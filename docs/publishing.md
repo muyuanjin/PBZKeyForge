@@ -2,6 +2,8 @@
 
 Two channels ship the same build: a GitHub Release and a Nexus Mods file page.
 
+Live page: https://www.nexusmods.com/phantombladezero/mods/402
+
 ## 1. Cut a release
 
 ```powershell
@@ -49,3 +51,4 @@ second entry differs from `NEXUSMODS_FILE_ID`.
 - Keep the previous version downloadable unless it is broken; only then set
   `archive_existing_version=true`.
 - Add the release notes from the GitHub Release to the page's changelog section.
+
