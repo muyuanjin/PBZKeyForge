@@ -1,0 +1,6 @@
+[center][color=#e8b96a][b][size=6]PBZKeyForge[/size][/b][/color][/center]
+[center][b]One key, several actions.[/b][/center]
+[center]Key binding editor for Phantom Blade Zero[/center]
+[line]
+[color=#e8b96a][b]PUT MORE THAN ONE ACTION ON THE SAME KEY[/b][/color]
+...

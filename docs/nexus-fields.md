@@ -13,3 +13,4 @@ Live page: https://www.nexusmods.com/phantombladezero/mods/402
 | Short description | One key can drive several actions. Edits Phantom Blade Zero's own key binding file directly, so bindings the in-game screen rejects actually work. Open source, built by CI, with seven ready-made presets. |
 | File ID | 8297694 |
 | Mod ID | 402 |
+
