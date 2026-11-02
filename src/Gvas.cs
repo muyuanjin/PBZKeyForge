@@ -35,6 +35,15 @@ namespace PBZKeyForge
         public List<BlobEntry> Entries = new List<BlobEntry>();
     }
 
+    /// <summary>A controller record belongs to one input profile and one device family.</summary>
+    public sealed class GamepadProfile
+    {
+        public string ProfileId, Family;
+        public int Index;
+        public Node Keys;
+        public List<Node> Fields;
+    }
+
     /// <summary>
     /// EnhancedInputUserSettings.sav reader/writer. The format is UE 5.7 GVAS with a
     /// player-mappable key profile block appended after the top level properties.
@@ -122,8 +131,13 @@ namespace PBZKeyForge
 
         public static SaveFile Load(string path)
         {
+            return FromBytes(File.ReadAllBytes(path));
+        }
+
+        public static SaveFile FromBytes(byte[] bytes)
+        {
             var s = new SaveFile();
-            s.d = File.ReadAllBytes(path);
+            s.d = (byte[])bytes.Clone();
             if (s.d.Length < 32 || Encoding.ASCII.GetString(s.d, 0, 4) != "GVAS")
                 throw new InvalidDataException("Not a GVAS save file.");
             s.p = 4 + 4 + 4 + 4 + 6 + 4;
@@ -239,6 +253,11 @@ namespace PBZKeyForge
 
         public void Save(string path)
         {
+            File.WriteAllBytes(path, ToBytes());
+        }
+
+        public byte[] ToBytes()
+        {
             var o = new List<byte>();
             o.AddRange(Header);
             foreach (var t in Props) WriteTag(o, t);
@@ -255,7 +274,7 @@ namespace PBZKeyForge
                 WStr(o, r.ProfileId);
             }
             o.AddRange(BlobRest);
-            File.WriteAllBytes(path, o.ToArray());
+            return o.ToArray();
         }
 
         public string ActiveProfile
@@ -280,6 +299,34 @@ namespace PBZKeyForge
                 if (t == null || t.Kind != 2) return new List<Node>();
                 return t.Items.Select(el => el.FirstOrDefault(x => x.Name == "Keys")).Where(x => x != null).ToList();
             }
+        }
+
+        public List<GamepadProfile> GamepadProfiles
+        {
+            get
+            {
+                var result = new List<GamepadProfile>();
+                Node profiles = Props.FirstOrDefault(node => node.Name == "GamepadFamilyProfiles");
+                if (profiles == null) return result;
+                if (profiles.Kind != 2) throw new InvalidDataException("Unsupported gamepad profile list.");
+                for (int index = 0; index < profiles.Items.Count; index++)
+                {
+                    List<Node> fields = profiles.Items[index];
+                    string profileId = Field(fields, "ProfileId");
+                    Node keys = fields.FirstOrDefault(node => node.Name == "Keys");
+                    // Without an explicit profile relationship, the tool cannot safely
+                    // infer whether this record is shared or belongs to the selected scheme.
+                    if (string.IsNullOrEmpty(profileId) || keys == null || keys.Kind != 2)
+                        throw new InvalidDataException("Unsupported gamepad record: an explicit ProfileId and Keys list are required.");
+                    result.Add(new GamepadProfile { ProfileId = profileId, Family = Field(fields, "Family"), Index = index, Keys = keys, Fields = fields });
+                }
+                return result;
+            }
+        }
+
+        public List<Node> GamepadKeysFor(string profileId)
+        {
+            return GamepadProfiles.Where(profile => profile.ProfileId == profileId).Select(profile => profile.Keys).ToList();
         }
 
         public static string StrOf(Node t)
@@ -351,7 +398,7 @@ namespace PBZKeyForge
             return Records.FirstOrDefault(r => r.ProfileId == profileId);
         }
 
-        /// <summary>Write CurrentProfileIdentifierString, which is how the game knows which scheme to apply.</summary>
+        /// <summary>Write Enhanced Input's profile metadata; the game's selector is in PBZSharedSetting.sav.</summary>
         public bool SetActiveProfile(string profileId)
         {
             if (RecordFor(profileId) == null) return false;

@@ -81,9 +81,10 @@ jobs:
           ## Install
           1. Close the game completely.
           2. Back up ``ProjectPBZ\Saved\EnhancedInputUserSettings.sav``.
-          3. Editor: run ``PBZKeyForge.exe``, pick the save, choose a scheme, apply a preset, save.
-             Preset files: copy one ``.sav`` over your file, then select that scheme in game.
-          4. Do not open the in-game keybind screen and press apply/reset afterwards.
+          3. Editor: run ``PBZKeyForge.exe``; it finds the save automatically. Choose a scheme, edit bindings or preview a quick configuration, then click ``Apply changes``.
+          4. To make the edited scheme active, check ``Set game scheme to…`` before applying. Leave it unchecked to save bindings without switching schemes.
+          5. Presets-only: replace ``EnhancedInputUserSettings.sav`` with a preset file, then select the scheme named by that file in game.
+          6. Do not open the in-game keybind screen and press apply/reset afterwards.
 
           Verified against build CL-301524.
           "@

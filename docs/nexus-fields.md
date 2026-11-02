@@ -8,7 +8,7 @@ Live page: https://www.nexusmods.com/phantombladezero/mods/402
 | --- | --- |
 | Mod name | PBZKeyForge |
 | Category | Tools |
-| Version | 1.0.2 |
+| Version | 1.1.0 |
 | Author | muyuanjin |
 | Short description | One key can drive several actions. Edits Phantom Blade Zero's own key binding file directly, so bindings the in-game screen rejects actually work. Open source, built by CI, with seven ready-made presets. |
 | File ID | 8297694 |
