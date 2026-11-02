@@ -417,9 +417,45 @@ namespace PBZKeyForge
             Add("ru", "scheme.custom2", "Своя 2");
             Add("ru", "status.scheme", "Редактируется: {0}");
             Add("ru", "status.activated", "Схема «{0}» назначена активной; применится после сохранения.");
-        }
+
+            // four step strip + quick action
+            Add("zh-Hans", "step.find", "找到存档");
+            Add("zh-Hans", "step.preset", "选择预设");
+            Add("zh-Hans", "step.apply", "套用");
+            Add("zh-Hans", "step.save", "保存到存档");
+            Add("zh-Hans", "btn.quick", "一键攻防");
+            Add("zh-Hans", "status.quick", "已套用一键攻防：攻击键同时防御。最后一步，点“保存到存档”。");
+
+            Add("en", "step.find", "Find your save");
+            Add("en", "step.preset", "Pick a preset");
+            Add("en", "step.apply", "Apply");
+            Add("en", "step.save", "Save to file");
+            Add("en", "btn.quick", "One-key guard");
+            Add("en", "status.quick", "Guard is now on your attack key. Last step: press Save to file.");
+
+            Add("ja", "step.find", "セーブを検出");
+            Add("ja", "step.preset", "プリセット選択");
+            Add("ja", "step.apply", "適用");
+            Add("ja", "step.save", "セーブに書き込む");
+            Add("ja", "btn.quick", "攻防一体");
+            Add("ja", "status.quick", "攻撃キーにガードを割り当てました。最後に「セーブに書き込む」を押してください。");
+
+            Add("ko", "step.find", "세이브 찾기");
+            Add("ko", "step.preset", "프리셋 선택");
+            Add("ko", "step.apply", "적용");
+            Add("ko", "step.save", "세이브에 저장");
+            Add("ko", "btn.quick", "공방 일체");
+            Add("ko", "status.quick", "공격 키에 방어를 넣었습니다. 마지막으로 세이브에 저장을 누르세요.");
+
+            Add("ru", "step.find", "Найти файл");
+            Add("ru", "step.preset", "Выбрать пресет");
+            Add("ru", "step.apply", "Применить");
+            Add("ru", "step.save", "Сохранить в файл");
+            Add("ru", "btn.quick", "Блок на атаке");
+            Add("ru", "status.quick", "Блок назначен на клавишу атаки. Последний шаг: Сохранить в файл.");        }
     }
 }
+
 
 
 

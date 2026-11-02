@@ -64,6 +64,10 @@ namespace PBZKeyForge
         Button btnBrowse = new Button(), btnAuto = new Button(), btnLoad = new Button();
         Button btnApply = new Button(), btnSave = new Button(), btnAbout = new Button();
 
+        const string NoKey = "—";
+        Label[] stepLabels;
+        Button btnQuick = new Button();
+        int step = 0;
         SaveFile sav;
         string selectedProfile;
         bool loading;
@@ -83,7 +87,7 @@ namespace PBZKeyForge
             StartPosition = FormStartPosition.CenterScreen;
             MaximizeBox = true;
 
-            var top = new Panel { Dock = DockStyle.Top, Height = 132 };
+            var top = new Panel { Dock = DockStyle.Top, Height = 176 };
 
             lblFile.Left = 12; lblFile.Top = 14; lblFile.Width = 96;
             txtPath.Left = 112; txtPath.Top = 11; txtPath.Width = 600;
@@ -115,6 +119,23 @@ namespace PBZKeyForge
             lblWarn.Left = 112; lblWarn.Top = 78; lblWarn.Width = 900; lblWarn.Height = 44;
             lblWarn.ForeColor = Color.Firebrick;
 
+            // Numbered step strip: 1 find the save, 2 pick a preset, 3 apply, 4 save.
+            stepLabels = new Label[4];
+            for (int i = 0; i < 4; i++)
+            {
+                var l = new Label
+                {
+                    AutoSize = true,
+                    Left = 12 + i * 190,
+                    Top = 136,
+                    Font = new Font("Microsoft YaHei UI", 10f)
+                };
+                stepLabels[i] = l;
+                top.Controls.Add(l);
+            }
+
+            Controls.Add(tabs);
+
             top.Controls.AddRange(new Control[] { lblFile, txtPath, btnBrowse, btnAuto, btnLoad,
                 lblScheme, cbScheme, btnActivate, btnAbout, cbLang, lblWarn });
             Controls.Add(top);
@@ -124,19 +145,70 @@ namespace PBZKeyForge
             tabs.Dock = DockStyle.Fill;
             tabs.TabPages.Add(tabKb);
             tabs.TabPages.Add(tabPad);
-            Controls.Add(tabs);
 
-            var bottom = new Panel { Dock = DockStyle.Bottom, Height = 86 };
-            lblPreset.Left = 12; lblPreset.Top = 16; lblPreset.Width = 96;
-            cbPreset.Left = 112; cbPreset.Top = 13; cbPreset.Width = 420;
-            cbPreset.DropDownStyle = ComboBoxStyle.DropDownList;
-            btnApply.Left = 542; btnApply.Top = 11; btnApply.Width = 120;
-            btnApply.Click += delegate { ApplyPreset(); };
-            btnSave.Left = 672; btnSave.Top = 9; btnSave.Width = 140; btnSave.Height = 32;
+            var bottom = new Panel { Dock = DockStyle.Bottom, Height = 104 };
+
+            // The one thing a first-time user needs: guard on the attack key, in one click.
+            btnQuick.Left = 12; btnQuick.Top = 8; btnQuick.Width = 260; btnQuick.Height = 44;
+            btnQuick.Font = new Font("Microsoft YaHei UI", 11f, FontStyle.Bold);
+            btnQuick.BackColor = Color.FromArgb(204, 65, 37);
+            btnQuick.ForeColor = Color.White;
+            btnQuick.FlatStyle = FlatStyle.Flat;
+            btnQuick.FlatAppearance.BorderSize = 0;
+            btnQuick.Click += delegate { QuickOneKey(); };
+
+            btnSave.Left = 284; btnSave.Top = 8; btnSave.Width = 150; btnSave.Height = 44;
+            btnSave.Font = new Font("Microsoft YaHei UI", 10f);
             btnSave.Click += delegate { SaveAll(); };
-            lblStatus.Left = 12; lblStatus.Top = 52; lblStatus.Width = 1000; lblStatus.Height = 28;
-            bottom.Controls.AddRange(new Control[] { lblPreset, cbPreset, btnApply, btnSave, lblStatus });
+
+            lblPreset.Left = 452; lblPreset.Top = 22; lblPreset.Width = 60;
+            cbPreset.Left = 516; cbPreset.Top = 19; cbPreset.Width = 330;
+            cbPreset.DropDownStyle = ComboBoxStyle.DropDownList;
+            btnApply.Left = 854; btnApply.Top = 17; btnApply.Width = 110; btnApply.Height = 28;
+            btnApply.Click += delegate { ApplyPreset(); };
+
+            lblStatus.Left = 12; lblStatus.Top = 68; lblStatus.Width = 990; lblStatus.Height = 28;
+
+            bottom.Controls.AddRange(new Control[] { btnQuick, btnSave, lblPreset, cbPreset, btnApply, lblStatus });
             Controls.Add(bottom);
+
+            Shown += delegate { UpdateSteps(); if (sav == null) AutoFind(); };
+        }
+
+        /// <summary>Highlight where the user is in the four-step flow.</summary>
+        void UpdateSteps()
+        {
+            if (stepLabels == null) return;
+            string[] names = { I18n.Str("step.find"), I18n.Str("step.preset"), I18n.Str("step.apply"), I18n.Str("step.save") };
+            for (int i = 0; i < stepLabels.Length; i++)
+            {
+                bool active = i == step;
+                stepLabels[i].Text = (i + 1) + ". " + names[i];
+                stepLabels[i].Font = new Font("Microsoft YaHei UI", 10f, active ? FontStyle.Bold : FontStyle.Regular);
+                stepLabels[i].ForeColor = active ? Color.FromArgb(204, 65, 37) : SystemColors.GrayText;
+            }
+        }
+
+        void OnKeyTextChanged(object sender, EventArgs e)
+        {
+            var cb = sender as ComboBox;
+            if (cb == null) return;
+            cb.ForeColor = KeyOf(cb) == "" ? SystemColors.GrayText : SystemColors.WindowText;
+        }
+
+        /// <summary>Apply the guard-on-attack preset and tell the user the last step.</summary>
+        void QuickOneKey()
+        {
+            if (sav == null) { lblStatus.Text = I18n.Str("status.needfile"); step = 0; UpdateSteps(); return; }
+            var preset = Presets.All().FirstOrDefault(p => p.Id == "onekey");
+            if (preset == null) return;
+            var rec = sav.RecordFor(selectedProfile);
+            if (rec == null) { lblStatus.Text = I18n.Str("status.needfile"); return; }
+            Presets.Apply(sav, preset, rec);
+            FillFromSave();
+            step = 3;
+            UpdateSteps();
+            lblStatus.Text = I18n.Str("status.quick");
         }
 
         void BuildKbTab()
@@ -166,8 +238,9 @@ namespace PBZKeyForge
                 var arr = new ComboBox[3];
                 for (int i = 0; i < 3; i++)
                 {
-                    var cb = new ComboBox { DropDownStyle = ComboBoxStyle.DropDown, Width = 200, Anchor = AnchorStyles.Left };
+                    var cb = new ComboBox { DropDownStyle = ComboBoxStyle.DropDown, Width = 200, Anchor = AnchorStyles.Left, Text = NoKey, ForeColor = SystemColors.GrayText };
                     cb.Items.AddRange(KeyNames.Keyboard);
+                    cb.TextChanged += OnKeyTextChanged;
                     arr[i] = cb;
                     grid.Controls.Add(cb, i + 1, row);
                 }
@@ -206,8 +279,9 @@ namespace PBZKeyForge
                 var arr = new ComboBox[3];
                 for (int i = 0; i < 3; i++)
                 {
-                    var cb = new ComboBox { DropDownStyle = ComboBoxStyle.DropDown, Width = 200, Anchor = AnchorStyles.Left };
+                    var cb = new ComboBox { DropDownStyle = ComboBoxStyle.DropDown, Width = 200, Anchor = AnchorStyles.Left, Text = NoKey, ForeColor = SystemColors.GrayText };
                     cb.Items.AddRange(KeyNames.Gamepad);
+                    cb.TextChanged += OnKeyTextChanged;
                     arr[i] = cb;
                     grid.Controls.Add(cb, i + 1, row);
                 }
@@ -234,6 +308,8 @@ namespace PBZKeyForge
             lblPreset.Text = I18n.Str("preset.label");
             btnApply.Text = I18n.Str("btn.apply");
             btnSave.Text = I18n.Str("btn.save");
+            btnQuick.Text = I18n.Str("btn.quick");
+            UpdateSteps();
             lblWarn.Text = I18n.Str("warn.editor");
             btnActivate.Text = I18n.Str("btn.activate");
             btnAbout.Text = I18n.Str("btn.about");
@@ -348,6 +424,7 @@ namespace PBZKeyForge
                 RebuildSchemeList();
                 FillFromSave();
                 loading = false;
+                step = 1; UpdateSteps();
                 lblStatus.Text = I18n.Str("status.loaded", sav.ActiveProfile,
                     sav.ActiveRecord == null ? 0 : sav.ActiveRecord.Entries.Count, sav.GamepadKeys.Count);
             }
@@ -356,8 +433,8 @@ namespace PBZKeyForge
 
         void FillFromSave()
         {
-            foreach (var kv in kbBoxes) foreach (var cb in kv.Value) cb.Text = "";
-            foreach (var kv in padBoxes) foreach (var cb in kv.Value) cb.Text = "";
+            foreach (var kv in kbBoxes) foreach (var cb in kv.Value) { cb.Text = NoKey; cb.ForeColor = SystemColors.GrayText; }
+            foreach (var kv in padBoxes) foreach (var cb in kv.Value) { cb.Text = NoKey; cb.ForeColor = SystemColors.GrayText; }
             if (sav == null) return;
 
             var rec = sav.RecordFor(selectedProfile);
@@ -367,7 +444,7 @@ namespace PBZKeyForge
                     ComboBox[] arr;
                     if (!kbBoxes.TryGetValue(e.Name, out arr)) continue;
                     int idx = Array.IndexOf(Presets.KeyboardSlots, (int)e.Slot);
-                    if (idx >= 0) arr[idx].Text = e.Key;
+                    if (idx >= 0) { arr[idx].Text = e.Key; arr[idx].ForeColor = SystemColors.WindowText; }
                 }
             foreach (var keys in sav.GamepadKeys)
                 foreach (var el in keys.Items)
@@ -378,8 +455,18 @@ namespace PBZKeyForge
                     string slot = SaveFile.Field(el, "Slot");
                     if (slot == null) continue;
                     int idx = Array.IndexOf(Presets.GamepadSlots, slot.Replace("EPlayerMappableKeySlot::", ""));
-                    if (idx >= 0 && string.IsNullOrEmpty(arr[idx].Text)) arr[idx].Text = SaveFile.Field(el, "Key");
+                    if (idx >= 0 && (arr[idx].Text == NoKey || string.IsNullOrEmpty(arr[idx].Text)))
+                    {
+                        arr[idx].Text = SaveFile.Field(el, "Key");
+                        arr[idx].ForeColor = SystemColors.WindowText;
+                    }
                 }
+        }
+
+        static string KeyOf(ComboBox cb)
+        {
+            string v = (cb.Text ?? "").Trim();
+            return v == NoKey ? "" : v;
         }
 
         void OnSchemeChanged()
@@ -402,7 +489,7 @@ namespace PBZKeyForge
             foreach (var a in Actions)
             {
                 var arr = kbBoxes[a.Id];
-                string v0 = arr[0].Text.Trim(), v1 = arr[1].Text.Trim(), v2 = arr[2].Text.Trim();
+                string v0 = KeyOf(arr[0]), v1 = KeyOf(arr[1]), v2 = KeyOf(arr[2]);
                 if (v0 == "" && v1 == "" && v2 == "") continue;
                 if (v0 == "") v0 = v1 != "" ? v1 : v2;
                 if (v1 == "") v1 = v0;
@@ -426,7 +513,7 @@ namespace PBZKeyForge
                     var arr = padBoxes[a.Id];
                     for (int k = 0; k < 3; k++)
                     {
-                        string want = arr[k].Text.Trim();
+                        string want = KeyOf(arr[k]);
                         if (want == "") continue;
                         string slotName = "EPlayerMappableKeySlot::" + Presets.GamepadSlots[k];
                         var el = keys.Items.FirstOrDefault(x =>
@@ -462,6 +549,7 @@ namespace PBZKeyForge
             if (rec == null) { lblStatus.Text = I18n.Str("status.needfile"); return; }
             Presets.Apply(sav, p, rec);
             FillFromSave();
+            step = 3; UpdateSteps();
             lblStatus.Text = I18n.Str("status.applied");
         }
 
@@ -510,6 +598,11 @@ namespace PBZKeyForge
         }
     }
 }
+
+
+
+
+
 
 
 
