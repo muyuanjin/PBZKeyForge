@@ -70,3 +70,16 @@ gh workflow run publish-nexusmods.yml --repo muyuanjin/PBZKeyForge `
   -f category=main -f archive_existing_version=false -f "description=<long text>"
 ```
 
+
+## Second file entry: presets only
+
+- `PBZKeyForge V1.0.2 Presets Only` - File ID `8297925`. Category **Optional** so it sits under Main files and the editor stays first.
+- Mod manager download stays disabled for this entry: Vortex cannot install a save file.
+- Publishing another version of it:
+
+```powershell
+gh workflow run publish-nexusmods.yml --repo muyuanjin/PBZKeyForge `
+  -f tag=v1.0.3 -f asset_name=PBZKeyForge-v1.0.3-presets-only.zip -f file_id=8297925 `
+  -f version=1.0.3 -f category=optional -f archive_existing_version=false `
+  -f "description=<preset list>"
+```
