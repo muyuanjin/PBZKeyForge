@@ -1,3 +1,10 @@
+## 1.0.4
+
+- The tool finds the save by itself on startup; no more hunting for the file.
+- A four-step strip at the top shows where you are: find the save, pick a preset, apply, save.
+- One primary button, `One-key guard`, applies guard-on-attack for you. The last step is still Save.
+- Key slots that have no override show `-` in grey instead of an empty box.
+
 ## 1.0.3
 
 - The action grid scrolls. Before this, a window shorter than the 20-row table simply cut the lower actions off with no way to reach them.
@@ -38,6 +45,7 @@ First release.
 
 Verified against the Steam launch build `CL-301524`: byte-identical GVAS round-trip, and
 preset writes validated against a strict structural checker.
+
 
 
 
