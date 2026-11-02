@@ -69,8 +69,8 @@ namespace PBZKeyForge
             Add("zh-Hans", "btn.browse", "浏览…");
             Add("zh-Hans", "btn.autofind", "自动查找");
             Add("zh-Hans", "btn.load", "载入");
-            Add("zh-Hans", "tab.kb", "键鼠");
-            Add("zh-Hans", "tab.pad", "手柄");
+            Add("zh-Hans", "tab.kb", "键鼠键位");
+            Add("zh-Hans", "tab.pad", "手柄键位");
             Add("zh-Hans", "col.action", "动作");
             Add("zh-Hans", "preset.label", "预设");
             Add("zh-Hans", "btn.apply", "套用预设");
@@ -91,24 +91,24 @@ namespace PBZKeyForge
 
             Add("zh-Hans", "act.IA_LightAttack", "轻攻击");
             Add("zh-Hans", "act.IA_HeavyAttack", "重攻击");
-            Add("zh-Hans", "act.IA_Guard", "防御");
+            Add("zh-Hans", "act.IA_Guard", "架势/格挡");
             Add("zh-Hans", "act.IA_Dodge", "闪避");
-            Add("zh-Hans", "act.IA_Jump", "跳跃");
-            Add("zh-Hans", "act.IA_Crouch", "蹲下");
+            Add("zh-Hans", "act.IA_Jump", "跳跃/特殊移动");
+            Add("zh-Hans", "act.IA_Crouch", "下蹲");
             Add("zh-Hans", "act.IA_MoveFast", "高速移动");
-            Add("zh-Hans", "act.IA_LockTarget", "锁定");
-            Add("zh-Hans", "act.IA_Interact", "交互");
-            Add("zh-Hans", "act.IA_Execute", "处决");
-            Add("zh-Hans", "act.IA_ShadowArm", "影武");
-            Add("zh-Hans", "act.IA_ShadowArm_LongPress", "影武长按");
-            Add("zh-Hans", "act.IA_SwitchWeapon", "切换武器");
-            Add("zh-Hans", "act.IA_SwitchShadowArm", "切换影武");
-            Add("zh-Hans", "act.IA_UltimateSkill", "必杀技");
-            Add("zh-Hans", "act.IA_Sense_Default", "心之眼");
-            Add("zh-Hans", "act.IA_OpenCharacterMenu", "角色菜单");
-            Add("zh-Hans", "act.IA_OpenMapMenu", "地图");
-            Add("zh-Hans", "act.IA_UseTopItem", "上品药");
-            Add("zh-Hans", "act.IA_UseBottomItem", "下品药");
+            Add("zh-Hans", "act.IA_LockTarget", "锁定敌人");
+            Add("zh-Hans", "act.IA_Interact", "对话/交互");
+            Add("zh-Hans", "act.IA_Execute", "处决敌人");
+            Add("zh-Hans", "act.IA_ShadowArm", "影之武装");
+            Add("zh-Hans", "act.IA_ShadowArm_LongPress", "影之武装（长按）");
+            Add("zh-Hans", "act.IA_SwitchWeapon", "更换武器");
+            Add("zh-Hans", "act.IA_SwitchShadowArm", "更换影之武装");
+            Add("zh-Hans", "act.IA_UltimateSkill", "绝技");
+            Add("zh-Hans", "act.IA_Sense_Default", "澄心伺隙");
+            Add("zh-Hans", "act.IA_OpenCharacterMenu", "打开角色菜单");
+            Add("zh-Hans", "act.IA_OpenMapMenu", "打开地图菜单");
+            Add("zh-Hans", "act.IA_UseTopItem", "使用上方药");
+            Add("zh-Hans", "act.IA_UseBottomItem", "使用下方药");
 
             Add("zh-Hans", "preset.onekey.name", "一键攻防：攻击键同时防御");
             Add("zh-Hans", "preset.onekey.desc", "左键/X 同时触发攻击与防御，其余键位不动。");
@@ -152,26 +152,26 @@ namespace PBZKeyForge
             Add("en", "about.title", "About");
             Add("en", "about.text", "Edits the key override records inside ProjectPBZ\\Saved\\EnhancedInputUserSettings.sav, bypassing the in-game conflict check.\n\n· Empty = use the game default\n· One key can drive several actions (that is the whole point)\n· Uninstall: restore your backup\n\nMIT License");
 
-            Add("en", "act.IA_LightAttack", "Light attack");
-            Add("en", "act.IA_HeavyAttack", "Heavy attack");
-            Add("en", "act.IA_Guard", "Guard");
+            Add("en", "act.IA_LightAttack", "Light Attack");
+            Add("en", "act.IA_HeavyAttack", "Heavy Attack");
+            Add("en", "act.IA_Guard", "Block");
             Add("en", "act.IA_Dodge", "Dodge");
-            Add("en", "act.IA_Jump", "Jump");
+            Add("en", "act.IA_Jump", "Jump / Special Movement");
             Add("en", "act.IA_Crouch", "Crouch");
             Add("en", "act.IA_MoveFast", "Sprint");
-            Add("en", "act.IA_LockTarget", "Lock-on");
-            Add("en", "act.IA_Interact", "Interact");
+            Add("en", "act.IA_LockTarget", "Lock On");
+            Add("en", "act.IA_Interact", "Interact / Talk");
             Add("en", "act.IA_Execute", "Execute");
-            Add("en", "act.IA_ShadowArm", "Phantom Edge");
-            Add("en", "act.IA_ShadowArm_LongPress", "Phantom Edge (hold)");
-            Add("en", "act.IA_SwitchWeapon", "Switch weapon");
-            Add("en", "act.IA_SwitchShadowArm", "Switch Edge");
-            Add("en", "act.IA_UltimateSkill", "Ultimate");
+            Add("en", "act.IA_ShadowArm", "Phantom Edges");
+            Add("en", "act.IA_ShadowArm_LongPress", "Phantom Edges (hold)");
+            Add("en", "act.IA_SwitchWeapon", "Switch Weapon");
+            Add("en", "act.IA_SwitchShadowArm", "Switch Phantom Edge");
+            Add("en", "act.IA_UltimateSkill", "Power Surge");
             Add("en", "act.IA_Sense_Default", "Mind's Eye");
-            Add("en", "act.IA_OpenCharacterMenu", "Character menu");
-            Add("en", "act.IA_OpenMapMenu", "Map");
-            Add("en", "act.IA_UseTopItem", "Upper item");
-            Add("en", "act.IA_UseBottomItem", "Lower item");
+            Add("en", "act.IA_OpenCharacterMenu", "Open Character Menu");
+            Add("en", "act.IA_OpenMapMenu", "Open Map");
+            Add("en", "act.IA_UseTopItem", "Use Upper Medicine");
+            Add("en", "act.IA_UseBottomItem", "Use Lower Medicine");
 
             Add("en", "preset.onekey.name", "One-key attack & guard");
             Add("en", "preset.onekey.desc", "Left mouse / X triggers attack and guard together. Everything else stays untouched.");
@@ -215,26 +215,26 @@ namespace PBZKeyForge
             Add("ja", "about.title", "このツールについて");
             Add("ja", "about.text", "ProjectPBZ\\Saved\\EnhancedInputUserSettings.sav のキー上書き記録を直接編集し、ゲーム内の競合チェックを回避します。\n\n· 空欄 = ゲーム既定を使用\n· 1 つのキーを複数の動作に割り当て可能\n· アンインストール：バックアップを戻すだけ\n\nMIT License");
 
-            Add("ja", "act.IA_LightAttack", "弱攻撃");
-            Add("ja", "act.IA_HeavyAttack", "強攻撃");
-            Add("ja", "act.IA_Guard", "ガード");
+            Add("ja", "act.IA_LightAttack", "軽攻撃");
+            Add("ja", "act.IA_HeavyAttack", "重攻撃");
+            Add("ja", "act.IA_Guard", "構え/ガード");
             Add("ja", "act.IA_Dodge", "回避");
-            Add("ja", "act.IA_Jump", "ジャンプ");
-            Add("ja", "act.IA_Crouch", "しゃがみ");
-            Add("ja", "act.IA_MoveFast", "ダッシュ");
+            Add("ja", "act.IA_Jump", "ジャンプ/特殊移動");
+            Add("ja", "act.IA_Crouch", "しゃがむ");
+            Add("ja", "act.IA_MoveFast", "高速移動");
             Add("ja", "act.IA_LockTarget", "ロックオン");
-            Add("ja", "act.IA_Interact", "調べる");
+            Add("ja", "act.IA_Interact", "会話/インタラクト");
             Add("ja", "act.IA_Execute", "処刑");
-            Add("ja", "act.IA_ShadowArm", "影刃");
-            Add("ja", "act.IA_ShadowArm_LongPress", "影刃（長押し）");
+            Add("ja", "act.IA_ShadowArm", "影の武装");
+            Add("ja", "act.IA_ShadowArm_LongPress", "影の武装（長押し）");
             Add("ja", "act.IA_SwitchWeapon", "武器切替");
-            Add("ja", "act.IA_SwitchShadowArm", "影刃切替");
-            Add("ja", "act.IA_UltimateSkill", "必殺技");
+            Add("ja", "act.IA_SwitchShadowArm", "影の武装切替");
+            Add("ja", "act.IA_UltimateSkill", "絶技");
             Add("ja", "act.IA_Sense_Default", "心眼");
-            Add("ja", "act.IA_OpenCharacterMenu", "キャラメニュー");
+            Add("ja", "act.IA_OpenCharacterMenu", "キャラクターメニュー");
             Add("ja", "act.IA_OpenMapMenu", "マップ");
-            Add("ja", "act.IA_UseTopItem", "上薬");
-            Add("ja", "act.IA_UseBottomItem", "下薬");
+            Add("ja", "act.IA_UseTopItem", "上の薬を使用");
+            Add("ja", "act.IA_UseBottomItem", "下の薬を使用");
 
             Add("ja", "preset.onekey.name", "ワンキー攻防：攻撃キーで同時にガード");
             Add("ja", "preset.onekey.desc", "左クリック／X で攻撃とガードを同時に発生。他のキーは変更しません。");
@@ -280,24 +280,24 @@ namespace PBZKeyForge
 
             Add("ko", "act.IA_LightAttack", "약공격");
             Add("ko", "act.IA_HeavyAttack", "강공격");
-            Add("ko", "act.IA_Guard", "방어");
+            Add("ko", "act.IA_Guard", "자세/방어");
             Add("ko", "act.IA_Dodge", "회피");
-            Add("ko", "act.IA_Jump", "점프");
+            Add("ko", "act.IA_Jump", "점프/특수 이동");
             Add("ko", "act.IA_Crouch", "앉기");
             Add("ko", "act.IA_MoveFast", "달리기");
-            Add("ko", "act.IA_LockTarget", "락온");
-            Add("ko", "act.IA_Interact", "상호작용");
+            Add("ko", "act.IA_LockTarget", "타겟 락온");
+            Add("ko", "act.IA_Interact", "대화/상호작용");
             Add("ko", "act.IA_Execute", "처형");
-            Add("ko", "act.IA_ShadowArm", "그림자 무기");
-            Add("ko", "act.IA_ShadowArm_LongPress", "그림자 무기(길게)");
-            Add("ko", "act.IA_SwitchWeapon", "무기 전환");
-            Add("ko", "act.IA_SwitchShadowArm", "그림자 무기 전환");
-            Add("ko", "act.IA_UltimateSkill", "필살기");
-            Add("ko", "act.IA_Sense_Default", "심안");
-            Add("ko", "act.IA_OpenCharacterMenu", "캐릭터 메뉴");
-            Add("ko", "act.IA_OpenMapMenu", "지도");
-            Add("ko", "act.IA_UseTopItem", "상급 약");
-            Add("ko", "act.IA_UseBottomItem", "하급 약");
+            Add("ko", "act.IA_ShadowArm", "팬텀 무장");
+            Add("ko", "act.IA_ShadowArm_LongPress", "팬텀 무장(길게)");
+            Add("ko", "act.IA_SwitchWeapon", "무기 교체");
+            Add("ko", "act.IA_SwitchShadowArm", "팬텀 무장 교체");
+            Add("ko", "act.IA_UltimateSkill", "궁극기");
+            Add("ko", "act.IA_Sense_Default", "통찰");
+            Add("ko", "act.IA_OpenCharacterMenu", "캐릭터 메뉴 열기");
+            Add("ko", "act.IA_OpenMapMenu", "지도 열기");
+            Add("ko", "act.IA_UseTopItem", "상단 물약 사용");
+            Add("ko", "act.IA_UseBottomItem", "하단 물약 사용");
 
             Add("ko", "preset.onekey.name", "원키 공방: 공격 키로 동시 방어");
             Add("ko", "preset.onekey.desc", "좌클릭/X 로 공격과 방어를 동시에 발생시킵니다. 다른 키는 그대로 둡니다.");
@@ -345,11 +345,11 @@ namespace PBZKeyForge
             Add("ru", "act.IA_HeavyAttack", "Тяжёлая атака");
             Add("ru", "act.IA_Guard", "Блок");
             Add("ru", "act.IA_Dodge", "Уклонение");
-            Add("ru", "act.IA_Jump", "Прыжок");
+            Add("ru", "act.IA_Jump", "Прыжок / особое движение");
             Add("ru", "act.IA_Crouch", "Присесть");
             Add("ru", "act.IA_MoveFast", "Ускорение");
             Add("ru", "act.IA_LockTarget", "Захват цели");
-            Add("ru", "act.IA_Interact", "Взаимодействие");
+            Add("ru", "act.IA_Interact", "Взаимодействие / разговор");
             Add("ru", "act.IA_Execute", "Добивание");
             Add("ru", "act.IA_ShadowArm", "Клинок тени");
             Add("ru", "act.IA_ShadowArm_LongPress", "Клинок тени (удержание)");
@@ -359,8 +359,8 @@ namespace PBZKeyForge
             Add("ru", "act.IA_Sense_Default", "Око разума");
             Add("ru", "act.IA_OpenCharacterMenu", "Меню персонажа");
             Add("ru", "act.IA_OpenMapMenu", "Карта");
-            Add("ru", "act.IA_UseTopItem", "Верхний предмет");
-            Add("ru", "act.IA_UseBottomItem", "Нижний предмет");
+            Add("ru", "act.IA_UseTopItem", "Верхнее лекарство");
+            Add("ru", "act.IA_UseBottomItem", "Нижнее лекарство");
 
             Add("ru", "preset.onekey.name", "Атака и блок на одной клавише");
             Add("ru", "preset.onekey.desc", "ЛКМ / X вызывают атаку и блок одновременно. Остальные клавиши не меняются.");
@@ -420,4 +420,6 @@ namespace PBZKeyForge
         }
     }
 }
+
+
 

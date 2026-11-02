@@ -14,6 +14,29 @@ namespace PBZKeyForge
             if (args.Length > 0)
             {
                 string cmd = args[0];
+                if (cmd == "--gui" && args.Length > 1)
+                {
+                    Application.EnableVisualStyles();
+                    var form = new MainForm();
+                    form.UiSmoke(args[1]);
+                    Application.Run(form);
+                    return 0;
+                }
+                if (cmd == "--shot" && args.Length > 2)
+                {
+                    Application.EnableVisualStyles();
+                    var form = new MainForm();
+                    form.UiSmoke(args[1]);
+                    form.Show();
+                    Application.DoEvents();
+                    var bmp = new System.Drawing.Bitmap(form.Width, form.Height);
+                    form.DrawToBitmap(bmp, new System.Drawing.Rectangle(0, 0, form.Width, form.Height));
+                    bmp.Save(args[2], System.Drawing.Imaging.ImageFormat.Png);
+                    bmp.Dispose();
+                    form.Close();
+                    Console.WriteLine("shot saved: " + args[2]);
+                    return 0;
+                }
                 if (cmd == "--ui-smoke")
                 {
                     Application.EnableVisualStyles();
@@ -39,3 +62,5 @@ namespace PBZKeyForge
         }
     }
 }
+
+
