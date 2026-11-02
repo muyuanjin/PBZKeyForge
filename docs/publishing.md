@@ -83,3 +83,7 @@ gh workflow run publish-nexusmods.yml --repo muyuanjin/PBZKeyForge `
   -f version=1.0.3 -f category=optional -f archive_existing_version=false `
   -f "description=<preset list>"
 ```
+
+## Fixing a file description that got cut at 255 characters
+
+The file form on the site limits the per-file description to 255 characters. The API does not: re-running the publish workflow writes the full text. The cost is that the API creates a new version of the file, so afterwards tidy the duplicate under **Manage versions** and delete the older versions.
