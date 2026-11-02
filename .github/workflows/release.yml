@@ -49,7 +49,6 @@ jobs:
 
           New-Item -ItemType Directory -Path pkg | Out-Null
           Copy-Item dist\PBZKeyForge.exe     pkg
-          Copy-Item dist\PBZKeyForge-cli.exe pkg
           Copy-Item README.md                pkg
           Copy-Item LICENSE                  pkg
           Copy-Item presets-out              pkg\presets -Recurse
@@ -72,14 +71,17 @@ jobs:
           $body = @"
           Key binding editor for Phantom Blade Zero. One key can drive several actions; the in-game screen refuses that, this tool writes it.
 
+          Source, issues and the build itself: https://github.com/muyuanjin/PBZKeyForge
+          The executables in this release are built and uploaded by GitHub Actions from the tagged commit, not on a local machine.
+
           ## Assets
-          - ``PBZKeyForge-$tag.zip`` - GUI, CLI and the preset save files.
-          - ``PBZKeyForge-$tag-presets-only.zip`` - only the ready-made ``.sav`` files, no executable.
+          - ``PBZKeyForge-$tag.zip`` - the editor and the preset save files.
+          - ``PBZKeyForge-$tag-presets-only.zip`` - only the ready-made ``.sav`` files, no executable. Use this if you would rather not run anything.
 
           ## Install
           1. Close the game completely.
           2. Back up ``ProjectPBZ\Saved\EnhancedInputUserSettings.sav``.
-          3. GUI: run ``PBZKeyForge.exe``, pick the save, choose a scheme, apply a preset, save.
+          3. Editor: run ``PBZKeyForge.exe``, pick the save, choose a scheme, apply a preset, save.
              Preset files: copy one ``.sav`` over your file, then select that scheme in game.
           4. Do not open the in-game keybind screen and press apply/reset afterwards.
 
