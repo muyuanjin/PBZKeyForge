@@ -1,6 +1,41 @@
-[center][color=#e8b96a][b][size=6]PBZKeyForge[/size][/b][/color][/center]
-[center][b]One key, several actions.[/b][/center]
-[center]Key binding editor for Phantom Blade Zero[/center]
+[center][img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793645996-2058107740.png[/img][/center]
 [line]
-[color=#e8b96a][b]PUT MORE THAN ONE ACTION ON THE SAME KEY[/b][/color]
-...
+[color=#e8b96a][b]WHAT THIS CHANGES[/b][/color]
+Phantom Blade Zero refuses to save a binding when two actions share a key. The engine has no such rule: the file is a list of per-action overrides, and two actions on one key fire together. This tool writes that binding into the file - the one thing the in-game screen will not let you do.
+So the attack button can guard while it attacks, the freed guard button can become dodge, and Space can be sprint.
+[line]
+[color=#e8b96a][b]PRESETS[/b][/color]
+[list]
+[*][b]onekey[/b] - guard on the attack button; nothing else moves.
+[*][b]onekey_dodge[/b] - guard on attack, and the freed guard button becomes dodge.
+[*][b]souls[/b] - gamepad: light RB, heavy RT, guard LB, dodge and sprint B.
+[*][b]space_sprint[/b] / [b]space_dodge[/b] - adds Space as a second sprint or dodge key; Shift stays.
+[*][b]undo_onekey[/b] / [b]vanilla[/b] - puts guard back, or clears every override.
+[/list]
+[color=#e8b96a][b]WHAT YOU GET[/b][/color]
+[list]
+[*][b]PBZKeyForge.exe[/b] - pick your save, choose a scheme (Default, Custom 1, Custom 2), set keys, save.
+[*]Seven ready-made [b].sav[/b] files in the [b]presets[/b] folder.
+[/list]
+20 actions, three key slots each, keyboard and mouse or gamepad. English, Simplified Chinese, Japanese, Korean and Russian: it follows your Windows language and the toolbar switches it.
+[color=#e8b96a][b]INSTALL[/b][/color]
+[list=1]
+[*]Close the game.
+[*]Back up [b]ProjectPBZ/Saved/EnhancedInputUserSettings.sav[/b].
+[*]Run [b]PBZKeyForge.exe[/b], press Auto-detect, choose a scheme, apply a preset or set the keys, then Save to file.
+[*]Start the game and make sure that scheme is the active one.
+[/list]
+No executable needed? Copy any file from [b]presets[/b] over your save and pick that scheme in game.
+[color=#cc4125][b]ONE THING TO KNOW[/b][/color]
+[quote][color=#cc4125][b]Do not open the in-game key bindings screen and press apply or reset afterwards.[/b][/color] The game rewrites the whole file when it saves, and the bindings are gone. Re-apply the preset if that happens.[/quote]
+It also replaces any other mod that ships this file, so use one at a time.
+[color=#e8b96a][b]SOURCE AND BUILDS[/b][/color]
+Code, issues and the build live at [url=https://github.com/muyuanjin/PBZKeyForge]github.com/muyuanjin/PBZKeyForge[/url]. The executable here is built and uploaded by GitHub Actions from the tagged commit, so you can read the source and see exactly what produced the file you run.
+[color=#e8b96a][b]COMPATIBILITY[/b][/color]
+[list]
+[*]Steam version, launch build CL-301524.
+[*]Windows 10/11 - no runtime install, no UE4SS, no pak files, no DLL.
+[/list]
+[color=#e8b96a][b]UNINSTALL[/b][/color]
+Restore your backup, or load the Vanilla preset and save.
+[i]Not affiliated with S-Game.[/i]
