@@ -1,5 +1,7 @@
 # PBZKeyForge
 
+[Nexus Mods](https://www.nexusmods.com/phantombladezero/mods/402) · [Releases](https://github.com/muyuanjin/PBZKeyForge/releases)
+
 **English** · [简体中文](#简体中文)
 
 A key binding editor for **Phantom Blade Zero** that writes the game's own input settings file directly, so a single key can drive several actions at once — something the in-game rebinding screen refuses to save because it reports a conflict.
@@ -148,3 +150,4 @@ powershell -ExecutionPolicy Bypass -File build\build.ps1
 ### 许可
 
 MIT。与 S-Game 无关，使用风险自负，记得留备份。
+
