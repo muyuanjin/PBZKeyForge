@@ -87,12 +87,21 @@ jobs:
               gh release view "${tag}" --json assets --jq '.assets[].name' |
                 grep -Ei '\.(zip|7z|rar)$' || true
             )
-            if [[ "${#archive_assets[@]}" -ne 1 ]]; then
-              printf 'Expected exactly one archive asset on %s, found %s:\n' "${tag}" "${#archive_assets[@]}" >&2
-              printf '  %s\n' "${archive_assets[@]}" >&2
+            if [[ "${#archive_assets[@]}" -eq 1 ]]; then
+              asset_name="${archive_assets[0]}"
+            elif [[ "${#archive_assets[@]}" -gt 1 ]]; then
+              # Prefer the main archive when the release also ships the presets-only package.
+              mapfile -t main_assets < <(printf '%s\n' "${archive_assets[@]}" | grep -Eiv 'presets-only' || true)
+              if [[ "${#main_assets[@]}" -ne 1 ]]; then
+                printf 'Cannot pick the main archive on %s, pass asset_name. Candidates:\n' "${tag}" >&2
+                printf '  %s\n' "${archive_assets[@]}" >&2
+                exit 1
+              fi
+              asset_name="${main_assets[0]}"
+            else
+              printf 'No archive asset on %s.\n' "${tag}" >&2
               exit 1
             fi
-            asset_name="${archive_assets[0]}"
           fi
 
           display_name="${INPUT_DISPLAY_NAME:-PBZKeyForge ${version}}"
