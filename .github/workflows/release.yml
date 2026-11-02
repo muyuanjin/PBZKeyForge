@@ -1,0 +1,96 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*.*.*'
+      - '*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and package
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build with the in-box .NET Framework compiler
+        shell: pwsh
+        run: ./build/build.ps1
+
+      - name: Generate preset save files
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          ./dist/PBZKeyForge-cli.exe --gen-presets ./samples/vanilla-base.sav ./presets-out
+          Get-ChildItem ./presets-out | Select-Object Name, Length | Format-Table -AutoSize
+
+      - name: Verify round-trip on the shipped base file
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          ./dist/PBZKeyForge-cli.exe --selftest ./samples/vanilla-base.sav | Tee-Object -Variable out
+          if ($out -notmatch "roundtrip=IDENTICAL") { throw "GVAS round-trip is not byte-identical" }
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $tag = "${{ github.ref_name }}"
+
+          New-Item -ItemType Directory -Path pkg | Out-Null
+          Copy-Item dist\PBZKeyForge.exe     pkg
+          Copy-Item dist\PBZKeyForge-cli.exe pkg
+          Copy-Item README.md                pkg
+          Copy-Item LICENSE                  pkg
+          Copy-Item presets-out              pkg\presets -Recurse
+          Compress-Archive -Path pkg\* -DestinationPath "PBZKeyForge-$tag.zip"
+
+          # Save-file-only package for players who do not want to run an executable.
+          New-Item -ItemType Directory -Path pkg-sav | Out-Null
+          Copy-Item presets-out\*.sav pkg-sav
+          Copy-Item README.md pkg-sav
+          Compress-Archive -Path pkg-sav\* -DestinationPath "PBZKeyForge-$tag-presets-only.zip"
+
+          Get-ChildItem *.zip | Select-Object Name, Length | Format-Table -AutoSize
+
+      - name: Release notes
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $body = @"
+          Key binding editor for Phantom Blade Zero. One key can drive several actions; the in-game screen refuses that, this tool writes it.
+
+          ## Assets
+          - ``PBZKeyForge-$tag.zip`` - GUI, CLI and the preset save files.
+          - ``PBZKeyForge-$tag-presets-only.zip`` - only the ready-made ``.sav`` files, no executable.
+
+          ## Install
+          1. Close the game completely.
+          2. Back up ``ProjectPBZ\Saved\EnhancedInputUserSettings.sav``.
+          3. GUI: run ``PBZKeyForge.exe``, pick the save, choose a scheme, apply a preset, save.
+             Preset files: copy one ``.sav`` over your file, then select that scheme in game.
+          4. Do not open the in-game keybind screen and press apply/reset afterwards.
+
+          Verified against build CL-301524.
+          "@
+          $body = ($body -split "`r?`n" | ForEach-Object { $_ -replace "^\s{10}", "" }) -join "`n"
+          Set-Content -Path release-notes.md -Value $body -Encoding utf8
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            PBZKeyForge-${{ github.ref_name }}.zip
+            PBZKeyForge-${{ github.ref_name }}-presets-only.zip
+          body_path: release-notes.md
+          generate_release_notes: true

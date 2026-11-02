@@ -1,0 +1,10 @@
+bin/
+obj/
+dist/
+*.user
+*.suo
+.vs/
+*.zip
+!docs/*.zip
+presets/
+docs/*.tmp
