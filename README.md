@@ -8,6 +8,8 @@ A key binding editor for **Phantom Blade Zero** that writes the game's own input
 
 `PBZKeyForge.exe` · single file · no installer · no .NET runtime download · Windows 10/11
 
+![PBZKeyForge editor](assets/screenshot.png)
+
 ---
 
 ## Why this exists
@@ -24,8 +26,8 @@ The in-game screen validates on **save**, not at runtime, and it rejects any bin
 
 - **One key, several actions.** Guard on the attack key, dodge on the guard key, whatever you want.
 - **Scheme aware.** Pick which scheme you are editing — `Default`, `Custom 1`, `Custom 2` — and switch the game to it from the tool.
-- **7 presets**, from "one-key attack & guard" to a Souls-style gamepad layout and Space-to-sprint.
-- **5 languages** — English, 简体中文, 日本語, 한국어, Русский. Auto-detected from Windows, switchable in the toolbar.
+- **Quick setups** for one-key guard, a Souls-style gamepad layout, and Space-based movement; restore the selected scheme's defaults from the same list.
+- **15 languages** — English, 简体中文, 繁體中文, 日本語, 한국어, Français, Deutsch, Español (España / Latinoamérica), Português (Brasil / Portugal), Русский, Italiano, ไทย, Tiếng Việt. Auto-detected from Windows, switchable in the toolbar.
 - **No overrides lost.** Keys you leave empty keep the game default; everything you do not touch is written back byte-for-byte.
 - **Safe writes.** The game must be closed, a timestamped backup is written first, and the file is re-read and verified after saving.
 
@@ -41,7 +43,9 @@ The in-game screen validates on **save**, not at runtime, and it rejects any bin
 
 Two ways to use it:
 
-**A. The GUI** — run `PBZKeyForge.exe`, press *Auto-detect* (or browse to the `.sav`), choose a scheme, apply a preset or type keys, then *Save to file*.
+**A. The GUI** — run `PBZKeyForge.exe`; it finds and reads the save automatically. Choose a scheme, edit bindings or select a quick configuration, then press *Apply changes*. Switching schemes reads the latest disk data; *Refresh* also preserves unsaved drafts and asks you to resolve conflicting edits. Use *More* to choose another save.
+
+Keyboard and gamepad drafts both belong to the selected scheme. Applying saves that scheme's bindings; other schemes' drafts stay pending. The footer lists what will be applied. Check *Set game scheme to…* to activate it in the same operation, or leave it unchecked to edit an inactive scheme. Consecutive quick configuration selections replace the previous preview; manual edits keep the result as a custom draft. *Restore all defaults* lives in *More* and previews a reset of both devices in every scheme before applying.
 
 **B. A ready-made preset** — copy one file from `presets\` over `EnhancedInputUserSettings.sav`, then in game select the scheme named in the file name. These are plain settings files, no executable involved; pick this if you would rather not run a tool.
 
@@ -49,12 +53,11 @@ Two ways to use it:
 
 | Preset | What it does |
 | --- | --- |
-| `onekey` | Attack key also guards (left mouse / X). Nothing else changes. |
-| `onekey_dodge` | The above, plus the freed guard key becomes dodge + sprint. |
-| `souls` | Souls-style gamepad: light RB, heavy RT, guard LB, dodge/sprint B, interact/execute Y. |
+| `onekey` | Adds guard to left mouse / X while keeping right mouse / LB and other existing guard bindings. |
+| `onekey_dodge` | Moves guard to left mouse / X; right mouse / LB become dodge + sprint. Replaces the affected actions' bindings. |
+| `souls` | Souls-style gamepad: light RB, heavy RT, guard LB, dodge/sprint A, interact/execute Y. |
 | `space_sprint` | Adds Space as a second sprint key; Shift stays. |
 | `space_dodge` | Adds Space as a second dodge key; Shift stays. |
-| `undo_onekey` | Puts guard back on right mouse / LB. |
 | `vanilla` | Removes every override and returns to the shipped defaults. |
 
 ## Command line (build pipeline only)
@@ -65,19 +68,21 @@ Two ways to use it:
 PBZKeyForge-cli.exe --selftest <sav>
 PBZKeyForge-cli.exe --schemes <sav>
 PBZKeyForge-cli.exe --list <sav>
-PBZKeyForge-cli.exe --apply-preset <in.sav> <out.sav> <presetId> [--scheme <profileId>] [--activate]
-PBZKeyForge-cli.exe --activate <in.sav> <out.sav> <profileId>
+PBZKeyForge-cli.exe --apply-preset <in.sav> <out.sav> <presetId> [--scheme <profileId>]
+PBZKeyForge-cli.exe --activate <installed.sav> <profileId>
 PBZKeyForge-cli.exe --make-vanilla <in.sav> <out.sav>
 PBZKeyForge-cli.exe --gen-presets <in.sav> <outDir>
 ```
 
 `--selftest` re-encodes the file without changes and compares it byte-for-byte with the input; it is the acceptance test this project is built around.
 
+Activating a scheme edits only `KeyBindingScheme` in the adjacent `PBZSharedSetting.sav`. The game must be closed. The tool backs up that file outside the game folder, authenticates it, and verifies the replacement before writing. Reading this setting requires the installed Steam executable; unsupported builds are rejected. The profile identifier in `EnhancedInputUserSettings.sav` does not control the game's selected scheme.
+
 ## Important
 
 - **Do not open the in-game keybind screen and press apply or reset after using this tool.** The game validates on its own save and rewrites the whole file, discarding these bindings. If you do, just re-apply.
 - Only one mod that replaces `EnhancedInputUserSettings.sav` can be active at a time.
-- Editing a scheme that is not active is fine, but the bindings only apply once that scheme is the active one — the tool has an *Activate scheme* button for exactly that.
+- Editing an inactive scheme's keyboard and gamepad bindings is supported. Check *Set game scheme to…* and press *Apply changes* when you want the game to use it. Gamepad records are matched by `ProfileId`; another scheme's records are preserved even when their `Family` values are identical.
 - Tested against the Steam launch build (`CL-301524`). A game update may change the file layout; the tool refuses to write if it cannot parse the file.
 
 ## Build from source
@@ -117,7 +122,7 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 - **一个键多个动作**：防御并到攻击键、闪避并到防御键，随便配。
 - **认方案**：可选编辑 `默认 / 自定义方案 1 / 自定义方案 2`，并能在工具里直接把某个方案设为游戏当前生效方案。
 - **7 个预设**：一键攻防、一键攻防+防御键改闪避、魂系手柄布局、空格冲刺、空格闪避、撤销一键攻防、恢复默认。
-- **5 种语言**：中文、English、日本語、한국어、Русский，自动识别系统语言，也能在工具栏切换。
+- **15 种语言**：简中、繁中、英、日、韩、法、德、西班牙西语、拉美西语、巴西葡语、葡萄牙葡语、俄、意、泰、越，覆盖游戏的界面语言；自动识别系统语言，也能在工具栏切换。
 - **不丢键位**：留空的格子保持游戏默认；没碰到的内容按原字节写回。
 - **写入安全**：游戏必须退出、先打时间戳备份、写完回读校验。
 
@@ -129,14 +134,16 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 两种用法：
 
-- **图形界面**：运行 `PBZKeyForge.exe` → 自动查找（或手动选 `.sav`）→ 选方案 → 套预设或直接填键 → 保存到存档。
+- **图形界面**：运行 `PBZKeyForge.exe` 自动查找并读取存档 → 选方案 → 直接改键或选择快速配置 → 应用更改。“更多”中可以更换存档。
 - **现成预设文件**：把 `presets\` 里对应文件覆盖到 `EnhancedInputUserSettings.sav`，进游戏选文件名里的那个方案。纯配置、不含可执行文件，介意杀毒的同学用这个。
 
 ### 重要提醒
 
 - **不要**在用完之后进游戏打开键位界面点"应用"或"恢复默认"，游戏会整份重写、把这些键位冲掉；真冲掉了重新套一次即可。
 - 同类会替换 `EnhancedInputUserSettings.sav` 的 mod 只能同时装一个。
-- 编辑非当前方案也可以，但要生效必须把该方案设为当前方案——工具里有"启用该方案"按钮。
+- 切换方案会重新读取磁盘最新数据；“刷新”保留未应用草稿，同一绑定被双方修改时需选择保留哪一项。键鼠和手柄草稿均按方案保存，只应用当前编辑方案，底栏显示此次范围。
+- 编辑非当前方案后，勾选“设为游戏当前方案”再“应用更改”即可启用；不勾选可只保存键位。连续选择快速配置会替换上一次预览，手动编辑后保留为自定义；“更多 → 全部恢复默认”先预览全部方案的键鼠和手柄重置，再统一应用。游戏运行时会单独提示并禁用应用，仍可编辑草稿。手柄记录按 `ProfileId` 匹配，`Family` 相同也不会顺带改动其他方案。
+- 方案启用只修改同目录 `PBZSharedSetting.sav` 的 `KeyBindingScheme` 字段，先在游戏目录外备份，再认证回读校验。需完全退出游戏，并能找到支持版本的 Steam 游戏程序。`EnhancedInputUserSettings.sav` 内的方案标识不决定游戏选择哪个方案。
 - 针对 Steam 首发版本（`CL-301524`）验证；游戏大更新后文件结构可能变化，工具解析不了时会拒绝写入。
 
 ### 从源码构建

@@ -6,24 +6,24 @@ So the attack button can guard while it attacks, the freed guard button can beco
 [line]
 [color=#e8b96a][b]PRESETS[/b][/color]
 [list]
-[*][b]onekey[/b] - guard on the attack button; nothing else moves.
+[*][b]onekey[/b] - adds guard to left mouse / X, keeping right mouse / LB and existing guard keys.
 [*][b]onekey_dodge[/b] - guard on attack, and the freed guard button becomes dodge.
-[*][b]souls[/b] - gamepad: light RB, heavy RT, guard LB, dodge and sprint B.
+[*][b]souls[/b] - gamepad: light RB, heavy RT, guard LB, dodge and sprint A.
 [*][b]space_sprint[/b] / [b]space_dodge[/b] - adds Space as a second sprint or dodge key; Shift stays.
-[*][b]undo_onekey[/b] / [b]vanilla[/b] - puts guard back, or clears every override.
+[*][b]vanilla[/b] - clears every override and restores shipped defaults.
 [/list]
 [color=#e8b96a][b]WHAT YOU GET[/b][/color]
 [list]
 [*][b]PBZKeyForge.exe[/b] - pick your save, choose a scheme (Default, Custom 1, Custom 2), set keys, save.
 [*]Seven ready-made [b].sav[/b] files in the [b]presets[/b] folder.
 [/list]
-20 actions, three key slots each, keyboard and mouse or gamepad. English, Simplified Chinese, Japanese, Korean and Russian: it follows your Windows language and the toolbar switches it.
+20 actions, three key slots each, keyboard and mouse or gamepad. All 15 game interface languages are available, including both Chinese scripts and regional Spanish and Portuguese variants. It follows your Windows language and the toolbar switches it.
 [color=#e8b96a][b]INSTALL[/b][/color]
 [list=1]
 [*]Close the game.
 [*]Back up [b]ProjectPBZ/Saved/EnhancedInputUserSettings.sav[/b].
-[*]Run [b]PBZKeyForge.exe[/b], press Auto-detect, choose a scheme, apply a preset or set the keys, then Save to file.
-[*]Start the game and make sure that scheme is the active one.
+[*]Run [b]PBZKeyForge.exe[/b]; it finds the save automatically. Choose a scheme, edit bindings or select a quick configuration, then press Apply changes.
+[*]Check Set game scheme to… before applying to activate it. Switching schemes automatically reads the latest settings; Refresh preserves unsaved drafts.
 [/list]
 No executable needed? Copy any file from [b]presets[/b] over your save and pick that scheme in game.
 [color=#cc4125][b]ONE THING TO KNOW[/b][/color]
@@ -37,5 +37,5 @@ Code, issues and the build live at [url=https://github.com/muyuanjin/PBZKeyForge
 [*]Windows 10/11 - no runtime install, no UE4SS, no pak files, no DLL.
 [/list]
 [color=#e8b96a][b]UNINSTALL[/b][/color]
-Restore your backup, or load the Vanilla preset and save.
+Restore your backup, or choose More → Restore all defaults and apply the previewed reset.
 [i]Not affiliated with S-Game.[/i]

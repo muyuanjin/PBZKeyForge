@@ -16,6 +16,8 @@ namespace PBZKeyForge
     {
         public string Id;
         public bool Vanilla;
+        public bool CurrentProfileVanilla;
+        public bool AdditiveGuard;
         public List<KeyBinding> Keyboard = new List<KeyBinding>();
         public List<KeyBinding> Gamepad = new List<KeyBinding>();
         public string Name { get { return I18n.Str("preset." + Id + ".name"); } }
@@ -32,18 +34,19 @@ namespace PBZKeyForge
         public static List<Preset> All()
         {
             var list = new List<Preset>();
+            list.Add(new Preset { Id = "vanilla_current", CurrentProfileVanilla = true });
 
             // 一键攻防
-            var p1 = new Preset { Id = "onekey" };
-            for (int i = 0; i < 3; i++) p1.Keyboard.Add(new KeyBinding("IA_Guard", i, "LeftMouseButton"));
-            p1.Gamepad.Add(new KeyBinding("IA_Guard", 0, "Gamepad_FaceButton_Left"));
-            p1.Gamepad.Add(new KeyBinding("IA_Guard", 1, "Gamepad_FaceButton_Left"));
+            var p1 = new Preset { Id = "onekey", AdditiveGuard = true };
             list.Add(p1);
 
             // 一键攻防 + 防御键改闪避/冲刺
             var p2 = new Preset { Id = "onekey_dodge" };
-            foreach (var b in p1.Keyboard) p2.Keyboard.Add(b);
-            foreach (var b in p1.Gamepad) p2.Gamepad.Add(b);
+            // This preset deliberately moves guard away from the old defense key.
+            // It is separate from the additive attack/guard preset above.
+            for (int i = 0; i < 3; i++) p2.Keyboard.Add(new KeyBinding("IA_Guard", i, "LeftMouseButton"));
+            p2.Gamepad.Add(new KeyBinding("IA_Guard", 0, "Gamepad_FaceButton_Left"));
+            p2.Gamepad.Add(new KeyBinding("IA_Guard", 1, "Gamepad_FaceButton_Left"));
             p2.Keyboard.Add(new KeyBinding("IA_Dodge", 0, "LeftShift"));
             p2.Keyboard.Add(new KeyBinding("IA_Dodge", 1, "LeftShift"));
             p2.Keyboard.Add(new KeyBinding("IA_Dodge", 2, "RightMouseButton"));
@@ -81,13 +84,6 @@ namespace PBZKeyForge
             p5.Keyboard.Add(new KeyBinding("IA_Dodge", 2, "SpaceBar"));
             list.Add(p5);
 
-            // 撤销一键攻防
-            var p6 = new Preset { Id = "undo_onekey" };
-            for (int i = 0; i < 3; i++) p6.Keyboard.Add(new KeyBinding("IA_Guard", i, "RightMouseButton"));
-            p6.Gamepad.Add(new KeyBinding("IA_Guard", 0, "Gamepad_LeftShoulder"));
-            p6.Gamepad.Add(new KeyBinding("IA_Guard", 1, "Gamepad_LeftShoulder"));
-            list.Add(p6);
-
             // 全部恢复默认
             list.Add(new Preset { Id = "vanilla", Vanilla = true });
             return list;
@@ -98,18 +94,35 @@ namespace PBZKeyForge
             return All().FirstOrDefault(p => string.Equals(p.Id, id, StringComparison.OrdinalIgnoreCase));
         }
 
-        /// <summary>Apply a preset to one keyboard record and every gamepad profile.</summary>
+        /// <summary>Apply to one profile's keyboard and controller records; only vanilla resets all profiles.</summary>
         public static void Apply(SaveFile sav, Preset preset, BlobRecord record)
         {
+            // ProfileId owns the relationship. Family (for example Xbox) can recur
+            // independently in Default, Custom1 and Custom2, and is not shared scope.
+            List<Node> gamepadKeys = sav.GamepadKeysFor(record.ProfileId);
+            if (preset.AdditiveGuard)
+            {
+                ApplyAdditiveGuard(gamepadKeys, record);
+                return;
+            }
             if (preset.Vanilla)
             {
                 foreach (var r in sav.Records) r.Entries = new List<BlobEntry>();
                 sav.ResetGamepadToDefaults();
                 return;
             }
+            if (preset.CurrentProfileVanilla)
+            {
+                record.Entries = new List<BlobEntry>();
+                foreach (var keys in gamepadKeys)
+                    foreach (var item in keys.Items)
+                    {
+                        string defaultKey = SaveFile.Field(item, "DefaultKey");
+                        if (defaultKey != null) SaveFile.SetField(item, "Key", defaultKey);
+                    }
+                return;
+            }
 
-            var touchedKb = new HashSet<string>(preset.Keyboard.Select(b => b.Action));
-            var keep = record.Entries.Where(e => !touchedKb.Contains(e.Name)).ToList();
             foreach (var group in preset.Keyboard.GroupBy(b => b.Action))
             {
                 var slots = group.ToDictionary(b => b.Slot, b => b.Key);
@@ -117,33 +130,28 @@ namespace PBZKeyForge
                 for (int i = 0; i < 3; i++)
                 {
                     string key = slots.ContainsKey(i) ? slots[i] : primary;
-                    keep.Add(new BlobEntry
-                    {
-                        Name = group.Key,
-                        Key = key,
-                        X = "None",
-                        Y = "None",
-                        Slot = (byte)KeyboardSlots[i]
-                    });
+                    var entries = record.Entries.Where(entry => entry.Name == group.Key && entry.Slot == KeyboardSlots[i]).ToArray();
+                    if (entries.Length == 0)
+                        record.Entries.Add(new BlobEntry { Name = group.Key, Key = key, X = "None", Y = "None", Slot = (byte)KeyboardSlots[i] });
+                    else foreach (BlobEntry entry in entries) entry.Key = key;
                 }
             }
-            record.Entries = keep;
 
-            foreach (var keys in sav.GamepadKeys)
+            foreach (var keys in gamepadKeys)
             {
                 foreach (var group in preset.Gamepad.GroupBy(b => b.Action))
                 {
                     var want = group.ToDictionary(b => b.Slot, b => b.Key);
                     string primary = want.ContainsKey(0) ? want[0] : want.Values.First();
 
-                    // Every slot the action already owns is rewritten, so a remap really
-                    // moves the action instead of leaving the old buttons alive.
+                    // Replacement presets move every supported slot. Unknown slots and
+                    // the existing records' opaque metadata belong to the save file.
                     foreach (var el in keys.Items)
                     {
                         if (SaveFile.Field(el, "MappingName") != group.Key) continue;
                         string slot = SaveFile.Field(el, "Slot") ?? "";
                         int idx = Array.IndexOf(GamepadSlots, slot.Replace("EPlayerMappableKeySlot::", ""));
-                        SaveFile.SetField(el, "Key", idx >= 0 && want.ContainsKey(idx) ? want[idx] : primary);
+                        if (idx >= 0) SaveFile.SetField(el, "Key", want.ContainsKey(idx) ? want[idx] : primary);
                     }
 
                     // Slots the preset names but the action does not own yet are created,
@@ -163,6 +171,100 @@ namespace PBZKeyForge
                     }
                 }
             }
+        }
+
+        /// <summary>Plan every device before changing anything, including other controller families.</summary>
+        static void ApplyAdditiveGuard(List<Node> gamepadKeys, BlobRecord record)
+        {
+            var commits = new List<System.Action>();
+            var keyboard = new List<BlobEntry>[3];
+            var values = new List<string>[3];
+            for (int slot = 0; slot < 3; slot++)
+            {
+                keyboard[slot] = record.Entries.Where(e => e.Name == "IA_Guard" && e.Slot == KeyboardSlots[slot]).ToList();
+                values[slot] = keyboard[slot].Select(e => e.Key).ToList();
+            }
+            foreach (var change in PlanGuardSlots(values, new[] { "RightMouseButton", "LeftMouseButton" }, I18n.Str("tab.kb")))
+            {
+                int slot = change.Key; string key = change.Value;
+                commits.Add(delegate
+                {
+                    if (keyboard[slot].Count == 0)
+                        record.Entries.Add(new BlobEntry { Name = "IA_Guard", Slot = (byte)KeyboardSlots[slot], Key = key, X = "None", Y = "None" });
+                    else foreach (BlobEntry entry in keyboard[slot]) entry.Key = key;
+                });
+            }
+            int familyIndex = 0;
+            foreach (Node keys in gamepadKeys)
+            {
+                Node familyKeys = keys;
+                var items = new List<List<Node>>[3];
+                values = new List<string>[3];
+                for (int slot = 0; slot < 3; slot++)
+                {
+                    string name = "EPlayerMappableKeySlot::" + GamepadSlots[slot];
+                    items[slot] = keys.Items.Where(item => SaveFile.Field(item, "MappingName") == "IA_Guard" && SaveFile.Field(item, "Slot") == name).ToList();
+                    values[slot] = items[slot].Select(item => SaveFile.Field(item, "Key")).ToList();
+                }
+                List<Node> template = keys.Items.FirstOrDefault(item => SaveFile.Field(item, "MappingName") == "IA_Guard");
+                var changes = PlanGuardSlots(values, new[] { "Gamepad_LeftShoulder", "Gamepad_FaceButton_Left" }, I18n.Str("tab.pad") + " #" + (++familyIndex));
+                if (changes.Count > 0 && template == null)
+                    throw new InvalidOperationException(I18n.Str("preset.capacity", I18n.Str("tab.pad") + " #" + familyIndex));
+                foreach (var change in changes)
+                {
+                    int slot = change.Key; string key = change.Value;
+                    // Capture this family's item lists, not the next loop iteration's lists.
+                    List<List<Node>> ownedItems = items[slot];
+                    List<Node> ownedTemplate = template;
+                    commits.Add(delegate
+                    {
+                        if (ownedItems.Count == 0)
+                        {
+                            var item = ownedTemplate.Select(SaveFile.CloneNode).ToList();
+                            SaveFile.SetField(item, "Slot", "EPlayerMappableKeySlot::" + GamepadSlots[slot]);
+                            SaveFile.SetField(item, "Key", key);
+                            familyKeys.Items.Add(item);
+                        }
+                        else foreach (var item in ownedItems) SaveFile.SetField(item, "Key", key);
+                    });
+                }
+            }
+            foreach (var commit in commits) commit();
+        }
+
+        static bool IsEmptyKey(string key)
+        { return string.IsNullOrEmpty(key) || string.Equals(key, "None", StringComparison.OrdinalIgnoreCase); }
+
+        static Dictionary<int, string> PlanGuardSlots(List<string>[] source, string[] required, string scope)
+        {
+            var slots = source.Select(values => values.Where(key => !IsEmptyKey(key)).Distinct().ToList()).ToArray();
+            string[] original = slots.SelectMany(values => values).Distinct().ToArray();
+            Dictionary<int, string> best = null;
+            int bestCost = int.MaxValue;
+            // Slots can legally contain several serialized entries. A greedy reuse
+            // can discard the only slot that preserves two distinct custom keys.
+            // Enumerate the 3^3 keep/right/left assignments before choosing a plan.
+            for (int assignment = 0; assignment < 27; assignment++)
+            {
+                int encoded = assignment, cost = 0;
+                var result = slots.Select(values => values.ToList()).ToArray();
+                var plan = new Dictionary<int, string>();
+                for (int slot = 0; slot < 3; slot++)
+                {
+                    int choice = encoded % 3; encoded /= 3;
+                    if (choice == 0) continue;
+                    string key = required[choice - 1];
+                    if (slots[slot].Count == 1 && slots[slot][0] == key) continue;
+                    result[slot] = new List<string> { key };
+                    plan[slot] = key;
+                    cost += 1000 + (slots[slot].Count == 0 ? slot : 100 + 2 - slot);
+                }
+                string[] retained = result.SelectMany(values => values).Distinct().ToArray();
+                if (cost < bestCost && original.All(retained.Contains) && required.All(retained.Contains))
+                { best = plan; bestCost = cost; }
+            }
+            if (best == null) throw new InvalidOperationException(I18n.Str("preset.capacity", scope));
+            return best;
         }
     }
 }

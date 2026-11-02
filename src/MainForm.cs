@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -19,13 +20,11 @@ namespace PBZKeyForge
             "Up","Down","Left","Right","Home","End","PageUp","PageDown","Insert","Delete",
             "NumPadZero","NumPadOne","NumPadTwo","NumPadThree","NumPadFour","NumPadFive","NumPadSix","NumPadSeven","NumPadEight","NumPadNine"
         };
-
         public static readonly string[] Gamepad = new[] {
             "", "Gamepad_FaceButton_Bottom","Gamepad_FaceButton_Right","Gamepad_FaceButton_Left","Gamepad_FaceButton_Top",
             "Gamepad_LeftShoulder","Gamepad_RightShoulder","Gamepad_LeftTrigger","Gamepad_RightTrigger",
             "Gamepad_LeftTriggerAxis","Gamepad_RightTriggerAxis","Gamepad_LeftThumbstick","Gamepad_RightThumbstick",
-            "Gamepad_DPad_Up","Gamepad_DPad_Down","Gamepad_DPad_Left","Gamepad_DPad_Right",
-            "Gamepad_Special_Left","Gamepad_Special_Right"
+            "Gamepad_DPad_Up","Gamepad_DPad_Down","Gamepad_DPad_Left","Gamepad_DPad_Right","Gamepad_Special_Left","Gamepad_Special_Right"
         };
     }
 
@@ -33,578 +32,565 @@ namespace PBZKeyForge
     {
         public string Id;
         public ActionInfo(string id) { Id = id; }
-        public string Label { get { return I18n.Str("act." + Id) + "   " + Id; } }
+        public string Label { get { return I18n.Str("act." + Id); } }
         public override string ToString() { return Label; }
     }
 
-    public class MainForm : Form
+    public class MainForm : EditorWindow
     {
-        public static readonly List<ActionInfo> Actions = new[]
-        {
+        public static readonly List<ActionInfo> Actions = new[] {
             "IA_LightAttack","IA_HeavyAttack","IA_Guard","IA_Dodge","IA_Jump","IA_Crouch","IA_MoveFast",
             "IA_LockTarget","IA_Interact","IA_Execute","IA_ShadowArm","IA_ShadowArm_LongPress",
             "IA_SwitchWeapon","IA_SwitchShadowArm","IA_UltimateSkill","IA_Sense_Default",
             "IA_OpenCharacterMenu","IA_OpenMapMenu","IA_UseTopItem","IA_UseBottomItem"
         }.Select(s => new ActionInfo(s)).ToList();
 
-        TextBox txtPath = new TextBox();
-        ComboBox cbLang = new ComboBox();
-        ComboBox cbScheme = new ComboBox();
-        Button btnActivate = new Button();
-        Label lblStatus = new Label();
-        Label lblWarn = new Label();
-        Label lblFile = new Label();
-        Label lblScheme = new Label();
-        Label lblPreset = new Label();
-        TabControl tabs = new TabControl();
-        TabPage tabKb = new TabPage(), tabPad = new TabPage();
-        Dictionary<string, ComboBox[]> kbBoxes = new Dictionary<string, ComboBox[]>();
-        Dictionary<string, ComboBox[]> padBoxes = new Dictionary<string, ComboBox[]>();
-        ComboBox cbPreset = new ComboBox();
-        Button btnBrowse = new Button(), btnAuto = new Button(), btnLoad = new Button();
-        Button btnApply = new Button(), btnSave = new Button(), btnAbout = new Button();
-
-        const string NoKey = "—";
-        Label[] stepLabels;
-        Button btnQuick = new Button();
-        int step = 0;
-        SaveFile sav;
-        string selectedProfile;
-        bool loading;
+        public EditorSession Session { get; private set; }
+        readonly ComboBox cbLang = new EditorComboBox(), cbPreset = new EditorComboBox();
+        readonly Button btnRefresh = new EditorButton(), btnMore = new EditorButton(), btnApply = new PrimaryActionButton();
+        readonly EditorTab[] schemeTabs = { new EditorTab(), new EditorTab(), new EditorTab() };
+        readonly EditorTab tabKb = new EditorTab(), tabPad = new EditorTab();
+        readonly Label lblTitle = new Label(), lblPath = new Label(), lblGame = new Label();
+        readonly Label lblPreset = new Label(), lblPreview = new Label(), lblHint = new Label();
+        readonly Label lblStatus = new Label(), lblScope = new Label(), lblBackup = new Label(), lblEmpty = new Label();
+        readonly Button btnUndo = new EditorButton();
+        readonly LinkLabel btnConflicts = new LinkLabel(), btnChoose = new LinkLabel();
+        readonly CheckBox chkActivate = new EditorCheckBox();
+        readonly ToolTip tip = new ToolTip();
+        readonly Panel preview = new EditorPanel(), body = new EditorPanel(), empty = new EditorPanel(), footer = new EditorPanel();
+        readonly Panel kbHost = new EditorPanel(), padHost = new EditorPanel();
+        readonly Dictionary<string, BindingButton[]> kbButtons = new Dictionary<string, BindingButton[]>();
+        readonly Dictionary<string, BindingButton[]> padButtons = new Dictionary<string, BindingButton[]>();
+        readonly List<Label> actionLabels = new List<Label>(), headings = new List<Label>();
+        readonly Timer gameTimer = new Timer();
+        bool loading, gamepad, modalActive, lastRunning;
+        ContextMenuStrip moreMenu;
+        string messageKey;
+        object[] messageArgs;
+        bool messageError;
+        Bitmap backgroundCache;
 
         public MainForm()
         {
             I18n.Current = I18n.Detect();
             Build();
             ApplyLanguage();
-            FormClosing += delegate { };
+            HandleCreated += delegate { EditorArtwork.DarkCaption(this); };
+            Shown += delegate { if (Session == null) AutoFind(false); };
+            Activated += delegate { if (Session != null && !loading && !modalActive) RefreshFromDisk(); };
+            FormClosing += delegate(object sender, FormClosingEventArgs e) { if (!ConfirmDiscard()) e.Cancel = true; };
+            gameTimer.Interval = 1500;
+            gameTimer.Tick += delegate { if (EditorSession.IsGameRunning != lastRunning) RenderSession(); };
+            gameTimer.Start();
         }
 
         void Build()
         {
-            Width = 1040; Height = 780;
-            MinimumSize = new Size(700, 480);
+            Font = new Font("Microsoft YaHei UI", 10f);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            DoubleBuffered = true;
+            ClientSize = new Size(1240, 840);
+            MinimumSize = new Size(980, 710);
             StartPosition = FormStartPosition.CenterScreen;
-            MaximizeBox = true;
+            BackColor = EditorTheme.Background;
+            ForeColor = EditorTheme.Ink;
+            try { Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath); } catch { }
+            var root = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 8, Padding = new Padding(24, 8, 24, 8), Margin = Padding.Empty, BackColor = Color.Transparent };
+            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            int[] heights = { 96, 34, 48, 54, 48, 0, 26, 112 };
+            foreach (int h in heights) root.RowStyles.Add(h == 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, h));
+            Controls.Add(root);
 
-            var top = new Panel { Dock = DockStyle.Top, Height = 176 };
-
-            lblFile.Left = 12; lblFile.Top = 14; lblFile.Width = 96;
-            txtPath.Left = 112; txtPath.Top = 11; txtPath.Width = 600;
-            btnBrowse.Left = 720; btnBrowse.Top = 9; btnBrowse.Width = 80;
-            btnBrowse.Click += delegate { Browse(); };
-            btnAuto.Left = 806; btnAuto.Top = 9; btnAuto.Width = 96;
-            btnAuto.Click += delegate { AutoFind(); };
-            btnLoad.Left = 908; btnLoad.Top = 9; btnLoad.Width = 96;
-            btnLoad.Click += delegate { LoadFile(); };
-            cbLang.Left = 908; cbLang.Top = 44; cbLang.Width = 96;
-            cbLang.DropDownStyle = ComboBoxStyle.DropDownList;
-            foreach (var l in I18n.Languages) cbLang.Items.Add(I18n.DisplayName(l));
-            cbLang.SelectedIndexChanged += delegate
+            var header = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 1, Margin = Padding.Empty, BackColor = Color.Transparent };
+            header.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            header.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            header.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 176));
+            header.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 112));
+            header.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 48));
+            var brand = new EditorPanel { Dock = DockStyle.Fill, BackColor = Color.Transparent, Margin = Padding.Empty };
+            // Alpha bounds: app mark y=22..486/512; wordmark y=12..366/378.
+            // Their visible centers align within 0.3 logical pixels, including image padding.
+            var appMark = new PictureBox { Left = 0, Top = 11, Width = 72, Height = 72, Image = EditorArtwork.AppMark, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent };
+            var wordmark = new PictureBox { Left = 84, Top = 7, Width = 170, Height = 79, Image = EditorArtwork.Wordmark, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent };
+            lblTitle.SetBounds(274, 32, 420, 32); lblTitle.TextAlign = ContentAlignment.MiddleLeft; lblTitle.AutoEllipsis = true;
+            lblTitle.Font = new Font(Font.FontFamily, 10.5f); lblTitle.ForeColor = EditorTheme.Ink; lblTitle.BackColor = Color.Transparent;
+            brand.Controls.AddRange(new Control[] { appMark, wordmark, lblTitle });
+            brand.Resize += delegate { lblTitle.Width = Math.Max(40, brand.ClientSize.Width - lblTitle.Left - 12); };
+            cbLang.Dock = DockStyle.Fill; cbLang.Margin = new Padding(4, 30, 8, 26); cbLang.DropDownStyle = ComboBoxStyle.DropDownList;
+            foreach (string language in I18n.Languages) cbLang.Items.Add(I18n.DisplayName(language));
+            cbLang.SelectedIndexChanged += delegate { if (loading || cbLang.SelectedIndex < 0) return; I18n.Current = I18n.Languages[cbLang.SelectedIndex]; ApplyLanguage(); };
+            StyleButton(btnRefresh, false); btnRefresh.Margin = new Padding(4, 28, 4, 28); btnRefresh.Click += delegate { RefreshFromDisk(); };
+            StyleButton(btnMore, false); btnMore.Margin = new Padding(4, 28, 0, 28); btnMore.Text = "•••"; btnMore.Click += delegate { ShowMore(); };
+            header.Controls.Add(brand, 0, 0);
+            cbLang.Dock = btnRefresh.Dock = btnMore.Dock = DockStyle.None;
+            Control[] headerControls = { cbLang, btnRefresh, btnMore };
+            var headerCells = new Panel[3];
+            for (int i = 0; i < headerCells.Length; i++)
             {
-                if (cbLang.SelectedIndex < 0) return;
-                I18n.Current = I18n.Languages[cbLang.SelectedIndex];
-                ApplyLanguage();
+                headerCells[i] = new EditorPanel { Dock = DockStyle.Fill, BackColor = Color.Transparent, Margin = Padding.Empty };
+                headerCells[i].Controls.Add(headerControls[i]);
+                header.Controls.Add(headerCells[i], i + 1, 0);
+            }
+            bool arrangingHeader = false;
+            Action alignHeaderControls = delegate
+            {
+                if (arrangingHeader) return;
+                arrangingHeader = true;
+                try
+                {
+                    float scale = CurrentAutoScaleDimensions.Width / 96f;
+                    int gap = (int)(8 * scale), height = cbLang.Height;
+                    for (int i = 0; i < headerControls.Length; i++)
+                        headerControls[i].SetBounds(gap / 2, Math.Max(0, (headerCells[i].ClientSize.Height - height) / 2),
+                            Math.Max(20, headerCells[i].ClientSize.Width - gap), height);
+                }
+                finally { arrangingHeader = false; }
             };
+            foreach (var cell in headerCells) cell.Resize += delegate { alignHeaderControls(); };
+            cbLang.SizeChanged += delegate { alignHeaderControls(); };
+            root.Controls.Add(header, 0, 0);
 
-            lblScheme.Left = 12; lblScheme.Top = 48; lblScheme.Width = 96;
-            cbScheme.Left = 112; cbScheme.Top = 45; cbScheme.Width = 380;
-            cbScheme.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbScheme.SelectedIndexChanged += delegate { OnSchemeChanged(); };
-            btnActivate.Left = 500; btnActivate.Top = 43; btnActivate.Width = 150;
-            btnActivate.Click += delegate { ActivateScheme(); };
-            btnAbout.Left = 660; btnAbout.Top = 43; btnAbout.Width = 100;
-            btnAbout.Click += delegate { MessageBox.Show(I18n.Str("about.text"), I18n.Str("about.title")); };
+            var pathBar = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, Margin = Padding.Empty, BackColor = Color.Transparent };
+            pathBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); pathBar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
+            lblPath.Dock = DockStyle.Fill; lblPath.TextAlign = ContentAlignment.MiddleLeft; lblPath.AutoEllipsis = true; lblPath.ForeColor = EditorTheme.Muted; lblPath.BackColor = Color.Transparent;
+            lblGame.Dock = DockStyle.Fill; lblGame.TextAlign = ContentAlignment.MiddleRight; lblGame.AutoEllipsis = true; lblGame.BackColor = Color.Transparent;
+            pathBar.Controls.Add(lblPath, 0, 0); pathBar.Controls.Add(lblGame, 1, 0);
+            pathBar.Paint += delegate(object s, PaintEventArgs e) { using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawLine(pen, 0, pathBar.Height - 1, pathBar.Width, pathBar.Height - 1); };
+            root.Controls.Add(pathBar, 0, 1);
 
-            lblWarn.Left = 112; lblWarn.Top = 78; lblWarn.Width = 900; lblWarn.Height = 44;
-            lblWarn.ForeColor = Color.Firebrick;
+            var schemeBar = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 3, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
+            for (int i = 0; i < 3; i++)
+            {
+                schemeBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333f));
+                var button = schemeTabs[i]; button.Dock = DockStyle.Fill; button.Margin = Padding.Empty;
+                button.Font = new Font(Font.FontFamily, 12f);
+                button.Click += delegate { if (button.Tag != null) SelectProfile((string)button.Tag); };
+                schemeBar.Controls.Add(button, i, 0);
+            }
+            root.Controls.Add(schemeBar, 0, 2);
 
-            // Numbered step strip: 1 find the save, 2 pick a preset, 3 apply, 4 save.
-            stepLabels = new Label[4];
+            var toolbar = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
+            toolbar.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45)); toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 55));
+            var devices = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
+            devices.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            devices.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50)); devices.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            tabKb.Dock = DockStyle.Fill; tabKb.Margin = Padding.Empty; tabKb.Click += delegate { ShowGamepad(false); };
+            tabPad.Dock = DockStyle.Fill; tabPad.Margin = Padding.Empty; tabPad.Click += delegate { ShowGamepad(true); };
+            devices.Controls.Add(tabKb, 0, 0); devices.Controls.Add(tabPad, 1, 0); toolbar.Controls.Add(devices, 0, 0);
+            var presets = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
+            presets.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            presets.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 132)); presets.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            lblPreset.Dock = DockStyle.Fill; lblPreset.TextAlign = ContentAlignment.MiddleRight; lblPreset.Margin = new Padding(0, 0, 12, 0);
+            cbPreset.Dock = DockStyle.Fill; cbPreset.Margin = new Padding(0, 10, 12, 8); cbPreset.DropDownStyle = ComboBoxStyle.DropDownList; cbPreset.DropDownWidth = 570;
+            cbPreset.SelectedIndexChanged += delegate
+            {
+                if (loading || Session == null) return;
+                TryAction(delegate { var preset = cbPreset.SelectedItem as Preset; Session.SelectPreset(preset == null ? null : preset.Id); });
+            };
+            presets.Controls.Add(lblPreset, 0, 0); presets.Controls.Add(cbPreset, 1, 0); toolbar.Controls.Add(presets, 1, 0); root.Controls.Add(toolbar, 0, 3);
+
+            preview.Dock = DockStyle.Fill; preview.Margin = new Padding(0, 0, 0, 8); preview.Padding = new Padding(12, 4, 10, 4);
+            lblPreview.Dock = DockStyle.Fill; lblPreview.TextAlign = ContentAlignment.MiddleLeft; lblPreview.AutoEllipsis = true;
+            btnConflicts.Dock = DockStyle.Right; btnConflicts.Width = 176; btnConflicts.TextAlign = ContentAlignment.MiddleRight; StyleLink(btnConflicts);
+            btnConflicts.Click += delegate { ResolveConflicts(); };
+            preview.Controls.Add(lblPreview); preview.Controls.Add(btnConflicts); root.Controls.Add(preview, 0, 4);
+
+            body.Dock = DockStyle.Fill; body.Margin = Padding.Empty;
+            BuildBindingTable(kbHost, kbButtons, false); BuildBindingTable(padHost, padButtons, true);
+            kbHost.Dock = DockStyle.Fill; padHost.Dock = DockStyle.Fill; body.Controls.Add(kbHost); body.Controls.Add(padHost);
+            empty.Dock = DockStyle.Fill; empty.BackColor = EditorTheme.Background;
+            lblEmpty.TextAlign = ContentAlignment.MiddleCenter; lblEmpty.Dock = DockStyle.Fill; lblEmpty.ForeColor = EditorTheme.Muted;
+            btnChoose.Dock = DockStyle.Bottom; btnChoose.Height = 70; btnChoose.TextAlign = ContentAlignment.TopCenter; StyleLink(btnChoose); btnChoose.Click += delegate { Browse(); };
+            empty.Controls.Add(lblEmpty); empty.Controls.Add(btnChoose); body.Controls.Add(empty); root.Controls.Add(body, 0, 5);
+            lblHint.Dock = DockStyle.Fill; lblHint.TextAlign = ContentAlignment.MiddleLeft; lblHint.ForeColor = EditorTheme.Muted; lblHint.Font = new Font(Font.FontFamily, 9f); lblHint.AutoEllipsis = true; lblHint.BackColor = Color.Transparent;
+            root.Controls.Add(lblHint, 0, 6);
+
+            footer.Dock = DockStyle.Fill; footer.Margin = Padding.Empty; footer.BackColor = EditorTheme.Surface;
+            footer.Paint += delegate(object s, PaintEventArgs e) { using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawLine(pen, 0, 0, footer.Width, 0); };
+            chkActivate.SetBounds(8, 12, 700, 30); chkActivate.AutoEllipsis = true;
+            chkActivate.CheckedChanged += delegate { if (!loading && Session != null) TryAction(delegate { Session.SetActivation(chkActivate.Checked); }); };
+            lblScope.SetBounds(8, 46, 700, 24); lblScope.AutoEllipsis = true; lblScope.Font = new Font(Font.FontFamily, 9f);
+            lblStatus.SetBounds(8, 72, 900, 23); lblStatus.AutoEllipsis = true; lblStatus.Font = new Font(Font.FontFamily, 9f);
+            StyleButton(btnUndo, false); btnUndo.Dock = DockStyle.None;
+            btnUndo.Click += delegate { TryAction(delegate { Session.Undo(); }); };
+            StyleButton(btnApply, true); btnApply.Dock = DockStyle.None; btnApply.SetBounds(890, 15, 196, 46); btnApply.Font = new Font(Font.FontFamily, 12f, FontStyle.Bold); btnApply.Click += delegate { ApplyChanges(); };
+            lblBackup.SetBounds(890, 64, 196, 23); lblBackup.TextAlign = ContentAlignment.MiddleCenter; lblBackup.ForeColor = EditorTheme.Muted; lblBackup.Font = new Font(Font.FontFamily, 8.5f);
+            footer.Controls.AddRange(new Control[] { chkActivate, lblScope, lblStatus, btnUndo, btnApply, lblBackup });
+            footer.Resize += delegate { LayoutFooter(); };
+            root.Controls.Add(footer, 0, 7);
+            AutoScaleDimensions = new SizeF(96f, 96f);
+            PerformAutoScale();
+            alignHeaderControls();
+            LayoutFooter();
+        }
+
+        void LayoutFooter()
+        {
+            float scale = CurrentAutoScaleDimensions.Width / 96f;
+            int actionWidth = (int)(184 * scale), actionHeight = (int)(44 * scale), gap = (int)(12 * scale);
+            btnApply.SetBounds(footer.ClientSize.Width - actionWidth - gap, (int)(14 * scale), actionWidth, actionHeight);
+            btnUndo.SetBounds(btnApply.Left - gap - actionWidth, btnApply.Top, actionWidth, actionHeight);
+            int left = gap, scopeWidth = Math.Max(100, btnUndo.Left - gap * 2);
+            chkActivate.SetBounds(left, (int)(12 * scale), scopeWidth, (int)(28 * scale));
+            lblScope.SetBounds(left, (int)(44 * scale), scopeWidth, (int)(24 * scale));
+            lblBackup.SetBounds(btnApply.Left, (int)(64 * scale), actionWidth, (int)(20 * scale));
+            lblStatus.SetBounds(left, (int)(84 * scale), Math.Max(100, footer.ClientSize.Width - gap * 2), (int)(22 * scale));
+        }
+
+        static void StyleButton(Button button, bool primary)
+        {
+            button.Dock = DockStyle.Fill; button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor = EditorTheme.Line; button.FlatAppearance.BorderSize = primary ? 0 : 1;
+            button.BackColor = Color.Transparent; button.ForeColor = EditorTheme.Ink; button.Cursor = Cursors.Hand;
+        }
+        static void StyleLink(LinkLabel link)
+        {
+            link.LinkColor = EditorTheme.Muted; link.ActiveLinkColor = EditorTheme.Amber; link.VisitedLinkColor = EditorTheme.Muted; link.LinkBehavior = LinkBehavior.HoverUnderline;
+        }
+        void BuildBindingTable(Panel host, Dictionary<string, BindingButton[]> boxes, bool pad)
+        {
+            host.BackColor = EditorTheme.Line; host.Padding = new Padding(1);
+            var scroll = new EditorPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = EditorTheme.Surface };
+            scroll.HandleCreated += delegate { EditorArtwork.DarkScrollbars(scroll); };
+            var grid = new BindingTable { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 4, RowCount = Actions.Count, Margin = Padding.Empty, BackColor = EditorTheme.Surface, CellBorderStyle = TableLayoutPanelCellBorderStyle.None, Font = new Font(Font.FontFamily, 10.5f) };
+            grid.CellPaint += delegate(object sender, TableLayoutCellPaintEventArgs e)
+            {
+                var rowLabel = grid.GetControlFromPosition(0, e.Row);
+                Color color = rowLabel == null ? EditorTheme.Surface : rowLabel.BackColor;
+                using (var brush = new SolidBrush(color)) e.Graphics.FillRectangle(brush, e.CellBounds);
+                using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawLine(pen, e.CellBounds.Left, e.CellBounds.Bottom - 1, e.CellBounds.Right, e.CellBounds.Bottom - 1);
+            };
+            SetColumns(grid);
+            int row = 0;
+            foreach (var action in Actions)
+            {
+                grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
+                var label = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Margin = Padding.Empty, Padding = new Padding(15, 0, 4, 0), AutoEllipsis = true, Tag = action.Id };
+                actionLabels.Add(label); SetTip(label, action.Id); grid.Controls.Add(label, 0, row);
+                label.Paint += delegate(object sender, PaintEventArgs e)
+                {
+                    using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawLine(pen, 0, label.Height - 1, label.Width, label.Height - 1);
+                    if (label.BackColor == EditorTheme.Preview)
+                        using (var brush = new SolidBrush(EditorTheme.AccentHover)) e.Graphics.FillRectangle(brush, 0, 5, Math.Max(2, (int)(3 * e.Graphics.DpiX / 96f)), label.Height - 10);
+                };
+                var buttons = new BindingButton[3];
+                for (int slot = 0; slot < 3; slot++)
+                {
+                    int binding = slot;
+                    var button = new BindingButton();
+                    button.Click += delegate
+                    {
+                        if (Session == null || Session.IsResetPending) return;
+                        using (var dialog = new BindingDialog(action.Label, pad, pad ? Session.GetGamepad(action.Id, binding) : Session.GetKeyboard(action.Id, binding)))
+                        {
+                            modalActive = true;
+                            try
+                            {
+                                if (dialog.ShowDialog(this) == DialogResult.OK)
+                                    TryAction(delegate { if (pad) Session.SetGamepad(action.Id, binding, dialog.Result); else Session.SetKeyboard(action.Id, binding, dialog.Result); });
+                            }
+                            finally { modalActive = false; }
+                        }
+                    };
+                    buttons[slot] = button; grid.Controls.Add(button, slot + 1, row);
+                }
+                boxes[action.Id] = buttons; row++;
+            }
+            scroll.Controls.Add(grid);
+            var headerViewport = new EditorPanel { Dock = DockStyle.Top, Height = 36, BackColor = EditorTheme.Floating };
+            var header = new BindingTable { ColumnCount = 4, BackColor = headerViewport.BackColor, CellBorderStyle = TableLayoutPanelCellBorderStyle.None };
+            SetColumns(header);
             for (int i = 0; i < 4; i++)
             {
-                var l = new Label
-                {
-                    AutoSize = true,
-                    Left = 12 + i * 190,
-                    Top = 136,
-                    Font = new Font("Microsoft YaHei UI", 10f)
-                };
-                stepLabels[i] = l;
-                top.Controls.Add(l);
+                var label = new Label { Dock = DockStyle.Fill, TextAlign = i == 0 ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter,
+                    Font = new Font(Font, FontStyle.Bold), Margin = Padding.Empty, Padding = i == 0 ? new Padding(15, 0, 0, 0) : Padding.Empty, Tag = i };
+                headings.Add(label); header.Controls.Add(label, i, 0);
             }
-
-            Controls.Add(tabs);
-
-            top.Controls.AddRange(new Control[] { lblFile, txtPath, btnBrowse, btnAuto, btnLoad,
-                lblScheme, cbScheme, btnActivate, btnAbout, cbLang, lblWarn });
-            Controls.Add(top);
-
-            BuildKbTab();
-            BuildPadTab();
-            tabs.Dock = DockStyle.Fill;
-            tabs.TabPages.Add(tabKb);
-            tabs.TabPages.Add(tabPad);
-
-            var bottom = new Panel { Dock = DockStyle.Bottom, Height = 104 };
-
-            // The one thing a first-time user needs: guard on the attack key, in one click.
-            btnQuick.Left = 12; btnQuick.Top = 8; btnQuick.Width = 260; btnQuick.Height = 44;
-            btnQuick.Font = new Font("Microsoft YaHei UI", 11f, FontStyle.Bold);
-            btnQuick.BackColor = Color.FromArgb(204, 65, 37);
-            btnQuick.ForeColor = Color.White;
-            btnQuick.FlatStyle = FlatStyle.Flat;
-            btnQuick.FlatAppearance.BorderSize = 0;
-            btnQuick.Click += delegate { QuickOneKey(); };
-
-            btnSave.Left = 284; btnSave.Top = 8; btnSave.Width = 150; btnSave.Height = 44;
-            btnSave.Font = new Font("Microsoft YaHei UI", 10f);
-            btnSave.Click += delegate { SaveAll(); };
-
-            lblPreset.Left = 452; lblPreset.Top = 22; lblPreset.Width = 60;
-            cbPreset.Left = 516; cbPreset.Top = 19; cbPreset.Width = 330;
-            cbPreset.DropDownStyle = ComboBoxStyle.DropDownList;
-            btnApply.Left = 854; btnApply.Top = 17; btnApply.Width = 110; btnApply.Height = 28;
-            btnApply.Click += delegate { ApplyPreset(); };
-
-            lblStatus.Left = 12; lblStatus.Top = 68; lblStatus.Width = 990; lblStatus.Height = 28;
-
-            bottom.Controls.AddRange(new Control[] { btnQuick, btnSave, lblPreset, cbPreset, btnApply, lblStatus });
-            Controls.Add(bottom);
-
-            Shown += delegate { UpdateSteps(); if (sav == null) AutoFind(); };
+            headerViewport.Controls.Add(header);
+            // Use the laid-out body width, including the scrollbar's actual effect.
+            // System scrollbar metrics may already be DPI scaled before WinForms
+            // scales control padding, so reserving that metric as padding scales twice.
+            Action alignHeader = delegate { header.SetBounds(grid.Left, 0, grid.Width, headerViewport.ClientSize.Height); };
+            grid.SizeChanged += delegate { alignHeader(); };
+            headerViewport.SizeChanged += delegate { alignHeader(); };
+            host.Layout += delegate { alignHeader(); };
+            host.Controls.Add(scroll); host.Controls.Add(headerViewport);
         }
-
-        /// <summary>Highlight where the user is in the four-step flow.</summary>
-        void UpdateSteps()
+        static void SetColumns(TableLayoutPanel table)
         {
-            if (stepLabels == null) return;
-            string[] names = { I18n.Str("step.find"), I18n.Str("step.preset"), I18n.Str("step.apply"), I18n.Str("step.save") };
-            for (int i = 0; i < stepLabels.Length; i++)
-            {
-                bool active = i == step;
-                stepLabels[i].Text = (i + 1) + ". " + names[i];
-                stepLabels[i].Font = new Font("Microsoft YaHei UI", 10f, active ? FontStyle.Bold : FontStyle.Regular);
-                stepLabels[i].ForeColor = active ? Color.FromArgb(204, 65, 37) : SystemColors.GrayText;
-            }
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 29));
+            for (int i = 0; i < 3; i++) table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.6667f));
         }
-
-        void OnKeyTextChanged(object sender, EventArgs e)
-        {
-            var cb = sender as ComboBox;
-            if (cb == null) return;
-            cb.ForeColor = KeyOf(cb) == "" ? SystemColors.GrayText : SystemColors.WindowText;
-        }
-
-        /// <summary>Apply the guard-on-attack preset and tell the user the last step.</summary>
-        void QuickOneKey()
-        {
-            if (sav == null) { lblStatus.Text = I18n.Str("status.needfile"); step = 0; UpdateSteps(); return; }
-            var preset = Presets.All().FirstOrDefault(p => p.Id == "onekey");
-            if (preset == null) return;
-            var rec = sav.RecordFor(selectedProfile);
-            if (rec == null) { lblStatus.Text = I18n.Str("status.needfile"); return; }
-            Presets.Apply(sav, preset, rec);
-            FillFromSave();
-            step = 3;
-            UpdateSteps();
-            lblStatus.Text = I18n.Str("status.quick");
-        }
-
-        void BuildKbTab()
-        {
-            var host = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
-            var grid = new TableLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                Dock = DockStyle.Top,
-                ColumnCount = 4,
-                Padding = new Padding(6)
-            };
-            grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
-            for (int i = 0; i < 3; i++) grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 210));
-            grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 28));
-            grid.Controls.Add(Head("槽 0"), 1, 0);
-            grid.Controls.Add(Head("槽 2"), 2, 0);
-            grid.Controls.Add(Head("槽 4"), 3, 0);
-            int row = 1;
-            foreach (var a in Actions)
-            {
-                grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 32));
-                var lbl = new Label { Text = a.Label, AutoSize = true, Anchor = AnchorStyles.Left };
-                lbl.Tag = "action:" + a.Id;
-                grid.Controls.Add(lbl, 0, row);
-                var arr = new ComboBox[3];
-                for (int i = 0; i < 3; i++)
-                {
-                    var cb = new ComboBox { DropDownStyle = ComboBoxStyle.DropDown, Width = 200, Anchor = AnchorStyles.Left, Text = NoKey, ForeColor = SystemColors.GrayText };
-                    cb.Items.AddRange(KeyNames.Keyboard);
-                    cb.TextChanged += OnKeyTextChanged;
-                    arr[i] = cb;
-                    grid.Controls.Add(cb, i + 1, row);
-                }
-                kbBoxes[a.Id] = arr;
-                row++;
-            }
-            grid.RowCount = row;
-            host.Controls.Add(grid);
-            tabKb.Controls.Add(host);
-        }
-
-        void BuildPadTab()
-        {
-            var host = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
-            var grid = new TableLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                Dock = DockStyle.Top,
-                ColumnCount = 4,
-                Padding = new Padding(6)
-            };
-            grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
-            for (int i = 0; i < 3; i++) grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 210));
-            grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 28));
-            grid.Controls.Add(Head("Second"), 1, 0);
-            grid.Controls.Add(Head("Fourth"), 2, 0);
-            grid.Controls.Add(Head("Sixth"), 3, 0);
-            int row = 1;
-            foreach (var a in Actions)
-            {
-                grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 32));
-                var lbl = new Label { Text = a.Label, AutoSize = true, Anchor = AnchorStyles.Left };
-                lbl.Tag = "action:" + a.Id;
-                grid.Controls.Add(lbl, 0, row);
-                var arr = new ComboBox[3];
-                for (int i = 0; i < 3; i++)
-                {
-                    var cb = new ComboBox { DropDownStyle = ComboBoxStyle.DropDown, Width = 200, Anchor = AnchorStyles.Left, Text = NoKey, ForeColor = SystemColors.GrayText };
-                    cb.Items.AddRange(KeyNames.Gamepad);
-                    cb.TextChanged += OnKeyTextChanged;
-                    arr[i] = cb;
-                    grid.Controls.Add(cb, i + 1, row);
-                }
-                padBoxes[a.Id] = arr;
-                row++;
-            }
-            grid.RowCount = row;
-            host.Controls.Add(grid);
-            tabPad.Controls.Add(host);
-        }
-
-        static Label Head(string s) { return new Label { Text = s, AutoSize = true, Font = new Font("Segoe UI", 9, FontStyle.Bold) }; }
 
         void ApplyLanguage()
         {
-            Text = I18n.Str("app.title");
-            lblFile.Text = I18n.Str("file.label");
-            lblScheme.Text = "Scheme";
-            btnBrowse.Text = I18n.Str("btn.browse");
-            btnAuto.Text = I18n.Str("btn.autofind");
-            btnLoad.Text = I18n.Str("btn.load");
-            tabKb.Text = I18n.Str("tab.kb");
-            tabPad.Text = I18n.Str("tab.pad");
-            lblPreset.Text = I18n.Str("preset.label");
-            btnApply.Text = I18n.Str("btn.apply");
-            btnSave.Text = I18n.Str("btn.save");
-            btnQuick.Text = I18n.Str("btn.quick");
-            UpdateSteps();
-            lblWarn.Text = I18n.Str("warn.editor");
-            btnActivate.Text = I18n.Str("btn.activate");
-            btnAbout.Text = I18n.Str("btn.about");
-            lblStatus.Text = I18n.Str("status.hint");
-            if (cbLang.SelectedIndex < 0)
+            loading = true;
+            try
+            {
+                Text = "PBZKeyForge · " + I18n.Str("app.title"); lblTitle.Text = I18n.Str("editor.subtitle");
+                btnRefresh.Text = I18n.Str("editor.refresh"); btnApply.Text = I18n.Str("editor.apply");
+                lblPreset.Text = I18n.Str("editor.quick"); btnUndo.Text = I18n.Str("editor.undo");
+                lblHint.Text = I18n.Str("editor.hint"); lblBackup.Text = I18n.Str("editor.backup");
+                lblEmpty.Text = I18n.Str("editor.empty"); btnChoose.Text = I18n.Str("editor.choose");
+                SetTip(btnMore, I18n.Str("editor.more")); SetTip(cbPreset, I18n.Str("editor.previewrule"));
+                foreach (var label in actionLabels) label.Text = I18n.Str("act." + label.Tag);
+                foreach (var label in headings) label.Text = (int)label.Tag == 0 ? I18n.Str("col.action") : I18n.Str("editor.binding", label.Tag);
                 cbLang.SelectedIndex = Array.IndexOf(I18n.Languages, I18n.Current);
-            RebuildPresetList();
-            RebuildActionLabels();
-            RebuildSchemeList();
+                cbPreset.Items.Clear(); cbPreset.Items.Add(I18n.Str("editor.nopreset"));
+                foreach (var preset in Presets.All().Where(p => !p.Vanilla)) cbPreset.Items.Add(preset);
+            }
+            finally { loading = false; }
+            RenderSession();
+            foreach (var row in kbButtons.Values.Concat(padButtons.Values)) foreach (var button in row) button.Invalidate();
         }
 
-        void RebuildActionLabels()
+        public void RenderSession()
         {
-            foreach (var tab in new[] { tabKb, tabPad })
-                foreach (var c in AllControls(tab))
+            loading = true;
+            SuspendLayout(); body.SuspendLayout(); footer.SuspendLayout();
+            try
+            {
+                bool loaded = Session != null;
+                lastRunning = EditorSession.IsGameRunning;
+                lblGame.Text = "●  " + I18n.Str(lastRunning ? "editor.running" : "editor.closed"); lblGame.ForeColor = lastRunning ? EditorTheme.Amber : EditorTheme.Green;
+                lblPath.Text = loaded ? I18n.Str("editor.location", DisplaySaveDirectory(Session.InputPath)) : I18n.Str("editor.nofile");
+                SetTip(lblPath, loaded ? Session.InputPath : I18n.Str("editor.empty"));
+                empty.Visible = !loaded; kbHost.Visible = loaded && !gamepad; padHost.Visible = loaded && gamepad; if (!loaded) empty.BringToFront();
+                tabKb.Text = I18n.Str("editor.keyboard"); tabPad.Text = I18n.Str("editor.gamepad"); tabKb.Selected = !gamepad; tabPad.Selected = gamepad;
+                tabKb.Dirty = loaded && Session.KeyboardChangeCount > 0; tabPad.Dirty = loaded && Session.GamepadChangeCount > 0;
+                tabKb.Enabled = loaded; tabPad.Enabled = loaded;
+                string[] labels = { I18n.Str("scheme.default"), I18n.Str("scheme.custom1"), I18n.Str("scheme.custom2") };
+                string[] profiles = loaded ? Session.Profiles : new string[0];
+                for (int i = 0; i < schemeTabs.Length; i++)
                 {
-                    var lbl = c as Label;
-                    if (lbl != null && lbl.Tag is string && ((string)lbl.Tag).StartsWith("action:"))
-                        lbl.Text = I18n.Str("act." + ((string)lbl.Tag).Substring(7)) + "   " + ((string)lbl.Tag).Substring(7);
+                    var button = schemeTabs[i]; button.Tag = i < profiles.Length ? profiles[i] : null; button.Text = i < profiles.Length ? SchemeLabel(profiles[i]) : labels[i];
+                    button.Selected = loaded && (string)button.Tag == Session.SelectedProfile;
+                    button.Badge = loaded && (string)button.Tag == Session.ActiveProfile ? I18n.Str("editor.current") : null;
+                    button.Dirty = loaded && button.Tag != null && Session.HasProfileDraft((string)button.Tag); button.Enabled = loaded;
                 }
-        }
-
-        static IEnumerable<Control> AllControls(Control root)
-        {
-            foreach (Control c in root.Controls)
-            {
-                yield return c;
-                foreach (var x in AllControls(c)) yield return x;
+                cbPreset.Enabled = loaded && !Session.IsResetPending;
+                int presetIndex = 0;
+                if (loaded && Session.PresetId != null)
+                {
+                    for (int i = 1; i < cbPreset.Items.Count; i++) if (((Preset)cbPreset.Items[i]).Id == Session.PresetId) presetIndex = i;
+                }
+                cbPreset.SelectedIndex = presetIndex;
+                foreach (var action in Actions)
+                    for (int slot = 0; slot < 3; slot++)
+                    {
+                        var kb = kbButtons[action.Id][slot]; var pad = padButtons[action.Id][slot];
+                        kb.Value = loaded ? Session.GetKeyboard(action.Id, slot) : null; pad.Value = loaded ? Session.GetGamepad(action.Id, slot) : null;
+                        kb.Changed = loaded && Session.IsKeyboardChanged(action.Id, slot); pad.Changed = loaded && Session.IsGamepadChanged(action.Id, slot);
+                        pad.Mixed = loaded && Session.GamepadValuesDiffer(action.Id, slot); kb.Enabled = pad.Enabled = loaded && !Session.IsResetPending;
+                        kb.AccessibleName = action.Label + " " + I18n.Str("editor.binding", slot + 1) + ": " + BindingButton.FriendlyKey(kb.Value);
+                        pad.AccessibleName = action.Label + " " + I18n.Str("editor.binding", slot + 1) + ": " + BindingButton.FriendlyKey(pad.Value);
+                        SetTip(kb, action.Id + "\n" + (kb.Value ?? I18n.Str("editor.defaulthelp")));
+                        SetTip(pad, action.Id + "\n" + (pad.Mixed ? I18n.Str("editor.mixedhelp") : pad.Value ?? I18n.Str("editor.defaulthelp")));
+                    }
+                for (int i = 0; i < actionLabels.Count; i++)
+                {
+                    var source = i < Actions.Count ? kbButtons : padButtons;
+                    Color rowColor = source[(string)actionLabels[i].Tag].Any(b => b.Changed) ? EditorTheme.Preview : i % 2 == 0 ? EditorTheme.Surface : EditorTheme.RowAlternate;
+                    actionLabels[i].BackColor = rowColor;
+                    foreach (var button in source[(string)actionLabels[i].Tag]) if (button.BackColor != rowColor) button.BackColor = rowColor;
+                }
+                chkActivate.Text = I18n.Str("editor.activate", loaded ? SchemeLabel(Session.SelectedProfile) : "—");
+                chkActivate.Checked = loaded && (Session.SelectedProfile == Session.ActiveProfile || Session.ActivationPending);
+                chkActivate.Enabled = loaded && !Session.IsResetPending && Session.ActiveProfile != null && Session.SelectedProfile != Session.ActiveProfile;
+                SetTip(chkActivate, loaded && Session.SchemeError != null ? I18n.Str("status.schemeunknown") + "\n" + Session.SchemeError : I18n.Str("editor.activatehelp"));
+                btnApply.Enabled = loaded && Session.HasChanges && !lastRunning && Session.Conflicts.Length == 0; btnUndo.Visible = loaded && Session.HasChanges;
+                lblScope.Text = !loaded ? "" : Session.IsResetPending ? I18n.Str("editor.resetscope", Session.ScopeChangeCount)
+                    : I18n.Str(Session.HasChanges ? "editor.scope" : "editor.clean", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount) + (Session.ActivationPending ? I18n.Str("editor.activationscope") : "");
+                lblScope.ForeColor = loaded && Session.HasChanges ? Color.FromArgb(228, 167, 154) : EditorTheme.Muted;
+                lblStatus.Text = loaded && Session.SchemeError != null ? I18n.Str("editor.schemeunknown")
+                    + (messageKey != null && messageKey != "editor.refreshed" ? " " + I18n.Str(messageKey, messageArgs) : "")
+                    : loaded && lastRunning ? I18n.Str("editor.exittoapply") : messageKey != null ? I18n.Str(messageKey, messageArgs) : I18n.Str("editor.ready");
+                lblStatus.ForeColor = messageError ? Color.FromArgb(238, 171, 156) : EditorTheme.Muted; SetTip(lblStatus, lblStatus.Text);
+                int conflictCount = loaded ? Session.Conflicts.Length : 0; btnConflicts.Visible = conflictCount > 0; btnConflicts.Text = I18n.Str("editor.conflicts", conflictCount);
+                var selectedPreset = cbPreset.SelectedItem as Preset;
+                lblPreview.Text = conflictCount > 0 ? I18n.Str("editor.conflictinfo") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
+                    : selectedPreset != null ? I18n.Str("editor.preview", selectedPreset.Desc) : gamepad ? I18n.Str("editor.sharedinfo") : I18n.Str("editor.directinfo");
+                preview.BackColor = conflictCount > 0 || selectedPreset != null || loaded && Session.IsResetPending ? EditorTheme.Preview : EditorTheme.Floating;
+                lblPreview.ForeColor = selectedPreset != null || conflictCount > 0 ? EditorTheme.Ink : EditorTheme.Muted;
+                SetTip(lblPreview, lblPreview.Text + (selectedPreset != null ? "\n" + I18n.Str("editor.previewrule") : ""));
             }
+            finally { footer.ResumeLayout(true); body.ResumeLayout(true); ResumeLayout(true); loading = false; }
         }
 
-        void RebuildPresetList()
+        void SetTip(Control control, string text)
         {
-            int keep = cbPreset.SelectedIndex;
-            cbPreset.Items.Clear();
-            foreach (var p in Presets.All()) cbPreset.Items.Add(p);
-            cbPreset.SelectedIndex = keep >= 0 && keep < cbPreset.Items.Count ? keep : 0;
-        }
-
-        void RebuildSchemeList()
-        {
-            string keep = selectedProfile;
-            cbScheme.Items.Clear();
-            if (sav == null) return;
-            foreach (var r in sav.Records)
-            {
-                string label = SchemeLabel(r.ProfileId) + (r.ProfileId == sav.ActiveProfile ? "  ★" : "");
-                cbScheme.Items.Add(new SchemeItem { Id = r.ProfileId, Label = label });
-            }
-            int idx = 0;
-            for (int i = 0; i < cbScheme.Items.Count; i++)
-                if (((SchemeItem)cbScheme.Items[i]).Id == (keep ?? sav.ActiveProfile)) idx = i;
-            cbScheme.SelectedIndex = idx;
+            if (tip.GetToolTip(control) != text) tip.SetToolTip(control, text);
         }
 
         static string SchemeLabel(string id)
         {
+            if (id == null) return "—";
             if (id.EndsWith(".Default")) return I18n.Str("scheme.default");
             if (id.EndsWith("Custom1")) return I18n.Str("scheme.custom1");
             if (id.EndsWith("Custom2")) return I18n.Str("scheme.custom2");
             return id;
         }
 
-        class SchemeItem
+        static string DisplaySaveDirectory(string inputPath)
         {
-            public string Id;
-            public string Label;
-            public override string ToString() { return Label; }
+            string directory = Path.GetDirectoryName(inputPath);
+            if (string.IsNullOrEmpty(directory)) return directory;
+            directory = directory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            string leaf = Path.GetFileName(directory);
+            DirectoryInfo parent = Directory.GetParent(directory);
+            return parent == null ? leaf : "…" + Path.DirectorySeparatorChar + parent.Name + Path.DirectorySeparatorChar + leaf;
         }
-
+        void TryAction(Action action)
+        {
+            try { action(); messageKey = null; messageError = false; }
+            catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
+            RenderSession();
+        }
+        void SetMessage(string key, bool error, params object[] args)
+        {
+            messageKey = key; messageArgs = args; messageError = error;
+        }
+        public void SelectProfile(string profile) { if (Session != null) TryAction(delegate { Session.SwitchProfile(profile); }); }
+        public void ShowGamepad(bool show) { gamepad = show; RenderSession(); }
+        public void RefreshFromDisk()
+        {
+            if (loading || modalActive) return;
+            if (Session == null) { AutoFind(false); return; }
+            try { Session.Refresh(); SetMessage("editor.refreshed", false); }
+            catch (Exception ex) { SetMessage("editor.refreshfail", true, ex.Message); }
+            RenderSession();
+        }
+        public void ApplyChanges()
+        {
+            if (Session == null) return;
+            try
+            {
+                var result = Session.Apply(); messageError = !result.Success;
+                if (result.PartialSuccess) SetMessage("editor.partial", true, result.Error);
+                else if (!result.Success) SetMessage("editor.failed", true, result.Error);
+                else SetMessage("editor.saved", false);
+            }
+            catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
+            RenderSession();
+        }
+        void ResolveConflicts()
+        {
+            if (Session == null) return;
+            modalActive = true;
+            try
+            {
+                foreach (var conflict in Session.Conflicts)
+                {
+                    string device = SchemeLabel(conflict.ProfileId) + " · " + I18n.Str(conflict.IsGamepad ? "editor.gamepad" : "editor.keyboard");
+                    string detail = I18n.Str("editor.resolve", device, I18n.Str("act." + conflict.Action), conflict.SlotIndex + 1,
+                        BindingButton.FriendlyKey(conflict.LocalValue), BindingButton.FriendlyKey(conflict.DiskValue));
+                    var answer = EditorDialogs.Show(this, detail, I18n.Str("editor.conflicttitle"), MessageBoxButtons.YesNoCancel);
+                    if (answer == DialogResult.Cancel) break;
+                    Session.ResolveConflict(conflict.Id, answer == DialogResult.Yes);
+                }
+            }
+            finally { modalActive = false; RenderSession(); }
+        }
+        bool ConfirmDiscard()
+        {
+            if (Session == null || !Session.HasAnyDrafts && !Session.HasChanges) return true;
+            modalActive = true;
+            try { return EditorDialogs.Show(this, I18n.Str("editor.discard"), I18n.Str("editor.drafttitle"), MessageBoxButtons.YesNo) == DialogResult.Yes; }
+            finally { modalActive = false; }
+        }
         void Browse()
         {
-            var d = new OpenFileDialog { Filter = "EnhancedInputUserSettings.sav|*.sav|All files|*.*" };
-            if (d.ShowDialog() == DialogResult.OK) { txtPath.Text = d.FileName; LoadFile(); }
+            if (!ConfirmDiscard()) return;
+            using (var dialog = new OpenFileDialog { Filter = "EnhancedInputUserSettings.sav|EnhancedInputUserSettings.sav|*.sav|*.sav|All files|*.*", Title = I18n.Str("editor.choose") })
+            {
+                modalActive = true;
+                try { if (dialog.ShowDialog(this) == DialogResult.OK) OpenPath(dialog.FileName); }
+                finally { modalActive = false; }
+            }
         }
-
-        void AutoFind()
+        void OpenPath(string path) { TryAction(delegate { var next = EditorSession.Open(path); Session = next; }); }
+        void AutoFind(bool confirm)
         {
-            var hits = new List<string>();
+            if (confirm && !ConfirmDiscard()) return;
             try
             {
-                var steam = Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", null) as string;
                 var roots = new List<string>();
-                if (!string.IsNullOrEmpty(steam)) roots.Add(steam.Replace('/', '\\'));
-                foreach (var drv in DriveInfo.GetDrives())
+                var steam = Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", null) as string;
+                if (!string.IsNullOrEmpty(steam))
                 {
-                    if (drv.DriveType != DriveType.Fixed) continue;
-                    var p = Path.Combine(drv.Name, @"SteamLibrary\steamapps\common\PBZ");
-                    if (Directory.Exists(p)) roots.Add(p);
+                    roots.Add(steam.Replace('/', '\\'));
+                    string libraries = Path.Combine(steam, @"steamapps\libraryfolders.vdf");
+                    if (File.Exists(libraries))
+                        foreach (System.Text.RegularExpressions.Match match in System.Text.RegularExpressions.Regex.Matches(File.ReadAllText(libraries), "\"path\"\\s*\"([^\"]+)\""))
+                            roots.Add(match.Groups[1].Value.Replace("\\\\", "\\"));
                 }
-                foreach (var r in roots)
-                {
-                    var c1 = Path.Combine(r, @"steamapps\common\PBZ\ProjectPBZ\Saved\EnhancedInputUserSettings.sav");
-                    if (File.Exists(c1)) { hits.Add(c1); continue; }
-                    var c2 = Path.Combine(r, @"ProjectPBZ\Saved\EnhancedInputUserSettings.sav");
-                    if (File.Exists(c2)) hits.Add(c2);
-                }
+                foreach (var drive in DriveInfo.GetDrives()) if (drive.DriveType == DriveType.Fixed) roots.Add(Path.Combine(drive.Name, "SteamLibrary"));
+                string found = roots.Select(root => Path.Combine(root, @"steamapps\common\PBZ\ProjectPBZ\Saved\EnhancedInputUserSettings.sav")).FirstOrDefault(File.Exists);
+                if (found != null) OpenPath(found);
+                else { SetMessage("editor.empty", false); RenderSession(); }
             }
-            catch (Exception ex) { lblStatus.Text = ex.Message; return; }
-            if (hits.Count == 0) { lblStatus.Text = I18n.Str("status.notfound"); return; }
-            txtPath.Text = hits[0];
-            LoadFile();
+            catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); RenderSession(); }
         }
-
-        void LoadFile()
+        void ShowMore()
         {
-            try
+            if (moreMenu != null) moreMenu.Close();
+            var menu = new ContextMenuStrip { Font = Font, BackColor = EditorTheme.Floating, ForeColor = EditorTheme.Ink,
+                Renderer = new ToolStripProfessionalRenderer(new EditorMenuColors()), ShowImageMargin = false, Padding = new Padding(5) };
+            moreMenu = menu;
+            menu.Items.Add(I18n.Str("editor.changefile"), null, delegate { Browse(); });
+            menu.Items.Add(I18n.Str("editor.rediscover"), null, delegate { AutoFind(true); });
+            menu.Items.Add(new ToolStripSeparator());
+            var reset = menu.Items.Add(I18n.Str("editor.resetall"), null, delegate
             {
-                loading = true;
-                sav = SaveFile.Load(txtPath.Text);
-                selectedProfile = sav.ActiveProfile;
-                RebuildSchemeList();
-                FillFromSave();
-                loading = false;
-                step = 1; UpdateSteps();
-                lblStatus.Text = I18n.Str("status.loaded", sav.ActiveProfile,
-                    sav.ActiveRecord == null ? 0 : sav.ActiveRecord.Entries.Count, sav.GamepadKeys.Count);
-            }
-            catch (Exception ex) { lblStatus.Text = I18n.Str("status.loadfail", ex.Message); sav = null; }
-        }
-
-        void FillFromSave()
-        {
-            foreach (var kv in kbBoxes) foreach (var cb in kv.Value) { cb.Text = NoKey; cb.ForeColor = SystemColors.GrayText; }
-            foreach (var kv in padBoxes) foreach (var cb in kv.Value) { cb.Text = NoKey; cb.ForeColor = SystemColors.GrayText; }
-            if (sav == null) return;
-
-            var rec = sav.RecordFor(selectedProfile);
-            if (rec != null)
-                foreach (var e in rec.Entries)
+                if (Session == null) return;
+                modalActive = true;
+                try
                 {
-                    ComboBox[] arr;
-                    if (!kbBoxes.TryGetValue(e.Name, out arr)) continue;
-                    int idx = Array.IndexOf(Presets.KeyboardSlots, (int)e.Slot);
-                    if (idx >= 0) { arr[idx].Text = e.Key; arr[idx].ForeColor = SystemColors.WindowText; }
+                    if (EditorDialogs.Show(this, I18n.Str("editor.resetconfirm"), I18n.Str("editor.resetall"), MessageBoxButtons.OKCancel) == DialogResult.OK)
+                        TryAction(delegate { Session.ResetAll(); });
                 }
-            foreach (var keys in sav.GamepadKeys)
-                foreach (var el in keys.Items)
-                {
-                    string mn = SaveFile.Field(el, "MappingName");
-                    ComboBox[] arr;
-                    if (mn == null || !padBoxes.TryGetValue(mn, out arr)) continue;
-                    string slot = SaveFile.Field(el, "Slot");
-                    if (slot == null) continue;
-                    int idx = Array.IndexOf(Presets.GamepadSlots, slot.Replace("EPlayerMappableKeySlot::", ""));
-                    if (idx >= 0 && (arr[idx].Text == NoKey || string.IsNullOrEmpty(arr[idx].Text)))
-                    {
-                        arr[idx].Text = SaveFile.Field(el, "Key");
-                        arr[idx].ForeColor = SystemColors.WindowText;
-                    }
-                }
-        }
-
-        static string KeyOf(ComboBox cb)
-        {
-            string v = (cb.Text ?? "").Trim();
-            return v == NoKey ? "" : v;
-        }
-
-        void OnSchemeChanged()
-        {
-            if (loading || sav == null || cbScheme.SelectedIndex < 0) return;
-            CommitGrid();
-            selectedProfile = ((SchemeItem)cbScheme.SelectedItem).Id;
-            FillFromSave();
-            lblStatus.Text = I18n.Str("status.scheme", SchemeLabel(selectedProfile));
-        }
-
-        /// <summary>Copy the grid into the in-memory record for the selected scheme.</summary>
-        void CommitGrid()
-        {
-            if (loading || sav == null || selectedProfile == null) return;
-            var rec = sav.RecordFor(selectedProfile);
-            if (rec == null) return;
-
-            var keep = rec.Entries.Where(e => !kbBoxes.ContainsKey(e.Name)).ToList();
-            foreach (var a in Actions)
+                finally { modalActive = false; }
+            });
+            reset.Enabled = Session != null && !Session.IsResetPending;
+            menu.Items.Add(I18n.Str("editor.openbackup"), null, delegate
             {
-                var arr = kbBoxes[a.Id];
-                string v0 = KeyOf(arr[0]), v1 = KeyOf(arr[1]), v2 = KeyOf(arr[2]);
-                if (v0 == "" && v1 == "" && v2 == "") continue;
-                if (v0 == "") v0 = v1 != "" ? v1 : v2;
-                if (v1 == "") v1 = v0;
-                if (v2 == "") v2 = v0;
-                string[] vals = { v0, v1, v2 };
-                for (int k = 0; k < 3; k++)
-                    keep.Add(new BlobEntry
-                    {
-                        Name = a.Id,
-                        Key = vals[k],
-                        X = "None",
-                        Y = "None",
-                        Slot = (byte)Presets.KeyboardSlots[k]
-                    });
-            }
-            rec.Entries = keep;
-
-            foreach (var keys in sav.GamepadKeys)
-                foreach (var a in Actions)
-                {
-                    var arr = padBoxes[a.Id];
-                    for (int k = 0; k < 3; k++)
-                    {
-                        string want = KeyOf(arr[k]);
-                        if (want == "") continue;
-                        string slotName = "EPlayerMappableKeySlot::" + Presets.GamepadSlots[k];
-                        var el = keys.Items.FirstOrDefault(x =>
-                            SaveFile.Field(x, "MappingName") == a.Id && SaveFile.Field(x, "Slot") == slotName);
-                        if (el == null)
-                        {
-                            var src = keys.Items.FirstOrDefault(x => SaveFile.Field(x, "MappingName") == a.Id);
-                            if (src == null) continue;
-                            el = src.Select(SaveFile.CloneNode).ToList();
-                            SaveFile.SetField(el, "Slot", slotName);
-                            keys.Items.Add(el);
-                        }
-                        SaveFile.SetField(el, "Key", want);
-                    }
-                }
+                try { Process.Start("explorer.exe", GameSchemeSettings.BackupDirectory()); }
+                catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); RenderSession(); }
+            });
+            menu.Items.Add(new ToolStripSeparator());
+            menu.Items.Add(I18n.Str("btn.about"), null, delegate { modalActive = true; try { EditorDialogs.Show(this, I18n.Str("about.text"), "PBZKeyForge " + Program.Version, MessageBoxButtons.OK); } finally { modalActive = false; } });
+            foreach (ToolStripItem item in menu.Items) item.Padding = new Padding(10, 6, 10, 6);
+            menu.Closed += delegate { moreMenu = null; menu.Dispose(); };
+            menu.Show(btnMore, new Point(btnMore.Width - menu.PreferredSize.Width, btnMore.Height));
         }
 
-        void ActivateScheme()
+        public void UiSmoke(string path) { OpenPath(path); }
+        protected override void OnPaintBackground(PaintEventArgs e)
         {
-            if (sav == null || cbScheme.SelectedIndex < 0) { lblStatus.Text = I18n.Str("status.needfile"); return; }
-            string id = ((SchemeItem)cbScheme.SelectedItem).Id;
-            sav.SetActiveProfile(id);
-            RebuildSchemeList();
-            lblStatus.Text = I18n.Str("status.activated", SchemeLabel(id));
-        }
-
-        void ApplyPreset()
-        {
-            if (sav == null) { lblStatus.Text = I18n.Str("status.needfile"); return; }
-            var p = cbPreset.SelectedItem as Preset;
-            if (p == null) return;
-            var rec = sav.RecordFor(selectedProfile);
-            if (rec == null) { lblStatus.Text = I18n.Str("status.needfile"); return; }
-            Presets.Apply(sav, p, rec);
-            FillFromSave();
-            step = 3; UpdateSteps();
-            lblStatus.Text = I18n.Str("status.applied");
-        }
-
-        void SaveAll()
-        {
-            if (sav == null) { lblStatus.Text = I18n.Str("status.needfile"); return; }
-            if (System.Diagnostics.Process.GetProcessesByName("PBZ").Length > 0)
-            { lblStatus.Text = I18n.Str("status.running"); return; }
-            try
+            if (ClientSize.Width <= 0 || ClientSize.Height <= 0) return;
+            if (backgroundCache == null || backgroundCache.Size != ClientSize)
             {
-                CommitGrid();
-                string bak = txtPath.Text + ".bak-" + DateTime.Now.ToString("yyyyMMdd-HHmmss");
-                if (File.Exists(txtPath.Text)) File.Copy(txtPath.Text, bak, true);
-                sav.Save(txtPath.Text);
-                var chk = SaveFile.Load(txtPath.Text);
-                sav = chk;
-                FillFromSave();
-                lblStatus.Text = I18n.Str("status.saved", Path.GetFileName(bak));
+                if (backgroundCache != null) backgroundCache.Dispose();
+                backgroundCache = new Bitmap(ClientSize.Width, ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                using (var graphics = Graphics.FromImage(backgroundCache)) EditorArtwork.PaintBackground(graphics, ClientRectangle);
             }
-            catch (Exception ex) { lblStatus.Text = I18n.Str("status.savefail", ex.Message); }
+            Rectangle clip = Rectangle.Intersect(ClientRectangle, Rectangle.Ceiling(e.Graphics.ClipBounds));
+            if (clip.Width > 0 && clip.Height > 0) e.Graphics.DrawImage(backgroundCache, clip, clip, GraphicsUnit.Pixel);
         }
-
-        public void UiSmoke(string path)
-        {
-            txtPath.Text = path;
-            LoadFile();
-        }
-
         public void AutoApply(string inPath, string outPath, string presetId, string scheme, bool activate)
         {
-            txtPath.Text = inPath;
-            LoadFile();
-            if (scheme != null)
-            {
-                selectedProfile = scheme;
-                RebuildSchemeList();
-            }
-            var p = Presets.ById(presetId);
-            var rec = sav.RecordFor(selectedProfile);
-            Presets.Apply(sav, p, rec);
-            if (activate) sav.SetActiveProfile(selectedProfile);
-            File.WriteAllBytes(outPath, new byte[0]);
-            File.Delete(outPath);
-            sav.Save(outPath);
-            Console.WriteLine("autoapply preset=" + presetId + " scheme=" + selectedProfile + " -> " + outPath);
+            if (activate) throw new ArgumentException("Use --activate <installed.sav> <profileId> separately.");
+            var save = SaveFile.Load(inPath); string profile = scheme ?? save.ActiveProfile; var record = save.RecordFor(profile);
+            if (record == null) throw new ArgumentException("Unknown scheme: " + profile);
+            var preset = Presets.ById(presetId); if (preset == null) throw new ArgumentException("Unknown preset: " + presetId);
+            Presets.Apply(save, preset, record); save.Save(outPath);
+            Console.WriteLine("autoapply preset=" + presetId + " scheme=" + profile + " -> " + outPath);
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) { gameTimer.Dispose(); tip.Dispose(); if (moreMenu != null) moreMenu.Dispose(); if (backgroundCache != null) backgroundCache.Dispose(); }
+            base.Dispose(disposing);
         }
     }
 }
-
-
-
-
-
-
-
-
-
-

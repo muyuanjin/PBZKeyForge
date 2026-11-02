@@ -1,3 +1,11 @@
+# 1.1.0 — 2026-11-03
+
+- Rebuilt the editor around scheme-scoped keyboard and gamepad drafts, with refresh, preview, conflict handling, undo, and explicit apply.
+- Added verified game-scheme activation through the game's shared settings file, with PBZS build recognition, key fingerprint checks, AES-GCM authentication, backups, and rejection of unauthenticated or unsupported data.
+- Added current-scheme default restoration while keeping the separate all-schemes reset.
+- Reworked the window frame, DPI-aware layouts, localized controls, and dialog action layout; removed ambiguous quick-setup labels.
+- Expanded the interface to 15 languages and added focused session, UI, scheme-activation, and translation checks.
+
 ## 1.0.4
 
 - The tool finds the save by itself on startup; no more hunting for the file.

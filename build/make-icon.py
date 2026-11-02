@@ -1,7 +1,10 @@
 from PIL import Image
 import os, glob
-src = glob.glob(r"E:\C#WorkSpace\PBZKeyForge\assets\icon-raw\*.png")[0]
-out_dir = r"E:\C#WorkSpace\PBZKeyForge\assets"
+from pathlib import Path
+
+root = Path(__file__).resolve().parents[1]
+src = glob.glob(str(root / "assets" / "icon-raw" / "*.png"))[0]
+out_dir = str(root / "assets")
 im = Image.open(src).convert("RGB")
 im.save(os.path.join(out_dir, "icon.png"), "PNG")
 im.save(os.path.join(out_dir, "icon.ico"), format="ICO",

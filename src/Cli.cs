@@ -29,7 +29,7 @@ namespace PBZKeyForge
                     return ApplyPreset(args, Arg(args, 1), Arg(args, 2), Arg(args, 3), opts);
 
                 case "--activate":
-                    return Activate(Arg(args, 1), Arg(args, 2), Arg(args, 3));
+                    return Activate(args);
 
                 case "--make-vanilla":
                     return MakeVanilla(Arg(args, 1), Arg(args, 2));
@@ -43,8 +43,8 @@ namespace PBZKeyForge
                     Console.WriteLine("  --selftest <sav>");
                     Console.WriteLine("  --list <sav>");
                     Console.WriteLine("  --schemes <sav>");
-                    Console.WriteLine("  --apply-preset <in> <out> <presetId> [--scheme <profileId>] [--activate]");
-                    Console.WriteLine("  --activate <in> <out> <profileId>");
+                    Console.WriteLine("  --apply-preset <in> <out> <presetId> [--scheme <profileId>]");
+                    Console.WriteLine("  --activate <installed.sav> <profileId>");
                     Console.WriteLine("  --make-vanilla <in> <out>");
                     Console.WriteLine("  --gen-presets <in> <outDir>");
                     return 2;
@@ -83,7 +83,7 @@ namespace PBZKeyForge
                         break;
                     }
             Console.WriteLine("in=" + a.Length + " out=" + b.Length + " roundtrip=" + (same ? "IDENTICAL" : "DIFF"));
-            Console.WriteLine("active=" + sav.ActiveProfile + " records=" + sav.Records.Count + " gamepadProfiles=" + sav.GamepadKeys.Count);
+            Console.WriteLine("profileIdentifier=" + sav.ActiveProfile + " records=" + sav.Records.Count + " gamepadProfiles=" + sav.GamepadKeys.Count);
             File.Delete(tmp);
             return same ? 0 : 1;
         }
@@ -91,7 +91,7 @@ namespace PBZKeyForge
         static int List(string path)
         {
             var sav = SaveFile.Load(path);
-            Console.WriteLine("active scheme: " + sav.ActiveProfile);
+            Console.WriteLine("game scheme: " + (GameProfile(path) ?? "unknown (shared settings unavailable)"));
             foreach (var r in sav.Records)
             {
                 Console.WriteLine("[" + r.ProfileId + "] " + r.Entries.Count + " entries");
@@ -108,37 +108,54 @@ namespace PBZKeyForge
         static int Schemes(string path)
         {
             var sav = SaveFile.Load(path);
+            string active = GameProfile(path);
             foreach (var r in sav.Records)
-                Console.WriteLine((r.ProfileId == sav.ActiveProfile ? "* " : "  ") + r.ProfileId);
+                Console.WriteLine((r.ProfileId == active ? "* " : "  ") + r.ProfileId);
             return 0;
+        }
+
+        static string GameProfile(string path)
+        {
+            try { return GameSchemeSettings.LoadForInputSave(path).ProfileId; }
+            catch { return null; }
         }
 
         static int ApplyPreset(string[] argv, string input, string output, string presetId, Dictionary<string, string> opts)
         {
+            if (HasFlag(argv, "--activate"))
+            {
+                Console.WriteLine("Use --activate <installed.sav> <profileId> separately to select the game's scheme.");
+                return 2;
+            }
             var sav = SaveFile.Load(input);
             var preset = Presets.ById(presetId);
             if (preset == null) { Console.WriteLine("unknown preset: " + presetId); return 2; }
 
             string scheme;
             opts.TryGetValue("--scheme", out scheme);
-            if (string.IsNullOrEmpty(scheme)) scheme = sav.ActiveProfile;
+            if (string.IsNullOrEmpty(scheme)) scheme = GameProfile(input) ?? sav.ActiveProfile;
             var rec = sav.RecordFor(scheme);
             if (rec == null) { Console.WriteLine("unknown scheme: " + scheme); return 2; }
 
             Presets.Apply(sav, preset, rec);
-            if (HasFlag(argv, "--activate")) sav.SetActiveProfile(scheme);
             sav.Save(output);
-            Console.WriteLine("preset=" + preset.Id + " scheme=" + scheme + (HasFlag(argv, "--activate") ? " (activated)" : "") + " -> " + output);
+            Console.WriteLine("preset=" + preset.Id + " scheme=" + scheme + " -> " + output);
             return 0;
         }
 
-        static int Activate(string input, string output, string profileId)
+        static int Activate(string[] args)
         {
-            var sav = SaveFile.Load(input);
-            if (!sav.SetActiveProfile(profileId)) { Console.WriteLine("unknown scheme: " + profileId); return 2; }
-            sav.Save(output);
-            Console.WriteLine("active scheme is now " + profileId);
-            return 0;
+            if (args.Length != 3)
+            { Console.WriteLine("usage: --activate <installed.sav> <profileId>"); return 2; }
+            try
+            {
+                var settings = GameSchemeSettings.LoadForInputSave(args[1]);
+                string backup = settings.Activate(args[2]);
+                Console.WriteLine(backup == null ? "game scheme already selected: " + args[2]
+                    : "game scheme selected: " + args[2] + "; backup=" + backup);
+                return 0;
+            }
+            catch (Exception ex) { Console.WriteLine("activation failed: " + ex.Message); return 1; }
         }
 
         static int MakeVanilla(string input, string output)

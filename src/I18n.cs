@@ -6,9 +6,9 @@ using System.Linq;
 namespace PBZKeyForge
 {
     /// <summary>Minimal string table with culture detection. Falls back to English, then to the key itself.</summary>
-    public static class I18n
+    public static partial class I18n
     {
-        public static readonly string[] Languages = { "zh-Hans", "en", "ja", "ko", "ru" };
+        public static readonly string[] Languages = new[] { "zh-Hans", "en", "ja", "ko", "ru" }.Concat(ExtendedLanguages()).ToArray();
 
         public static string Current = "en";
 
@@ -40,6 +40,8 @@ namespace PBZKeyForge
         public static string Detect()
         {
             var c = CultureInfo.CurrentUICulture;
+            string extended = DetectExtendedCulture(c);
+            if (extended != null) return extended;
             string n = c.TwoLetterISOLanguageName.ToLowerInvariant();
             if (n == "zh") return "zh-Hans";
             if (n == "ja") return "ja";
@@ -50,6 +52,8 @@ namespace PBZKeyForge
 
         public static string DisplayName(string lang)
         {
+            string extended = ExtendedDisplayName(lang);
+            if (extended != null) return extended;
             switch (lang)
             {
                 case "zh-Hans": return "中文（简体）";
@@ -120,10 +124,10 @@ namespace PBZKeyForge
             Add("zh-Hans", "preset.space_sprint.desc", "键鼠额外加一个空格键给高速移动，Shift 保留。");
             Add("zh-Hans", "preset.space_dodge.name", "空格 = 闪避");
             Add("zh-Hans", "preset.space_dodge.desc", "键鼠额外加一个空格键给闪避，Shift 保留。");
-            Add("zh-Hans", "preset.undo_onekey.name", "撤销一键攻防");
-            Add("zh-Hans", "preset.undo_onekey.desc", "把手柄防御放回 LB、键鼠防御放回右键。");
             Add("zh-Hans", "preset.vanilla.name", "清除全部覆盖（恢复默认）");
             Add("zh-Hans", "preset.vanilla.desc", "清掉本工具写的键位，回到游戏默认。");
+            Add("zh-Hans", "preset.vanilla_current.name", "恢复当前方案默认");
+            Add("zh-Hans", "preset.vanilla_current.desc", "仅恢复当前方案的键鼠和手柄默认键位，其他方案不变。");
 
             // ---------------- English ----------------
             Add("en", "app.title", "Phantom Blade Zero Key Tool");
@@ -183,10 +187,10 @@ namespace PBZKeyForge
             Add("en", "preset.space_sprint.desc", "Adds Space as an extra keyboard sprint key; Shift stays.");
             Add("en", "preset.space_dodge.name", "Space = dodge");
             Add("en", "preset.space_dodge.desc", "Adds Space as an extra keyboard dodge key; Shift stays.");
-            Add("en", "preset.undo_onekey.name", "Undo one-key attack & guard");
-            Add("en", "preset.undo_onekey.desc", "Puts gamepad guard back on LB and keyboard guard back on right mouse.");
             Add("en", "preset.vanilla.name", "Clear all overrides (game defaults)");
             Add("en", "preset.vanilla.desc", "Removes the bindings written by this tool and returns to the shipped defaults.");
+            Add("en", "preset.vanilla_current.name", "Restore current scheme defaults");
+            Add("en", "preset.vanilla_current.desc", "Restores keyboard and controller defaults for this scheme only.");
 
             // ---------------- 日本語 ----------------
             Add("ja", "app.title", "影之刃零 キー設定ツール");
@@ -246,10 +250,10 @@ namespace PBZKeyForge
             Add("ja", "preset.space_sprint.desc", "キーボードのダッシュにスペースを追加。Shift も残ります。");
             Add("ja", "preset.space_dodge.name", "スペース＝回避");
             Add("ja", "preset.space_dodge.desc", "キーボードの回避にスペースを追加。Shift も残ります。");
-            Add("ja", "preset.undo_onekey.name", "ワンキー攻防を解除");
-            Add("ja", "preset.undo_onekey.desc", "ガードをゲームパッドの LB、キーボードの右クリックに戻します。");
             Add("ja", "preset.vanilla.name", "すべての上書きを削除（既定に戻す）");
             Add("ja", "preset.vanilla.desc", "このツールが書いたキー設定を消し、ゲーム既定に戻します。");
+            Add("ja", "preset.vanilla_current.name", "現在の設定を既定に戻す");
+            Add("ja", "preset.vanilla_current.desc", "現在の設定のキーボードとゲームパッドだけを既定に戻します。");
 
             // ---------------- 한국어 ----------------
             Add("ko", "app.title", "그림자 무기 키 설정 도구");
@@ -309,10 +313,10 @@ namespace PBZKeyForge
             Add("ko", "preset.space_sprint.desc", "키보드 달리기에 스페이스를 추가합니다. Shift 는 유지.");
             Add("ko", "preset.space_dodge.name", "스페이스 = 회피");
             Add("ko", "preset.space_dodge.desc", "키보드 회피에 스페이스를 추가합니다. Shift 는 유지.");
-            Add("ko", "preset.undo_onekey.name", "원키 공방 해제");
-            Add("ko", "preset.undo_onekey.desc", "방어를 게임패드 LB, 키보드 우클릭으로 되돌립니다.");
             Add("ko", "preset.vanilla.name", "모든 덮어쓰기 삭제(기본값)");
             Add("ko", "preset.vanilla.desc", "이 도구가 쓴 키 설정을 지우고 게임 기본값으로 돌립니다.");
+            Add("ko", "preset.vanilla_current.name", "현재 프리셋 기본값으로 복원");
+            Add("ko", "preset.vanilla_current.desc", "현재 프리셋의 키보드와 게임패드만 기본값으로 복원합니다.");
 
             // ---------------- Русский ----------------
             Add("ru", "app.title", "Настройка управления Phantom Blade Zero");
@@ -372,10 +376,10 @@ namespace PBZKeyForge
             Add("ru", "preset.space_sprint.desc", "Добавляет пробел как вторую клавишу ускорения; Shift сохраняется.");
             Add("ru", "preset.space_dodge.name", "Пробел = уклонение");
             Add("ru", "preset.space_dodge.desc", "Добавляет пробел как вторую клавишу уклонения; Shift сохраняется.");
-            Add("ru", "preset.undo_onekey.name", "Отменить атаку и блок на одной клавише");
-            Add("ru", "preset.undo_onekey.desc", "Возвращает блок на LB геймпада и на правую кнопку мыши.");
             Add("ru", "preset.vanilla.name", "Удалить все переопределения");
             Add("ru", "preset.vanilla.desc", "Убирает назначения, сделанные этим инструментом, и возвращает значения игры.");
+            Add("ru", "preset.vanilla_current.name", "Восстановить текущую схему по умолчанию");
+            Add("ru", "preset.vanilla_current.desc", "Восстанавливает клавиатуру и геймпад только для этой схемы.");
 
             // ---- scheme / buttons ----
             Add("zh-Hans", "btn.activate", "启用该方案");
@@ -384,7 +388,10 @@ namespace PBZKeyForge
             Add("zh-Hans", "scheme.custom1", "自定义方案 1");
             Add("zh-Hans", "scheme.custom2", "自定义方案 2");
             Add("zh-Hans", "status.scheme", "正在编辑：{0}");
-            Add("zh-Hans", "status.activated", "已把「{0}」设为生效方案，保存后进游戏生效。");
+            Add("zh-Hans", "scheme.label", "方案");
+            Add("zh-Hans", "status.schemeunknown", "未能读取游戏的方案选择。");
+            Add("zh-Hans", "status.activated", "已将「{0}」设为游戏当前方案。备份 {1}。");
+            Add("zh-Hans", "status.activesame", "「{0}」已经是生效方案，存档没有改动。");
 
             Add("en", "btn.activate", "Activate scheme");
             Add("en", "btn.about", "About");
@@ -392,7 +399,10 @@ namespace PBZKeyForge
             Add("en", "scheme.custom1", "Custom 1");
             Add("en", "scheme.custom2", "Custom 2");
             Add("en", "status.scheme", "Editing: {0}");
-            Add("en", "status.activated", "'{0}' is now the active scheme; it takes effect after saving.");
+            Add("en", "scheme.label", "Scheme");
+            Add("en", "status.schemeunknown", "Could not read the game's scheme selection.");
+            Add("en", "status.activated", "Set '{0}' as the current game scheme. Backup: {1}.");
+            Add("en", "status.activesame", "'{0}' is already the active scheme; the save was left untouched.");
 
             Add("ja", "btn.activate", "このプリセットを有効化");
             Add("ja", "btn.about", "情報");
@@ -400,7 +410,10 @@ namespace PBZKeyForge
             Add("ja", "scheme.custom1", "カスタム 1");
             Add("ja", "scheme.custom2", "カスタム 2");
             Add("ja", "status.scheme", "編集中：{0}");
-            Add("ja", "status.activated", "「{0}」を有効なプリセットに設定しました。保存後に反映されます。");
+            Add("ja", "scheme.label", "設定");
+            Add("ja", "status.schemeunknown", "ゲームの設定選択を読み取れませんでした。");
+            Add("ja", "status.activated", "ゲームの使用設定を「{0}」にしました。バックアップ：{1}。");
+            Add("ja", "status.activesame", "「{0}」はすでに有効なプリセットです。セーブは変更していません。");
 
             Add("ko", "btn.activate", "이 프리셋 사용");
             Add("ko", "btn.about", "정보");
@@ -408,7 +421,10 @@ namespace PBZKeyForge
             Add("ko", "scheme.custom1", "사용자 1");
             Add("ko", "scheme.custom2", "사용자 2");
             Add("ko", "status.scheme", "편집 중: {0}");
-            Add("ko", "status.activated", "'{0}' 을(를) 활성 프리셋으로 설정했습니다. 저장 후 적용됩니다.");
+            Add("ko", "scheme.label", "프리셋");
+            Add("ko", "status.schemeunknown", "게임의 프리셋 선택을 읽지 못했습니다.");
+            Add("ko", "status.activated", "게임 사용 설정을 '{0}'로 지정했습니다. 백업: {1}.");
+            Add("ko", "status.activesame", "'{0}' 은(는) 이미 활성 프리셋입니다. 세이브는 그대로 두었습니다.");
 
             Add("ru", "btn.activate", "Сделать активной");
             Add("ru", "btn.about", "О программе");
@@ -416,7 +432,10 @@ namespace PBZKeyForge
             Add("ru", "scheme.custom1", "Своя 1");
             Add("ru", "scheme.custom2", "Своя 2");
             Add("ru", "status.scheme", "Редактируется: {0}");
-            Add("ru", "status.activated", "Схема «{0}» назначена активной; применится после сохранения.");
+            Add("ru", "scheme.label", "Схема");
+            Add("ru", "status.schemeunknown", "Не удалось прочитать выбранную в игре схему.");
+            Add("ru", "status.activated", "Схема «{0}» выбрана как текущая в игре. Копия: {1}.");
+            Add("ru", "status.activesame", "Схема «{0}» уже активна; файл не изменялся.");
 
             // four step strip + quick action
             Add("zh-Hans", "step.find", "找到存档");
@@ -452,7 +471,10 @@ namespace PBZKeyForge
             Add("ru", "step.apply", "Применить");
             Add("ru", "step.save", "Сохранить в файл");
             Add("ru", "btn.quick", "Блок на атаке");
-            Add("ru", "status.quick", "Блок назначен на клавишу атаки. Последний шаг: Сохранить в файл.");        }
+            Add("ru", "status.quick", "Блок назначен на клавишу атаки. Последний шаг: Сохранить в файл.");
+            EditorStrings();
+            ExtendedStrings();
+        }
     }
 }
 

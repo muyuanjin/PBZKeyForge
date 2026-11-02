@@ -1,0 +1,33 @@
+Create ONE polished high-fidelity desktop application UI design mockup for PBZKeyForge, a Windows utility for editing Phantom Blade Zero key bindings. This is a real compact settings editor, not a website, marketing landing page, analytics dashboard, game launcher, poster, or illustration. Render the application itself filling the 2048x1152 landscape canvas, with a thin native title bar and approximately 40px internal side margins. No surrounding laptop, hands, desktop wallpaper, perspective, floating mockup presentation, explanatory annotation, or designer caption.
+
+Design goal: exceptionally easy to understand, minimal buttons, clear distinction between the scheme being edited and the scheme the game currently uses, compact but generous spacing. Use elegant contemporary Windows desktop design that could be implemented using custom-painted WinForms. Light warm off-white #F6F5F1 background, white table area, charcoal #272A28 text, pale gray dividers, one restrained warm amber #C18D45 accent. No red primary actions. No glass effects, gradients, giant cards, giant hero button, decorative martial arts art, or numbered workflow strip. Crisp readable Simplified Chinese typography (Microsoft YaHei UI / Noto Sans CJK), careful baseline alignment, subtle 5px corners, restrained small line icons. Main content table is the dominant element. Large enough Chinese text to read clearly.
+
+Exact composition, top to bottom:
+
+1. Restrained top title row. Left: small monogram key icon, then title “影之刃零 · 键位设置”; PBZKeyForge may appear as a smaller muted brand label. Right: language dropdown “简体中文”, a small OUTLINED secondary button with refresh icon and visible label “刷新”, then a simple overflow ellipsis. Only the refresh button and the bottom Apply button are permanent action buttons.
+
+2. Compact contextual line below title, not an input form: a small folder outline icon and muted text “存档位置  …\ProjectPBZ\Saved”. Far right small muted green dot plus “游戏已退出”. No load button, no browse button, no auto-detect button, no giant filepath textbox.
+
+3. Scheme navigation row, three restrained horizontal tabs with readable text: “默认预设”, “自定义 1”, “自定义 2”. “自定义 1” is SELECTED for editing, with an amber underline and very subtle warm background, not a large colored button. “自定义 2” is NOT selected and has a small pale sage/gray-green badge “游戏当前”. This crucially indicates editing Custom 1 while game still uses Custom 2. A tiny amber draft dot may appear next to Custom 1. Do NOT mark Custom 1 as game current. No separate activate-scheme button.
+
+4. Below a separator, a slim editor toolbar. Left two small device tabs “键鼠” (selected, dark type, thin underline) and “手柄” (inactive). Each can have a small amber dot to indicate pending changes. Right aligned label “快速配置” and ONE conventional dropdown displaying “左键攻防（替换右键防御）” with a down chevron. This dropdown is an input choice, not an extra Apply button. No “套用” button. No separate “一键攻防” button.
+
+5. One compact pale amber information strip above the table, not an alert: “预览：防御改为左键 / 手柄 X，右键 / LB 不再防御。” This states the actual replacement effect. It must not claim right-click defense is preserved. Keep the strip one line, fine typography, no massive warning icon and no red text.
+
+6. Main large clear key-binding table. Four columns with headers “动作”, “绑定 1”, “绑定 2”, “绑定 3”. First column approximately 28%, the remaining three even. Rows separated by very light lines. Include at least ten clearly readable rows, ideally these eleven:
+轻攻击 | 默认 | 默认 | 默认
+重攻击 | 默认 | 默认 | 默认
+架势/格挡 | 左键 | 左键 | 左键
+闪避 | 默认 | 默认 | 默认
+跳跃/特殊移动 | 默认 | 默认 | 默认
+下蹲 | 默认 | 默认 | 默认
+高速移动 | 默认 | 默认 | 默认
+锁定敌人 | 默认 | 默认 | 默认
+对话/交互 | 默认 | 默认 | 默认
+处决敌人 | 默认 | 默认 | 默认
+影之武装 | 默认 | 默认 | 默认
+Use compact aligned key-binding controls/keycaps. “默认” is muted gray text in lightly outlined cells, not a dash or blank, and represents inheritance. The changed “架势/格挡” row has a very subtle amber tint, three amber-outlined “左键” binding cells, and a small amber left-edge change marker. Do not show raw IA_* identifiers, KeyProfile IDs, slot 0/2/4, encryption/file-format details, or warning badges for allowed duplicate keys. A restrained scrollbar on the table right indicates more actions. Avoid making every cell look like a giant dropdown. A tiny note under the table: “默认：继承游戏键位 · 点击绑定可修改”.
+
+7. Fixed bottom action area separated by a fine top border. Left: a standard checked checkbox and clear text “下次启动使用「自定义 1」”. Under it a small amber dot plus “有未应用的更改”. This check is a staged request; the “游戏当前” badge above must still remain on Custom 2. Right: muted text-link action “撤销更改”, followed by ONE medium-sized amber filled primary button “应用更改”. The primary is approximately 160px wide and 44px tall at normal desktop scale, not oversized. A small muted helper “应用前自动备份” may sit beneath/right next to the action area. No second save button, no activation button, no preset-apply button, no duplicated CTA.
+
+Prioritize an understated, exceptionally coherent working desktop tool. Every component must have a clear reason to exist. The design should feel immediately usable and much calmer than a stack of stock buttons. Maintain a compact hierarchy and use whitespace purposefully. All critical labels must be accurate Chinese; avoid fake unreadable text. Output only this single UI mockup image.
