@@ -79,6 +79,7 @@ namespace PBZKeyForge
         void Build()
         {
             Width = 1040; Height = 780;
+            MinimumSize = new Size(700, 480);
             StartPosition = FormStartPosition.CenterScreen;
             MaximizeBox = true;
 
@@ -140,15 +141,25 @@ namespace PBZKeyForge
 
         void BuildKbTab()
         {
-            var grid = new TableLayoutPanel { Dock = DockStyle.Fill, AutoScroll = true, ColumnCount = 4, Padding = new Padding(6) };
+            var host = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
+            var grid = new TableLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Dock = DockStyle.Top,
+                ColumnCount = 4,
+                Padding = new Padding(6)
+            };
             grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
             for (int i = 0; i < 3; i++) grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 210));
+            grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 28));
             grid.Controls.Add(Head("槽 0"), 1, 0);
             grid.Controls.Add(Head("槽 2"), 2, 0);
             grid.Controls.Add(Head("槽 4"), 3, 0);
             int row = 1;
             foreach (var a in Actions)
             {
+                grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 32));
                 var lbl = new Label { Text = a.Label, AutoSize = true, Anchor = AnchorStyles.Left };
                 lbl.Tag = "action:" + a.Id;
                 grid.Controls.Add(lbl, 0, row);
@@ -163,20 +174,32 @@ namespace PBZKeyForge
                 kbBoxes[a.Id] = arr;
                 row++;
             }
-            tabKb.Controls.Add(grid);
+            grid.RowCount = row;
+            host.Controls.Add(grid);
+            tabKb.Controls.Add(host);
         }
 
         void BuildPadTab()
         {
-            var grid = new TableLayoutPanel { Dock = DockStyle.Fill, AutoScroll = true, ColumnCount = 4, Padding = new Padding(6) };
+            var host = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
+            var grid = new TableLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Dock = DockStyle.Top,
+                ColumnCount = 4,
+                Padding = new Padding(6)
+            };
             grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
             for (int i = 0; i < 3; i++) grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 210));
+            grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 28));
             grid.Controls.Add(Head("Second"), 1, 0);
             grid.Controls.Add(Head("Fourth"), 2, 0);
             grid.Controls.Add(Head("Sixth"), 3, 0);
             int row = 1;
             foreach (var a in Actions)
             {
+                grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 32));
                 var lbl = new Label { Text = a.Label, AutoSize = true, Anchor = AnchorStyles.Left };
                 lbl.Tag = "action:" + a.Id;
                 grid.Controls.Add(lbl, 0, row);
@@ -191,7 +214,9 @@ namespace PBZKeyForge
                 padBoxes[a.Id] = arr;
                 row++;
             }
-            tabPad.Controls.Add(grid);
+            grid.RowCount = row;
+            host.Controls.Add(grid);
+            tabPad.Controls.Add(host);
         }
 
         static Label Head(string s) { return new Label { Text = s, AutoSize = true, Font = new Font("Segoe UI", 9, FontStyle.Bold) }; }

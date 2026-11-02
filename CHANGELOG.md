@@ -1,3 +1,8 @@
+## 1.0.3
+
+- The action grid scrolls. Before this, a window shorter than the 20-row table simply cut the lower actions off with no way to reach them.
+- Minimum window size is 700x480, so it still works on a small screen.
+
 ## 1.0.2
 
 - The download no longer ships `PBZKeyForge-cli.exe`. It stays in the build for CI (preset generation and round-trip self tests) but players only get the editor and the preset save files.
@@ -33,5 +38,6 @@ First release.
 
 Verified against the Steam launch build `CL-301524`: byte-identical GVAS round-trip, and
 preset writes validated against a strict structural checker.
+
 
 
