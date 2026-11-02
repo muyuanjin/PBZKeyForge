@@ -15,14 +15,16 @@ git push origin v1.0.0
 
 | Asset | Contents |
 | --- | --- |
-| `PBZKeyForge-<tag>.zip` | `PBZKeyForge.exe`, `PBZKeyForge-cli.exe`, `presets\*.sav`, `README.md`, `LICENSE` |
+| `PBZKeyForge-<tag>.zip` | `PBZKeyForge.exe`, `presets\*.sav`, `README.md`, `LICENSE` |
 | `PBZKeyForge-<tag>-presets-only.zip` | only the generated `.sav` files, for players who do not want to run an executable |
+
+`PBZKeyForge-cli.exe` is built in the same pipeline but is not shipped to players: the workflow uses it to generate the presets and to run the round-trip self test.
 
 The workflow fails if `--selftest` does not report `roundtrip=IDENTICAL` on the shipped base file.
 
 ## 2. Nexus Mods setup (once)
 
-1. Create the mod page under the Phantom Blade Zero game entry, category **Utilities** or **Gameplay**.
+1. Create the mod page under the Phantom Blade Zero game entry, category **Tools**.
 2. Create at least one file entry; its numeric ID is what the upload action needs.
 3. Store the credentials on the repository:
 
@@ -38,7 +40,7 @@ The page body lives in `docs/nexus-description.md` (BBCode, English only, images
 The workflow is manual and takes an existing GitHub Release asset:
 
 ```powershell
-gh workflow run publish-nexusmods.yml -f tag=v1.0.0 -f category=main -f archive_existing_version=false
+gh workflow run publish-nexusmods.yml -f tag=v1.0.2 -f asset_name=PBZKeyForge-v1.0.2.zip -f version=1.0.2 -f category=main -f archive_existing_version=false
 ```
 
 Run it once per file entry, for example `category=main` for the full package and
@@ -53,7 +55,7 @@ second entry differs from `NEXUSMODS_FILE_ID`.
 - Add the release notes from the GitHub Release to the page's changelog section.
 
 
-## Verified Nexus wiring (v1.0.1)
+## Verified Nexus wiring
 
 - Mod page: https://www.nexusmods.com/phantombladezero/mods/402 (mod id 402)
 - File entry: File ID `8297694` (Advanced panel on the Files tab), stored as the `NEXUSMODS_FILE_ID` repository variable.
@@ -64,6 +66,7 @@ gh variable set NEXUSMODS_FILE_ID --body 8297694 --repo muyuanjin/PBZKeyForge
 gh secret set NEXUSMODS_API_KEY --repo muyuanjin/PBZKeyForge   # paste the key from Account settings -> API Access
 
 gh workflow run publish-nexusmods.yml --repo muyuanjin/PBZKeyForge `
-  -f tag=v1.0.1 -f asset_name=PBZKeyForge-v1.0.1.zip -f version=1.0.1 `
+  -f tag=v1.0.2 -f asset_name=PBZKeyForge-v1.0.2.zip -f version=1.0.2 `
   -f category=main -f archive_existing_version=false -f "description=<long text>"
 ```
+
