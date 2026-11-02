@@ -87,3 +87,7 @@ gh workflow run publish-nexusmods.yml --repo muyuanjin/PBZKeyForge `
 ## Fixing a file description that got cut at 255 characters
 
 The file form on the site limits the per-file description to 255 characters. The API does not: re-running the publish workflow writes the full text. The cost is that the API creates a new version of the file, so afterwards tidy the duplicate under **Manage versions** and delete the older versions.
+
+## Mod manager download
+
+`publish-nexusmods.yml` passes `allow_mod_manager_download: false` on every upload. The action defaults it to `true`, so an API upload silently re-enables the Vortex button even after it was turned off in the web UI, and turning it off again in the UI means opening the file form, whose description field is capped at 255 characters.
