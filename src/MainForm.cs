@@ -66,6 +66,7 @@ namespace PBZKeyForge
 
         SaveFile sav;
         string selectedProfile;
+        bool loading;
 
         public MainForm()
         {
@@ -142,9 +143,9 @@ namespace PBZKeyForge
             var grid = new TableLayoutPanel { Dock = DockStyle.Fill, AutoScroll = true, ColumnCount = 4, Padding = new Padding(6) };
             grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
             for (int i = 0; i < 3; i++) grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 210));
-            grid.Controls.Add(Head("//slot0"), 1, 0);
-            grid.Controls.Add(Head("//slot2"), 2, 0);
-            grid.Controls.Add(Head("//slot4"), 3, 0);
+            grid.Controls.Add(Head("槽 0"), 1, 0);
+            grid.Controls.Add(Head("槽 2"), 2, 0);
+            grid.Controls.Add(Head("槽 4"), 3, 0);
             int row = 1;
             foreach (var a in Actions)
             {
@@ -170,9 +171,9 @@ namespace PBZKeyForge
             var grid = new TableLayoutPanel { Dock = DockStyle.Fill, AutoScroll = true, ColumnCount = 4, Padding = new Padding(6) };
             grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
             for (int i = 0; i < 3; i++) grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 210));
-            grid.Controls.Add(Head("//pad0"), 1, 0);
-            grid.Controls.Add(Head("//pad1"), 2, 0);
-            grid.Controls.Add(Head("//pad2"), 3, 0);
+            grid.Controls.Add(Head("Second"), 1, 0);
+            grid.Controls.Add(Head("Fourth"), 2, 0);
+            grid.Controls.Add(Head("Sixth"), 3, 0);
             int row = 1;
             foreach (var a in Actions)
             {
@@ -316,10 +317,12 @@ namespace PBZKeyForge
         {
             try
             {
+                loading = true;
                 sav = SaveFile.Load(txtPath.Text);
                 selectedProfile = sav.ActiveProfile;
                 RebuildSchemeList();
                 FillFromSave();
+                loading = false;
                 lblStatus.Text = I18n.Str("status.loaded", sav.ActiveProfile,
                     sav.ActiveRecord == null ? 0 : sav.ActiveRecord.Entries.Count, sav.GamepadKeys.Count);
             }
@@ -356,7 +359,7 @@ namespace PBZKeyForge
 
         void OnSchemeChanged()
         {
-            if (sav == null || cbScheme.SelectedIndex < 0) return;
+            if (loading || sav == null || cbScheme.SelectedIndex < 0) return;
             CommitGrid();
             selectedProfile = ((SchemeItem)cbScheme.SelectedItem).Id;
             FillFromSave();
@@ -366,7 +369,7 @@ namespace PBZKeyForge
         /// <summary>Copy the grid into the in-memory record for the selected scheme.</summary>
         void CommitGrid()
         {
-            if (sav == null || selectedProfile == null) return;
+            if (loading || sav == null || selectedProfile == null) return;
             var rec = sav.RecordFor(selectedProfile);
             if (rec == null) return;
 
@@ -482,5 +485,8 @@ namespace PBZKeyForge
         }
     }
 }
+
+
+
 
 
