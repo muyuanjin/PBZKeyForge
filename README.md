@@ -57,16 +57,18 @@ Two ways to use it:
 | `undo_onekey` | Puts guard back on right mouse / LB. |
 | `vanilla` | Removes every override and returns to the shipped defaults. |
 
-## Command line
+## Command line (build pipeline only)
+
+`PBZKeyForge-cli.exe` is built by the same script but is not part of the download. The release workflow uses it to generate the preset files and to run the round-trip check, and it is handy when writing them:
 
 ```
-`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --selftest <sav>
-`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --schemes <sav>
-`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --list <sav>
-`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --apply-preset <in.sav> <out.sav> <presetId> [--scheme <profileId>] [--activate]
-`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --activate <in.sav> <out.sav> <profileId>
-`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --make-vanilla <in.sav> <out.sav>
-`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --gen-presets <in.sav> <outDir>
+PBZKeyForge-cli.exe --selftest <sav>
+PBZKeyForge-cli.exe --schemes <sav>
+PBZKeyForge-cli.exe --list <sav>
+PBZKeyForge-cli.exe --apply-preset <in.sav> <out.sav> <presetId> [--scheme <profileId>] [--activate]
+PBZKeyForge-cli.exe --activate <in.sav> <out.sav> <profileId>
+PBZKeyForge-cli.exe --make-vanilla <in.sav> <out.sav>
+PBZKeyForge-cli.exe --gen-presets <in.sav> <outDir>
 ```
 
 `--selftest` re-encodes the file without changes and compares it byte-for-byte with the input; it is the acceptance test this project is built around.
@@ -86,7 +88,7 @@ No SDK required — the .NET Framework compiler that ships with Windows is enoug
 powershell -ExecutionPolicy Bypass -File build\build.ps1
 ```
 
-Outputs `dist\PBZKeyForge.exe` (GUI) and `dist\`PBZKeyForge-cli.exe` (build pipeline only, not shipped)` (console).
+Outputs `dist\PBZKeyForge.exe` (GUI) and `dist\PBZKeyForge-cli.exe` (console, build pipeline only).
 
 ## License
 
@@ -145,10 +147,11 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 powershell -ExecutionPolicy Bypass -File build\build.ps1
 ```
 
-产物：`dist\PBZKeyForge.exe`（界面）与 `dist\`PBZKeyForge-cli.exe` (build pipeline only, not shipped)`（命令行）。
+产物：`dist\PBZKeyForge.exe`（界面）与 `dist\PBZKeyForge-cli.exe`（命令行，仅供构建流程使用）。
 
 ### 许可
 
 MIT。与 S-Game 无关，使用风险自负，记得留备份。
+
 
 
