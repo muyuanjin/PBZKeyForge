@@ -1,3 +1,10 @@
+## 1.0.1
+
+- Action names in the UI now match the in-game key bindings screen (zh-Hans, English, Japanese, Korean, Russian).
+- Fixed: the scheme list rebuilt itself while a save was loading and wiped the grid, so an existing save looked empty.
+- Added `--gui <save>` to open the editor on a file, and `--shot <save> <png>` to render the window to an image.
+- Assets: real UI screenshot.
+
 # Changelog
 
 ## 1.0.0 — 2026-11-02
@@ -21,3 +28,4 @@ First release.
 
 Verified against the Steam launch build `CL-301524`: byte-identical GVAS round-trip, and
 preset writes validated against a strict structural checker.
+
