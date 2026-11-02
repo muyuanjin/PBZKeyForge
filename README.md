@@ -60,13 +60,13 @@ Two ways to use it:
 ## Command line
 
 ```
-PBZKeyForge-cli.exe --selftest <sav>
-PBZKeyForge-cli.exe --schemes <sav>
-PBZKeyForge-cli.exe --list <sav>
-PBZKeyForge-cli.exe --apply-preset <in.sav> <out.sav> <presetId> [--scheme <profileId>] [--activate]
-PBZKeyForge-cli.exe --activate <in.sav> <out.sav> <profileId>
-PBZKeyForge-cli.exe --make-vanilla <in.sav> <out.sav>
-PBZKeyForge-cli.exe --gen-presets <in.sav> <outDir>
+`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --selftest <sav>
+`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --schemes <sav>
+`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --list <sav>
+`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --apply-preset <in.sav> <out.sav> <presetId> [--scheme <profileId>] [--activate]
+`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --activate <in.sav> <out.sav> <profileId>
+`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --make-vanilla <in.sav> <out.sav>
+`PBZKeyForge-cli.exe` (build pipeline only, not shipped) --gen-presets <in.sav> <outDir>
 ```
 
 `--selftest` re-encodes the file without changes and compares it byte-for-byte with the input; it is the acceptance test this project is built around.
@@ -86,7 +86,7 @@ No SDK required — the .NET Framework compiler that ships with Windows is enoug
 powershell -ExecutionPolicy Bypass -File build\build.ps1
 ```
 
-Outputs `dist\PBZKeyForge.exe` (GUI) and `dist\PBZKeyForge-cli.exe` (console).
+Outputs `dist\PBZKeyForge.exe` (GUI) and `dist\`PBZKeyForge-cli.exe` (build pipeline only, not shipped)` (console).
 
 ## License
 
@@ -145,9 +145,10 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 powershell -ExecutionPolicy Bypass -File build\build.ps1
 ```
 
-产物：`dist\PBZKeyForge.exe`（界面）与 `dist\PBZKeyForge-cli.exe`（命令行）。
+产物：`dist\PBZKeyForge.exe`（界面）与 `dist\`PBZKeyForge-cli.exe` (build pipeline only, not shipped)`（命令行）。
 
 ### 许可
 
 MIT。与 S-Game 无关，使用风险自负，记得留备份。
+
 
