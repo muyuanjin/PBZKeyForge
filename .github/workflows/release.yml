@@ -36,8 +36,10 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          ./dist/PBZKeyForge-cli.exe --selftest ./samples/vanilla-base.sav | Tee-Object -Variable out
-          if ($out -notmatch "roundtrip=IDENTICAL") { throw "GVAS round-trip is not byte-identical" }
+          $out = & ./dist/PBZKeyForge-cli.exe --selftest ./samples/vanilla-base.sav
+          $text = ($out | Out-String)
+          Write-Host $text
+          if ($text -notmatch "roundtrip=IDENTICAL") { throw "GVAS round-trip is not byte-identical" }
 
       - name: Package
         shell: pwsh
@@ -94,3 +96,4 @@ jobs:
             PBZKeyForge-${{ github.ref_name }}-presets-only.zip
           body_path: release-notes.md
           generate_release_notes: true
+
