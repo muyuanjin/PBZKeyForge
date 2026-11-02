@@ -41,6 +41,11 @@ on:
         required: true
         default: false
         type: boolean
+      allow_mod_manager_download:
+        description: "Offer the file to mod managers (Vortex). Off by default: this mod is a manual install, nothing for Vortex to manage."
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -146,3 +151,6 @@ jobs:
           description: ${{ steps.meta.outputs.description }}
           category: ${{ inputs.category }}
           archive_existing_version: ${{ inputs.archive_existing_version }}
+          allow_mod_manager_download: ${{ inputs.allow_mod_manager_download }}
+          primary_mod_manager_download: false
+
