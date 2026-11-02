@@ -52,3 +52,18 @@ second entry differs from `NEXUSMODS_FILE_ID`.
   `archive_existing_version=true`.
 - Add the release notes from the GitHub Release to the page's changelog section.
 
+
+## Verified Nexus wiring (v1.0.1)
+
+- Mod page: https://www.nexusmods.com/phantombladezero/mods/402 (mod id 402)
+- File entry: File ID `8297694` (Advanced panel on the Files tab), stored as the `NEXUSMODS_FILE_ID` repository variable.
+- Upload goes through `publish-nexusmods.yml`; the API accepts a long file description, unlike the 255 character limit on the manual upload form.
+
+```powershell
+gh variable set NEXUSMODS_FILE_ID --body 8297694 --repo muyuanjin/PBZKeyForge
+gh secret set NEXUSMODS_API_KEY --repo muyuanjin/PBZKeyForge   # paste the key from Account settings -> API Access
+
+gh workflow run publish-nexusmods.yml --repo muyuanjin/PBZKeyForge `
+  -f tag=v1.0.1 -f asset_name=PBZKeyForge-v1.0.1.zip -f version=1.0.1 `
+  -f category=main -f archive_existing_version=false -f "description=<long text>"
+```
