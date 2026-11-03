@@ -50,17 +50,128 @@ internal static class CaptureScreenshots
     static T Field<T>(object owner, string name)
     { return (T)owner.GetType().GetField(name, Hidden).GetValue(owner); }
 
+    static System.Collections.Generic.IEnumerable<Control> Descendants(Control owner)
+    {
+        foreach (Control child in owner.Controls)
+        {
+            yield return child;
+            foreach (Control nested in Descendants(child)) yield return nested;
+        }
+    }
+
+    static void Click(Control owner, string name)
+    { Descendants(owner).OfType<Button>().Single(button => button.Name == name).PerformClick(); }
+
+    static void Place(Form window, int width, int height)
+    {
+        var work = Screen.FromControl(window).WorkingArea;
+        float scale;
+        using (var graphics = window.CreateGraphics()) scale = graphics.DpiX / 96f;
+        window.Size = new Size(Math.Min(work.Width - 24, (int)(width * scale)), Math.Min(work.Height - 24, (int)(height * scale)));
+        window.Location = new Point(work.Left + (work.Width - window.Width) / 2, work.Top + (work.Height - window.Height) / 2);
+        if (!work.Contains(window.Bounds)) throw new InvalidOperationException("The desktop is too small for the editor. Use a larger display or lower Windows scaling.");
+        window.TopMost = true; window.Activate(); window.Refresh();
+        Cursor.Position = window.PointToScreen(new Point(16, 16));
+    }
+
+    static void Capture(Form window, string path, ComboBox dropdown, Form background)
+    {
+        Exception failure = null;
+        bool complete = false;
+        var elapsed = Stopwatch.StartNew();
+        using (var timer = new Timer { Interval = 120 })
+        {
+            timer.Tick += delegate
+            {
+                try
+                {
+                    if (elapsed.ElapsedMilliseconds > 5000) throw new InvalidOperationException("The requested screenshot did not become ready.");
+                    Rectangle bounds = background == null ? window.Bounds : Rectangle.Union(background.Bounds, window.Bounds);
+                    if (dropdown != null)
+                    {
+                        var info = new ComboInfo { Size = Marshal.SizeOf(typeof(ComboInfo)) };
+                        if (!dropdown.DroppedDown || !GetComboBoxInfo(dropdown.Handle, ref info) || !IsWindowVisible(info.List)) return;
+                        // Start the list at its header, independent of current selection.
+                        SendMessage(info.List, 0x197, IntPtr.Zero, IntPtr.Zero);
+                        NativeRect list;
+                        if (!GetWindowRect(info.List, out list)) throw new InvalidOperationException("Cannot locate the expanded list.");
+                        bounds = Rectangle.Union(bounds, Rectangle.FromLTRB(list.Left, list.Top, list.Right, list.Bottom));
+                    }
+                    if (!Screen.FromControl(window).WorkingArea.Contains(bounds)) throw new InvalidOperationException("The screenshot extends beyond the display.");
+                    window.Update(); DwmFlush();
+                    using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
+                    {
+                        using (var graphics = Graphics.FromImage(bitmap)) graphics.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
+                        bitmap.Save(path, ImageFormat.Png);
+                    }
+                    Console.WriteLine("Captured: " + path + (dropdown == null ? "" : " (dropdown open)"));
+                    complete = true; timer.Stop();
+                }
+                catch (Exception ex) { failure = ex; complete = true; timer.Stop(); }
+                finally { if (complete && dropdown != null) dropdown.DroppedDown = false; }
+            };
+            timer.Start();
+            if (dropdown != null)
+            {
+                var click = new IntPtr(((dropdown.Height / 2) << 16) | (dropdown.Width - 12));
+                PostMessage(dropdown.Handle, 0x201, new IntPtr(1), click);
+                PostMessage(dropdown.Handle, 0x202, IntPtr.Zero, click);
+            }
+            while (!complete) { Application.DoEvents(); System.Threading.Thread.Sleep(10); }
+        }
+        if (failure != null) throw failure;
+    }
+
+    static void CapturePresets(MainForm form, EditorPreferences preferences, string scene, string path)
+    {
+        string directory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "capture-presets-" + Guid.NewGuid().ToString("N"));
+        var store = new UserPresetStore(directory);
+        bool chinese = I18n.Current == "zh-Hans";
+        string name = chinese ? "鼠标攻防" : "Mouse attack + guard";
+        try
+        {
+            using (var dialog = new UserPresetDialog(form.Session, store, PresetApplyMode.OnlyPreset, preferences))
+            {
+                dialog.ShowInTaskbar = false; dialog.StartPosition = FormStartPosition.Manual; dialog.Show(form);
+                Place(dialog, 1100, 840);
+                Field<ToolTip>(dialog, "tips").RemoveAll();
+                Field<TextBox>(dialog, "nameBox").Text = name;
+                if (scene == "presets-share")
+                {
+                    Click(dialog, "saveCurrent");
+                    var scope = Field<ComboBox>(dialog, "shareScope");
+                    scope.SelectedIndex = 1;
+                    Capture(dialog, path, scope, null);
+                }
+                else if (scene == "presets-import")
+                {
+                    var preset = UserPresetStore.Capture(form.Session, name);
+                    preset = UserPresetStore.SelectScopes(preset, preset.Scopes.Where(scope => scope.Family == null));
+                    Field<TextBox>(dialog, "nameBox").Clear();
+                    Field<TextBox>(dialog, "shareBox").Text = UserPresetStore.Share(preset);
+                    Click(dialog, "previewShare");
+                    Field<TextBox>(dialog, "previewName").Focus();
+                    Capture(dialog, path, null, null);
+                }
+                else Capture(dialog, path, null, null);
+                dialog.Close();
+            }
+        }
+        finally { if (Directory.Exists(directory)) { store.Delete(store.Load()); Directory.Delete(directory); } }
+    }
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Run(string[] args)
     {
         Application.EnableVisualStyles();
         Point pointer = Cursor.Position;
         Directory.CreateDirectory(args[2]);
-        using (var form = new MainForm(new EditorPreferences(Path.Combine(args[2], "capture-mode.txt"))))
+        var preferences = new EditorPreferences(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "capture-mode.txt"));
+        using (var form = new MainForm(preferences))
         {
             form.StartPosition = FormStartPosition.Manual;
             form.ShowInTaskbar = false;
-            if (args.Length > 5 && !string.IsNullOrEmpty(args[5])) form.UiSmoke(args[5]);
+            if (args.Length > 6 && !string.IsNullOrEmpty(args[6])) form.UiSmoke(args[6]);
             form.Show();
             try
             {
@@ -70,7 +181,16 @@ internal static class CaptureScreenshots
                 language.SelectedIndex = Array.IndexOf(I18n.Languages, args[3]);
                 form.Session.SwitchProfile("PBZ.KeyProfile.Custom1");
                 form.Session.StagePreset(Presets.ById(args[4]), PresetApplyMode.OnlyPreset);
-                form.RenderSession();
+                string scene = args[5];
+                bool gamepad = scene.EndsWith("-gamepad", StringComparison.Ordinal);
+                form.ShowGamepad(gamepad);
+                if (gamepad)
+                {
+                    var view = Field<object>(form, "keyBindings");
+                    view.GetType().GetField("selectedKey", Hidden).SetValue(view, "Gamepad_FaceButton_Bottom");
+                    form.RenderSession();
+                }
+                if (scene == "actions" || scene == "binding-edit") form.ShowActionView(true);
                 // Keep the public capture independent of personal preset names and paths.
                 var picker = Field<ComboBox>(form, "cbPreset");
                 for (int index = picker.Items.Count - 1; index >= 0; index--)
@@ -78,52 +198,22 @@ internal static class CaptureScreenshots
                 Field<Label>(form, "lblPath").Text = I18n.Str("editor.location", @"…\ProjectPBZ\Saved");
                 Field<ToolTip>(form, "tip").RemoveAll();
                 Field<Timer>(form, "gameTimer").Stop();
-                var work = Screen.FromControl(form).WorkingArea;
-                float scale;
-                using (var graphics = form.CreateGraphics()) scale = graphics.DpiX / 96f;
-                form.Size = new Size(Math.Min(work.Width - 24, (int)(1280 * scale)), Math.Min(work.Height - 24, (int)(840 * scale)));
-                form.Location = new Point(work.Left + (work.Width - form.Width) / 2, work.Top + (work.Height - form.Height) / 2);
-                if (!work.Contains(form.Bounds)) throw new InvalidOperationException("The desktop is too small for the editor. Use a larger display or lower Windows scaling.");
-                form.TopMost = true; form.Activate(); form.Refresh();
-                Cursor.Position = form.PointToScreen(new Point(16, 16));
-
-                Exception failure = null;
-                bool complete = false;
-                var elapsed = Stopwatch.StartNew();
-                using (var timer = new Timer { Interval = 80 })
+                Place(form, 1280, 840);
+                string path = Path.Combine(args[2], scene + "-" + args[3] + ".png");
+                if (scene.StartsWith("presets-", StringComparison.Ordinal)) CapturePresets(form, preferences, scene, path);
+                else if (scene == "binding-edit")
                 {
-                    timer.Tick += delegate
+                    var type = typeof(MainForm).Assembly.GetType("PBZKeyForge.BindingDialog");
+                    string factory = form.Session.GetKeyboardDefault("IA_Guard", 0);
+                    using (var dialog = (Form)Activator.CreateInstance(type, new object[] {
+                        I18n.Str("act.IA_Guard"), false, factory, new[] { factory }, true }))
                     {
-                        try
-                        {
-                            if (elapsed.ElapsedMilliseconds > 5000) throw new InvalidOperationException("The preset dropdown did not become visible.");
-                            var info = new ComboInfo { Size = Marshal.SizeOf(typeof(ComboInfo)) };
-                            if (!picker.DroppedDown || !GetComboBoxInfo(picker.Handle, ref info) || !IsWindowVisible(info.List)) return;
-                            // Start the list at its built-in header, independent of current selection.
-                            SendMessage(info.List, 0x197, IntPtr.Zero, IntPtr.Zero);
-                            NativeRect list;
-                            if (!GetWindowRect(info.List, out list)) throw new InvalidOperationException("Cannot locate the expanded preset list.");
-                            var bounds = Rectangle.Union(form.Bounds, Rectangle.FromLTRB(list.Left, list.Top, list.Right, list.Bottom));
-                            if (!work.Contains(bounds)) throw new InvalidOperationException("The expanded preset list extends beyond the display.");
-                            form.Update(); DwmFlush();
-                            string path = Path.Combine(args[2], "main-" + args[3] + ".png");
-                            using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
-                            {
-                                using (var graphics = Graphics.FromImage(bitmap)) graphics.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
-                                bitmap.Save(path, ImageFormat.Png);
-                            }
-                            Console.WriteLine("Captured " + args[3] + ": " + path + " (preset dropdown open)");
-                            complete = true; timer.Stop(); picker.DroppedDown = false;
-                        }
-                        catch (Exception ex) { failure = ex; complete = true; timer.Stop(); picker.DroppedDown = false; }
-                    };
-                    timer.Start();
-                    var click = new IntPtr(((picker.Height / 2) << 16) | (picker.Width - 12));
-                    PostMessage(picker.Handle, 0x201, new IntPtr(1), click);
-                    PostMessage(picker.Handle, 0x202, IntPtr.Zero, click);
-                    while (!complete) { Application.DoEvents(); System.Threading.Thread.Sleep(10); }
+                        dialog.Show(form); dialog.TopMost = true;
+                        dialog.Location = new Point(form.Left + (form.Width - dialog.Width) / 2, form.Top + (form.Height - dialog.Height) / 2);
+                        Capture(dialog, path, Field<ComboBox>(dialog, "keys"), form); dialog.Close();
+                    }
                 }
-                if (failure != null) throw failure;
+                else Capture(form, path, scene == "main" || scene == "main-gamepad" ? picker : null, null);
                 if (!original.SequenceEqual(File.ReadAllBytes(form.Session.InputPath))) throw new IOException("The source save changed during capture.");
             }
             finally
