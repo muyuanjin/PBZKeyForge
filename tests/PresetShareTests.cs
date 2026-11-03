@@ -52,7 +52,7 @@ public static class PresetShareTests
             byte[] original = File.ReadAllBytes(args[0]);
             var multi = SaveFile.FromBytes(original);
             var fields = multi.GamepadProfiles.Single(item => item.ProfileId == Profile).Fields.Select(SaveFile.CloneNode).ToList();
-            SaveFile.SetField(fields, "Family", "PlayStation"); multi.Props.Single(node => node.Name == "GamepadFamilyProfiles").Items.Add(fields);
+            SaveFile.SetField(fields, "Family", "PS"); multi.Props.Single(node => node.Name == "GamepadFamilyProfiles").Items.Add(fields);
             string input = Path.Combine(output, "multi.sav"); multi.Save(input); byte[] fixture = File.ReadAllBytes(input);
 
             // Independent protobuf vector: baseline=1, keyboard scope, action=3, packed added=[1].
@@ -80,7 +80,7 @@ public static class PresetShareTests
             session.SetGamepadFamily("IA_Guard", 0, session.ControllerFamilies.Single(item => item.Name == "Xbox").Index, "Gamepad_FaceButton_Left");
             var captured = UserPresetStore.Capture(session, "少主剑:攻防");
             Assert(captured.Scopes.Count == 3 && captured.UserMappings.Count == 3, "Capture records unchanged device scopes separately from diff");
-            foreach (string scope in new[] { "all", "keyboard", "Xbox", "PlayStation" })
+            foreach (string scope in new[] { "all", "keyboard", "Xbox", "PS" })
             {
                 var value = UserPresetStore.SelectScopes(captured, captured.Scopes.Where(item => scope == "all" || (scope == "keyboard" ? item.Family == null : item.Family == scope)));
                 string code = UserPresetStore.Share(value); var decoded = UserPresetStore.ParseShare(code);
@@ -95,8 +95,8 @@ public static class PresetShareTests
             store.Delete(new[] { saved });
 
             var pad = UserPresetStore.SelectScopes(captured, captured.Scopes.Where(scope => scope.Family == "Xbox"));
-            var emptyPad = UserPresetStore.ParseShare(UserPresetStore.Share(UserPresetStore.SelectScopes(captured, captured.Scopes.Where(scope => scope.Family == "PlayStation"))));
-            Assert(emptyPad.UserMappings.Count == 0 && emptyPad.Scopes.Single().Family == "PlayStation", "Empty diff retains reset scope");
+            var emptyPad = UserPresetStore.ParseShare(UserPresetStore.Share(UserPresetStore.SelectScopes(captured, captured.Scopes.Where(scope => scope.Family == "PS"))));
+            Assert(emptyPad.UserMappings.Count == 0 && emptyPad.Scopes.Single().Family == "PS", "Empty diff retains reset scope");
             foreach (PresetApplyMode mode in Enum.GetValues(typeof(PresetApplyMode)))
             {
                 var target = Open(input); target.SetKeyboard("IA_Interact", 0, "F11");
@@ -118,7 +118,7 @@ public static class PresetShareTests
                 else target.StagePreset(pad, mode);
                 OutsideScopes(target, beforeScope, pad);
                 SameKeys(target, "IA_Interact", null, "F11");
-                SameKeys(target, "IA_Guard", "PlayStation", "Gamepad_FaceButton_Top", "Gamepad_LeftShoulder");
+                SameKeys(target, "IA_Guard", "PS", "Gamepad_FaceButton_Top", "Gamepad_LeftShoulder");
                 SameKeys(target, "IA_Guard", "Xbox", mode == PresetApplyMode.Append
                     ? new[] { "Gamepad_FaceButton_Top", "Gamepad_LeftShoulder" }
                     : new[] { "Gamepad_LeftShoulder", "Gamepad_FaceButton_Left" });
@@ -128,7 +128,7 @@ public static class PresetShareTests
             byte[] beforeReset = reset.ExportCurrentScheme();
             reset.StagePreset(emptyPad, PresetApplyMode.OnlyPreset);
             OutsideScopes(reset, beforeReset, emptyPad);
-            SameKeys(reset, "IA_Guard", "PlayStation", "Gamepad_LeftShoulder");
+            SameKeys(reset, "IA_Guard", "PS", "Gamepad_LeftShoulder");
             SameKeys(reset, "IA_Guard", "Xbox", "Gamepad_FaceButton_Top", "Gamepad_LeftShoulder");
             SameKeys(reset, "IA_Interact", null, "F11");
 

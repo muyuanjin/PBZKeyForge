@@ -81,7 +81,7 @@ The script produces 20 images and a linked `README.md` index in `assets/screensh
 | `presets-share` | Saved preset and sharing device dropdown | Your presets and share codes |
 | `presets-import` | Share-code preview, device scope and apply choices | Your presets and share codes / Choose how a preset changes your keys |
 
-It reads the detected save or falls back to the repository sample, previews `mouse_guard` for keyboard/mouse and `souls` for controllers without applying them, omits personal preset names and displays only the generic save-directory suffix. Saving demonstrations use an isolated temporary preset library, removed afterwards; the user's library and clipboard are untouched. The game's real scheme status is retained; a sample without an installed executable reports that scheme activation cannot be verified. If the input lacks a PlayStation record, the PS demonstration uses a temporary copy with the Xbox record’s family changed to PlayStation. The input remains unchanged, and the copy is removed after capture. Run on an unlocked Windows desktop with enough room for the editor.
+It opens an offline scheme by default, previews `mouse_guard` for keyboard/mouse and `souls` for controllers without applying them, and selects the editor's Xbox or PlayStation family directly. No game installation, save or connected controller is required. Saving demonstrations use an isolated temporary preset library, removed afterwards; the user's library and clipboard are untouched. With `-SavePath`, it reads the specified save without writing it and omits personal names and local paths. Run on an unlocked Windows desktop with enough room for the editor.
 
 To capture a different build or input:
 

@@ -82,6 +82,8 @@ byte[] output = save.ToBytes();
 
 原始样本的三条 `GamepadFamilyProfiles` **全部为 Xbox**，分别属于默认、自定义 1、自定义 2。记录身份至少包含 `(ProfileId, Family)`；不得把这三条当成三种手柄，也不得因属性名带 `Family` 就认为跨方案共享。
 
+游戏标准家族名为 `Xbox` 和 `PS`，界面将 `PS` 显示为 PlayStation。`ControllerProfiles` 为缺失家族或空键表提供内置原厂模板；不需要硬件连接历史。浏览不增加保存记录，编辑后的导出或应用按目标方案、家族物化。方案切换后，下拉框必须使用当前方案的家族对象和索引，不能因显示名称相同而复用上一方案的对象。
+
 `Keys` 条目含 `MappingName`、`Slot`、`DefaultKey`、`Key`。`Key` 是修改落点；修改已有条目时，`DefaultKey` 和其余元数据保持原样。枚举槽名与数值的关系为：
 
 | 原始槽号 | 枚举字符串 |
@@ -106,7 +108,7 @@ SaveFile.SetField(item, "Key", "Gamepad_LeftShoulder");
 
 常用按钮：X 为 `Gamepad_FaceButton_Left`，A 为 `Gamepad_FaceButton_Bottom`，LB 为 `Gamepad_LeftShoulder`，RB 为 `Gamepad_RightShoulder`，RT 为 `Gamepad_RightTrigger`。这些是引擎键名；显示层可另映射为 PlayStation 符号。
 
-补齐已注册但缺少家族条目的手柄槽时，优先克隆**相同 profile、相同 family、相同动作**的已有条目；动作整组缺失时可用同方案、同家族的其他动作条目，并更新 `MappingName`。使用 `SaveFile.CloneNode` 深拷贝，设置目标 `Slot` 和 `Key`，并从 `InputDefaults.ForRawSlot(action, true, rawSlot)` 取得目标槽的实际 `DefaultKey`，不能把模板的 LB 等默认值复制过去。没有可用模板或缺失归属字段时不能猜结构。不要删除未识别字段，或认为所有手柄条目都必以 `Gamepad_` 开头。未注册的额外手柄槽默认返回 `None`，没有家族激活投影，不能通过新增 family-only 条目使其生效。
+补齐已注册但缺少家族条目的手柄槽时，优先克隆**相同 profile、相同 family、相同动作**的已有条目；动作整组缺失时可用同方案、同家族的其他动作条目，并更新 `MappingName`。整个键表为空时使用 `ControllerProfiles.KeyTemplate` 的内置原厂结构。使用 `SaveFile.CloneNode` 深拷贝，设置目标 `Slot` 和 `Key`，并从 `InputDefaults.ForRawSlot(action, true, rawSlot)` 取得目标槽的实际 `DefaultKey`，不能把模板的 LB 等默认值复制过去。没有可用模板或缺失归属字段时不能猜结构。不要删除未识别字段，或认为所有手柄条目都必以 `Gamepad_` 开头。未注册的额外手柄槽默认返回 `None`，没有家族激活投影，不能通过新增 family-only 条目使其生效。
 
 ## 新增、替换和重置分开实现
 

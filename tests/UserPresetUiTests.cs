@@ -114,14 +114,16 @@ public static class UserPresetUiTests
                 Assert(Field<TextBox>(dialog, "previewName").Text == imported.Name && !Field<TextBox>(dialog, "previewName").ReadOnly, "Imported name is editable");
                 Assert(session.ScopeChangeCount == draft && session.PresetId == null && store.Load().Count == 2, "Import preview changes neither draft nor library");
                 var scopes = Field<ComboBox>(dialog, "shareScope");
-                Assert(scopes.Items.Count == 3 && scopes.Items[1].ToString() == I18n.Str("preset.keyboardonly") && scopes.Items[2].ToString() == "Xbox", "Share choices reflect actual saved device scopes");
-                Assert(All(Field<Panel>(dialog, "preview")).OfType<Label>().Any(label => label.Text == I18n.Str("preset.devices", UserPresetStore.ScopeText(imported))), "Import shows included devices before application");
+                Assert(scopes.Items.Count == 5 && scopes.Items.Cast<object>().Select(item => item.ToString()).OrderBy(name => name)
+                    .SequenceEqual(new[] { I18n.Str("preset.alldevices"), I18n.Str("preset.keyboardonly"), I18n.Str("preset.controllersonly"), "Xbox", "PS" }.OrderBy(name => name)),
+                    "Share choices include keyboard and both editable controller families");
+                Assert(All(Field<Panel>(dialog, "preview")).OfType<Label>().Any(label => label.Text == I18n.Str("preset.devices", UserPresetStore.ScopeText(UserPresetStore.ParseShare(code)))), "Import shows included devices before application");
                 int allLength = CopyShare(dialog).Length;
                 scopes.SelectedIndex = 1; string keyboardCode = CopyShare(dialog);
                 var sharedKeyboard = UserPresetStore.ParseShare(keyboardCode);
                 Assert(sharedKeyboard.Scopes.Count == 1 && sharedKeyboard.Scopes[0].Family == null && keyboardCode.Length < allLength, "Keyboard copy omits controller scope and shortens code");
                 Assert(Field<Label>(dialog, "shareLength").Text == I18n.Str("preset.sharelength", keyboardCode.Length), "Character count includes code and name");
-                scopes.SelectedIndex = 2;
+                scopes.SelectedItem = scopes.Items.Cast<object>().Single(item => item.ToString() == "Xbox");
                 var sharedPad = UserPresetStore.ParseShare(CopyShare(dialog));
                 Assert(sharedPad.Scopes.Single().Family == "Xbox" && sharedPad.UserMappings.Count == 0, "Unchanged controller can be shared with explicit reset scope");
                 Assert(session.ScopeChangeCount == draft && store.Load().Count == 2 && session.PresetId == null, "Sharing device selection never changes library or draft");
@@ -193,10 +195,10 @@ public static class UserPresetUiTests
             }
             var multi = SaveFile.FromBytes(fixture);
             var fields = multi.GamepadProfiles.First(item => item.ProfileId == session.SelectedProfile).Fields.Select(SaveFile.CloneNode).ToList();
-            SaveFile.SetField(fields, "Family", "PlayStation"); multi.Props.First(node => node.Name == "GamepadFamilyProfiles").Items.Add(fields);
+            SaveFile.SetField(fields, "Family", "PS"); multi.Props.First(node => node.Name == "GamepadFamilyProfiles").Items.Add(fields);
             string multiPath = Path.Combine(output, "multiple-families.sav"); multi.Save(multiPath);
             var secondFamilySession = EditorSession.Open(multiPath); secondFamilySession.SwitchProfile(session.SelectedProfile);
-            int secondFamily = secondFamilySession.ControllerFamilies.Single(item => item.Name == "PlayStation").Index;
+            int secondFamily = secondFamilySession.ControllerFamilies.Single(item => item.Name == "PS").Index;
             secondFamilySession.SetGamepadFamily("IA_Guard", 0, secondFamily, "Gamepad_FaceButton_Left");
             var padPreset = UserPresetStore.Capture(secondFamilySession, "第二家族"); secondFamilySession.Undo();
             using (var dialog = new UserPresetDialog(secondFamilySession, store, PresetApplyMode.Replace))
@@ -206,11 +208,11 @@ public static class UserPresetUiTests
                 var scopes = Field<ComboBox>(dialog, "shareScope");
                 Assert(scopes.Items.Cast<object>().Any(item => item.ToString() == I18n.Str("preset.controllersonly")), "Multiple controller families can be shared together");
                 scopes.SelectedItem = scopes.Items.Cast<object>().Single(item => item.ToString() == I18n.Str("preset.controllersonly"));
-                Assert(UserPresetStore.ParseShare(CopyShare(dialog)).Scopes.Select(scope => scope.Family).OrderBy(family => family).SequenceEqual(new[] { "PlayStation", "Xbox" }), "Controllers-only copy excludes keyboard");
-                scopes.SelectedItem = scopes.Items.Cast<object>().Single(item => item.ToString() == "PlayStation");
-                Assert(UserPresetStore.ParseShare(CopyShare(dialog)).Scopes.Single().Family == "PlayStation", "One selected controller family is copied");
+                Assert(UserPresetStore.ParseShare(CopyShare(dialog)).Scopes.Select(scope => scope.Family).OrderBy(family => family).SequenceEqual(new[] { "PS", "Xbox" }), "Controllers-only copy excludes keyboard");
+                scopes.SelectedItem = scopes.Items.Cast<object>().Single(item => item.ToString() == "PS");
+                Assert(UserPresetStore.ParseShare(CopyShare(dialog)).Scopes.Single().Family == "PS", "One selected controller family is copied");
                 var panel = Field<Panel>(dialog, "preview");
-                Assert(All(panel).OfType<Label>().Any(label => label.Text == I18n.Str("editor.gamepad") + " · PlayStation"), "Diagram identifies changed second family");
+                Assert(All(panel).OfType<Label>().Any(label => label.Text == I18n.Str("editor.gamepad") + " · PS"), "Diagram identifies changed second family");
                 var image = (Bitmap)All(panel).OfType<PictureBox>().Single().Image; bool blue = false;
                 for (int y = 0; y < image.Height && !blue; y += 2)
                     for (int x = 0; x < image.Width && !blue; x += 2) blue = image.GetPixel(x, y).ToArgb() == Color.FromArgb(64, 158, 255).ToArgb();

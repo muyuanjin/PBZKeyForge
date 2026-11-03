@@ -27,9 +27,9 @@ namespace PBZKeyForge
     {
         sealed class Cell
         {
-            public string Id, Profile, Action, Key, DefaultKey, Slot, Family;
+            public string Id, Profile, Action, Key, DefaultKey, Slot, Family, FamilyName;
             public int SlotIndex, FamilyIndex;
-            public bool IsGamepad;
+            public bool IsGamepad, VirtualBinding;
             public BlobRecord Record;
             public BlobEntry Entry;
             public Node Keys;
@@ -54,12 +54,14 @@ namespace PBZKeyForge
         Dictionary<string, Cell> cells;
         // Addresses survive missing overrides and provide metadata for pending additions.
         readonly Dictionary<string, Cell> addresses = new Dictionary<string, Cell>();
+        readonly Dictionary<string, int> familyIndices = new Dictionary<string, int>();
         Draft draft = new Draft(), previewCheckpoint, resetCheckpoint;
         readonly HashSet<string> resetExcluded = new HashSet<string>();
         string previewProfile;
         string resetActivationProfile;
         bool resetActivation;
         public string InputPath { get; private set; }
+        public bool IsOffline { get { return InputPath == null; } }
         public string SelectedProfile { get; private set; }
         public string ActiveProfile { get; private set; }
         public string SchemeError { get; private set; }
@@ -91,12 +93,23 @@ namespace PBZKeyForge
 
         EditorSession() { }
 
+        public static EditorSession CreateOffline()
+        {
+            var session = new EditorSession();
+            session.disk = ControllerProfiles.FactorySave();
+            session.diskBytes = session.disk.ToBytes();
+            session.cells = session.Extract(session.disk);
+            session.Remember(session.cells);
+            session.SelectedProfile = session.Profiles.First();
+            return session;
+        }
+
         public static EditorSession Open(string inputPath)
         {
             var session = new EditorSession { InputPath = Path.GetFullPath(inputPath) };
             session.diskBytes = File.ReadAllBytes(session.InputPath);
             session.disk = SaveFile.FromBytes(session.diskBytes);
-            session.cells = Extract(session.disk);
+            session.cells = session.Extract(session.disk);
             session.Remember(session.cells);
             session.ReadScheme();
             session.SelectedProfile = session.disk.RecordFor(session.ActiveProfile) != null ? session.ActiveProfile : session.disk.ActiveProfile;
@@ -108,6 +121,7 @@ namespace PBZKeyForge
 
         void ReadScheme()
         {
+            if (IsOffline) { ActiveProfile = null; SchemeError = null; ActivationPending = false; return; }
             try { ActiveProfile = GameSchemeSettings.LoadForInputSave(InputPath).ProfileId; SchemeError = null; }
             catch (Exception ex) { ActiveProfile = null; SchemeError = ex.Message; }
             if (ActiveProfile == SelectedProfile) ActivationPending = false;
@@ -124,6 +138,7 @@ namespace PBZKeyForge
 
         public void Refresh()
         {
+            if (IsOffline) return;
             byte[] latest = File.ReadAllBytes(InputPath);
             if (!Same(latest, diskBytes))
             {
@@ -282,7 +297,8 @@ namespace PBZKeyForge
                     int ordinal = addresses.Values.Count(candidate => candidate.Family == group.Key && candidate.Action == action && candidate.Slot == slot);
                     string id = PadId(group.Key, action, slot, ordinal);
                     cell = new Cell { Id = id, Profile = SelectedProfile, IsGamepad = true, Action = action, Slot = slot, SlotIndex = slotIndex, FamilyIndex = template.FamilyIndex,
-                        Family = group.Key, DefaultKey = defaultKey, Keys = template.Keys, Item = template.Item };
+                        Family = group.Key, FamilyName = template.FamilyName, VirtualBinding = true,
+                        DefaultKey = defaultKey, Keys = template.Keys, Item = template.Item };
                     addresses[id] = cell;
                 }
                 result.Add(cell);
@@ -371,6 +387,7 @@ namespace PBZKeyForge
             else Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile));
             var snapshot = new EditorSession { disk = baseline, diskBytes = baselineBytes, cells = Extract(baseline),
                 SelectedProfile = SelectedProfile, ActiveProfile = ActiveProfile };
+            foreach (var pair in familyIndices) snapshot.familyIndices[pair.Key] = pair.Value;
             snapshot.Remember(snapshot.cells);
             var result = Extract(planned);
             snapshot.Remember(result);
@@ -494,9 +511,12 @@ namespace PBZKeyForge
 
         public void ExportCurrentScheme(string path)
         {
-            if (string.Equals(Path.GetFullPath(path), InputPath, StringComparison.OrdinalIgnoreCase))
+            string target = Path.GetFullPath(path);
+            if (string.Equals(target, InputPath, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(Path.GetFileName(target), "EnhancedInputUserSettings.sav", StringComparison.OrdinalIgnoreCase)
+                    && File.Exists(Path.Combine(Path.GetDirectoryName(target), "PBZSharedSetting.sav")))
                 throw new InvalidOperationException(I18n.Str("preset.exportotherpath"));
-            File.WriteAllBytes(path, ExportCurrentScheme());
+            File.WriteAllBytes(target, ExportCurrentScheme());
         }
 
         public void ResetAll()
@@ -504,6 +524,12 @@ namespace PBZKeyForge
             EnsureEditable();
             Refresh();
             EndPreview();
+            if (IsOffline)
+            {
+                draft = new Draft();
+                ActivationPending = false;
+                return;
+            }
             resetCheckpoint = draft.Copy();
             resetExcluded.Clear();
             resetActivation = ActivationPending;
@@ -560,6 +586,7 @@ namespace PBZKeyForge
             var result = new EditorApplyResult();
             try
             {
+                if (IsOffline) throw new InvalidOperationException(I18n.Str("preset.exportfile"));
                 if (IsGameRunning) throw new IOException("Close Phantom Blade Zero before applying changes.");
                 Refresh();
                 if (Conflicts.Length > 0) throw new IOException("Resolve binding conflicts before applying changes.");
@@ -633,9 +660,25 @@ namespace PBZKeyForge
             foreach (var edit in edits)
             {
                 Cell descriptor = Address(edit.Key), target;
+                if (descriptor.IsGamepad && descriptor.FamilyName != null) ControllerProfiles.InitializeStorage(output);
+                if (descriptor.IsGamepad && descriptor.FamilyName != null && !output.GamepadProfiles.Any(profile =>
+                    profile.ProfileId == descriptor.Profile && profile.Family == descriptor.FamilyName))
+                {
+                    ControllerProfiles.Ensure(output, descriptor.Profile, descriptor.FamilyName);
+                    outputCells = Extract(output);
+                }
                 if (outputCells.TryGetValue(edit.Key, out target))
                 {
-                    if (target.Entry != null)
+                    if (target.VirtualBinding)
+                    {
+                        if (edit.Value != null)
+                        {
+                            var item = target.Item.Select(SaveFile.CloneNode).ToList();
+                            SaveFile.SetField(item, "Key", edit.Value);
+                            target.Keys.Items.Add(item);
+                        }
+                    }
+                    else if (target.Entry != null)
                     {
                         if (edit.Value == null) target.Record.Entries.Remove(target.Entry);
                         else target.Entry.Key = edit.Value;
@@ -681,7 +724,7 @@ namespace PBZKeyForge
         static string PadId(string family, string action, string slot, int ordinal)
         { return "P\u001f" + family + "\u001f" + action + "\u001f" + slot + "\u001f" + ordinal; }
 
-        static Dictionary<string, Cell> Extract(SaveFile save)
+        Dictionary<string, Cell> Extract(SaveFile save)
         {
             var map = new Dictionary<string, Cell>();
             foreach (BlobRecord record in save.Records)
@@ -701,15 +744,22 @@ namespace PBZKeyForge
                 }
             }
             var familyOccurrences = new Dictionary<string, int>();
-            foreach (GamepadProfile profile in save.GamepadProfiles)
+            foreach (GamepadProfile profile in ControllerProfiles.ForEditing(save))
                 {
                     Node keys = profile.Keys;
                     string identity = FamilyIdentity(profile.Fields);
                     int familyOrdinal;
                     familyOccurrences.TryGetValue(identity, out familyOrdinal); familyOccurrences[identity] = familyOrdinal + 1;
                     identity += ":" + familyOrdinal;
+                    int familyIndex;
+                    if (!familyIndices.TryGetValue(identity, out familyIndex))
+                    {
+                        familyIndex = profile.Index;
+                        while (familyIndices.Values.Contains(familyIndex)) familyIndex++;
+                        familyIndices[identity] = familyIndex;
+                    }
                     var occurrences = new Dictionary<string, int>();
-                    foreach (var item in keys.Items)
+                    foreach (var item in ControllerProfiles.EditingKeys(profile))
                     {
                         string action = SaveFile.Field(item, "MappingName"), slot = SaveFile.Field(item, "Slot");
                         if (action == null || slot == null) continue;
@@ -718,7 +768,9 @@ namespace PBZKeyForge
                         occurrences.TryGetValue(group, out ordinal); occurrences[group] = ordinal + 1;
                         string id = PadId(identity, action, slot, ordinal);
                         map[id] = new Cell { Id = id, Profile = profile.ProfileId, IsGamepad = true, Action = action, Slot = slot, SlotIndex = SaveFile.Field(item, "DefaultKey") == InputDefaults.ForRawSlot(action, true, InputDefaults.RawSlot(slot)) ? Array.IndexOf(PadRawSlots(save, profile, action), InputDefaults.RawSlot(slot)) : -1,
-                        Family = identity, FamilyIndex = profile.Index, Key = SaveFile.Field(item, "Key"), DefaultKey = SaveFile.Field(item, "DefaultKey"), Keys = keys, Item = item };
+                        Family = identity, FamilyName = profile.Family, FamilyIndex = familyIndex,
+                        VirtualBinding = !keys.Items.Contains(item),
+                        Key = SaveFile.Field(item, "Key"), DefaultKey = SaveFile.Field(item, "DefaultKey"), Keys = keys, Item = item };
                     }
                 }
             return map;

@@ -31,6 +31,11 @@ description: 为《影之刃零》开发存档型键位 mod 或编辑工具，�
 
 支持构建的默认数据入口是 [InputDefaults](../../src/KeyboardDefaults.cs)，维护数据是 [assets/input-defaults.json](../../assets/input-defaults.json)，资源提取入口是 [extract-input-defaults.py](../../build/extract-input-defaults.py)。60 条资源注册输入按原生身份合并为 59 条最终默认，动作级集合由最终默认和固定映射生成。先按原厂注册确定槽归属，再合并对应方案的共享覆盖及手柄家族覆盖，不能按当前按键类别归属槽。适配新构建时沿 IMC 资源和注册路径重新取得两级数据，不能由存档缺少键鼠 `DefaultKey` 推断默认值不可得。
 
+Xbox 的标准保存 Family 为 `Xbox`，PlayStation 为 `PS`；显示名称不直接充当
+保存身份。设备编辑选项不以已连接硬件或已有家族记录为条件。没有游戏或存档
+时可从内置原厂基线编辑预设并导出；创建家族记录的字段与静态证据见
+[默认映射与有效绑定](references/default-bindings.md) 的手柄家族部分。
+
 尽量复用仓库的 `SaveFile`、`GameSchemeSettings` 和 `EditorSession`。`SaveFile.Save()` 只是序列化写文件，不提供备份、并发检查或游戏运行保护；安装目录的安全写入参考 `EditorSession.Apply()`。移植到其他语言时保留同样的格式约束和验证条件。
 
 先在副本进行零修改往返，必须逐字节一致，再编辑目标动作。写回前确认游戏已退出，检测文件是否被外部更新，备份到游戏目录外，写同目录临时文件并回读验证后原子替换。游戏键位页面点应用或恢复默认会重新保存设置，可能覆盖 mod；不能据此声称文件修改永久无效。

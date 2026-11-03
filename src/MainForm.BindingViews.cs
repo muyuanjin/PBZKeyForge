@@ -72,11 +72,15 @@ namespace PBZKeyForge
             btnRecords.Visible = actionView;
             bindingHelp.RefreshText();
             int selectedFamily = SelectedFamilyIndex;
+            var previousFamily = cbFamily.SelectedItem as ControllerFamily;
             var families = loaded ? Session.ControllerFamilies : new ControllerFamily[0];
-            if (!cbFamily.Items.Cast<ControllerFamily>().Select(f => f.ToString()).SequenceEqual(families.Select(f => f.ToString())))
+            if (!cbFamily.Items.Cast<ControllerFamily>().Select(f => f.Index + "\u001f" + f.Name)
+                .SequenceEqual(families.Select(f => f.Index + "\u001f" + f.Name)))
             {
                 cbFamily.Items.Clear(); foreach (var family in families) cbFamily.Items.Add(family);
                 cbFamily.SelectedIndex = Array.FindIndex(families, f => f.Index == selectedFamily);
+                if (cbFamily.SelectedIndex < 0 && previousFamily != null)
+                    cbFamily.SelectedIndex = Array.FindIndex(families, f => f.Name == previousFamily.Name);
                 if (cbFamily.SelectedIndex < 0 && cbFamily.Items.Count > 0) cbFamily.SelectedIndex = 0;
             }
             cbFamily.Visible = gamepad; cbFamily.Enabled = loaded && families.Length > 0;

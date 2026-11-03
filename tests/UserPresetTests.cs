@@ -26,7 +26,7 @@ public static class UserPresetTests
             session.SetGamepad("IA_Guard", 0, "Gamepad_FaceButton_Left");
             int changes = session.ScopeChangeCount;
             var preset = UserPresetStore.Capture(session, "少主剑:攻防");
-            Assert(preset.UserMappings.Count == 3, "Capture only changed actions/devices");
+            Assert(preset.UserMappings.Count == 4, "Capture only changed actions across keyboard, Xbox and PlayStation");
             Assert(preset.UserMappings.Single(mapping => mapping.Action == "IA_HeavyAttack").Removed.SequenceEqual(new[] { "F" }), "Pure unbinding retained");
             Assert(preset.UserMappings.Single(mapping => mapping.Action == "IA_Guard" && mapping.Family == null).Added.SequenceEqual(new[] { "LeftMouseButton" }), "Unchanged factory key omitted");
             string code = UserPresetStore.Share(preset); Console.WriteLine("share_length=" + code.Length + " " + code);

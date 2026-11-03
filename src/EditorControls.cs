@@ -145,10 +145,11 @@ namespace PBZKeyForge
         public bool UsesDefault;
         public bool ActionLevelDefault;
         public bool Unavailable;
+        public bool IsOffline;
         public bool FactoryMatch { get { return UsesDefault || !Mixed && DefaultKeys != null && DefaultKeys.Contains(Value); } }
         public bool EmptyBinding { get { return !Mixed && (UsesDefault ? DefaultKeys != null && !DefaultKeys.Any(k => !string.IsNullOrEmpty(k) && k != "None") : Value == "None"); } }
         public Color StatusColor { get { return Changed ? BindingStatus.Pending : FactoryMatch ? BindingStatus.Factory : BindingStatus.Custom; } }
-        public string StatusText { get { return I18n.Str(Changed ? "views.pending" : UsesDefault && DefaultKeys == null ? "editor.defaultunknown" : FactoryMatch ? "views.original" : "views.savedcustom"); } }
+        public string StatusText { get { return I18n.Str(Changed ? IsOffline ? "offline.pending" : "views.pending" : UsesDefault && DefaultKeys == null ? "editor.defaultunknown" : FactoryMatch ? "views.original" : "views.savedcustom"); } }
         public string DisplayText { get { return Unavailable ? "—" : Mixed ? I18n.Str("editor.mixed") : UsesDefault ? DefaultValue(DefaultKeys) : FriendlyKey(Value); } }
         public string Value { get { return value; } set { if (this.value != value) { this.value = value; Invalidate(); } } }
         public bool Changed { get { return changed; } set { if (changed != value) { changed = value; Invalidate(); } } }

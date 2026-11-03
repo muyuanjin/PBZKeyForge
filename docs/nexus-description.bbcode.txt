@@ -12,6 +12,8 @@ Single-file Windows app. No installer, mod loader, DLL injection or extra runtim
 [/list]
 Switching schemes reads the latest settings. Refresh preserves drafts and asks you to resolve conflicting changes. Both editing views share the same draft; switching views does not save it.
 
+[b]No game or save yet?[/b] The editor opens an offline scheme with built-in factory bindings. Keyboard/mouse, Xbox and PlayStation are available even if no controller has ever been connected. Choose Controller, then Xbox or PlayStation to edit each family independently. Save or share through Preset manager, or use [b]Export game bindings[/b] in the footer to create a .sav file. You can also start with [b]More → New offline scheme[/b]. Open your own save when you want to apply directly to the game.
+
 [color=#cc4125][b]IMPORTANT[/b][/color]
 [quote][b]Do not apply or reset bindings in the game's own key binding screen afterwards.[/b] The game rewrites these settings. If this happens, reapply your layout with PBZKeyForge.[/quote]
 Only one mod replacing EnhancedInputUserSettings.sav can be installed at a time. Shared bindings trigger multiple actions; this tool does not add timed input sequences or guarantee a particular combination skill.
@@ -37,20 +39,20 @@ The initial choice is Preset only, and your choice is remembered. Selecting a pr
 The interface supports all 15 game languages, including Simplified and Traditional Chinese. Switch languages from the toolbar. The gallery above shows keyboard/mouse, Xbox and PlayStation layouts in English and Simplified Chinese, with the preset list expanded.
 
 [center][b]Select a key, edit its actions, and review the scheme changes[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793738867-1951931963.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793743297-1833902486.png[/img][/center]
 
 [color=#e8b96a][b]YOUR PRESETS AND SHARE CODES[/b][/color]
 Open [b]Preset manager[/b] next to Quick setup. Enter a name in the highlighted field, then choose [b]Save as preset[/b] to save the current scheme, including unapplied edits. Personal presets are separate from built-ins. Select one to preview it; check several to delete them without changing your current bindings.
 
 [center][b]Save your current scheme with a name[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793738880-115553500.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793743313-425950747.png[/img][/center]
 
 Copy a named, one-line share code for all included devices, keyboard/mouse, controllers or one controller family. The character count updates with your choice. Select a saved preset to preview its factory differences; check presets in the library to delete them.
 
 Paste a share code, click [b]Preview[/b], and inspect the included devices and changes before saving or using it. [b]Save to my presets[/b] keeps it in your library; [b]Save and use[/b] also stages it in the current scheme. [b]Export game bindings[/b] creates a .sav copy containing the current scheme's unapplied edits; other schemes keep their saved settings. Export leaves the source save and active game scheme unchanged.
 
 [center][b]Share your layout for all devices or a selected device family[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793738883-1481743152.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793743316-406270396.png[/img][/center]
 
 [color=#e8b96a][b]BUILT-IN LAYOUTS[/b][/color]
 [list]

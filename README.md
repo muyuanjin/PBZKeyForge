@@ -8,13 +8,13 @@ A key binding editor for **Phantom Blade Zero** that writes the game's own input
 
 `PBZKeyForge.exe` · single file · no installer · no .NET runtime download · Windows 10/11
 
-![PBZKeyForge 1.2.0 in English with the preset list expanded](assets/screenshots/1.2.0/main-en.png)
+![PBZKeyForge 1.2.1 in English with the preset list expanded](assets/screenshots/1.2.1/main-en.png)
 
-![PBZKeyForge 1.2.0 Xbox view with the preset list expanded](assets/screenshots/1.2.0/main-gamepad-en.png)
+![PBZKeyForge 1.2.1 Xbox view with the preset list expanded](assets/screenshots/1.2.1/main-gamepad-en.png)
 
-![PBZKeyForge 1.2.0 PlayStation view with the preset list expanded](assets/screenshots/1.2.0/main-playstation-en.png)
+![PBZKeyForge 1.2.1 PlayStation view with the preset list expanded](assets/screenshots/1.2.1/main-playstation-en.png)
 
-[Feature screenshots: editing, saving presets, sharing and importing](assets/screenshots/1.2.0/README.md)
+[Feature screenshots: editing, saving presets, sharing and importing](assets/screenshots/1.2.1/README.md)
 
 ---
 
@@ -35,6 +35,7 @@ The in-game screen validates on **save**, not at runtime, and it rejects any bin
 - **Two editing views.** Click keyboard, mouse or controller buttons to edit their actions, or edit bindings by action. Factory, customized and pending bindings have distinct badge colors; the bottom panel compares the whole scheme.
 - **Quick setups** for one-key guard, a Souls-style gamepad layout, and Space-based movement; restore the selected scheme's defaults from the same list.
 - **Personal presets and sharing.** Save named layouts, preview and import compact share codes, share only selected devices, export a game settings file, and batch-delete personal presets.
+- **Offline editing.** Create keyboard/mouse, Xbox and PlayStation layouts without installing the game, owning a controller or loading a save. Each controller family can be edited and shared separately.
 - **15 languages** — English, 简体中文, 繁體中文, 日本語, 한국어, Français, Deutsch, Español (España / Latinoamérica), Português (Brasil / Portugal), Русский, Italiano, ไทย, Tiếng Việt. Auto-detected from Windows, switchable in the toolbar.
 - **Explicit binding choices.** Default inherits the factory key; Unbound removes it. Unrelated save data is preserved.
 - **Safe writes.** The game must be closed, a timestamped backup is written first, and the file is re-read and verified after saving.
@@ -52,6 +53,8 @@ The in-game screen validates on **save**, not at runtime, and it rejects any bin
 Two ways to use it:
 
 **A. The GUI** — run `PBZKeyForge.exe`; it finds and reads the save automatically. Choose a scheme, edit bindings or select a quick configuration, then press *Apply changes*. Switching schemes reads the latest disk data; *Refresh* also preserves unsaved drafts and asks you to resolve conflicting edits. Use *More* to choose another save.
+
+If no save is found, the editor opens an offline scheme using built-in factory bindings. You can also choose **More → New offline scheme**. Select Keyboard/mouse or Controller, then choose Xbox or PlayStation in the controller selector. Save or share the layout through Preset manager, or use **Export game bindings** in the footer to create a `.sav` file. Offline editing does not require a game installation or a connected controller; applying directly to the game requires opening its save.
 
 Keyboard and gamepad drafts both belong to the selected scheme. Applying saves that scheme's bindings; other schemes' drafts stay pending. The footer lists what will be applied. Check *Set game scheme to…* to activate it in the same operation, or leave it unchecked to edit an inactive scheme. Consecutive quick configuration selections replace the previous preview; manual edits keep the result as a custom draft. *Restore all defaults* lives in *More* and previews a reset of both devices in every scheme before applying.
 
@@ -125,7 +128,7 @@ Outputs `dist\PBZKeyForge.exe` (GUI) and `dist\PBZKeyForge-cli.exe` (console, bu
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshots.ps1
 ```
 
-Captures ten scenes in English and Simplified Chinese, producing 20 images and a linked index in `assets/screenshots/<application-version>/`. Keyboard/mouse, Xbox and PlayStation main windows have the preset dropdown expanded (`main-<language>.png`, `main-gamepad-<language>.png` and `main-playstation-<language>.png`). Separate feature shots show unobstructed key and action views, factory/unbound choices, saving a preset, device scopes for sharing, and share-code import previews. The script reads the detected save, or the repository sample when no installation is found, stages built-in presets in memory, and never applies them. Preset examples use a temporary library that is removed after capture. When the input has no PlayStation record, a temporary copy uses the Xbox bindings with the PlayStation family for the PS demonstration; the input save stays unchanged. Local paths and personal preset names are excluded. Keep the Windows desktop unlocked; the editor briefly comes to the foreground.
+Captures ten scenes in English and Simplified Chinese, producing 20 images and a linked index in `assets/screenshots/<application-version>/`. Keyboard/mouse, Xbox and PlayStation main windows have the preset dropdown expanded (`main-<language>.png`, `main-gamepad-<language>.png` and `main-playstation-<language>.png`). Separate feature shots show unobstructed key and action views, factory/unbound choices, saving a preset, device scopes for sharing, and share-code import previews. By default, the script opens the editor's offline scheme, selects the real Xbox or PlayStation editing family, stages built-in presets in memory, and never applies them. Preset examples use a temporary library that is removed after capture. Local paths and personal preset names are excluded. Keep the Windows desktop unlocked; the editor briefly comes to the foreground.
 
 Use `-SavePath <save>` to choose an input, `-ApplicationPath <exe>` for a particular build, `-Preset <id>` / `-ControllerPreset <id>` to change keyboard/mouse and controller previews, or `-OutputDir <directory>` to choose the output. Use `-Shots main,main-gamepad,main-playstation` for just the six expanded-list main screenshots. See [publishing](docs/publishing.md#versioned-screenshots-and-page-description) for the versioned Nexus media and illustrated homepage update steps.
 
@@ -141,13 +144,13 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 `PBZKeyForge.exe` · 单文件 · 免安装 · 不需要额外下载 .NET 运行时 · Windows 10/11
 
-![PBZKeyForge 1.2.0 中文主界面，预设下拉框已展开](assets/screenshots/1.2.0/main-zh-Hans.png)
+![PBZKeyForge 1.2.1 中文主界面，预设下拉框已展开](assets/screenshots/1.2.1/main-zh-Hans.png)
 
-![PBZKeyForge 1.2.0 中文 Xbox 视图，预设下拉框已展开](assets/screenshots/1.2.0/main-gamepad-zh-Hans.png)
+![PBZKeyForge 1.2.1 中文 Xbox 视图，预设下拉框已展开](assets/screenshots/1.2.1/main-gamepad-zh-Hans.png)
 
-![PBZKeyForge 1.2.0 中文 PlayStation 视图，预设下拉框已展开](assets/screenshots/1.2.0/main-playstation-zh-Hans.png)
+![PBZKeyForge 1.2.1 中文 PlayStation 视图，预设下拉框已展开](assets/screenshots/1.2.1/main-playstation-zh-Hans.png)
 
-[功能截图：编辑绑定、保存预设、分享与导入](assets/screenshots/1.2.0/README.md)
+[功能截图：编辑绑定、保存预设、分享与导入](assets/screenshots/1.2.1/README.md)
 
 ### 为什么需要它
 
@@ -165,6 +168,7 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 - **认方案**：可选编辑 `默认 / 自定义方案 1 / 自定义方案 2`，并能在工具里直接把某个方案设为游戏当前生效方案。
 - **两种视图**：按键视图可点击键鼠和手柄图形，动作视图按功能编辑；徽标区分原厂、已修改和待应用，底部显示整个方案的差异。
 - **自己的预设**：命名保存、分享码预览导入、按设备分享、导出游戏键位文件，也可批量删除个人预设。
+- **离线配键**：没有安装游戏、没有存档、没有连接过手柄，也能编辑键鼠、Xbox 和 PlayStation，分别保存、分享和导出。
 - **快速配置**：左键兼防御、左轻右重，双键防御、双键攻防，自动疾跑、左键攻防，右键闪避、魂系手柄布局、空格高速移动、空格闪避、恢复原厂。
 - **15 种语言**：简中、繁中、英、日、韩、法、德、西班牙西语、拉美西语、巴西葡语、葡萄牙葡语、俄、意、泰、越，覆盖游戏的界面语言；自动识别系统语言，也能在工具栏切换。
 - **明确绑定状态**：“默认”继承原厂键位，“无绑定”明确解绑；保留存档中的无关内容。
@@ -180,6 +184,8 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 - **图形界面**：运行 `PBZKeyForge.exe` 自动查找并读取存档 → 选方案 → 直接改键或选择快速配置 → 应用更改。“更多”中可以更换存档。
 - **现成预设文件**：按 `presets\PRESETS.md` 中的名称和说明选择文件，覆盖到 `EnhancedInputUserSettings.sav`，进游戏选择表中的方案。发布包中的预设作用于**自定义 1**，替换文件不会自动切换游戏当前方案。纯配置、不含可执行文件。
+
+没有找到存档时，程序直接打开内置原厂键位的离线方案，也可通过“更多 → 新建离线方案”进入。切换到“手柄”后，在家族选择器中选 Xbox 或 PlayStation，两者独立编辑。在预设管理中保存、分享，或通过底栏“导出游戏键位文件”生成 `.sav`，均不需要安装游戏或连接手柄；直接写入游戏时再打开自己的存档。
 
 8 个预设文件（7 个改键预设及 1 个原厂键位文件）和中英对照说明均由程序内同一套预设定义生成，内容为原厂布局加上对应预设，与悬浮预览和“仅用预设”模式一致。“双键攻防，自动疾跑”将左键设为轻攻击＋防御、右键设为重攻击＋防御、空格同时绑定闪避／跳跃，W／A／D 绑定高速移动，保留 F 重攻击和 Shift 闪避，仅修改键鼠。程序还在快速配置中提供恢复本方案原厂，在“更多”中提供恢复全部方案原厂；两者使用同一套原厂键位，恢复范围不同。
 
@@ -216,7 +222,7 @@ powershell -ExecutionPolicy Bypass -File build\build.ps1
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshots.ps1
 ```
 
-一次生成 10 个场景的英文和简体中文截图，共 20 张，按程序版本存放在 `assets/screenshots/<版本>/`，并生成可点击的图片索引。键鼠、Xbox 和 PlayStation 主界面的预设下拉框均展开，文件名分别为 `main-<语言>.png`、`main-gamepad-<语言>.png` 和 `main-playstation-<语言>.png`。功能截图另行展示无遮挡的按键视图、动作视图、默认与无绑定选项、保存预设、分享设备范围和导入预览。脚本读取检测到的存档，未找到安装时使用仓库样本；只在内存中预览内置预设，不应用改键。预设示例使用临时预设库，截图后自动清理。输入没有 PlayStation 记录时，PS 演示使用隔离副本，将 Xbox 绑定的设备家族改为 PlayStation；原存档保持不变。截图隐藏本地路径和个人预设名称。运行时需保持桌面解锁，编辑器会短暂显示在前台。
+一次生成 10 个场景的英文和简体中文截图，共 20 张，按程序版本存放在 `assets/screenshots/<版本>/`，并生成可点击的图片索引。键鼠、Xbox 和 PlayStation 主界面的预设下拉框均展开，文件名分别为 `main-<语言>.png`、`main-gamepad-<语言>.png` 和 `main-playstation-<语言>.png`。功能截图另行展示无遮挡的按键视图、动作视图、默认与无绑定选项、保存预设、分享设备范围和导入预览。脚本默认打开程序的离线方案，选择实际可编辑的 Xbox 或 PlayStation 家族，只在内存中预览内置预设，不应用改键。预设示例使用临时预设库，截图后自动清理。截图隐藏本地路径和个人预设名称。运行时需保持桌面解锁，编辑器会短暂显示在前台。
 
 可用 `-SavePath <存档>` 指定输入、`-ApplicationPath <程序>` 指定构建、`-Preset <标识>` / `-ControllerPreset <标识>` 更换键鼠和手柄预览预设、`-OutputDir <目录>` 指定输出。只截六张展开预设列表的主界面时，添加 `-Shots main,main-gamepad,main-playstation`。每次公开发布将截图上传到 N 网媒体并标注版本，在主页 BBCode 对应功能段落嵌入媒体图片，详见[发布说明](docs/publishing.md#versioned-screenshots-and-page-description)。
 

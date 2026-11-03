@@ -65,7 +65,7 @@ namespace PBZKeyForge
             "Gamepad_DPad_Up", "Gamepad_DPad_Down", "Gamepad_DPad_Left", "Gamepad_DPad_Right", "Gamepad_Special_Left", "Gamepad_Special_Right",
             "Multiply", "Add", "Subtract", "Decimal", "Divide", "NumLock", "ScrollLock", "Pause", "PrintScreen", "LeftWindows", "RightWindows"
         };
-        static readonly string[] Families = { "Xbox", "PlayStation" };
+        static readonly string[] Families = { "Xbox", "PS" };
 
         static uint Id(string value, string[] known, List<string> extra)
         {

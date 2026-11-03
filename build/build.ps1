@@ -32,6 +32,7 @@ $iconArg = @()
 if (Test-Path $icon) { $iconArg = @("/win32icon:$icon") }
 $artworkArgs = @(
     "/resource:$protobuf,PBZKeyForge.protobuf-net",
+    "/resource:$root\samples\vanilla-base.sav,PBZKeyForge.vanilla-base.sav",
     "/resource:$root\assets\ui\wallpaper.jpg,PBZKeyForge.Wallpaper",
     "/resource:$root\assets\ui\game-wordmark.png,PBZKeyForge.GameWordmark",
     "/resource:$root\assets\ui\app-mark.png,PBZKeyForge.AppMark",

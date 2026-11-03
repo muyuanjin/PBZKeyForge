@@ -7,11 +7,20 @@ Run from the repository root after `powershell.exe -NoProfile -ExecutionPolicy B
 ```powershell
 $compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
 $sessionSources = @(Get-ChildItem src -Filter *.cs | ForEach-Object { $_.FullName })
-& $compiler /nologo /main:EditorSessionTests /out:dist\EditorSessionTests.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll /r:System.Web.Extensions.dll /r:third_party\protobuf-net\protobuf-net.dll /resource:third_party\protobuf-net\protobuf-net.dll,PBZKeyForge.protobuf-net $sessionSources tests\EditorSessionTests.cs
+& $compiler /nologo /main:EditorSessionTests /out:dist\EditorSessionTests.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll /r:System.Web.Extensions.dll /r:third_party\protobuf-net\protobuf-net.dll /resource:third_party\protobuf-net\protobuf-net.dll,PBZKeyForge.protobuf-net /resource:samples\vanilla-base.sav,PBZKeyForge.vanilla-base.sav $sessionSources tests\EditorSessionTests.cs
 .\dist\EditorSessionTests.exe samples\vanilla-base.sav
 ```
 
 The session checks create fresh temporary copies. They cover disk refresh and conflicts, per-scheme keyboard and controller drafts, isolation between profiles with the same controller family, preview replacement/cancellation, global reset/undo, unknown data preservation, interrupted writes, resource-based raw slots for crouch/menu/items, all three Shadow Arm controller slots, shared Blob ownership, and rejection of unregistered controller slots. No game installation is required for this command.
+
+Check offline editing and controller families without device records:
+
+```powershell
+& $compiler /nologo /out:dist\OfflineControllerTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll tests\OfflineControllerTests.cs
+.\dist\OfflineControllerTests.exe samples\vanilla-base.sav dist\offline-controller-check
+```
+
+The checks cover offline keyboard/mouse, Xbox and PlayStation editing; missing controller arrays and empty key lists; per-family and per-scheme isolation; built-in presets and scoped share codes; exports and reopening; factory reset; source preservation; and refusal to overwrite game settings through export. Navigation and keyboard-only edits do not add controller records. Controller records use the game's canonical `Xbox` and `PS` family names, with new entries constructed from the embedded factory template.
 
 Check responsive application and recovery using fixture copies:
 
@@ -89,6 +98,15 @@ Copy-Item samples\vanilla-base.sav dist\menu-test-input.sav
 These checks send mouse messages through the real menu's click and auto-close path. They exercise all five More-menu actions, repeated backup-folder openings, file-picker cancellation, reset confirmation/cancellation/undo, pending-draft navigation cancellation, menu labels in the selected test language, and disposal with the owning window. Add `--all-languages` for a targeted menu localization check. Opening the backup folder launches Explorer; rediscovery only reads the detected save. The input copy must remain byte-identical. The suite reproduces the v1.1.0 `ContextMenuStrip` disposal failure; directly calling `ToolStripItem.PerformClick()` does not cover that failure path.
 
 ## Binding perspectives
+
+Check the editor without a game, save, or connected controller:
+
+```powershell
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\OfflineEditorUiTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\OfflineEditorUiTests.cs
+.\dist\OfflineEditorUiTests.exe dist\offline-ui-check
+```
+
+This enters the normal offline workflow with no save path, checks preset access, export availability and the absence of game activation, then edits Xbox and PlayStation independently. It keeps PlayStation selected across Default, Custom 1 and Custom 2, edits through the UI event, and checks family/scheme isolation after export and reopening. Screenshots capture keyboard/mouse and both controller families. It does not automate the native export file picker or write game files.
 
 Quick configuration hover previews use an in-memory snapshot and never select or apply the hovered preset. The harness opens the native dropdown with mouse messages, pauses over its header, then exercises item hover, leaving and returning, switching items, and cancellation through the list window. It checks that the popup remains beside the open list without covering options and captures both from the desktop; it does not invoke private hover callbacks. It also checks draft isolation, replacement of an existing preview, mini diagrams, and factory comparison text:
 

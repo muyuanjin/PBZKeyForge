@@ -9,7 +9,7 @@ message PresetShare {
 }
 
 message DeviceScope {
-  // 0: keyboard/mouse, 1: Xbox, 2: PlayStation.
+  // 0: keyboard/mouse, 1: Xbox (Xbox), 2: PlayStation (PS).
   uint32 device = 1;
   repeated BindingChange changes = 2;
 }

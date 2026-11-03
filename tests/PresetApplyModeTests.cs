@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -85,7 +85,7 @@ public static class PresetApplyModeTests
             // All selected controller families participate; another scheme remains untouched.
             var multi = SaveFile.FromBytes(saved);
             var fields = multi.GamepadProfiles.First(item => item.ProfileId == Profile).Fields.Select(SaveFile.CloneNode).ToList();
-            SaveFile.SetField(fields, "Family", "PlayStation");
+            SaveFile.SetField(fields, "Family", "PS");
             multi.Props.First(node => node.Name == "GamepadFamilyProfiles").Items.Add(fields);
             foreach (var item in multi.GamepadKeysFor(Profile).SelectMany(keys => keys.Items).Where(item => SaveFile.Field(item, "MappingName") == "IA_Guard"))
                 SaveFile.SetField(item, "Key", "Gamepad_RightShoulder");
@@ -130,6 +130,7 @@ public static class PresetApplyModeTests
                 Assert(button.Mode == PresetApplyMode.OnlyPreset && button.Visible && button.Enabled, "All mode choices visible with first-launch selection");
                 SelectMode(button, PresetApplyMode.Append);
                 var picker = Field<ComboBox>(form, "cbPreset");
+                foreach (var personal in picker.Items.Cast<object>().OfType<Preset>().Where(preset => preset.IsUser).ToArray()) picker.Items.Remove(personal);
                 Assert(button.Parent == picker.Parent, "Mode belongs beside preset selector");
                 picker.SelectedItem = picker.Items.Cast<object>().OfType<Preset>().Single(preset => preset.Id == "mouse_guard");
                 foreach (var mode in new[] { PresetApplyMode.Replace, PresetApplyMode.OnlyPreset, PresetApplyMode.Append })
