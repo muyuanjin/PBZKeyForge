@@ -7,15 +7,16 @@ param(
     [string]$ControllerPreset = "souls",
     [ValidateSet("en", "zh-Hans")]
     [string[]]$Languages = @("en", "zh-Hans"),
-    [string[]]$Shots = @("main", "main-gamepad", "bindings", "bindings-gamepad", "actions", "binding-edit", "presets-save", "presets-share", "presets-import")
+    [string[]]$Shots = @("main", "main-gamepad", "main-playstation", "bindings", "bindings-gamepad", "actions", "binding-edit", "presets-save", "presets-share", "presets-import")
 )
 
 $ErrorActionPreference = "Stop"
 $captions = [ordered]@{
     "main" = "Quick setup: keyboard and mouse"
-    "main-gamepad" = "Quick setup: controller"
+    "main-gamepad" = "Quick setup: Xbox"
+    "main-playstation" = "Quick setup: PlayStation"
     "bindings" = "Key view and scheme changes"
-    "bindings-gamepad" = "Controller actions and scheme changes"
+    "bindings-gamepad" = "Xbox actions and scheme changes"
     "actions" = "Action view and binding slots"
     "binding-edit" = "Factory binding and explicit unbinding"
     "presets-save" = "Save the current scheme as a preset"
@@ -44,7 +45,7 @@ if ($LASTEXITCODE -ne 0) { throw "Screenshot tool compilation failed." }
 Write-Host "The editor will briefly appear in front of other windows. Keep the desktop unlocked."
 foreach ($language in $Languages) {
     foreach ($shot in $shotsToCapture) {
-        $previewPreset = if ($shot.EndsWith("-gamepad")) { $ControllerPreset } else { $Preset }
+        $previewPreset = if ($shot.EndsWith("-gamepad") -or $shot.EndsWith("-playstation")) { $ControllerPreset } else { $Preset }
         & $capture $application $root $output $language $previewPreset $shot "$SavePath"
         if ($LASTEXITCODE -ne 0) { throw "Screenshot failed: $language / $shot" }
     }

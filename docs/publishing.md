@@ -66,12 +66,13 @@ For every public version, build or select that version's executable and run:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshots.ps1
 ```
 
-The script produces 18 images and a linked `README.md` index in `assets/screenshots/<version>/`, using the executable's version number. Each scene has `-en.png` and `-zh-Hans.png` variants:
+The script produces 20 images and a linked `README.md` index in `assets/screenshots/<version>/`, using the executable's version number. Each scene has `-en.png` and `-zh-Hans.png` variants:
 
 | Scene | Screenshot | Description section |
 | --- | --- | --- |
-| `main` | Keyboard/mouse, preset dropdown expanded | Built-in layouts |
-| `main-gamepad` | Controller, preset dropdown expanded | Built-in layouts |
+| `main` | Keyboard/mouse, preset dropdown expanded | Gallery |
+| `main-gamepad` | Xbox, preset dropdown expanded | Gallery |
+| `main-playstation` | PlayStation, preset dropdown expanded | Gallery |
 | `bindings` | Keyboard/mouse actions and whole-scheme changes | See and edit your bindings |
 | `bindings-gamepad` | Controller actions and whole-scheme changes | See and edit your bindings |
 | `actions` | Action view with binding slots | See and edit your bindings |
@@ -80,7 +81,7 @@ The script produces 18 images and a linked `README.md` index in `assets/screensh
 | `presets-share` | Saved preset and sharing device dropdown | Your presets and share codes |
 | `presets-import` | Share-code preview, device scope and apply choices | Your presets and share codes / Choose how a preset changes your keys |
 
-It reads the detected save or falls back to the repository sample, previews `mouse_guard` for keyboard/mouse and `souls` for controllers without applying them, omits personal preset names and displays only the generic save-directory suffix. Saving demonstrations use an isolated temporary preset library, removed afterwards; the user's library and clipboard are untouched. The game's real scheme status is retained; a sample without an installed executable reports that scheme activation cannot be verified. Run on an unlocked Windows desktop with enough room for the editor.
+It reads the detected save or falls back to the repository sample, previews `mouse_guard` for keyboard/mouse and `souls` for controllers without applying them, omits personal preset names and displays only the generic save-directory suffix. Saving demonstrations use an isolated temporary preset library, removed afterwards; the user's library and clipboard are untouched. The game's real scheme status is retained; a sample without an installed executable reports that scheme activation cannot be verified. If the input lacks a PlayStation record, the PS demonstration uses a temporary copy with the Xbox record’s family changed to PlayStation. The input remains unchanged, and the copy is removed after capture. Run on an unlocked Windows desktop with enough room for the editor.
 
 To capture a different build or input:
 
@@ -90,11 +91,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshot
   -Preset mouse_guard -OutputDir assets\screenshots\1.2.0
 ```
 
-Use `-ControllerPreset <id>` to select a different controller preview. Use `-Shots main,main-gamepad` for only the four main screenshots, or select individual scene names to recapture a feature. `-Languages en` limits a capture to English.
+Use `-ControllerPreset <id>` to select a different controller preview. Use `-Shots main,main-gamepad,main-playstation` for only the six main screenshots, or select individual scene names to recapture a feature. `-Languages en` limits a capture to English.
 
-Inspect the PNGs for readable text, correct language and absence of local information. The four main screenshots must show the preset list open; the other scenes show the feature being described. Upload them to the mod's **Manage → Media → Add image(s)** gallery with titles `PBZKeyForge <version> — <language> — <scene>`. Save the media changes and verify the images on the public Images tab. Keep older version images, identified by their titles.
+Inspect the PNGs for readable text, correct language and absence of local information. The six main screenshots must show the preset list open; the other scenes show the feature being described. Upload them to the mod's **Manage → Media → Add image(s)** gallery with titles `PBZKeyForge <version> — <language> — <scene>`. Save the media changes and verify the images on the public Images tab. Place the six main screenshots first: English keyboard/mouse, Xbox, PlayStation, then Simplified Chinese keyboard/mouse, Xbox, PlayStation. Set the English keyboard/mouse screenshot as the thumbnail. Keep the banner after these six. Hide outdated UI images from the gallery without deleting them.
 
-Use each uploaded image's full-size public `staticdelivery.nexusmods.com` URL in `[center][img]URL[/img][/center]` below its matching feature description in `docs/nexus-description.bbcode.txt`. A gallery link alone does not illustrate a feature. Use the English images for the English homepage text and place Chinese images in an expandable section. Images uploaded for the description can stay under **Hidden images**: this hides them from the gallery while retaining their public URLs for embedding. Record the local-file-to-media mapping in `docs/nexus-media-<version>.md`. Confirm each embedded image shows the described feature and version before saving the page.
+Keep installation, the in-game binding warning and preset apply-mode explanations ahead of feature illustrations. The description uses three images: editing by key, saving a personal preset, and sharing with a device scope. Do not repeat the six gallery screenshots in the body or embed the entire screenshot collection. Use each image's full-size public `staticdelivery.nexusmods.com` URL in `[center][img]URL[/img][/center]` below its matching explanation. Other feature images stay under **Hidden images**, retaining their public URLs for later use. Record the gallery order, thumbnail and local-file-to-media mapping in `docs/nexus-media-<version>.md`. Confirm each embedded image shows the described feature and version before saving the page.
 
 Read the live Description tab before editing the homepage. Update `docs/nexus-description.bbcode.txt` to reflect current player-visible features and instructions, then paste it through **Manage → Mod details → Full description → View source** and save. Update the homepage version and short description along with it. Point the English and Chinese README sections to the matching versioned screenshots. File-upload release notes are maintained separately in `docs/releases/`.
 
