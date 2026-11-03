@@ -126,8 +126,8 @@ namespace PBZKeyForge
             Add("zh-Hans", "preset.space_dodge.desc", "键鼠额外加一个空格键给闪避，Shift 保留。");
             Add("zh-Hans", "preset.vanilla.name", "清除全部覆盖（恢复默认）");
             Add("zh-Hans", "preset.vanilla.desc", "清掉本工具写的键位，回到游戏默认。");
-            Add("zh-Hans", "preset.vanilla_current.name", "恢复当前方案默认");
-            Add("zh-Hans", "preset.vanilla_current.desc", "仅恢复当前方案的键鼠和手柄默认键位，其他方案不变。");
+            Add("zh-Hans", "preset.vanilla_current.name", "恢复原厂");
+            Add("zh-Hans", "preset.vanilla_current.desc", "仅恢复当前方案的键鼠和手柄原厂键位，其他方案不变。");
 
             // ---------------- English ----------------
             Add("en", "app.title", "Phantom Blade Zero Key Tool");
@@ -189,8 +189,8 @@ namespace PBZKeyForge
             Add("en", "preset.space_dodge.desc", "Adds Space as an extra keyboard dodge key; Shift stays.");
             Add("en", "preset.vanilla.name", "Clear all overrides (game defaults)");
             Add("en", "preset.vanilla.desc", "Removes the bindings written by this tool and returns to the shipped defaults.");
-            Add("en", "preset.vanilla_current.name", "Restore current scheme defaults");
-            Add("en", "preset.vanilla_current.desc", "Restores keyboard and controller defaults for this scheme only.");
+            Add("en", "preset.vanilla_current.name", "Restore factory defaults");
+            Add("en", "preset.vanilla_current.desc", "Restores factory keyboard and controller bindings for this scheme only.");
 
             // ---------------- 日本語 ----------------
             Add("ja", "app.title", "影之刃零 キー設定ツール");
@@ -252,8 +252,8 @@ namespace PBZKeyForge
             Add("ja", "preset.space_dodge.desc", "キーボードの回避にスペースを追加。Shift も残ります。");
             Add("ja", "preset.vanilla.name", "すべての上書きを削除（既定に戻す）");
             Add("ja", "preset.vanilla.desc", "このツールが書いたキー設定を消し、ゲーム既定に戻します。");
-            Add("ja", "preset.vanilla_current.name", "現在の設定を既定に戻す");
-            Add("ja", "preset.vanilla_current.desc", "現在の設定のキーボードとゲームパッドだけを既定に戻します。");
+            Add("ja", "preset.vanilla_current.name", "初期設定に戻す");
+            Add("ja", "preset.vanilla_current.desc", "現在の設定のキーボードとゲームパッドだけを初期設定に戻します。");
 
             // ---------------- 한국어 ----------------
             Add("ko", "app.title", "그림자 무기 키 설정 도구");
@@ -315,8 +315,8 @@ namespace PBZKeyForge
             Add("ko", "preset.space_dodge.desc", "키보드 회피에 스페이스를 추가합니다. Shift 는 유지.");
             Add("ko", "preset.vanilla.name", "모든 덮어쓰기 삭제(기본값)");
             Add("ko", "preset.vanilla.desc", "이 도구가 쓴 키 설정을 지우고 게임 기본값으로 돌립니다.");
-            Add("ko", "preset.vanilla_current.name", "현재 프리셋 기본값으로 복원");
-            Add("ko", "preset.vanilla_current.desc", "현재 프리셋의 키보드와 게임패드만 기본값으로 복원합니다.");
+            Add("ko", "preset.vanilla_current.name", "공장 기본값 복원");
+            Add("ko", "preset.vanilla_current.desc", "현재 설정의 키보드와 게임패드만 공장 기본값으로 복원합니다.");
 
             // ---------------- Русский ----------------
             Add("ru", "app.title", "Настройка управления Phantom Blade Zero");
@@ -378,8 +378,8 @@ namespace PBZKeyForge
             Add("ru", "preset.space_dodge.desc", "Добавляет пробел как вторую клавишу уклонения; Shift сохраняется.");
             Add("ru", "preset.vanilla.name", "Удалить все переопределения");
             Add("ru", "preset.vanilla.desc", "Убирает назначения, сделанные этим инструментом, и возвращает значения игры.");
-            Add("ru", "preset.vanilla_current.name", "Восстановить текущую схему по умолчанию");
-            Add("ru", "preset.vanilla_current.desc", "Восстанавливает клавиатуру и геймпад только для этой схемы.");
+            Add("ru", "preset.vanilla_current.name", "Заводские настройки");
+            Add("ru", "preset.vanilla_current.desc", "Восстанавливает заводские назначения клавиатуры и геймпада только для этой схемы.");
 
             // ---- scheme / buttons ----
             Add("zh-Hans", "btn.activate", "启用该方案");

@@ -26,9 +26,12 @@ New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 
 $sources = @(Get-ChildItem $src -Filter *.cs | ForEach-Object { $_.FullName })
 $refs = @("/r:System.dll", "/r:System.Core.dll", "/r:System.Windows.Forms.dll", "/r:System.Drawing.dll", "/r:System.Web.Extensions.dll")
+$protobuf = Join-Path $root "third_party\protobuf-net\protobuf-net.dll"
+$refs += "/r:$protobuf"
 $iconArg = @()
 if (Test-Path $icon) { $iconArg = @("/win32icon:$icon") }
 $artworkArgs = @(
+    "/resource:$protobuf,PBZKeyForge.protobuf-net",
     "/resource:$root\assets\ui\wallpaper.jpg,PBZKeyForge.Wallpaper",
     "/resource:$root\assets\ui\game-wordmark.png,PBZKeyForge.GameWordmark",
     "/resource:$root\assets\ui\app-mark.png,PBZKeyForge.AppMark",

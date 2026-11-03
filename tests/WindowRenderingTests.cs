@@ -36,6 +36,15 @@ public static class WindowRenderingTests
     static void Frame(EditorWindow form, string output, string state)
     {
         Application.DoEvents();
+        var main = form as MainForm;
+        if (main != null)
+        {
+            var footer = Field<Control>(main, "footer");
+            var status = Field<Control>(main, "lblStatus"); var backup = Field<Control>(main, "lblBackup");
+            Assert(!status.Bounds.IntersectsWith(backup.Bounds), state + ": status overlaps the backup hint.");
+            Assert(footer.ClientRectangle.Contains(backup.Bounds) && backup.Height >= backup.Font.Height,
+                state + ": backup hint is clipped by the footer.");
+        }
         // Force synchronous frame painting as Windows does on focus and title changes.
         RedrawWindow(form.Handle, IntPtr.Zero, IntPtr.Zero, 0x501);
         DwmFlush();

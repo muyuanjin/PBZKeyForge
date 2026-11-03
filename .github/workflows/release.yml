@@ -30,7 +30,26 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           ./dist/PBZKeyForge-cli.exe --gen-presets ./samples/vanilla-base.sav ./presets-out
+          if ($LASTEXITCODE -ne 0) { throw "Preset generation failed" }
           Get-ChildItem ./presets-out | Select-Object Name, Length | Format-Table -AutoSize
+
+      - name: Verify preset share format and device scopes
+        shell: pwsh
+        run: |
+          $compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          & $compiler /nologo /out:dist\PresetShareTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll tests\PresetShareTests.cs
+          if ($LASTEXITCODE -ne 0) { throw "Preset share test compilation failed" }
+          ./dist/PresetShareTests.exe ./samples/vanilla-base.sav ./dist/preset-share-check
+          if ($LASTEXITCODE -ne 0) { throw "Preset share checks failed" }
+
+      - name: Verify preset files match the editor
+        shell: pwsh
+        run: |
+          $compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          & $compiler /nologo /out:dist\PresetPackageTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll tests\PresetPackageTests.cs
+          if ($LASTEXITCODE -ne 0) { throw "Preset package test compilation failed" }
+          ./dist/PresetPackageTests.exe ./samples/vanilla-base.sav ./presets-out ./dist/preset-package-check
+          if ($LASTEXITCODE -ne 0) { throw "Preset files differ from the editor" }
 
       - name: Verify round-trip on the shipped base file
         shell: pwsh
@@ -58,6 +77,7 @@ jobs:
           # Save-file-only package for players who do not want to run an executable.
           New-Item -ItemType Directory -Path pkg-sav | Out-Null
           Copy-Item presets-out\*.sav pkg-sav
+          Copy-Item presets-out\PRESETS.md pkg-sav
           Copy-Item README.md pkg-sav
           Compress-Archive -Path pkg-sav\* -DestinationPath "PBZKeyForge-$tag-presets-only.zip"
 
@@ -84,7 +104,7 @@ jobs:
           2. Back up ``ProjectPBZ\Saved\EnhancedInputUserSettings.sav``.
           3. Editor: run ``PBZKeyForge.exe``; it finds the save automatically. Choose a scheme, edit bindings or preview a quick configuration, then click ``Apply changes``.
           4. To make the edited scheme active, check ``Set game scheme to…`` before applying. Leave it unchecked to save bindings without switching schemes.
-          5. Presets-only: replace ``EnhancedInputUserSettings.sav`` with a preset file, then select the scheme named by that file in game.
+          5. Presets-only: consult ``PRESETS.md``, replace ``EnhancedInputUserSettings.sav`` with the chosen file, then select the listed scheme in game.
           6. Do not open the in-game keybind screen and press apply/reset afterwards.
 
           Verified against build CL-301524.

@@ -65,15 +65,15 @@ namespace PBZKeyForge
                         EditorTheme.Muted, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
             using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawLine(pen, 0, Height - 1, Width, Height - 1);
             if (BackColor == EditorTheme.Preview)
-                using (var brush = new SolidBrush(EditorTheme.AccentHover)) e.Graphics.FillRectangle(brush, 0, (int)(5 * scale), Math.Max(2, (int)(3 * scale)), Height - (int)(10 * scale));
+                using (var brush = new SolidBrush(BindingStatus.Pending)) e.Graphics.FillRectangle(brush, 0, (int)(5 * scale), Math.Max(2, (int)(3 * scale)), Height - (int)(10 * scale));
         }
     }
 
     internal static class BindingStatus
     {
         public static readonly Color Factory = Color.FromArgb(128, 143, 153);
-        public static readonly Color Custom = Color.FromArgb(240, 178, 78);
-        public static readonly Color Pending = Color.FromArgb(226, 66, 83);
+        public static readonly Color Custom = Color.FromArgb(64, 158, 255);
+        public static readonly Color Pending = Color.FromArgb(240, 178, 78);
         public static void Dot(Graphics graphics, Color color, float x, float y, float size)
         { using (var brush = new SolidBrush(color)) graphics.FillEllipse(brush, x, y, size, size); }
     }
@@ -310,7 +310,7 @@ namespace PBZKeyForge
                 RectangleF badge = badges[key];
                 using (var brush = new SolidBrush(state.Color)) e.Graphics.FillEllipse(brush, badge);
                 using (var pen = new Pen(EditorTheme.Surface, scale)) e.Graphics.DrawEllipse(pen, badge);
-                TextRenderer.DrawText(e.Graphics, state.Number, numberFont, Rectangle.Round(badge), state.Pending ? Color.White : EditorTheme.Background,
+                TextRenderer.DrawText(e.Graphics, state.Number, numberFont, Rectangle.Round(badge), EditorTheme.Background,
                     TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
             }
         }
@@ -333,21 +333,14 @@ namespace PBZKeyForge
             if (icon != null) e.Graphics.DrawImage(icon, new Rectangle(inset, (Height - iconSize) / 2, iconSize, iconSize));
             TextRenderer.DrawText(e.Graphics, Text, Font, new Rectangle(left, (int)(5 * scale), Width - left - inset, Height / 2), Removed ? EditorTheme.Muted : EditorTheme.Ink,
                 TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
-            string status = I18n.Str(Removed ? "views.removedshort" : Fixed ? "views.fixed" : Unknown ? "editor.defaultunknown" : Custom ? "views.custom" : "views.original");
+            string status = I18n.Str(Pending ? "views.pending" : Removed ? "views.removedshort" : Fixed ? "views.fixed" : Unknown ? "editor.defaultunknown" : Custom ? "views.savedcustom" : "views.original");
+            if (Pending && Removed) status = I18n.Str("views.removedshort") + " · " + status;
             int y = Height * 2 / 3, dot = (int)(6 * scale);
-            BindingStatus.Dot(e.Graphics, Custom || Removed ? BindingStatus.Custom : BindingStatus.Factory, left, y, dot);
+            BindingStatus.Dot(e.Graphics, Pending ? BindingStatus.Pending : Custom || Removed ? BindingStatus.Custom : BindingStatus.Factory, left, y, dot);
             using (var statusFont = new Font(Font.FontFamily, 8f))
             {
                 var bounds = new Rectangle(left + dot + (int)(5 * scale), y - (int)(5 * scale), Width - left - dot - inset, (int)(18 * scale));
-                TextRenderer.DrawText(e.Graphics, status, statusFont, bounds, EditorTheme.Muted, TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
-                if (Pending)
-                {
-                    int offset = TextRenderer.MeasureText(e.Graphics, status, statusFont, Size.Empty, TextFormatFlags.NoPadding).Width + (int)(20 * scale);
-                    BindingStatus.Dot(e.Graphics, BindingStatus.Pending, left + offset, y, dot);
-                    TextRenderer.DrawText(e.Graphics, I18n.Str("views.pending"), statusFont,
-                        new Rectangle(left + offset + dot + (int)(5 * scale), bounds.Y, Math.Max(0, Width - left - offset - dot - inset), bounds.Height), BindingStatus.Pending,
-                        TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
-                }
+                TextRenderer.DrawText(e.Graphics, status, statusFont, bounds, Pending ? BindingStatus.Pending : EditorTheme.Muted, TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
             }
             if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(ClientRectangle, -3, -3));
         }
@@ -500,7 +493,7 @@ namespace PBZKeyForge
                     edit.Removed = isRemoved; edit.Custom = custom; edit.Unknown = !custom && relation.DefaultKeys == null; edit.Fixed = fixedBinding;
                     edit.Pending = relation.Keys.Contains(selectedKey) != before[relation.Action].Keys.Contains(selectedKey)
                         && relation.KnowsKey(selectedKey) && before[relation.Action].KnowsKey(selectedKey);
-                    edit.AccessibleName = edit.Text + " · " + I18n.Str(isRemoved ? "views.removedshort" : custom ? "views.custom" : "views.original"); edit.Invalidate();
+                    edit.AccessibleName = edit.Text + " · " + I18n.Str(edit.Pending ? "views.pending" : isRemoved ? "views.removedshort" : custom ? "views.savedcustom" : "views.original"); edit.Invalidate();
                 }
                 add.Height = Font.Height + 18; add.Text = "+ " + I18n.Str("views.addaction"); add.Enabled = !session.IsResetPending;
                 reset.Height = Font.Height + 16; reset.Text = I18n.Str("views.restorekey");

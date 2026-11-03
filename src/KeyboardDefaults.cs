@@ -110,6 +110,15 @@ namespace PBZKeyForge
         public static int[] RegisteredSlots(string action, bool gamepad)
         { return EffectiveBindings.Where(binding => binding.Action == action && binding.Gamepad == gamepad).Select(binding => binding.Slot).Distinct().OrderBy(slot => slot).ToArray(); }
 
+        public static string[] ResolveKeys(string action, bool gamepad, IEnumerable<KeyValuePair<int, string>> overrides)
+        {
+            var saved = overrides.ToArray();
+            var inherited = RegisteredSlots(action, gamepad).Where(slot => !saved.Any(binding => binding.Key == slot))
+                .Select(slot => ForRawSlot(action, gamepad, slot));
+            return saved.Select(binding => binding.Value).Concat(inherited).Concat(FixedForAction(action, gamepad))
+                .Where(key => !string.IsNullOrEmpty(key) && key != "None").Distinct().ToArray();
+        }
+
         static List<int> OwnedSlots(string action, bool gamepad, IEnumerable<int> existingSlots)
         {
             return RegisteredSlots(action, gamepad).Concat(existingSlots.Where(slot => slot >= 0 && slot < SlotNames.Length - 1)).Distinct().ToList();

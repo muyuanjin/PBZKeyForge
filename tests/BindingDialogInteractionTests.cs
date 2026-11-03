@@ -113,8 +113,9 @@ public static class BindingDialogInteractionTests
             }
             form.Show(); Application.DoEvents();
             Assert(cases[0].DisplayText == "E" && cases[0].StatusColor == Color.FromArgb(128, 143, 153), "Factory binding retained the prefix or wrong status.");
-            Assert(cases[1].StatusColor == Color.FromArgb(240, 178, 78), "Saved customization did not use the key-view amber.");
-            Assert(cases[2].StatusColor == Color.FromArgb(226, 66, 83), "Pending customization did not use the key-view red.");
+            Assert(cases[1].StatusColor == Color.FromArgb(64, 158, 255), "Saved customization did not use the key-view blue.");
+            Assert(cases[1].StatusText == "已修改", "Saved customization must use the short modified label.");
+            Assert(cases[2].StatusColor == Color.FromArgb(240, 178, 78), "Pending customization did not use the key-view yellow.");
             Assert(cases[3].EmptyBinding && cases[4].EmptyBinding && cases[3].StatusColor != cases[4].StatusColor, "Empty inheritance and pending unbind lost their distinction.");
             using (var bitmap = new Bitmap(cases[3].Width, cases[3].Height))
             {

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added named user presets, batch deletion, game-file export and compact PBZ2 share codes using Protobuf, stable binding IDs and explicit keyboard/controller scopes.
+- Added sharing device selection and live code lengths; Preset only preserves devices outside the preset's scope. Apply mode is a compact three-state switch beside the preset controls.
 - Added shared key and action views, clickable keyboard/mouse/controller diagrams, and factory/saved/pending status badges.
 - Added whole-scheme comparisons against saved or factory bindings, with four row presentation modes.
 - Added explicit unbinding, concrete factory keys in binding dialogs, and resource-based action and raw-slot defaults for CL-301524.

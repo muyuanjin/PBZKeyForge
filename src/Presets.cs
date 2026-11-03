@@ -1,9 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PBZKeyForge
 {
+    public enum PresetApplyMode { Append, Replace, OnlyPreset }
+
     public class KeyBinding
     {
         public string Action;
@@ -12,16 +14,34 @@ namespace PBZKeyForge
         public KeyBinding(string a, int s, string k) { Action = a; Slot = s; Key = k; }
     }
 
+    public sealed class PresetMapping
+    {
+        public string Action;
+        public string Family;
+        public string[] Added = new string[0], Removed = new string[0];
+    }
+
+    public sealed class PresetScope
+    {
+        // Null identifies keyboard/mouse; controller names match the save's Family.
+        public string Family;
+    }
+
     public class Preset
     {
         public string Id;
+        public string UserName;
+        public List<PresetMapping> UserMappings;
+        public uint BaselineId;
+        public List<PresetScope> Scopes;
+        public bool IsUser { get { return UserMappings != null; } }
         public bool Vanilla;
         public bool CurrentProfileVanilla;
         public bool AdditiveGuard;
         public List<KeyBinding> Keyboard = new List<KeyBinding>();
         public List<KeyBinding> Gamepad = new List<KeyBinding>();
-        public string Name { get { return I18n.Str("preset." + Id + ".name"); } }
-        public string Desc { get { return I18n.Str("preset." + Id + ".desc"); } }
+        public string Name { get { return IsUser ? UserName : I18n.Str("preset." + Id + ".name"); } }
+        public string Desc { get { return IsUser ? I18n.Str("preset.devices", UserPresetStore.ScopeText(this)) : I18n.Str("preset." + Id + ".desc"); } }
         public override string ToString() { return Name; }
     }
 
@@ -48,6 +68,17 @@ namespace PBZKeyForge
             mouseGuard.Keyboard.Add(new KeyBinding("IA_HeavyAttack", 1, "None"));
             mouseGuard.Keyboard.Add(new KeyBinding("IA_HeavyAttack", 2, "RightMouseButton"));
             list.Add(mouseGuard);
+
+            var mouseGuardSpace = new Preset { Id = "mouse_guard_space" };
+            mouseGuardSpace.Keyboard.AddRange(mouseGuard.Keyboard.Select(binding => new KeyBinding(binding.Action, binding.Slot, binding.Key)));
+            foreach (string action in new[] { "IA_Dodge", "IA_MoveFast" })
+            {
+                mouseGuardSpace.Keyboard.Add(new KeyBinding(action, 0, "LeftShift"));
+                mouseGuardSpace.Keyboard.Add(new KeyBinding(action, 1, "LeftShift"));
+                mouseGuardSpace.Keyboard.Add(new KeyBinding(action, 2, "SpaceBar"));
+            }
+            mouseGuardSpace.Keyboard.Add(new KeyBinding("IA_Jump", 0, "SpaceBar"));
+            list.Add(mouseGuardSpace);
 
             // 一键攻防 + 防御键改闪避/冲刺
             var p2 = new Preset { Id = "onekey_dodge" };
@@ -100,6 +131,135 @@ namespace PBZKeyForge
         public static Preset ById(string id)
         {
             return All().FirstOrDefault(p => string.Equals(p.Id, id, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static SaveFile FactoryPreview(SaveFile source, Preset preset, string profile)
+        {
+            var result = SaveFile.FromBytes(source.ToBytes());
+            Apply(result, ById("vanilla_current"), result.RecordFor(profile));
+            if (preset.IsUser) Apply(result, preset, result.RecordFor(profile), PresetApplyMode.Replace);
+            else Apply(result, preset, result.RecordFor(profile));
+            return result;
+        }
+
+        public static void Apply(SaveFile save, Preset preset, BlobRecord record, PresetApplyMode mode)
+        {
+            if (preset.Vanilla || preset.CurrentProfileVanilla) { Apply(save, preset, record); return; }
+            if (preset.IsUser)
+            {
+                UserPresetStore.Validate(preset);
+                if (preset.Scopes.Any(scope => scope.Family != null
+                    && !save.GamepadProfiles.Any(family => family.ProfileId == record.ProfileId && family.Family == scope.Family)))
+                    throw new InvalidOperationException(I18n.Str("preset.familymissing"));
+            }
+            if (mode == PresetApplyMode.OnlyPreset)
+            {
+                if (preset.IsUser)
+                {
+                    var planned = SaveFile.FromBytes(save.ToBytes());
+                    var plannedRecord = planned.RecordFor(record.ProfileId);
+                    var familiesBefore = planned.GamepadKeysFor(record.ProfileId);
+                    if (preset.Scopes.Any(scope => scope.Family == null))
+                        plannedRecord.Entries.RemoveAll(entry => !IsGamepadOverride(familiesBefore, entry));
+                    foreach (var family in planned.GamepadProfiles.Where(family => family.ProfileId == record.ProfileId
+                        && preset.Scopes.Any(scope => scope.Family == family.Family)))
+                        foreach (var item in family.Keys.Items)
+                        {
+                            string key = SaveFile.Field(item, "DefaultKey");
+                            if (key != null) SaveFile.SetField(item, "Key", key);
+                        }
+                    var complete = new Preset { UserName = preset.Name, BaselineId = preset.BaselineId, Scopes = preset.Scopes,
+                        UserMappings = preset.Scopes.SelectMany(scope => PresetBaseline.Actions.Select(action =>
+                            preset.UserMappings.FirstOrDefault(mapping => mapping.Action == action && mapping.Family == scope.Family)
+                            ?? new PresetMapping { Action = action, Family = scope.Family })).ToList() };
+                    Apply(planned, complete, plannedRecord, PresetApplyMode.Replace);
+                    record.Entries = plannedRecord.Entries;
+                    var originalFamilies = save.GamepadKeysFor(record.ProfileId);
+                    var resultFamilies = planned.GamepadKeysFor(record.ProfileId);
+                    for (int family = 0; family < originalFamilies.Count; family++) originalFamilies[family].Items = resultFamilies[family].Items;
+                    return;
+                }
+                var onlyTarget = FactoryPreview(save, preset, record.ProfileId);
+                var onlyRecord = onlyTarget.RecordFor(record.ProfileId);
+                record.Entries = onlyRecord.Entries;
+                var savedFamilies = save.GamepadKeysFor(record.ProfileId);
+                var plannedFamilies = onlyTarget.GamepadKeysFor(record.ProfileId);
+                for (int family = 0; family < savedFamilies.Count; family++) savedFamilies[family].Items = plannedFamilies[family].Items;
+                return;
+            }
+            var commits = new List<System.Action>();
+            var families = save.GamepadKeysFor(record.ProfileId);
+            var target = preset.IsUser ? null : FactoryPreview(save, preset, record.ProfileId);
+            var targetRecord = target == null ? null : target.RecordFor(record.ProfileId);
+            var targetFamilies = target == null ? null : target.GamepadKeysFor(record.ProfileId);
+            var keyboardActions = preset.IsUser ? preset.UserMappings.Where(mapping => mapping.Family == null).Select(mapping => mapping.Action)
+                : preset.Keyboard.Select(binding => binding.Action).Concat(preset.AdditiveGuard ? new[] { "IA_Guard" } : new string[0]).Distinct();
+            foreach (string action in keyboardActions)
+            {
+                int[] rawSlots = KeyboardRawSlots(record, families, action);
+                var entries = rawSlots.Select(raw => record.Entries.Where(entry => entry.Name == action && entry.Slot == raw).ToArray()).ToArray();
+                var values = entries.Select((group, index) => group.Length > 0 ? group.Select(entry => entry.Key).ToList()
+                    : new List<string> { InputDefaults.ForRawSlot(action, false, rawSlots[index]) }).ToArray();
+                string[] required = preset.IsUser ? UserKeys(preset, preset.UserMappings.First(mapping => mapping.Family == null && mapping.Action == action)) : InputDefaults.ResolveKeys(action, false, targetRecord.Entries.Where(entry => entry.Name == action && !IsGamepadOverride(targetFamilies, entry))
+                    .Select(entry => new KeyValuePair<int, string>(entry.Slot, entry.Key)));
+                required = required.Except(InputDefaults.FixedForAction(action, false)).ToArray();
+                var changes = PlanSlots(values, required, mode == PresetApplyMode.Append,
+                    I18n.Str("editor.keyboard") + " · " + I18n.Str("act." + action));
+                foreach (var change in changes)
+                {
+                    int index = change.Key; string key = change.Value;
+                    commits.Add(delegate {
+                        if (entries[index].Length == 0)
+                            record.Entries.Add(new BlobEntry { Name = action, Slot = (byte)rawSlots[index], Key = key, X = "None", Y = "None" });
+                        else foreach (var entry in entries[index]) entry.Key = key;
+                    });
+                }
+            }
+            var padActions = preset.IsUser ? preset.UserMappings.Where(mapping => mapping.Family != null).Select(mapping => mapping.Action).Distinct()
+                : preset.Gamepad.Select(binding => binding.Action).Concat(preset.AdditiveGuard ? new[] { "IA_Guard" } : new string[0]).Distinct();
+            for (int family = 0; family < families.Count; family++)
+            {
+                var keys = families[family]; var targetKeys = targetFamilies == null ? null : targetFamilies[family];
+                string familyName = save.GamepadProfiles.First(item => item.ProfileId == record.ProfileId && item.Keys == keys).Family;
+                foreach (string action in padActions)
+                {
+                    var userMapping = preset.IsUser ? preset.UserMappings.FirstOrDefault(mapping => mapping.Family == familyName && mapping.Action == action) : null;
+                    if (preset.IsUser && userMapping == null) continue;
+                    int[] rawSlots = InputDefaults.RegisteredSlots(action, true);
+                    var entries = rawSlots.Select(raw => keys.Items.Where(item => SaveFile.Field(item, "MappingName") == action
+                        && SaveFile.Field(item, "Slot") == InputDefaults.SlotName(raw) && SaveFile.Field(item, "DefaultKey") == InputDefaults.ForRawSlot(action, true, raw)).ToArray()).ToArray();
+                    var values = entries.Select((group, index) => group.Length > 0 ? group.Select(item => SaveFile.Field(item, "Key")).ToList()
+                        : new List<string> { InputDefaults.ForRawSlot(action, true, rawSlots[index]) }).ToArray();
+                    string[] required = preset.IsUser ? UserKeys(preset, userMapping) : InputDefaults.ResolveKeys(action, true, targetKeys.Items.Where(item => SaveFile.Field(item, "MappingName") == action
+                        && InputDefaults.RegisteredSlots(action, true).Contains(InputDefaults.RawSlot(SaveFile.Field(item, "Slot")))
+                        && SaveFile.Field(item, "DefaultKey") == InputDefaults.ForRawSlot(action, true, InputDefaults.RawSlot(SaveFile.Field(item, "Slot"))))
+                        .Select(item => new KeyValuePair<int, string>(InputDefaults.RawSlot(SaveFile.Field(item, "Slot")), SaveFile.Field(item, "Key"))));
+                    var changes = PlanSlots(values, required, mode == PresetApplyMode.Append,
+                        I18n.Str("editor.gamepad") + " #" + (family + 1) + " · " + I18n.Str("act." + action));
+                    var template = keys.Items.FirstOrDefault(item => SaveFile.Field(item, "MappingName") == action) ?? keys.Items.FirstOrDefault();
+                    if (changes.Count > 0 && template == null) throw new InvalidOperationException(I18n.Str("preset.bindingsfull", I18n.Str("act." + action)));
+                    foreach (var change in changes)
+                    {
+                        int index = change.Key; string key = change.Value;
+                        commits.Add(delegate {
+                            if (entries[index].Length > 0) foreach (var item in entries[index]) SaveFile.SetField(item, "Key", key);
+                            else
+                            {
+                                var item = template.Select(SaveFile.CloneNode).ToList();
+                                SaveFile.SetField(item, "MappingName", action); SaveFile.SetField(item, "Slot", InputDefaults.SlotName(rawSlots[index]));
+                                SaveFile.SetField(item, "DefaultKey", InputDefaults.ForRawSlot(action, true, rawSlots[index])); SaveFile.SetField(item, "Key", key);
+                                keys.Items.Add(item);
+                            }
+                        });
+                    }
+                }
+            }
+            foreach (var commit in commits) commit();
+        }
+
+        static string[] UserKeys(Preset preset, PresetMapping mapping)
+        {
+            return PresetBaseline.Keys(preset.BaselineId, mapping.Action, mapping.Family != null).Except(mapping.Removed).Concat(mapping.Added).Distinct().ToArray();
         }
 
         /// <summary>Apply to one profile's keyboard and controller records; only vanilla resets all profiles.</summary>
@@ -281,16 +441,18 @@ namespace PBZKeyForge
         { return string.IsNullOrEmpty(key) || string.Equals(key, "None", StringComparison.OrdinalIgnoreCase); }
 
         static Dictionary<int, string> PlanGuardSlots(List<string>[] source, string[] required, string scope)
+        { return PlanSlots(source, required, true, scope, true); }
+
+        static Dictionary<int, string> PlanSlots(List<string>[] source, string[] required, bool append, string scope, bool guard = false)
         {
             var slots = source.Select(values => values.Where(key => !IsEmptyKey(key)).Distinct().ToList()).ToArray();
             string[] original = slots.SelectMany(values => values).Distinct().ToArray();
             Dictionary<int, string> best = null;
             int bestCost = int.MaxValue;
-            // Slots can legally contain several serialized entries. A greedy reuse
-            // can discard the only slot that preserves two distinct custom keys.
-            // Enumerate keep/right/left assignments before choosing a plan.
+            var options = required.Concat(new[] { "None" }).Distinct().ToArray();
+            int choices = options.Length + 1;
             int assignments = 1;
-            for (int slot = 0; slot < source.Length; slot++) assignments *= 3;
+            for (int slot = 0; slot < source.Length; slot++) assignments *= choices;
             for (int assignment = 0; assignment < assignments; assignment++)
             {
                 int encoded = assignment, cost = 0;
@@ -298,19 +460,19 @@ namespace PBZKeyForge
                 var plan = new Dictionary<int, string>();
                 for (int slot = 0; slot < source.Length; slot++)
                 {
-                    int choice = encoded % 3; encoded /= 3;
+                    int choice = encoded % choices; encoded /= choices;
                     if (choice == 0) continue;
-                    string key = required[choice - 1];
+                    string key = options[choice - 1];
                     if (slots[slot].Count == 1 && slots[slot][0] == key) continue;
-                    result[slot] = new List<string> { key };
+                    result[slot] = IsEmptyKey(key) ? new List<string>() : new List<string> { key };
                     plan[slot] = key;
                     cost += 1000 + (slots[slot].Count == 0 ? slot : 100 + 2 - slot);
                 }
                 string[] retained = result.SelectMany(values => values).Distinct().ToArray();
-                if (cost < bestCost && original.All(retained.Contains) && required.All(retained.Contains))
+                if (cost < bestCost && (append ? original.All(retained.Contains) : retained.All(required.Contains)) && required.All(retained.Contains))
                 { best = plan; bestCost = cost; }
             }
-            if (best == null) throw new InvalidOperationException(I18n.Str("preset.capacity", scope));
+            if (best == null) throw new InvalidOperationException(I18n.Str(guard ? "preset.capacity" : "preset.bindingsfull", scope));
             return best;
         }
     }
