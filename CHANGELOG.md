@@ -1,4 +1,9 @@
-# 1.1.0 — 2026-11-03
+# 1.1.1 — 2026-11-03
+
+- Fixed an unhandled `ContextMenuStrip` disposal exception after clicking More-menu actions, including Open backup folder.
+- Added mouse-message regression checks for every More-menu action, repeated openings, cancellations, and all interface languages.
+
+## 1.1.0 — 2026-11-03
 
 - Rebuilt the editor around scheme-scoped keyboard and gamepad drafts, with refresh, preview, conflict handling, undo, and explicit apply.
 - Added verified game-scheme activation through the game's shared settings file, with PBZS build recognition, key fingerprint checks, AES-GCM authentication, backups, and rejection of unauthenticated or unsupported data.

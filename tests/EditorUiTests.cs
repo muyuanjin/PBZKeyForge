@@ -14,6 +14,7 @@ public static class EditorUiTests
 {
     const BindingFlags Hidden = BindingFlags.Instance | BindingFlags.NonPublic;
     static int checks;
+    static bool captureImages = true;
     [DllImport("shcore.dll")]
     static extern int GetProcessDpiAwareness(IntPtr process, out int awareness);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
@@ -52,6 +53,7 @@ public static class EditorUiTests
     }
     static void Shot(Form form, string directory, string name)
     {
+        if (!captureImages) return;
         form.Refresh(); Application.DoEvents();
         using (var image = new Bitmap(form.Width, form.Height))
         {
@@ -68,6 +70,157 @@ public static class EditorUiTests
     }
     static Rectangle BoundsInForm(Form form, Control control)
     { return form.RectangleToClient(control.Parent.RectangleToScreen(control.Bounds)); }
+    static void ClickButton(MainForm form, string name)
+    {
+        var button = Field<Button>(form, name);
+        Assert(button.Visible && button.Enabled, "Button cannot be clicked: " + name);
+        button.PerformClick(); Application.DoEvents();
+    }
+    static void ClickProfile(MainForm form, string profile)
+    {
+        var tab = Field<EditorTab[]>(form, "schemeTabs").Single(button => (string)button.Tag == profile);
+        Assert(tab.Visible && tab.Enabled, "Scheme tab cannot be clicked: " + profile);
+        tab.PerformClick(); Application.DoEvents();
+        Assert(form.Session.SelectedProfile == profile && tab.Selected, "Scheme tab did not select its own profile: " + profile);
+    }
+    static void ClickDevice(MainForm form, bool gamepad)
+    {
+        ClickButton(form, gamepad ? "tabPad" : "tabKb");
+        Assert(Field<Panel>(form, "padHost").Visible == gamepad && Field<Panel>(form, "kbHost").Visible != gamepad,
+            "Device tab did not show exactly its binding table.");
+    }
+    static void RespondDialog(MainForm owner, Action trigger, Action<Form> respond, string expectedType)
+    {
+        Exception failure = null; bool answered = false;
+        var elapsed = System.Diagnostics.Stopwatch.StartNew();
+        using (var timer = new Timer { Interval = 30 })
+        {
+            timer.Tick += delegate
+            {
+                if (elapsed.Elapsed.TotalSeconds > 15)
+                {
+                    // An unexpected native modal window cannot be closed through
+                    // OpenForms. End this isolated test process with a finite failure.
+                    Console.Error.WriteLine("FAIL: modal response timed out after 15 seconds: " + (expectedType ?? "conflict confirmation"));
+                    Environment.Exit(1);
+                }
+                Form dialog = Application.OpenForms.Cast<Form>().FirstOrDefault(candidate => candidate != owner);
+                if (dialog == null) return;
+                timer.Stop();
+                try
+                {
+                    Assert(dialog.Modal && owner.OwnedForms.Contains(dialog), "Action did not open an owned modal dialog.");
+                    if (expectedType != null) Assert(dialog.GetType().Name == expectedType, "Unexpected modal dialog: " + dialog.GetType().Name);
+                    dialog.ShowInTaskbar = false; dialog.Opacity = 0;
+                    respond(dialog); answered = true;
+                }
+                catch (Exception ex) { failure = ex; dialog.Close(); }
+            };
+            timer.Start(); trigger();
+        }
+        if (failure != null) throw failure;
+        Assert(answered, "Control event did not open its expected dialog.");
+        Assert(!Application.OpenForms.Cast<Form>().Any(candidate => candidate != owner), "Modal dialog remained open after responding.");
+        Application.DoEvents();
+    }
+    static Button BindingCell(MainForm form, bool gamepad, string action, int slot)
+    {
+        var buttons = Field<IDictionary>(form, gamepad ? "padButtons" : "kbButtons");
+        return (Button)((Array)buttons[action]).GetValue(slot);
+    }
+    static void ClickBindingCell(Button button)
+    {
+        var scroll = button.Parent;
+        while (scroll != null && (!(scroll is ScrollableControl) || !((ScrollableControl)scroll).AutoScroll)) scroll = scroll.Parent;
+        Assert(scroll != null, "Binding table has no scrollable viewport.");
+        ((ScrollableControl)scroll).ScrollControlIntoView(button); Application.DoEvents();
+        Assert(button.Visible && button.Enabled, "Binding cell is not available for clicking.");
+        Point center = button.PointToScreen(new Point(button.Width / 2, button.Height / 2));
+        Assert(scroll.RectangleToScreen(scroll.ClientRectangle).Contains(center), "Scrolled binding cell is outside its viewport.");
+        button.PerformClick();
+    }
+    static void BindingAction(MainForm form, bool gamepad, string action, int slot, string key, bool clear)
+    {
+        ClickDevice(form, gamepad);
+        RespondDialog(form, delegate { ClickBindingCell(BindingCell(form, gamepad, action, slot)); }, delegate(Form dialog)
+        {
+            if (clear)
+                Descendants(dialog).OfType<Button>().Single(button => button.Text == I18n.Str("editor.clear")).PerformClick();
+            else
+            {
+                var choices = Field<ComboBox>(dialog, "keys");
+                choices.SelectedIndex = Enumerable.Range(0, choices.Items.Count).Single(index =>
+                    (string)choices.Items[index].GetType().GetField("Key").GetValue(choices.Items[index]) == key);
+                ((Button)dialog.AcceptButton).PerformClick();
+            }
+        }, "BindingDialog");
+    }
+    static void AllBindingCellsCancel(MainForm form, string input, string shared)
+    {
+        byte[] inputBefore = File.ReadAllBytes(input), sharedBefore = File.ReadAllBytes(shared);
+        foreach (bool gamepad in new[] { false, true })
+        {
+            ClickDevice(form, gamepad);
+            var buttons = Field<IDictionary>(form, gamepad ? "padButtons" : "kbButtons");
+            int visited = 0;
+            foreach (DictionaryEntry entry in buttons)
+                for (int slot = 0; slot < ((Array)entry.Value).Length; slot++)
+                {
+                    string action = (string)entry.Key; int binding = slot;
+                    string before = gamepad ? form.Session.GetGamepad(action, slot) : form.Session.GetKeyboard(action, slot);
+                    RespondDialog(form, delegate { ClickBindingCell(BindingCell(form, gamepad, action, binding)); }, delegate(Form dialog)
+                    {
+                        Assert(Field<ComboBox>(dialog, "keys").Items.Count > 0, "Binding dialog has no key choices.");
+                        Assert(dialog.Text.Contains(I18n.Str("act." + action)), "Binding cell opened another action's dialog: " + action);
+                        Assert(Field<ComboBox>(dialog, "keys").Text == BindingButton.FriendlyKey(before), "Binding dialog did not show the clicked slot's value.");
+                        ((Button)dialog.CancelButton).PerformClick();
+                    }, "BindingDialog");
+                    Assert((gamepad ? form.Session.GetGamepad(action, slot) : form.Session.GetKeyboard(action, slot)) == before,
+                        "Cancel changed binding: " + action + "/" + slot);
+                    Assert(!form.Session.HasAnyDrafts, "Cancel created a draft: " + action + "/" + slot);
+                    visited++;
+                }
+            Assert(visited == buttons.Count * 3 && visited > 0, "Binding cell coverage missed a row or slot.");
+            Console.WriteLine("Opened and cancelled " + visited + (gamepad ? " gamepad" : " keyboard") + " binding cells.");
+        }
+        Assert(inputBefore.SequenceEqual(File.ReadAllBytes(input)) && sharedBefore.SequenceEqual(File.ReadAllBytes(shared)), "Opening/cancelling binding cells wrote save files.");
+        ClickDevice(form, false);
+    }
+    static void ClearBindingOverrides(MainForm form, string input, string shared)
+    {
+        byte[] inputBefore = File.ReadAllBytes(input), sharedBefore = File.ReadAllBytes(shared);
+        string originalKeyboard = form.Session.GetKeyboard("IA_Jump", 0), originalPad = form.Session.GetGamepad("IA_Jump", 0);
+        BindingAction(form, false, "IA_Jump", 0, "F7", false);
+        Assert(form.Session.GetKeyboard("IA_Jump", 0) == "F7", "Keyboard editor did not stage override before clear.");
+        BindingAction(form, false, "IA_Jump", 0, null, true);
+        Assert(form.Session.GetKeyboard("IA_Jump", 0) == null, "Clear override did not remove keyboard override.");
+        if (form.Session.HasChanges) ClickButton(form, "btnUndo");
+        Assert(form.Session.GetKeyboard("IA_Jump", 0) == originalKeyboard && !form.Session.HasAnyDrafts, "Undo button did not restore original keyboard state.");
+        string padKey = form.Session.GetGamepadDefault("IA_Jump", 0) == "Gamepad_RightTrigger" ? "Gamepad_LeftTrigger" : "Gamepad_RightTrigger";
+        BindingAction(form, true, "IA_Jump", 0, padKey, false);
+        Assert(form.Session.GetGamepad("IA_Jump", 0) == padKey, "Controller editor did not stage override before clear.");
+        BindingAction(form, true, "IA_Jump", 0, null, true);
+        Assert(form.Session.GetGamepad("IA_Jump", 0) == form.Session.GetGamepadDefault("IA_Jump", 0), "Controller clear did not restore game default.");
+        if (form.Session.HasChanges) ClickButton(form, "btnUndo");
+        Assert(form.Session.GetGamepad("IA_Jump", 0) == originalPad && !form.Session.HasAnyDrafts, "Undo button did not restore original controller state.");
+        Assert(inputBefore.SequenceEqual(File.ReadAllBytes(input)) && sharedBefore.SequenceEqual(File.ReadAllBytes(shared)), "Clearing draft overrides wrote save files.");
+        ClickDevice(form, false);
+    }
+    static void ResolveConflictButton(MainForm form, DialogResult answer)
+    {
+        var link = Field<LinkLabel>(form, "btnConflicts");
+        Assert(link.Visible && link.Enabled && form.Session.Conflicts.Length == 1, "Conflict action is unavailable for one unresolved conflict.");
+        RespondDialog(form, delegate
+        {
+            // LinkLabel has no PerformClick. Dispatch its actual Click event; the
+            // registered UI handler owns opening and resolving the confirmation.
+            typeof(Control).GetMethod("OnClick", Hidden).Invoke(link, new object[] { EventArgs.Empty });
+        }, delegate(Form dialog)
+        {
+            var button = Descendants(dialog).OfType<Button>().Single(candidate => candidate.DialogResult == answer);
+            VisibleInsideForm(dialog, button); button.PerformClick();
+        }, null);
+    }
     static void WindowChrome(MainForm form, string output)
     {
         Assert(form.FormBorderStyle == FormBorderStyle.None, "Main window still uses the default Windows frame.");
@@ -214,6 +367,8 @@ public static class EditorUiTests
         try
         {
             Application.EnableVisualStyles();
+            bool controlsOnly = args.Contains("--controls-only");
+            captureImages = !controlsOnly;
             int awareness;
             Assert(GetProcessDpiAwareness(IntPtr.Zero, out awareness) == 0 && awareness == 1, "UI host must use the application's System DPI manifest.");
             string input = Path.GetFullPath(args[0]), output = Path.GetFullPath(args[1]);
@@ -257,7 +412,7 @@ public static class EditorUiTests
                 Assert(!apply.Enabled, "Clean editor must not allow an empty apply.");
                 language.SelectedIndex = 0; form.Size = regularSize; Application.DoEvents();
                 WindowChrome(form, output);
-                for (int i = 0; i < I18n.Languages.Length; i++)
+                for (int i = 0; i < I18n.Languages.Length && (!controlsOnly || i == 0); i++)
                 {
                     language.SelectedIndex = i; form.Size = regularSize; Application.DoEvents();
                     VisibleInsideForm(form, language); VisibleInsideForm(form, presets); VisibleInsideForm(form, apply);
@@ -273,23 +428,27 @@ public static class EditorUiTests
                 language.SelectedIndex = 0; form.Size = regularSize;
                 string editing = form.Session.Profiles.First(p => p.EndsWith("Custom1"));
                 string other = form.Session.Profiles.First(p => p != editing);
-                form.SelectProfile(other);
+                ClickProfile(form, other);
                 string otherPadJump = form.Session.GetGamepad("IA_Jump", 0);
-                form.SelectProfile(editing);
+                ClickProfile(form, editing);
+                foreach (string profile in form.Session.Profiles) ClickProfile(form, profile);
+                ClickProfile(form, editing);
+                AllBindingCellsCancel(form, input, shared);
+                ClearBindingOverrides(form, input, shared);
                 string[] originalDodge = Enumerable.Range(0, 3).Select(i => form.Session.GetKeyboard("IA_Dodge", i)).ToArray();
                 presets.SelectedItem = presets.Items.OfType<Preset>().First(p => p.Id == "onekey_dodge");
                 Assert(form.Session.PresetId == "onekey_dodge" && apply.Enabled, "Selecting quick configuration did not create a draft.");
                 presets.SelectedItem = presets.Items.OfType<Preset>().First(p => p.Id == "onekey");
                 Assert(Enumerable.Range(0, 3).All(i => form.Session.GetKeyboard("IA_Dodge", i) == originalDodge[i]), "Quick configurations accumulated an earlier dodge preview.");
                 EditKeyboard(form, "IA_Jump", 0, "F8", output);
-                form.ShowGamepad(true);
+                ClickDevice(form, true);
                 EditKeyboard(form, "IA_Jump", 0, "Gamepad_Special_Right", output, true);
-                form.SelectProfile(other);
+                ClickProfile(form, other);
                 Assert(form.Session.GetGamepad("IA_Jump", 0) == otherPadJump, "A controller draft leaked into another scheme.");
                 form.Session.SetGamepad("IA_Jump", 0, otherPadJump == "Gamepad_RightTrigger" ? "Gamepad_LeftTrigger" : "Gamepad_RightTrigger"); form.RenderSession();
-                form.SelectProfile(editing);
+                ClickProfile(form, editing);
                 Assert(form.Session.GetGamepad("IA_Jump", 0) == "Gamepad_Special_Right", "Scheme navigation lost the selected controller draft.");
-                form.ShowGamepad(false);
+                ClickDevice(form, false);
                 Assert(form.Session.PresetId == null, "Manual edit did not finish the configuration preview.");
                 ActionsAlign(form, true);
                 Assert(initialInput.SequenceEqual(File.ReadAllBytes(input)) && initialShared.SequenceEqual(File.ReadAllBytes(shared)), "Drafting or language selection wrote to disk.");
@@ -300,7 +459,7 @@ public static class EditorUiTests
                 record.Entries.RemoveAll(e => e.Name == "IA_Interact" && e.Slot == 0);
                 record.Entries.Add(new BlobEntry { Name = "IA_Interact", Key = "F9", X = "None", Y = "None", Slot = 0 });
                 disk.Save(input);
-                form.SelectProfile(other); form.SelectProfile(editing);
+                ClickProfile(form, other); ClickProfile(form, editing);
                 Assert(form.Session.GetKeyboard("IA_Jump", 0) == "F8", "Scheme switching lost a local draft.");
                 Assert(form.Session.GetKeyboard("IA_Interact", 0) == "F9", "Scheme switching did not read the latest disk binding.");
                 Shot(form, output, "draft-zh-Hans");
@@ -310,8 +469,8 @@ public static class EditorUiTests
                 Shot(form, output, "draft-activate-zh-Hans");
                 activate.Checked = false;
                 Assert(!form.Session.ActivationPending, "Unchecking activation left a hidden intention.");
-                form.ShowGamepad(true); ColumnsAlign(form, "padHost"); Shot(form, output, "gamepad-zh-Hans");
-                form.ShowGamepad(false);
+                ClickDevice(form, true); ColumnsAlign(form, "padHost"); Shot(form, output, "gamepad-zh-Hans");
+                ClickDevice(form, false);
                 Assert(apply.Enabled, "Draft apply unexpectedly disabled.");
                 apply.PerformClick(); Application.DoEvents();
                 Assert(SaveFile.Load(input).RecordFor(editing).Entries.Any(e => e.Name == "IA_Jump" && e.Slot == 0 && e.Key == "F8"), "Apply button did not save the binding draft.");
@@ -327,10 +486,10 @@ public static class EditorUiTests
                 form.Session.ResetAll(); form.RenderSession();
                 Assert(form.Session.IsResetPending && !presets.Enabled, "Global reset did not lock further quick edits.");
                 Shot(form, output, "reset-zh-Hans");
-                form.Session.Undo(); form.RenderSession();
+                ClickButton(form, "btnUndo");
                 Assert(!form.Session.IsResetPending && presets.Enabled, "Undo reset did not restore the editor.");
                 form.Session.SetKeyboard("IA_Jump", 0, "F10"); form.RenderSession();
-                for (int i = 0; i < I18n.Languages.Length; i++)
+                for (int i = 0; i < I18n.Languages.Length && (!controlsOnly || i == 0); i++)
                 {
                     language.SelectedIndex = i; form.Size = form.MinimumSize; Application.DoEvents();
                     VisibleInsideForm(form, apply); VisibleInsideForm(form, presets);
@@ -356,21 +515,47 @@ public static class EditorUiTests
                 Assert(apply.Enabled, "Exited game left Apply disabled.");
                 disk = SaveFile.Load(input); record = disk.RecordFor(editing);
                 record.Entries.First(e => e.Name == "IA_Jump" && e.Slot == 0).Key = "F11"; disk.Save(input);
-                form.RefreshFromDisk();
+                ClickButton(form, "btnRefresh");
                 Assert(form.Session.Conflicts.Length == 1 && !apply.Enabled, "Refresh must show a same-binding conflict and block Apply.");
                 Shot(form, output, "conflict-zh-Hans");
-                form.Session.Undo(); form.RenderSession();
+                byte[] conflictedInput = File.ReadAllBytes(input);
+                string conflictId = form.Session.Conflicts.Single().Id;
+                Console.WriteLine("Conflict button: Cancel, use game, then keep draft.");
+                ResolveConflictButton(form, DialogResult.Cancel);
+                Assert(form.Session.Conflicts.Single().Id == conflictId && form.Session.GetKeyboard("IA_Jump", 0) == "F10" && !apply.Enabled,
+                    "Cancelling conflict resolution lost the draft or unblocked Apply.");
+                ResolveConflictButton(form, DialogResult.No);
+                Assert(form.Session.Conflicts.Length == 0 && form.Session.GetKeyboard("IA_Jump", 0) == "F11" && !form.Session.HasChanges && !apply.Enabled,
+                    "Adopting disk did not clear the selected conflict and its draft.");
+                Assert(conflictedInput.SequenceEqual(File.ReadAllBytes(input)), "Conflict Cancel/Use game wrote disk before Apply.");
+                BindingAction(form, false, "IA_Jump", 0, "F8", false);
+                disk = SaveFile.Load(input); record = disk.RecordFor(editing);
+                record.Entries.First(e => e.Name == "IA_Jump" && e.Slot == 0).Key = "F9"; disk.Save(input);
+                ClickButton(form, "btnRefresh");
+                Assert(form.Session.Conflicts.Length == 1 && !apply.Enabled, "Second external edit did not produce a resolvable conflict.");
+                byte[] beforeLocalChoice = File.ReadAllBytes(input);
+                ResolveConflictButton(form, DialogResult.Yes);
+                Assert(form.Session.Conflicts.Length == 0 && form.Session.GetKeyboard("IA_Jump", 0) == "F8" && apply.Enabled,
+                    "Keep draft did not retain the local binding and enable Apply.");
+                Assert(beforeLocalChoice.SequenceEqual(File.ReadAllBytes(input)), "Keep draft wrote disk before Apply.");
+                ClickButton(form, "btnApply");
+                Assert(SaveFile.Load(input).RecordFor(editing).Entries.First(e => e.Name == "IA_Jump" && e.Slot == 0).Key == "F8",
+                    "Apply after Keep draft did not save the chosen binding.");
+                OtherProfilesUnchanged(beforeLocalChoice, File.ReadAllBytes(input), editing);
+                Assert(initialShared.SequenceEqual(File.ReadAllBytes(shared)), "Conflict resolution changed the active scheme unexpectedly.");
+                ClickProfile(form, other); ClickButton(form, "btnUndo"); ClickProfile(form, editing);
+                Assert(!form.Session.HasAnyDrafts, "UI undo did not discard the remaining other-scheme draft.");
                 byte[] validShared = File.ReadAllBytes(shared);
                 try
                 {
                     byte[] invalidShared = (byte[])validShared.Clone(); invalidShared[invalidShared.Length - 1] ^= 1;
-                    File.WriteAllBytes(shared, invalidShared); form.RefreshFromDisk();
+                    File.WriteAllBytes(shared, invalidShared); ClickButton(form, "btnRefresh");
                     var status = Field<Label>(form, "lblStatus");
                     Assert(form.Session.ActiveProfile == null && status.Text.Contains(I18n.Str("editor.schemeunknown")), "Ordinary refresh hid the persistent unknown-scheme explanation.");
                     Assert(!activate.Enabled, "Unknown selector still allowed activation.");
                     Shot(form, output, "unknown-scheme-zh-Hans");
                 }
-                finally { File.WriteAllBytes(shared, validShared); form.RefreshFromDisk(); }
+                finally { File.WriteAllBytes(shared, validShared); ClickButton(form, "btnRefresh"); }
             }
             Console.WriteLine("PASS: " + checks + " UI assertions; artifacts: " + output);
             return 0;
