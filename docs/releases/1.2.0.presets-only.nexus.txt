@@ -1,0 +1,13 @@
+PBZKeyForge 1.2.0 Presets Only — changes since 1.1.1
+
+This download contains eight ready-made game settings files and an English/Chinese PRESETS.md guide. There is no executable in this package. Choose one layout; the files are alternatives, not a set to install together.
+
+Two new mouse layouts combine light attack and guard on left click, and heavy attack and guard on right click, retaining F for heavy attack. The automatic-sprint variant also binds sprint to W/A/D and dodge/jump to Space, retaining Shift for dodge. Shift and Space do not trigger sprint in that layout. Both layouts change keyboard/mouse bindings only.
+
+The other choices are guard on the attack button; guard on attack with the former guard button changed to dodge/sprint; a Souls-style controller layout; Space as an additional sprint key; Space as an additional dodge key; and factory bindings. PRESETS.md lists the exact bindings and the target scheme for each file. All eight files use factory settings plus the chosen layout, so they provide a complete starting configuration rather than adding to your existing custom settings.
+
+Close the game and back up ProjectPBZ/Saved/EnhancedInputUserSettings.sav. Copy your chosen preset over that file, using EnhancedInputUserSettings.sav as the destination name, then select Custom 1 in game. Replacing the file does not switch the active scheme automatically. Avoid applying or resetting bindings in the game's own binding screen afterwards, as it rewrites these settings. Restore your backup to undo the replacement.
+
+If you want to preserve existing custom bindings, edit individual keys, save personal presets or use compact share codes, download the main PBZKeyForge editor instead. Its Add keys, Replace keys and Preset only options let you preview a layout before applying it.
+
+Supports the Steam CL-301524 build. The preset files in this archive match the editor's factory-based layouts and are built and uploaded by GitHub Actions from the v1.2.0 source tag: https://github.com/muyuanjin/PBZKeyForge/releases/tag/v1.2.0

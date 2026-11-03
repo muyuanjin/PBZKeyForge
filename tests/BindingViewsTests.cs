@@ -198,7 +198,7 @@ public static class BindingViewsTests
                 form.ShowInTaskbar = false; form.Opacity = 0; form.UiSmoke(path); form.Show(); Application.DoEvents();
                 form.SelectProfile(custom); Field<ComboBox>(form, "cbLang").SelectedIndex = 0;
                 Assert(!form.ActionView, "Key view should be the default.");
-                Field<Button>(form, "btnPresetMode").PerformClick();
+                Field<PresetModeSelector>(form, "btnPresetMode").Controls.OfType<Button>().Single(option => option.Name == "modeReplace").PerformClick();
                 Field<ComboBox>(form, "cbPreset").SelectedItem = Field<ComboBox>(form, "cbPreset").Items.OfType<Preset>().Single(p => p.Id == "mouse_guard");
                 Assert(form.Session.PresetMode == PresetApplyMode.Replace, "Binding-view setup must replace its existing custom bindings.");
                 int count = form.Session.ScopeChangeCount;

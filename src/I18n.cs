@@ -473,6 +473,7 @@ namespace PBZKeyForge
             Add("ru", "btn.quick", "Блок на атаке");
             Add("ru", "status.quick", "Блок назначен на клавишу атаки. Последний шаг: Сохранить в файл.");
             EditorStrings();
+            ApplyProgressStrings();
             ExtendedStrings();
         }
     }

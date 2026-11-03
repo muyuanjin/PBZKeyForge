@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace PBZKeyForge
@@ -36,6 +37,17 @@ namespace PBZKeyForge
         }
     }
 
+    internal sealed class PresetNameBox : TextBox
+    {
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        static extern IntPtr SendMessage(IntPtr window, int message, IntPtr parameter, string text);
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            SendMessage(Handle, 0x1501, new IntPtr(1), I18n.Str("preset.nameexample"));
+        }
+    }
+
     public sealed class UserPresetDialog : EditorWindow
     {
         sealed class ShareChoice
@@ -46,14 +58,16 @@ namespace PBZKeyForge
         }
         readonly EditorSession session;
         readonly UserPresetStore store;
-        readonly TextBox nameBox = new TextBox(), shareBox = new TextBox(), previewName = new TextBox();
+        readonly EditorPreferences preferences;
+        readonly TextBox nameBox = new PresetNameBox(), shareBox = new TextBox(), previewName = new TextBox();
         readonly CheckedListBox list = new CheckedListBox();
         readonly Panel preview = new EditorPanel();
         readonly Label status = new Label(), shareLength = new Label();
         readonly Button delete = new EditorButton(), share = new EditorButton(), saveImport = new EditorButton(), use = new EditorButton();
-        readonly PresetApplyButton modeButton = new PresetApplyButton();
+        readonly PresetModeSelector modeButton = new PresetModeSelector();
+        readonly Label modeHelp = new Label(), libraryCount = new Label(), nameHint = new Label();
         readonly ComboBox shareScope = new EditorComboBox();
-        readonly ToolTip tips = new ToolTip { AutoPopDelay = 20000 };
+        readonly ToolTip tips = new ToolTip { AutoPopDelay = 20000, ShowAlways = true };
         string shareCode;
         Preset displayed;
         bool refreshing, rendering;
@@ -61,44 +75,81 @@ namespace PBZKeyForge
         public Preset AppliedPreset { get; private set; }
 
         public UserPresetDialog(EditorSession session, UserPresetStore store, PresetApplyMode mode)
+            : this(session, store, mode, EditorPreferences.Default()) { }
+
+        public UserPresetDialog(EditorSession session, UserPresetStore store, PresetApplyMode mode, EditorPreferences preferences)
         {
+            this.preferences = preferences;
             this.session = session; this.store = store; ChosenMode = mode;
             Text = I18n.Str("preset.manage"); Font = new Font("Microsoft YaHei UI", 10f);
-            AutoScaleMode = AutoScaleMode.Dpi; ClientSize = new Size(900, 700); MinimumSize = new Size(800, 650);
+            AutoScaleMode = AutoScaleMode.Dpi; ClientSize = new Size(960, 800); MinimumSize = new Size(850, 740);
             StartPosition = FormStartPosition.CenterParent; BackColor = EditorTheme.Surface; ForeColor = EditorTheme.Ink;
             MinimizeBox = false; MaximizeBox = false;
-            var root = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 6, Padding = new Padding(20, 12, 20, 12), Margin = Padding.Empty };
+            var root = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 4, Padding = new Padding(20, 12, 20, 12), Margin = Padding.Empty };
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            foreach (int height in new[] { 38, 32, 0, 42, 50, 44 }) root.RowStyles.Add(new RowStyle(height == 0 ? SizeType.Percent : SizeType.Absolute, height == 0 ? 100 : height));
+            foreach (int height in new[] { 140, 0, 94, 48 }) root.RowStyles.Add(new RowStyle(height == 0 ? SizeType.Percent : SizeType.Absolute, height == 0 ? 100 : height));
             Controls.Add(root);
-            var current = CreateRow(4); current.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90)); current.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            current.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 146)); current.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
-            current.Controls.Add(Label("preset.name"), 0, 0); StyleInput(nameBox); nameBox.MaxLength = 80;
-            current.Controls.Add(nameBox, 1, 0);
-            var save = Button("preset.save", delegate { Run(delegate { var preset = store.Save(UserPresetStore.Capture(session, nameBox.Text), nameBox.Text); Reload(preset.Id); Message("preset.saved"); }); });
-            save.Name = "saveCurrent"; current.Controls.Add(save, 2, 0);
-            var export = Button("preset.export", delegate { Export(); }); export.Name = "exportGame"; current.Controls.Add(export, 3, 0); root.Controls.Add(current, 0, 0);
-            root.Controls.Add(Label("preset.currenthelp"), 0, 1);
 
-            var content = CreateRow(2); content.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40)); content.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60));
-            var library = new EditorLayout { Dock = DockStyle.Fill, RowCount = 4, ColumnCount = 1, Margin = new Padding(0, 0, 12, 0) };
-            library.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            library.RowStyles.Add(new RowStyle(SizeType.Absolute, 32)); library.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); library.RowStyles.Add(new RowStyle(SizeType.Absolute, 38)); library.RowStyles.Add(new RowStyle(SizeType.Absolute, 34));
-            library.Controls.Add(Label("preset.mine"), 0, 0);
-            list.Dock = DockStyle.Fill; list.Margin = Padding.Empty; list.BackColor = EditorTheme.Floating; list.ForeColor = EditorTheme.Ink; list.BorderStyle = BorderStyle.None;
-            list.CheckOnClick = true; list.IntegralHeight = false; list.SelectedIndexChanged += delegate { if (!refreshing) SelectLibrary(); };
-            list.ItemCheck += delegate { if (!refreshing) BeginInvoke((Action)SelectLibrary); };
-            library.Controls.Add(list, 0, 1);
-            delete.Text = I18n.Str("preset.delete"); delete.Dock = DockStyle.Fill; delete.Margin = new Padding(0, 5, 0, 0); delete.Name = "deleteSelected";
-            delete.Click += delegate { DeleteSelected(); }; library.Controls.Add(delete, 0, 2);
-            library.Controls.Add(Label("preset.builtinreadonly"), 0, 3); content.Controls.Add(library, 0, 0);
+            var currentCard = Card(4); currentCard.Margin = new Padding(0, 0, 0, 12);
+            foreach (int height in new[] { 28, 26, 40, 24 }) currentCard.RowStyles.Add(new RowStyle(SizeType.Absolute, height));
+            currentCard.Controls.Add(Heading("preset.currenttitle"), 0, 0);
+            currentCard.Controls.Add(Label("preset.currenthelp"), 0, 1);
+            var current = CreateRow(4);
+            current.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 88)); current.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            current.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 148)); current.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 188));
+            current.Controls.Add(Label("preset.name"), 0, 0); StyleInput(nameBox); nameBox.MaxLength = 80; nameBox.Name = "currentPresetName";
+            nameBox.AccessibleName = I18n.Str("preset.name"); current.Controls.Add(NameEntry(), 1, 0);
+            var save = Button("preset.save", delegate {
+                if (string.IsNullOrWhiteSpace(nameBox.Text))
+                {
+                    nameHint.Text = I18n.Str("preset.entername"); nameHint.ForeColor = BindingStatus.Pending;
+                    nameBox.Focus(); nameBox.Parent.Invalidate(); return;
+                }
+                Run(delegate {
+                    var preset = store.Save(UserPresetStore.Capture(session, nameBox.Text), nameBox.Text);
+                    Reload(preset.Id); Message("preset.saved");
+                });
+            });
+            save.Name = "saveCurrent"; save.ForeColor = EditorTheme.Muted;
+            tips.SetToolTip(save, I18n.Str("preset.entername"));
+            nameBox.TextChanged += delegate {
+                bool ready = !string.IsNullOrWhiteSpace(nameBox.Text);
+                ((EditorButton)save).Primary = ready; save.ForeColor = ready ? EditorTheme.Ink : EditorTheme.Muted;
+                nameHint.Text = ""; tips.SetToolTip(save, ready ? null : I18n.Str("preset.entername"));
+                save.Invalidate(); nameBox.Parent.Invalidate();
+            };
+            nameBox.KeyDown += delegate(object sender, KeyEventArgs e) {
+                if (e.KeyCode == Keys.Enter) { save.PerformClick(); e.Handled = e.SuppressKeyPress = true; }
+            };
+            Shown += delegate { nameBox.Focus(); };
+            current.Controls.Add(save, 2, 0);
+            var export = Button("preset.export", delegate { Export(); }); export.Name = "exportGame"; current.Controls.Add(export, 3, 0);
+            nameHint.Dock = DockStyle.Fill; nameHint.ForeColor = EditorTheme.Muted; nameHint.TextAlign = ContentAlignment.MiddleLeft;
+            nameHint.Margin = new Padding(88, 0, 0, 0);
+            currentCard.Controls.Add(current, 0, 2); currentCard.Controls.Add(nameHint, 0, 3); root.Controls.Add(currentCard, 0, 0);
 
-            var detail = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 4, Margin = Padding.Empty };
-            detail.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            foreach (int height in new[] { 34, 0, 42, 42 }) detail.RowStyles.Add(new RowStyle(height == 0 ? SizeType.Percent : SizeType.Absolute, height == 0 ? 100 : height));
-            StyleInput(previewName); previewName.MaxLength = 80; detail.Controls.Add(previewName, 0, 0);
+            var content = CreateRow(2); content.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 29)); content.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 71));
+            var library = Card(4); library.Margin = new Padding(0, 0, 12, 12);
+            library.RowStyles.Add(new RowStyle(SizeType.Absolute, 32)); library.RowStyles.Add(new RowStyle(SizeType.Absolute, 24));
+            library.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); library.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
+            library.Controls.Add(Heading("preset.mine"), 0, 0);
+            libraryCount.Dock = DockStyle.Fill; libraryCount.ForeColor = EditorTheme.Muted; library.Controls.Add(libraryCount, 0, 1);
+            list.Dock = DockStyle.Fill; list.Margin = new Padding(0, 4, 0, 8); list.BackColor = EditorTheme.Floating; list.ForeColor = EditorTheme.Ink; list.BorderStyle = BorderStyle.None;
+            list.CheckOnClick = false; list.IntegralHeight = false; list.SelectedIndexChanged += delegate { if (!refreshing) SelectLibrary(); };
+            list.ItemCheck += delegate { if (!refreshing) BeginInvoke((Action)UpdateLibraryChecks); };
+            library.Controls.Add(list, 0, 2);
+            delete.Dock = DockStyle.Fill; delete.Margin = Padding.Empty; delete.Name = "deleteSelected";
+            delete.Click += delegate { DeleteSelected(); }; library.Controls.Add(delete, 0, 3); content.Controls.Add(library, 0, 0);
+
+            var detail = Card(7); detail.Margin = new Padding(0, 0, 0, 12);
+            foreach (int height in new[] { 28, 36, 0, 40, 28, 44, 36 })
+                detail.RowStyles.Add(new RowStyle(height == 0 ? SizeType.Percent : SizeType.Absolute, height == 0 ? 100 : height));
+            detail.Controls.Add(Heading("preset.detailtitle"), 0, 0);
+            var detailName = CreateRow(2); detailName.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 88)); detailName.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            detailName.Controls.Add(Label("preset.name"), 0, 0); StyleInput(previewName); previewName.MaxLength = 80; previewName.AccessibleName = I18n.Str("preset.name");
+            detailName.Controls.Add(InputHost(previewName), 1, 0); detail.Controls.Add(detailName, 0, 1);
             previewName.TextChanged += delegate { if (!rendering) UpdateShare(); };
-            preview.Dock = DockStyle.Fill; preview.AutoScroll = true; preview.BackColor = EditorTheme.Floating; preview.Margin = new Padding(0, 6, 0, 6); detail.Controls.Add(preview, 0, 1);
+            preview.Dock = DockStyle.Fill; preview.AutoScroll = true; preview.BackColor = EditorTheme.Background; preview.Margin = new Padding(0, 6, 0, 6); detail.Controls.Add(preview, 0, 2);
             preview.Layout += delegate { LayoutPreview(); };
             preview.HandleCreated += delegate { EditorArtwork.DarkScrollbars(preview); };
             var sharing = CreateRow(4);
@@ -108,43 +159,63 @@ namespace PBZKeyForge
             shareScope.Dock = DockStyle.Fill; shareScope.DropDownStyle = ComboBoxStyle.DropDownList; shareScope.Margin = new Padding(0, 5, 8, 4);
             shareScope.Name = "shareScope"; shareScope.AccessibleName = I18n.Str("preset.sharescope"); tips.SetToolTip(shareScope, I18n.Str("preset.sharehelp"));
             shareScope.SelectedIndexChanged += delegate { if (!rendering) UpdateShare(); }; sharing.Controls.Add(shareScope, 1, 0);
-            share.Text = I18n.Str("preset.share"); share.Dock = DockStyle.Fill; share.Margin = new Padding(0, 3, 4, 3); share.Name = "copyShare";
+            share.Text = I18n.Str("preset.share"); share.Dock = DockStyle.Fill; share.Margin = new Padding(0, 3, 8, 3); share.Name = "copyShare";
             share.Click += delegate { Run(delegate { if (shareCode != null) { Clipboard.SetText(shareCode); Message("preset.copied"); } }); };
             sharing.Controls.Add(share, 2, 0); shareLength.Dock = DockStyle.Fill; shareLength.TextAlign = ContentAlignment.MiddleRight;
-            shareLength.ForeColor = EditorTheme.Muted; sharing.Controls.Add(shareLength, 3, 0); detail.Controls.Add(sharing, 0, 2);
-            var actions = CreateRow(3); actions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50)); actions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-            actions.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 112));
-            saveImport.Text = I18n.Str("preset.saveimport"); saveImport.Dock = DockStyle.Fill; saveImport.Margin = new Padding(4, 0, 0, 0); saveImport.Name = "saveImport";
-            saveImport.Click += delegate { Run(delegate { var value = store.Save(displayed, previewName.Text); Reload(value.Id); Message("preset.saved"); }); };
-            actions.Controls.Add(saveImport, 0, 0);
-            use.Dock = DockStyle.Fill; use.Margin = new Padding(0, 4, 0, 0); use.Name = "usePreset";
+            shareLength.ForeColor = EditorTheme.Muted; sharing.Controls.Add(shareLength, 3, 0); detail.Controls.Add(sharing, 0, 3);
+            var modeRow = CreateRow(2); modeRow.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 88)); modeRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            var modeHeading = Label("preset.mode"); modeHeading.Font = new Font(Font.FontFamily, 9f);
+            modeRow.Controls.Add(modeHeading, 0, 0); modeButton.Dock = DockStyle.None; modeButton.Anchor = AnchorStyles.Left;
+            modeButton.AutoSize = true; modeButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            modeButton.Font = new Font(Font.FontFamily, 9f); modeButton.Margin = Padding.Empty; modeButton.Name = "presetMode";
+            modeButton.ModeChanged += delegate { Run(delegate {
+                ChosenMode = modeButton.Mode; UpdateMode(); preferences.SavePresetMode(ChosenMode);
+            }); };
+            modeRow.Controls.Add(modeButton, 1, 0); detail.Controls.Add(modeRow, 0, 4);
+            modeHelp.Dock = DockStyle.Fill; modeHelp.ForeColor = EditorTheme.Muted; modeHelp.TextAlign = ContentAlignment.MiddleLeft; modeHelp.Margin = new Padding(0, 4, 0, 4);
+            detail.Controls.Add(modeHelp, 0, 5);
+            var actions = CreateRow(2); actions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); actions.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 212));
+            use.Dock = DockStyle.Fill; use.Margin = Padding.Empty; use.Name = "usePreset"; ((EditorButton)use).Primary = true;
             use.Click += delegate { Run(delegate {
                 var value = displayed;
                 if (value.Id == null)
                 {
-                    // Verify capacity before persisting the imported preset.
                     session.CheckPreset(value, ChosenMode);
                     value = store.Save(value, previewName.Text);
                 }
                 session.StagePreset(value, ChosenMode); AppliedPreset = value; DialogResult = DialogResult.OK; Close();
             }); };
-            actions.Controls.Add(use, 1, 0);
-            modeButton.Dock = DockStyle.Fill; modeButton.Margin = new Padding(6, 4, 0, 0); modeButton.Name = "presetMode";
-            modeButton.Click += delegate { ChosenMode = (PresetApplyMode)(((int)ChosenMode + 1) % 3); UpdateMode(); };
-            actions.Controls.Add(modeButton, 2, 0); detail.Controls.Add(actions, 0, 3);
-            content.Controls.Add(detail, 1, 0); root.Controls.Add(content, 0, 2);
+            actions.Controls.Add(use, 1, 0); detail.Controls.Add(actions, 0, 6);
+            content.Controls.Add(detail, 1, 0); root.Controls.Add(content, 0, 1);
 
-            var import = CreateRow(3); import.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120)); import.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); import.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 96));
-            import.Controls.Add(Label("preset.paste"), 0, 0); StyleInput(shareBox); import.Controls.Add(shareBox, 1, 0);
+            var importCard = Card(3); importCard.Margin = Padding.Empty;
+            importCard.RowStyles.Add(new RowStyle(SizeType.Absolute, 28)); importCard.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
+            importCard.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            importCard.Controls.Add(Heading("preset.importtitle"), 0, 0);
+            var import = CreateRow(3); import.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); import.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 84)); import.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
+            StyleInput(shareBox); shareBox.Margin = new Padding(0, 5, 8, 4); shareBox.AccessibleName = I18n.Str("preset.paste"); import.Controls.Add(InputHost(shareBox), 0, 0);
             var inspect = Button("preset.preview", delegate { Run(delegate { Display(UserPresetStore.ParseShare(shareBox.Text)); Message("preset.importhelp"); }); }); inspect.Name = "previewShare";
-            import.Controls.Add(inspect, 2, 0); root.Controls.Add(import, 0, 3);
-            status.Dock = DockStyle.Fill; status.ForeColor = EditorTheme.Muted; status.Text = I18n.Str("preset.importhelp"); root.Controls.Add(status, 0, 4);
-            var closeRow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft, WrapContents = false, Margin = Padding.Empty };
-            var close = Button("editor.close", delegate { Close(); }); close.Width = 120; close.Dock = DockStyle.None; close.DialogResult = DialogResult.Cancel; CancelButton = close;
-            closeRow.Controls.Add(close); root.Controls.Add(closeRow, 0, 5);
+            import.Controls.Add(inspect, 1, 0);
+            saveImport.Text = I18n.Str("preset.saveimport"); saveImport.Dock = DockStyle.Fill; saveImport.Margin = new Padding(8, 2, 0, 2); saveImport.Name = "saveImport";
+            saveImport.Click += delegate { Run(delegate { var value = store.Save(displayed, previewName.Text); Reload(value.Id); Message("preset.saved"); }); };
+            import.Controls.Add(saveImport, 2, 0); importCard.Controls.Add(import, 0, 1); root.Controls.Add(importCard, 0, 2);
+            var footer = CreateRow(2); footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); footer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 112));
+            status.Dock = DockStyle.Fill; status.ForeColor = EditorTheme.Muted; status.Text = I18n.Str("preset.emptyhelp"); status.TextAlign = ContentAlignment.MiddleLeft; status.Margin = new Padding(0, 4, 12, 0);
+            footer.Controls.Add(status, 0, 0);
+            var close = Button("editor.close", delegate { Close(); }); close.Margin = new Padding(0, 6, 0, 2); close.DialogResult = DialogResult.Cancel; CancelButton = close;
+            footer.Controls.Add(close, 1, 0); root.Controls.Add(footer, 0, 3);
             AutoScaleDimensions = new SizeF(96, 96); PerformAutoScale(); Reload(null); UpdateMode();
         }
 
+        EditorLayout Card(int rows)
+        {
+            var card = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = rows, Padding = new Padding(12, 8, 12, 8), BackColor = EditorTheme.Floating };
+            card.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            card.Paint += delegate(object sender, PaintEventArgs e) { using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawRectangle(pen, 0, 0, card.Width - 1, card.Height - 1); };
+            return card;
+        }
+        Label Heading(string key)
+        { var label = Label(key); label.ForeColor = EditorTheme.Ink; label.Font = new Font(Font, FontStyle.Bold); return label; }
         static EditorLayout CreateRow(int columns)
         {
             var layout = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = columns, RowCount = 1, Margin = Padding.Empty };
@@ -152,11 +223,38 @@ namespace PBZKeyForge
         }
         Label Label(string key)
         { return new Label { Dock = DockStyle.Fill, Text = I18n.Str(key), ForeColor = EditorTheme.Muted, TextAlign = ContentAlignment.MiddleLeft, Margin = Padding.Empty }; }
+        Control NameEntry()
+        {
+            var host = new Panel { Dock = DockStyle.Fill, Margin = new Padding(0, 2, 8, 2), BackColor = EditorTheme.Background };
+            nameBox.Dock = DockStyle.None; nameBox.BorderStyle = BorderStyle.None;
+            nameBox.BackColor = host.BackColor; nameBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            host.Controls.Add(nameBox);
+            host.Layout += delegate {
+                int inset = Math.Max(8, Font.Height / 2);
+                nameBox.SetBounds(inset, Math.Max(0, (host.ClientSize.Height - nameBox.PreferredHeight) / 2), Math.Max(0, host.ClientSize.Width - inset * 2), nameBox.PreferredHeight);
+            };
+            host.Paint += delegate(object sender, PaintEventArgs e) {
+                bool highlight = nameBox.Focused || string.IsNullOrWhiteSpace(nameBox.Text);
+                using (var pen = new Pen(highlight ? EditorTheme.Accent : EditorTheme.Line, highlight ? 1.5f * e.Graphics.DpiX / 96f : 1))
+                    e.Graphics.DrawRectangle(pen, 1, 1, Math.Max(0, host.Width - 3), Math.Max(0, host.Height - 3));
+            };
+            host.Click += delegate { nameBox.Focus(); };
+            nameBox.GotFocus += delegate { host.Invalidate(); }; nameBox.LostFocus += delegate { host.Invalidate(); };
+            return host;
+        }
+        static Control InputHost(TextBox input)
+        {
+            var host = new Panel { Dock = DockStyle.Fill, Margin = input.Margin, BackColor = EditorTheme.Floating };
+            input.Dock = DockStyle.None; input.Margin = Padding.Empty; input.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            host.Controls.Add(input);
+            host.Layout += delegate { input.SetBounds(0, Math.Max(0, (host.ClientSize.Height - input.PreferredHeight) / 2), host.ClientSize.Width, input.PreferredHeight); };
+            return host;
+        }
         static void StyleInput(TextBox input)
-        { input.Dock = DockStyle.Fill; input.BackColor = EditorTheme.Floating; input.ForeColor = EditorTheme.Ink; input.BorderStyle = BorderStyle.FixedSingle; input.Margin = new Padding(4, 5, 8, 4); }
+        { input.Dock = DockStyle.Fill; input.BackColor = EditorTheme.Floating; input.ForeColor = EditorTheme.Ink; input.BorderStyle = BorderStyle.FixedSingle; input.Margin = new Padding(0, 5, 8, 4); }
         Button Button(string key, Action action)
         {
-            var button = new EditorButton { Text = I18n.Str(key), Dock = DockStyle.Fill, Height = 36, Margin = new Padding(4, 0, 0, 0) };
+            var button = new EditorButton { Text = I18n.Str(key), Dock = DockStyle.Fill, Height = 36, Margin = new Padding(0, 2, 8, 2) };
             button.Click += delegate { action(); }; return button;
         }
         void Run(Action action)
@@ -165,11 +263,8 @@ namespace PBZKeyForge
         void UpdateMode()
         {
             string[] keys = { "preset.append", "preset.replace", "preset.only" };
-            modeButton.Mode = ChosenMode; modeButton.Text = I18n.Str(keys[(int)ChosenMode]) + " ↻";
-            ((TableLayoutPanel)modeButton.Parent).ColumnStyles[2].Width = keys.Max(key => TextRenderer.MeasureText(I18n.Str(key) + " ↻", Font).Width) + 24;
-            modeButton.AccessibleName = I18n.Str("preset.mode") + ": " + I18n.Str(keys[(int)ChosenMode]);
-            tips.SetToolTip(modeButton, I18n.Str(ChosenMode == PresetApplyMode.OnlyPreset ? "preset.only.scopehelp" : keys[(int)ChosenMode] + ".help")
-                + "\n" + I18n.Str("preset.nextmode", I18n.Str(keys[((int)ChosenMode + 1) % 3])));
+            modeButton.Mode = ChosenMode; modeButton.RefreshLabels();
+            modeHelp.Text = I18n.Str(ChosenMode == PresetApplyMode.OnlyPreset ? "preset.only.scopehelp" : keys[(int)ChosenMode] + ".help");
         }
 
         Preset SelectedShare()
@@ -202,14 +297,21 @@ namespace PBZKeyForge
                 list.Items.Clear();
                 foreach (var preset in store.Load()) list.Items.Add(preset, preset.Id == selectedId);
                 for (int index = 0; index < list.Items.Count; index++) if (((Preset)list.Items[index]).Id == selectedId) list.SelectedIndex = index;
+                if (list.SelectedIndex < 0 && list.Items.Count > 0) list.SelectedIndex = 0;
             }
             finally { refreshing = false; }
             SelectLibrary();
         }
         void SelectLibrary()
         {
+            UpdateLibraryChecks();
+            Display(list.SelectedItem as Preset);
+        }
+        void UpdateLibraryChecks()
+        {
             delete.Enabled = list.CheckedItems.Count > 0;
-            Display(list.CheckedItems.Count == 1 ? list.CheckedItems[0] as Preset : null);
+            delete.Text = I18n.Str("preset.delete") + (list.CheckedItems.Count > 0 ? " (" + list.CheckedItems.Count + ")" : "");
+            libraryCount.Text = I18n.Str("preset.libraryhint", list.Items.Count);
         }
         void Display(Preset preset)
         {
@@ -218,9 +320,15 @@ namespace PBZKeyForge
             try
             {
                 displayed = preset;
+                if (preset != null && preset.Id == null)
+                {
+                    refreshing = true;
+                    try { list.SelectedIndex = -1; } finally { refreshing = false; }
+                }
                 foreach (Control control in preview.Controls.Cast<Control>().ToArray()) control.Dispose();
                 previewName.Text = preset == null ? "" : preset.Name; previewName.ReadOnly = preset == null || preset.Id != null;
-                share.Enabled = use.Enabled = modeButton.Enabled = shareScope.Enabled = preset != null; saveImport.Enabled = preset != null && preset.Id == null;
+                share.Enabled = use.Enabled = modeButton.Enabled = shareScope.Enabled = preset != null;
+                saveImport.Visible = preset != null && preset.Id == null; saveImport.Enabled = saveImport.Visible;
                 shareScope.Items.Clear(); shareCode = null; shareLength.Text = "";
                 if (preset != null)
                 {
@@ -235,7 +343,11 @@ namespace PBZKeyForge
                     shareScope.SelectedIndex = 0;
                 }
                 use.Text = I18n.Str(preset != null && preset.Id == null ? "preset.saveapply" : "preset.stage");
-                if (preset == null) return;
+                if (preset == null)
+                {
+                    preview.Controls.Add(new Label { Text = I18n.Str("preset.emptyhelp"), AutoSize = true, ForeColor = EditorTheme.Muted });
+                    return;
+                }
                 var snapshot = session.PreviewPreset(preset);
                 int top = 8;
                 var scopeLabel = new Label { Text = I18n.Str("preset.devices", UserPresetStore.ScopeText(preset)),

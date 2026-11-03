@@ -330,17 +330,35 @@ namespace PBZKeyForge
             float scale = e.Graphics.DpiX / 96f; e.Graphics.Clear(Hovered ? EditorTheme.Hover : EditorTheme.Floating);
             int inset = (int)(12 * scale), iconSize = (int)(24 * scale), left = inset + iconSize + (int)(12 * scale);
             Image icon = EditorArtwork.ActionIcon(ActionId);
-            if (icon != null) e.Graphics.DrawImage(icon, new Rectangle(inset, (Height - iconSize) / 2, iconSize, iconSize));
-            TextRenderer.DrawText(e.Graphics, Text, Font, new Rectangle(left, (int)(5 * scale), Width - left - inset, Height / 2), Removed ? EditorTheme.Muted : EditorTheme.Ink,
-                TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+            var iconBounds = new Rectangle(inset, (Height - iconSize) / 2, iconSize, iconSize);
+            if (icon != null)
+            {
+                if (Removed)
+                {
+                    using (var attributes = new System.Drawing.Imaging.ImageAttributes())
+                    {
+                        attributes.SetColorMatrix(new System.Drawing.Imaging.ColorMatrix(new[] {
+                            new[] { .3f, .3f, .3f, 0f, 0f }, new[] { .59f, .59f, .59f, 0f, 0f },
+                            new[] { .11f, .11f, .11f, 0f, 0f }, new[] { 0f, 0f, 0f, .38f, 0f }, new[] { 0f, 0f, 0f, 0f, 1f } }));
+                        e.Graphics.DrawImage(icon, iconBounds, 0, 0, icon.Width, icon.Height, GraphicsUnit.Pixel, attributes);
+                    }
+                }
+                else e.Graphics.DrawImage(icon, iconBounds);
+            }
+            using (var titleFont = new Font(Font, Removed ? FontStyle.Strikeout : Font.Style))
+                TextRenderer.DrawText(e.Graphics, Text, titleFont, new Rectangle(left, (int)(5 * scale), Width - left - inset, Height / 2), Removed ? EditorTheme.Muted : EditorTheme.Ink,
+                    TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+            if (Removed)
+                using (var pen = new Pen(EditorTheme.Muted, 1.5f * scale))
+                    e.Graphics.DrawLine(pen, iconBounds.Left, iconBounds.Bottom, iconBounds.Right, iconBounds.Top);
             string status = I18n.Str(Pending ? "views.pending" : Removed ? "views.removedshort" : Fixed ? "views.fixed" : Unknown ? "editor.defaultunknown" : Custom ? "views.savedcustom" : "views.original");
             if (Pending && Removed) status = I18n.Str("views.removedshort") + " · " + status;
             int y = Height * 2 / 3, dot = (int)(6 * scale);
-            BindingStatus.Dot(e.Graphics, Pending ? BindingStatus.Pending : Custom || Removed ? BindingStatus.Custom : BindingStatus.Factory, left, y, dot);
+            BindingStatus.Dot(e.Graphics, Removed ? BindingStatus.Factory : Pending ? BindingStatus.Pending : Custom ? BindingStatus.Custom : BindingStatus.Factory, left, y, dot);
             using (var statusFont = new Font(Font.FontFamily, 8f))
             {
                 var bounds = new Rectangle(left + dot + (int)(5 * scale), y - (int)(5 * scale), Width - left - dot - inset, (int)(18 * scale));
-                TextRenderer.DrawText(e.Graphics, status, statusFont, bounds, Pending ? BindingStatus.Pending : EditorTheme.Muted, TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+                TextRenderer.DrawText(e.Graphics, status, statusFont, bounds, Pending && !Removed ? BindingStatus.Pending : EditorTheme.Muted, TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
             }
             if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(ClientRectangle, -3, -3));
         }
@@ -402,7 +420,7 @@ namespace PBZKeyForge
                 if (currentSession == null) return;
                 var actions = currentSession.BindingActions(currentPad, currentFamily)
                     .Where(a => !currentSession.Relations(a, currentPad, currentFamily).Keys.Any(k => BindingViewText.PhysicalKey(k) == selectedKey));
-                using (var choice = new ActionChoiceDialog(actions))
+                using (var choice = new ActionChoiceDialog(currentSession, actions, currentPad, currentFamily))
                     if (choice.ShowDialog(FindForm()) == DialogResult.OK && EditRelation != null)
                     {
                         var defaults = currentSession.Relations(choice.Result, currentPad, currentFamily).DefaultKeys;
@@ -522,18 +540,34 @@ namespace PBZKeyForge
     internal sealed class ActionChoiceDialog : EditorWindow
     {
         public string Result;
-        public ActionChoiceDialog(IEnumerable<string> actions)
+        public ActionChoiceDialog(EditorSession session, IEnumerable<string> actions, bool gamepad, int family)
         {
             Text = I18n.Str("views.add"); Font = new Font("Microsoft YaHei UI", 10f); AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(440, 168); StartPosition = FormStartPosition.CenterParent; AllowResize = false;
+            ClientSize = new Size(540, 270); StartPosition = FormStartPosition.CenterParent; AllowResize = false;
             BackColor = EditorTheme.Background; ForeColor = EditorTheme.Ink;
-            var combo = new EditorComboBox { Left = 20, Top = Caption.Height + 18, Width = 400, DropDownStyle = ComboBoxStyle.DropDownList };
+            var combo = new EditorComboBox { Name = "actionChoice", Left = 20, Top = Caption.Height + 18, Width = 500, DropDownStyle = ComboBoxStyle.DropDownList };
             foreach (string action in actions) combo.Items.Add(new ActionInfo(action));
             if (combo.Items.Count > 0) combo.SelectedIndex = 0;
-            var ok = new EditorButton { Left = 212, Top = Caption.Height + 75, Width = 100, Height = 34, Text = I18n.Str("editor.ok"), Enabled = combo.Items.Count > 0 };
+            var capacity = new Label { Name = "bindingCapacity", Left = 20, Top = Caption.Height + 60, Width = 500, Height = 24, ForeColor = EditorTheme.Muted };
+            var current = new Label { Left = 20, Top = Caption.Height + 87, Width = 500, Height = 24, ForeColor = EditorTheme.Muted, AutoEllipsis = true };
+            var hint = new Label { Name = "capacityHint", Left = 20, Top = Caption.Height + 117, Width = 500, Height = 46, ForeColor = EditorTheme.Muted };
+            var ok = new EditorButton { Name = "addSelectedAction", Left = 312, Top = Caption.Height + 177, Width = 100, Height = 34, Text = I18n.Str("views.add"), Enabled = combo.Items.Count > 0 };
             ok.Click += delegate { Result = ((ActionInfo)combo.SelectedItem).Id; DialogResult = DialogResult.OK; };
-            var cancel = new EditorButton { Left = 320, Top = ok.Top, Width = 100, Height = 34, Text = I18n.Str("editor.cancel"), DialogResult = DialogResult.Cancel };
-            Controls.AddRange(new Control[] { combo, ok, cancel }); AcceptButton = ok; CancelButton = cancel;
+            Action update = delegate {
+                var selected = combo.SelectedItem as ActionInfo;
+                if (selected == null) { ok.Enabled = false; return; }
+                var available = session.RelationshipCapacity(selected.Id, gamepad, family);
+                var relation = session.Relations(selected.Id, gamepad, family);
+                capacity.Text = I18n.Str("views.bindingcount", available.Used, available.Limit);
+                current.Text = I18n.Str("views.currentkeys", BindingViewText.Keys(relation.Keys));
+                ok.Enabled = available.CanAdd && !session.IsResetPending;
+                hint.Text = !relation.Complete ? I18n.Str("views.incomplete") : available.CanAdd ? I18n.Str("views.bindinglimit", available.Limit)
+                    : I18n.Str("views.bindingfull", BindingViewText.ActionName(selected.Id), available.Limit);
+                hint.ForeColor = available.CanAdd ? EditorTheme.Muted : BindingStatus.Pending;
+            };
+            combo.SelectedIndexChanged += delegate { update(); }; update();
+            var cancel = new EditorButton { Left = 420, Top = ok.Top, Width = 100, Height = 34, Text = I18n.Str("editor.cancel"), DialogResult = DialogResult.Cancel };
+            Controls.AddRange(new Control[] { combo, capacity, current, hint, ok, cancel }); AcceptButton = ok; CancelButton = cancel;
             AutoScaleDimensions = new SizeF(96, 96); PerformAutoScale();
         }
     }

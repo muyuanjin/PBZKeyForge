@@ -212,6 +212,10 @@ public static class SchemeActivationTests
                 var apply = (Button)formType.GetField("btnApply", Hidden).GetValue(form);
                 if (apply.Enabled) apply.PerformClick();
                 Application.DoEvents();
+                var elapsed = System.Diagnostics.Stopwatch.StartNew();
+                while ((bool)formType.GetProperty("IsApplying").GetValue(form, null) && elapsed.Elapsed.TotalSeconds < 15)
+                { Application.DoEvents(); System.Threading.Thread.Sleep(1); }
+                Assert(!(bool)formType.GetProperty("IsApplying").GetValue(form, null), "GUI apply did not complete.");
                 var settings = Load(guiShared);
                 Assert(Profile(settings) == profile, "GUI activate did not reach the game's selector.");
                 Assert(WithoutScheme(Json(settings)) == baseline, "GUI activation changed unrelated settings.");

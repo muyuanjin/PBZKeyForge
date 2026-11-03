@@ -48,14 +48,14 @@ namespace PBZKeyForge
         public EditorSession Session { get; private set; }
         readonly ComboBox cbLang = new EditorComboBox(), cbPreset = new PresetPicker();
         readonly Button btnPresetManager = new EditorButton();
-        readonly Button btnRefresh = new EditorButton(), btnMore = new EditorButton(), btnApply = new PrimaryActionButton();
+        readonly Button btnRefresh = new EditorButton(), btnMore = new EditorButton(), btnApply = new ApplyActionButton();
         readonly EditorTab[] schemeTabs = { new EditorTab(), new EditorTab(), new EditorTab() };
         readonly EditorTab tabKb = new EditorTab(), tabPad = new EditorTab();
         readonly Label lblTitle = new Label(), lblPath = new Label(), lblGame = new Label();
         readonly Label lblPreset = new Label();
-        readonly PresetApplyButton btnPresetMode = new PresetApplyButton();
-        PresetApplyMode presetCycleCursor = PresetApplyMode.Append;
-        PresetApplyMode presetMode = PresetApplyMode.Append;
+        readonly PresetModeSelector btnPresetMode = new PresetModeSelector();
+        readonly EditorPreferences preferences;
+        PresetApplyMode presetMode;
         readonly Label lblStatus = new Label(), lblScope = new Label(), lblBackup = new Label(), lblEmpty = new Label();
         readonly Button btnUndo = new EditorButton();
         readonly LinkLabel btnConflicts = new LinkLabel(), btnChoose = new LinkLabel();
@@ -76,15 +76,19 @@ namespace PBZKeyForge
         Bitmap backgroundCache;
         PresetHoverPreview presetHoverPreview;
 
-        public MainForm()
+        public MainForm() : this(EditorPreferences.Default()) { }
+
+        public MainForm(EditorPreferences preferences)
         {
+            this.preferences = preferences;
+            presetMode = preferences.LoadPresetMode();
             I18n.Current = I18n.Detect();
             Build();
             ApplyLanguage();
             HandleCreated += delegate { EditorArtwork.DarkCaption(this); };
             Shown += delegate { if (Session == null) AutoFind(false); };
             Activated += delegate { if (Session != null && !loading && !modalActive) RefreshFromDisk(); };
-            FormClosing += delegate(object sender, FormClosingEventArgs e) { if (!ConfirmDiscard()) e.Cancel = true; };
+            FormClosing += delegate(object sender, FormClosingEventArgs e) { if (IsApplying || !ConfirmDiscard()) e.Cancel = true; };
             gameTimer.Interval = 1500;
             gameTimer.Tick += delegate { if (EditorSession.IsGameRunning != lastRunning) RenderSession(); };
             gameTimer.Start();
@@ -103,7 +107,7 @@ namespace PBZKeyForge
             try { Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath); } catch { }
             var root = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 6, Padding = new Padding(16, 6, 16, 6), Margin = Padding.Empty, BackColor = Color.Transparent };
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            int[] heights = { 72, 22, 36, 44, 0, 94 };
+            int[] heights = { 72, 22, 36, 64, 0, 94 };
             for (int rowIndex = 0; rowIndex < heights.Length; rowIndex++)
                 root.RowStyles.Add(rowIndex == 4 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, heights[rowIndex]));
             Controls.Add(root);
@@ -178,40 +182,46 @@ namespace PBZKeyForge
 
             var toolbar = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
             toolbar.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35)); toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65));
+            toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30)); toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
             var devices = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
             devices.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             devices.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50)); devices.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             tabKb.Dock = DockStyle.Fill; tabKb.Margin = Padding.Empty; tabKb.Click += delegate { ShowGamepad(false); };
             tabPad.Dock = DockStyle.Fill; tabPad.Margin = Padding.Empty; tabPad.Click += delegate { ShowGamepad(true); };
             devices.Controls.Add(tabKb, 0, 0); devices.Controls.Add(tabPad, 1, 0); toolbar.Controls.Add(devices, 0, 0);
-            var presets = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 1, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
-            presets.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            presets.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80)); presets.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); presets.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 112)); presets.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 108));
+            var presets = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 2, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
+            presets.RowStyles.Add(new RowStyle(SizeType.Percent, 56.25f));
+            presets.RowStyles.Add(new RowStyle(SizeType.Percent, 43.75f));
+            presets.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80)); presets.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); presets.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 112));
             lblPreset.Dock = DockStyle.Fill; lblPreset.TextAlign = ContentAlignment.MiddleRight; lblPreset.Margin = new Padding(0, 0, 12, 0);
-            cbPreset.Dock = DockStyle.Fill; cbPreset.Margin = new Padding(0, 10, 12, 8); cbPreset.DropDownStyle = ComboBoxStyle.DropDownList; cbPreset.DropDownWidth = 570;
+            cbPreset.Dock = DockStyle.Fill; cbPreset.Margin = new Padding(0, 3, 8, 3); cbPreset.DropDownStyle = ComboBoxStyle.DropDownList; cbPreset.DropDownWidth = 570;
             cbPreset.SelectedIndexChanged += delegate
             {
                 if (loading || Session == null) return;
                 TryAction(delegate {
                     var preset = cbPreset.SelectedItem as Preset;
                     if (preset == null) Session.SelectPreset(null, presetMode); else Session.StagePreset(preset, presetMode);
-                    presetCycleCursor = presetMode;
                 });
             };
-            btnPresetManager.Dock = DockStyle.Fill; btnPresetManager.Margin = new Padding(0, 7, 8, 7); btnPresetManager.Click += delegate { ManagePresets(); };
-            btnPresetMode.Dock = DockStyle.Fill; btnPresetMode.Margin = new Padding(0, 7, 8, 7);
-            btnPresetMode.Click += delegate {
+            btnPresetManager.Dock = DockStyle.Fill; btnPresetManager.Margin = new Padding(0, 3, 8, 3); btnPresetManager.Click += delegate { ManagePresets(); };
+            btnPresetMode.Dock = DockStyle.None; btnPresetMode.Anchor = AnchorStyles.Left;
+            btnPresetMode.AutoSize = true; btnPresetMode.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnPresetMode.Font = new Font(Font.FontFamily, 9f); btnPresetMode.Margin = new Padding(0, 0, 8, 2);
+            btnPresetMode.ModeChanged += delegate {
                 if (loading || Session == null) return;
-                var mode = (PresetApplyMode)(((int)presetCycleCursor + 1) % 3);
-                presetCycleCursor = mode;
+                var mode = btnPresetMode.Mode;
                 TryAction(delegate {
                     var preset = cbPreset.SelectedItem as Preset;
                     if (preset != null) Session.StagePreset(preset, mode);
                     presetMode = mode;
+                    preferences.SavePresetMode(mode);
                 });
             };
-            presets.Controls.Add(btnPresetMode, 2, 0); presets.Controls.Add(btnPresetManager, 3, 0);
+            var modeLabel = new Label { Text = I18n.Str("preset.mode"), Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleRight, ForeColor = EditorTheme.Muted, Font = new Font(Font.FontFamily, 9f), Margin = new Padding(0, 0, 12, 0), Name = "presetModeLabel" };
+            presets.Controls.Add(modeLabel, 0, 1);
+            presets.Controls.Add(btnPresetMode, 1, 1);
+            presets.Controls.Add(btnPresetManager, 2, 0);
             presets.Controls.Add(lblPreset, 0, 0); presets.Controls.Add(cbPreset, 1, 0); toolbar.Controls.Add(presets, 1, 0); root.Controls.Add(toolbar, 0, 3);
             presetHoverPreview = new PresetHoverPreview(cbPreset, delegate { return Session; }, delegate { return gamepad; }, delegate { return SelectedFamilyIndex; });
 
@@ -372,6 +382,7 @@ namespace PBZKeyForge
 
         public void RenderSession()
         {
+            if (IsApplying) return;
             loading = true;
             SuspendLayout(); body.SuspendLayout(); footer.SuspendLayout();
             try
@@ -403,17 +414,11 @@ namespace PBZKeyForge
                     for (int i = 1; i < cbPreset.Items.Count; i++) if (((Preset)cbPreset.Items[i]).Id == Session.PresetId) presetIndex = i;
                 }
                 cbPreset.SelectedIndex = presetIndex;
-                if (loaded && Session.PresetId != null && presetMode != Session.PresetMode) presetMode = presetCycleCursor = Session.PresetMode;
                 bool restoringFactory = loaded && Session.PresetId == "vanilla_current";
-                string[] modeKeys = { "preset.append", "preset.replace", "preset.only" };
-                btnPresetMode.Mode = presetMode;
-                btnPresetMode.Text = I18n.Str(modeKeys[(int)presetMode]) + " ↻";
-                btnPresetMode.AccessibleName = I18n.Str("preset.mode") + ": " + I18n.Str(modeKeys[(int)presetMode]);
+                btnPresetMode.RefreshLabels(); btnPresetMode.Mode = presetMode;
                 btnPresetMode.Enabled = loaded && !Session.IsResetPending && !restoringFactory;
-                SetTip(btnPresetMode, I18n.Str("preset.mode") + ": " + I18n.Str(modeKeys[(int)presetMode]) + "\n"
-                    + I18n.Str(restoringFactory ? "preset.restore.help" : presetMode == PresetApplyMode.OnlyPreset
-                        && cbPreset.SelectedItem is Preset && ((Preset)cbPreset.SelectedItem).IsUser ? "preset.only.scopehelp" : modeKeys[(int)presetMode] + ".help") + "\n"
-                    + I18n.Str("preset.nextmode", I18n.Str(modeKeys[((int)presetCycleCursor + 1) % 3])));
+                var modeHeading = btnPresetMode.Parent.Controls.Find("presetModeLabel", false).FirstOrDefault();
+                if (modeHeading != null) modeHeading.Text = I18n.Str("preset.mode");
                 foreach (var action in Actions)
                     for (int slot = 0; slot < 3; slot++)
                     {
@@ -517,23 +522,10 @@ namespace PBZKeyForge
         public void ShowGamepad(bool show) { gamepad = show; RenderSession(); }
         public void RefreshFromDisk()
         {
-            if (loading || modalActive) return;
+            if (loading || modalActive || IsApplying) return;
             if (Session == null) { AutoFind(false); return; }
             try { Session.Refresh(); SetMessage("editor.refreshed", false); }
             catch (Exception ex) { SetMessage("editor.refreshfail", true, ex.Message); }
-            RenderSession();
-        }
-        public void ApplyChanges()
-        {
-            if (Session == null) return;
-            try
-            {
-                var result = Session.Apply(); messageError = !result.Success;
-                if (result.PartialSuccess) SetMessage("editor.partial", true, result.Error);
-                else if (!result.Success) SetMessage("editor.failed", true, result.Error);
-                else SetMessage("editor.saved", false);
-            }
-            catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
             RenderSession();
         }
         void ResolveConflicts()
@@ -649,9 +641,10 @@ namespace PBZKeyForge
             modalActive = true;
             try
             {
-                using (var dialog = new UserPresetDialog(Session, UserPresetStore.Default(), presetMode))
+                using (var dialog = new UserPresetDialog(Session, UserPresetStore.Default(), presetMode, preferences))
                 {
-                    if (dialog.ShowDialog(this) == DialogResult.OK) presetMode = presetCycleCursor = dialog.ChosenMode;
+                    dialog.ShowDialog(this);
+                    presetMode = dialog.ChosenMode;
                 }
             }
             catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }

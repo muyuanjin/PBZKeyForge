@@ -1,9 +1,15 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 — 2026-11-04
+
+- Reorganized preset management around saving the current scheme, browsing personal presets and importing share codes; added name-field focus, placeholder and interactive empty-name guidance.
+- Replaced the cycling apply-mode button with three directly selectable options beside the preset picker; Preset only is the initial mode and the application remembers the selection.
+- Moved Apply off the UI thread, added a progress spinner and retained drafts after failed writes; cached unchanged executable identity checks to reduce repeated application time.
+- Added gray crossed-out removed actions and visible per-action binding capacity, including a clear explanation when another key cannot be added.
+- Added the mouse attack/guard and automatic-sprint layouts: the latter uses W/A/D for sprint and Space for dodge/jump, retaining F heavy attack and Shift dodge.
 
 - Added named user presets, batch deletion, game-file export and compact PBZ2 share codes using Protobuf, stable binding IDs and explicit keyboard/controller scopes.
-- Added sharing device selection and live code lengths; Preset only preserves devices outside the preset's scope. Apply mode is a compact three-state switch beside the preset controls.
+- Added sharing device selection and live code lengths; Preset only preserves devices outside the preset's scope.
 - Added shared key and action views, clickable keyboard/mouse/controller diagrams, and factory/saved/pending status badges.
 - Added whole-scheme comparisons against saved or factory bindings, with four row presentation modes.
 - Added explicit unbinding, concrete factory keys in binding dialogs, and resource-based action and raw-slot defaults for CL-301524.
