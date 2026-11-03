@@ -1,0 +1,17 @@
+PBZKeyForge 1.2.0 — changes since 1.1.1
+
+See your bindings on clickable keyboard, mouse and controller diagrams. Select a key to see and edit its actions on the right, or switch to Action view to work by function. Gray badges match factory settings, blue badges mark your saved changes, and yellow badges mark edits waiting to be applied. Removed actions are gray and crossed out. The comparison panel shows the whole scheme against your saved settings or factory defaults, with views for changes, results and original bindings.
+
+Save your own layouts: open Preset manager, enter a name in the highlighted field, then choose Save as preset. Your current scheme is saved, including edits you have not applied yet. Personal presets are separate from built-ins; browse and preview them, or check several to delete them without changing your current bindings. You can also export the current scheme as a game settings file.
+
+Share a named layout in one line. Copy a share code for keyboard/mouse, controllers, a specific controller family or all included devices; its length updates as you choose. Paste a code into Preset manager and preview it before saving or using it. A keyboard-only preset leaves your controller settings alone, including when using Preset only.
+
+The three preset choices are always visible beside the preset picker. Add keys keeps your existing keys and adds the preset's bindings. Replace keys replaces the actions covered by the preset. Preset only restores factory bindings within the preset's included devices, then applies that preset. Your choice is remembered, and selecting a preset creates a preview draft: Apply changes is still the step that writes it to the game.
+
+New mouse layouts combine light attack with guard on left click and heavy attack with guard on right click, while retaining F for heavy attack. The automatic-sprint layout adds sprint to W/A/D and dodge/jump to Space, retaining Shift for dodge. The download includes eight ready-made settings files and an English/Chinese guide.
+
+Default now shows the actual factory key, and Unbound explicitly removes a binding. Action names and icons have been corrected, including 澄心洞照 and the Shadow Arm axe. The editor shows how many binding slots an action uses and explains when it cannot accept another key. Applying changes is more responsive and shows a spinning progress indicator; if a write fails, your edits remain available to retry.
+
+Close the game before applying changes. The editor automatically backs up writes. For the presets-only download, follow PRESETS.md and select Custom 1 in game after replacing the settings file. Do not apply or reset bindings in the game's own binding screen afterwards, as it rewrites these settings. Supports the Steam CL-301524 build on Windows 10/11. No mod loader or extra runtime installation is required.
+
+Both downloads are built and uploaded by GitHub Actions from the v1.2.0 source tag: https://github.com/muyuanjin/PBZKeyForge/releases/tag/v1.2.0

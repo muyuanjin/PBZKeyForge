@@ -85,32 +85,13 @@ jobs:
 
       - name: Release notes
         shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
+          $ErrorActionPreference = "Stop"
           $tag = "${{ github.ref_name }}"
-          $body = @"
-          Key binding editor for Phantom Blade Zero. One key can drive several actions; the in-game screen refuses that, this tool writes it.
-
-          Source, issues and the build itself: https://github.com/muyuanjin/PBZKeyForge
-          The executables in this release are built and uploaded by GitHub Actions from the tagged commit, not on a local machine.
-
-          ## Assets
-          - ``PBZKeyForge-$tag.zip`` - the editor and the preset save files.
-          - ``PBZKeyForge-$tag-presets-only.zip`` - only the ready-made ``.sav`` files, no executable. Use this if you would rather not run anything.
-
-          ## Install
-          1. Close the game completely.
-          2. Back up ``ProjectPBZ\Saved\EnhancedInputUserSettings.sav``.
-          3. Editor: run ``PBZKeyForge.exe``; it finds the save automatically. Choose a scheme, edit bindings or preview a quick configuration, then click ``Apply changes``.
-          4. To make the edited scheme active, check ``Set game scheme to…`` before applying. Leave it unchecked to save bindings without switching schemes.
-          5. Presets-only: consult ``PRESETS.md``, replace ``EnhancedInputUserSettings.sav`` with the chosen file, then select the listed scheme in game.
-          6. Do not open the in-game keybind screen and press apply/reset afterwards.
-
-          Verified against build CL-301524.
-          "@
-          $body = ($body -split "`r?`n" | ForEach-Object { $_ -replace "^\s{10}", "" }) -join "`n"
-          Set-Content -Path release-notes.md -Value $body -Encoding utf8
+          $version = $tag -replace '^v', ''
+          $notes = "docs/releases/$version.md"
+          if (-not (Test-Path $notes)) { throw "Missing release notes: $notes" }
+          Copy-Item $notes release-notes.md
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
@@ -119,5 +100,4 @@ jobs:
             PBZKeyForge-${{ github.ref_name }}.zip
             PBZKeyForge-${{ github.ref_name }}-presets-only.zip
           body_path: release-notes.md
-          generate_release_notes: true
 

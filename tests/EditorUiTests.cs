@@ -75,6 +75,12 @@ public static class EditorUiTests
         var button = Field<Button>(form, name);
         Assert(button.Visible && button.Enabled, "Button cannot be clicked: " + name);
         button.PerformClick(); Application.DoEvents();
+        if (name == "btnApply")
+        {
+            var elapsed = System.Diagnostics.Stopwatch.StartNew();
+            while (form.IsApplying && elapsed.Elapsed.TotalSeconds < 15) { Application.DoEvents(); System.Threading.Thread.Sleep(1); }
+            Assert(!form.IsApplying, "Apply did not complete.");
+        }
     }
     static void ClickProfile(MainForm form, string profile)
     {

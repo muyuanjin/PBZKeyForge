@@ -55,9 +55,9 @@ Choose **Unbound** to write an explicit empty binding for a slot. **Default**, b
 
 ## My presets and sharing
 
-Use **Preset manager** beside Quick setups to name and save the current scheme, including unapplied edits. Your presets appear separately from built-in presets. Select one to preview or copy its one-line share code; select several to delete them. Deleting a preset keeps your current bindings.
+Use **Preset manager** beside Quick setups to name and save the current scheme, including unapplied edits. Your presets appear separately from built-in presets. Select one to preview or copy its one-line share code; check several to delete them. Deleting a preset keeps your current bindings.
 
-Paste a share code and preview it before saving or using it. It includes the name and only the changes from factory defaults. Beside **Copy share code**, choose all included devices, keyboard/mouse, controllers, or a specific controller family; the character count updates immediately. Imported presets show their included devices. **Preset only** restores and applies only those devices, preserving devices outside the preset's scope. The compact switch beside Quick setups cycles through **Add keys**, **Replace keys**, and **Preset only**; hover for details. Using a preset creates a draft; **Apply changes** in the main window writes it to the game.
+Paste a share code and preview it before saving or using it. It includes the name and only the changes from factory defaults. Beside **Copy share code**, choose all included devices, keyboard/mouse, controllers, or a specific controller family; the character count updates immediately. Imported presets show their included devices. **Preset only** restores and applies only those devices, preserving devices outside the preset's scope. Choose directly from **Add keys**, **Replace keys**, and **Preset only** beside Quick setups; all three choices stay visible, with details on hover. The application starts with Preset only and remembers your selected mode across launches. Using a preset creates a draft; **Apply changes** in the main window writes it to the game.
 
 **Export game bindings** writes a `.sav` copy containing the selected scheme's unapplied edits. Other schemes keep their saved settings. Export does not activate a scheme or overwrite the source save. Your preset library is stored in `%LOCALAPPDATA%\PBZKeyForge\Presets`.
 
@@ -67,7 +67,7 @@ Paste a share code and preview it before saving or using it. It includes the nam
 | --- | --- |
 | `onekey` | Adds guard to left mouse / X while keeping right mouse / LB and other existing guard bindings. |
 | `mouse_guard` | Keyboard / mouse only: left mouse light attack + guard; right mouse heavy attack + guard; F remains heavy attack. Replaces these three actions' bindings. |
-| `mouse_guard_space` | Keyboard / mouse only: the same mouse attack + guard layout; Space combines dodge, sprint and jump. F retains heavy attack; Shift retains dodge / sprint. |
+| `mouse_guard_space` | Keyboard / mouse only: the same mouse attack + guard layout; Space combines dodge and jump; W/A/D sprint. F retains heavy attack; Shift retains dodge. |
 | `onekey_dodge` | Moves guard to left mouse / X; right mouse / LB become dodge + sprint. Replaces the affected actions' bindings. |
 | `souls` | Souls-style gamepad: light RB, heavy RT, guard LB, dodge/sprint A, interact/execute Y. |
 | `space_sprint` | Adds Space as a second sprint key; Shift stays. |
@@ -137,7 +137,7 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 - **一个键多个动作**：防御并到攻击键、闪避并到防御键，随便配。
 - **认方案**：可选编辑 `默认 / 自定义方案 1 / 自定义方案 2`，并能在工具里直接把某个方案设为游戏当前生效方案。
-- **快速配置**：左键兼防御、左轻右重，双键防御、双键攻防，空格机动、左键攻防，右键闪避、魂系手柄布局、空格高速移动、空格闪避、恢复原厂。
+- **快速配置**：左键兼防御、左轻右重，双键防御、双键攻防，自动疾跑、左键攻防，右键闪避、魂系手柄布局、空格高速移动、空格闪避、恢复原厂。
 - **15 种语言**：简中、繁中、英、日、韩、法、德、西班牙西语、拉美西语、巴西葡语、葡萄牙葡语、俄、意、泰、越，覆盖游戏的界面语言；自动识别系统语言，也能在工具栏切换。
 - **不丢键位**：留空的格子保持游戏默认；没碰到的内容按原字节写回。
 - **写入安全**：游戏必须退出、先打时间戳备份、写完回读校验。
@@ -153,13 +153,13 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 - **图形界面**：运行 `PBZKeyForge.exe` 自动查找并读取存档 → 选方案 → 直接改键或选择快速配置 → 应用更改。“更多”中可以更换存档。
 - **现成预设文件**：按 `presets\PRESETS.md` 中的名称和说明选择文件，覆盖到 `EnhancedInputUserSettings.sav`，进游戏选择表中的方案。发布包中的预设作用于**自定义 1**，替换文件不会自动切换游戏当前方案。纯配置、不含可执行文件。
 
-8 个预设文件（7 个改键预设及 1 个原厂键位文件）和中英对照说明均由程序内同一套预设定义生成，内容为原厂布局加上对应预设，与悬浮预览和“仅用预设”模式一致。“双键攻防，空格机动”将左键设为轻攻击＋防御、右键设为重攻击＋防御、空格同时绑定闪避／高速移动／跳跃，保留 F 重攻击和 Shift 闪避／高速移动，仅修改键鼠。程序还在快速配置中提供恢复本方案原厂，在“更多”中提供恢复全部方案原厂；两者使用同一套原厂键位，恢复范围不同。
+8 个预设文件（7 个改键预设及 1 个原厂键位文件）和中英对照说明均由程序内同一套预设定义生成，内容为原厂布局加上对应预设，与悬浮预览和“仅用预设”模式一致。“双键攻防，自动疾跑”将左键设为轻攻击＋防御、右键设为重攻击＋防御、空格同时绑定闪避／跳跃，W／A／D 绑定高速移动，保留 F 重攻击和 Shift 闪避，仅修改键鼠。程序还在快速配置中提供恢复本方案原厂，在“更多”中提供恢复全部方案原厂；两者使用同一套原厂键位，恢复范围不同。
 
 ### 重要提醒
 
 快速配置旁的“预设管理”可以命名保存当前方案，包含尚未应用的修改。“我的预设”与内置预设分组显示；单选可预览、复制分享码，勾选多个可批量删除，删除不改变当前键位。复制旁可选择全部所含设备、仅键鼠、仅控制器或某个手柄家族，字符数即时更新。分享码带名称，只记录相对原厂的绑定增减。粘贴后先预览，确认“包含设备”再保存或套用；“仅用预设”只恢复和套用所含设备，其他设备保持原样。
 
-快速配置右侧的小按钮循环切换“追加按键／替换按键／仅用预设”，悬浮可查看说明。套用只形成草稿，主界面“应用更改”才写入游戏。“导出游戏键位文件”输出 `.sav` 副本，包含当前方案的未应用修改，其余方案保持已保存内容；导出不切换游戏方案，也不覆盖源存档。预设库保存在 `%LOCALAPPDATA%\PBZKeyForge\Presets`。
+快速配置区域同时显示“追加按键／替换按键／仅用预设”三个选项，点击即可选择，悬浮可查看各自说明。套用只形成草稿，主界面“应用更改”才写入游戏。“导出游戏键位文件”输出 `.sav` 副本，包含当前方案的未应用修改，其余方案保持已保存内容；导出不切换游戏方案，也不覆盖源存档。预设库保存在 `%LOCALAPPDATA%\PBZKeyForge\Presets`。
 
 “按键视图”将可点击的键盘和鼠标放在一起，点击按键后在右侧编辑功能。数字徽标表示功能数：灰色为原厂一致、蓝色为已修改、黄色为待应用。手柄面键和十字键的徽标向四周分布，LT／RT 同时包含轴输入和数字输入。底部横跨两栏显示整个方案的变化，包含键鼠和手柄，可切换与修改前或原厂对比。每行默认按“新增 → 保留 → 灰色删除线移除”展示，点击绑定内容可循环切换绑定变化、纯变化、纯结果、原本。“动作视图”按动作列出原厂按键与可编辑槽位。两种视图共享草稿，切换不会保存。
 

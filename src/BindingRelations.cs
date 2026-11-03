@@ -28,6 +28,12 @@ namespace PBZKeyForge
         { return Complete || Keys.Contains(key) || DefaultKeys != null && !DefaultKeys.Contains(key); }
     }
 
+    public sealed class BindingCapacity
+    {
+        public int Used, Limit;
+        public bool CanAdd;
+    }
+
     public sealed class KeyRelations
     {
         public string Key;
@@ -269,7 +275,29 @@ namespace PBZKeyForge
                         SetGamepadFamily(action, Array.IndexOf(rawSlots, raw), familyIndex, "None");
                 return;
             }
-            // Reuse an empty or redundant slot, preserving every other key and its metadata.
+            int available = AvailableRelationshipSlot(action, gamepad, familyIndex);
+            if (available < 0)
+                throw new InvalidOperationException(I18n.Str("views.bindingfull", BindingViewText.ActionName(action), RelationshipCapacity(action, gamepad, familyIndex).Limit));
+            if (gamepad) SetGamepadFamily(action, available, familyIndex, key); else SetKeyboard(action, available, key);
+        }
+
+        public BindingCapacity RelationshipCapacity(string action, bool gamepad, int familyIndex)
+        {
+            string family = gamepad ? cells.Values.First(c => c.IsGamepad && c.Profile == SelectedProfile && c.FamilyIndex == familyIndex).Family : null;
+            int[] rawSlots = gamepad ? PadRawSlots(SelectedProfile, family, action) : KeyboardRawSlots(SelectedProfile, action);
+            var relation = Relations(action, gamepad, familyIndex);
+            return new BindingCapacity {
+                Used = relation.Keys.Except(InputDefaults.FixedForAction(action, gamepad)).Count(),
+                Limit = rawSlots.Count(raw => !gamepad || InputDefaults.RegisteredSlots(action, true).Contains(raw)),
+                CanAdd = relation.Complete && AvailableRelationshipSlot(action, gamepad, familyIndex) >= 0 };
+        }
+
+        int AvailableRelationshipSlot(string action, bool gamepad, int familyIndex)
+        {
+            var records = ActionBindingRecords(action, gamepad, familyIndex, false);
+            string family = gamepad ? cells.Values.First(c => c.IsGamepad && c.Profile == SelectedProfile && c.FamilyIndex == familyIndex).Family : null;
+            int[] rawSlots = gamepad ? PadRawSlots(SelectedProfile, family, action) : KeyboardRawSlots(SelectedProfile, action);
+            Func<BindingRecord, int> rawSlot = r => gamepad ? InputDefaults.RawSlot(r.Slot) : int.Parse(r.Slot);
             for (int slot = 0; slot < rawSlots.Length; slot++)
             {
                 int raw = rawSlots[slot];
@@ -282,12 +310,9 @@ namespace PBZKeyForge
                         .Select(s => InputDefaults.ForRawSlot(action, gamepad, s)))
                     .Concat(InputDefaults.FixedForAction(action, gamepad));
                 if (provided.All(k => k == "None" || string.IsNullOrEmpty(k) || remaining.Contains(k)))
-                {
-                    if (gamepad) SetGamepadFamily(action, slot, familyIndex, key); else SetKeyboard(action, slot, key);
-                    return;
-                }
+                    return slot;
             }
-            throw new InvalidOperationException(I18n.Str("views.capacity"));
+            return -1;
         }
 
         public void ReplaceRelationship(string action, string oldKey, string newKey, bool gamepad, int familyIndex)

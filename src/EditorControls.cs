@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -70,25 +70,71 @@ namespace PBZKeyForge
         }
     }
 
-    public sealed class PresetApplyButton : EditorButton
+    public sealed class PresetModeSelector : TableLayoutPanel
     {
-        PresetApplyMode mode;
-        public PresetApplyMode Mode { get { return mode; } set { mode = value; Invalidate(); } }
-        protected override void OnPaint(PaintEventArgs e)
+        sealed class ModeOption : EditorButton
         {
-            float scale = e.Graphics.DpiX / 96f;
-            Color tone = Mode == PresetApplyMode.Append ? Color.FromArgb(132, 174, 231)
-                : Mode == PresetApplyMode.Replace ? Color.FromArgb(114, 199, 182) : Color.FromArgb(193, 153, 228);
-            Color fill = !Enabled ? EditorTheme.Surface : Color.FromArgb(30 + tone.R / 12, 34 + tone.G / 12, 38 + tone.B / 12);
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            using (var shape = EditorArtwork.Rounded(new RectangleF(.5f, .5f, Width - 1.5f, Height - 1.5f), 4 * scale))
-            using (var brush = new SolidBrush(fill))
-            using (var pen = new Pen(Enabled ? tone : EditorTheme.Line, Hovered ? 2 : 1))
-            { e.Graphics.FillPath(brush, shape); e.Graphics.DrawPath(pen, shape); }
-            TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, Enabled ? tone : EditorTheme.Muted,
-                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
-            if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, new Rectangle(3, 3, Width - 7, Height - 7));
+            public bool Selected;
+            protected override void OnPaint(PaintEventArgs e)
+            {
+                Color fill = Hovered ? EditorTheme.Hover : Selected ? EditorTheme.Floating : EditorTheme.Surface;
+                e.Graphics.Clear(fill);
+                using (var pen = new Pen(EditorTheme.Line))
+                    e.Graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
+                if (Selected && Enabled)
+                    using (var pen = new Pen(EditorTheme.Accent, Math.Max(1, 2 * e.Graphics.DpiY / 96f)))
+                        e.Graphics.DrawLine(pen, 1, Height - 2, Width - 2, Height - 2);
+                TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, Enabled && Selected ? EditorTheme.Ink : EditorTheme.Muted,
+                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+                if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, new Rectangle(3, 3, Width - 7, Height - 7));
+            }
         }
+        readonly ModeOption[] options = { new ModeOption(), new ModeOption(), new ModeOption() };
+        readonly ToolTip tips = new ToolTip { AutoPopDelay = 20000 };
+        static readonly string[] keys = { "preset.append", "preset.replace", "preset.only" };
+        PresetApplyMode mode;
+        public event EventHandler ModeChanged;
+        public PresetApplyMode Mode
+        {
+            get { return mode; }
+            set { mode = value; for (int i = 0; i < options.Length; i++) { options[i].Selected = i == (int)mode; options[i].Invalidate(); } }
+        }
+        public PresetModeSelector()
+        {
+            DoubleBuffered = true; BackColor = EditorTheme.Surface;
+            ColumnCount = 3; RowCount = 1; Margin = Padding.Empty;
+            RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            for (int i = 0; i < options.Length; i++)
+            {
+                int index = i;
+                ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / 3));
+                options[i].Dock = DockStyle.Fill; options[i].Margin = Padding.Empty;
+                options[i].Name = "mode" + ((PresetApplyMode)i).ToString();
+                options[i].Click += delegate {
+                    if (mode == (PresetApplyMode)index) return;
+                    Mode = (PresetApplyMode)index;
+                    if (ModeChanged != null) ModeChanged(this, EventArgs.Empty);
+                };
+                Controls.Add(options[i], i, 0);
+            }
+            RefreshLabels(); Mode = PresetApplyMode.OnlyPreset;
+        }
+        public void RefreshLabels()
+        {
+            AccessibleName = I18n.Str("preset.mode");
+            for (int i = 0; i < options.Length; i++)
+            {
+                options[i].Text = I18n.Str(keys[i]); options[i].AccessibleName = AccessibleName + ": " + options[i].Text;
+                tips.SetToolTip(options[i], I18n.Str(i == 2 ? "preset.only.scopehelp" : keys[i] + ".help"));
+            }
+        }
+        public override Size GetPreferredSize(Size proposedSize)
+        {
+            int width = options.Max(option => TextRenderer.MeasureText(option.Text, Font).Width) + Font.Height * 2;
+            return new Size(width * 3, Font.Height + Math.Max(3, Font.Height / 5));
+        }
+        protected override void Dispose(bool disposing)
+        { if (disposing) tips.Dispose(); base.Dispose(disposing); }
     }
 
     public sealed class BindingButton : EditorButton
@@ -186,14 +232,6 @@ namespace PBZKeyForge
         {
             string text = keys == null ? I18n.Str("editor.defaultunknown") : string.Join(" / ", keys.Where(key => !string.IsNullOrEmpty(key) && key != "None").Select(FriendlyKey).Distinct());
             return text.Length == 0 ? I18n.Str("editor.unbound") : text;
-        }
-    }
-
-    internal sealed class PrimaryActionButton : EditorButton
-    {
-        public PrimaryActionButton()
-        {
-            Primary = true;
         }
     }
 

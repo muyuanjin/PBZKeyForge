@@ -19,18 +19,18 @@ namespace PBZKeyForge
         {
             this.session = session; this.action = action; this.pad = pad; this.family = family; this.refresh = refresh; this.actionView = actionView;
             Text = BindingViewText.ActionName(action); Font = new Font("Microsoft YaHei UI", 10f); AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(650, 380); StartPosition = FormStartPosition.CenterParent; AllowResize = false;
+            ClientSize = new Size(650, 420); StartPosition = FormStartPosition.CenterParent; AllowResize = false;
             BackColor = EditorTheme.Background; ForeColor = EditorTheme.Ink;
-            info.SetBounds(20, Caption.Height + 14, 610, 58); info.ForeColor = EditorTheme.Muted;
-            keys.SetBounds(20, Caption.Height + 78, 610, 145); keys.BackColor = EditorTheme.Floating; keys.ForeColor = EditorTheme.Ink;
+            info.SetBounds(20, Caption.Height + 14, 610, 94); info.ForeColor = EditorTheme.Muted;
+            keys.SetBounds(20, Caption.Height + 114, 610, 145); keys.BackColor = EditorTheme.Floating; keys.ForeColor = EditorTheme.Ink;
             keys.DisplayMember = "Label"; keys.BorderStyle = BorderStyle.FixedSingle;
             var buttons = new[] { add, change, remove };
             string[] text = { "views.add", "views.change", "views.remove" };
             for (int i = 0; i < buttons.Length; i++)
-            { buttons[i].SetBounds(20 + i * 206, Caption.Height + 235, 198, 34); buttons[i].Text = I18n.Str(text[i]); }
+            { buttons[i].SetBounds(20 + i * 206, Caption.Height + 271, 198, 34); buttons[i].Text = I18n.Str(text[i]); }
             add.Click += delegate { Pick(false); }; change.Click += delegate { Pick(true); };
             remove.Click += delegate { if (keys.SelectedItem != null) Run(delegate { session.ChangeRelationship(action, (string)keys.SelectedItem, false, pad, family); }); };
-            restore.SetBounds(20, Caption.Height + 283, 280, 36); restore.Text = I18n.Str("views.restore");
+            restore.SetBounds(20, Caption.Height + 319, 280, 36); restore.Text = I18n.Str("views.restore");
             restore.Click += delegate { Run(delegate { session.RestoreAction(action, pad, family); }); };
             var details = new EditorButton { Left = 310, Top = restore.Top, Width = 190, Height = 36, Text = I18n.Str("views.actionview") };
             details.Click += delegate { actionView(); Close(); };
@@ -44,7 +44,7 @@ namespace PBZKeyForge
         {
             var relation = session.Relations(action, pad, family);
             string key = keys.SelectedItem as string;
-            add.Enabled = !session.IsResetPending && relation.Complete;
+            add.Enabled = !session.IsResetPending && session.RelationshipCapacity(action, pad, family).CanAdd;
             change.Enabled = remove.Enabled = !session.IsResetPending && key != null
                 && !InputDefaults.FixedForAction(action, pad).Contains(key)
                 && (relation.Complete || relation.DefaultKeys != null && !relation.DefaultKeys.Contains(key));
@@ -52,8 +52,11 @@ namespace PBZKeyForge
         void Render()
         {
             var relation = session.Relations(action, pad, family);
+            var capacity = session.RelationshipCapacity(action, pad, family);
             info.Text = I18n.Str("views.factory", relation.DefaultKeys == null ? I18n.Str("editor.defaultunknown") : BindingViewText.Keys(relation.DefaultKeys))
-                + "\n" + (relation.Complete ? "" : I18n.Str("views.incomplete"));
+                + "\n" + I18n.Str("views.bindingcount", capacity.Used, capacity.Limit)
+                + "\n" + (!relation.Complete ? I18n.Str("views.incomplete") : capacity.CanAdd ? I18n.Str("views.bindinglimit", capacity.Limit)
+                    : I18n.Str("views.bindingfull", BindingViewText.ActionName(action), capacity.Limit));
             keys.Items.Clear(); keys.Items.AddRange(relation.Keys.Cast<object>().ToArray()); if (keys.Items.Count > 0) keys.SelectedIndex = 0;
             restore.Enabled = !session.IsResetPending && (!pad || relation.DefaultKeys != null); UpdateButtons();
         }

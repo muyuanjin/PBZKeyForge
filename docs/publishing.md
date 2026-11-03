@@ -6,6 +6,8 @@ Live page: https://www.nexusmods.com/phantombladezero/mods/402
 
 ## 1. Cut a release
 
+Write `docs/releases/<version>.md` for GitHub, `<version>.nexus.txt` for the main Nexus download and `<version>.presets-only.nexus.txt` for the preset archive before tagging. All describe the complete difference from the previous public version. GitHub notes include implementation and validation details; Nexus file descriptions explain player-visible behavior and use for the selected package. Each Nexus description must exceed 225 characters. The release workflow uses the checked-in notes rather than generating a commit list; the Nexus workflow reads its description from the release tag unless an explicit description is provided.
+
 ```powershell
 git tag -a v1.0.0 -m "PBZKeyForge 1.0.0"
 git push origin v1.0.0
@@ -35,7 +37,7 @@ gh secret set NEXUSMODS_API_KEY          # paste the personal API key when promp
 gh variable set NEXUSMODS_FILE_ID --body "<file id>"
 ```
 
-The page body lives in `docs/nexus-description.md` (BBCode, English only, images uploaded separately).
+The page description source is `docs/nexus-description.bbcode.txt` (English; images uploaded separately).
 
 ## 3. Upload a build
 
@@ -61,7 +63,7 @@ second entry differs from `NEXUSMODS_FILE_ID`.
 
 - Mod page: https://www.nexusmods.com/phantombladezero/mods/402 (mod id 402)
 - File entry: File ID `8297694` (Advanced panel on the Files tab), stored as the `NEXUSMODS_FILE_ID` repository variable.
-- Upload goes through `publish-nexusmods.yml`; the API accepts a long file description, unlike the 255 character limit on the manual upload form.
+- Upload goes through `publish-nexusmods.yml`; the API accepts a long file description, without the short-description limit on the manual upload form.
 
 ```powershell
 gh variable set NEXUSMODS_FILE_ID --body 8297694 --repo muyuanjin/PBZKeyForge
@@ -86,10 +88,10 @@ gh workflow run publish-nexusmods.yml --repo muyuanjin/PBZKeyForge `
   -f "description=<preset list>"
 ```
 
-## Fixing a file description that got cut at 255 characters
+## Correcting a published file description
 
-The file form on the site limits the per-file description to 255 characters. The API does not: re-running the publish workflow writes the full text. The cost is that the API creates a new version of the file, so afterwards tidy the duplicate under **Manage versions** and delete the older versions.
+The file form limits description length; the API supports the full version notes. Re-running the publish workflow creates another file version, so inspect existing versions before retrying and remove an obsolete duplicate only after confirming the new upload succeeded.
 
 ## Mod manager download
 
-`publish-nexusmods.yml` passes `allow_mod_manager_download: false` on every upload. The action defaults it to `true`, so an API upload silently re-enables the Vortex button even after it was turned off in the web UI, and turning it off again in the UI means opening the file form, whose description field is capped at 255 characters.
+`publish-nexusmods.yml` passes `allow_mod_manager_download: false` on every upload. The action defaults it to `true`, so an API upload silently re-enables the Vortex button even after it was turned off in the web UI, and turning it off again in the UI means opening the file form, whose description field has a short length limit.

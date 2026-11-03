@@ -8,7 +8,9 @@
         }
         static void EditorStrings()
         {
+            BindingFeedbackStrings();
             PresetShareStrings();
+            PresetLayoutStrings();
             Editor("preset.vanilla.name", "全部恢复原厂", "Reset all schemes", "全設定を初期化", "모든 설정 초기화", "Сбросить все схемы");
             Editor("preset.vanilla_current.name", "恢复原厂", "Restore factory defaults", "初期設定に戻す", "공장 기본값 복원", "Заводские настройки");
             Editor("preset.mode", "套用方式", "Apply mode", "適用方法", "적용 방식", "Способ применения", "套用方式", "Application", "Anwenden", "Modo de aplicación", "Modo de aplicação", "Modalità", "วิธีใช้", "Cách áp dụng", "Modo de aplicação", "Modo de aplicación");
@@ -49,7 +51,6 @@
             Editor("preset.deleted", "所选预设已删除。", "Selected presets deleted.", "選択項目を削除しました。", "선택 프리셋 삭제됨.", "Выбранные пресеты удалены.", "所選預設已刪除。", "Sélection supprimée.", "Auswahl gelöscht.", "Selección eliminada.", "Selecionados excluídos.", "Selezionati eliminati.", "ลบชุดปุ่มที่เลือกแล้ว", "Đã xóa các mục đã chọn.", "Selecionadas eliminadas.", "Selección eliminada.");
             Editor("preset.copied", "分享码已复制，可直接粘贴发送。", "Share code copied. Paste it to send.", "共有コードをコピーしました。貼り付けて送れます。", "공유 코드 복사됨. 붙여넣어 보내세요.", "Код скопирован. Вставьте его в сообщение.", "分享碼已複製，可直接貼上傳送。", "Code copié. Collez-le pour l’envoyer.", "Code kopiert. Zum Senden einfügen.", "Código copiado. Pégalo para enviarlo.", "Código copiado. Cole para enviar.", "Codice copiato. Incollalo per inviarlo.", "คัดลอกรหัสแล้ว วางเพื่อส่งได้เลย", "Đã sao chép mã. Dán để gửi.", "Código copiado. Cole para enviar.", "Código copiado. Pégalo para enviarlo.");
             Editor("preset.exported", "游戏键位文件已导出。", "Game bindings exported.", "ゲーム設定を出力しました。", "게임 키 파일 내보냄.", "Клавиши игры экспортированы.", "遊戲鍵位檔已匯出。", "Commandes exportées.", "Spielbelegung exportiert.", "Controles exportados.", "Teclas do jogo exportadas.", "Comandi esportati.", "ส่งออกไฟล์ปุ่มเกมแล้ว", "Đã xuất phím trò chơi.", "Teclas do jogo exportadas.", "Controles exportados.");
-            Editor("preset.nextmode", "点击切换为：{0}；将重新预览所选预设。", "Click to switch to {0} and recalculate the selected preset.", "クリックで「{0}」に切り替え、選択プリセットを再計算します。", "클릭하여 {0}(으)로 전환하고 선택 프리셋을 다시 계산합니다.", "Нажмите для перехода к «{0}» и пересчёта выбранного пресета.", "點擊切換為：{0}；將重新預覽所選預設。", "Cliquer pour passer à {0} et recalculer le préréglage sélectionné.", "Klicken für {0} und erneute Vorschau der gewählten Vorlage.", "Haz clic para cambiar a {0} y recalcular el preajuste.", "Clique para mudar para {0} e recalcular a predefinição.", "Fai clic per passare a {0} e ricalcolare il preset.", "คลิกเพื่อเปลี่ยนเป็น {0} และคำนวณชุดปุ่มที่เลือกใหม่", "Nhấn để chuyển sang {0} và tính lại bộ đặt sẵn.", "Clique para mudar para {0} e recalcular a predefinição.", "Haz clic para cambiar a {0} y recalcular el preajuste.");
             BindingViewStrings();
             BindingHelpStrings();
             Editor("editor.capturing", "正在录入：按键或点击鼠标；Tab 结束", "Listening: press a key or mouse button; Tab to leave", "入力待ち：キー／マウスボタン（Tab で終了）", "입력 대기: 키 또는 마우스 버튼 · Tab으로 종료", "Нажмите клавишу или кнопку мыши; Tab — выход", "正在擷取：按鍵或點擊滑鼠；Tab 結束", "Appuyez sur une touche ou un bouton de souris ; Tab pour quitter", "Taste oder Maustaste drücken; Tab beendet die Aufnahme", "Pulsa una tecla o botón del ratón; Tab para salir", "Pressione uma tecla ou botão do mouse; Tab para sair", "Premi un tasto o pulsante del mouse; Tab per uscire", "กดปุ่มแป้นพิมพ์หรือเมาส์ กด Tab เพื่อออก", "Nhấn phím hoặc nút chuột; Tab để thoát", "Prima uma tecla ou botão do rato; Tab para sair", "Presiona una tecla o botón del mouse; Tab para salir");
@@ -147,29 +148,29 @@
             Editor("preset.space_dodge.name", "空格闪避", "Space to dodge", "スペースで回避", "스페이스로 회피", "Пробел — уклонение");
             Editor("preset.space_dodge.desc", "仅键鼠：闪避改为 Shift / 空格。", "Keyboard only: dodge becomes Shift / Space.", "キーボードのみ：回避は Shift / スペース。", "키보드만: 회피는 Shift / 스페이스입니다.", "Только клавиатура: уклонение на Shift / пробел.");
             Editor("preset.mouse_guard_space.name",
-                "双键攻防，空格机动", "Dual-button combat + Space mobility", "両クリックで攻防・スペースで機動",
-                "양클릭 공방, 스페이스 기동", "Кнопки мыши: атака/блок, пробел: манёвры",
-                "雙鍵攻防，空格機動", "Souris attaque/parade, Espace mobilité",
-                "Maus Angriff/Block, Leertaste Bewegung", "Ratón ataque/bloqueo, Espacio movilidad",
-                "Mouse ataque/defesa, Espaço mobilidade", "Mouse attacco/parata, Spazio movimento",
-                "สองปุ่มโจมตีและป้องกัน สเปซเคลื่อนที่", "Hai nút công/thủ, Space cơ động",
-                "Rato ataque/defesa, Espaço mobilidade", "Ratón ataque/bloqueo, Espacio movilidad");
+                "双键攻防，自动疾跑", "Dual-button combat + Auto sprint", "両クリックで攻防・自動ダッシュ",
+                "양클릭 공방, 자동 질주", "Кнопки мыши: атака/блок, автобег",
+                "雙鍵攻防，自動疾跑", "Souris attaque/parade, course auto",
+                "Maus Angriff/Block, automatischer Sprint", "Ratón ataque/bloqueo, carrera automática",
+                "Mouse ataque/defesa, corrida automática", "Mouse attacco/parata, corsa automatica",
+                "สองปุ่มโจมตีและป้องกัน วิ่งเร็วอัตโนมัติ", "Hai nút công/thủ, tự động chạy nhanh",
+                "Rato ataque/defesa, corrida automática", "Ratón ataque/bloqueo, carrera automática");
             Editor("preset.mouse_guard_space.desc",
-                "仅键鼠：左键轻攻击＋防御，右键重攻击＋防御；空格同时绑定闪避、高速移动和跳跃。保留 F 重攻击、Shift 闪避／高速移动。",
-                "Keyboard / mouse only: left mouse light attack + guard, right mouse heavy attack + guard; Space binds dodge, sprint and jump together. F retains heavy attack; Shift retains dodge / sprint.",
-                "キーボードとマウスのみ：左クリックで弱攻撃＋防御、右クリックで強攻撃＋防御。スペースに回避・高速移動・ジャンプを同時割り当て。F の強攻撃、Shift の回避／高速移動も維持。",
-                "키보드/마우스만: 좌클릭 약공격+방어, 우클릭 강공격+방어. 스페이스에 회피·고속 이동·점프를 함께 지정합니다. F 강공격, Shift 회피/고속 이동은 유지합니다.",
-                "Только клавиатура и мышь: ЛКМ — лёгкая атака + блок, ПКМ — тяжёлая атака + блок; пробел — уклонение, бег и прыжок. F сохраняет тяжёлую атаку, Shift — уклонение/бег.",
-                "僅鍵鼠：左鍵輕攻擊＋防禦，右鍵重攻擊＋防禦；空格同時綁定閃避、高速移動和跳躍。保留 F 重攻擊、Shift 閃避／高速移動。",
-                "Clavier/souris : clic gauche attaque légère + parade, clic droit attaque lourde + parade ; Espace combine esquive, course et saut. F garde l’attaque lourde, Maj garde esquive/course.",
-                "Nur Tastatur/Maus: links leichter Angriff + Block, rechts schwerer Angriff + Block; Leertaste kombiniert Ausweichen, Sprint und Sprung. F bleibt schwerer Angriff, Umschalt bleibt Ausweichen/Sprint.",
-                "Solo teclado/ratón: clic izquierdo ataque ligero + bloqueo, derecho ataque fuerte + bloqueo; Espacio combina esquiva, carrera y salto. F mantiene ataque fuerte; Mayús mantiene esquiva/carrera.",
-                "Só teclado/mouse: botão esquerdo ataque leve + defesa, direito ataque forte + defesa; Espaço combina esquiva, corrida e salto. F mantém ataque forte; Shift mantém esquiva/corrida.",
-                "Solo tastiera/mouse: sinistro attacco leggero + parata, destro attacco pesante + parata; Spazio unisce schivata, corsa e salto. F mantiene l’attacco pesante; Maiusc mantiene schivata/corsa.",
-                "เฉพาะคีย์บอร์ด/เมาส์: คลิกซ้ายโจมตีเบา+ป้องกัน คลิกขวาโจมตีหนัก+ป้องกัน สเปซรวมหลบ วิ่งเร็ว และกระโดด คง F โจมตีหนัก และ Shift หลบ/วิ่งเร็ว",
-                "Chỉ bàn phím/chuột: chuột trái đánh nhẹ + đỡ, chuột phải đánh mạnh + đỡ; Space gán chung né, chạy nhanh và nhảy. Giữ F đánh mạnh, Shift né/chạy nhanh.",
-                "Só teclado/rato: botão esquerdo ataque leve + defesa, direito ataque forte + defesa; Espaço combina esquiva, corrida e salto. F mantém ataque forte; Shift mantém esquiva/corrida.",
-                "Solo teclado/ratón: clic izquierdo ataque ligero + bloqueo, derecho ataque fuerte + bloqueo; Espacio combina esquiva, carrera y salto. F mantiene ataque fuerte; Mayús mantiene esquiva/carrera.");
+                "仅键鼠：左键轻攻击＋防御，右键重攻击＋防御；空格闪避＋跳跃，W／A／D 高速移动。保留 F 重攻击、Shift 闪避；Shift 和空格不再触发高速移动。",
+                "Keyboard / mouse only: left mouse light attack + guard, right mouse heavy attack + guard; Space dodge + jump, W/A/D sprint. F retains heavy attack; Shift retains dodge. Shift and Space no longer sprint.",
+                "キーボードとマウスのみ：左クリックで弱攻撃＋防御、右クリックで強攻撃＋防御。スペースは回避＋ジャンプ、W/A/D は高速移動。F の強攻撃と Shift の回避を維持。Shift とスペースの高速移動は解除。",
+                "키보드/마우스만: 좌클릭 약공격+방어, 우클릭 강공격+방어. 스페이스 회피+점프, W/A/D 고속 이동. F 강공격과 Shift 회피는 유지하며 Shift와 스페이스의 고속 이동은 해제합니다.",
+                "Только клавиатура и мышь: ЛКМ — лёгкая атака + блок, ПКМ — тяжёлая атака + блок; пробел — уклонение + прыжок, W/A/D — бег. F сохраняет тяжёлую атаку, Shift — уклонение. Shift и пробел больше не включают бег.",
+                "僅鍵鼠：左鍵輕攻擊＋防禦，右鍵重攻擊＋防禦；空格閃避＋跳躍，W／A／D 高速移動。保留 F 重攻擊、Shift 閃避；Shift 和空格不再觸發高速移動。",
+                "Clavier/souris : clic gauche attaque légère + parade, clic droit attaque lourde + parade ; Espace esquive + saut, W/A/D course. F garde l’attaque lourde, Maj garde l’esquive. Maj et Espace ne déclenchent plus la course.",
+                "Nur Tastatur/Maus: links leichter Angriff + Block, rechts schwerer Angriff + Block; Leertaste Ausweichen + Sprung, W/A/D Sprint. F bleibt schwerer Angriff, Umschalt bleibt Ausweichen. Umschalt und Leertaste lösen keinen Sprint mehr aus.",
+                "Solo teclado/ratón: clic izquierdo ataque ligero + bloqueo, derecho ataque fuerte + bloqueo; Espacio esquiva + salto, W/A/D carrera. F mantiene ataque fuerte; Mayús mantiene esquiva. Mayús y Espacio ya no activan la carrera.",
+                "Só teclado/mouse: botão esquerdo ataque leve + defesa, direito ataque forte + defesa; Espaço esquiva + salto, W/A/D corrida. F mantém ataque forte; Shift mantém esquiva. Shift e Espaço não ativam mais a corrida.",
+                "Solo tastiera/mouse: sinistro attacco leggero + parata, destro attacco pesante + parata; Spazio schivata + salto, W/A/D corsa. F mantiene l’attacco pesante; Maiusc mantiene schivata. Maiusc e Spazio non attivano più la corsa.",
+                "เฉพาะคีย์บอร์ด/เมาส์: คลิกซ้ายโจมตีเบา+ป้องกัน คลิกขวาโจมตีหนัก+ป้องกัน สเปซหลบ+กระโดด W/A/D วิ่งเร็ว คง F โจมตีหนัก และ Shift หลบ โดย Shift และสเปซไม่ใช้วิ่งเร็วอีกต่อไป",
+                "Chỉ bàn phím/chuột: chuột trái đánh nhẹ + đỡ, chuột phải đánh mạnh + đỡ; Space né + nhảy, W/A/D chạy nhanh. Giữ F đánh mạnh, Shift né. Shift và Space không còn kích hoạt chạy nhanh.",
+                "Só teclado/rato: botão esquerdo ataque leve + defesa, direito ataque forte + defesa; Espaço esquiva + salto, W/A/D corrida. F mantém ataque forte; Shift mantém esquiva. Shift e Espaço deixam de ativar a corrida.",
+                "Solo teclado/ratón: clic izquierdo ataque ligero + bloqueo, derecho ataque fuerte + bloqueo; Espacio esquiva + salto, W/A/D carrera. F mantiene ataque fuerte; Mayús mantiene esquiva. Mayús y Espacio ya no activan la carrera.");
         }
 
         static void BindingViewStrings()

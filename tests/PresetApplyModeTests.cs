@@ -13,6 +13,8 @@ public static class PresetApplyModeTests
     const BindingFlags Hidden = BindingFlags.Instance | BindingFlags.NonPublic;
     static int checks;
     [DllImport("user32.dll")] static extern IntPtr SendMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
+    static void SelectMode(PresetModeSelector selector, PresetApplyMode mode)
+    { selector.Controls.OfType<Button>().Single(button => button.Name == "mode" + mode).PerformClick(); Application.DoEvents(); }
     static void Assert(bool value, string message)
     { checks++; if (!value) throw new Exception(message); }
     static T Field<T>(object owner, string name)
@@ -119,37 +121,37 @@ public static class PresetApplyModeTests
             Assert(rejected && fullBytes.SequenceEqual(full.ToBytes()), "Capacity failure is atomic across actions");
 
             File.WriteAllBytes(input, saved);
-            using (var form = new MainForm())
+            using (var form = new MainForm(new EditorPreferences(Path.Combine(output, Guid.NewGuid().ToString("N"), "mode.txt"))))
             {
                 form.Opacity = 0; form.ShowInTaskbar = false; form.UiSmoke(input); form.Show(); Application.DoEvents();
                 Field<ComboBox>(form, "cbLang").SelectedIndex = 0;
                 form.Session.SwitchProfile(Profile); form.RenderSession();
-                var button = Field<PresetApplyButton>(form, "btnPresetMode");
-                Assert(button.Mode == PresetApplyMode.Append && button.Visible && button.Enabled, "Compact mode defaults to Append");
+                var button = Field<PresetModeSelector>(form, "btnPresetMode");
+                Assert(button.Mode == PresetApplyMode.OnlyPreset && button.Visible && button.Enabled, "All mode choices visible with first-launch selection");
+                SelectMode(button, PresetApplyMode.Append);
                 var picker = Field<ComboBox>(form, "cbPreset");
                 Assert(button.Parent == picker.Parent, "Mode belongs beside preset selector");
                 picker.SelectedItem = picker.Items.Cast<object>().OfType<Preset>().Single(preset => preset.Id == "mouse_guard");
                 foreach (var mode in new[] { PresetApplyMode.Replace, PresetApplyMode.OnlyPreset, PresetApplyMode.Append })
                 {
-                    button.PerformClick(); Application.DoEvents();
-                    Assert(button.Mode == mode && form.Session.PresetMode == mode, "Cycle click updates selected mode");
+                    SelectMode(button, mode);
+                    Assert(button.Mode == mode && form.Session.PresetMode == mode, "Direct selection updates selected mode");
                     Keys(form.Session, "IA_Interact", false, mode == PresetApplyMode.OnlyPreset ? "E" : "H");
                 }
                 Snapshot(form, Path.Combine(output, "quick-modes-regular.png"));
                 form.Size = form.MinimumSize; Application.DoEvents();
                 Assert(button.Parent.ClientRectangle.Contains(button.Bounds), "Compact mode fits minimum window");
-                Assert(TextRenderer.MeasureText(button.Text, button.Font).Width < button.Width, "Mode label fits");
-                Assert(Field<ToolTip>(form, "tip").GetToolTip(button).Contains(I18n.Str("preset.append.help")), "Current mode detail appears on hover");
+                foreach (Button option in button.Controls) Assert(option.Visible && TextRenderer.MeasureText(option.Text, option.Font).Width < option.Width, "All three mode labels fit");
+                Assert(button.Controls.Count == 3, "All three application modes remain visible");
                 Snapshot(form, Path.Combine(output, "quick-modes-minimum.png"));
                 form.Session.SelectPreset(null);
                 for (int slot = 0; slot < 3; slot++) form.Session.SetKeyboard("IA_HeavyAttack", slot, new[] { "G", "H", "J" }[slot]);
                 form.Session.SelectPreset("mouse_guard", PresetApplyMode.Replace); form.RenderSession();
-                button.PerformClick(); Assert(button.Mode == PresetApplyMode.OnlyPreset, "Cycle reaches OnlyPreset");
-                button.PerformClick();
+                SelectMode(button, PresetApplyMode.OnlyPreset); Assert(button.Mode == PresetApplyMode.OnlyPreset, "Directly selects OnlyPreset");
+                SelectMode(button, PresetApplyMode.Append);
                 Assert(button.Mode == PresetApplyMode.OnlyPreset && form.Session.PresetMode == PresetApplyMode.OnlyPreset,
                     "Failed mode click keeps successful mode");
-                Assert(Field<ToolTip>(form, "tip").GetToolTip(button).Contains(I18n.Str("preset.nextmode", I18n.Str("preset.replace"))), "Failed cycle tooltip offers following mode");
-                button.PerformClick(); Assert(button.Mode == PresetApplyMode.Replace, "Failed append does not trap cycling");
+                SelectMode(button, PresetApplyMode.Replace); Assert(button.Mode == PresetApplyMode.Replace, "A different mode can be selected after capacity failure");
                 picker.SelectedItem = picker.Items.Cast<object>().OfType<Preset>().Single(preset => preset.Id == "vanilla_current");
                 Assert(!button.Enabled, "Restore factory is independent of mode");
                 var userPreset = new Preset { Id = "user_test", UserName = "我的攻防", BaselineId = 1,

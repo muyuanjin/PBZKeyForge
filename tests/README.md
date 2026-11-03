@@ -1,4 +1,4 @@
-# Local verification
+﻿# Local verification
 
 Integration checks use Simplified Chinese by default. Full language sweeps are opt-in and reserved for targeted localization testing: append `--all-languages` to the relevant command, for example `.\dist\SchemeDiffViewTests.exe samples\vanilla-base.sav dist\diff-language-check --all-languages`. The dedicated `I18nTranslationTests` is also run separately only for localization work; it is not part of routine verification.
 
@@ -12,6 +12,15 @@ $sessionSources = @(Get-ChildItem src -Filter *.cs | ForEach-Object { $_.FullNam
 ```
 
 The session checks create fresh temporary copies. They cover disk refresh and conflicts, per-scheme keyboard and controller drafts, isolation between profiles with the same controller family, preview replacement/cancellation, global reset/undo, unknown data preservation, interrupted writes, resource-based raw slots for crouch/menu/items, all three Shadow Arm controller slots, shared Blob ownership, and rejection of unregistered controller slots. No game installation is required for this command.
+
+Check responsive application and recovery using fixture copies:
+
+```powershell
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\ApplyResponsivenessTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\ApplyResponsivenessTests.cs
+.\dist\ApplyResponsivenessTests.exe samples\vanilla-base.sav dist\apply-responsiveness-check
+```
+
+The check pauses a background write at the replacement boundary while pumping UI messages. It verifies the spinner advances, editing and closing remain disabled, a second Apply cannot start, and the file stays untouched until the writer continues. An interrupted write retains the draft and restores controls; retry saves it. A screenshot captures the busy state.
 
 Check the mouse attack/guard preset independently, including the retained F heavy attack binding:
 
@@ -97,7 +106,7 @@ Check the three visible quick-configuration application modes:
 .\dist\PresetApplyModeTests.exe samples\vanilla-base.sav dist\quick-mode-check
 ```
 
-Checks Add keys, Replace keys and Preset only against existing custom keys; mode switching and cancellation use the same checkpoint. It covers duplicate no-ops, save/reopen, other-scheme isolation, controller families, atomic capacity rejection and retained mode selection after a failed click. Screenshots show the compact mode switch beside the preset selector at regular and minimum window sizes. Restore factory defaults disables the mode switch. All writes use fixture copies.
+Checks Add keys, Replace keys and Preset only against existing custom keys; mode switching and cancellation use the same checkpoint. It covers duplicate no-ops, save/reopen, other-scheme isolation, controller families, atomic capacity rejection and retained mode selection after a failed click. Screenshots show all three directly selectable modes beside the preset selector at regular and minimum window sizes. Restore factory defaults disables the mode switch. All writes use fixture copies.
 
 Check saved user presets, share codes and game-file export:
 
@@ -110,7 +119,7 @@ Check saved user presets, share codes and game-file export:
 .\dist\UserPresetUiTests.exe samples\vanilla-base.sav dist\user-preset-ui-check
 ```
 
-The share checks use an independent Protobuf byte vector to verify stable IDs and packed encoding, raw/DEFLATE selection, skipped metadata, unknown semantic rejection, literal engine keys/family names, frozen resource defaults, explicit empty scopes, and keyboard/controller-family isolation in all three application modes. The model checks save/reload, Unicode names containing colons, pure unbinding, fixed Ctrl plus three editable keys, duplicate names, builtin deletion rejection and source-file protection. Export includes only the selected scheme's draft. The GUI harness uses an isolated preset library and real control events for save, preview, scoped copying with live lengths, import, confirmed/cancelled batch deletion, local mode switching and staging. Screenshots cover regular/minimum windows, name edits across resizing, horizontal fit, and a preset affecting the second controller family. Export serialization is checked through the session API; the native export file picker is not automated.
+The share checks use an independent Protobuf byte vector to verify stable IDs and packed encoding, raw/DEFLATE selection, skipped metadata, unknown semantic rejection, literal engine keys/family names, frozen resource defaults, explicit empty scopes, and keyboard/controller-family isolation in all three application modes. The model checks save/reload, Unicode names containing colons, pure unbinding, fixed Ctrl plus three editable keys, duplicate names, builtin deletion rejection and source-file protection. Export includes only the selected scheme's draft. The GUI harness uses an isolated preset library and real control events for save, preview, scoped copying with live lengths, import, confirmed/cancelled batch deletion, direct mode selection and staging. Selected rows drive previews; deletion checks do not interrupt browsing. Screenshots cover regular/minimum windows, name edits across resizing, horizontal fit, and a preset affecting the second controller family. Name guidance checks cover initial focus, neutral interactive saving, empty-name clicks, whitespace and ready-state styling. Add `--native-guidance` to move the real pointer over the gray save action and capture its native tooltip. Export serialization is checked through the session API; the native export file picker is not automated.
 
 ```powershell
 & $compiler /nologo /win32manifest:build\app.manifest /out:dist\BindingViewsTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\BindingViewsTests.cs
@@ -154,3 +163,12 @@ This check briefly shows a topmost window and captures the actual desktop pixels
 ```
 
 Checks the visible dropdown arrow through mouse messages, text entry through the native edit control, capture activation without recording its first click, capture focus isolation, Tab navigation, and explicit unbinding in Simplified Chinese. Add `--all-languages` for targeted localization testing. State samples compare factory, saved custom, pending, and empty bindings. Details must summarize remaining effective keys when another entry is unbound and include inherited entries without duplicates. The question button opens a wrapping, scrollable example tutorial. Layout screenshots use `DrawToBitmap`; this test does not measure transient repaint frames. Input saves remain unchanged.
+
+## Binding capacity and removed actions
+
+```powershell
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\BindingFeedbackTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\BindingFeedbackTests.cs
+.\dist\BindingFeedbackTests.exe samples\vanilla-base.sav dist\binding-feedback-check
+```
+
+Checks a fourth-key rejection without losing existing bindings, visible current keys and capacity, action-specific controller limits, disabled full-capacity confirmation, and gray removed action names/icons/status. Screenshots capture the full-capacity picker, action details and removed relationship. Saves are not written.

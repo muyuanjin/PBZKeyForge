@@ -1,6 +1,6 @@
 # 当前构建与验证
 
-2026-11-04，Windows，使用系统自带 .NET Framework 编译器及 Windows PowerShell 5.1 构建。GUI 位于 `dist/PBZKeyForge.exe`，CLI 位于 `dist/PBZKeyForge-cli.exe`；版本字段为 1.1.1，新功能记录在 [Unreleased](../../../CHANGELOG.md)。
+2026-11-04，Windows，使用系统自带 .NET Framework 编译器及 Windows PowerShell 5.1 构建。GUI 位于 `dist/PBZKeyForge.exe`，CLI 位于 `dist/PBZKeyForge-cli.exe`；版本字段为 1.2.0，版本变化记录在 [更新日志](../../../CHANGELOG.md)。
 
 ## 功能状态
 
@@ -29,15 +29,21 @@
 | 预设生成 | 8 份存档生成成功 |
 | `PresetShareTests` | 109 项通过：Protobuf 独立字节向量、永久编号、压缩选择、基线及设备范围隔离 |
 | `UserPresetTests` | 24 项通过：保存、导入、明确解绑及游戏文件导出 |
-| `UserPresetUiTests` | 66 项通过：范围筛选、字符数、局部三态、导入、删除及最小窗口截图 |
+| `UserPresetUiTests` | 82 项通过：名称焦点与空名点击、原生悬停引导、范围筛选、三段直接选择、导入、勾选删除隔离及最小窗口对齐 |
 | `PresetHoverPreviewTests` | 91 项通过：真实下拉悬浮、原厂基准预览、设备图示、配色及草稿隔离 |
-| `PresetApplyModeTests` | 58 项通过：三种套用方式、容量拒绝及取消恢复 |
+| `PresetPreferenceTests` | 40 项通过：选择记忆、预设结果及主辅控件高度／字号／宽度与最小窗口可读性 |
+| `PresetApplyModeTests` | 59 项通过：三种套用方式直接选择、容量拒绝及取消恢复 |
+| `BindingFeedbackTests` | 26 项通过：移除动作灰化划线、键鼠／手柄容量提示与满额拒绝 |
+| `ApplyResponsivenessTests` | 18 项通过：动画持续、重复应用／关闭限制、失败保留草稿和重试 |
+| `SchemeActivationTests` | 61 项认证写入副本检查及 18 项只读检查通过 |
 | `PresetPackageTests` | 3,773 项通过：8 份预设与编辑器结果一致 |
 
-验证产物位于 `dist/verification/`、`dist/commit-check/` 和 `dist/commit-final/`。预设管理的常规／最小窗口、第二手柄家族布局及底栏截图已审阅。构建脚本生成的程序与预设均为忽略产物；素材源图、资源数据、提取脚本、设计说明及许可证由 Git 管理。
+本地验证截图与日志不进入发布包。预设管理的常规／最小窗口、第二手柄家族布局及底栏截图已审阅。构建脚本生成的程序与预设均为忽略产物；素材源图、资源数据、提取脚本、设计说明及许可证由 Git 管理。
+
+同一处绑定修改在本机隔离副本上的应用耗时为 28 ms；未缓存的程序身份确认仍需完整读取可执行文件。程序摘要只在路径、长度和修改时间一致时复用，存档认证仍逐次执行。
 
 ## 已知限制
 
 默认资源适用于 CL-301524，未知动作仍保留原始记录编辑及“未确认”默认状态。影之武装长按的固定 Ctrl 映射独立于可编辑槽。
 
-本轮验证使用仓库样本及其副本，未执行真实安装上的认证方案启用检查，也未启动游戏验证组合技能的时序和出招。窗口截图覆盖本机显示配置，不代表不同 DPI 显示器间动态切换。
+本轮验证使用仓库样本，以及已支持安装的可执行程序和存档副本完成认证方案启用检查；没有写入原始玩家存档，也未启动游戏验证组合技能的时序和出招。窗口截图覆盖本机显示配置，不代表不同 DPI 显示器间动态切换。

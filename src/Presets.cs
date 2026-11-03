@@ -71,12 +71,12 @@ namespace PBZKeyForge
 
             var mouseGuardSpace = new Preset { Id = "mouse_guard_space" };
             mouseGuardSpace.Keyboard.AddRange(mouseGuard.Keyboard.Select(binding => new KeyBinding(binding.Action, binding.Slot, binding.Key)));
-            foreach (string action in new[] { "IA_Dodge", "IA_MoveFast" })
-            {
-                mouseGuardSpace.Keyboard.Add(new KeyBinding(action, 0, "LeftShift"));
-                mouseGuardSpace.Keyboard.Add(new KeyBinding(action, 1, "LeftShift"));
-                mouseGuardSpace.Keyboard.Add(new KeyBinding(action, 2, "SpaceBar"));
-            }
+            mouseGuardSpace.Keyboard.Add(new KeyBinding("IA_Dodge", 0, "LeftShift"));
+            mouseGuardSpace.Keyboard.Add(new KeyBinding("IA_Dodge", 1, "LeftShift"));
+            mouseGuardSpace.Keyboard.Add(new KeyBinding("IA_Dodge", 2, "SpaceBar"));
+            mouseGuardSpace.Keyboard.Add(new KeyBinding("IA_MoveFast", 0, "W"));
+            mouseGuardSpace.Keyboard.Add(new KeyBinding("IA_MoveFast", 1, "A"));
+            mouseGuardSpace.Keyboard.Add(new KeyBinding("IA_MoveFast", 2, "D"));
             mouseGuardSpace.Keyboard.Add(new KeyBinding("IA_Jump", 0, "SpaceBar"));
             list.Add(mouseGuardSpace);
 

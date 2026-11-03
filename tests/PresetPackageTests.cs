@@ -38,7 +38,7 @@ public static class PresetPackageTests
             new[] { "IA_Guard", "LeftMouseButton", "RightMouseButton" },
             new[] { "IA_HeavyAttack", "F", "RightMouseButton" },
             new[] { "IA_Dodge", "LeftShift", "SpaceBar" },
-            new[] { "IA_MoveFast", "LeftShift", "SpaceBar" },
+            new[] { "IA_MoveFast", "W", "A", "D" },
             new[] { "IA_Jump", "SpaceBar" }
         };
         foreach (var keys in expected)

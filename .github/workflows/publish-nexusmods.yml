@@ -60,6 +60,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout release notes
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
       - name: Prepare Nexus upload metadata
         id: meta
         shell: bash
@@ -116,14 +121,23 @@ jobs:
           echo "display_name=${display_name}" >> "$GITHUB_OUTPUT"
           echo "file_id=${file_id}" >> "$GITHUB_OUTPUT"
 
+          description="${INPUT_DESCRIPTION}"
+          if [[ -z "${description}" ]]; then
+            notes="docs/releases/${version}.nexus.txt"
+            if [[ "${asset_name}" == *-presets-only.zip ]]; then
+              notes="docs/releases/${version}.presets-only.nexus.txt"
+            fi
+            description="$(cat "${notes}")"
+          fi
+          if [[ "${#description}" -le 225 ]]; then
+            printf 'The Nexus file description must exceed 225 characters and describe changes since the previous public release.\n' >&2
+            exit 1
+          fi
+
           description_delimiter="nexus_description_$(uuidgen | tr '[:upper:]' '[:lower:]')"
           {
             echo "description<<${description_delimiter}"
-            if [[ -n "${INPUT_DESCRIPTION}" ]]; then
-              printf '%s\n' "${INPUT_DESCRIPTION}"
-            else
-              printf 'PBZKeyForge %s\n' "${version}"
-            fi
+            printf '%s\n' "${description}"
             echo "${description_delimiter}"
           } >> "$GITHUB_OUTPUT"
 

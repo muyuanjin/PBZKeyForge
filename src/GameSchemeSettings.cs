@@ -22,6 +22,13 @@ namespace PBZKeyForge
         };
         static readonly Encoding Utf8 = new UTF8Encoding(false, true);
         static readonly Regex SchemeField = new Regex("\"KeyBindingScheme\"\\s*:\\s*\"(?<value>[^\"]*)\"");
+        static readonly Dictionary<string, ExecutableIdentity> executableIdentities = new Dictionary<string, ExecutableIdentity>(StringComparer.OrdinalIgnoreCase);
+        sealed class ExecutableIdentity
+        {
+            public long Length;
+            public DateTime LastWrite;
+            public string Digest;
+        }
         readonly string path;
         readonly string executable;
         readonly byte[] original;
@@ -130,9 +137,7 @@ namespace PBZKeyForge
             {
                 using (var stream = new FileStream(exe, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    byte[] hash;
-                    using (var sha = SHA256.Create()) hash = sha.ComputeHash(stream);
-                    executableDigest = Hex(hash);
+                    executableDigest = ExecutableDigest(exe, stream);
                     foreach (var known in VerifiedKeyProfiles)
                         if (executableDigest == known.ExecutableSha256) { build = known; exactExecutable = true; break; }
 
@@ -177,6 +182,22 @@ namespace PBZKeyForge
                 return keys;
             }
             catch { ClearKeys(keys); throw; }
+        }
+
+        static string ExecutableDigest(string executable, FileStream stream)
+        {
+            string fullPath = Path.GetFullPath(executable);
+            DateTime lastWrite = File.GetLastWriteTimeUtc(fullPath);
+            lock (executableIdentities)
+            {
+                ExecutableIdentity identity;
+                if (executableIdentities.TryGetValue(fullPath, out identity) && identity.Length == stream.Length && identity.LastWrite == lastWrite)
+                    return identity.Digest;
+                string digest;
+                using (var sha = SHA256.Create()) digest = Hex(sha.ComputeHash(stream));
+                executableIdentities[fullPath] = new ExecutableIdentity { Length = stream.Length, LastWrite = lastWrite, Digest = digest };
+                return digest;
+            }
         }
 
         static string Hex(byte[] bytes)
