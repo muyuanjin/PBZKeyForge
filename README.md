@@ -10,6 +10,10 @@ A key binding editor for **Phantom Blade Zero** that writes the game's own input
 
 ![PBZKeyForge 1.2.0 in English with the preset list expanded](assets/screenshots/1.2.0/main-en.png)
 
+![PBZKeyForge 1.2.0 controller view with the preset list expanded](assets/screenshots/1.2.0/main-gamepad-en.png)
+
+[Feature screenshots: editing, saving presets, sharing and importing](assets/screenshots/1.2.0/README.md)
+
 ---
 
 ## Why this exists
@@ -119,9 +123,9 @@ Outputs `dist\PBZKeyForge.exe` (GUI) and `dist\PBZKeyForge-cli.exe` (console, bu
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshots.ps1
 ```
 
-Captures English and Simplified Chinese main windows with the native preset dropdown expanded. Images are saved in `assets/screenshots/<application-version>/` as `main-en.png` and `main-zh-Hans.png`. The script reads the detected save, or the repository sample when no installation is found, stages a built-in preset in memory, and never applies it. Local paths and personal preset names are excluded. Keep the Windows desktop unlocked; the editor briefly comes to the foreground.
+Captures nine scenes in English and Simplified Chinese, producing 18 images and a linked index in `assets/screenshots/<application-version>/`. Both keyboard/mouse and controller main windows have the preset dropdown expanded (`main-<language>.png` and `main-gamepad-<language>.png`). Separate feature shots show unobstructed key and action views, factory/unbound choices, saving a preset, device scopes for sharing, and share-code import previews. The script reads the detected save, or the repository sample when no installation is found, stages built-in presets in memory, and never applies them. Preset examples use a temporary library that is removed after capture. Local paths and personal preset names are excluded. Keep the Windows desktop unlocked; the editor briefly comes to the foreground.
 
-Use `-SavePath <save>` to choose an input, `-ApplicationPath <exe>` for a particular build, `-Preset <id>` to change the preview, or `-OutputDir <directory>` to choose the output. See [publishing](docs/publishing.md#versioned-screenshots-and-page-description) for the versioned Nexus media and homepage update steps.
+Use `-SavePath <save>` to choose an input, `-ApplicationPath <exe>` for a particular build, `-Preset <id>` / `-ControllerPreset <id>` to change keyboard/mouse and controller previews, or `-OutputDir <directory>` to choose the output. Use `-Shots main,main-gamepad` for just the four expanded-list main screenshots. See [publishing](docs/publishing.md#versioned-screenshots-and-page-description) for the versioned Nexus media and illustrated homepage update steps.
 
 ## License
 
@@ -136,6 +140,10 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 `PBZKeyForge.exe` · 单文件 · 免安装 · 不需要额外下载 .NET 运行时 · Windows 10/11
 
 ![PBZKeyForge 1.2.0 中文主界面，预设下拉框已展开](assets/screenshots/1.2.0/main-zh-Hans.png)
+
+![PBZKeyForge 1.2.0 中文控制器视图，预设下拉框已展开](assets/screenshots/1.2.0/main-gamepad-zh-Hans.png)
+
+[功能截图：编辑绑定、保存预设、分享与导入](assets/screenshots/1.2.0/README.md)
 
 ### 为什么需要它
 
@@ -204,9 +212,9 @@ powershell -ExecutionPolicy Bypass -File build\build.ps1
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshots.ps1
 ```
 
-一次生成英文和简体中文主界面，截图时预设下拉框保持展开。图片按程序版本存放在 `assets/screenshots/<版本>/`，文件名为 `main-en.png` 和 `main-zh-Hans.png`。脚本读取检测到的存档，未找到安装时使用仓库样本；只在内存中预览内置预设，不应用改键。截图隐藏本地路径和个人预设名称。运行时需保持桌面解锁，编辑器会短暂显示在前台。
+一次生成 9 个场景的英文和简体中文截图，共 18 张，按程序版本存放在 `assets/screenshots/<版本>/`，并生成可点击的图片索引。键鼠和控制器主界面的预设下拉框均展开，文件名分别为 `main-<语言>.png` 和 `main-gamepad-<语言>.png`。功能截图另行展示无遮挡的按键视图、动作视图、默认与无绑定选项、保存预设、分享设备范围和导入预览。脚本读取检测到的存档，未找到安装时使用仓库样本；只在内存中预览内置预设，不应用改键。预设示例使用临时预设库，截图后自动清理。截图隐藏本地路径和个人预设名称。运行时需保持桌面解锁，编辑器会短暂显示在前台。
 
-可用 `-SavePath <存档>` 指定输入、`-ApplicationPath <程序>` 指定构建、`-Preset <标识>` 更换预览预设、`-OutputDir <目录>` 指定输出。每次公开发布都将两张图上传到 N 网媒体并标注版本，详见[发布说明](docs/publishing.md#versioned-screenshots-and-page-description)。
+可用 `-SavePath <存档>` 指定输入、`-ApplicationPath <程序>` 指定构建、`-Preset <标识>` / `-ControllerPreset <标识>` 更换键鼠和手柄预览预设、`-OutputDir <目录>` 指定输出。只截四张展开预设列表的主界面时，添加 `-Shots main,main-gamepad`。每次公开发布将截图上传到 N 网媒体并标注版本，在主页 BBCode 对应功能段落嵌入媒体图片，详见[发布说明](docs/publishing.md#versioned-screenshots-and-page-description)。
 
 ### 许可
 

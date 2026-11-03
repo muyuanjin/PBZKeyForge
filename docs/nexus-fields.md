@@ -4,7 +4,7 @@ The page description source is `nexus-description.bbcode.txt`. Version-specific 
 
 Live page: https://www.nexusmods.com/phantombladezero/mods/402
 
-Versioned media sources: `assets/screenshots/<version>/main-en.png` and `main-zh-Hans.png`. Generate both with `build/capture-screenshots.ps1`; upload and name them as described in [publishing](publishing.md#versioned-screenshots-and-page-description).
+Versioned media sources: `assets/screenshots/<version>/README.md` indexes nine scenes in English and Simplified Chinese. Generate the 18 images with `build/capture-screenshots.ps1`; upload them and embed their Nexus media URLs in the matching BBCode feature sections as described in [publishing](publishing.md#versioned-screenshots-and-page-description).
 
 | Field | Value |
 | --- | --- |
