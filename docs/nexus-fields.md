@@ -6,6 +6,8 @@ Live page: https://www.nexusmods.com/phantombladezero/mods/402
 
 Versioned media sources: `assets/screenshots/<version>/README.md` indexes nine scenes in English and Simplified Chinese. Generate the 18 images with `build/capture-screenshots.ps1`; upload them and embed their Nexus media URLs in the matching BBCode feature sections as described in [publishing](publishing.md#versioned-screenshots-and-page-description).
 
+[1.2.0 media URLs](nexus-media-1.2.0.md) map all 18 screenshots to their uploaded Nexus images. English images illustrate their corresponding feature sections; Chinese images appear in an expandable section. These description images remain under Hidden images rather than appearing in the gallery.
+
 | Field | Value |
 | --- | --- |
 | Mod name | PBZKeyForge |
