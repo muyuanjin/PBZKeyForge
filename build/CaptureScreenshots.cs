@@ -167,62 +167,85 @@ internal static class CaptureScreenshots
         Point pointer = Cursor.Position;
         Directory.CreateDirectory(args[2]);
         var preferences = new EditorPreferences(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "capture-mode.txt"));
-        using (var form = new MainForm(preferences))
+        string input = args.Length > 6 && !string.IsNullOrEmpty(args[6]) ? args[6] : null;
+        string temporaryInput = null;
+        if (args[5].EndsWith("-playstation", StringComparison.Ordinal))
         {
-            form.StartPosition = FormStartPosition.Manual;
-            form.ShowInTaskbar = false;
-            if (args.Length > 6 && !string.IsNullOrEmpty(args[6])) form.UiSmoke(args[6]);
-            form.Show();
-            try
+            var sample = SaveFile.Load(input ?? Path.Combine(args[1], "samples", "vanilla-base.sav"));
+            if (!sample.GamepadProfiles.Any(profile => profile.ProfileId == "PBZ.KeyProfile.Custom1" && profile.Family == "PlayStation"))
             {
-                if (form.Session == null) form.UiSmoke(Path.Combine(args[1], "samples", "vanilla-base.sav"));
-                byte[] original = File.ReadAllBytes(form.Session.InputPath);
-                var language = Field<ComboBox>(form, "cbLang");
-                language.SelectedIndex = Array.IndexOf(I18n.Languages, args[3]);
-                form.Session.SwitchProfile("PBZ.KeyProfile.Custom1");
-                form.Session.StagePreset(Presets.ById(args[4]), PresetApplyMode.OnlyPreset);
-                string scene = args[5];
-                bool gamepad = scene.EndsWith("-gamepad", StringComparison.Ordinal);
-                form.ShowGamepad(gamepad);
-                if (gamepad)
-                {
-                    var view = Field<object>(form, "keyBindings");
-                    view.GetType().GetField("selectedKey", Hidden).SetValue(view, "Gamepad_FaceButton_Bottom");
-                    form.RenderSession();
-                }
-                if (scene == "actions" || scene == "binding-edit") form.ShowActionView(true);
-                // Keep the public capture independent of personal preset names and paths.
-                var picker = Field<ComboBox>(form, "cbPreset");
-                for (int index = picker.Items.Count - 1; index >= 0; index--)
-                    if (picker.Items[index] is Preset && ((Preset)picker.Items[index]).IsUser) picker.Items.RemoveAt(index);
-                Field<Label>(form, "lblPath").Text = I18n.Str("editor.location", @"…\ProjectPBZ\Saved");
-                Field<ToolTip>(form, "tip").RemoveAll();
-                Field<Timer>(form, "gameTimer").Stop();
-                Place(form, 1280, 840);
-                string path = Path.Combine(args[2], scene + "-" + args[3] + ".png");
-                if (scene.StartsWith("presets-", StringComparison.Ordinal)) CapturePresets(form, preferences, scene, path);
-                else if (scene == "binding-edit")
-                {
-                    var type = typeof(MainForm).Assembly.GetType("PBZKeyForge.BindingDialog");
-                    string factory = form.Session.GetKeyboardDefault("IA_Guard", 0);
-                    using (var dialog = (Form)Activator.CreateInstance(type, new object[] {
-                        I18n.Str("act.IA_Guard"), false, factory, new[] { factory }, true }))
-                    {
-                        dialog.Show(form); dialog.TopMost = true;
-                        dialog.Location = new Point(form.Left + (form.Width - dialog.Width) / 2, form.Top + (form.Height - dialog.Height) / 2);
-                        Capture(dialog, path, Field<ComboBox>(dialog, "keys"), form); dialog.Close();
-                    }
-                }
-                else Capture(form, path, scene == "main" || scene == "main-gamepad" ? picker : null, null);
-                if (!original.SequenceEqual(File.ReadAllBytes(form.Session.InputPath))) throw new IOException("The source save changed during capture.");
-            }
-            finally
-            {
-                Cursor.Position = pointer;
-                if (form.Session != null) form.Session.Undo();
-                form.Close();
+                var profile = sample.GamepadProfiles.First(item => item.ProfileId == "PBZ.KeyProfile.Custom1" && item.Family == "Xbox");
+                SaveFile.SetField(profile.Fields, "Family", "PlayStation");
+                temporaryInput = Path.GetTempFileName();
+                sample.Save(temporaryInput);
+                input = temporaryInput;
             }
         }
+        try
+        {
+            using (var form = new MainForm(preferences))
+            {
+                form.StartPosition = FormStartPosition.Manual;
+                form.ShowInTaskbar = false;
+                if (input != null) form.UiSmoke(input);
+                form.Show();
+                try
+                {
+                    if (form.Session == null) form.UiSmoke(Path.Combine(args[1], "samples", "vanilla-base.sav"));
+                    byte[] original = File.ReadAllBytes(form.Session.InputPath);
+                    var language = Field<ComboBox>(form, "cbLang");
+                    language.SelectedIndex = Array.IndexOf(I18n.Languages, args[3]);
+                    form.Session.SwitchProfile("PBZ.KeyProfile.Custom1");
+                    form.Session.StagePreset(Presets.ById(args[4]), PresetApplyMode.OnlyPreset);
+                    string scene = args[5];
+                    bool playstation = scene.EndsWith("-playstation", StringComparison.Ordinal);
+                    bool gamepad = scene.EndsWith("-gamepad", StringComparison.Ordinal) || playstation;
+                    form.ShowGamepad(gamepad);
+                    if (gamepad)
+                    {
+                        var familyPicker = Field<ComboBox>(form, "cbFamily");
+                        string familyName = playstation ? "PlayStation" : "Xbox";
+                        var family = familyPicker.Items.Cast<ControllerFamily>().Single(item => item.Name == familyName);
+                        familyPicker.SelectedItem = family;
+                        var view = Field<object>(form, "keyBindings");
+                        view.GetType().GetField("selectedKey", Hidden).SetValue(view, "Gamepad_FaceButton_Bottom");
+                        form.RenderSession();
+                    }
+                    if (scene == "actions" || scene == "binding-edit") form.ShowActionView(true);
+                    // Keep the public capture independent of personal preset names and paths.
+                    var picker = Field<ComboBox>(form, "cbPreset");
+                    for (int index = picker.Items.Count - 1; index >= 0; index--)
+                        if (picker.Items[index] is Preset && ((Preset)picker.Items[index]).IsUser) picker.Items.RemoveAt(index);
+                    Field<Label>(form, "lblPath").Text = I18n.Str("editor.location", @"…\ProjectPBZ\Saved");
+                    Field<ToolTip>(form, "tip").RemoveAll();
+                    Field<Timer>(form, "gameTimer").Stop();
+                    Place(form, 1280, 840);
+                    string path = Path.Combine(args[2], scene + "-" + args[3] + ".png");
+                    if (scene.StartsWith("presets-", StringComparison.Ordinal)) CapturePresets(form, preferences, scene, path);
+                    else if (scene == "binding-edit")
+                    {
+                        var type = typeof(MainForm).Assembly.GetType("PBZKeyForge.BindingDialog");
+                        string factory = form.Session.GetKeyboardDefault("IA_Guard", 0);
+                        using (var dialog = (Form)Activator.CreateInstance(type, new object[] {
+                            I18n.Str("act.IA_Guard"), false, factory, new[] { factory }, true }))
+                        {
+                            dialog.Show(form); dialog.TopMost = true;
+                            dialog.Location = new Point(form.Left + (form.Width - dialog.Width) / 2, form.Top + (form.Height - dialog.Height) / 2);
+                            Capture(dialog, path, Field<ComboBox>(dialog, "keys"), form); dialog.Close();
+                        }
+                    }
+                    else Capture(form, path, scene.StartsWith("main", StringComparison.Ordinal) ? picker : null, null);
+                    if (!original.SequenceEqual(File.ReadAllBytes(form.Session.InputPath))) throw new IOException("The source save changed during capture.");
+                }
+                finally
+                {
+                    Cursor.Position = pointer;
+                    if (form.Session != null) form.Session.Undo();
+                    form.Close();
+                }
+            }
+        }
+        finally { if (temporaryInput != null) File.Delete(temporaryInput); }
         return 0;
     }
 }
