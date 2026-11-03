@@ -4,6 +4,8 @@ The page description source is `nexus-description.bbcode.txt`. Version-specific 
 
 Live page: https://www.nexusmods.com/phantombladezero/mods/402
 
+Versioned media sources: `assets/screenshots/<version>/main-en.png` and `main-zh-Hans.png`. Generate both with `build/capture-screenshots.ps1`; upload and name them as described in [publishing](publishing.md#versioned-screenshots-and-page-description).
+
 | Field | Value |
 | --- | --- |
 | Mod name | PBZKeyForge |

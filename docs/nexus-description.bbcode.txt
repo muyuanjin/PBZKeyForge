@@ -1,41 +1,63 @@
 [center][img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793645996-2058107740.png[/img][/center]
 [line]
-[color=#e8b96a][b]WHAT THIS CHANGES[/b][/color]
-Phantom Blade Zero refuses to save a binding when two actions share a key. The engine has no such rule: the file is a list of per-action overrides, and two actions on one key fire together. This tool writes that binding into the file - the one thing the in-game screen will not let you do.
-So the attack button can guard while it attacks, the freed guard button can become dodge, and Space can be sprint.
-[line]
-[color=#e8b96a][b]PRESETS[/b][/color]
+[color=#e8b96a][b]ONE KEY, SEVERAL ACTIONS[/b][/color]
+Phantom Blade Zero's binding screen rejects shared keys. PBZKeyForge edits the game's own settings file so a single key can trigger several actions: attack and guard together, dodge on your former guard button, or your own keyboard and controller layout.
+
+Single-file Windows app. No installer, mod loader, DLL injection or extra runtime download. Open source; release downloads are built and uploaded by GitHub Actions.
+
+[color=#e8b96a][b]SEE AND EDIT YOUR BINDINGS[/b][/color]
 [list]
-[*][b]onekey[/b] - adds guard to left mouse / X, keeping right mouse / LB and existing guard keys.
-[*][b]onekey_dodge[/b] - guard on attack, and the freed guard button becomes dodge.
-[*][b]souls[/b] - gamepad: light RB, heavy RT, guard LB, dodge and sprint A.
-[*][b]space_sprint[/b] / [b]space_dodge[/b] - adds Space as a second sprint or dodge key; Shift stays.
-[*][b]vanilla[/b] - clears every override and restores shipped defaults.
+[*][b]By key:[/b] click a key on the keyboard, mouse or controller diagram to see and edit its actions on the right. The keyboard and mouse appear together.
+[*][b]By action:[/b] edit each function's bindings and see its actual factory keys. Choose Default to inherit the factory binding, or Unbound to remove it explicitly.
+[*][b]Clear status:[/b] gray badges match factory settings, blue marks saved customization, and yellow marks edits waiting to be applied. Removed actions are gray and crossed out.
+[*][b]Whole-scheme comparison:[/b] compare with your saved settings or factory defaults. Switch between combined bindings, changes only, results and original bindings.
+[*][b]Binding limits explained:[/b] see how many slots an action uses and why another key cannot be added.
 [/list]
-[color=#e8b96a][b]WHAT YOU GET[/b][/color]
+The interface supports all 15 game languages, including Simplified and Traditional Chinese. Switch languages from the toolbar. [url=https://github.com/muyuanjin/PBZKeyForge/tree/main/assets/screenshots/1.2.0]English and Chinese screenshots with the preset list expanded[/url].
+
+[color=#e8b96a][b]YOUR PRESETS AND SHARE CODES[/b][/color]
+Open [b]Preset manager[/b] next to Quick setup. Enter a name in the highlighted field, then choose [b]Save as preset[/b] to save the current scheme, including unapplied edits. Personal presets are separate from built-ins. Select one to preview it; check several to delete them without changing your current bindings.
+
+Copy a named, one-line share code for all included devices, keyboard/mouse, controllers or one controller family. The character count updates with your choice. Paste a code and preview it before saving or using it. [b]Export game bindings[/b] creates a game settings file containing your current scheme's edits.
+
+[color=#e8b96a][b]CHOOSE HOW A PRESET CHANGES YOUR KEYS[/b][/color]
+Three choices stay visible beside the preset picker. Hover over a choice for details.
 [list]
-[*][b]PBZKeyForge.exe[/b] - pick your save, choose a scheme (Default, Custom 1, Custom 2), set keys, save.
-[*]Seven ready-made [b].sav[/b] files in the [b]presets[/b] folder.
+[*][b]Add keys:[/b] keep existing keys and add the preset's bindings; duplicates are ignored.
+[*][b]Replace keys:[/b] replace the bindings of the actions covered by the preset; other actions stay as they are.
+[*][b]Preset only:[/b] start from factory bindings for the devices included in the preset, then use that preset's layout. Devices outside its scope keep their settings.
 [/list]
-20 actions, three key slots each, keyboard and mouse or gamepad. All 15 game interface languages are available, including both Chinese scripts and regional Spanish and Portuguese variants. It follows your Windows language and the toolbar switches it.
-[color=#e8b96a][b]INSTALL[/b][/color]
+The initial choice is Preset only, and your choice is remembered. Selecting a preset creates a draft. [b]Apply changes[/b] writes it to the game. Applying shows a spinning progress indicator; if a write fails, your draft remains available to retry.
+
+[color=#e8b96a][b]BUILT-IN LAYOUTS[/b][/color]
+[list]
+[*][b]Left mouse also guards:[/b] add guard to left mouse / X while keeping right mouse / LB and existing guard keys.
+[*][b]Left light, right heavy; both guard:[/b] left click is light attack + guard; right click is heavy attack + guard. F remains heavy attack. Keyboard/mouse only.
+[*][b]Dual-button combat + Auto sprint:[/b] the same mouse layout, plus W/A/D sprint and Space dodge + jump. F retains heavy attack; Shift retains dodge. Shift and Space no longer trigger sprint. Keyboard/mouse only.
+[*][b]Left attack + guard, right dodge:[/b] move guard to left mouse / X and use right mouse / LB for dodge + sprint.
+[*][b]Souls gamepad layout:[/b] light attack RB, heavy RT, guard LB, dodge/sprint A, interact/execute Y.
+[*][b]Space to sprint / Space to dodge:[/b] add Space to the selected action while retaining Shift.
+[*][b]Restore factory defaults:[/b] restore the selected scheme in Quick setup, or all schemes through More.
+[/list]
+The included [b]PRESETS.md[/b] lists the factory-based layouts used by the eight ready-made settings files. Add keys mode can retain additional existing bindings; the hover preview shows the preset relative to factory settings.
+
+[color=#e8b96a][b]DOWNLOADS AND INSTALLATION[/b][/color]
 [list=1]
-[*]Close the game.
-[*]Back up [b]ProjectPBZ/Saved/EnhancedInputUserSettings.sav[/b].
-[*]Run [b]PBZKeyForge.exe[/b]; it finds the save automatically. Choose a scheme, edit bindings or select a quick configuration, then press Apply changes.
-[*]Check Set game scheme to… before applying to activate it. Switching schemes automatically reads the latest settings; Refresh preserves unsaved drafts.
+[*]Close the game completely. Back up [b]ProjectPBZ/Saved/EnhancedInputUserSettings.sav[/b].
+[*][b]Main download:[/b] extract the archive and run PBZKeyForge.exe. It finds your save automatically. Choose Default, Custom 1 or Custom 2, then edit bindings or preview a preset.
+[*]Click [b]Apply changes[/b] to save. Check [b]Set game scheme to…[/b] if you also want to make the edited scheme active. Writes are backed up automatically.
+[*][b]Presets-only download:[/b] choose one file using PRESETS.md, copy it over EnhancedInputUserSettings.sav, then select [b]Custom 1[/b] in game. This replaces your saved layouts; use the editor when you want to keep and combine existing custom settings. The presets-only archive contains no executable.
 [/list]
-No executable needed? Copy any file from [b]presets[/b] over your save and pick that scheme in game.
-[color=#cc4125][b]ONE THING TO KNOW[/b][/color]
-[quote][color=#cc4125][b]Do not open the in-game key bindings screen and press apply or reset afterwards.[/b][/color] The game rewrites the whole file when it saves, and the bindings are gone. Re-apply the preset if that happens.[/quote]
-It also replaces any other mod that ships this file, so use one at a time.
+Switching schemes reads the latest settings. Refresh preserves drafts and asks you to resolve conflicting changes. Both editing views share the same draft; switching views does not save it.
+
+[color=#cc4125][b]IMPORTANT[/b][/color]
+[quote][b]Do not apply or reset bindings in the game's own key binding screen afterwards.[/b] The game rewrites these settings. If this happens, reapply your layout with PBZKeyForge.[/quote]
+Only one mod replacing EnhancedInputUserSettings.sav can be installed at a time. Shared bindings trigger multiple actions; this tool does not add timed input sequences or guarantee a particular combination skill.
+
+[color=#e8b96a][b]COMPATIBILITY AND UNINSTALL[/b][/color]
+Windows 10/11, Steam CL-301524. The tool supports keyboard/mouse and controller bindings. Game updates may require new defaults or scheme-activation support. Restore your backup to uninstall, or preview and apply [b]More → Restore all defaults[/b] to return to factory bindings.
+
 [color=#e8b96a][b]SOURCE AND BUILDS[/b][/color]
-Code, issues and the build live at [url=https://github.com/muyuanjin/PBZKeyForge]github.com/muyuanjin/PBZKeyForge[/url]. The executable here is built and uploaded by GitHub Actions from the tagged commit, so you can read the source and see exactly what produced the file you run.
-[color=#e8b96a][b]COMPATIBILITY[/b][/color]
-[list]
-[*]Steam version, launch build CL-301524.
-[*]Windows 10/11 - no runtime install, no UE4SS, no pak files, no DLL.
-[/list]
-[color=#e8b96a][b]UNINSTALL[/b][/color]
-Restore your backup, or choose More → Restore all defaults and apply the previewed reset.
+[url=https://github.com/muyuanjin/PBZKeyForge]Source, documentation and issues[/url] · [url=https://github.com/muyuanjin/PBZKeyForge/releases]Version downloads and update notes[/url]
+
 [i]Not affiliated with S-Game.[/i]

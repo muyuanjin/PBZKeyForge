@@ -58,6 +58,28 @@ second entry differs from `NEXUSMODS_FILE_ID`.
   `archive_existing_version=true`.
 - Add the release notes from the GitHub Release to the page's changelog section.
 
+## Versioned screenshots and page description
+
+For every public version, build or select that version's executable and run:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshots.ps1
+```
+
+The script produces `assets/screenshots/<version>/main-en.png` and `main-zh-Hans.png`, using the executable's version number. Both show the native preset dropdown open. It reads the detected save or falls back to the repository sample, previews `mouse_guard` without applying it, omits personal preset names and displays only the generic save-directory suffix. The game's real scheme status is retained; a sample without an installed executable reports that scheme activation cannot be verified. Run on an unlocked Windows desktop with enough room for the editor.
+
+To capture a different build or input:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshots.ps1 `
+  -ApplicationPath dist\PBZKeyForge.exe -SavePath samples\vanilla-base.sav `
+  -Preset mouse_guard -OutputDir assets\screenshots\1.2.0
+```
+
+Inspect both PNGs for the open list, readable text, correct language and absence of local information. Upload them to the mod's **Manage → Media → Add image(s)** gallery with titles `PBZKeyForge <version> — English — presets expanded` and `PBZKeyForge <version> — 简体中文 — 预设列表`. Save the media changes and verify both images on the public Images tab. Keep older version images, identified by their titles.
+
+Read the live Description tab before editing the homepage. Update `docs/nexus-description.bbcode.txt` to reflect current player-visible features and instructions, then paste it through **Manage → Mod details → Full description → View source** and save. Update the homepage version and short description along with it. Point the English and Chinese README sections to the matching versioned screenshots. File-upload release notes are maintained separately in `docs/releases/`.
+
 
 ## Verified Nexus wiring
 

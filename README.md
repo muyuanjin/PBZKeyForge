@@ -8,7 +8,7 @@ A key binding editor for **Phantom Blade Zero** that writes the game's own input
 
 `PBZKeyForge.exe` · single file · no installer · no .NET runtime download · Windows 10/11
 
-![PBZKeyForge editor](assets/screenshot.png)
+![PBZKeyForge 1.2.0 in English with the preset list expanded](assets/screenshots/1.2.0/main-en.png)
 
 ---
 
@@ -26,9 +26,11 @@ The in-game screen validates on **save**, not at runtime, and it rejects any bin
 
 - **One key, several actions.** Guard on the attack key, dodge on the guard key, whatever you want.
 - **Scheme aware.** Pick which scheme you are editing — `Default`, `Custom 1`, `Custom 2` — and switch the game to it from the tool.
+- **Two editing views.** Click keyboard, mouse or controller buttons to edit their actions, or edit bindings by action. Factory, customized and pending bindings have distinct badge colors; the bottom panel compares the whole scheme.
 - **Quick setups** for one-key guard, a Souls-style gamepad layout, and Space-based movement; restore the selected scheme's defaults from the same list.
+- **Personal presets and sharing.** Save named layouts, preview and import compact share codes, share only selected devices, export a game settings file, and batch-delete personal presets.
 - **15 languages** — English, 简体中文, 繁體中文, 日本語, 한국어, Français, Deutsch, Español (España / Latinoamérica), Português (Brasil / Portugal), Русский, Italiano, ไทย, Tiếng Việt. Auto-detected from Windows, switchable in the toolbar.
-- **No overrides lost.** Keys you leave empty keep the game default; everything you do not touch is written back byte-for-byte.
+- **Explicit binding choices.** Default inherits the factory key; Unbound removes it. Unrelated save data is preserved.
 - **Safe writes.** The game must be closed, a timestamped backup is written first, and the file is re-read and verified after saving.
 
 ## Install
@@ -111,6 +113,16 @@ powershell -ExecutionPolicy Bypass -File build\build.ps1
 
 Outputs `dist\PBZKeyForge.exe` (GUI) and `dist\PBZKeyForge-cli.exe` (console, build pipeline only).
 
+## Release screenshots
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshots.ps1
+```
+
+Captures English and Simplified Chinese main windows with the native preset dropdown expanded. Images are saved in `assets/screenshots/<application-version>/` as `main-en.png` and `main-zh-Hans.png`. The script reads the detected save, or the repository sample when no installation is found, stages a built-in preset in memory, and never applies it. Local paths and personal preset names are excluded. Keep the Windows desktop unlocked; the editor briefly comes to the foreground.
+
+Use `-SavePath <save>` to choose an input, `-ApplicationPath <exe>` for a particular build, `-Preset <id>` to change the preview, or `-OutputDir <directory>` to choose the output. See [publishing](docs/publishing.md#versioned-screenshots-and-page-description) for the versioned Nexus media and homepage update steps.
+
 ## License
 
 MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
@@ -122,6 +134,8 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 直接改写《影之刃零》自己的按键设置文件，让一个键同时触发多个动作——游戏内的改键界面会因为"按键冲突"拒绝保存，而引擎本身并不限制这件事。
 
 `PBZKeyForge.exe` · 单文件 · 免安装 · 不需要额外下载 .NET 运行时 · Windows 10/11
+
+![PBZKeyForge 1.2.0 中文主界面，预设下拉框已展开](assets/screenshots/1.2.0/main-zh-Hans.png)
 
 ### 为什么需要它
 
@@ -137,9 +151,11 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 - **一个键多个动作**：防御并到攻击键、闪避并到防御键，随便配。
 - **认方案**：可选编辑 `默认 / 自定义方案 1 / 自定义方案 2`，并能在工具里直接把某个方案设为游戏当前生效方案。
+- **两种视图**：按键视图可点击键鼠和手柄图形，动作视图按功能编辑；徽标区分原厂、已修改和待应用，底部显示整个方案的差异。
+- **自己的预设**：命名保存、分享码预览导入、按设备分享、导出游戏键位文件，也可批量删除个人预设。
 - **快速配置**：左键兼防御、左轻右重，双键防御、双键攻防，自动疾跑、左键攻防，右键闪避、魂系手柄布局、空格高速移动、空格闪避、恢复原厂。
 - **15 种语言**：简中、繁中、英、日、韩、法、德、西班牙西语、拉美西语、巴西葡语、葡萄牙葡语、俄、意、泰、越，覆盖游戏的界面语言；自动识别系统语言，也能在工具栏切换。
-- **不丢键位**：留空的格子保持游戏默认；没碰到的内容按原字节写回。
+- **明确绑定状态**：“默认”继承原厂键位，“无绑定”明确解绑；保留存档中的无关内容。
 - **写入安全**：游戏必须退出、先打时间戳备份、写完回读校验。
 
 ### 安装
@@ -181,6 +197,16 @@ powershell -ExecutionPolicy Bypass -File build\build.ps1
 ```
 
 产物：`dist\PBZKeyForge.exe`（界面）与 `dist\PBZKeyForge-cli.exe`（命令行，仅供构建流程使用）。
+
+### 截取版本截图
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshots.ps1
+```
+
+一次生成英文和简体中文主界面，截图时预设下拉框保持展开。图片按程序版本存放在 `assets/screenshots/<版本>/`，文件名为 `main-en.png` 和 `main-zh-Hans.png`。脚本读取检测到的存档，未找到安装时使用仓库样本；只在内存中预览内置预设，不应用改键。截图隐藏本地路径和个人预设名称。运行时需保持桌面解锁，编辑器会短暂显示在前台。
+
+可用 `-SavePath <存档>` 指定输入、`-ApplicationPath <程序>` 指定构建、`-Preset <标识>` 更换预览预设、`-OutputDir <目录>` 指定输出。每次公开发布都将两张图上传到 N 网媒体并标注版本，详见[发布说明](docs/publishing.md#versioned-screenshots-and-page-description)。
 
 ### 许可
 
