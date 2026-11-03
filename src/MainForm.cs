@@ -11,7 +11,7 @@ namespace PBZKeyForge
     public static class KeyNames
     {
         public static readonly string[] Keyboard = new[] {
-            "", "LeftMouseButton","RightMouseButton","MiddleMouseButton","ThumbMouseButton","ThumbMouseButton2",
+            "", "None", "LeftMouseButton","RightMouseButton","MiddleMouseButton","ThumbMouseButton","ThumbMouseButton2",
             "LeftShift","RightShift","LeftControl","RightControl","LeftAlt","RightAlt","SpaceBar","Tab","CapsLock",
             "Escape","Enter","BackSpace","LeftBracket","RightBracket","Semicolon","Quote","Comma","Period","Slash","Backslash","Tilde",
             "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
@@ -21,7 +21,7 @@ namespace PBZKeyForge
             "NumPadZero","NumPadOne","NumPadTwo","NumPadThree","NumPadFour","NumPadFive","NumPadSix","NumPadSeven","NumPadEight","NumPadNine"
         };
         public static readonly string[] Gamepad = new[] {
-            "", "Gamepad_FaceButton_Bottom","Gamepad_FaceButton_Right","Gamepad_FaceButton_Left","Gamepad_FaceButton_Top",
+            "", "None", "Gamepad_FaceButton_Bottom","Gamepad_FaceButton_Right","Gamepad_FaceButton_Left","Gamepad_FaceButton_Top",
             "Gamepad_LeftShoulder","Gamepad_RightShoulder","Gamepad_LeftTrigger","Gamepad_RightTrigger",
             "Gamepad_LeftTriggerAxis","Gamepad_RightTriggerAxis","Gamepad_LeftThumbstick","Gamepad_RightThumbstick",
             "Gamepad_DPad_Up","Gamepad_DPad_Down","Gamepad_DPad_Left","Gamepad_DPad_Right","Gamepad_Special_Left","Gamepad_Special_Right"
@@ -36,10 +36,10 @@ namespace PBZKeyForge
         public override string ToString() { return Label; }
     }
 
-    public class MainForm : EditorWindow
+    public partial class MainForm : EditorWindow
     {
         public static readonly List<ActionInfo> Actions = new[] {
-            "IA_LightAttack","IA_HeavyAttack","IA_Guard","IA_Dodge","IA_Jump","IA_Crouch","IA_MoveFast",
+            "IA_LightAttack","IA_HeavyAttack","IA_Guard","IA_Dodge","IA_Jump","IA_Crouch","IA_MoveFast","IA_MoveSlow",
             "IA_LockTarget","IA_Interact","IA_Execute","IA_ShadowArm","IA_ShadowArm_LongPress",
             "IA_SwitchWeapon","IA_SwitchShadowArm","IA_UltimateSkill","IA_Sense_Default",
             "IA_OpenCharacterMenu","IA_OpenMapMenu","IA_UseTopItem","IA_UseBottomItem"
@@ -57,11 +57,13 @@ namespace PBZKeyForge
         readonly LinkLabel btnConflicts = new LinkLabel(), btnChoose = new LinkLabel();
         readonly CheckBox chkActivate = new EditorCheckBox();
         readonly ToolTip tip = new ToolTip();
+        TableLayoutPanel editorRoot;
         readonly Panel preview = new EditorPanel(), body = new EditorPanel(), empty = new EditorPanel(), footer = new EditorPanel();
         readonly Panel kbHost = new EditorPanel(), padHost = new EditorPanel();
         readonly Dictionary<string, BindingButton[]> kbButtons = new Dictionary<string, BindingButton[]>();
         readonly Dictionary<string, BindingButton[]> padButtons = new Dictionary<string, BindingButton[]>();
         readonly List<Label> actionLabels = new List<Label>(), headings = new List<Label>();
+        readonly List<Label> factoryLabels = new List<Label>();
         readonly Timer gameTimer = new Timer();
         bool loading, gamepad, modalActive, lastRunning;
         ContextMenuStrip moreMenu;
@@ -95,11 +97,12 @@ namespace PBZKeyForge
             BackColor = EditorTheme.Background;
             ForeColor = EditorTheme.Ink;
             try { Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath); } catch { }
-            var root = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 8, Padding = new Padding(24, 8, 24, 8), Margin = Padding.Empty, BackColor = Color.Transparent };
+            var root = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 8, Padding = new Padding(16, 6, 16, 6), Margin = Padding.Empty, BackColor = Color.Transparent };
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            int[] heights = { 96, 34, 48, 54, 48, 0, 26, 112 };
-            foreach (int h in heights) root.RowStyles.Add(h == 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, h));
-            Controls.Add(root);
+            int[] heights = { 72, 22, 36, 44, 0, 0, 0, 94 };
+            for (int rowIndex = 0; rowIndex < heights.Length; rowIndex++)
+                root.RowStyles.Add(rowIndex == 5 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, heights[rowIndex]));
+            editorRoot = root; Controls.Add(root);
 
             var header = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 1, Margin = Padding.Empty, BackColor = Color.Transparent };
             header.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
@@ -110,9 +113,9 @@ namespace PBZKeyForge
             var brand = new EditorPanel { Dock = DockStyle.Fill, BackColor = Color.Transparent, Margin = Padding.Empty };
             // Alpha bounds: app mark y=22..486/512; wordmark y=12..366/378.
             // Their visible centers align within 0.3 logical pixels, including image padding.
-            var appMark = new PictureBox { Left = 0, Top = 11, Width = 72, Height = 72, Image = EditorArtwork.AppMark, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent };
-            var wordmark = new PictureBox { Left = 84, Top = 7, Width = 170, Height = 79, Image = EditorArtwork.Wordmark, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent };
-            lblTitle.SetBounds(274, 32, 420, 32); lblTitle.TextAlign = ContentAlignment.MiddleLeft; lblTitle.AutoEllipsis = true;
+            var appMark = new PictureBox { Left = 0, Top = 8, Width = 54, Height = 54, Image = EditorArtwork.AppMark, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent };
+            var wordmark = new PictureBox { Left = 66, Top = 5, Width = 148, Height = 62, Image = EditorArtwork.Wordmark, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent };
+            lblTitle.SetBounds(232, 22, 420, 28); lblTitle.TextAlign = ContentAlignment.MiddleLeft; lblTitle.AutoEllipsis = true;
             lblTitle.Font = new Font(Font.FontFamily, 10.5f); lblTitle.ForeColor = EditorTheme.Ink; lblTitle.BackColor = Color.Transparent;
             brand.Controls.AddRange(new Control[] { appMark, wordmark, lblTitle });
             brand.Resize += delegate { lblTitle.Width = Math.Max(40, brand.ClientSize.Width - lblTitle.Left - 12); };
@@ -199,6 +202,7 @@ namespace PBZKeyForge
             body.Dock = DockStyle.Fill; body.Margin = Padding.Empty;
             BuildBindingTable(kbHost, kbButtons, false); BuildBindingTable(padHost, padButtons, true);
             kbHost.Dock = DockStyle.Fill; padHost.Dock = DockStyle.Fill; body.Controls.Add(kbHost); body.Controls.Add(padHost);
+            BuildBindingViews();
             empty.Dock = DockStyle.Fill; empty.BackColor = EditorTheme.Background;
             lblEmpty.TextAlign = ContentAlignment.MiddleCenter; lblEmpty.Dock = DockStyle.Fill; lblEmpty.ForeColor = EditorTheme.Muted;
             btnChoose.Dock = DockStyle.Bottom; btnChoose.Height = 70; btnChoose.TextAlign = ContentAlignment.TopCenter; StyleLink(btnChoose); btnChoose.Click += delegate { Browse(); };
@@ -215,7 +219,7 @@ namespace PBZKeyForge
             StyleButton(btnUndo, false); btnUndo.Dock = DockStyle.None;
             btnUndo.Click += delegate { TryAction(delegate { Session.Undo(); }); };
             StyleButton(btnApply, true); btnApply.Dock = DockStyle.None; btnApply.SetBounds(890, 15, 196, 46); btnApply.Font = new Font(Font.FontFamily, 12f, FontStyle.Bold); btnApply.Click += delegate { ApplyChanges(); };
-            lblBackup.SetBounds(890, 64, 196, 23); lblBackup.TextAlign = ContentAlignment.MiddleCenter; lblBackup.ForeColor = EditorTheme.Muted; lblBackup.Font = new Font(Font.FontFamily, 8.5f);
+            lblBackup.SetBounds(890, 64, 196, 23); lblBackup.TextAlign = ContentAlignment.MiddleCenter; lblBackup.AutoEllipsis = true; lblBackup.ForeColor = EditorTheme.Muted; lblBackup.Font = new Font(Font.FontFamily, 8.5f);
             footer.Controls.AddRange(new Control[] { chkActivate, lblScope, lblStatus, btnUndo, btnApply, lblBackup });
             footer.Resize += delegate { LayoutFooter(); };
             root.Controls.Add(footer, 0, 7);
@@ -235,7 +239,7 @@ namespace PBZKeyForge
             chkActivate.SetBounds(left, (int)(12 * scale), scopeWidth, (int)(28 * scale));
             lblScope.SetBounds(left, (int)(44 * scale), scopeWidth, (int)(24 * scale));
             lblBackup.SetBounds(btnApply.Left, (int)(64 * scale), actionWidth, (int)(20 * scale));
-            lblStatus.SetBounds(left, (int)(84 * scale), Math.Max(100, footer.ClientSize.Width - gap * 2), (int)(22 * scale));
+            lblStatus.SetBounds(left, (int)(70 * scale), Math.Max(100, footer.ClientSize.Width - gap * 2), (int)(20 * scale));
         }
 
         static void StyleButton(Button button, bool primary)
@@ -253,7 +257,7 @@ namespace PBZKeyForge
             host.BackColor = EditorTheme.Line; host.Padding = new Padding(1);
             var scroll = new EditorPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = EditorTheme.Surface };
             scroll.HandleCreated += delegate { EditorArtwork.DarkScrollbars(scroll); };
-            var grid = new BindingTable { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 4, RowCount = Actions.Count, Margin = Padding.Empty, BackColor = EditorTheme.Surface, CellBorderStyle = TableLayoutPanelCellBorderStyle.None, Font = new Font(Font.FontFamily, 10.5f) };
+            var grid = new BindingTable { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 5, RowCount = Actions.Count, Margin = Padding.Empty, BackColor = EditorTheme.Surface, CellBorderStyle = TableLayoutPanelCellBorderStyle.None, Font = new Font(Font.FontFamily, 10.5f) };
             grid.CellPaint += delegate(object sender, TableLayoutCellPaintEventArgs e)
             {
                 var rowLabel = grid.GetControlFromPosition(0, e.Row);
@@ -265,15 +269,12 @@ namespace PBZKeyForge
             int row = 0;
             foreach (var action in Actions)
             {
-                grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
-                var label = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Margin = Padding.Empty, Padding = new Padding(15, 0, 4, 0), AutoEllipsis = true, Tag = action.Id };
+                grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 42));
+                var label = new ActionNameLabel { ActionId = action.Id, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Margin = Padding.Empty, Padding = new Padding(15, 0, 4, 0), AutoEllipsis = true, Tag = action.Id };
                 actionLabels.Add(label); SetTip(label, action.Id); grid.Controls.Add(label, 0, row);
-                label.Paint += delegate(object sender, PaintEventArgs e)
-                {
-                    using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawLine(pen, 0, label.Height - 1, label.Width, label.Height - 1);
-                    if (label.BackColor == EditorTheme.Preview)
-                        using (var brush = new SolidBrush(EditorTheme.AccentHover)) e.Graphics.FillRectangle(brush, 0, 5, Math.Max(2, (int)(3 * e.Graphics.DpiX / 96f)), label.Height - 10);
-                };
+                var factoryLabel = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, Margin = Padding.Empty, AutoEllipsis = true,
+                    ForeColor = EditorTheme.Muted, Tag = action.Id };
+                factoryLabels.Add(factoryLabel); grid.Controls.Add(factoryLabel, 1, row);
                 var buttons = new BindingButton[3];
                 for (int slot = 0; slot < 3; slot++)
                 {
@@ -282,30 +283,35 @@ namespace PBZKeyForge
                     button.Click += delegate
                     {
                         if (Session == null || Session.IsResetPending) return;
-                        using (var dialog = new BindingDialog(action.Label, pad, pad ? Session.GetGamepad(action.Id, binding) : Session.GetKeyboard(action.Id, binding)))
+                        using (var dialog = new BindingDialog(action.Label, pad, button.Value, button.DefaultKeys, button.UsesDefault))
                         {
                             modalActive = true;
                             try
                             {
                                 if (dialog.ShowDialog(this) == DialogResult.OK)
-                                    TryAction(delegate { if (pad) Session.SetGamepad(action.Id, binding, dialog.Result); else Session.SetKeyboard(action.Id, binding, dialog.Result); });
+                                    TryAction(delegate { if (pad) Session.SetGamepadFamily(action.Id, binding, SelectedFamilyIndex, dialog.Result); else Session.SetKeyboard(action.Id, binding, dialog.Result); });
                             }
                             finally { modalActive = false; }
                         }
                     };
-                    buttons[slot] = button; grid.Controls.Add(button, slot + 1, row);
+                    buttons[slot] = button; grid.Controls.Add(button, slot + 2, row);
                 }
                 boxes[action.Id] = buttons; row++;
             }
             scroll.Controls.Add(grid);
             var headerViewport = new EditorPanel { Dock = DockStyle.Top, Height = 36, BackColor = EditorTheme.Floating };
-            var header = new BindingTable { ColumnCount = 4, BackColor = headerViewport.BackColor, CellBorderStyle = TableLayoutPanelCellBorderStyle.None };
+            var header = new BindingTable { ColumnCount = 5, BackColor = headerViewport.BackColor, CellBorderStyle = TableLayoutPanelCellBorderStyle.None };
             SetColumns(header);
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 var label = new Label { Dock = DockStyle.Fill, TextAlign = i == 0 ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter,
                     Font = new Font(Font, FontStyle.Bold), Margin = Padding.Empty, Padding = i == 0 ? new Padding(15, 0, 0, 0) : Padding.Empty, Tag = i };
                 headings.Add(label); header.Controls.Add(label, i, 0);
+                if (i == 1 || i == 2)
+                {
+                    var question = new BindingHelpButton(i == 1 ? "help.defaults" : "help.slots") { Dock = DockStyle.Right, Width = 24 };
+                    label.Controls.Add(question); label.Padding = new Padding(0, 0, 24, 0);
+                }
             }
             headerViewport.Controls.Add(header);
             // Use the laid-out body width, including the scrollbar's actual effect.
@@ -316,11 +322,13 @@ namespace PBZKeyForge
             headerViewport.SizeChanged += delegate { alignHeader(); };
             host.Layout += delegate { alignHeader(); };
             host.Controls.Add(scroll); host.Controls.Add(headerViewport);
+            host.Controls.Add(new BindingLegend { Dock = DockStyle.Bottom, Height = 28, BackColor = EditorTheme.Surface });
         }
         static void SetColumns(TableLayoutPanel table)
         {
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 29));
-            for (int i = 0; i < 3; i++) table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.6667f));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22));
+            for (int i = 0; i < 3; i++) table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 18));
         }
 
         void ApplyLanguage()
@@ -335,7 +343,8 @@ namespace PBZKeyForge
                 lblEmpty.Text = I18n.Str("editor.empty"); btnChoose.Text = I18n.Str("editor.choose");
                 SetTip(btnMore, I18n.Str("editor.more")); SetTip(cbPreset, I18n.Str("editor.previewrule"));
                 foreach (var label in actionLabels) label.Text = I18n.Str("act." + label.Tag);
-                foreach (var label in headings) label.Text = (int)label.Tag == 0 ? I18n.Str("col.action") : I18n.Str("editor.binding", label.Tag);
+                foreach (var label in headings) label.Text = (int)label.Tag == 0 ? I18n.Str("col.action") : (int)label.Tag == 1
+                    ? I18n.Str("views.factory", "").TrimEnd(' ', ':', '：') : I18n.Str("editor.binding", (int)label.Tag - 1);
                 cbLang.SelectedIndex = Array.IndexOf(I18n.Languages, I18n.Current);
                 cbPreset.Items.Clear(); cbPreset.Items.Add(I18n.Str("editor.nopreset"));
                 foreach (var preset in Presets.All().Where(p => !p.Vanilla)) cbPreset.Items.Add(preset);
@@ -356,7 +365,8 @@ namespace PBZKeyForge
                 lblGame.Text = "●  " + I18n.Str(lastRunning ? "editor.running" : "editor.closed"); lblGame.ForeColor = lastRunning ? EditorTheme.Amber : EditorTheme.Green;
                 lblPath.Text = loaded ? I18n.Str("editor.location", DisplaySaveDirectory(Session.InputPath)) : I18n.Str("editor.nofile");
                 SetTip(lblPath, loaded ? Session.InputPath : I18n.Str("editor.empty"));
-                empty.Visible = !loaded; kbHost.Visible = loaded && !gamepad; padHost.Visible = loaded && gamepad; if (!loaded) empty.BringToFront();
+                empty.Visible = !loaded; kbHost.Visible = loaded && actionView && !gamepad; padHost.Visible = loaded && actionView && gamepad; if (!loaded) empty.BringToFront();
+                RenderBindingViews();
                 tabKb.Text = I18n.Str("editor.keyboard"); tabPad.Text = I18n.Str("editor.gamepad"); tabKb.Selected = !gamepad; tabPad.Selected = gamepad;
                 tabKb.Dirty = loaded && Session.KeyboardChangeCount > 0; tabPad.Dirty = loaded && Session.GamepadChangeCount > 0;
                 tabKb.Enabled = loaded; tabPad.Enabled = loaded;
@@ -380,19 +390,46 @@ namespace PBZKeyForge
                     for (int slot = 0; slot < 3; slot++)
                     {
                         var kb = kbButtons[action.Id][slot]; var pad = padButtons[action.Id][slot];
-                        kb.Value = loaded ? Session.GetKeyboard(action.Id, slot) : null; pad.Value = loaded ? Session.GetGamepad(action.Id, slot) : null;
-                        kb.Changed = loaded && Session.IsKeyboardChanged(action.Id, slot); pad.Changed = loaded && Session.IsGamepadChanged(action.Id, slot);
-                        pad.Mixed = loaded && Session.GamepadValuesDiffer(action.Id, slot); kb.Enabled = pad.Enabled = loaded && !Session.IsResetPending;
-                        kb.AccessibleName = action.Label + " " + I18n.Str("editor.binding", slot + 1) + ": " + BindingButton.FriendlyKey(kb.Value);
-                        pad.AccessibleName = action.Label + " " + I18n.Str("editor.binding", slot + 1) + ": " + BindingButton.FriendlyKey(pad.Value);
-                        SetTip(kb, action.Id + "\n" + (kb.Value ?? I18n.Str("editor.defaulthelp")));
-                        SetTip(pad, action.Id + "\n" + (pad.Mixed ? I18n.Str("editor.mixedhelp") : pad.Value ?? I18n.Str("editor.defaulthelp")));
+                        var padRecords = loaded ? Session.BindingRecords(true, SelectedFamilyIndex).Where(r => r.Action == action.Id && r.SlotIndex == slot
+                            && r.DefaultKey == InputDefaults.ForRawSlot(action.Id, true, InputDefaults.RawSlot(r.Slot))).ToArray() : new BindingRecord[0];
+                        var kbRecords = loaded ? Session.BindingRecords(false, -1).Where(r => r.Action == action.Id && r.SlotIndex == slot).ToArray() : new BindingRecord[0];
+                        kb.Value = kbRecords.Select(r => r.Key).FirstOrDefault(); pad.Value = padRecords.Select(r => r.Key).FirstOrDefault();
+                        string keyboardDefault = loaded ? Session.GetKeyboardDefault(action.Id, slot) : null;
+                        kb.DefaultKeys = keyboardDefault == null ? null : new[] { keyboardDefault }; kb.ActionLevelDefault = false; kb.UsesDefault = kb.Value == null;
+                        string padDefault = loaded ? Session.GetGamepadDefault(action.Id, slot, SelectedFamilyIndex) : null;
+                        pad.DefaultKeys = padRecords.Length == 0 ? padDefault == null ? null : new[] { padDefault }
+                            : padRecords.Any(r => r.DefaultKey == null) ? null : padRecords.Select(r => r.DefaultKey).Distinct().ToArray();
+                        pad.UsesDefault = padRecords.Length == 0 || padRecords.All(r => r.Key == r.DefaultKey);
+                        kb.Changed = loaded && Session.IsKeyboardChanged(action.Id, slot); pad.Changed = padRecords.Any(r => r.Changed);
+                        pad.Mixed = padRecords.Select(r => r.Key).Distinct().Skip(1).Any(); kb.Mixed = kbRecords.Select(r => r.Key).Distinct().Skip(1).Any();
+                        kb.Unavailable = loaded && !Session.HasKeyboardSlot(action.Id, slot);
+                        pad.Unavailable = loaded && !Session.HasGamepadSlot(action.Id, slot, SelectedFamilyIndex);
+                        kb.Enabled = loaded && !Session.IsResetPending && !kb.Unavailable;
+                        pad.Enabled = loaded && !Session.IsResetPending && !pad.Unavailable;
+                        kb.AccessibleName = action.Label + " " + I18n.Str("editor.binding", slot + 1) + ": " + kb.DisplayText + " · " + kb.StatusText;
+                        pad.AccessibleName = action.Label + " " + I18n.Str("editor.binding", slot + 1) + ": " + pad.DisplayText + " · " + pad.StatusText;
+                        SetTip(kb, action.Id + "\n" + kb.DisplayText + " · " + kb.StatusText + (kb.UsesDefault ? "\n" + I18n.Str("editor.keyboarddefaulthelp") : ""));
+                        SetTip(pad, action.Id + "\n" + pad.DisplayText + " · " + pad.StatusText + (pad.Mixed ? "\n" + I18n.Str("editor.mixedhelp") : ""));
+                        kb.Invalidate(); pad.Invalidate();
                     }
                 for (int i = 0; i < actionLabels.Count; i++)
                 {
                     var source = i < Actions.Count ? kbButtons : padButtons;
+                    string action = (string)actionLabels[i].Tag;
+                    string[] defaults = !loaded ? null : i < Actions.Count ? Session.FactoryKeyboardKeys(action) : Session.Relations(action, true, SelectedFamilyIndex).DefaultKeys;
+                    actionLabels[i].Text = BindingViewText.ActionName(action);
+                    var actionLabel = actionLabels[i] as ActionNameLabel;
+                    if (actionLabel != null)
+                    {
+                        string keys = !loaded ? "" : BindingViewText.Keys(Session.Relations(action, i >= Actions.Count, SelectedFamilyIndex).Keys);
+                        actionLabel.KeySummary = loaded ? I18n.Str("help.keysummary", keys) : "";
+                        SetTip(actionLabel, action + "\n" + actionLabel.KeySummary); actionLabel.Invalidate();
+                    }
+                    factoryLabels[i].Text = defaults == null ? I18n.Str("editor.defaultunknown") : BindingViewText.Keys(defaults);
+                    SetTip(factoryLabels[i], I18n.Str("views.factory", factoryLabels[i].Text));
                     Color rowColor = source[(string)actionLabels[i].Tag].Any(b => b.Changed) ? EditorTheme.Preview : i % 2 == 0 ? EditorTheme.Surface : EditorTheme.RowAlternate;
                     actionLabels[i].BackColor = rowColor;
+                    factoryLabels[i].BackColor = rowColor;
                     foreach (var button in source[(string)actionLabels[i].Tag]) if (button.BackColor != rowColor) button.BackColor = rowColor;
                 }
                 chkActivate.Text = I18n.Str("editor.activate", loaded ? SchemeLabel(Session.SelectedProfile) : "—");
@@ -411,6 +448,9 @@ namespace PBZKeyForge
                 var selectedPreset = cbPreset.SelectedItem as Preset;
                 lblPreview.Text = conflictCount > 0 ? I18n.Str("editor.conflictinfo") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
                     : selectedPreset != null ? I18n.Str("editor.preview", selectedPreset.Desc) : gamepad ? I18n.Str("editor.sharedinfo") : I18n.Str("editor.directinfo");
+                bool showPreview = conflictCount > 0 || selectedPreset != null || loaded && Session.IsResetPending;
+                preview.Visible = showPreview; lblHint.Visible = false;
+                editorRoot.RowStyles[4].Height = showPreview ? 30 * CurrentAutoScaleDimensions.Width / 96f : 0;
                 preview.BackColor = conflictCount > 0 || selectedPreset != null || loaded && Session.IsResetPending ? EditorTheme.Preview : EditorTheme.Floating;
                 lblPreview.ForeColor = selectedPreset != null || conflictCount > 0 ? EditorTheme.Ink : EditorTheme.Muted;
                 SetTip(lblPreview, lblPreview.Text + (selectedPreset != null ? "\n" + I18n.Str("editor.previewrule") : ""));

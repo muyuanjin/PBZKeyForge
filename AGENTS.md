@@ -1,8 +1,10 @@
 # Repository Guidelines
 
+For game input mappings, default bindings, save formats, or scheme activation, read [the project Mod development skill](skills/phantom-blade-zero-save-modding/SKILL.md) and its relevant references before changing the model or collecting game evidence.
+
 ## Project Structure & Module Organization
 
-- `src/`: C# application code. `MainForm.cs` owns WinForms UI; `Cli.cs` provides console commands; `Gvas.cs` reads/writes input saves; `GameSchemeSettings.cs` handles the game's actual scheme selector. `Presets.cs` and `I18n.cs` define presets and five-language text.
+- `src/`: C# application code. `MainForm.cs` owns WinForms UI; `Cli.cs` provides console commands; `Gvas.cs` reads/writes input saves; `GameSchemeSettings.cs` handles the game's actual scheme selector. `Presets.cs` and `I18n.cs` define presets and multilingual text.
 - `tests/`: standalone integration checks against the built application.
 - `build/`: compiler script and icon generation. `assets/` contains icons, banners, and screenshots.
 - `samples/vanilla-base.sav`: baseline fixture. `dist/` and generated `presets/` are ignored outputs.
@@ -23,9 +25,11 @@ These commands build both executables, launch the GUI, verify byte-identical GVA
 
 ## Coding Style & Naming Conventions
 
-Use four-space indentation, braces on separate lines, the `PBZKeyForge` namespace, PascalCase types/methods, and camelCase fields/locals. Keep syntax compatible with the bundled .NET Framework compiler. Add user-facing strings to all five languages in `I18n.cs`; preserve official game action names. No formatter or linter is configured.
+Use four-space indentation, braces on separate lines, the `PBZKeyForge` namespace, PascalCase types/methods, and camelCase fields/locals. Keep syntax compatible with the bundled .NET Framework compiler. Add user-facing strings to all 15 supported languages in `I18n.cs` and its partial files; preserve official game action names. No formatter or linter is configured.
 
 ## Testing Guidelines
+
+Routine checks use one language (Simplified Chinese). Run all 15 languages only for a targeted localization test: append `--all-languages` to the relevant integration harness, or invoke the dedicated `I18nTranslationTests` for dictionary checks. Do not include either sweep in routine verification.
 
 The release workflow requires `roundtrip=IDENTICAL`. For scheme changes, compile and run the standalone assertion harness; set the path variables first:
 

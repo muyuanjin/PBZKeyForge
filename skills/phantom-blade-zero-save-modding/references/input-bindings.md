@@ -12,13 +12,13 @@ GVAS header（原样保存）
     ProfileId / Family / Keys[]
 子对象块
   BlobA / BlobB / recordCount
-  records[]                         # 各方案键鼠覆盖
+  records[]                         # 各方案共享 profile 覆盖，包含原厂手柄槽
 尾部对象属性与 ObjectEnd（原样保存）
 ```
 
 `SaveFile.Header`、`Props`、`Records`、`BlobRest` 分别保留这些部分，入口是 [src/Gvas.cs](../../../src/Gvas.cs)。`GamepadProfiles` 保留方案和设备家族关系；`GamepadKeysFor(profileId)` 返回指定方案的手柄键表。只需要某一种设备家族时，还应筛选 `Family`。
 
-## 键鼠覆盖
+## 共享 profile 覆盖
 
 三个已知 profile：
 
@@ -44,9 +44,11 @@ entries[entryCount]:
 profileId: FString
 ```
 
-样本中 `X/Y` 常为 `"None"`、padding 常为零；修改已有记录时保留它们，不把“常见值”当成重建所有记录的理由。尾部不是无用垃圾，不能截掉。
+`X/Y/opaquePadding` 是序列化的硬件描述符；样本中 `X/Y` 常为 `"None"`、padding 常为零。修改已有记录时保留它们，不按当前 Key 的类别改写硬件身份，也不把“常见值”当成重建所有记录的理由。尾部不是无用垃圾，不能截掉。
 
-键鼠使用物理槽 `0 / 2 / 4`，手柄使用 `1 / 3 / 5`。这是 `EPlayerMappableKeySlot` 枚举，不是数组下标。工具界面的“绑定 1 / 2 / 3”和部分 API 的 `slotIndex=0/1/2` 是逻辑编号，需做转换。
+原始槽使用 `EPlayerMappableKeySlot` 枚举，`First` 至 `Seventh` 对应 0 至 6；7 是 `Unspecified`，8 是 `Max`，均不能作为额外显式槽分配。槽号随动作和 IMC 注册顺序变化，不按键鼠／手柄全局奇偶分配。工具界面的“绑定 1 / 2 / 3”和 API 的 `slotIndex=0/1/2` 是逻辑编号，通过 `InputDefaults.Slots` 或 `EditorSession.GetKeyboardRawSlot/GetGamepadRawSlot` 转为当前动作的真实原始槽。
+
+格挡的键鼠默认槽为 0、2，手柄为 1、3；蹲伏的键鼠默认槽为 1，手柄为 0。影之武装最终键鼠只有槽 0，手柄为槽 1、2、3；资源中键鼠和手柄的同一槽 2 合并为手柄默认。逐槽完整表、共享覆盖与手柄家族覆盖的优先级见[默认映射与有效绑定](default-bindings.md)。游戏界面按原厂键合并后的主／副列不能作为原始槽号。
 
 常用动作及键名：
 
@@ -59,7 +61,7 @@ profileId: FString
 
 常用键名为 `LeftMouseButton`、`RightMouseButton`、`LeftShift`、`SpaceBar`、`F8`。其余动作和键名优先从原存档、`MainForm.Actions`、`KeyNames` 读取；不要按显示翻译猜标识。
 
-有动作覆盖时，不能假定未显式保留的原按键仍然有效。“左键也能防御”应显式保留 `RightMouseButton` 并增加 `LeftMouseButton`；仅将防御覆盖成左键是替换语义。不同动作共用同一个键是 mod 的目标能力，不能按游戏页面的冲突检查把它自动拆开。具体动作能否同时执行还受游戏状态和输入处理影响。
+覆盖按对应槽生效，缺失覆盖的槽仍从资源默认补齐。能否保留某个原按键，取决于它由哪些槽提供以及这些槽是否都已覆盖；不能由“该动作存在覆盖”或“还有空白格”直接判断。“左键也能防御”须在合并后的有效关系中保留 `RightMouseButton` 并增加 `LeftMouseButton`；将提供右键的全部槽改成左键则属于替换。不同动作共用同一个键是 mod 的目标能力，不能按游戏页面的冲突检查把它自动拆开。具体动作能否同时执行还受游戏状态和输入处理影响。
 
 精确修改一个已有条目的 C# 示例（只在内存修改，重复条目要先明确选择）：
 
@@ -80,13 +82,18 @@ byte[] output = save.ToBytes();
 
 原始样本的三条 `GamepadFamilyProfiles` **全部为 Xbox**，分别属于默认、自定义 1、自定义 2。记录身份至少包含 `(ProfileId, Family)`；不得把这三条当成三种手柄，也不得因属性名带 `Family` 就认为跨方案共享。
 
-`Keys` 条目含 `MappingName`、`Slot`、`DefaultKey`、`Key`。`Key` 是修改落点；`DefaultKey` 和其余元数据保持原样。槽名分别为：
+`Keys` 条目含 `MappingName`、`Slot`、`DefaultKey`、`Key`。`Key` 是修改落点；修改已有条目时，`DefaultKey` 和其余元数据保持原样。枚举槽名与数值的关系为：
 
-| 逻辑绑定 | 物理枚举字符串 |
+| 原始槽号 | 枚举字符串 |
 | --- | --- |
+| 0 | `EPlayerMappableKeySlot::First` |
 | 1 | `EPlayerMappableKeySlot::Second` |
-| 2 | `EPlayerMappableKeySlot::Fourth` |
-| 3 | `EPlayerMappableKeySlot::Sixth` |
+| 2 | `EPlayerMappableKeySlot::Third` |
+| 3 | `EPlayerMappableKeySlot::Fourth` |
+| 4 | `EPlayerMappableKeySlot::Fifth` |
+| 5 | `EPlayerMappableKeySlot::Sixth` |
+| 6 | `EPlayerMappableKeySlot::Seventh` |
+| 7 | `EPlayerMappableKeySlot::Unspecified`（自动选择，不作显式槽） |
 
 ```csharp
 var owner = save.GamepadProfiles.Single(p =>
@@ -99,7 +106,7 @@ SaveFile.SetField(item, "Key", "Gamepad_LeftShoulder");
 
 常用按钮：X 为 `Gamepad_FaceButton_Left`，A 为 `Gamepad_FaceButton_Bottom`，LB 为 `Gamepad_LeftShoulder`，RB 为 `Gamepad_RightShoulder`，RT 为 `Gamepad_RightTrigger`。这些是引擎键名；显示层可另映射为 PlayStation 符号。
 
-目标槽不存在时，克隆**相同 profile、相同 family、相同动作**的已有条目，使用 `SaveFile.CloneNode` 深拷贝，仅改变 `Slot` 和 `Key`。没有可用模板或缺失归属字段时不能猜结构。不要删除未识别字段，或认为所有手柄条目都必以 `Gamepad_` 开头。
+补齐已注册但缺少家族条目的手柄槽时，优先克隆**相同 profile、相同 family、相同动作**的已有条目；动作整组缺失时可用同方案、同家族的其他动作条目，并更新 `MappingName`。使用 `SaveFile.CloneNode` 深拷贝，设置目标 `Slot` 和 `Key`，并从 `InputDefaults.ForRawSlot(action, true, rawSlot)` 取得目标槽的实际 `DefaultKey`，不能把模板的 LB 等默认值复制过去。没有可用模板或缺失归属字段时不能猜结构。不要删除未识别字段，或认为所有手柄条目都必以 `Gamepad_` 开头。未注册的额外手柄槽默认返回 `None`，没有家族激活投影，不能通过新增 family-only 条目使其生效。
 
 ## 新增、替换和重置分开实现
 
@@ -109,7 +116,7 @@ SaveFile.SetField(item, "Key", "Gamepad_LeftShoulder");
 - `onekey_dodge`：把防御移到左键 / X，再把右键 / LB 用于闪避与高速移动；它会替换相关动作绑定，不是前一项的简单叠加。
 - 恢复默认：键鼠移除目标覆盖；手柄将 `Key` 恢复为对应 `DefaultKey`。全局操作必须明确范围。
 
-新增绑定先规划再提交。三个槽不一定是一槽一条；同槽可能有多条记录。既有不同键都必须保留，空槽或冗余重复槽才可复用。简单贪心会误判容量：槽 0 为 F8、槽 2 为 F9、槽 4 同时含 F8/F9，可保留槽 4 并复用另两槽。当前 planner 枚举三个槽的少量分配，选保留全部既有键及目标键、改动最少的方案；任一目标设备容量不足时整组拒绝。
+新增绑定先规划再提交。三个逻辑列按动作解析到真实槽号；同槽可能有多条记录。既有不同键都必须保留，空槽或冗余重复槽才可复用。简单贪心会误判容量：某动作的槽 0 为 F8、槽 2 为 F9、槽 4 同时含 F8/F9，可保留槽 4 并复用另两槽。当前 planner 枚举三列的少量分配，选保留全部既有键及目标键、改动最少的方案；任一目标设备容量不足时整组拒绝。
 
 ## GVAS 移植注意
 

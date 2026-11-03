@@ -1,0 +1,2550 @@
+{
+  "build": "CL-301524",
+  "profiles": [
+    "InputUserSettings.Profiles.Default",
+    "PBZ.KeyProfile.Custom1",
+    "PBZ.KeyProfile.Custom2"
+  ],
+  "profileDefaultsIdentical": true,
+  "bindings": [
+    {
+      "action": "IA_Crouch",
+      "rawSlot": 0,
+      "key": "Gamepad_LeftThumbstick",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 9
+        }
+      ]
+    },
+    {
+      "action": "IA_Crouch",
+      "rawSlot": 1,
+      "key": "C",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 30
+        }
+      ]
+    },
+    {
+      "action": "IA_Dodge",
+      "rawSlot": 1,
+      "key": "Gamepad_RightShoulder",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 5
+        }
+      ]
+    },
+    {
+      "action": "IA_Dodge",
+      "rawSlot": 3,
+      "key": "Gamepad_RightShoulder",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 7
+        }
+      ]
+    },
+    {
+      "action": "IA_Dodge",
+      "rawSlot": 0,
+      "key": "LeftShift",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 4
+        }
+      ]
+    },
+    {
+      "action": "IA_Dodge",
+      "rawSlot": 2,
+      "key": "LeftShift",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 6
+        }
+      ]
+    },
+    {
+      "action": "IA_Execute",
+      "rawSlot": 1,
+      "key": "Gamepad_FaceButton_Right",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Execution.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_Execute",
+      "rawSlot": 0,
+      "key": "E",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Execution.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_Guard",
+      "rawSlot": 1,
+      "key": "Gamepad_LeftShoulder",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_Guard",
+      "rawSlot": 3,
+      "key": "Gamepad_LeftShoulder",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 3
+        }
+      ]
+    },
+    {
+      "action": "IA_Guard",
+      "rawSlot": 0,
+      "key": "RightMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_Guard",
+      "rawSlot": 2,
+      "key": "RightMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 1,
+      "key": "Gamepad_FaceButton_Top",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 5
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 3,
+      "key": "Gamepad_FaceButton_Top",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 19
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 5,
+      "key": "Gamepad_FaceButton_Top",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 25
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 0,
+      "key": "F",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 4
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 2,
+      "key": "F",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 6
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 4,
+      "key": "F",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 24
+        }
+      ]
+    },
+    {
+      "action": "IA_Interact",
+      "rawSlot": 1,
+      "key": "Gamepad_FaceButton_Right",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Interaction.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_Interact",
+      "rawSlot": 0,
+      "key": "E",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Interaction.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_Jump",
+      "rawSlot": 1,
+      "key": "Gamepad_FaceButton_Bottom",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_InteractionSpecialMove.uasset",
+          "mappingIndex": 1
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_Jump",
+      "rawSlot": 0,
+      "key": "SpaceBar",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_InteractionSpecialMove.uasset",
+          "mappingIndex": 0
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 1,
+      "key": "Gamepad_FaceButton_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 3
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 3,
+      "key": "Gamepad_FaceButton_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 21
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 5,
+      "key": "Gamepad_FaceButton_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 27
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 0,
+      "key": "LeftMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 2,
+      "key": "LeftMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 20
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 4,
+      "key": "LeftMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 26
+        }
+      ]
+    },
+    {
+      "action": "IA_LockTarget",
+      "rawSlot": 1,
+      "key": "Gamepad_RightThumbstick",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 8
+        }
+      ]
+    },
+    {
+      "action": "IA_LockTarget",
+      "rawSlot": 0,
+      "key": "MiddleMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 7
+        }
+      ]
+    },
+    {
+      "action": "IA_MoveFast",
+      "rawSlot": 1,
+      "key": "Gamepad_RightShoulder",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 9
+        }
+      ]
+    },
+    {
+      "action": "IA_MoveFast",
+      "rawSlot": 0,
+      "key": "LeftShift",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 8
+        }
+      ]
+    },
+    {
+      "action": "IA_MoveSlow",
+      "rawSlot": 0,
+      "key": "LeftAlt",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 7
+        }
+      ]
+    },
+    {
+      "action": "IA_OpenCharacterMenu",
+      "rawSlot": 0,
+      "key": "Gamepad_Special_Right",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_OpenCharacterMenu",
+      "rawSlot": 1,
+      "key": "I",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 6
+        }
+      ]
+    },
+    {
+      "action": "IA_OpenMapMenu",
+      "rawSlot": 1,
+      "key": "Gamepad_Special_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 3
+        }
+      ]
+    },
+    {
+      "action": "IA_OpenMapMenu",
+      "rawSlot": 0,
+      "key": "M",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_OpenMapMenu",
+      "rawSlot": 2,
+      "key": "Tab",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 4
+        }
+      ]
+    },
+    {
+      "action": "IA_Sense_Default",
+      "rawSlot": 1,
+      "key": "Gamepad_Special_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 9
+        }
+      ]
+    },
+    {
+      "action": "IA_Sense_Default",
+      "rawSlot": 0,
+      "key": "V",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 8
+        }
+      ]
+    },
+    {
+      "action": "IA_ShadowArm",
+      "rawSlot": 1,
+      "key": "Gamepad_RightTriggerAxis",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Interaction_ShaChiBroken.uasset",
+          "mappingIndex": 1
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 14
+        }
+      ]
+    },
+    {
+      "action": "IA_ShadowArm",
+      "rawSlot": 2,
+      "key": "Gamepad_RightTriggerAxis",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Interaction_ShaChiBroken.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_ShadowArm",
+      "rawSlot": 3,
+      "key": "Gamepad_RightTriggerAxis",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 16
+        }
+      ]
+    },
+    {
+      "action": "IA_ShadowArm",
+      "rawSlot": 0,
+      "key": "LeftControl",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Interaction_ShaChiBroken.uasset",
+          "mappingIndex": 0
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 13
+        }
+      ]
+    },
+    {
+      "action": "IA_ShadowArm",
+      "rawSlot": 2,
+      "key": "LeftControl",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 15
+        }
+      ]
+    },
+    {
+      "action": "IA_ShadowArm_LongPress",
+      "rawSlot": 0,
+      "key": "Gamepad_RightTrigger",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 32
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchShadowArm",
+      "rawSlot": 1,
+      "key": "Gamepad_DPad_Right",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 6
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchShadowArm",
+      "rawSlot": 0,
+      "key": "Two",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 5
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchWeapon",
+      "rawSlot": 1,
+      "key": "Gamepad_DPad_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchWeapon",
+      "rawSlot": 3,
+      "key": "Gamepad_DPad_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 3
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchWeapon",
+      "rawSlot": 0,
+      "key": "One",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchWeapon",
+      "rawSlot": 2,
+      "key": "One",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_UltimateSkill",
+      "rawSlot": 1,
+      "key": "Gamepad_LeftTriggerAxis",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 12
+        }
+      ]
+    },
+    {
+      "action": "IA_UltimateSkill",
+      "rawSlot": 3,
+      "key": "Gamepad_LeftTriggerAxis",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 29
+        }
+      ]
+    },
+    {
+      "action": "IA_UltimateSkill",
+      "rawSlot": 0,
+      "key": "Q",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 11
+        }
+      ]
+    },
+    {
+      "action": "IA_UltimateSkill",
+      "rawSlot": 2,
+      "key": "Q",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 28
+        }
+      ]
+    },
+    {
+      "action": "IA_UseBottomItem",
+      "rawSlot": 0,
+      "key": "Gamepad_DPad_Down",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput_Meidicne.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_UseBottomItem",
+      "rawSlot": 1,
+      "key": "R",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput_Meidicne.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_UseTopItem",
+      "rawSlot": 0,
+      "key": "Gamepad_DPad_Up",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput_Meidicne.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_UseTopItem",
+      "rawSlot": 1,
+      "key": "T",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput_Meidicne.uasset",
+          "mappingIndex": 3
+        }
+      ]
+    }
+  ],
+  "effectiveBindings": [
+    {
+      "action": "IA_Crouch",
+      "rawSlot": 0,
+      "key": "Gamepad_LeftThumbstick",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 9
+        }
+      ]
+    },
+    {
+      "action": "IA_Crouch",
+      "rawSlot": 1,
+      "key": "C",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 30
+        }
+      ]
+    },
+    {
+      "action": "IA_Dodge",
+      "rawSlot": 1,
+      "key": "Gamepad_RightShoulder",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 5
+        }
+      ]
+    },
+    {
+      "action": "IA_Dodge",
+      "rawSlot": 3,
+      "key": "Gamepad_RightShoulder",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 7
+        }
+      ]
+    },
+    {
+      "action": "IA_Dodge",
+      "rawSlot": 0,
+      "key": "LeftShift",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 4
+        }
+      ]
+    },
+    {
+      "action": "IA_Dodge",
+      "rawSlot": 2,
+      "key": "LeftShift",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 6
+        }
+      ]
+    },
+    {
+      "action": "IA_Execute",
+      "rawSlot": 1,
+      "key": "Gamepad_FaceButton_Right",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Execution.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_Execute",
+      "rawSlot": 0,
+      "key": "E",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Execution.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_Guard",
+      "rawSlot": 1,
+      "key": "Gamepad_LeftShoulder",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_Guard",
+      "rawSlot": 3,
+      "key": "Gamepad_LeftShoulder",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 3
+        }
+      ]
+    },
+    {
+      "action": "IA_Guard",
+      "rawSlot": 0,
+      "key": "RightMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_Guard",
+      "rawSlot": 2,
+      "key": "RightMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Deflect.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 1,
+      "key": "Gamepad_FaceButton_Top",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 5
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 3,
+      "key": "Gamepad_FaceButton_Top",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 19
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 5,
+      "key": "Gamepad_FaceButton_Top",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 25
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 0,
+      "key": "F",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 4
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 2,
+      "key": "F",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 6
+        }
+      ]
+    },
+    {
+      "action": "IA_HeavyAttack",
+      "rawSlot": 4,
+      "key": "F",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 24
+        }
+      ]
+    },
+    {
+      "action": "IA_Interact",
+      "rawSlot": 1,
+      "key": "Gamepad_FaceButton_Right",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Interaction.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_Interact",
+      "rawSlot": 0,
+      "key": "E",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Interaction.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_Jump",
+      "rawSlot": 1,
+      "key": "Gamepad_FaceButton_Bottom",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_InteractionSpecialMove.uasset",
+          "mappingIndex": 1
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_Jump",
+      "rawSlot": 0,
+      "key": "SpaceBar",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_InteractionSpecialMove.uasset",
+          "mappingIndex": 0
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 1,
+      "key": "Gamepad_FaceButton_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 3
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 3,
+      "key": "Gamepad_FaceButton_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 21
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 5,
+      "key": "Gamepad_FaceButton_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 27
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 0,
+      "key": "LeftMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 2,
+      "key": "LeftMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 20
+        }
+      ]
+    },
+    {
+      "action": "IA_LightAttack",
+      "rawSlot": 4,
+      "key": "LeftMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 26
+        }
+      ]
+    },
+    {
+      "action": "IA_LockTarget",
+      "rawSlot": 1,
+      "key": "Gamepad_RightThumbstick",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 8
+        }
+      ]
+    },
+    {
+      "action": "IA_LockTarget",
+      "rawSlot": 0,
+      "key": "MiddleMouseButton",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 7
+        }
+      ]
+    },
+    {
+      "action": "IA_MoveFast",
+      "rawSlot": 1,
+      "key": "Gamepad_RightShoulder",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 9
+        }
+      ]
+    },
+    {
+      "action": "IA_MoveFast",
+      "rawSlot": 0,
+      "key": "LeftShift",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 8
+        }
+      ]
+    },
+    {
+      "action": "IA_MoveSlow",
+      "rawSlot": 0,
+      "key": "LeftAlt",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 7
+        }
+      ]
+    },
+    {
+      "action": "IA_OpenCharacterMenu",
+      "rawSlot": 0,
+      "key": "Gamepad_Special_Right",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_OpenCharacterMenu",
+      "rawSlot": 1,
+      "key": "I",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 6
+        }
+      ]
+    },
+    {
+      "action": "IA_OpenMapMenu",
+      "rawSlot": 1,
+      "key": "Gamepad_Special_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 3
+        }
+      ]
+    },
+    {
+      "action": "IA_OpenMapMenu",
+      "rawSlot": 0,
+      "key": "M",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_OpenMapMenu",
+      "rawSlot": 2,
+      "key": "Tab",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 4
+        }
+      ]
+    },
+    {
+      "action": "IA_Sense_Default",
+      "rawSlot": 1,
+      "key": "Gamepad_Special_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 9
+        }
+      ]
+    },
+    {
+      "action": "IA_Sense_Default",
+      "rawSlot": 0,
+      "key": "V",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 8
+        }
+      ]
+    },
+    {
+      "action": "IA_ShadowArm",
+      "rawSlot": 1,
+      "key": "Gamepad_RightTriggerAxis",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Interaction_ShaChiBroken.uasset",
+          "mappingIndex": 1
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 14
+        }
+      ]
+    },
+    {
+      "action": "IA_ShadowArm",
+      "rawSlot": 2,
+      "key": "Gamepad_RightTriggerAxis",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Interaction_ShaChiBroken.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_ShadowArm",
+      "rawSlot": 3,
+      "key": "Gamepad_RightTriggerAxis",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 16
+        }
+      ]
+    },
+    {
+      "action": "IA_ShadowArm",
+      "rawSlot": 0,
+      "key": "LeftControl",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Interaction_ShaChiBroken.uasset",
+          "mappingIndex": 0
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 13
+        }
+      ]
+    },
+    {
+      "action": "IA_ShadowArm_LongPress",
+      "rawSlot": 0,
+      "key": "Gamepad_RightTrigger",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 32
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchShadowArm",
+      "rawSlot": 1,
+      "key": "Gamepad_DPad_Right",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 6
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchShadowArm",
+      "rawSlot": 0,
+      "key": "Two",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 5
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchWeapon",
+      "rawSlot": 1,
+      "key": "Gamepad_DPad_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchWeapon",
+      "rawSlot": 3,
+      "key": "Gamepad_DPad_Left",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 3
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchWeapon",
+      "rawSlot": 0,
+      "key": "One",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_SwitchWeapon",
+      "rawSlot": 2,
+      "key": "One",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_UltimateSkill",
+      "rawSlot": 1,
+      "key": "Gamepad_LeftTriggerAxis",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 12
+        }
+      ]
+    },
+    {
+      "action": "IA_UltimateSkill",
+      "rawSlot": 3,
+      "key": "Gamepad_LeftTriggerAxis",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 29
+        }
+      ]
+    },
+    {
+      "action": "IA_UltimateSkill",
+      "rawSlot": 0,
+      "key": "Q",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 11
+        }
+      ]
+    },
+    {
+      "action": "IA_UltimateSkill",
+      "rawSlot": 2,
+      "key": "Q",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 28
+        }
+      ]
+    },
+    {
+      "action": "IA_UseBottomItem",
+      "rawSlot": 0,
+      "key": "Gamepad_DPad_Down",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput_Meidicne.uasset",
+          "mappingIndex": 0
+        }
+      ]
+    },
+    {
+      "action": "IA_UseBottomItem",
+      "rawSlot": 1,
+      "key": "R",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput_Meidicne.uasset",
+          "mappingIndex": 2
+        }
+      ]
+    },
+    {
+      "action": "IA_UseTopItem",
+      "rawSlot": 0,
+      "key": "Gamepad_DPad_Up",
+      "device": "Gamepad",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput_Meidicne.uasset",
+          "mappingIndex": 1
+        }
+      ]
+    },
+    {
+      "action": "IA_UseTopItem",
+      "rawSlot": 1,
+      "key": "T",
+      "device": "KeyboardMouse",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput_Meidicne.uasset",
+          "mappingIndex": 3
+        }
+      ]
+    }
+  ],
+  "projectionEvidence": "CL-301524 native registration identity and the three captured profile DefaultKey tables; docs/input-defaults.md",
+  "fixedMappings": [
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_Map",
+      "actions": [
+        "IA_OpenMapMenu"
+      ],
+      "device": "Gamepad",
+      "key": "Gamepad_Special_Left",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyMap.uasset",
+          "mappingIndex": 1,
+          "triggers": [
+            "InputTriggerPressed"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_Map",
+      "actions": [
+        "IA_OpenMapMenu"
+      ],
+      "device": "KeyboardMouse",
+      "key": "M",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyMap.uasset",
+          "mappingIndex": 0,
+          "triggers": [
+            "InputTriggerPressed"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_Map",
+      "actions": [
+        "IA_OpenMapMenu"
+      ],
+      "device": "KeyboardMouse",
+      "key": "Tab",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyMap.uasset",
+          "mappingIndex": 2,
+          "triggers": [
+            "InputTriggerPressed"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_MoveDown_GM",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_LeftTrigger",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_DebugMode.uasset",
+          "mappingIndex": 6,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_MoveInput_GM",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_Left2D",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_DebugMode.uasset",
+          "mappingIndex": 0,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_MoveInput_GM",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "A",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_DebugMode.uasset",
+          "mappingIndex": 1,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_MoveInput_GM",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "D",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_DebugMode.uasset",
+          "mappingIndex": 3,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_MoveInput_GM",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "S",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_DebugMode.uasset",
+          "mappingIndex": 2,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_MoveInput_GM",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "W",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_DebugMode.uasset",
+          "mappingIndex": 4,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_MoveUp_GM",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_RightTrigger",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_DebugMode.uasset",
+          "mappingIndex": 5,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_NextTab",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_RightTrigger",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyOption.uasset",
+          "mappingIndex": 3,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_PreviousTab",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_LeftTrigger",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyOption.uasset",
+          "mappingIndex": 4,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_PushGameSystemMenu",
+      "actions": [
+        "IA_OpenCharacterMenu"
+      ],
+      "device": "Gamepad",
+      "key": "Gamepad_Special_Right",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyOption.uasset",
+          "mappingIndex": 0,
+          "triggers": [
+            "InputTriggerDown"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_PushGameSystemMenu",
+      "actions": [
+        "IA_OpenCharacterMenu"
+      ],
+      "device": "KeyboardMouse",
+      "key": "Escape",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 5,
+          "triggers": [
+            "InputTriggerDown"
+          ]
+        },
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyOption.uasset",
+          "mappingIndex": 1,
+          "triggers": [
+            "InputTriggerDown"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_PushGameSystemMenu",
+      "actions": [
+        "IA_OpenCharacterMenu"
+      ],
+      "device": "KeyboardMouse",
+      "key": "I",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyOption.uasset",
+          "mappingIndex": 2,
+          "triggers": [
+            "InputTriggerDown"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_Sense_Default",
+      "actions": [
+        "IA_Sense_Default"
+      ],
+      "device": "Gamepad",
+      "key": "Gamepad_Special_Left",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlySense.uasset",
+          "mappingIndex": 2,
+          "triggers": [
+            "/Game/PBZContent/Input/IMC_HUDInput"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_Sense_Default",
+      "actions": [
+        "IA_Sense_Default"
+      ],
+      "device": "Gamepad",
+      "key": "PBZ_Touchpad_SwipeUp",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 7,
+          "triggers": [
+            "PBZInputTriggerDefaultTouchpadSwipe"
+          ]
+        },
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlySense.uasset",
+          "mappingIndex": 0,
+          "triggers": [
+            "PBZInputTriggerDefaultTouchpadSwipe"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_Sense_Default",
+      "actions": [
+        "IA_Sense_Default"
+      ],
+      "device": "KeyboardMouse",
+      "key": "V",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlySense.uasset",
+          "mappingIndex": 1,
+          "triggers": [
+            "/Game/PBZContent/Input/IMC_HUDInput"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_ShipBackword",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_LeftTriggerAxis",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Ship.uasset",
+          "mappingIndex": 10,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_ShipBackword",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "S",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Ship.uasset",
+          "mappingIndex": 9,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_ShipForward",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_RightTriggerAxis",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Ship.uasset",
+          "mappingIndex": 2,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_ShipForward",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "W",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Ship.uasset",
+          "mappingIndex": 0,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_ShipRight",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_LeftX",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Ship.uasset",
+          "mappingIndex": 3,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_ShipRight",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "A",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Ship.uasset",
+          "mappingIndex": 4,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_ShipRight",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "D",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Ship.uasset",
+          "mappingIndex": 1,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_SkipTutorialUI",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_RightThumbstick",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 8,
+          "triggers": [
+            "InputTriggerDown"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_SkipTutorialUI2",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_LeftThumbstick",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 7,
+          "triggers": [
+            "InputTriggerChordAction",
+            "InputTriggerDown"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_SkipTutorialUI2",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "P",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 9,
+          "triggers": [
+            "InputTriggerPressed"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZCombatAsset/Input/IA_StatusInflictionDebug",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Eight",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 14,
+          "triggers": [
+            "InputTriggerPressed",
+            "InputTriggerChordAction"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZDeflectSystem/Input/IA_DeflectDebug",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Five",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 7,
+          "triggers": [
+            "InputTriggerPressed",
+            "InputTriggerChordAction"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZDeflectSystem/Input/IA_PerfectDodge",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_RightShoulder",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 18,
+          "triggers": [
+            "InputTriggerPressed"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZDeflectSystem/Input/IA_PerfectDodge",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "LeftShift",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 17,
+          "triggers": [
+            "InputTriggerPressed"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZInput/InputActions/IA_DebugSlomo",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_RightTrigger",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 1,
+          "triggers": [
+            "InputTriggerChordAction",
+            "InputTriggerPressed"
+          ]
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 3,
+          "triggers": [
+            "InputTriggerChordAction",
+            "InputTriggerReleased"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZInput/InputActions/IA_DebugSlomo",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Four",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 4,
+          "triggers": [
+            "InputTriggerPressed",
+            "InputTriggerChordAction"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZInput/InputActions/IA_DebugSlomo",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "NumPadThree",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 2,
+          "triggers": [
+            "InputTriggerPressed",
+            "InputTriggerReleased"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZInput/InputActions/IA_DebugUI",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_Special_Left",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 9,
+          "triggers": [
+            "InputTriggerChordAction",
+            "InputTriggerDown"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZInput/InputActions/IA_DebugUI",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "O",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 10,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZInput/InputActions/IA_DebugUI2",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_RightShoulder",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 11,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZInput/InputActions/IA_NegativeFrameDebug",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Seven",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 13,
+          "triggers": [
+            "InputTriggerPressed"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_LongPress",
+      "actions": [
+        "IA_ShadowArm_LongPress"
+      ],
+      "device": "KeyboardMouse",
+      "key": "LeftControl",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 31,
+          "triggers": [
+            "InputTriggerHold"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZInput/InputActions/IA_TakePhoto",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "P",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_HUDInput.uasset",
+          "mappingIndex": 1,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/PBZInput/InputActions/IA_TargetingDebug",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Six",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 12,
+          "triggers": [
+            "InputTriggerPressed",
+            "InputTriggerChordAction"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameAttributes/Input/IA_AttributeDebug",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Two",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 6,
+          "triggers": [
+            "InputTriggerPressed",
+            "InputTriggerChordAction"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameCombatSystem/Bullet/Input/IA_BulletDebug",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "One",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 5,
+          "triggers": [
+            "InputTriggerPressed",
+            "InputTriggerChordAction"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameCombatSystem/Targeting/IA_JoystickChangeLockTargetAxis",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_Right2D",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 10,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameCombatSystem/Targeting/IA_MouseChangeLockTargetAxis",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Mouse2D",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 11,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameCombatSystem/Targeting/IA_MouseChangeLockTargetNext",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "MouseScrollDown",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 22,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameCombatSystem/Targeting/IA_MouseChangeLockTargetPrevious",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "MouseScrollUp",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 23,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameCombatSystem/Weapon/Input/IA_ChangeWeapon",
+      "actions": [
+        "IA_SwitchWeapon"
+      ],
+      "device": "Gamepad",
+      "key": "Gamepad_DPad_Left",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyChangeWeapon.uasset",
+          "mappingIndex": 1,
+          "triggers": [
+            "InputTrigger_HoldAndReleaseEarly"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameCombatSystem/Weapon/Input/IA_ChangeWeapon",
+      "actions": [
+        "IA_SwitchWeapon"
+      ],
+      "device": "KeyboardMouse",
+      "key": "One",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyChangeWeapon.uasset",
+          "mappingIndex": 0,
+          "triggers": [
+            "InputTrigger_HoldAndReleaseEarly"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameCombatSystem/Weapon/Input/IA_ChangingWeapon",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_LeftTrigger",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_ChangeWeapon.uasset",
+          "mappingIndex": 4,
+          "triggers": [
+            "InputTriggerDown"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameCombatSystem/Weapon/Input/IA_ChangingWeapon",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_LeftTriggerAxis",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Default.uasset",
+          "mappingIndex": 10,
+          "triggers": [
+            "InputTriggerDown"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameExecution/Input/IA_ExecutionDebug",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Three",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 0,
+          "triggers": [
+            "InputTriggerPressed",
+            "InputTriggerChordAction"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_JoyStickLookInput",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_Right2D",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyLook.uasset",
+          "mappingIndex": 1,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Ship.uasset",
+          "mappingIndex": 5,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 1,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_JoystickMoveInput",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_Left2D",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 6,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_OnlyMove.uasset",
+          "mappingIndex": 4,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_KeyboardMoveInput",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "A",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 4,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_OnlyMove.uasset",
+          "mappingIndex": 2,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_KeyboardMoveInput",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "D",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 5,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_OnlyMove.uasset",
+          "mappingIndex": 3,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_KeyboardMoveInput",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Down",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 13,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_OnlyMove.uasset",
+          "mappingIndex": 6,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_KeyboardMoveInput",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Left",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 14,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_OnlyMove.uasset",
+          "mappingIndex": 7,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_KeyboardMoveInput",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Right",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 15,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_OnlyMove.uasset",
+          "mappingIndex": 8,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_KeyboardMoveInput",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "S",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 3,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_OnlyMove.uasset",
+          "mappingIndex": 1,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_KeyboardMoveInput",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Up",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 12,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_OnlyMove.uasset",
+          "mappingIndex": 5,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_KeyboardMoveInput",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "W",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 2,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_OnlyMove.uasset",
+          "mappingIndex": 0,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_MouseLookInput",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "Mouse2D",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_OnlyLook.uasset",
+          "mappingIndex": 0,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Ship.uasset",
+          "mappingIndex": 6,
+          "triggers": []
+        },
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 0,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_Sprint",
+      "actions": [
+        "IA_MoveFast"
+      ],
+      "device": "Gamepad",
+      "key": "Gamepad_RightShoulder",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Ship.uasset",
+          "mappingIndex": 7,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_Sprint",
+      "actions": [
+        "IA_MoveFast"
+      ],
+      "device": "KeyboardMouse",
+      "key": "LeftShift",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Content/PBZContent/Input/IMC_Ship.uasset",
+          "mappingIndex": 8,
+          "triggers": []
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameLocomotionDriver/Input/IA_SprintSwitch",
+      "actions": [],
+      "device": "Gamepad",
+      "key": "Gamepad_LeftThumbstick",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Locomotion.uasset",
+          "mappingIndex": 16,
+          "triggers": [
+            "InputTriggerPressed"
+          ]
+        }
+      ]
+    },
+    {
+      "inputAction": "/SGameUtils/Input/IA_DebugHold",
+      "actions": [],
+      "device": "KeyboardMouse",
+      "key": "LeftAlt",
+      "sources": [
+        {
+          "context": "ProjectPBZ/Plugins/Secret/PBZInput/Content/IMC_Debug.uasset",
+          "mappingIndex": 8,
+          "triggers": [
+            "InputTriggerDown"
+          ]
+        }
+      ]
+    }
+  ]
+}

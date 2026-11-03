@@ -66,8 +66,8 @@ public static class I18nTranslationTests
             Detect("es-ES", "es-ES"); Detect("es-MX", "es-419"); Detect("es-AR", "es-419");
             Detect("pt-PT", "pt-PT"); Detect("pt-BR", "pt-BR"); Detect("th-TH", "th"); Detect("vi-VN", "vi");
             Detect("ja-JP", "ja"); Detect("ko-KR", "ko"); Detect("ru-RU", "ru"); Detect("en-US", "en");
-            Assert(table["zh-Hans"]["act.IA_Sense_Default"] == "澄心伺隙", "Existing official Simplified Chinese action name changed");
-            Assert(table["zh-Hant"]["act.IA_Sense_Default"] == "澄心伺隙", "Traditional Chinese must preserve the official action term");
+            Assert(table["zh-Hans"]["act.IA_Sense_Default"] == "澄心洞照", "Simplified Chinese action name must match the game's controls screen");
+            Assert(table["zh-Hant"]["act.IA_Sense_Default"] == "澄心洞照", "Traditional Chinese must preserve the official action term");
             Assert(table["en"]["act.IA_Guard"] == "Block", "Existing official English action name changed");
             Assert(!table["pt-PT"]["editor.keyboard"].Contains("mouse") && table["pt-BR"]["editor.keyboard"].Contains("mouse"), "Portuguese regional computer terminology must remain distinct");
             Assert(!table["es-419"]["editor.keyboard"].Contains("ratón") && table["es-ES"]["editor.keyboard"].Contains("ratón"), "Spanish regional computer terminology must remain distinct");

@@ -5,13 +5,25 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using PBZKeyForge;
 
-// Compile with Gvas.cs, GameSchemeSettings.cs, I18n.cs, I18n.Editor.cs, Presets.cs and EditorSession.cs.
+// Compile with Gvas.cs, GameSchemeSettings.cs, I18n.cs, I18n.Editor.cs, I18n.Extended.cs, KeyboardDefaults.cs, Presets.cs and EditorSession.cs.
 // Every write is made to a freshly created fixture copy; original game saves are never inputs.
 public static class EditorSessionTests
 {
     const string Custom1 = "PBZ.KeyProfile.Custom1", Custom2 = "PBZ.KeyProfile.Custom2";
     static string fixture, root;
     static int assertions;
+    static readonly int[] GuardKeyboardSlots = { 0, 2, 4 };
+    static readonly int[] GuardGamepadSlots = { 1, 3 };
+
+    static int[] KeyboardSlots(SaveFile save, string profile, string action)
+    {
+        return InputDefaults.Slots(action, false, save.RecordFor(profile).Entries.Where(entry => entry.Name == action && entry.Slot < 7).Select(entry => (int)entry.Slot),
+            save.GamepadKeysFor(profile).SelectMany(keys => keys.Items).Where(item => SaveFile.Field(item, "MappingName") == action)
+                .Select(item => InputDefaults.RawSlot(SaveFile.Field(item, "Slot"))));
+    }
+
+    static int[] GamepadSlots(SaveFile save, string profile, Node keys, string action)
+    { return InputDefaults.RegisteredSlots(action, true); }
 
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     static extern bool CreateHardLink(string name, string existing, IntPtr security);
@@ -94,7 +106,7 @@ public static class EditorSessionTests
     static void ExternalPad(string path, string profile, string action, int slot, string value)
     {
         var save = SaveFile.Load(path);
-        string name = "EPlayerMappableKeySlot::" + Presets.GamepadSlots[slot];
+        string name = InputDefaults.SlotName(GamepadSlots(save, profile, save.GamepadKeysFor(profile).First(), action)[slot]);
         var item = save.GamepadKeysFor(profile).First().Items.First(entry => SaveFile.Field(entry, "MappingName") == action && SaveFile.Field(entry, "Slot") == name);
         SaveFile.SetField(item, "Key", value); save.Save(path);
     }
@@ -197,7 +209,7 @@ public static class EditorSessionTests
         {
             var item = PadFor(save)[index].Items.First(e => SaveFile.Field(e, "MappingName") == "IA_Guard");
             SaveFile.SetField(item, "Key", index == 0 ? "Gamepad_LeftShoulder" : "Gamepad_RightShoulder");
-            SaveFile.SetField(item, "DefaultKey", index == 0 ? "Gamepad_LeftShoulder" : "Gamepad_RightShoulder");
+            SaveFile.SetField(item, "DefaultKey", "Gamepad_LeftShoulder");
             var unknown = item.Select(SaveFile.CloneNode).ToList();
             SaveFile.SetField(unknown, "Slot", "EPlayerMappableKeySlot::UnknownFutureSlot");
             SaveFile.SetField(unknown, "Key", "UnknownPadKey"); PadFor(save)[index].Items.Add(unknown);
@@ -210,7 +222,7 @@ public static class EditorSessionTests
         var current = SaveFile.Load(path);
         Assert(SaveFile.Field(PadFor(current)[0].Items.First(e => SaveFile.Field(e, "MappingName") == "IA_Guard"), "Key") == "Gamepad_LeftShoulder", "unedited current-profile Xbox family preserved");
         Assert(SaveFile.Field(PadFor(current)[1].Items.First(e => SaveFile.Field(e, "MappingName") == "IA_Guard"), "Key") == "Gamepad_RightShoulder", "unedited same-profile second family remains different");
-        session.SelectPreset("onekey"); Assert(session.Apply().Success, "preset applies through session");
+        session.SelectPreset("onekey_dodge"); Assert(session.Apply().Success, "replacement preset applies through session");
         current = SaveFile.Load(path); guard = current.RecordFor(Custom1).Entries.First(e => e.Name == "IA_Guard" && e.Slot == 0);
         Assert(guard.X == "metadata-X" && guard.Y == "metadata-Y" && guard.Pad.SequenceEqual(new byte[] { 1, 2, 3, 4, 5 }), "preset changes binding key and preserves existing opaque metadata");
         Assert(current.RecordFor(Custom1).Entries.Any(e => e.Slot == 9 && e.Key == "UnknownKeyboardKey"), "preset preserves unsupported keyboard slot");
@@ -231,6 +243,34 @@ public static class EditorSessionTests
         Assert(beforeDefault.SequenceEqual(ProfileSnapshot(current, "InputUserSettings.Profiles.Default")) && beforeCustom2.SequenceEqual(ProfileSnapshot(current, Custom2)), "manual edit and clear preserve other profiles exactly");
         session.SwitchProfile(Custom1); session.SetKeyboard("IA_Guard", 0, null); Assert(session.Apply().Success, "clear keyboard override applies");
         Assert(Keyboard(path, Custom1, "IA_Guard", 0) == null, "clear removes override rather than binding empty string");
+    }
+
+    static void ExplicitUnbinding()
+    {
+        string path = NewInput("unbinding");
+        var before = SaveFile.Load(path);
+        AddFamily(before, Custom1, "PlayStation"); before.Save(path);
+        var session = Open(path);
+        session.SetKeyboard("IA_Guard", 0, "None");
+        session.SetKeyboard("IA_Guard", 1, "None");
+        session.SetGamepad("IA_Guard", 0, "None");
+        Assert(!session.IsGamepadDefault("IA_Guard", 0), "explicit unbinding differs from controller defaults");
+        session.SwitchProfile(Custom2); session.SwitchProfile(Custom1);
+        Assert(session.GetKeyboard("IA_Guard", 0) == "None" && session.GetGamepad("IA_Guard", 0) == "None", "unbound drafts survive navigation");
+        Assert(session.Apply().Success, "explicit unbinding applies");
+        var saved = SaveFile.Load(path);
+        Assert(Keyboard(path, Custom1, "IA_Guard", 0) == "None" && Keyboard(path, Custom1, "IA_Guard", 2) == "None", "unbinding preserves an explicit override for existing and missing keyboard slots");
+        Assert(PadFor(saved).All(keys => keys.Items.Where(item => SaveFile.Field(item, "MappingName") == "IA_Guard" && SaveFile.Field(item, "Slot") == "EPlayerMappableKeySlot::Second").All(item => SaveFile.Field(item, "Key") == "None")), "unbinding persists in each controller family");
+        Assert(ProfileSnapshot(before, Custom2).SequenceEqual(ProfileSnapshot(saved, Custom2)) && ProfileSnapshot(before, "InputUserSettings.Profiles.Default").SequenceEqual(ProfileSnapshot(saved, "InputUserSettings.Profiles.Default")), "unbinding preserves other schemes");
+        session = Open(path);
+        Assert(session.GetKeyboard("IA_Guard", 1) == "None" && session.GetGamepad("IA_Guard", 0) == "None", "reopening keeps explicit unbinding");
+        session.SetKeyboard("IA_Guard", 0, null); session.SetKeyboard("IA_Guard", 1, null);
+        session.SetGamepad("IA_Guard", 0, null);
+        Assert(session.IsGamepadDefault("IA_Guard", 0) && session.Apply().Success, "clear override restores controller defaults after unbinding");
+        before.RecordFor(Custom1).Entries.RemoveAll(entry => entry.Name == "IA_Guard" && (entry.Slot == 0 || entry.Slot == 2));
+        Assert(before.ToBytes().SequenceEqual(File.ReadAllBytes(path)), "restoring defaults removes keyboard overrides while preserving all other save data");
+        session.SetKeyboard("IA_Guard", 0, "None"); session.SetGamepad("IA_Guard", 0, "None"); session.Undo();
+        Assert(!session.HasAnyDrafts && session.GetKeyboard("IA_Guard", 0) == null, "undo cancels unbinding without writing");
     }
 
     static void ProfilePadMerging()
@@ -320,6 +360,7 @@ public static class EditorSessionTests
                 source.RecordFor(Custom1).Entries.Add(new BlobEntry { Name = action, Slot = 0, Key = "F9", X = "duplicate-X", Y = "duplicate-Y", Pad = new byte[] { 2, 4, 6, 8, 0 } });
                 source.RecordFor(Custom1).Entries.Add(new BlobEntry { Name = action, Slot = 2, Key = "F10", X = "other-slot-X", Y = "other-slot-Y" });
                 source.RecordFor(Custom1).Entries.Add(new BlobEntry { Name = action, Slot = 9, Key = "FutureKeyboardGuard", X = "unknown-X", Y = "unknown-Y" });
+                source.RecordFor(Custom1).Entries.Add(new BlobEntry { Name = action, Slot = 7, Key = "UnspecifiedKeyboardGuard", X = "unspecified-X", Y = "unspecified-Y" });
             }
             foreach (Node keys in PadFor(source))
                 foreach (string action in preset.Gamepad.Select(binding => binding.Action).Distinct())
@@ -331,7 +372,8 @@ public static class EditorSessionTests
                         var item = template.Select(SaveFile.CloneNode).ToList();
                         SaveFile.SetField(item, "Slot", "EPlayerMappableKeySlot::" + (index < 2 ? "Second" : index == 2 ? "Sixth" : "FutureSlot"));
                         SaveFile.SetField(item, "Key", index == 3 ? "FuturePadGuard" : "Gamepad_RightTrigger");
-                        SaveFile.SetField(item, "DefaultKey", "MetadataSentinel" + index); keys.Items.Add(item);
+                        int raw = InputDefaults.RawSlot(SaveFile.Field(item, "Slot"));
+                        SaveFile.SetField(item, "DefaultKey", raw >= 0 && InputDefaults.RegisteredSlots(action, true).Contains(raw) ? InputDefaults.ForRawSlot(action, true, raw) : "MetadataSentinel" + index); keys.Items.Add(item);
                     }
                 }
             byte[] sourceBytes = source.ToBytes();
@@ -340,15 +382,17 @@ public static class EditorSessionTests
                 for (int index = 0; index < 3; index++)
                 {
                     string key = group.Any(binding => binding.Slot == index) ? group.First(binding => binding.Slot == index).Key : group.First().Key;
-                    var matching = expected.RecordFor(Custom1).Entries.Where(entry => entry.Name == group.Key && entry.Slot == Presets.KeyboardSlots[index]).ToArray();
+                    var matching = expected.RecordFor(Custom1).Entries.Where(entry => entry.Name == group.Key && entry.Slot == KeyboardSlots(source, Custom1, group.Key)[index]).ToArray();
                     Assert(matching.Length > 0 && matching.All(entry => entry.Key == key), preset.Id + " replaces every duplicate supported keyboard slot and supplies missing slots");
                 }
             foreach (Node keys in PadFor(expected))
                 foreach (var group in preset.Gamepad.GroupBy(binding => binding.Action))
                     foreach (var item in keys.Items.Where(item => SaveFile.Field(item, "MappingName") == group.Key))
                     {
-                        int index = Array.IndexOf(Presets.GamepadSlots, SaveFile.Field(item, "Slot").Replace("EPlayerMappableKeySlot::", ""));
-                        string key = index < 0 ? "FuturePadGuard" : group.Any(binding => binding.Slot == index) ? group.First(binding => binding.Slot == index).Key : group.First().Key;
+                        int familyIndex = PadFor(expected).IndexOf(keys);
+                        int index = Array.IndexOf(GamepadSlots(source, Custom1, PadFor(source)[familyIndex], group.Key), InputDefaults.RawSlot(SaveFile.Field(item, "Slot")));
+                        var original = PadFor(source)[familyIndex].Items.FirstOrDefault(before => SaveFile.Field(before, "MappingName") == group.Key && SaveFile.Field(before, "Slot") == SaveFile.Field(item, "Slot"));
+                        string key = index < 0 ? SaveFile.Field(original, "Key") : group.Any(binding => binding.Slot == index) ? group.First(binding => binding.Slot == index).Key : group.First().Key;
                         Assert(SaveFile.Field(item, "Key") == key, preset.Id + " moves all supported pad slots and preserves unknown slot");
                     }
 
@@ -364,7 +408,7 @@ public static class EditorSessionTests
                 for (int index = 0; index < before.Entries.Count; index++)
                 {
                     BlobEntry original = before.Entries[index], current = after.Entries[index];
-                    bool editable = before.ProfileId == Custom1 && preset.Keyboard.Any(binding => binding.Action == original.Name) && Array.IndexOf(Presets.KeyboardSlots, (int)original.Slot) >= 0;
+                    bool editable = before.ProfileId == Custom1 && preset.Keyboard.Any(binding => binding.Action == original.Name) && Array.IndexOf(KeyboardSlots(source, before.ProfileId, original.Name), (int)original.Slot) >= 0;
                     Assert(editable || original.Key == current.Key, preset.Id + " preserves unknown and unrelated keyboard keys exactly");
                     current.Key = original.Key;
                 }
@@ -377,7 +421,7 @@ public static class EditorSessionTests
                 for (int index = 0; index < before.Items.Count; index++)
                 {
                     var original = before.Items[index];
-                    bool editable = source.GamepadProfiles[family].ProfileId == Custom1 && preset.Gamepad.Any(binding => binding.Action == SaveFile.Field(original, "MappingName")) && Array.IndexOf(Presets.GamepadSlots, SaveFile.Field(original, "Slot").Replace("EPlayerMappableKeySlot::", "")) >= 0;
+                    bool editable = source.GamepadProfiles[family].ProfileId == Custom1 && preset.Gamepad.Any(binding => binding.Action == SaveFile.Field(original, "MappingName")) && Array.IndexOf(GamepadSlots(source, source.GamepadProfiles[family].ProfileId, before, SaveFile.Field(original, "MappingName")), InputDefaults.RawSlot(SaveFile.Field(original, "Slot"))) >= 0;
                     Assert(editable || SaveFile.Field(original, "Key") == SaveFile.Field(after.Items[index], "Key"), preset.Id + " preserves unknown and unrelated controller keys exactly");
                     SaveFile.SetField(after.Items[index], "Key", SaveFile.Field(original, "Key"));
                 }
@@ -492,30 +536,31 @@ public static class EditorSessionTests
     static void ConfigureGuard(SaveFile save, string[] keyboard, Func<int, string[]> gamepad)
     {
         var record = save.RecordFor(Custom1);
-        record.Entries.RemoveAll(e => e.Name == "IA_Guard" && Array.IndexOf(Presets.KeyboardSlots, (int)e.Slot) >= 0);
+        record.Entries.RemoveAll(e => e.Name == "IA_Guard" && Array.IndexOf(GuardKeyboardSlots, (int)e.Slot) >= 0);
         for (int slot = 0; slot < 3; slot++)
-            if (keyboard[slot] != null) record.Entries.Add(new BlobEntry { Name = "IA_Guard", Slot = (byte)Presets.KeyboardSlots[slot], Key = keyboard[slot], X = "guard-metadata-" + slot, Y = "None", Pad = new byte[] { 5, 4, 3, 2, 1 } });
+            if (keyboard[slot] != null) record.Entries.Add(new BlobEntry { Name = "IA_Guard", Slot = (byte)GuardKeyboardSlots[slot], Key = keyboard[slot], X = "guard-metadata-" + slot, Y = "None", Pad = new byte[] { 5, 4, 3, 2, 1 } });
         for (int family = 0; family < save.GamepadKeys.Count; family++)
         {
             var keys = save.GamepadKeys[family];
             var template = keys.Items.First(item => SaveFile.Field(item, "MappingName") == "IA_Guard").Select(SaveFile.CloneNode).ToList();
-            keys.Items.RemoveAll(item => SaveFile.Field(item, "MappingName") == "IA_Guard" && Array.IndexOf(Presets.GamepadSlots, (SaveFile.Field(item, "Slot") ?? "").Replace("EPlayerMappableKeySlot::", "")) >= 0);
+            keys.Items.RemoveAll(item => SaveFile.Field(item, "MappingName") == "IA_Guard" && Array.IndexOf(GuardGamepadSlots, InputDefaults.RawSlot(SaveFile.Field(item, "Slot"))) >= 0);
             string[] wanted = gamepad(family);
-            for (int slot = 0; slot < 3; slot++)
+            for (int slot = 0; slot < GuardGamepadSlots.Length; slot++)
                 if (wanted[slot] != null)
                 {
                     var item = template.Select(SaveFile.CloneNode).ToList();
-                    SaveFile.SetField(item, "Slot", "EPlayerMappableKeySlot::" + Presets.GamepadSlots[slot]);
-                    SaveFile.SetField(item, "Key", wanted[slot]); keys.Items.Add(item);
+                    SaveFile.SetField(item, "Slot", InputDefaults.SlotName(GuardGamepadSlots[slot]));
+                    SaveFile.SetField(item, "Key", wanted[slot]);
+                    SaveFile.SetField(item, "DefaultKey", InputDefaults.ForRawSlot("IA_Guard", true, GuardGamepadSlots[slot])); keys.Items.Add(item);
                 }
         }
     }
 
     static string[] GuardKeyboard(SaveFile save)
-    { return save.RecordFor(Custom1).Entries.Where(e => e.Name == "IA_Guard" && Array.IndexOf(Presets.KeyboardSlots, (int)e.Slot) >= 0).Select(e => e.Key).ToArray(); }
+    { return save.RecordFor(Custom1).Entries.Where(e => e.Name == "IA_Guard" && Array.IndexOf(GuardKeyboardSlots, (int)e.Slot) >= 0).Select(e => e.Key).ToArray(); }
 
     static string[] GuardPad(Node keys)
-    { return keys.Items.Where(item => SaveFile.Field(item, "MappingName") == "IA_Guard" && Array.IndexOf(Presets.GamepadSlots, (SaveFile.Field(item, "Slot") ?? "").Replace("EPlayerMappableKeySlot::", "")) >= 0).Select(item => SaveFile.Field(item, "Key")).ToArray(); }
+    { return keys.Items.Where(item => SaveFile.Field(item, "MappingName") == "IA_Guard" && Array.IndexOf(GuardGamepadSlots, InputDefaults.RawSlot(SaveFile.Field(item, "Slot"))) >= 0).Select(item => SaveFile.Field(item, "Key")).ToArray(); }
 
     static bool ContainsBoth(string[] keys, string first, string second)
     { return keys.Contains(first) && keys.Contains(second); }
@@ -548,37 +593,16 @@ public static class EditorSessionTests
         Assert(PadFor(old).All(keys => keys.Items.Any(item => SaveFile.Field(item, "Key") == "FuturePadGuard")), "additive planning preserves unknown controller slots");
 
         var custom = SaveFile.Load(fixture); AddFamily(custom, Custom1, "PlayStation");
-        ConfigureGuard(custom, new[] { "RightMouseButton", "F8", "None" }, delegate(int family) { return family == 1 ? new[] { "Gamepad_LeftShoulder", "Gamepad_RightShoulder", "" } : new[] { "Gamepad_FaceButton_Left", "Gamepad_RightTrigger", "None" }; });
+        ConfigureGuard(custom, new[] { "RightMouseButton", "F8", "None" }, delegate { return new[] { "Gamepad_LeftShoulder", "None" }; });
         ApplyTarget(custom, onekey);
-        Assert(GuardKeyboard(custom).Contains("F8") && ContainsBoth(GuardKeyboard(custom), "RightMouseButton", "LeftMouseButton"), "distinct custom keyboard binding remains alongside both guard buttons");
-        Assert(GuardPad(PadFor(custom)[0]).Contains("Gamepad_RightShoulder") && GuardPad(PadFor(custom)[1]).Contains("Gamepad_RightTrigger"), "same-profile family-specific custom bindings remain distinct");
-        Assert(PadFor(custom).All(keys => ContainsBoth(GuardPad(keys), "Gamepad_LeftShoulder", "Gamepad_FaceButton_Left")), "None and empty bindings supply capacity in every family");
+        Assert(GuardKeyboard(custom).Contains("F8") && ContainsBoth(GuardKeyboard(custom), "RightMouseButton", "LeftMouseButton"), "custom keyboard binding remains alongside both guard buttons");
+        Assert(PadFor(custom).All(keys => ContainsBoth(GuardPad(keys), "Gamepad_LeftShoulder", "Gamepad_FaceButton_Left")), "empty registered controller slot supplies capacity");
 
-        var duplicate = SaveFile.Load(fixture);
-        ConfigureGuard(duplicate, new[] { "F8", "F8", "F8" }, delegate { return new[] { "Gamepad_RightShoulder", "Gamepad_RightShoulder", "Gamepad_RightShoulder" }; });
-        ApplyTarget(duplicate, onekey);
-        Assert(GuardKeyboard(duplicate).Contains("F8") && ContainsBoth(GuardKeyboard(duplicate), "RightMouseButton", "LeftMouseButton"), "redundant slots can supply two required buttons without dropping custom key");
-        Assert(PadFor(duplicate).All(keys => GuardPad(keys).Contains("Gamepad_RightShoulder") && ContainsBoth(GuardPad(keys), "Gamepad_LeftShoulder", "Gamepad_FaceButton_Left")), "redundant controller slots preserve existing unique key");
-
-        var multiEntry = SaveFile.Load(fixture); AddFamily(multiEntry, Custom1, "PlayStation");
-        ConfigureGuard(multiEntry, new[] { "F8", "F9", "F8" }, delegate { return new[] { "Gamepad_RightShoulder", "Gamepad_RightTrigger", "Gamepad_RightShoulder" }; });
-        multiEntry.RecordFor(Custom1).Entries.Add(new BlobEntry { Name = "IA_Guard", Slot = 4, Key = "F9", X = "shared-slot-custom", Y = "None" });
-        foreach (Node keys in multiEntry.GamepadKeys)
-        {
-            var item = keys.Items.First(entry => SaveFile.Field(entry, "MappingName") == "IA_Guard" && SaveFile.Field(entry, "Slot") == "EPlayerMappableKeySlot::Sixth").Select(SaveFile.CloneNode).ToList();
-            SaveFile.SetField(item, "Key", "Gamepad_RightTrigger"); keys.Items.Add(item);
-        }
-        byte[] multiEntryBefore = multiEntry.ToBytes();
-        ApplyTarget(multiEntry, onekey);
-        Assert(new[] { "F8", "F9", "RightMouseButton", "LeftMouseButton" }.All(GuardKeyboard(multiEntry).Contains), "planner retains multi-entry slot and uses the other slots for both required mouse buttons");
-        Assert(PadFor(multiEntry).All(keys => new[] { "Gamepad_RightShoulder", "Gamepad_RightTrigger", "Gamepad_LeftShoulder", "Gamepad_FaceButton_Left" }.All(GuardPad(keys).Contains)), "planner preserves multi-entry slot in every controller family");
-        Assert(multiEntry.RecordFor(Custom1).Entries.Any(entry => entry.Slot == 4 && entry.Key == "F9" && entry.X == "shared-slot-custom"), "multi-entry preservation keeps exact custom metadata");
-        byte[] multiEntryBytes = multiEntry.ToBytes();
-        Assert(multiEntryBytes.SequenceEqual(SaveFile.FromBytes(multiEntryBytes).ToBytes()), "multi-entry additive output roundtrips identically");
-        string multiEntryPath = NewInput("additive-multi-entry"); File.WriteAllBytes(multiEntryPath, multiEntryBefore);
-        var multiEntrySession = Open(multiEntryPath); multiEntrySession.SelectPreset("onekey");
-        Assert(multiEntrySession.Apply().Success, "GUI accepts feasible multi-entry guard assignment");
-        Assert(multiEntryBytes.SequenceEqual(File.ReadAllBytes(multiEntryPath)), "GUI and CLI retain corresponding multi-entry bindings and metadata");
+        var fullCustomPad = SaveFile.Load(fixture);
+        ConfigureGuard(fullCustomPad, new string[3], delegate { return new[] { "Gamepad_RightShoulder", "Gamepad_RightShoulder" }; });
+        byte[] fullCustomBefore = fullCustomPad.ToBytes(); bool fullCustomRejected = false;
+        try { ApplyTarget(fullCustomPad, onekey); } catch (InvalidOperationException) { fullCustomRejected = true; }
+        Assert(fullCustomRejected && fullCustomBefore.SequenceEqual(fullCustomPad.ToBytes()), "two registered controller slots cannot retain a custom key and add two more keys");
 
         var fullKeyboard = SaveFile.Load(fixture);
         ConfigureGuard(fullKeyboard, new[] { "F8", "F9", "F10" }, delegate { return new[] { "Gamepad_LeftShoulder", "Gamepad_LeftShoulder", "Gamepad_LeftShoulder" }; });
@@ -592,7 +616,7 @@ public static class EditorSessionTests
         Assert(rejected && fullBefore.SequenceEqual(fullPad.ToBytes()), "late-family capacity failure leaves earlier devices completely unchanged");
 
         string guiPath = NewInput("additive-gui-cli"); var guiSource = SaveFile.Load(fixture); AddFamily(guiSource, Custom1, "PlayStation");
-        ConfigureGuard(guiSource, new[] { "RightMouseButton", "F8", "None" }, delegate(int family) { return family == 1 ? new[] { "Gamepad_LeftShoulder", "Gamepad_RightShoulder", "" } : new[] { "Gamepad_FaceButton_Left", "Gamepad_RightTrigger", "None" }; });
+        ConfigureGuard(guiSource, new[] { "RightMouseButton", "F8", "None" }, delegate { return new[] { "Gamepad_LeftShoulder", "None" }; });
         guiSource.Save(guiPath);
         var expected = SaveFile.Load(guiPath); ApplyTarget(expected, onekey);
         var gui = Open(guiPath); gui.SelectPreset("onekey"); Assert(gui.HasChanges && gui.KeyboardChangeCount > 0 && gui.GamepadChangeCount > 0, "GUI materializes actual additive changes for both devices");
@@ -614,7 +638,142 @@ public static class EditorSessionTests
         ApplyTarget(replacing, Presets.ById("onekey_dodge"));
         Assert(GuardKeyboard(replacing).All(key => key == "LeftMouseButton") && PadFor(replacing).All(keys => GuardPad(keys).All(key => key == "Gamepad_FaceButton_Left")), "onekey_dodge retains explicit replacement semantics");
         Assert(replacing.RecordFor(Custom1).Entries.Any(e => e.Name == "IA_Dodge" && e.Key == "RightMouseButton") && PadFor(replacing).All(keys => keys.Items.Any(item => SaveFile.Field(item, "MappingName") == "IA_Dodge" && SaveFile.Field(item, "Key") == "Gamepad_LeftShoulder")), "onekey_dodge still moves old defense buttons to dodge");
+        Assert(PadFor(replacing).All(keys => keys.Items.Where(item => SaveFile.Field(item, "MappingName") == "IA_MoveFast").All(item => SaveFile.Field(item, "Key") == "Gamepad_LeftShoulder")), "onekey_dodge replaces the single registered sprint slot with LB");
         Assert(Presets.ById("undo_onekey") == null, "ambiguous partial-restore preset is removed");
+    }
+
+    static void RegisteredControllerDefaults()
+    {
+        string path = NewInput("registered-controller-defaults");
+        var save = SaveFile.Load(path);
+        var invalid = PadFor(save).First().Items.First(item => SaveFile.Field(item, "MappingName") == "IA_Crouch");
+        SaveFile.SetField(invalid, "DefaultKey", "Gamepad_RightShoulder");
+        SaveFile.SetField(invalid, "Key", "Gamepad_DPad_Up"); save.Save(path);
+        var session = Open(path);
+        Assert(session.GetGamepad("IA_Crouch", 0) == null && session.GetGamepadDefault("IA_Crouch", 0) == "Gamepad_LeftThumbstick", "a family row with another DefaultKey does not override the registered controller mapping");
+        session.SetGamepad("IA_Crouch", 0, "Gamepad_FaceButton_Top");
+        Assert(session.Apply().Success, "a registered slot with no matching family default can be added");
+        save = SaveFile.Load(path);
+        Assert(PadFor(save).First().Items.Any(item => SaveFile.Field(item, "MappingName") == "IA_Crouch" && SaveFile.Field(item, "DefaultKey") == "Gamepad_RightShoulder" && SaveFile.Field(item, "Key") == "Gamepad_DPad_Up"), "nonmatching family defaults remain byte-preserved raw records");
+        Assert(Open(path).GetGamepad("IA_Crouch", 0) == "Gamepad_FaceButton_Top", "the matching registered family default supplies the effective current value");
+        byte[] before = save.ToBytes();
+        var extra = new Preset { Id = "unregistered-pad-slot" };
+        extra.Gamepad.Add(new KeyBinding("IA_Guard", 2, "Gamepad_DPad_Up"));
+        bool rejected = false; try { Presets.Apply(save, extra, save.RecordFor(Custom1)); } catch (InvalidOperationException) { rejected = true; }
+        Assert(rejected && before.SequenceEqual(save.ToBytes()), "presets reject unregistered family-only controller slots atomically");
+        var malformed = SaveFile.Load(fixture);
+        foreach (Node keys in PadFor(malformed)) keys.Items.RemoveAll(item => SaveFile.Field(item, "MappingName") == "IA_MoveFast");
+        ApplyTarget(malformed, Presets.ById("onekey_dodge"));
+        Assert(PadFor(malformed).All(keys => keys.Items.Any(item => SaveFile.Field(item, "MappingName") == "IA_MoveFast" && SaveFile.Field(item, "Slot") == "EPlayerMappableKeySlot::Second" && SaveFile.Field(item, "DefaultKey") == "Gamepad_RightShoulder" && SaveFile.Field(item, "Key") == "Gamepad_LeftShoulder")), "replacement preset supplies a missing registered sprint family slot");
+    }
+
+    static void SharedBlobOwnership()
+    {
+        string path = NewInput("shared-blob-ownership");
+        var save = SaveFile.Load(path);
+        var record = save.RecordFor(Custom1);
+        record.Entries.Add(new BlobEntry { Name = "IA_Crouch", Slot = 0, Key = "F8", X = "None", Y = "None" });
+        SetKeyboard(save, Custom1, "IA_Crouch", 1, "C");
+        save.Save(path);
+        var session = Open(path);
+        Assert(session.GetKeyboard("IA_Crouch", 0) == "C" && session.GetKeyboardRawSlot("IA_Crouch", 0) == 1, "a keyboard-valued Blob override of controller raw slot 0 remains controller-owned");
+        Assert(session.GetGamepad("IA_Crouch", 0) == "Gamepad_LeftThumbstick", "the active family CurrentKey takes precedence over the shared Blob override");
+        Assert(!Enumerable.Range(0, 3).Select(index => session.GetKeyboard("IA_Crouch", index)).Contains("F8"), "shared controller overrides never appear as keyboard bindings");
+        session.SetKeyboard("IA_Crouch", 0, "F9"); session.SetGamepad("IA_Crouch", 0, "Gamepad_FaceButton_Top");
+        Assert(session.KeyboardChangeCount == 1 && session.GamepadChangeCount == 1, "each device's edit is counted in its own draft scope");
+        Assert(session.Apply().Success, "shared Blob and family edits apply");
+        save = SaveFile.Load(path);
+        Assert(save.RecordFor(Custom1).Entries.Any(entry => entry.Name == "IA_Crouch" && entry.Slot == 0 && entry.Key == "F8" && entry.X == "None" && entry.Y == "None" && entry.Pad.All(value => value == 0)), "family edits preserve the original shared controller override and hardware metadata");
+        Assert(save.RecordFor(Custom1).Entries.Any(entry => entry.Name == "IA_Crouch" && entry.Slot == 1 && entry.Key == "F9"), "keyboard edits target the real keyboard registration");
+        session = Open(path); session.ResetAll();
+        Assert(session.Apply().Success, "global reset removes shared controller overrides through their Blob storage");
+        Assert(!SaveFile.Load(path).RecordFor(Custom1).Entries.Any(entry => entry.Name == "IA_Crouch"), "global reset clears both Blob device categories");
+        Assert(Open(path).GetGamepad("IA_Crouch", 0) == "Gamepad_LeftThumbstick", "global reset restores the controller family default");
+
+        path = NewInput("shared-blob-missing-family-slot"); save = SaveFile.Load(path);
+        save.RecordFor(Custom1).Entries.Add(new BlobEntry { Name = "IA_Crouch", Slot = 0, Key = "None", X = "None", Y = "None" });
+        foreach (Node keys in PadFor(save)) keys.Items.RemoveAll(item => SaveFile.Field(item, "MappingName") == "IA_Crouch");
+        save.Save(path); session = Open(path);
+        Assert(session.GetKeyboard("IA_Crouch", 0) == null && session.GetKeyboardDefault("IA_Crouch", 0) == "C", "missing family rows do not reclassify shared controller overrides as keyboard slots");
+        Assert(session.GetGamepadDefault("IA_Crouch", 0) == "Gamepad_LeftThumbstick", "a missing family row inherits the projected controller default instead of Blob None");
+        session.SetGamepad("IA_Crouch", 0, "Gamepad_FaceButton_Top");
+        Assert(session.Apply().Success && Open(path).GetGamepad("IA_Crouch", 0) == "Gamepad_FaceButton_Top", "a missing family slot can be edited without altering its shared Blob override");
+    }
+
+    static void LimitedSlotCapacity()
+    {
+        string path = NewInput("limited-keyboard-slots");
+        var save = SaveFile.Load(path);
+        foreach (Node keys in PadFor(save))
+        {
+            var template = keys.Items.First(item => SaveFile.Field(item, "MappingName") == "IA_Jump");
+            for (int raw = 2; raw <= 6; raw++)
+            {
+                var item = template.Select(SaveFile.CloneNode).ToList();
+                SaveFile.SetField(item, "Slot", InputDefaults.SlotName(raw));
+                SaveFile.SetField(item, "DefaultKey", "None"); keys.Items.Add(item);
+            }
+        }
+        save.Save(path);
+        var session = Open(path);
+        Assert(session.HasKeyboardSlot("IA_Jump", 0) && !session.HasKeyboardSlot("IA_Jump", 1), "keyboard reports only the raw slots remaining after controller ownership");
+        Assert(session.GetKeyboard("IA_Jump", 1) == null && session.GetKeyboardDefault("IA_Jump", 1) == null && session.GetKeyboardRawSlot("IA_Jump", 1) == -1, "unavailable keyboard columns have no binding, default or raw slot");
+        bool rejected = false;
+        try { session.SetKeyboard("IA_Jump", 1, "F8"); } catch (InvalidOperationException) { rejected = true; }
+        Assert(rejected && !session.HasAnyDrafts, "editing an unavailable keyboard column reports capacity without a draft");
+        byte[] before = save.ToBytes();
+        var preset = new Preset { Id = "limited-capacity-test" };
+        preset.Keyboard.Add(new KeyBinding("IA_Jump", 0, "F8")); preset.Keyboard.Add(new KeyBinding("IA_Jump", 1, "F9"));
+        rejected = false;
+        try { Presets.Apply(save, preset, save.RecordFor(Custom1)); } catch (InvalidOperationException) { rejected = true; }
+        Assert(rejected && before.SequenceEqual(save.ToBytes()), "presets reject unavailable keyboard columns before changing bindings");
+
+        path = NewInput("limited-controller-slots"); save = SaveFile.Load(path);
+        for (int raw = 2; raw <= 6; raw++) SetKeyboard(save, Custom1, "IA_Jump", raw, "F8");
+        save.Save(path); session = Open(path);
+        Assert(session.HasGamepadSlot("IA_Jump", 0) && !session.HasGamepadSlot("IA_Jump", 1), "controller reports only its remaining registered raw slot");
+        Assert(session.GetGamepad("IA_Jump", 1) == null && session.GetGamepadDefault("IA_Jump", 1) == null && session.GetGamepadRawSlot("IA_Jump", 1) == -1, "unavailable controller columns return no value without indexing beyond capacity");
+        rejected = false;
+        try { session.SetGamepad("IA_Jump", 1, "Gamepad_DPad_Up"); } catch (InvalidOperationException) { rejected = true; }
+        Assert(rejected && !session.HasAnyDrafts, "editing an unavailable controller column reports capacity without a draft");
+    }
+
+    static void ResourceSlotRoundtrip()
+    {
+        Assert(InputDefaults.RawSlot("EPlayerMappableKeySlot::Unspecified") == 7 && InputDefaults.SlotName(7) == "EPlayerMappableKeySlot::Unspecified", "slot 7 retains the native Unspecified enum identity");
+        Assert(InputDefaults.Slots("IA_Guard", false, new[] { 7 }, new int[0]).SequenceEqual(new[] { 0, 2, 4 }), "Unspecified keyboard records do not occupy ordinary editing slots");
+        Assert(InputDefaults.Slots("IA_Guard", true, new[] { 7 }, new int[0]).SequenceEqual(new[] { 1, 3, 5 }), "Unspecified controller records do not occupy ordinary editing slots");
+        Assert(InputDefaults.Slots("IA_Jump", false, new int[0], new[] { 1, 2, 3, 4, 5, 6 }).SequenceEqual(new[] { 0 }), "exhausted real slots never allocate Unspecified as an extra slot");
+        string path = NewInput("resource-slots");
+        var session = Open(path);
+        foreach (string action in new[] { "IA_Crouch", "IA_OpenCharacterMenu", "IA_UseBottomItem", "IA_UseTopItem" })
+        {
+            Assert(session.GetKeyboardRawSlot(action, 0) == 1 && session.GetGamepadRawSlot(action, 0) == 0, action + " uses resource registration order rather than device parity");
+            session.SetKeyboard(action, 0, "F8");
+            session.SetGamepad(action, 0, "Gamepad_FaceButton_Top");
+        }
+        Assert(session.GetKeyboardDefault("IA_Guard", 2) == "None" && !session.HasGamepadSlot("IA_Guard", 2) && session.GetGamepadDefault("IA_Guard", 2) == null, "only keyboard can allocate an extra guard slot without a factory registration");
+        Assert(Enumerable.Range(0, 3).Select(index => session.GetGamepadRawSlot("IA_ShadowArm", index)).SequenceEqual(new[] { 1, 2, 3 }), "all three registered shadow-arm controller slots remain editable");
+        bool rejected = false; try { session.SetGamepad("IA_Guard", 2, "Gamepad_DPad_Up"); } catch (InvalidOperationException) { rejected = true; }
+        Assert(rejected && !session.IsGamepadChanged("IA_Guard", 2), "unregistered controller slot creation rejects without a draft");
+        var result = session.Apply(); Assert(result.Success, "resource slot edits apply: " + result.Error);
+        var saved = SaveFile.Load(path);
+        foreach (string action in new[] { "IA_Crouch", "IA_OpenCharacterMenu", "IA_UseBottomItem", "IA_UseTopItem" })
+        {
+            Assert(saved.RecordFor(Custom1).Entries.Any(entry => entry.Name == action && entry.Slot == 1 && entry.Key == "F8"), action + " keyboard edit preserves raw slot 1");
+            Assert(PadFor(saved).All(keys => keys.Items.Any(item => SaveFile.Field(item, "MappingName") == action && SaveFile.Field(item, "Slot") == "EPlayerMappableKeySlot::First" && SaveFile.Field(item, "Key") == "Gamepad_FaceButton_Top")), action + " controller edit preserves raw slot 0");
+        }
+        Assert(PadFor(saved).All(keys => !keys.Items.Any(item => SaveFile.Field(item, "MappingName") == "IA_Guard" && SaveFile.Field(item, "Slot") == "EPlayerMappableKeySlot::Sixth")), "rejected extra controller slots are not serialized");
+        var extraTemplate = PadFor(saved).First().Items.First(item => SaveFile.Field(item, "MappingName") == "IA_Guard").Select(SaveFile.CloneNode).ToList();
+        SaveFile.SetField(extraTemplate, "Slot", "EPlayerMappableKeySlot::Sixth");
+        SaveFile.SetField(extraTemplate, "DefaultKey", "None"); SaveFile.SetField(extraTemplate, "Key", "Gamepad_DPad_Up");
+        PadFor(saved).First().Items.Add(extraTemplate); saved.Save(path);
+        var reopened = Open(path);
+        Assert(reopened.GetKeyboard("IA_Crouch", 0) == "F8" && reopened.GetGamepad("IA_Crouch", 0) == "Gamepad_FaceButton_Top", "non-parity edits survive reopening");
+        Assert(!reopened.HasGamepadSlot("IA_Guard", 2) && reopened.GetGamepad("IA_Guard", 2) == null, "saved unregistered controller rows remain outside ordinary editing columns");
+        reopened.SetKeyboard("IA_Jump", 0, "F9"); Assert(reopened.Apply().Success, "unrelated edit preserves extra controller rows");
+        Assert(SaveFile.Load(path).GamepadKeysFor(Custom1).First().Items.Any(item => SaveFile.Field(item, "MappingName") == "IA_Guard" && SaveFile.Field(item, "Slot") == "EPlayerMappableKeySlot::Sixth" && SaveFile.Field(item, "DefaultKey") == "None" && SaveFile.Field(item, "Key") == "Gamepad_DPad_Up"), "saved extra controller row keeps its raw metadata");
+
     }
 
     public static int Main(string[] args)
@@ -626,7 +785,7 @@ public static class EditorSessionTests
             root = Path.Combine(Path.GetTempPath(), "PBZKeyForge-editor-tests-" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(root);
             Assert(original.SequenceEqual(SaveFile.Load(fixture).ToBytes()), "new byte API preserves fixture roundtrip");
-            RefreshAndConflicts(); ScopeAndSwitch(); Preview(); ScopedPadAndMetadata(); ProfilePadMerging(); ProfilePresetAndUnsupportedData(); PresetMetadataParity(); ResetAndRace(); AdditiveGuardPresets();
+            RefreshAndConflicts(); ScopeAndSwitch(); Preview(); ScopedPadAndMetadata(); ExplicitUnbinding(); ProfilePadMerging(); ProfilePresetAndUnsupportedData(); PresetMetadataParity(); ResetAndRace(); AdditiveGuardPresets(); ResourceSlotRoundtrip(); LimitedSlotCapacity(); SharedBlobOwnership(); RegisteredControllerDefaults();
             if (args.Length >= 3) AuthenticatedApplication(args[1], args[2]);
             Assert(original.SequenceEqual(File.ReadAllBytes(fixture)), "original fixture unchanged");
             Console.WriteLine("EditorSessionTests PASS: " + assertions + " assertions; copies: " + root);

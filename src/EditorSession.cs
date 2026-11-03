@@ -23,7 +23,7 @@ namespace PBZKeyForge
     }
 
     /// <summary>Owns disk snapshots, binding drafts and transactional application scope.</summary>
-    public sealed class EditorSession
+    public sealed partial class EditorSession
     {
         sealed class Cell
         {
@@ -184,7 +184,7 @@ namespace PBZKeyForge
         public string GetKeyboard(string action, int slotIndex)
         {
             CheckSlot(slotIndex);
-            return Current(KeyboardAddress(action, slotIndex));
+            return HasKeyboardSlot(action, slotIndex) ? Current(KeyboardAddress(action, slotIndex)) : null;
         }
 
         public string GetGamepad(string action, int slotIndex)
@@ -197,7 +197,24 @@ namespace PBZKeyForge
         public string GetGamepadDefault(string action, int slotIndex)
         {
             Cell cell = PadAddresses(action, slotIndex, false).FirstOrDefault();
-            return cell == null ? null : cell.DefaultKey;
+            int rawSlot = GetGamepadRawSlot(action, slotIndex);
+            return rawSlot < 0 ? null : InputDefaults.ForRawSlot(action, true, rawSlot);
+        }
+
+        public string GetGamepadDefault(string action, int slotIndex, int familyIndex)
+        {
+            CheckSlot(slotIndex);
+            Cell owner = cells.Values.FirstOrDefault(c => c.IsGamepad && c.Profile == SelectedProfile && c.FamilyIndex == familyIndex);
+            if (owner == null) return null;
+            int[] slots = PadRawSlots(SelectedProfile, owner.Family, action);
+            if (slotIndex >= slots.Length) return null;
+            return InputDefaults.ForRawSlot(action, true, slots[slotIndex]);
+        }
+
+        public bool IsGamepadDefault(string action, int slotIndex)
+        {
+            CheckSlot(slotIndex);
+            return PadAddresses(action, slotIndex, false).All(cell => Current(cell) == cell.DefaultKey);
         }
 
         public bool GamepadValuesDiffer(string action, int slotIndex)
@@ -233,12 +250,15 @@ namespace PBZKeyForge
 
         Cell KeyboardAddress(string action, int slotIndex)
         {
-            string slot = Presets.KeyboardSlots[slotIndex].ToString();
+            int[] slots = KeyboardRawSlots(SelectedProfile, action);
+            if (slotIndex >= slots.Length) throw new InvalidOperationException(I18n.Str("preset.capacity", I18n.Str("tab.kb")));
+            string slot = slots[slotIndex].ToString();
             string id = KeyboardId(SelectedProfile, action, slot, 0);
             Cell cell;
             if (!addresses.TryGetValue(id, out cell))
             {
-                cell = new Cell { Id = id, Profile = SelectedProfile, Action = action, Slot = slot, SlotIndex = slotIndex, FamilyIndex = -1 };
+                cell = new Cell { Id = id, Profile = SelectedProfile, Action = action, Slot = slot, SlotIndex = slotIndex, FamilyIndex = -1,
+                    DefaultKey = InputDefaults.ForRawSlot(action, false, int.Parse(slot)) };
                 addresses[id] = cell;
             }
             return cell;
@@ -246,25 +266,65 @@ namespace PBZKeyForge
 
         IEnumerable<Cell> PadAddresses(string action, int slotIndex, bool create)
         {
-            string slot = "EPlayerMappableKeySlot::" + Presets.GamepadSlots[slotIndex];
             var result = new List<Cell>();
-            foreach (var group in cells.Values.Where(c => c.IsGamepad && c.Profile == SelectedProfile).GroupBy(c => c.Family))
+            foreach (var group in cells.Values.Where(c => c.IsGamepad && c.Family != null && c.Profile == SelectedProfile).GroupBy(c => c.Family))
             {
-                Cell template = group.FirstOrDefault(c => c.Action == action);
-                if (template == null) continue;
-                string id = PadId(group.Key, action, slot, 0);
-                Cell cell;
-                if (!addresses.TryGetValue(id, out cell))
+                Cell template = group.FirstOrDefault(c => c.Action == action) ?? group.First();
+                int[] slots = PadRawSlots(SelectedProfile, group.Key, action);
+                if (slotIndex >= slots.Length) continue;
+                string slot = InputDefaults.SlotName(slots[slotIndex]);
+                string defaultKey = InputDefaults.ForRawSlot(action, true, slots[slotIndex]);
+                Cell cell = addresses.Values.FirstOrDefault(candidate => candidate.Family == group.Key && candidate.Action == action && candidate.Slot == slot && candidate.DefaultKey == defaultKey);
+                if (cell == null)
                 {
                     if (!create) continue;
+                    int ordinal = addresses.Values.Count(candidate => candidate.Family == group.Key && candidate.Action == action && candidate.Slot == slot);
+                    string id = PadId(group.Key, action, slot, ordinal);
                     cell = new Cell { Id = id, Profile = SelectedProfile, IsGamepad = true, Action = action, Slot = slot, SlotIndex = slotIndex, FamilyIndex = template.FamilyIndex,
-                        Family = group.Key, DefaultKey = template.DefaultKey, Keys = template.Keys, Item = template.Item };
+                        Family = group.Key, DefaultKey = defaultKey, Keys = template.Keys, Item = template.Item };
                     addresses[id] = cell;
                 }
                 result.Add(cell);
             }
             return result;
         }
+
+        int[] KeyboardRawSlots(string profile, string action)
+        {
+            return InputDefaults.Slots(action, false,
+                cells.Values.Where(cell => cell.Profile == profile && cell.Action == action && !cell.IsGamepad).Select(cell => int.Parse(cell.Slot)),
+                cells.Values.Where(cell => cell.Profile == profile && cell.Action == action && cell.IsGamepad).Select(cell => InputDefaults.RawSlot(cell.Slot)));
+        }
+
+        int[] PadRawSlots(string profile, string family, string action)
+        { return InputDefaults.RegisteredSlots(action, true); }
+
+        public bool HasKeyboardSlot(string action, int slotIndex)
+        { CheckSlot(slotIndex); return slotIndex < KeyboardRawSlots(SelectedProfile, action).Length; }
+
+        public bool HasGamepadSlot(string action, int slotIndex)
+        { return GetGamepadRawSlot(action, slotIndex) >= 0; }
+
+        public bool HasGamepadSlot(string action, int slotIndex, int familyIndex)
+        {
+            CheckSlot(slotIndex);
+            Cell owner = cells.Values.FirstOrDefault(cell => cell.IsGamepad && cell.Profile == SelectedProfile && cell.FamilyIndex == familyIndex);
+            return owner != null && slotIndex < PadRawSlots(SelectedProfile, owner.Family, action).Length;
+        }
+
+        public int GetKeyboardRawSlot(string action, int slotIndex)
+        { CheckSlot(slotIndex); int[] slots = KeyboardRawSlots(SelectedProfile, action); return slotIndex < slots.Length ? slots[slotIndex] : -1; }
+
+        public int GetGamepadRawSlot(string action, int slotIndex)
+        {
+            CheckSlot(slotIndex);
+            Cell template = cells.Values.FirstOrDefault(cell => cell.Profile == SelectedProfile && cell.Action == action && cell.IsGamepad && cell.Family != null);
+            int[] slots = template == null ? InputDefaults.RegisteredSlots(action, true) : PadRawSlots(SelectedProfile, template.Family, action);
+            return slotIndex < slots.Length ? slots[slotIndex] : -1;
+        }
+
+        public string GetKeyboardDefault(string action, int slotIndex)
+        { CheckSlot(slotIndex); return HasKeyboardSlot(action, slotIndex) ? KeyboardAddress(action, slotIndex).DefaultKey : null; }
 
         void EnsureEditable()
         {
@@ -273,7 +333,9 @@ namespace PBZKeyForge
 
         public void SetKeyboard(string action, int slotIndex, string key)
         {
-            EnsureEditable(); CheckSlot(slotIndex); EndPreview();
+            EnsureEditable(); CheckSlot(slotIndex);
+            if (!HasKeyboardSlot(action, slotIndex)) throw new InvalidOperationException(I18n.Str("preset.capacity", I18n.Str("tab.kb")));
+            EndPreview();
             Cell primary = KeyboardAddress(action, slotIndex);
             var targets = cells.Values.Where(c => !c.IsGamepad && c.Profile == SelectedProfile && c.Action == action && c.Slot == primary.Slot).ToArray();
             if (targets.Length == 0) targets = new[] { primary };
@@ -282,7 +344,9 @@ namespace PBZKeyForge
 
         public void SetGamepad(string action, int slotIndex, string key)
         {
-            EnsureEditable(); CheckSlot(slotIndex); EndPreview();
+            EnsureEditable(); CheckSlot(slotIndex);
+            if (!HasGamepadSlot(action, slotIndex)) throw new InvalidOperationException(I18n.Str("preset.capacity", I18n.Str("tab.pad")));
+            EndPreview();
             foreach (Cell cell in PadAddresses(action, slotIndex, key != null))
                 Edit(cell, string.IsNullOrWhiteSpace(key) ? (cell.DefaultKey ?? Current(cell)) : key.Trim());
         }
@@ -361,7 +425,7 @@ namespace PBZKeyForge
             }
         }
 
-        static string ResetValue(Cell cell) { return cell.IsGamepad ? (cell.DefaultKey ?? cell.Key) : null; }
+        static string ResetValue(Cell cell) { return cell.Entry != null || !cell.IsGamepad ? null : (cell.DefaultKey ?? cell.Key); }
 
         public void Undo()
         {
@@ -479,7 +543,7 @@ namespace PBZKeyForge
                 Cell descriptor = Address(edit.Key), target;
                 if (outputCells.TryGetValue(edit.Key, out target))
                 {
-                    if (!target.IsGamepad)
+                    if (target.Entry != null)
                     {
                         if (edit.Value == null) target.Record.Entries.Remove(target.Entry);
                         else target.Entry.Key = edit.Value;
@@ -495,11 +559,14 @@ namespace PBZKeyForge
                 }
                 else if (edit.Value != null)
                 {
-                    Cell template = outputCells.Values.FirstOrDefault(c => c.IsGamepad && c.Profile == descriptor.Profile && c.Family == descriptor.Family && c.Action == descriptor.Action);
+                    Cell template = outputCells.Values.FirstOrDefault(c => c.IsGamepad && c.Profile == descriptor.Profile && c.Family == descriptor.Family && c.Action == descriptor.Action)
+                        ?? outputCells.Values.FirstOrDefault(c => c.IsGamepad && c.Profile == descriptor.Profile && c.Family == descriptor.Family);
                     if (template == null) throw new InvalidDataException("The edited controller family was removed externally.");
                     var item = template.Item.Select(SaveFile.CloneNode).ToList();
+                    SaveFile.SetField(item, "MappingName", descriptor.Action);
                     SaveFile.SetField(item, "Slot", descriptor.Slot);
                     SaveFile.SetField(item, "Key", edit.Value);
+                    SaveFile.SetField(item, "DefaultKey", descriptor.DefaultKey ?? "None");
                     template.Keys.Items.Add(item);
                 }
             }
@@ -533,9 +600,12 @@ namespace PBZKeyForge
                     string group = entry.Name + "\u001f" + entry.Slot;
                     int ordinal;
                     occurrences.TryGetValue(group, out ordinal); occurrences[group] = ordinal + 1;
-                    string id = KeyboardId(record.ProfileId, entry.Name, entry.Slot.ToString(), ordinal);
+                    bool gamepad = Presets.IsGamepadOverride(save.GamepadKeysFor(record.ProfileId), entry);
+                    string id = (gamepad ? "B" : "K") + KeyboardId(record.ProfileId, entry.Name, entry.Slot.ToString(), ordinal).Substring(1);
                     map[id] = new Cell { Id = id, Profile = record.ProfileId, Action = entry.Name, Key = entry.Key,
-                        Slot = entry.Slot.ToString(), SlotIndex = Array.IndexOf(Presets.KeyboardSlots, (int)entry.Slot), FamilyIndex = -1, Entry = entry, Record = record };
+                        IsGamepad = gamepad, Slot = gamepad ? InputDefaults.SlotName(entry.Slot) : entry.Slot.ToString(),
+                        DefaultKey = InputDefaults.ForRawSlot(entry.Name, gamepad, entry.Slot),
+                        SlotIndex = gamepad ? -1 : Array.IndexOf(KeyboardRawSlots(save, record, entry.Name), (int)entry.Slot), FamilyIndex = -1, Entry = entry, Record = record };
                 }
             }
             var familyOccurrences = new Dictionary<string, int>();
@@ -555,12 +625,23 @@ namespace PBZKeyForge
                         int ordinal;
                         occurrences.TryGetValue(group, out ordinal); occurrences[group] = ordinal + 1;
                         string id = PadId(identity, action, slot, ordinal);
-                        map[id] = new Cell { Id = id, Profile = profile.ProfileId, IsGamepad = true, Action = action, Slot = slot, SlotIndex = Array.IndexOf(Presets.GamepadSlots, slot.Replace("EPlayerMappableKeySlot::", "")),
-                            Family = identity, FamilyIndex = profile.Index, Key = SaveFile.Field(item, "Key"), DefaultKey = SaveFile.Field(item, "DefaultKey"), Keys = keys, Item = item };
+                        map[id] = new Cell { Id = id, Profile = profile.ProfileId, IsGamepad = true, Action = action, Slot = slot, SlotIndex = SaveFile.Field(item, "DefaultKey") == InputDefaults.ForRawSlot(action, true, InputDefaults.RawSlot(slot)) ? Array.IndexOf(PadRawSlots(save, profile, action), InputDefaults.RawSlot(slot)) : -1,
+                        Family = identity, FamilyIndex = profile.Index, Key = SaveFile.Field(item, "Key"), DefaultKey = SaveFile.Field(item, "DefaultKey"), Keys = keys, Item = item };
                     }
                 }
             return map;
         }
+
+        static int[] KeyboardRawSlots(SaveFile save, BlobRecord record, string action)
+        {
+            List<Node> gamepad = save.GamepadKeysFor(record.ProfileId);
+            return InputDefaults.Slots(action, false, record.Entries.Where(entry => entry.Name == action && !Presets.IsGamepadOverride(gamepad, entry)).Select(entry => (int)entry.Slot),
+                gamepad.SelectMany(keys => keys.Items).Where(item => SaveFile.Field(item, "MappingName") == action).Select(item => InputDefaults.RawSlot(SaveFile.Field(item, "Slot")))
+                    .Concat(record.Entries.Where(entry => entry.Name == action && Presets.IsGamepadOverride(gamepad, entry)).Select(entry => (int)entry.Slot)));
+        }
+
+        static int[] PadRawSlots(SaveFile save, GamepadProfile profile, string action)
+        { return InputDefaults.RegisteredSlots(action, true); }
 
         static string FamilyIdentity(List<Node> family)
         {

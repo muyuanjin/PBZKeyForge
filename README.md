@@ -49,11 +49,16 @@ Keyboard and gamepad drafts both belong to the selected scheme. Applying saves t
 
 **B. A ready-made preset** — copy one file from `presets\` over `EnhancedInputUserSettings.sav`, then in game select the scheme named in the file name. These are plain settings files, no executable involved; pick this if you would rather not run a tool.
 
+**By key** shows a clickable keyboard and mouse together. Number badges count actions: gray for factory mappings, amber for saved customization, red for pending changes. Controller face-button and D-pad badges spread outward; LT/RT include both axis and digital inputs. Select a key to edit its actions on the right. The full-width bottom panel compares the entire scheme with either its saved state or factory defaults, including controller changes. Each row shows additions first, retained keys next, and gray struck-through removals last. Click its binding content to cycle through combined, changes-only, result-only and before views. **By action** lists factory keys and editable slots. Both perspectives share the same draft.
+
+Choose **Unbound** to write an explicit empty binding for a slot. **Default**, blank input, and **Clear override** restore that slot’s factory value. The dialog identifies **Default | actual key** or **Default | Unbound**; table cells show concrete keys, with empty slots shown as a quiet dash and binding status available on hover. Both the full action key set and the raw slot defaults come from the supported game’s input resources. The fixed Ctrl hold mapping for Phantom Edges remains active independently of editable slots. See [default binding sources and limits](docs/input-defaults.md).
+
 ## Presets
 
 | Preset | What it does |
 | --- | --- |
 | `onekey` | Adds guard to left mouse / X while keeping right mouse / LB and other existing guard bindings. |
+| `mouse_guard` | Keyboard / mouse only: left mouse light attack + guard; right mouse heavy attack + guard; F remains heavy attack. Replaces these three actions' bindings. |
 | `onekey_dodge` | Moves guard to left mouse / X; right mouse / LB become dodge + sprint. Replaces the affected actions' bindings. |
 | `souls` | Souls-style gamepad: light RB, heavy RT, guard LB, dodge/sprint A, interact/execute Y. |
 | `space_sprint` | Adds Space as a second sprint key; Shift stays. |
@@ -121,7 +126,7 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 - **一个键多个动作**：防御并到攻击键、闪避并到防御键，随便配。
 - **认方案**：可选编辑 `默认 / 自定义方案 1 / 自定义方案 2`，并能在工具里直接把某个方案设为游戏当前生效方案。
-- **7 个预设**：一键攻防、一键攻防+防御键改闪避、魂系手柄布局、空格冲刺、空格闪避、撤销一键攻防、恢复默认。
+- **快速配置**：一键攻防、左右键攻防（保留 F 重攻击）、一键攻防+防御键改闪避、魂系手柄布局、空格冲刺、空格闪避、恢复当前方案默认。
 - **15 种语言**：简中、繁中、英、日、韩、法、德、西班牙西语、拉美西语、巴西葡语、葡萄牙葡语、俄、意、泰、越，覆盖游戏的界面语言；自动识别系统语言，也能在工具栏切换。
 - **不丢键位**：留空的格子保持游戏默认；没碰到的内容按原字节写回。
 - **写入安全**：游戏必须退出、先打时间戳备份、写完回读校验。
@@ -138,6 +143,10 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 - **现成预设文件**：把 `presets\` 里对应文件覆盖到 `EnhancedInputUserSettings.sav`，进游戏选文件名里的那个方案。纯配置、不含可执行文件，介意杀毒的同学用这个。
 
 ### 重要提醒
+
+“按键视图”将可点击的键盘和鼠标放在一起，点击按键后在右侧编辑功能。数字徽标表示功能数：灰色为原厂一致、橙色为已保存自定义、红色为待应用。手柄面键和十字键的徽标向四周分布，LT／RT 同时包含轴输入和数字输入。底部横跨两栏显示整个方案的变化，包含键鼠和手柄，可切换与修改前或原厂对比。每行默认按“新增 → 保留 → 灰色删除线移除”展示，点击绑定内容可循环切换绑定变化、纯变化、纯结果、原本。“动作视图”按动作列出原厂按键与可编辑槽位。两种视图共享草稿，切换不会保存。
+
+修改绑定时选择“无绑定”可明确解绑该槽；“默认”、输入留空和“清除覆盖”均恢复该槽的原厂值。弹窗明确显示“默认 | 具体按键”或“默认 | 无绑定”；表格直接显示具体按键，空槽以短横线弱化，悬停可查看绑定状态。动作级原厂按键集合和逐槽默认值均来自受支持游戏版本的输入资源。影之武装长按的固定 Ctrl 映射独立于可编辑槽，清空槽位不会取消它。详见[默认键来源与限制](docs/input-defaults.md)。
 
 - **不要**在用完之后进游戏打开键位界面点"应用"或"恢复默认"，游戏会整份重写、把这些键位冲掉；真冲掉了重新套一次即可。
 - 同类会替换 `EnhancedInputUserSettings.sav` 的 mod 只能同时装一个。

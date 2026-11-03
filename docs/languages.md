@@ -24,7 +24,7 @@ PBZKeyForge provides all 15 interface languages listed for **Phantom Blade Zero*
 
 When adding or changing a string, update every language, preserve its format placeholders, and check narrow layouts. French, German and Portuguese labels can be wider; Thai requires an appropriate Windows font fallback.
 
-Run the independent dictionary, placeholder and region-detection checks from the repository root:
+Language sweeps are excluded from routine verification. For targeted localization work, run the independent dictionary, placeholder and region-detection checks from the repository root:
 
 ```powershell
 $translationOutput = Join-Path $env:TEMP 'pbz-editor-model-tests'
@@ -34,3 +34,5 @@ New-Item -ItemType Directory -Path $translationOutput -Force | Out-Null
 ```
 
 The test checks each dictionary directly so English fallback cannot hide a missing translation. It covers every string key, including dialogs, presets, legacy entries and window controls.
+
+Integration harnesses test Simplified Chinese by default. Append `--all-languages` to the relevant harness only when checking translated layouts or behavior across all 15 languages.

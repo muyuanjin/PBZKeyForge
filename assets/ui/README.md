@@ -16,10 +16,4 @@ Rebuild from the repository root with Python and Pillow:
 python build\prepare-ui-assets.py --scene "<path-to-source-wallpaper>"
 ```
 
-To use another copy of the same original image:
-
-```powershell
-python build\prepare-ui-assets.py --scene "<path-to-source-wallpaper>"
-```
-
 The script validates source dimensions because its extraction coordinates apply to the 6000 × 3700 original. `--scene` must be supplied explicitly; `--icon` and `--output` can override their repository-relative defaults. Generating these assets uses local files only.
