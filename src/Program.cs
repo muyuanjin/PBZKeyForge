@@ -6,7 +6,7 @@ namespace PBZKeyForge
 {
     public static class Program
     {
-        public const string Version = "1.0.0";
+        public static readonly string Version = typeof(Program).Assembly.GetName().Version.ToString(3);
 
         [STAThread]
         public static int Main(string[] args)

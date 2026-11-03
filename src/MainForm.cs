@@ -534,12 +534,19 @@ namespace PBZKeyForge
         }
         void ShowMore()
         {
-            if (moreMenu != null) moreMenu.Close();
+            if (moreMenu == null) moreMenu = CreateMoreMenu();
+            foreach (ToolStripItem item in moreMenu.Items)
+                if (item is ToolStripMenuItem) item.Text = I18n.Str(item.Name);
+            moreMenu.Items["editor.resetall"].Enabled = Session != null && !Session.IsResetPending;
+            moreMenu.Show(btnMore, new Point(btnMore.Width - moreMenu.PreferredSize.Width, btnMore.Height));
+        }
+
+        ContextMenuStrip CreateMoreMenu()
+        {
             var menu = new ContextMenuStrip { Font = Font, BackColor = EditorTheme.Floating, ForeColor = EditorTheme.Ink,
                 Renderer = new ToolStripProfessionalRenderer(new EditorMenuColors()), ShowImageMargin = false, Padding = new Padding(5) };
-            moreMenu = menu;
-            menu.Items.Add(I18n.Str("editor.changefile"), null, delegate { Browse(); });
-            menu.Items.Add(I18n.Str("editor.rediscover"), null, delegate { AutoFind(true); });
+            menu.Items.Add(I18n.Str("editor.changefile"), null, delegate { Browse(); }).Name = "editor.changefile";
+            menu.Items.Add(I18n.Str("editor.rediscover"), null, delegate { AutoFind(true); }).Name = "editor.rediscover";
             menu.Items.Add(new ToolStripSeparator());
             var reset = menu.Items.Add(I18n.Str("editor.resetall"), null, delegate
             {
@@ -552,17 +559,18 @@ namespace PBZKeyForge
                 }
                 finally { modalActive = false; }
             });
-            reset.Enabled = Session != null && !Session.IsResetPending;
+            reset.Name = "editor.resetall";
             menu.Items.Add(I18n.Str("editor.openbackup"), null, delegate
             {
                 try { Process.Start("explorer.exe", GameSchemeSettings.BackupDirectory()); }
                 catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); RenderSession(); }
-            });
+            }).Name = "editor.openbackup";
             menu.Items.Add(new ToolStripSeparator());
-            menu.Items.Add(I18n.Str("btn.about"), null, delegate { modalActive = true; try { EditorDialogs.Show(this, I18n.Str("about.text"), "PBZKeyForge " + Program.Version, MessageBoxButtons.OK); } finally { modalActive = false; } });
+            menu.Items.Add(I18n.Str("btn.about"), null, delegate { modalActive = true; try { EditorDialogs.Show(this, I18n.Str("about.text"), "PBZKeyForge " + Program.Version, MessageBoxButtons.OK); } finally { modalActive = false; } }).Name = "btn.about";
             foreach (ToolStripItem item in menu.Items) item.Padding = new Padding(10, 6, 10, 6);
-            menu.Closed += delegate { moreMenu = null; menu.Dispose(); };
-            menu.Show(btnMore, new Point(btnMore.Width - menu.PreferredSize.Width, btnMore.Height));
+            // WinForms still uses the menu after Closed while dispatching an item click.
+            // Keep it alive across openings; MainForm.Dispose owns its lifetime.
+            return menu;
         }
 
         public void UiSmoke(string path) { OpenPath(path); }
