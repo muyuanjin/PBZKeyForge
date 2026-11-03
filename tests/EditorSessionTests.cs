@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -201,7 +201,7 @@ public static class EditorSessionTests
         string path = NewInput("metadata"); var save = SaveFile.Load(path);
         Assert(save.GamepadProfiles.Count == 3 && save.GamepadProfiles.All(profile => profile.Family == "Xbox"), "real fixture has three Xbox records, not three device families");
         Assert(save.GamepadProfiles.Select(profile => profile.ProfileId).SequenceEqual(save.Records.Select(record => record.ProfileId)), "each fixture gamepad record explicitly belongs to one keyboard profile");
-        AddFamily(save, Custom1, "PlayStation");
+        AddFamily(save, Custom1, "PS");
         var guard = save.RecordFor(Custom1).Entries.First(e => e.Name == "IA_Guard" && e.Slot == 0);
         guard.X = "metadata-X"; guard.Y = "metadata-Y"; guard.Pad = new byte[] { 1, 2, 3, 4, 5 };
         save.RecordFor(Custom1).Entries.Add(new BlobEntry { Name = "IA_Guard", Slot = 9, Key = "UnknownKeyboardKey", X = "unknown", Y = "None" });
@@ -249,7 +249,7 @@ public static class EditorSessionTests
     {
         string path = NewInput("unbinding");
         var before = SaveFile.Load(path);
-        AddFamily(before, Custom1, "PlayStation"); before.Save(path);
+        AddFamily(before, Custom1, "PS"); before.Save(path);
         var session = Open(path);
         session.SetKeyboard("IA_Guard", 0, "None");
         session.SetKeyboard("IA_Guard", 1, "None");
@@ -293,7 +293,10 @@ public static class EditorSessionTests
         session.SetKeyboard("IA_Jump", 0, "F9"); Assert(session.Apply().Success, "hidden other-profile conflict does not block current apply");
         session.SwitchProfile(Custom1);
         Assert(session.Conflicts.Single().Id == conflict.Id && session.GetGamepad("IA_Guard", 0) == "Gamepad_RightShoulder", "returning restores previous profile's pad conflict and local draft");
-        session.ResolveConflict(conflict.Id, false); Assert(!session.HasChanges, "adopting game resolves only the selected pad conflict");
+        session.ResolveConflict(conflict.Id, false);
+        Assert(session.Conflicts.Length == 0 && session.GamepadChangeCount == 1
+            && session.Relations("IA_Guard", true, session.ControllerFamilies.Single(family => family.Name == "PS").Index).Keys.Contains("Gamepad_RightShoulder"),
+            "adopting the Xbox change resolves its conflict and preserves the independent PlayStation draft");
 
         string previewPath = NewInput("profile-pad-preview"); var preview = Open(previewPath);
         preview.SetGamepad("IA_Jump", 0, "Gamepad_RightShoulder");
@@ -355,7 +358,7 @@ public static class EditorSessionTests
     {
         foreach (Preset preset in Presets.All().Where(item => !item.Vanilla && !item.AdditiveGuard))
         {
-            var source = SaveFile.Load(fixture); AddFamily(source, Custom1, "PlayStation");
+            var source = SaveFile.Load(fixture); AddFamily(source, Custom1, "PS");
             foreach (string action in preset.Keyboard.Select(binding => binding.Action).Distinct())
             {
                 source.RecordFor(Custom1).Entries.RemoveAll(entry => entry.Name == action);
@@ -617,9 +620,12 @@ public static class EditorSessionTests
         Assert(PadFor(old).All(keys => ContainsBoth(GuardPad(keys), "Gamepad_LeftShoulder", "Gamepad_FaceButton_Left")), "legacy all-X controller repairs LB defense");
         Assert(old.RecordFor(Custom1).Entries.Where(e => e.Slot != 9 && e.Name == "IA_Guard").All(e => e.X.StartsWith("guard-metadata-") && e.Pad.SequenceEqual(new byte[] { 5, 4, 3, 2, 1 })), "reusing duplicate slots preserves entry metadata");
         Assert(old.RecordFor(Custom1).Entries.Any(e => e.Slot == 9 && e.Key == "FutureKeyboardGuard"), "additive planning preserves unknown keyboard slot");
-        Assert(PadFor(old).All(keys => keys.Items.Any(item => SaveFile.Field(item, "Key") == "FuturePadGuard")), "additive planning preserves unknown controller slots");
+        Assert(old.GamepadProfiles.Where(family => family.ProfileId == Custom1 && family.Family == "Xbox")
+            .All(family => family.Keys.Items.Any(item => SaveFile.Field(item, "Key") == "FuturePadGuard")), "additive planning preserves existing unknown controller slots");
+        Assert(old.GamepadProfiles.Single(family => family.ProfileId == Custom1 && family.Family == "PS").Keys.Items
+            .All(item => SaveFile.Field(item, "Key") != "FuturePadGuard"), "a new controller family does not inherit another family's unknown overrides");
 
-        var custom = SaveFile.Load(fixture); AddFamily(custom, Custom1, "PlayStation");
+        var custom = SaveFile.Load(fixture); AddFamily(custom, Custom1, "PS");
         ConfigureGuard(custom, new[] { "RightMouseButton", "F8", "None" }, delegate { return new[] { "Gamepad_LeftShoulder", "None" }; });
         ApplyTarget(custom, onekey);
         Assert(GuardKeyboard(custom).Contains("F8") && ContainsBoth(GuardKeyboard(custom), "RightMouseButton", "LeftMouseButton"), "custom keyboard binding remains alongside both guard buttons");
@@ -636,13 +642,13 @@ public static class EditorSessionTests
         byte[] fullBefore = fullKeyboard.ToBytes(); bool rejected = false;
         try { ApplyTarget(fullKeyboard, onekey); } catch (InvalidOperationException) { rejected = true; }
         Assert(rejected && fullBefore.SequenceEqual(fullKeyboard.ToBytes()), "full keyboard capacity rejects atomically without discarding distinct keys");
-        var fullPad = SaveFile.Load(fixture); AddFamily(fullPad, Custom1, "PlayStation");
+        var fullPad = SaveFile.Load(fixture); AddFamily(fullPad, Custom1, "PS");
         ConfigureGuard(fullPad, new string[3], delegate(int family) { return family == 3 ? new[] { "Gamepad_RightShoulder", "Gamepad_RightTrigger", "Gamepad_FaceButton_Top" } : new[] { "Gamepad_LeftShoulder", "Gamepad_LeftShoulder", "Gamepad_LeftShoulder" }; });
         fullBefore = fullPad.ToBytes(); rejected = false;
         try { ApplyTarget(fullPad, onekey); } catch (InvalidOperationException) { rejected = true; }
         Assert(rejected && fullBefore.SequenceEqual(fullPad.ToBytes()), "late-family capacity failure leaves earlier devices completely unchanged");
 
-        string guiPath = NewInput("additive-gui-cli"); var guiSource = SaveFile.Load(fixture); AddFamily(guiSource, Custom1, "PlayStation");
+        string guiPath = NewInput("additive-gui-cli"); var guiSource = SaveFile.Load(fixture); AddFamily(guiSource, Custom1, "PS");
         ConfigureGuard(guiSource, new[] { "RightMouseButton", "F8", "None" }, delegate { return new[] { "Gamepad_LeftShoulder", "None" }; });
         guiSource.Save(guiPath);
         var expected = SaveFile.Load(guiPath); ApplyTarget(expected, onekey);
@@ -677,7 +683,7 @@ public static class EditorSessionTests
         SaveFile.SetField(invalid, "DefaultKey", "Gamepad_RightShoulder");
         SaveFile.SetField(invalid, "Key", "Gamepad_DPad_Up"); save.Save(path);
         var session = Open(path);
-        Assert(session.GetGamepad("IA_Crouch", 0) == null && session.GetGamepadDefault("IA_Crouch", 0) == "Gamepad_LeftThumbstick", "a family row with another DefaultKey does not override the registered controller mapping");
+        Assert(session.GetGamepad("IA_Crouch", 0) == "Gamepad_LeftThumbstick" && session.GetGamepadDefault("IA_Crouch", 0) == "Gamepad_LeftThumbstick", "a family row with another DefaultKey inherits the registered controller mapping");
         session.SetGamepad("IA_Crouch", 0, "Gamepad_FaceButton_Top");
         Assert(session.Apply().Success, "a registered slot with no matching family default can be added");
         save = SaveFile.Load(path);
@@ -707,7 +713,7 @@ public static class EditorSessionTests
         Assert(session.GetGamepad("IA_Crouch", 0) == "Gamepad_LeftThumbstick", "the active family CurrentKey takes precedence over the shared Blob override");
         Assert(!Enumerable.Range(0, 3).Select(index => session.GetKeyboard("IA_Crouch", index)).Contains("F8"), "shared controller overrides never appear as keyboard bindings");
         session.SetKeyboard("IA_Crouch", 0, "F9"); session.SetGamepad("IA_Crouch", 0, "Gamepad_FaceButton_Top");
-        Assert(session.KeyboardChangeCount == 1 && session.GamepadChangeCount == 1, "each device's edit is counted in its own draft scope");
+        Assert(session.KeyboardChangeCount == 1 && session.GamepadChangeCount == 2, "keyboard and both supported controller families are counted in their draft scopes");
         Assert(session.Apply().Success, "shared Blob and family edits apply");
         save = SaveFile.Load(path);
         Assert(save.RecordFor(Custom1).Entries.Any(entry => entry.Name == "IA_Crouch" && entry.Slot == 0 && entry.Key == "F8" && entry.X == "None" && entry.Y == "None" && entry.Pad.All(value => value == 0)), "family edits preserve the original shared controller override and hardware metadata");

@@ -51,6 +51,15 @@ jobs:
           ./dist/PresetPackageTests.exe ./samples/vanilla-base.sav ./presets-out ./dist/preset-package-check
           if ($LASTEXITCODE -ne 0) { throw "Preset files differ from the editor" }
 
+      - name: Verify offline and missing-controller editing
+        shell: pwsh
+        run: |
+          $compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          & $compiler /nologo /out:dist\OfflineControllerTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll tests\OfflineControllerTests.cs
+          if ($LASTEXITCODE -ne 0) { throw "Offline test compilation failed" }
+          ./dist/OfflineControllerTests.exe ./samples/vanilla-base.sav ./dist/offline-controller-check
+          if ($LASTEXITCODE -ne 0) { throw "Offline editing checks failed" }
+
       - name: Verify round-trip on the shipped base file
         shell: pwsh
         run: |

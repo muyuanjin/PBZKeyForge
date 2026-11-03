@@ -33,6 +33,14 @@ public static class BindingViewsTests
     }
     static Control Diagram(MainForm form)
     { Application.DoEvents(); return Descendants(Field<Control>(form, "keyBindings")).Single(c => c.GetType().Name == "DeviceDiagram"); }
+    static void UnobstructedDiagram(MainForm form)
+    {
+        var view = Field<Control>(form, "keyBindings");
+        var diagram = Diagram(form);
+        var hint = Field<Control>(view, "hint");
+        Assert(diagram.Top >= hint.Bottom && !diagram.Bounds.IntersectsWith(hint.Bounds),
+            "The device canvas must start below the instruction label.");
+    }
     static void Badge(MainForm form, string key, int count, Color color)
     {
         form.RenderSession(); var states = Field<IDictionary>(Diagram(form), "states"); object state = states[key];
@@ -141,7 +149,8 @@ public static class BindingViewsTests
             shaped.Props.First(n => n.Name == "GamepadFamilyProfiles").Items.Add(familyFields); shaped.Save(path);
             session = EditorSession.Open(path); session.SwitchProfile(custom);
             var families = session.ControllerFamilies;
-            Assert(families.Length == 2, "Controller families must stay separate within the selected scheme.");
+            Assert(families.Select(f => f.Name).OrderBy(name => name).SequenceEqual(new[] { "DualSense", "PS", "Xbox" }),
+                "Saved families and the missing supported family must stay separate within the selected scheme.");
             Assert(session.Relations(Guard, true, families[1].Index).DefaultKeys.SequenceEqual(new[] { "Gamepad_LeftShoulder" }), "Controller factory defaults must come from registered resources.");
             var firstKeys = session.BindingRecords(true, families[0].Index).Select(r => r.Key).ToArray();
             session.ChangeRelationship(Guard, "Gamepad_RightShoulder", false, true, families[1].Index);
@@ -212,6 +221,7 @@ public static class BindingViewsTests
                 Assert(form.Session.Relations(Guard, false, -1).Keys.Contains("G"), "Action draft missing after key navigation.");
                 var keyView = Field<Control>(form, "keyBindings");
                 var keyboardDiagram = Descendants(keyView).Single(c => c.GetType().Name == "DeviceDiagram");
+                UnobstructedDiagram(form);
                 var targets = Field<System.Collections.Generic.Dictionary<string, RectangleF>>(keyboardDiagram, "targets");
                 Assert(targets.ContainsKey("LeftMouseButton") && targets.ContainsKey("LeftControl"), "Keyboard and mouse must be clickable on the same canvas.");
                 var keyboardImage = Field<System.Collections.Generic.Dictionary<string, RectangleF>>(keyboardDiagram, "imageBounds")["keyboard"];
@@ -253,6 +263,7 @@ public static class BindingViewsTests
                     Shot(form, Path.Combine(root, "keys-" + I18n.Languages[lang] + ".png"));
                     form.ShowActionView(true); Shot(form, Path.Combine(root, "actions-" + I18n.Languages[lang] + ".png"));
                     form.Size = form.MinimumSize; form.ShowActionView(false); Application.DoEvents();
+                    UnobstructedDiagram(form);
                     Inside(form, Field<Control>(form, "keyBindings")); Inside(form, Field<Button>(form, "btnApply"));
                     var minimumDiagram = Descendants(keyView).Single(c => c.GetType().Name == "DeviceDiagram");
                     var images = Field<System.Collections.Generic.Dictionary<string, RectangleF>>(minimumDiagram, "imageBounds");
@@ -264,6 +275,7 @@ public static class BindingViewsTests
                 form.Size = regular; Field<ComboBox>(form, "cbLang").SelectedIndex = 0; form.ShowGamepad(true);
                 var familyCombo = Field<ComboBox>(form, "cbFamily"); familyCombo.SelectedIndex = 1;
                 Assert(form.SelectedFamilyIndex == families[1].Index, "UI family selector chose the wrong record.");
+                UnobstructedDiagram(form);
                 Shot(form, Path.Combine(root, "gamepad-keys.png"));
                 form.ShowActionView(true); Shot(form, Path.Combine(root, "gamepad-actions.png"));
                 Assert(beforeUi.SequenceEqual(File.ReadAllBytes(path)), "Navigation or preview wrote the input save.");

@@ -85,7 +85,7 @@ namespace PBZKeyForge
             MinimizeBox = false; MaximizeBox = false;
             BackColor = EditorTheme.Background; ForeColor = EditorTheme.Ink;
             var help = new Label { Left = 20, Top = Caption.Height + 14, Width = 910, Height = 58,
-                Text = I18n.Str("help.summary"), ForeColor = EditorTheme.Muted };
+                Text = I18n.Str(session.IsOffline ? "offline.recordshelp" : "help.summary"), ForeColor = EditorTheme.Muted };
             var question = new BindingHelpButton("help.slots") { Left = 950, Top = help.Top, Height = 32 };
             actions.SetBounds(20, Caption.Height + 78, 960, 180);
             actions.Columns.Add(I18n.Str("col.action"), 220);
@@ -129,7 +129,7 @@ namespace PBZKeyForge
                             records.Add(new BindingRecord { Action = action, Slot = "", Key = key, DefaultKey = key });
                         foreach (var record in records.OrderBy(r => r.Slot))
                         {
-                            string status = I18n.Str(record.Id == null ? "help.inheritshort" : record.Changed ? "views.pending" : record.DefaultKey == null ? "editor.defaultunknown"
+                            string status = I18n.Str(record.Id == null ? "help.inheritshort" : record.Changed ? session.IsOffline ? "offline.pending" : "views.pending" : record.DefaultKey == null ? "editor.defaultunknown"
                                 : record.Key == record.DefaultKey ? "views.original" : "views.savedcustom");
                             var item = new ListViewItem(new[] { BindingButton.FriendlyKey(record.Key),
                                 record.DefaultKey == null ? I18n.Str("editor.defaultunknown") : BindingButton.FriendlyKey(record.DefaultKey), status }) { Tag = record };
@@ -154,7 +154,7 @@ namespace PBZKeyForge
                         bool custom = relation.DefaultKeys != null && !relation.Keys.OrderBy(k => k).SequenceEqual(relation.DefaultKeys.OrderBy(k => k));
                         var item = new ListViewItem(new[] { BindingViewText.ActionName(action), BindingViewText.Keys(relation.Keys),
                             relation.DefaultKeys == null ? I18n.Str("editor.defaultunknown") : BindingViewText.Keys(relation.DefaultKeys),
-                            I18n.Str(relation.Changed ? "views.pending" : custom ? "views.savedcustom" : "views.original") }) { Tag = action };
+                            I18n.Str(relation.Changed ? session.IsOffline ? "offline.pending" : "views.pending" : custom ? "views.savedcustom" : "views.original") }) { Tag = action };
                         actions.Items.Add(item); if (action == selectedAction) item.Selected = true;
                     }
                     if (actions.SelectedItems.Count == 0 && actions.Items.Count > 0) actions.Items[0].Selected = true;
@@ -207,7 +207,7 @@ namespace PBZKeyForge
                     e.Graphics.FillRectangle(brush, e.Bounds);
                 Color color = EditorTheme.Ink;
                 if (e.ColumnIndex == Columns.Count - 1)
-                    color = e.SubItem.Text == I18n.Str("views.pending") ? BindingStatus.Pending
+                    color = e.SubItem.Text == I18n.Str("views.pending") || e.SubItem.Text == I18n.Str("offline.pending") ? BindingStatus.Pending
                         : e.SubItem.Text == I18n.Str("views.savedcustom") ? BindingStatus.Custom : BindingStatus.Factory;
                 else if (e.ColumnIndex == Columns.Count - 2) color = EditorTheme.Muted;
                 TextRenderer.DrawText(e.Graphics, e.SubItem.Text, Font, Rectangle.Inflate(e.Bounds, -8, 0), color,

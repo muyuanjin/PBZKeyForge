@@ -30,6 +30,26 @@ python build\extract-input-defaults.py --game-exe <platform\steam\PBZ.exe> --pak
 
 `InputDefaults.Slots(action, gamepad, existingSlots, otherDeviceSlots)` 将已注册槽和已有保存槽映射到工具的三个逻辑编辑列，并选择可用的额外槽。调用 `EditorSession.GetKeyboardRawSlot` 或 `GetGamepadRawSlot` 获取当前列的真实槽号；不要将列号当 raw slot，也不要套用固定的 `0/2/4` 或 `1/3/5`。
 
+## 手柄家族与离线基线
+
+支持构建的标准存储家族是 `Xbox`、`PS`、`NS`、`Other`。PlayStation
+界面名称和 `SteamInput_PS4` / `SteamInput_PS5` 等设备名称经原生
+`0x14688ebc0` 规范化为 `PS` 后进入投影；不要把 `PlayStation`、`PS4`、
+`PS5` 或 `DualSense` 直接当作标准 Family 写入。具体分支、常量地址及进入
+保存投影的调用链见[手柄方案证据](../../../docs/gamepad-profile-evidence.md)。
+
+设备选择不应依赖已连接硬件或存档是否已有家族记录。工具可以从内置原厂表
+提供键鼠、Xbox、PlayStation 的编辑基线；缺少游戏、存档或手柄只影响应用到
+游戏，不影响预设编辑与导出。缺少的家族记录可从随程序发布的基线克隆 GVAS
+结构，设置目标 `ProfileId` 与标准 Family，以原厂表的已注册手柄 raw slot
+建立 `MappingName`、`Slot`、`DefaultKey`、`Key`，初始 `Key` 等于该槽
+`DefaultKey`。不能把另一家族的当前自定义键当作新家族的原厂键。
+实际输出手柄改动时将 `GamepadFamilyStorageVersion` 写为 1，包括新增家族和
+已有空家族的编辑；已有记录的未知字段保持原样。原生构造先将版本初始化为
+0、家族数组初始化为空。版本缺失或为 0 时，首次投影会先以共享当前键重写
+目标家族，再将版本置 1，因此不能只补家族数组而漏掉版本。仅浏览、无编辑
+导出或只编辑键鼠时保留原版本。构造和替换分支的地址见上述证据文档。
+
 ## 合并默认与覆盖
 
 先按 `(ProfileId, mapping, rawSlot, hardware)` 定位共享 profile 覆盖，再按最终原厂注册确定键鼠／手柄槽归属。Blob 的 X/Y/Pad5 保存硬件描述符，不能用当前 `Key` 的类别代替归属。对原厂键鼠槽，存在共享覆盖则使用覆盖 `Key`，否则使用该槽默认；保留固定映射。显式 `None` 表示解绑，不能当成缺失覆盖。额外保存条目仍保留，已知动作未注册的槽默认是 `None`，未知动作的默认值为未知。

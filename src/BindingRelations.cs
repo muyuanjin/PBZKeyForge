@@ -15,7 +15,7 @@ namespace PBZKeyForge
     {
         public int Index;
         public string Name;
-        public override string ToString() { return Name + " [" + (Index + 1) + "]"; }
+        public override string ToString() { return Name == "PS" ? "PlayStation" : Name; }
     }
 
     public sealed class ActionRelations
@@ -59,8 +59,8 @@ namespace PBZKeyForge
     {
         public ControllerFamily[] ControllerFamilies
         {
-            get { return disk.GamepadProfiles.Where(p => p.ProfileId == SelectedProfile)
-                .Select(p => new ControllerFamily { Index = p.Index, Name = p.Family }).ToArray(); }
+            get { return cells.Values.Where(cell => cell.IsGamepad && cell.Profile == SelectedProfile && cell.FamilyName != null)
+                .GroupBy(cell => cell.FamilyIndex).Select(group => new ControllerFamily { Index = group.Key, Name = group.First().FamilyName }).ToArray(); }
         }
 
         public BindingRecord[] BindingRecords(bool gamepad, int familyIndex)

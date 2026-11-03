@@ -12,12 +12,12 @@ public static class PresetPackageTests
     static string MarkdownCell(string text)
     { return text.Replace("|", "&#124;").Replace("\r", "").Replace("\n", "<br>"); }
 
-    static void CompareDevice(EditorSession expected, EditorSession actual, bool pad, int family, string context)
+    static void CompareDevice(EditorSession expected, EditorSession actual, bool pad, int family, int actualFamily, string context)
     {
-        foreach (string action in expected.BindingActions(pad, family).Union(actual.BindingActions(pad, family)))
+        foreach (string action in expected.BindingActions(pad, family).Union(actual.BindingActions(pad, actualFamily)))
         {
             var before = expected.Relations(action, pad, family);
-            var after = actual.Relations(action, pad, family);
+            var after = actual.Relations(action, pad, actualFamily);
             Assert(before.Keys.OrderBy(key => key).SequenceEqual(after.Keys.OrderBy(key => key)),
                 context + ": " + (pad ? "controller " + family : "keyboard") + " " + action);
         }
@@ -25,10 +25,11 @@ public static class PresetPackageTests
 
     static void CompareScheme(EditorSession expected, EditorSession actual, string context)
     {
-        CompareDevice(expected, actual, false, -1, context);
-        Assert(expected.ControllerFamilies.Select(f => f.Index + ":" + f.Name)
-            .SequenceEqual(actual.ControllerFamilies.Select(f => f.Index + ":" + f.Name)), context + ": controller families");
-        foreach (var family in expected.ControllerFamilies) CompareDevice(expected, actual, true, family.Index, context);
+        CompareDevice(expected, actual, false, -1, -1, context);
+        Assert(expected.ControllerFamilies.Select(f => f.Name).OrderBy(name => name)
+            .SequenceEqual(actual.ControllerFamilies.Select(f => f.Name).OrderBy(name => name)), context + ": controller families");
+        foreach (var family in expected.ControllerFamilies)
+            CompareDevice(expected, actual, true, family.Index, actual.ControllerFamilies.Single(item => item.Name == family.Name).Index, context);
     }
 
     static void MouseSpaceKeys(EditorSession session)

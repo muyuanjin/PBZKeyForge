@@ -1,0 +1,11 @@
+PBZKeyForge 1.2.1 — changes since 1.2.0
+
+Create a layout even before installing the game. When no save is found, the editor now opens an offline scheme with factory bindings. You can also choose More → New offline scheme. Edit keyboard and mouse, save a named preset, share a code, or use Export bindings in the footer to create a game settings file. Open your own save when you want to apply changes directly to the game.
+
+Xbox and PlayStation are now both available in the Controller view, even if you do not own a controller, have never connected one, or your save contains no controller settings. Choose the family beside the editing-view tabs. Each family has its own bindings; you can edit and share just Xbox, just PlayStation, or keyboard/mouse. PlayStation files use the game's own PS family identity.
+
+The controller diagram now sits below its instruction text, keeping its shoulders and labels visible. English and Chinese screenshots show all three device views using these same editing controls.
+
+Close the game before applying changes or replacing its settings file. Writes through the editor are backed up automatically. For a ready-made preset, follow PRESETS.md and select Custom 1 in game. Avoid applying or resetting bindings in the game's own binding screen afterwards, which rewrites the file. Supports Windows 10/11 and Steam CL-301524; no mod loader or extra runtime download is needed.
+
+Built and uploaded by GitHub Actions from the v1.2.1 source tag: https://github.com/muyuanjin/PBZKeyForge/releases/tag/v1.2.1

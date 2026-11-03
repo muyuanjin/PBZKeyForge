@@ -81,11 +81,11 @@ namespace PBZKeyForge
     internal sealed class KeyBadgeState
     {
         public int Count;
-        public bool Complete, Differs, Pending;
+        public bool Complete, Differs, Pending, IsOffline;
         public Color Color { get { return Pending ? BindingStatus.Pending : Differs ? BindingStatus.Custom : BindingStatus.Factory; } }
         public bool Visible { get { return Count > 0 || Differs || Pending; } }
         public string Number { get { return Complete ? Count.ToString() : Count > 0 ? Count + "+" : "?"; } }
-        public string Status { get { return I18n.Str(Pending ? "views.pending" : Differs ? "views.savedcustom" : Complete ? "views.original" : "editor.defaultunknown"); } }
+        public string Status { get { return I18n.Str(Pending ? IsOffline ? "offline.pending" : "views.pending" : Differs ? "views.savedcustom" : Complete ? "views.original" : "editor.defaultunknown"); } }
     }
 
     internal sealed class DeviceDiagram : ScrollableControl
@@ -116,7 +116,7 @@ namespace PBZKeyForge
             string selectedKey, IEnumerable<string> knownKeys)
         {
             bool sony = family != null && (family.IndexOf("sony", StringComparison.OrdinalIgnoreCase) >= 0 || family.IndexOf("playstation", StringComparison.OrdinalIgnoreCase) >= 0
-                || family.IndexOf("dual", StringComparison.OrdinalIgnoreCase) >= 0 || family.Equals("PS4", StringComparison.OrdinalIgnoreCase) || family.Equals("PS5", StringComparison.OrdinalIgnoreCase));
+                || family.IndexOf("dual", StringComparison.OrdinalIgnoreCase) >= 0 || family.Equals("PS", StringComparison.OrdinalIgnoreCase) || family.Equals("PS4", StringComparison.OrdinalIgnoreCase) || family.Equals("PS5", StringComparison.OrdinalIgnoreCase));
             string nextController = sony ? "playstation" : "xbox";
             var physical = pad ? DeviceHotspots.ForDevice(nextController).Keys : DeviceHotspots.ForDevice("keyboard").Keys.Concat(DeviceHotspots.ForDevice("mouse").Keys);
             var extras = knownKeys.Except(physical).Where(k => k != "None" && !string.IsNullOrEmpty(k)).Distinct().ToList();
@@ -324,7 +324,7 @@ namespace PBZKeyForge
 
     internal sealed class RelationshipButton : EditorButton
     {
-        public bool Custom, Pending, Removed, Unknown, Fixed;
+        public bool Custom, Pending, Removed, Unknown, Fixed, IsOffline;
         protected override void OnPaint(PaintEventArgs e)
         {
             float scale = e.Graphics.DpiX / 96f; e.Graphics.Clear(Hovered ? EditorTheme.Hover : EditorTheme.Floating);
@@ -351,7 +351,7 @@ namespace PBZKeyForge
             if (Removed)
                 using (var pen = new Pen(EditorTheme.Muted, 1.5f * scale))
                     e.Graphics.DrawLine(pen, iconBounds.Left, iconBounds.Bottom, iconBounds.Right, iconBounds.Top);
-            string status = I18n.Str(Pending ? "views.pending" : Removed ? "views.removedshort" : Fixed ? "views.fixed" : Unknown ? "editor.defaultunknown" : Custom ? "views.savedcustom" : "views.original");
+            string status = I18n.Str(Pending ? IsOffline ? "offline.pending" : "views.pending" : Removed ? "views.removedshort" : Fixed ? "views.fixed" : Unknown ? "editor.defaultunknown" : Custom ? "views.savedcustom" : "views.original");
             if (Pending && Removed) status = I18n.Str("views.removedshort") + " · " + status;
             int y = Height * 2 / 3, dot = (int)(6 * scale);
             BindingStatus.Dot(e.Graphics, Removed ? BindingStatus.Factory : Pending ? BindingStatus.Pending : Custom ? BindingStatus.Custom : BindingStatus.Factory, left, y, dot);
@@ -366,10 +366,11 @@ namespace PBZKeyForge
 
     internal sealed class BindingLegend : Control
     {
+        public bool IsOffline;
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e); float scale = e.Graphics.DpiX / 96f, left = 8 * scale;
-            string[] names = { "views.original", "views.savedcustom", "views.pending" };
+            string[] names = { "views.original", "views.savedcustom", IsOffline ? "offline.pending" : "views.pending" };
             Color[] colors = { BindingStatus.Factory, BindingStatus.Custom, BindingStatus.Pending };
             using (var font = new Font(Font.FontFamily, 8f))
             for (int i = 0; i < names.Length; i++)
@@ -389,6 +390,7 @@ namespace PBZKeyForge
         readonly Panel detail = new EditorPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = EditorTheme.Surface };
         readonly Label hint = BindingViewText.Label("", 24), heading = BindingViewText.Label("", 30), count = BindingViewText.Label("", 24);
         readonly Label notice = BindingViewText.Label("", 40);
+        readonly BindingLegend legend = new BindingLegend { Dock = DockStyle.Bottom, Height = 28 };
         readonly EditorButton add = new EditorButton { Dock = DockStyle.Top }, reset = new EditorButton { Dock = DockStyle.Top },
             actionView = new EditorButton { Dock = DockStyle.Top };
         readonly List<RelationshipRow> actionRows = new List<RelationshipRow>();
@@ -410,7 +412,7 @@ namespace PBZKeyForge
             devices.Dock = selected.Dock = DockStyle.Fill; devices.Margin = new Padding(0, 0, 8, 0); selected.Margin = Padding.Empty;
             devices.BackColor = selected.BackColor = EditorTheme.Surface;
             columns.Controls.Add(devices, 0, 0); columns.Controls.Add(selected, 1, 0); Controls.Add(columns);
-            Controls.Add(new BindingLegend { Dock = DockStyle.Bottom, Height = 28 });
+            Controls.Add(legend);
             hint.ForeColor = notice.ForeColor = EditorTheme.Muted;
             UpdateHeadingFont();
             devices.Controls.Add(hint); selected.Controls.Add(detail); selected.Controls.Add(heading);
@@ -445,6 +447,7 @@ namespace PBZKeyForge
         public void Render(EditorSession session, bool pad, int familyIndex)
         {
             if (session == null) return;
+            legend.IsOffline = session.IsOffline; legend.Invalidate();
             currentSession = session; currentPad = pad; currentFamily = familyIndex;
             if (selectedKey == null || pad != selectedKey.StartsWith("Gamepad_", StringComparison.Ordinal)) selectedKey = pad ? "Gamepad_FaceButton_Left" : "LeftMouseButton";
             var rawRelations = session.BindingActions(pad, familyIndex).Select(a => session.Relations(a, pad, familyIndex)).ToArray();
@@ -453,6 +456,7 @@ namespace PBZKeyForge
             string[] known = relations.SelectMany(r => r.Keys).Concat(relations.Where(r => r.DefaultKeys != null).SelectMany(r => r.DefaultKeys))
                 .Concat(before.Values.SelectMany(r => r.Keys)).Concat(new[] { selectedKey }).Distinct().ToArray();
             Func<string, KeyBadgeState> state = key => new KeyBadgeState {
+                IsOffline = session.IsOffline,
                 Count = relations.Count(r => r.Keys.Contains(key)), Complete = relations.All(r => r.KnowsKey(key)),
                 Differs = relations.Any(r => r.DefaultKeys != null && (r.Keys.Contains(key) && !r.DefaultKeys.Contains(key)
                     || r.Complete && !r.Keys.Contains(key) && r.DefaultKeys.Contains(key))),
@@ -464,7 +468,7 @@ namespace PBZKeyForge
             {
                 diagram = new DeviceDiagram(pad, familyName, state,
                     delegate(string key) { selectedKey = key; Render(currentSession, currentPad, currentFamily); }, selectedKey, known);
-                devices.Controls.Add(diagram); diagram.SendToBack();
+                devices.Controls.Add(diagram); diagram.BringToFront();
             }
             else diagram.UpdateBindings(pad, familyName, state, selectedKey, known);
             hint.Text = I18n.Str("views.clickkey"); hint.Height = Font.Height + 10;
@@ -508,10 +512,10 @@ namespace PBZKeyForge
                     operation.Enabled = !fixedBinding && (relation.Complete || !isRemoved && relation.DefaultKeys != null && !relation.DefaultKeys.Contains(selectedKey)) && !session.IsResetPending;
                     operation.AccessibleName = I18n.Str(isRemoved ? "views.restore" : "views.remove") + " " + BindingViewText.ActionName(relation.Action);
                     edit.ActionId = relation.Action; edit.Text = BindingViewText.ActionName(relation.Action);
-                    edit.Removed = isRemoved; edit.Custom = custom; edit.Unknown = !custom && relation.DefaultKeys == null; edit.Fixed = fixedBinding;
+                    edit.Removed = isRemoved; edit.Custom = custom; edit.Unknown = !custom && relation.DefaultKeys == null; edit.Fixed = fixedBinding; edit.IsOffline = session.IsOffline;
                     edit.Pending = relation.Keys.Contains(selectedKey) != before[relation.Action].Keys.Contains(selectedKey)
                         && relation.KnowsKey(selectedKey) && before[relation.Action].KnowsKey(selectedKey);
-                    edit.AccessibleName = edit.Text + " · " + I18n.Str(edit.Pending ? "views.pending" : isRemoved ? "views.removedshort" : custom ? "views.savedcustom" : "views.original"); edit.Invalidate();
+                    edit.AccessibleName = edit.Text + " · " + I18n.Str(edit.Pending ? session.IsOffline ? "offline.pending" : "views.pending" : isRemoved ? "views.removedshort" : custom ? "views.savedcustom" : "views.original"); edit.Invalidate();
                 }
                 add.Height = Font.Height + 18; add.Text = "+ " + I18n.Str("views.addaction"); add.Enabled = !session.IsResetPending;
                 reset.Height = Font.Height + 16; reset.Text = I18n.Str("views.restorekey");

@@ -8,6 +8,7 @@
         }
         static void EditorStrings()
         {
+            OfflineStrings();
             BindingFeedbackStrings();
             PresetShareStrings();
             PresetLayoutStrings();

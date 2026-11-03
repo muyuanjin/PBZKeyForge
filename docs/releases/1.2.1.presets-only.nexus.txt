@@ -1,0 +1,9 @@
+PBZKeyForge 1.2.1 — presets only; changes since 1.2.0
+
+This download contains eight ready-made game settings files, an English/Chinese PRESETS.md guide and documentation. It contains no executable. Controller presets now include separate Xbox and PlayStation settings, so PlayStation layouts no longer depend on previously connecting a controller or saving its settings in game. Keyboard/mouse-only presets retain their keyboard/mouse scope. The included guide explains each layout and its target scheme.
+
+Close the game and back up ProjectPBZ/Saved/EnhancedInputUserSettings.sav. Choose one preset using PRESETS.md, copy it over that file, then select Custom 1 in the game. Replacing the file also replaces your existing saved layouts. If you want to preserve and combine your settings, create your own layout, or share only Xbox, PlayStation or keyboard/mouse, use the main editor download instead. Version 1.2.1 of the editor can create and export these layouts without installing the game or loading a save.
+
+Do not apply or reset bindings in the game's own key-binding screen afterwards, as it rewrites these shared bindings. Restore your backup to uninstall. The files use the supported Steam CL-301524 factory defaults.
+
+Built and uploaded by GitHub Actions from the v1.2.1 source tag: https://github.com/muyuanjin/PBZKeyForge/releases/tag/v1.2.1

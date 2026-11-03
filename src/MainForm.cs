@@ -56,13 +56,14 @@ namespace PBZKeyForge
         readonly PresetModeSelector btnPresetMode = new PresetModeSelector();
         readonly EditorPreferences preferences;
         PresetApplyMode presetMode;
-        readonly Label lblStatus = new Label(), lblScope = new Label(), lblBackup = new Label(), lblEmpty = new Label();
+        readonly Label lblStatus = new Label(), lblScope = new Label(), lblBackup = new Label(), lblEmpty = new Label(), lblOffline = new Label();
         readonly Button btnUndo = new EditorButton();
         readonly LinkLabel btnConflicts = new LinkLabel(), btnChoose = new LinkLabel();
         readonly CheckBox chkActivate = new EditorCheckBox();
         readonly ToolTip tip = new ToolTip();
         readonly Panel body = new EditorPanel(), empty = new EditorPanel(), footer = new EditorPanel();
         readonly Panel kbHost = new EditorPanel(), padHost = new EditorPanel();
+        readonly BindingLegend kbLegend = new BindingLegend(), padLegend = new BindingLegend();
         readonly Dictionary<string, BindingButton[]> kbButtons = new Dictionary<string, BindingButton[]>();
         readonly Dictionary<string, BindingButton[]> padButtons = new Dictionary<string, BindingButton[]>();
         readonly List<Label> actionLabels = new List<Label>(), headings = new List<Label>();
@@ -87,7 +88,7 @@ namespace PBZKeyForge
             ApplyLanguage();
             HandleCreated += delegate { EditorArtwork.DarkCaption(this); };
             Shown += delegate { if (Session == null) AutoFind(false); };
-            Activated += delegate { if (Session != null && !loading && !modalActive) RefreshFromDisk(); };
+            Activated += delegate { if (Session != null && !Session.IsOffline && !loading && !modalActive) RefreshFromDisk(); };
             FormClosing += delegate(object sender, FormClosingEventArgs e) { if (IsApplying || !ConfirmDiscard()) e.Cancel = true; };
             gameTimer.Interval = 1500;
             gameTimer.Tick += delegate { if (EditorSession.IsGameRunning != lastRunning) RenderSession(); };
@@ -130,7 +131,7 @@ namespace PBZKeyForge
             cbLang.Dock = DockStyle.Fill; cbLang.Margin = new Padding(4, 30, 8, 26); cbLang.DropDownStyle = ComboBoxStyle.DropDownList;
             foreach (string language in I18n.Languages) cbLang.Items.Add(I18n.DisplayName(language));
             cbLang.SelectedIndexChanged += delegate { if (loading || cbLang.SelectedIndex < 0) return; I18n.Current = I18n.Languages[cbLang.SelectedIndex]; ApplyLanguage(); };
-            StyleButton(btnRefresh, false); btnRefresh.Margin = new Padding(4, 28, 4, 28); btnRefresh.Click += delegate { RefreshFromDisk(); };
+            StyleButton(btnRefresh, false); btnRefresh.Margin = new Padding(4, 28, 4, 28); btnRefresh.Click += delegate { if (Session != null && Session.IsOffline) Browse(); else RefreshFromDisk(); };
             StyleButton(btnMore, false); btnMore.Margin = new Padding(4, 28, 0, 28); btnMore.Text = "•••"; btnMore.Click += delegate { ShowMore(); };
             header.Controls.Add(brand, 0, 0);
             cbLang.Dock = btnRefresh.Dock = btnMore.Dock = DockStyle.None;
@@ -238,6 +239,7 @@ namespace PBZKeyForge
             footer.Paint += delegate(object s, PaintEventArgs e) { using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawLine(pen, 0, 0, footer.Width, 0); };
             chkActivate.SetBounds(8, 12, 700, 30); chkActivate.AutoEllipsis = true;
             chkActivate.CheckedChanged += delegate { if (!loading && Session != null) TryAction(delegate { Session.SetActivation(chkActivate.Checked); }); };
+            lblOffline.AutoEllipsis = true; lblOffline.TextAlign = ContentAlignment.MiddleLeft;
             lblScope.SetBounds(8, 46, 700, 24); lblScope.AutoEllipsis = true; lblScope.Font = new Font(Font.FontFamily, 9f);
             btnConflicts.TextAlign = ContentAlignment.MiddleLeft; btnConflicts.AutoEllipsis = true; StyleLink(btnConflicts);
             btnConflicts.Font = lblScope.Font; btnConflicts.Click += delegate { ResolveConflicts(); };
@@ -246,7 +248,7 @@ namespace PBZKeyForge
             btnUndo.Click += delegate { TryAction(delegate { Session.Undo(); }); };
             StyleButton(btnApply, true); btnApply.Dock = DockStyle.None; btnApply.SetBounds(890, 15, 196, 46); btnApply.Font = new Font(Font.FontFamily, 12f, FontStyle.Bold); btnApply.Click += delegate { ApplyChanges(); };
             lblBackup.SetBounds(890, 64, 196, 23); lblBackup.TextAlign = ContentAlignment.MiddleCenter; lblBackup.AutoEllipsis = true; lblBackup.ForeColor = EditorTheme.Muted; lblBackup.Font = new Font(Font.FontFamily, 8.5f);
-            footer.Controls.AddRange(new Control[] { chkActivate, lblScope, btnConflicts, lblStatus, btnUndo, btnApply, lblBackup });
+            footer.Controls.AddRange(new Control[] { chkActivate, lblOffline, lblScope, btnConflicts, lblStatus, btnUndo, btnApply, lblBackup });
             footer.Resize += delegate { LayoutFooter(); };
             root.Controls.Add(footer, 0, 5);
             AutoScaleDimensions = new SizeF(96f, 96f);
@@ -263,6 +265,7 @@ namespace PBZKeyForge
             btnUndo.SetBounds(btnApply.Left - gap - actionWidth, btnApply.Top, actionWidth, actionHeight);
             int left = gap, scopeWidth = Math.Max(100, btnUndo.Left - gap * 2);
             chkActivate.SetBounds(left, (int)(12 * scale), scopeWidth, (int)(28 * scale));
+            lblOffline.Bounds = chkActivate.Bounds;
             lblScope.SetBounds(left, (int)(44 * scale), scopeWidth, (int)(24 * scale));
             btnConflicts.Bounds = lblScope.Bounds;
             lblBackup.SetBounds(btnApply.Left, (int)(64 * scale), actionWidth, (int)(20 * scale));
@@ -349,7 +352,9 @@ namespace PBZKeyForge
             headerViewport.SizeChanged += delegate { alignHeader(); };
             host.Layout += delegate { alignHeader(); };
             host.Controls.Add(scroll); host.Controls.Add(headerViewport);
-            host.Controls.Add(new BindingLegend { Dock = DockStyle.Bottom, Height = 28, BackColor = EditorTheme.Surface });
+            var legend = pad ? padLegend : kbLegend;
+            legend.Dock = DockStyle.Bottom; legend.Height = 28; legend.BackColor = EditorTheme.Surface;
+            host.Controls.Add(legend);
         }
         static void SetColumns(TableLayoutPanel table)
         {
@@ -388,10 +393,15 @@ namespace PBZKeyForge
             try
             {
                 bool loaded = Session != null;
+                bool offline = loaded && Session.IsOffline;
+                kbLegend.IsOffline = padLegend.IsOffline = offline;
                 lastRunning = EditorSession.IsGameRunning;
-                lblGame.Text = "●  " + I18n.Str(lastRunning ? "editor.running" : "editor.closed"); lblGame.ForeColor = lastRunning ? EditorTheme.Amber : EditorTheme.Green;
-                lblPath.Text = loaded ? I18n.Str("editor.location", DisplaySaveDirectory(Session.InputPath)) : I18n.Str("editor.nofile");
-                SetTip(lblPath, loaded ? Session.InputPath : I18n.Str("editor.empty"));
+                lblGame.Text = "●  " + I18n.Str(offline ? "offline.mode" : lastRunning ? "editor.running" : "editor.closed"); lblGame.ForeColor = offline ? EditorTheme.Muted : lastRunning ? EditorTheme.Amber : EditorTheme.Green;
+                lblPath.Text = offline ? I18n.Str("offline.location") : loaded ? I18n.Str("editor.location", DisplaySaveDirectory(Session.InputPath)) : I18n.Str("editor.nofile");
+                SetTip(lblPath, offline ? I18n.Str("offline.help") : loaded ? Session.InputPath : I18n.Str("editor.empty"));
+                btnRefresh.Text = I18n.Str(offline ? "editor.choose" : "editor.refresh");
+                btnApply.Text = I18n.Str(offline ? "offline.export" : "editor.apply");
+                lblBackup.Text = I18n.Str(offline ? "offline.exporthelp" : "editor.backup");
                 empty.Visible = !loaded; kbHost.Visible = loaded && actionView && !gamepad; padHost.Visible = loaded && actionView && gamepad; if (!loaded) empty.BringToFront();
                 RenderBindingViews();
                 tabKb.Text = I18n.Str("editor.keyboard"); tabPad.Text = I18n.Str("editor.gamepad"); tabKb.Selected = !gamepad; tabPad.Selected = gamepad;
@@ -423,6 +433,7 @@ namespace PBZKeyForge
                     for (int slot = 0; slot < 3; slot++)
                     {
                         var kb = kbButtons[action.Id][slot]; var pad = padButtons[action.Id][slot];
+                        kb.IsOffline = pad.IsOffline = offline;
                         var padRecords = loaded ? Session.BindingRecords(true, SelectedFamilyIndex).Where(r => r.Action == action.Id && r.SlotIndex == slot
                             && r.DefaultKey == InputDefaults.ForRawSlot(action.Id, true, InputDefaults.RawSlot(r.Slot))).ToArray() : new BindingRecord[0];
                         var kbRecords = loaded ? Session.BindingRecords(false, -1).Where(r => r.Action == action.Id && r.SlotIndex == slot).ToArray() : new BindingRecord[0];
@@ -466,11 +477,15 @@ namespace PBZKeyForge
                     foreach (var button in source[(string)actionLabels[i].Tag]) if (button.BackColor != rowColor) button.BackColor = rowColor;
                 }
                 chkActivate.Text = I18n.Str("editor.activate", loaded ? SchemeLabel(Session.SelectedProfile) : "—");
+                chkActivate.Visible = !offline; lblOffline.Visible = offline;
+                lblOffline.Text = I18n.Str("offline.mode");
+                SetTip(lblOffline, I18n.Str("offline.help"));
                 chkActivate.Checked = loaded && (Session.SelectedProfile == Session.ActiveProfile || Session.ActivationPending);
                 chkActivate.Enabled = loaded && !Session.IsResetPending && Session.ActiveProfile != null && Session.SelectedProfile != Session.ActiveProfile;
                 SetTip(chkActivate, loaded && Session.SchemeError != null ? I18n.Str("status.schemeunknown") + "\n" + Session.SchemeError : I18n.Str("editor.activatehelp"));
-                btnApply.Enabled = loaded && Session.HasChanges && !lastRunning && Session.Conflicts.Length == 0; btnUndo.Visible = loaded && Session.HasChanges;
-                lblScope.Text = !loaded ? "" : Session.IsResetPending ? I18n.Str("editor.resetscope", Session.ScopeChangeCount)
+                btnApply.Enabled = loaded && (offline || Session.HasChanges && !lastRunning && Session.Conflicts.Length == 0); btnUndo.Visible = loaded && Session.HasChanges;
+                lblScope.Text = !loaded ? "" : offline ? I18n.Str("offline.scope", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount)
+                    : Session.IsResetPending ? I18n.Str("editor.resetscope", Session.ScopeChangeCount)
                     : I18n.Str(Session.HasChanges ? "editor.scope" : "editor.clean", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount) + (Session.ActivationPending ? I18n.Str("editor.activationscope") : "");
                 lblScope.ForeColor = loaded && Session.HasChanges ? BindingStatus.Pending : EditorTheme.Muted;
                 int conflictCount = loaded ? Session.Conflicts.Length : 0;
@@ -479,7 +494,7 @@ namespace PBZKeyForge
                 lblStatus.Text = conflictCount > 0 ? I18n.Str("editor.conflictinfo") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
                     : loaded && Session.SchemeError != null ? I18n.Str("editor.schemeunknown")
                     + (messageKey != null && messageKey != "editor.refreshed" ? " " + I18n.Str(messageKey, messageArgs) : "")
-                    : loaded && lastRunning ? I18n.Str("editor.exittoapply") : messageKey != null ? I18n.Str(messageKey, messageArgs) : I18n.Str("editor.ready");
+                    : loaded && !offline && lastRunning ? I18n.Str("editor.exittoapply") : messageKey != null ? I18n.Str(messageKey, messageArgs) : I18n.Str(offline ? "offline.help" : "editor.ready");
                 lblStatus.ForeColor = messageError ? Color.FromArgb(238, 171, 156) : EditorTheme.Muted; SetTip(lblStatus, lblStatus.Text);
             }
             finally { footer.ResumeLayout(true); body.ResumeLayout(true); ResumeLayout(true); loading = false; }
@@ -524,6 +539,7 @@ namespace PBZKeyForge
         {
             if (loading || modalActive || IsApplying) return;
             if (Session == null) { AutoFind(false); return; }
+            if (Session.IsOffline) return;
             try { Session.Refresh(); SetMessage("editor.refreshed", false); }
             catch (Exception ex) { SetMessage("editor.refreshfail", true, ex.Message); }
             RenderSession();
@@ -550,7 +566,7 @@ namespace PBZKeyForge
         {
             if (Session == null || !Session.HasAnyDrafts && !Session.HasChanges) return true;
             modalActive = true;
-            try { return EditorDialogs.Show(this, I18n.Str("editor.discard"), I18n.Str("editor.drafttitle"), MessageBoxButtons.YesNo) == DialogResult.Yes; }
+            try { return EditorDialogs.Show(this, I18n.Str(Session.IsOffline ? "offline.discard" : "editor.discard"), I18n.Str("editor.drafttitle"), MessageBoxButtons.YesNo) == DialogResult.Yes; }
             finally { modalActive = false; }
         }
         void Browse()
@@ -564,6 +580,11 @@ namespace PBZKeyForge
             }
         }
         void OpenPath(string path) { TryAction(delegate { var next = EditorSession.Open(path); Session = next; }); }
+        public void NewOfflineScheme()
+        {
+            if (!ConfirmDiscard()) return;
+            TryAction(delegate { Session = EditorSession.CreateOffline(); });
+        }
         void AutoFind(bool confirm)
         {
             if (confirm && !ConfirmDiscard()) return;
@@ -582,9 +603,10 @@ namespace PBZKeyForge
                 foreach (var drive in DriveInfo.GetDrives()) if (drive.DriveType == DriveType.Fixed) roots.Add(Path.Combine(drive.Name, "SteamLibrary"));
                 string found = roots.Select(root => Path.Combine(root, @"steamapps\common\PBZ\ProjectPBZ\Saved\EnhancedInputUserSettings.sav")).FirstOrDefault(File.Exists);
                 if (found != null) OpenPath(found);
+                else if (Session == null) NewOfflineScheme();
                 else { SetMessage("editor.empty", false); RenderSession(); }
             }
-            catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); RenderSession(); }
+            catch (Exception ex) { if (Session == null) NewOfflineScheme(); SetMessage("editor.failed", true, ex.Message); RenderSession(); }
         }
         void ShowMore()
         {
@@ -599,6 +621,7 @@ namespace PBZKeyForge
         {
             var menu = new ContextMenuStrip { Font = Font, BackColor = EditorTheme.Floating, ForeColor = EditorTheme.Ink,
                 Renderer = new ToolStripProfessionalRenderer(new EditorMenuColors()), ShowImageMargin = false, Padding = new Padding(5) };
+            menu.Items.Add(I18n.Str("offline.new"), null, delegate { NewOfflineScheme(); }).Name = "offline.new";
             menu.Items.Add(I18n.Str("editor.changefile"), null, delegate { Browse(); }).Name = "editor.changefile";
             menu.Items.Add(I18n.Str("editor.rediscover"), null, delegate { AutoFind(true); }).Name = "editor.rediscover";
             menu.Items.Add(new ToolStripSeparator());
@@ -656,6 +679,7 @@ namespace PBZKeyForge
         }
 
         public void UiSmoke(string path) { OpenPath(path); }
+        public void UiOffline() { NewOfflineScheme(); }
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             if (ClientSize.Width <= 0 || ClientSize.Height <= 0) return;

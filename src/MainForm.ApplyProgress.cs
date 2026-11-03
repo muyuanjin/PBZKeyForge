@@ -50,6 +50,23 @@ namespace PBZKeyForge
         public async void ApplyChanges()
         {
             if (Session == null || IsApplying) return;
+            if (Session.IsOffline)
+            {
+                modalActive = true;
+                try
+                {
+                    using (var dialog = new SaveFileDialog { Title = I18n.Str("preset.export"), Filter = I18n.Str("preset.export") + " (*.sav)|*.sav",
+                        FileName = "EnhancedInputUserSettings.sav", DefaultExt = "sav", AddExtension = true })
+                        if (dialog.ShowDialog(this) == DialogResult.OK)
+                        {
+                            Session.ExportCurrentScheme(dialog.FileName);
+                            SetMessage("preset.exported", false);
+                        }
+                }
+                catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
+                finally { modalActive = false; RenderSession(); }
+                return;
+            }
             var disabled = Controls.Cast<Control>().Where(control => control != Caption && control.Enabled).ToArray();
             IsApplying = true;
             gameTimer.Stop();

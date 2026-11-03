@@ -56,7 +56,7 @@ namespace PBZKeyForge
             int removed = changes.Sum(d => d.RemovedKeys.Length);
             total.Text = (incomplete ? "≥ " : "") + "+" + added + " / −" + removed;
             tip.SetToolTip(total, I18n.Str("views.relationcounts") + (incomplete ? "\n" + I18n.Str("views.partial") : ""));
-            empty.Text = I18n.Str(incomplete ? "views.partialdiff" : compareFactory ? "views.nofactorydiff" : "views.nosaveddiff");
+            empty.Text = I18n.Str(incomplete ? "views.partialdiff" : compareFactory || session.IsOffline ? "views.nofactorydiff" : "views.nosaveddiff");
             empty.Height = Font.Height + 20; empty.Visible = changes.Length == 0;
             rows.SuspendLayout();
             try
@@ -87,7 +87,7 @@ namespace PBZKeyForge
             finally { rows.ResumeLayout(true); }
         }
         static string DeviceName(BindingDifference diff)
-        { return I18n.Str(diff.Gamepad ? "editor.gamepad" : "editor.keyboard") + (diff.Gamepad ? " · " + diff.Family + " [" + (diff.FamilyIndex + 1) + "]" : ""); }
+        { return I18n.Str(diff.Gamepad ? "editor.gamepad" : "editor.keyboard") + (diff.Gamepad ? " · " + new ControllerFamily { Name = diff.Family } : ""); }
         static string KeyText(string[] keys, bool complete)
         { return complete ? BindingViewText.Keys(keys) : (keys.Length == 0 ? I18n.Str("editor.defaultunknown") : "≥ " + BindingViewText.Keys(keys)); }
         void SetRowTip(DifferenceRow row)
