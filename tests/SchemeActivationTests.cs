@@ -219,7 +219,8 @@ public static class SchemeActivationTests
                 Assert(Same(input, File.ReadAllBytes(guiInput)), "Activating a scheme changed input bindings.");
             }
             var languages = (ComboBox)formType.GetField("cbLang", Hidden).GetValue(form);
-            for (int i = 0; i < languages.Items.Count; i++) languages.SelectedIndex = i;
+            int languageCount = args.Contains("--all-languages") ? languages.Items.Count : 1;
+            for (int i = 0; i < languageCount; i++) languages.SelectedIndex = i;
             Assert(Profile(Load(guiShared)) == profiles[2] && Same(input, File.ReadAllBytes(guiInput)), "Language switch changed a save.");
         }
         Assert(Directory.GetFiles(root, "*.tmp", SearchOption.AllDirectories).Length == 0, "Temporary write residue.");

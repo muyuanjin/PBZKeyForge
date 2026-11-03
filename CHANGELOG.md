@@ -1,4 +1,15 @@
-# 1.1.1 — 2026-11-03
+# Changelog
+
+## Unreleased
+
+- Added shared key and action views, clickable keyboard/mouse/controller diagrams, and factory/saved/pending status badges.
+- Added whole-scheme comparisons against saved or factory bindings, with four row presentation modes.
+- Added explicit unbinding, concrete factory keys in binding dialogs, and resource-based action and raw-slot defaults for CL-301524.
+- Added the mouse attack/guard preset while retaining F heavy attack; corrected shared slot ownership and registered controller slot handling.
+- Added 21 action icons, device artwork sources, and third-party license notices; corrected the Chinese Mind's Eye action name.
+- Made full language sweeps opt-in with `--all-languages`; routine integration checks use Simplified Chinese.
+
+## 1.1.1 — 2026-11-03
 
 - Fixed an unhandled `ContextMenuStrip` disposal exception after clicking More-menu actions, including Open backup folder.
 - Added mouse-message regression checks for every More-menu action, repeated openings, cancellations, and all interface languages.
@@ -34,8 +45,6 @@
 - Fixed: the scheme list rebuilt itself while a save was loading and wiped the grid, so an existing save looked empty.
 - Added `--gui <save>` to open the editor on a file, and `--shot <save> <png>` to render the window to an image.
 - Assets: real UI screenshot.
-
-# Changelog
 
 ## 1.0.0 — 2026-11-02
 

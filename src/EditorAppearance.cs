@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
@@ -26,6 +27,19 @@ namespace PBZKeyForge
         public static readonly Image Wallpaper = Load("PBZKeyForge.Wallpaper");
         public static readonly Image Wordmark = Load("PBZKeyForge.GameWordmark");
         public static readonly Image AppMark = Load("PBZKeyForge.AppMark");
+        public static readonly Image Mouse = Load("PBZKeyForge.Device.mouse");
+        public static readonly Image Keyboard = Load("PBZKeyForge.Device.keyboard");
+        public static readonly Image Xbox = Load("PBZKeyForge.Device.xbox");
+        public static readonly Image PlayStation = Load("PBZKeyForge.Device.playstation");
+        static readonly Dictionary<string, Image> actionIcons = new Dictionary<string, Image>();
+        public static Image ActionIcon(string action)
+        {
+            if (string.IsNullOrEmpty(action)) return null;
+            Image icon;
+            if (!actionIcons.TryGetValue(action, out icon))
+            { icon = Load("PBZKeyForge.Action." + action); actionIcons[action] = icon; }
+            return icon;
+        }
         static Image Load(string name)
         {
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name))
@@ -81,13 +95,15 @@ namespace PBZKeyForge
 
     public class EditorButton : Button
     {
+        public bool Multiline;
+        public string ActionId;
         protected bool Hovered, Pressed;
         public bool Primary;
         public EditorButton()
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
             FlatStyle = FlatStyle.Flat; FlatAppearance.BorderSize = 0;
-            Cursor = Cursors.Hand; BackColor = Color.Transparent;
+            Cursor = Cursors.Hand; BackColor = Color.Transparent; ForeColor = EditorTheme.Ink;
         }
         protected override void OnMouseEnter(EventArgs e) { Hovered = true; Invalidate(); base.OnMouseEnter(e); }
         protected override void OnMouseLeave(EventArgs e) { Hovered = Pressed = false; Invalidate(); base.OnMouseLeave(e); }
@@ -107,8 +123,18 @@ namespace PBZKeyForge
             using (var brush = new SolidBrush(fill))
             using (var pen = new Pen(Primary ? fill : Hovered ? EditorTheme.Muted : EditorTheme.Line))
             { e.Graphics.FillPath(brush, shape); e.Graphics.DrawPath(pen, shape); }
-            TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, Enabled ? EditorTheme.Ink : EditorTheme.Muted,
-                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+            Rectangle textBounds = ClientRectangle;
+            var actionIcon = EditorArtwork.ActionIcon(ActionId);
+            if (actionIcon != null)
+            {
+                int size = (int)(24 * scale), inset = (int)(12 * scale);
+                e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                e.Graphics.DrawImage(actionIcon, new Rectangle(inset, (Height - size) / 2, size, size));
+                textBounds = new Rectangle(inset + size + (int)(10 * scale), 0, Math.Max(0, Width - inset * 2 - size - (int)(10 * scale)), Height);
+            }
+            TextRenderer.DrawText(e.Graphics, Text, Font, textBounds, Enabled ? ForeColor : EditorTheme.Muted,
+                (actionIcon == null ? TextFormatFlags.HorizontalCenter : TextFormatFlags.Left) | TextFormatFlags.VerticalCenter
+                | (Multiline ? TextFormatFlags.WordBreak : TextFormatFlags.SingleLine) | TextFormatFlags.EndEllipsis);
             if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, new Rectangle((int)(4 * scale), (int)(4 * scale), Width - (int)(8 * scale), Height - (int)(8 * scale)), EditorTheme.Ink, fill);
         }
     }
@@ -116,6 +142,34 @@ namespace PBZKeyForge
     internal sealed class EditorComboBox : ComboBox
     {
         bool hovered;
+        public bool CenterText;
+        [StructLayout(LayoutKind.Sequential)]
+        struct ComboBoxInfo
+        {
+            public int Size;
+            public Rectangle Item, Button;
+            public int ButtonState;
+            public IntPtr ComboHandle, EditHandle, ListHandle;
+        }
+        [DllImport("user32.dll")]
+        static extern bool GetComboBoxInfo(IntPtr handle, ref ComboBoxInfo info);
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongW")]
+        static extern int GetWindowLong(IntPtr handle, int index);
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongW")]
+        static extern int SetWindowLong(IntPtr handle, int index, int value);
+        [DllImport("user32.dll")]
+        static extern bool SetWindowPos(IntPtr handle, IntPtr after, int x, int y, int width, int height, uint flags);
+        [StructLayout(LayoutKind.Sequential)]
+        struct PaintInfo
+        {
+            public IntPtr Dc;
+            public int Erase;
+            public int Left, Top, Right, Bottom;
+            public int Restore, Update;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)] public byte[] Reserved;
+        }
+        [DllImport("user32.dll")] static extern IntPtr BeginPaint(IntPtr window, out PaintInfo paint);
+        [DllImport("user32.dll")] static extern bool EndPaint(IntPtr window, ref PaintInfo paint);
         public EditorComboBox()
         {
             DrawMode = DrawMode.OwnerDrawFixed;
@@ -128,6 +182,21 @@ namespace PBZKeyForge
         {
             base.OnHandleCreated(e);
             using (var g = CreateGraphics()) ItemHeight = Math.Max(Font.Height + (int)(6 * g.DpiY / 96f), (int)(26 * g.DpiY / 96f));
+            AlignEdit();
+        }
+        protected override void OnResize(EventArgs e) { base.OnResize(e); AlignEdit(); }
+        void AlignEdit()
+        {
+            if (!CenterText || !IsHandleCreated || DropDownStyle != ComboBoxStyle.DropDown) return;
+            var info = new ComboBoxInfo { Size = Marshal.SizeOf(typeof(ComboBoxInfo)) };
+            if (!GetComboBoxInfo(Handle, ref info)) return;
+            SetWindowLong(info.EditHandle, -16, (GetWindowLong(info.EditHandle, -16) & ~3) | 1);
+            using (var graphics = CreateGraphics())
+            {
+                int inset = (int)(10 * graphics.DpiX / 96f), arrowWidth = (int)(30 * graphics.DpiX / 96f);
+                SetWindowPos(info.EditHandle, IntPtr.Zero, inset, (Height - Font.Height) / 2,
+                    Math.Max(1, Width - arrowWidth - inset * 2), Font.Height, 0x14);
+            }
         }
         protected override void OnMouseEnter(EventArgs e) { hovered = true; Invalidate(); base.OnMouseEnter(e); }
         protected override void OnMouseLeave(EventArgs e) { hovered = false; Invalidate(); base.OnMouseLeave(e); }
@@ -137,34 +206,80 @@ namespace PBZKeyForge
             bool selected = (e.State & DrawItemState.Selected) != 0;
             using (var brush = new SolidBrush(selected ? EditorTheme.Hover : EditorTheme.Floating)) e.Graphics.FillRectangle(brush, e.Bounds);
             var text = new Rectangle(e.Bounds.X + 9, e.Bounds.Y, e.Bounds.Width - 18, e.Bounds.Height);
+            var action = Items[e.Index] as ActionInfo;
+            Image icon = action == null ? null : EditorArtwork.ActionIcon(action.Id);
+            if (icon != null)
+            {
+                int size = Math.Min(e.Bounds.Height - 4, Font.Height + 4);
+                e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                e.Graphics.DrawImage(icon, new Rectangle(text.Left, text.Top + (text.Height - size) / 2, size, size));
+                text.X += size + 8; text.Width = Math.Max(0, text.Width - size - 8);
+            }
             TextRenderer.DrawText(e.Graphics, GetItemText(Items[e.Index]), Font, text, EditorTheme.Ink,
-                TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.SingleLine);
+                TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.SingleLine | (CenterText ? TextFormatFlags.HorizontalCenter : TextFormatFlags.Left));
         }
         protected override void WndProc(ref Message message)
         {
-            base.WndProc(ref message);
-            bool print = message.Msg == 0x317 || message.Msg == 0x318;
-            if (message.Msg != 0xF && !print || !IsHandleCreated) return;
-            using (var graphics = print ? Graphics.FromHdc(message.WParam) : Graphics.FromHwnd(Handle))
+            if (message.Msg == 0x201 && IsHandleCreated)
             {
-                float scale = graphics.DpiX / 96f;
-                int arrowWidth = (int)(30 * scale);
-                int inset = (int)(10 * scale);
-                if (DropDownStyle == ComboBoxStyle.DropDownList)
+                int x = (short)(message.LParam.ToInt64() & 0xffff);
+                using (var graphics = CreateGraphics())
+                    if (x >= Width - (int)(30 * graphics.DpiX / 96f))
+                    { Focus(); DroppedDown = !DroppedDown; message.Result = IntPtr.Zero; return; }
+            }
+            if (message.Msg == 0xF && IsHandleCreated)
+            {
+                PaintInfo paint;
+                IntPtr dc = BeginPaint(Handle, out paint);
+                try
                 {
-                    using (var brush = new SolidBrush(Enabled ? EditorTheme.Floating : EditorTheme.Surface)) graphics.FillRectangle(brush, ClientRectangle);
-                    TextRenderer.DrawText(graphics, Text, Font, new Rectangle(inset, 0, Math.Max(1, Width - arrowWidth - inset), Height), Enabled ? EditorTheme.Ink : EditorTheme.Muted,
-                        TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.SingleLine);
+                    using (var graphics = Graphics.FromHdc(dc))
+                    using (var buffer = BufferedGraphicsManager.Current.Allocate(graphics, ClientRectangle))
+                    {
+                        IntPtr bufferedDc = buffer.Graphics.GetHdc();
+                        try
+                        {
+                            var print = Message.Create(Handle, 0x318, bufferedDc, new IntPtr(0xC));
+                            base.WndProc(ref print);
+                        }
+                        finally { buffer.Graphics.ReleaseHdc(bufferedDc); }
+                        PaintChrome(buffer.Graphics); buffer.Render();
+                    }
                 }
-                using (var brush = new SolidBrush(EditorTheme.Floating)) graphics.FillRectangle(brush, Width - arrowWidth, 0, arrowWidth, Height);
-                graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                using (var pen = new Pen(hovered || Focused ? EditorTheme.Muted : EditorTheme.Line))
-                    graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
-                using (var pen = new Pen(EditorTheme.Muted, 1.5f * scale))
-                {
-                    float center = Width - arrowWidth / 2f, y = Height / 2f;
-                    graphics.DrawLines(pen, new[] { new PointF(center - 4 * scale, y - 2 * scale), new PointF(center, y + 2 * scale), new PointF(center + 4 * scale, y - 2 * scale) });
-                }
+                finally { EndPaint(Handle, ref paint); }
+                message.Result = IntPtr.Zero; return;
+            }
+            if (message.Msg == 0x14 && IsHandleCreated) { message.Result = new IntPtr(1); return; }
+            base.WndProc(ref message);
+            if ((message.Msg == 0x317 || message.Msg == 0x318) && IsHandleCreated)
+                using (var graphics = Graphics.FromHdc(message.WParam)) PaintChrome(graphics);
+        }
+        void PaintChrome(Graphics graphics)
+        {
+            float scale = graphics.DpiX / 96f;
+            int arrowWidth = (int)(30 * scale);
+            int inset = (int)(10 * scale);
+            if (CenterText && DropDownStyle == ComboBoxStyle.DropDown)
+            {
+                var state = graphics.Save();
+                graphics.ExcludeClip(new Rectangle(inset, (Height - Font.Height) / 2, Math.Max(1, Width - arrowWidth - inset * 2), Font.Height));
+                using (var brush = new SolidBrush(EditorTheme.Floating)) graphics.FillRectangle(brush, ClientRectangle);
+                graphics.Restore(state);
+            }
+            if (DropDownStyle == ComboBoxStyle.DropDownList)
+            {
+                using (var brush = new SolidBrush(Enabled ? EditorTheme.Floating : EditorTheme.Surface)) graphics.FillRectangle(brush, ClientRectangle);
+                TextRenderer.DrawText(graphics, Text, Font, new Rectangle(inset, 0, Math.Max(1, Width - arrowWidth - inset), Height), Enabled ? EditorTheme.Ink : EditorTheme.Muted,
+                    TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.SingleLine);
+            }
+            using (var brush = new SolidBrush(EditorTheme.Floating)) graphics.FillRectangle(brush, Width - arrowWidth, 0, arrowWidth, Height);
+            graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            using (var pen = new Pen(hovered || Focused ? EditorTheme.Muted : EditorTheme.Line))
+                graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
+            using (var pen = new Pen(EditorTheme.Muted, 1.5f * scale))
+            {
+                float center = Width - arrowWidth / 2f, y = Height / 2f;
+                graphics.DrawLines(pen, new[] { new PointF(center - 4 * scale, y - 2 * scale), new PointF(center, y + 2 * scale), new PointF(center + 4 * scale, y - 2 * scale) });
             }
         }
     }

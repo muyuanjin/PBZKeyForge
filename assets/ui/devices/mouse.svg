@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="576" viewBox="2 0 20 24" fill="none" stroke="#BCC3C6" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="5" y="2" width="14" height="20" rx="7" fill="#242B30" />
+  <path d="M12 2v3.2 M5.2 10h13.6" stroke-width="0.5" /><rect x="11.15" y="5.2" width="1.7" height="3.5" rx="0.85" fill="#161C20" stroke-width="0.45" /><rect x="2.9" y="10" width="1.4" height="2.8" rx="0.7" fill="#303A40" stroke-width="0.45" /><rect x="2.9" y="14" width="1.4" height="2.8" rx="0.7" fill="#303A40" stroke-width="0.45" /></svg>

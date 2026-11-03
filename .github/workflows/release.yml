@@ -51,6 +51,7 @@ jobs:
           Copy-Item dist\PBZKeyForge.exe     pkg
           Copy-Item README.md                pkg
           Copy-Item LICENSE                  pkg
+          Copy-Item THIRD-PARTY-NOTICES.md    pkg
           Copy-Item presets-out              pkg\presets -Recurse
           Compress-Archive -Path pkg\* -DestinationPath "PBZKeyForge-$tag.zip"
 

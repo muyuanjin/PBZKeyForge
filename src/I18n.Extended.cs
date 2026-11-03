@@ -52,6 +52,9 @@ namespace PBZKeyForge
 
         static void ExtendedStrings()
         {
+            Extra("editor.unbound", "無綁定", "Non affecté", "Nicht belegt", "Sin asignar", "Sem atribuição", "Non assegnato", "ไม่กำหนดปุ่ม", "Chưa gán");
+            Extra("editor.defaultunknown", "未確認", "Non confirmé", "Unbestätigt", "Sin confirmar", "Não confirmado", "Non confermato", "ยังไม่ยืนยัน", "Chưa xác nhận");
+            Extra("editor.keyboarddefaulthelp", "繼承此欄位的原廠按鍵；選擇「無綁定」可明確解除此欄位。", "Hérite de la touche d'usine de cet emplacement. Choisissez Non affecté pour le désactiver.", "Übernimmt die Werkstaste dieses Platzes. Mit Nicht belegt wird dieser Platz gelöst.", "Hereda la tecla de fábrica de esta ranura. Elige Sin asignar para desvincularla.", "Herda a tecla padrão deste espaço. Escolha Sem atribuição para desativá-lo.", "Eredita il tasto di fabbrica di questo slot. Scegli Non assegnato per scollegarlo.", "ใช้ปุ่มเริ่มต้นของช่องนี้ เลือกไม่กำหนดปุ่มเพื่อยกเลิกการผูกช่องนี้", "Kế thừa phím mặc định của ô này. Chọn Chưa gán để bỏ gán ô này.");
             Extra("editor.title", "影之刃零 · 鍵位設定", "Phantom Blade Zero · Commandes", "Phantom Blade Zero · Steuerung", "Phantom Blade Zero · Controles", "Phantom Blade Zero · Controles", "Phantom Blade Zero · Comandi", "Phantom Blade Zero · การควบคุม", "Phantom Blade Zero · Điều khiển");
             Extra("editor.subtitle", "PBZKeyForge / 鍵位設定", "PBZKeyForge / Commandes", "PBZKeyForge / Tastenbelegung", "PBZKeyForge / Asignaciones", "PBZKeyForge / Teclas", "PBZKeyForge / Assegnazioni", "PBZKeyForge / ตั้งค่าปุ่ม", "PBZKeyForge / Gán phím");
             Extra("editor.yes", "是", "Oui", "Ja", "Sí", "Sim", "Sì", "ใช่", "Có");
@@ -134,6 +137,8 @@ namespace PBZKeyForge
 
         static void ExtendedActionsAndPresets()
         {
+            Extra("preset.mouse_guard.name", "左右鍵攻防（保留 F 重攻擊）", "Attaques souris + garde (F conservé)", "Mausangriffe + Block (F bleibt)", "Ataques de ratón + bloqueo (mantiene F)", "Ataques do mouse + bloqueio (mantém F)", "Attacchi mouse + parata (mantiene F)", "โจมตีและป้องกันด้วยเมาส์ (คง F)", "Chuột tấn công + đỡ (giữ F)");
+            Extra("preset.mouse_guard.desc", "僅鍵鼠：左鍵輕攻擊＋防禦，右鍵重攻擊＋防禦，F 仍為重攻擊。取代輕攻擊、重攻擊與防禦的既有綁定。", "Clavier / souris : clic gauche attaque légère + garde, clic droit attaque lourde + garde ; F garde l'attaque lourde. Remplace les affectations de ces trois actions.", "Nur Tastatur / Maus: Linksklick leichter Angriff + Block, Rechtsklick schwerer Angriff + Block; F bleibt schwerer Angriff. Ersetzt bisherige Belegungen dieser drei Aktionen.", "Solo teclado / ratón: clic izquierdo ataque ligero + bloqueo, clic derecho ataque pesado + bloqueo; F mantiene el ataque pesado. Sustituye las asignaciones de estas tres acciones.", "Só teclado / mouse: clique esquerdo ataque leve + bloqueio, clique direito ataque pesado + bloqueio; F mantém o ataque pesado. Substitui as teclas dessas três ações.", "Solo tastiera / mouse: clic sinistro attacco leggero + parata, clic destro attacco pesante + parata; F mantiene l'attacco pesante. Sostituisce le assegnazioni di queste tre azioni.", "เฉพาะคีย์บอร์ด / เมาส์: คลิกซ้ายโจมตีเบา＋ป้องกัน คลิกขวาโจมตีหนัก＋ป้องกัน F ยังโจมตีหนัก แทนที่ปุ่มเดิมของทั้งสามการกระทำ", "Chỉ bàn phím / chuột: chuột trái đánh nhẹ + đỡ, chuột phải đánh mạnh + đỡ; F vẫn đánh mạnh. Thay các phím hiện có của ba hành động này.");
             Extra("act.IA_LightAttack", "輕攻擊", "Attaque légère", "Leichter Angriff", "Ataque ligero", "Ataque leve", "Attacco leggero", "โจมตีเบา", "Tấn công nhẹ");
             Extra("act.IA_HeavyAttack", "重攻擊", "Attaque lourde", "Schwerer Angriff", "Ataque pesado", "Ataque pesado", "Attacco pesante", "โจมตีหนัก", "Tấn công mạnh");
             Extra("act.IA_Guard", "架勢／格擋", "Garde", "Blocken", "Bloquear", "Bloquear", "Parata", "ป้องกัน", "Đỡ đòn");
@@ -141,6 +146,7 @@ namespace PBZKeyForge
             Extra("act.IA_Jump", "跳躍／特殊移動", "Saut / déplacement spécial", "Springen / Spezialbewegung", "Saltar / movimiento especial", "Pular / movimento especial", "Salto / movimento speciale", "กระโดด / การเคลื่อนไหวพิเศษ", "Nhảy / di chuyển đặc biệt");
             Extra("act.IA_Crouch", "蹲下", "S'accroupir", "Ducken", "Agacharse", "Agachar", "Accovacciarsi", "ย่อตัว", "Cúi người");
             Extra("act.IA_MoveFast", "高速移動", "Sprint", "Sprinten", "Esprintar", "Correr", "Scatto", "วิ่งเร็ว", "Chạy nhanh");
+            Extra("act.IA_MoveSlow", "低速移動", "Marcher", "Gehen", "Caminar", "Andar", "Camminare", "เดิน", "Đi bộ");
             Extra("act.IA_LockTarget", "鎖定敵人", "Verrouiller la cible", "Ziel erfassen", "Fijar objetivo", "Fixar alvo", "Aggancia bersaglio", "ล็อกเป้าหมาย", "Khóa mục tiêu");
             Extra("act.IA_Interact", "對話／互動", "Interagir / parler", "Interagieren / Sprechen", "Interactuar / hablar", "Interagir / falar", "Interagisci / parla", "โต้ตอบ / พูดคุย", "Tương tác / nói chuyện");
             Extra("act.IA_Execute", "處決敵人", "Exécution", "Hinrichten", "Ejecutar", "Executar", "Esecuzione", "สังหาร", "Kết liễu");
@@ -149,7 +155,7 @@ namespace PBZKeyForge
             Extra("act.IA_SwitchWeapon", "更換武器", "Changer d'arme", "Waffe wechseln", "Cambiar arma", "Trocar arma", "Cambia arma", "เปลี่ยนอาวุธ", "Đổi vũ khí");
             Extra("act.IA_SwitchShadowArm", "更換影之武裝", "Changer d'arme fantôme", "Phantomwaffe wechseln", "Cambiar arma fantasma", "Trocar arma fantasma", "Cambia arma fantasma", "เปลี่ยนอาวุธเงา", "Đổi vũ khí bóng ma");
             Extra("act.IA_UltimateSkill", "絕技", "Déchaînement", "Kraftausbruch", "Estallido de poder", "Explosão de poder", "Esplosione di potere", "ปลดปล่อยพลัง", "Bùng nổ sức mạnh");
-            Extra("act.IA_Sense_Default", "澄心伺隙", "Œil de l'esprit", "Geistiges Auge", "Ojo de la mente", "Olho da mente", "Occhio della mente", "เนตรจิต", "Tâm nhãn");
+            Extra("act.IA_Sense_Default", "澄心洞照", "Œil de l'esprit", "Geistiges Auge", "Ojo de la mente", "Olho da mente", "Occhio della mente", "เนตรจิต", "Tâm nhãn");
             Extra("act.IA_OpenCharacterMenu", "開啟角色選單", "Menu du personnage", "Charaktermenü öffnen", "Abrir menú de personaje", "Abrir menu do personagem", "Apri menu personaggio", "เปิดเมนูตัวละคร", "Mở trình đơn nhân vật");
             Extra("act.IA_OpenMapMenu", "開啟地圖", "Ouvrir la carte", "Karte öffnen", "Abrir mapa", "Abrir mapa", "Apri mappa", "เปิดแผนที่", "Mở bản đồ");
             Extra("act.IA_UseTopItem", "使用上方藥品", "Utiliser le remède du haut", "Oberes Heilmittel nutzen", "Usar medicina superior", "Usar remédio superior", "Usa medicina superiore", "ใช้ยาช่องบน", "Dùng thuốc ô trên");

@@ -166,7 +166,8 @@ public static class EditorMenuTests
                     "Cancelling navigation discarded the draft.");
                 Field<Button>(form, "btnUndo").PerformClick();
                 var language = Field<ComboBox>(form, "cbLang");
-                for (int i = 0; i < I18n.Languages.Length; i++)
+                int languageCount = args.Contains("--all-languages") ? I18n.Languages.Length : 1;
+                for (int i = 0; i < languageCount; i++)
                 {
                     language.SelectedIndex = i;
                     var menu = Open(form);

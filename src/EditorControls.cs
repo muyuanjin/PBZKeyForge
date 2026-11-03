@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace PBZKeyForge
@@ -73,6 +74,15 @@ namespace PBZKeyForge
     {
         string value;
         bool changed, mixed;
+        public string[] DefaultKeys;
+        public bool UsesDefault;
+        public bool ActionLevelDefault;
+        public bool Unavailable;
+        public bool FactoryMatch { get { return UsesDefault || !Mixed && DefaultKeys != null && DefaultKeys.Contains(Value); } }
+        public bool EmptyBinding { get { return !Mixed && (UsesDefault ? DefaultKeys != null && !DefaultKeys.Any(k => !string.IsNullOrEmpty(k) && k != "None") : Value == "None"); } }
+        public Color StatusColor { get { return Changed ? BindingStatus.Pending : FactoryMatch ? BindingStatus.Factory : BindingStatus.Custom; } }
+        public string StatusText { get { return I18n.Str(Changed ? "views.pending" : UsesDefault && DefaultKeys == null ? "editor.defaultunknown" : FactoryMatch ? "views.original" : "views.savedcustom"); } }
+        public string DisplayText { get { return Unavailable ? "—" : Mixed ? I18n.Str("editor.mixed") : UsesDefault ? DefaultValue(DefaultKeys) : FriendlyKey(Value); } }
         public string Value { get { return value; } set { if (this.value != value) { this.value = value; Invalidate(); } } }
         public bool Changed { get { return changed; } set { if (changed != value) { changed = value; Invalidate(); } } }
         public bool Mixed { get { return mixed; } set { if (mixed != value) { mixed = value; Invalidate(); } } }
@@ -91,14 +101,19 @@ namespace PBZKeyForge
             e.Graphics.Clear(BackColor);
             float scale = e.Graphics.DpiX / 96f;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            Color fill = Changed ? EditorTheme.Preview : Hovered ? EditorTheme.Hover : EditorTheme.Floating;
+            bool quiet = Unavailable || EmptyBinding && FactoryMatch && !Changed;
+            bool emphasize = Hovered && Enabled || Focused;
+            Color fill = Changed ? EditorTheme.Preview : emphasize ? EditorTheme.Hover : quiet ? BackColor : EditorTheme.Floating;
             using (var shape = EditorArtwork.Rounded(new RectangleF(0.5f, 0.5f, Width - 1.5f, Height - 1.5f), 4 * scale))
             using (var brush = new SolidBrush(fill))
-            using (var pen = new Pen(Changed ? EditorTheme.AccentHover : Hovered ? EditorTheme.Muted : EditorTheme.Line))
-            { e.Graphics.FillPath(brush, shape); e.Graphics.DrawPath(pen, shape); }
-            string text = Mixed ? I18n.Str("editor.mixed") : FriendlyKey(Value);
-            TextRenderer.DrawText(e.Graphics, text, Font, new Rectangle(4, 0, Width - 8, Height), !Enabled ? Color.Gray : string.IsNullOrEmpty(Value) ? EditorTheme.Muted : EditorTheme.Ink,
+            using (var pen = new Pen(Changed ? BindingStatus.Pending : emphasize ? EditorTheme.Muted : EditorTheme.Line))
+            { e.Graphics.FillPath(brush, shape); if (!quiet || emphasize) e.Graphics.DrawPath(pen, shape); }
+            string text = EmptyBinding || Unavailable ? "—" : DisplayText;
+            Color ink = Unavailable || !Enabled ? EditorTheme.Muted : quiet ? BindingStatus.Factory : FactoryMatch && !Changed ? EditorTheme.Muted : StatusColor;
+            TextRenderer.DrawText(e.Graphics, text, Font, new Rectangle((int)(14 * scale), 0, Width - (int)(28 * scale), Height), ink,
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.SingleLine);
+            if (!Unavailable && (!quiet || emphasize))
+                BindingStatus.Dot(e.Graphics, StatusColor, 8 * scale, Height / 2f - 2.5f * scale, 5 * scale);
             if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, new Rectangle(3, 3, Width - 7, Height - 7));
         }
 
@@ -107,6 +122,7 @@ namespace PBZKeyForge
             if (string.IsNullOrEmpty(key)) return I18n.Str("editor.default");
             switch (key)
             {
+                case "None": return I18n.Str("editor.unbound");
                 case "LeftMouseButton": return I18n.Str("key.mouseleft");
                 case "RightMouseButton": return I18n.Str("key.mouseright");
                 case "MiddleMouseButton": return I18n.Str("key.mousemiddle");
@@ -141,6 +157,15 @@ namespace PBZKeyForge
                 default: return key;
             }
         }
+        public static string DefaultLabel(string[] keys)
+        {
+            return I18n.Str("editor.default") + " | " + DefaultValue(keys);
+        }
+        public static string DefaultValue(string[] keys)
+        {
+            string text = keys == null ? I18n.Str("editor.defaultunknown") : string.Join(" / ", keys.Where(key => !string.IsNullOrEmpty(key) && key != "None").Select(FriendlyKey).Distinct());
+            return text.Length == 0 ? I18n.Str("editor.unbound") : text;
+        }
     }
 
     internal sealed class PrimaryActionButton : EditorButton
@@ -168,12 +193,43 @@ namespace PBZKeyForge
         }
     }
 
-    internal sealed class KeyCaptureBox : TextBox
+    internal sealed class KeyCaptureBox : Control
     {
         public event Action<string> ModifierCaptured;
+        public event Action<string> MouseCaptured;
+        bool armed;
+        public KeyCaptureBox()
+        {
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Selectable | ControlStyles.ResizeRedraw, true);
+            TabStop = true;
+            Cursor = Cursors.Hand;
+            AccessibleRole = AccessibleRole.PushButton;
+        }
+        protected override bool IsInputKey(Keys keyData) { return (keyData & Keys.KeyCode) != Keys.Tab; }
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            bool wasArmed = armed && Focused;
+            Focus(); base.OnMouseDown(e);
+            if (!wasArmed || MouseCaptured == null) return;
+            string key = e.Button == MouseButtons.Left ? "LeftMouseButton" : e.Button == MouseButtons.Right ? "RightMouseButton"
+                : e.Button == MouseButtons.Middle ? "MiddleMouseButton" : e.Button == MouseButtons.XButton1 ? "ThumbMouseButton"
+                : e.Button == MouseButtons.XButton2 ? "ThumbMouseButton2" : null;
+            if (key != null) MouseCaptured(key);
+        }
+        protected override void OnGotFocus(EventArgs e) { armed = true; base.OnGotFocus(e); Invalidate(); }
+        protected override void OnLostFocus(EventArgs e) { armed = false; base.OnLostFocus(e); Invalidate(); }
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            e.Graphics.Clear(BackColor);
+            using (var pen = new Pen(Focused ? EditorTheme.Accent : EditorTheme.Line))
+                e.Graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
+            TextRenderer.DrawText(e.Graphics, armed ? I18n.Str("editor.capturing") : Text, Font, Rectangle.Inflate(ClientRectangle, -8, -2), Enabled ? armed ? EditorTheme.Ink : ForeColor : EditorTheme.Muted,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+            if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(ClientRectangle, -4, -4));
+        }
         protected override void WndProc(ref Message message)
         {
-            if (message.Msg == 0x100 || message.Msg == 0x104)
+            if (Focused && armed && (message.Msg == 0x100 || message.Msg == 0x104))
             {
                 int virtualKey = message.WParam.ToInt32();
                 long data = message.LParam.ToInt64();
@@ -194,14 +250,15 @@ namespace PBZKeyForge
 
     internal sealed class BindingDialog : EditorWindow
     {
-        readonly ComboBox keys = new EditorComboBox();
+        readonly ComboBox keys = new EditorComboBox { CenterText = true };
         public string Result;
         sealed class Choice
         {
             public string Key;
-            public override string ToString() { return BindingButton.FriendlyKey(Key); }
+            public string[] DefaultKeys;
+            public override string ToString() { return Key == "" ? BindingButton.DefaultLabel(DefaultKeys) : BindingButton.FriendlyKey(Key); }
         }
-        public BindingDialog(string action, bool gamepad, string value)
+        public BindingDialog(string action, bool gamepad, string value, string[] defaultKeys, bool isDefault)
         {
             Text = I18n.Str("editor.editbinding", action);
             Font = new Font("Microsoft YaHei UI", 10f);
@@ -212,28 +269,24 @@ namespace PBZKeyForge
             MinimizeBox = false; MaximizeBox = false;
             BackColor = EditorTheme.Background;
             ForeColor = EditorTheme.Ink;
-            var help = new Label { Left = 20, Top = 18, Width = 470, Height = 45, Text = I18n.Str(gamepad ? "editor.padinput" : "editor.keyinput") };
+            var help = new Label { Left = 20, Top = 18, Width = 430, Height = 45, Text = I18n.Str(gamepad ? "editor.padinput" : "editor.keyinput") };
+            var question = new BindingHelpButton("help.defaults") { Left = 460, Top = 18, Width = 30, Height = 32 };
             keys.SetBounds(20, 72, 470, 30);
             keys.DropDownStyle = ComboBoxStyle.DropDown;
-            foreach (string key in gamepad ? KeyNames.Gamepad : KeyNames.Keyboard) keys.Items.Add(new Choice { Key = key });
-            keys.Text = BindingButton.FriendlyKey(value);
-            for (int i = 0; i < keys.Items.Count; i++) if (((Choice)keys.Items[i]).Key == (value ?? "")) keys.SelectedIndex = i;
-            var capture = new KeyCaptureBox { Left = 20, Top = 120, Width = 470, Height = 30, ReadOnly = true, Text = I18n.Str("editor.capture"), BackColor = EditorTheme.Floating, ForeColor = EditorTheme.Muted, BorderStyle = BorderStyle.FixedSingle, TextAlign = HorizontalAlignment.Center };
+            foreach (string key in gamepad ? KeyNames.Gamepad : KeyNames.Keyboard) keys.Items.Add(new Choice { Key = key, DefaultKeys = defaultKeys });
+            keys.Text = isDefault ? BindingButton.DefaultLabel(defaultKeys) : BindingButton.FriendlyKey(value);
+            for (int i = 0; i < keys.Items.Count; i++) if (((Choice)keys.Items[i]).Key == (isDefault ? "" : value ?? "")) keys.SelectedIndex = i;
+            var capture = new KeyCaptureBox { Left = 20, Top = 120, Width = 470, Height = 34, Text = I18n.Str("editor.capture"), BackColor = EditorTheme.Floating, ForeColor = EditorTheme.Muted };
             capture.ModifierCaptured += SelectKey;
-            capture.PreviewKeyDown += delegate(object sender, PreviewKeyDownEventArgs e) { e.IsInputKey = true; };
+            capture.MouseCaptured += SelectKey;
+            capture.PreviewKeyDown += delegate(object sender, PreviewKeyDownEventArgs e) { e.IsInputKey = e.KeyCode != Keys.Tab; };
             capture.KeyDown += delegate(object sender, KeyEventArgs e)
             {
+                if (e.KeyCode == Keys.Tab)
+                { SelectNextControl(capture, !e.Shift, true, true, true); e.SuppressKeyPress = true; return; }
                 string key = KeyFromCode(e.KeyCode);
                 if (key != null) SelectKey(key);
                 e.SuppressKeyPress = true;
-            };
-            capture.MouseDown += delegate(object sender, MouseEventArgs e)
-            {
-                if (e.Button == MouseButtons.Left) SelectKey("LeftMouseButton");
-                else if (e.Button == MouseButtons.Right) SelectKey("RightMouseButton");
-                else if (e.Button == MouseButtons.Middle) SelectKey("MiddleMouseButton");
-                else if (e.Button == MouseButtons.XButton1) SelectKey("ThumbMouseButton");
-                else if (e.Button == MouseButtons.XButton2) SelectKey("ThumbMouseButton2");
             };
             capture.Enabled = !gamepad;
             var clear = new EditorButton { Left = 20, Top = 176, Width = 165, Height = 33, Text = I18n.Str("editor.clear") };
@@ -244,11 +297,12 @@ namespace PBZKeyForge
                 var choice = keys.SelectedItem as Choice;
                 Result = choice != null && keys.Text == choice.ToString() ? choice.Key : keys.Text.Trim();
                 if (Result == I18n.Str("editor.default")) Result = null;
+                else if (Result == I18n.Str("editor.unbound")) Result = "None";
                 DialogResult = DialogResult.OK;
             };
             var cancel = new EditorButton { Left = 394, Top = 176, Width = 96, Height = 33, Text = I18n.Str("editor.cancel"), DialogResult = DialogResult.Cancel };
             AcceptButton = ok; CancelButton = cancel;
-            Controls.AddRange(new Control[] { help, keys, capture, clear, ok, cancel });
+            Controls.AddRange(new Control[] { help, question, keys, capture, clear, ok, cancel });
             foreach (Control control in Controls) if (control != Caption) control.Top += Caption.Height;
             AutoScaleDimensions = new SizeF(96f, 96f);
             PerformAutoScale();
@@ -259,6 +313,8 @@ namespace PBZKeyForge
             for (int i = 0; i < keys.Items.Count; i++) if (((Choice)keys.Items[i]).Key == key) { keys.SelectedIndex = i; return; }
             keys.Text = key;
         }
+        protected override void OnShown(EventArgs e)
+        { base.OnShown(e); keys.Focus(); }
         static string KeyFromCode(Keys key)
         {
             if (key >= Keys.A && key <= Keys.Z || key >= Keys.F1 && key <= Keys.F12) return key.ToString();

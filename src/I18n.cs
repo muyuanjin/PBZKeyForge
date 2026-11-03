@@ -108,7 +108,7 @@ namespace PBZKeyForge
             Add("zh-Hans", "act.IA_SwitchWeapon", "更换武器");
             Add("zh-Hans", "act.IA_SwitchShadowArm", "更换影之武装");
             Add("zh-Hans", "act.IA_UltimateSkill", "绝技");
-            Add("zh-Hans", "act.IA_Sense_Default", "澄心伺隙");
+            Add("zh-Hans", "act.IA_Sense_Default", "澄心洞照");
             Add("zh-Hans", "act.IA_OpenCharacterMenu", "打开角色菜单");
             Add("zh-Hans", "act.IA_OpenMapMenu", "打开地图菜单");
             Add("zh-Hans", "act.IA_UseTopItem", "使用上方药");

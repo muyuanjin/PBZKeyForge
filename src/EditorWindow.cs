@@ -103,6 +103,9 @@ namespace PBZKeyForge
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
+            // The client owns the entire frame, including its activation appearance.
+            int policy = 1; // DWMNCRP_DISABLED
+            DwmSetWindowAttribute(Handle, 2, ref policy, sizeof(int));
             LayoutChrome();
         }
         void LayoutChrome()
@@ -163,6 +166,14 @@ namespace PBZKeyForge
         protected override void WndProc(ref Message message)
         {
             if (message.Msg == 0x83) { message.Result = IntPtr.Zero; return; }
+            // WS_THICKFRAME retains native sizing, but must not paint a native border.
+            if (message.Msg == 0x85 || message.Msg == 0xAE || message.Msg == 0xAF)
+            { message.Result = IntPtr.Zero; return; }
+            if (message.Msg == 0x86)
+            {
+                message.LParam = new IntPtr(-1); // Process activation without repainting the frame.
+                base.WndProc(ref message); return;
+            }
             if (message.Msg == 0x24)
             {
                 var monitor = new MonitorInfo { Size = Marshal.SizeOf(typeof(MonitorInfo)) };
@@ -201,6 +212,7 @@ namespace PBZKeyForge
         [StructLayout(LayoutKind.Sequential)] struct MinMaxInfo { public WinPoint Reserved, MaxSize, MaxPosition, MinTrackSize, MaxTrackSize; }
         [StructLayout(LayoutKind.Sequential)] struct MonitorInfo { public int Size; public WinRect Monitor, Work; public int Flags; }
         [DllImport("user32.dll")] static extern bool ReleaseCapture();
+        [DllImport("dwmapi.dll")] static extern int DwmSetWindowAttribute(IntPtr window, int attribute, ref int value, int size);
         [DllImport("user32.dll")] static extern IntPtr SendMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
         [DllImport("user32.dll")] static extern IntPtr MonitorFromWindow(IntPtr window, int flags);
         [DllImport("user32.dll")] static extern bool GetMonitorInfo(IntPtr monitor, ref MonitorInfo info);

@@ -36,11 +36,11 @@ public static class EditorUiTests
     }
     static void ColumnsAlign(MainForm form, string hostName)
     {
-        var tables = Descendants(Field<Panel>(form, hostName)).OfType<TableLayoutPanel>().Where(t => t.ColumnCount == 4).ToArray();
-        var header = tables.First(t => t.Controls.Count == 4);
-        var body = tables.First(t => t.Controls.Count > 4);
+        var tables = Descendants(Field<Panel>(form, hostName)).OfType<TableLayoutPanel>().Where(t => t.ColumnCount == 5).ToArray();
+        var header = tables.First(t => t.Controls.Count == 5);
+        var body = tables.First(t => t.Controls.Count > 5);
         Assert(header.GetColumnWidths().SequenceEqual(body.GetColumnWidths()), "Fixed header and binding columns diverged at native DPI.");
-        for (int column = 1; column < 4; column++)
+        for (int column = 2; column < 5; column++)
         {
             var label = (Label)header.GetControlFromPosition(column, 0);
             var button = body.GetControlFromPosition(column, 0);
@@ -162,17 +162,23 @@ public static class EditorUiTests
         {
             ClickDevice(form, gamepad);
             var buttons = Field<IDictionary>(form, gamepad ? "padButtons" : "kbButtons");
-            int visited = 0;
+            int visited = 0, unavailable = 0;
             foreach (DictionaryEntry entry in buttons)
                 for (int slot = 0; slot < ((Array)entry.Value).Length; slot++)
                 {
                     string action = (string)entry.Key; int binding = slot;
+                    var cell = (BindingButton)BindingCell(form, gamepad, action, binding);
+                    if (!cell.Enabled)
+                    {
+                        Assert(cell.Unavailable && cell.DisplayText == "—", "Unavailable slots must show a disabled placeholder.");
+                        unavailable++; continue;
+                    }
                     string before = gamepad ? form.Session.GetGamepad(action, slot) : form.Session.GetKeyboard(action, slot);
                     RespondDialog(form, delegate { ClickBindingCell(BindingCell(form, gamepad, action, binding)); }, delegate(Form dialog)
                     {
                         Assert(Field<ComboBox>(dialog, "keys").Items.Count > 0, "Binding dialog has no key choices.");
                         Assert(dialog.Text.Contains(I18n.Str("act." + action)), "Binding cell opened another action's dialog: " + action);
-                        Assert(Field<ComboBox>(dialog, "keys").Text == BindingButton.FriendlyKey(before), "Binding dialog did not show the clicked slot's value.");
+                        Assert(Field<ComboBox>(dialog, "keys").Text == (cell.UsesDefault ? BindingButton.DefaultLabel(cell.DefaultKeys) : cell.DisplayText), "Binding dialog did not show the clicked slot's value.");
                         ((Button)dialog.CancelButton).PerformClick();
                     }, "BindingDialog");
                     Assert((gamepad ? form.Session.GetGamepad(action, slot) : form.Session.GetKeyboard(action, slot)) == before,
@@ -180,7 +186,7 @@ public static class EditorUiTests
                     Assert(!form.Session.HasAnyDrafts, "Cancel created a draft: " + action + "/" + slot);
                     visited++;
                 }
-            Assert(visited == buttons.Count * 3 && visited > 0, "Binding cell coverage missed a row or slot.");
+            Assert(visited + unavailable == buttons.Count * 3 && visited > 0, "Binding cell coverage missed a row or slot.");
             Console.WriteLine("Opened and cancelled " + visited + (gamepad ? " gamepad" : " keyboard") + " binding cells.");
         }
         Assert(inputBefore.SequenceEqual(File.ReadAllBytes(input)) && sharedBefore.SequenceEqual(File.ReadAllBytes(shared)), "Opening/cancelling binding cells wrote save files.");
@@ -205,6 +211,75 @@ public static class EditorUiTests
         Assert(form.Session.GetGamepad("IA_Jump", 0) == originalPad && !form.Session.HasAnyDrafts, "Undo button did not restore original controller state.");
         Assert(inputBefore.SequenceEqual(File.ReadAllBytes(input)) && sharedBefore.SequenceEqual(File.ReadAllBytes(shared)), "Clearing draft overrides wrote save files.");
         ClickDevice(form, false);
+    }
+    static void UnboundBindings(MainForm form, string input, string shared, string output, int languageCount)
+    {
+        byte[] before = File.ReadAllBytes(input), sharedBefore = File.ReadAllBytes(shared);
+        var language = Field<ComboBox>(form, "cbLang");
+        language.SelectedIndex = 0;
+        Assert(((BindingButton)BindingCell(form, false, "IA_HeavyAttack", 0)).DisplayText == "F", "Inherited keyboard slots must display their resource default key without a repeated prefix.");
+        Assert(KeyboardDefaults.ForAction("IA_OpenMapMenu").SequenceEqual(new[] { "M", "Tab" }), "Map action defaults must retain both registered resource keys.");
+        Assert(KeyboardDefaults.ForAction("IA_ShadowArm_LongPress").SequenceEqual(new[] { "LeftControl" }), "Holding Phantom Edges must retain the action-level Ctrl default.");
+        Assert(BindingButton.DefaultLabel(new[] { "None" }) == "默认 | 无绑定", "Explicitly empty defaults must show unbound.");
+        Assert(((BindingButton)BindingCell(form, false, "IA_Guard", 2)).EmptyBinding, "Empty factory slots must use a quiet placeholder.");
+        foreach (bool gamepad in new[] { false, true })
+        {
+            var defaultButton = (BindingButton)BindingCell(form, gamepad, "IA_HeavyAttack", 0);
+            ClickDevice(form, gamepad);
+            RespondDialog(form, delegate { ClickBindingCell(defaultButton); }, delegate(Form dialog)
+            {
+                Assert(Field<ComboBox>(dialog, "keys").Text == BindingButton.DefaultLabel(defaultButton.DefaultKeys), "Default dialog choice must identify the same concrete key as its table cell.");
+                ((Button)dialog.CancelButton).PerformClick();
+            }, "BindingDialog");
+        }
+        ClickDevice(form, false);
+        Shot(form, output, "keyboard-defaults");
+        ClickDevice(form, true); Shot(form, output, "gamepad-defaults");
+        for (int index = 0; index < languageCount; index++)
+        {
+            language.SelectedIndex = index;
+            foreach (bool gamepad in new[] { false, true })
+            {
+                BindingAction(form, gamepad, "IA_Guard", 0, "None", false);
+                var button = (BindingButton)BindingCell(form, gamepad, "IA_Guard", 0);
+                Assert(button.Value == "None" && button.DisplayText == I18n.Str("editor.unbound"), "Explicit unbinding must be localized and distinct from default.");
+                RespondDialog(form, delegate { ClickBindingCell(button); }, delegate(Form dialog)
+                {
+                    var choices = Field<ComboBox>(dialog, "keys");
+                    Assert(choices.Text == I18n.Str("editor.unbound"), "Reopening unbound must keep the explicit unbound choice.");
+                    var capture = Descendants(dialog).Single(control => control.GetType().Name == "KeyCaptureBox");
+                    Assert(!(capture is TextBoxBase) && capture.ContextMenuStrip == null, "Capture area must not be a text editor or expose an edit menu.");
+                    VisibleInsideForm(dialog, capture);
+                    foreach (var action in Descendants(dialog).OfType<Button>().Where(control => control.Visible)) VisibleInsideForm(dialog, action);
+                    if (!gamepad)
+                    {
+                        capture.Focus();
+                        SendMessage(capture.Handle, 0x100, new IntPtr((int)Keys.F9), new IntPtr(1));
+                        Assert(choices.Text == "F9", "Capture control must receive keyboard input.");
+                        SendMessage(capture.Handle, 0x204, IntPtr.Zero, new IntPtr(8 | 8 << 16));
+                        SendMessage(capture.Handle, 0x205, IntPtr.Zero, new IntPtr(8 | 8 << 16));
+                        Assert(choices.Text == BindingButton.FriendlyKey("RightMouseButton"), "Right click must capture a mouse binding.");
+                        SendMessage(capture.Handle, 0x7b, capture.Handle, new IntPtr(-1));
+                        SendMessage(capture.Handle, 0x100, new IntPtr((int)Keys.ShiftKey), new IntPtr(1L | 0x36L << 16));
+                        Assert(choices.Text == BindingButton.FriendlyKey("RightShift"), "Capture must preserve modifier side.");
+                    }
+                    choices.SelectedIndex = 1;
+                    if (index == 0) Shot(dialog, output, gamepad ? "unbound-gamepad-dialog" : "unbound-keyboard-dialog");
+                    ((Button)dialog.CancelButton).PerformClick();
+                }, "BindingDialog");
+                Assert(button.Value == "None", "Cancelling capture must preserve unbinding.");
+                BindingAction(form, gamepad, "IA_Guard", 0, "", false);
+                Assert((gamepad ? form.Session.GetGamepad("IA_Guard", 0) == form.Session.GetGamepadDefault("IA_Guard", 0) : form.Session.GetKeyboard("IA_Guard", 0) == null), "Selecting default must restore inheritance rather than unbind.");
+                string display = ((BindingButton)BindingCell(form, gamepad, "IA_Guard", 0)).DisplayText;
+                string expectedDefault = gamepad ? form.Session.GetGamepadDefault("IA_Guard", 0) : form.Session.GetKeyboardDefault("IA_Guard", 0);
+                Assert(display == BindingButton.DefaultValue(new[] { expectedDefault }), "Inherited cells must display their exact resource slot default in every language.");
+                if (form.Session.HasChanges) ClickButton(form, "btnUndo");
+            }
+        }
+        language.SelectedIndex = 0; ClickDevice(form, false);
+        BindingAction(form, false, "IA_Guard", 0, "None", false);
+        Shot(form, output, "unbound-draft"); ClickButton(form, "btnUndo");
+        Assert(before.SequenceEqual(File.ReadAllBytes(input)) && sharedBefore.SequenceEqual(File.ReadAllBytes(shared)), "Binding dialogs must not write saves before Apply.");
     }
     static void ResolveConflictButton(MainForm form, DialogResult answer)
     {
@@ -335,7 +410,7 @@ public static class EditorUiTests
                     dialog.ShowInTaskbar = false; dialog.Opacity = 0;
                     Assert(dialog.FormBorderStyle == FormBorderStyle.None, "Binding dialog did not share the custom window frame.");
                     var choices = Field<ComboBox>(dialog, "keys");
-                    var capture = Descendants(dialog).OfType<TextBox>().First(c => c.GetType().Name == "KeyCaptureBox");
+                    var capture = Descendants(dialog).First(c => c.GetType().Name == "KeyCaptureBox");
                     string[] modifiers = { "LeftShift", "RightShift", "LeftControl", "RightControl", "LeftAlt", "RightAlt" };
                     int[] virtualKeys = { 0x10, 0x10, 0x11, 0x11, 0x12, 0x12 }, scans = { 0x2a, 0x36, 0x1d, 0x1d, 0x38, 0x38 };
                     for (int m = 0; !gamepad && m < modifiers.Length; m++)
@@ -368,6 +443,7 @@ public static class EditorUiTests
         {
             Application.EnableVisualStyles();
             bool controlsOnly = args.Contains("--controls-only");
+            int languageCount = args.Contains("--all-languages") ? I18n.Languages.Length : 1;
             captureImages = !controlsOnly;
             int awareness;
             Assert(GetProcessDpiAwareness(IntPtr.Zero, out awareness) == 0 && awareness == 1, "UI host must use the application's System DPI manifest.");
@@ -380,7 +456,7 @@ public static class EditorUiTests
             {
                 // DrawToBitmap captures controls without flashing every test state on the user's desktop.
                 form.ShowInTaskbar = false; form.Opacity = 0;
-                form.UiSmoke(input); form.Show(); Application.DoEvents();
+                form.UiSmoke(input); form.ShowActionView(true); form.Show(); Application.DoEvents();
                 Assert(!Field<Label>(form, "lblPath").Text.Contains(Path.GetPathRoot(input)),
                     "The save-location caption must not expose the user's absolute path.");
                 if (args.Length > 2 && args[2] == "--dialog-only")
@@ -398,6 +474,15 @@ public static class EditorUiTests
                     Shot(form, output, "screenshot");
                     return 0;
                 }
+                if (args.Contains("--bindings-only"))
+                {
+                    Field<ComboBox>(form, "cbLang").SelectedIndex = 0;
+                    AllBindingCellsCancel(form, input, shared);
+                    UnboundBindings(form, input, shared, output, languageCount);
+                    ClearBindingOverrides(form, input, shared);
+                    Console.WriteLine("PASS: binding controls; " + checks + " checks; " + languageCount + " languages.");
+                    return 0;
+                }
                 float dpiScale;
                 using (var graphics = form.CreateGraphics()) { dpiScale = graphics.DpiX / 96f; Console.WriteLine("Native UI DPI: " + graphics.DpiX); }
                 Size regularSize = new Size((int)(1280 * dpiScale), (int)(800 * dpiScale));
@@ -412,7 +497,7 @@ public static class EditorUiTests
                 Assert(!apply.Enabled, "Clean editor must not allow an empty apply.");
                 language.SelectedIndex = 0; form.Size = regularSize; Application.DoEvents();
                 WindowChrome(form, output);
-                for (int i = 0; i < I18n.Languages.Length && (!controlsOnly || i == 0); i++)
+                for (int i = 0; i < languageCount; i++)
                 {
                     language.SelectedIndex = i; form.Size = regularSize; Application.DoEvents();
                     VisibleInsideForm(form, language); VisibleInsideForm(form, presets); VisibleInsideForm(form, apply);
@@ -489,7 +574,7 @@ public static class EditorUiTests
                 ClickButton(form, "btnUndo");
                 Assert(!form.Session.IsResetPending && presets.Enabled, "Undo reset did not restore the editor.");
                 form.Session.SetKeyboard("IA_Jump", 0, "F10"); form.RenderSession();
-                for (int i = 0; i < I18n.Languages.Length && (!controlsOnly || i == 0); i++)
+                for (int i = 0; i < languageCount; i++)
                 {
                     language.SelectedIndex = i; form.Size = form.MinimumSize; Application.DoEvents();
                     VisibleInsideForm(form, apply); VisibleInsideForm(form, presets);

@@ -1,4 +1,4 @@
-#requires -Version 5.1
+﻿#requires -Version 5.1
 <#
     Builds PBZKeyForge with the .NET Framework compiler shipped with Windows.
     No SDK, no NuGet, no runtime install for the end user.
@@ -25,14 +25,21 @@ if (-not $csc) { throw "csc.exe (.NET Framework 4.x) not found." }
 New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 
 $sources = @(Get-ChildItem $src -Filter *.cs | ForEach-Object { $_.FullName })
-$refs = @("/r:System.dll", "/r:System.Core.dll", "/r:System.Windows.Forms.dll", "/r:System.Drawing.dll")
+$refs = @("/r:System.dll", "/r:System.Core.dll", "/r:System.Windows.Forms.dll", "/r:System.Drawing.dll", "/r:System.Web.Extensions.dll")
 $iconArg = @()
 if (Test-Path $icon) { $iconArg = @("/win32icon:$icon") }
 $artworkArgs = @(
     "/resource:$root\assets\ui\wallpaper.jpg,PBZKeyForge.Wallpaper",
     "/resource:$root\assets\ui\game-wordmark.png,PBZKeyForge.GameWordmark",
-    "/resource:$root\assets\ui\app-mark.png,PBZKeyForge.AppMark"
+    "/resource:$root\assets\ui\app-mark.png,PBZKeyForge.AppMark",
+    "/resource:$root\assets\ui\devices\hotspots.json,PBZKeyForge.Device.hotspots"
 )
+foreach ($deviceAsset in Get-ChildItem "$root\assets\ui\devices" -Filter *.png) {
+    $artworkArgs += "/resource:$($deviceAsset.FullName),PBZKeyForge.Device.$($deviceAsset.BaseName)"
+}
+foreach ($actionAsset in Get-ChildItem "$root\assets\ui\actions" -Filter *.png -ErrorAction SilentlyContinue) {
+    $artworkArgs += "/resource:$($actionAsset.FullName),PBZKeyForge.Action.$($actionAsset.BaseName)"
+}
 
 Write-Host "Compiling GUI with $csc"
 $guiArgs = @("/nologo", "/optimize+", "/target:winexe", "/out:$OutputDir\PBZKeyForge.exe", "/win32manifest:$manifest") + $iconArg + $artworkArgs + $refs + $sources
@@ -43,5 +50,7 @@ Write-Host "Compiling CLI"
 $cliArgs = @("/nologo", "/optimize+", "/target:exe", "/out:$OutputDir\PBZKeyForge-cli.exe", "/win32manifest:$manifest") + $artworkArgs + $refs + $sources
 & $csc $cliArgs
 if ($LASTEXITCODE -ne 0) { throw "CLI build failed" }
+
+Copy-Item "$root\THIRD-PARTY-NOTICES.md" $OutputDir
 
 Get-ChildItem "$OutputDir\PBZKeyForge*.exe" | Select-Object Name, Length | Format-Table -AutoSize
