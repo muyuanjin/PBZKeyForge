@@ -1,0 +1,21 @@
+syntax = "proto3";
+package pbzkeyforge;
+
+message PresetShare {
+  uint32 baseline = 1;
+  repeated DeviceScope scopes = 2;
+  repeated string extra_keys = 3;
+  repeated string extra_families = 4;
+}
+
+message DeviceScope {
+  // 0: keyboard/mouse, 1: Xbox, 2: PlayStation.
+  uint32 device = 1;
+  repeated BindingChange changes = 2;
+}
+
+message BindingChange {
+  uint32 action = 1;
+  repeated uint32 added = 2 [packed = true];
+  repeated uint32 removed = 3 [packed = true];
+}

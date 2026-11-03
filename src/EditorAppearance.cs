@@ -139,7 +139,7 @@ namespace PBZKeyForge
         }
     }
 
-    internal sealed class EditorComboBox : ComboBox
+    internal class EditorComboBox : ComboBox
     {
         bool hovered;
         public bool CenterText;

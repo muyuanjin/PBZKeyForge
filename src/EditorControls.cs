@@ -19,7 +19,7 @@ namespace PBZKeyForge
         public static readonly Color Accent = Color.FromArgb(173, 54, 59);
         public static readonly Color AccentHover = Color.FromArgb(196, 74, 78);
         public static readonly Color Amber = Accent;
-        public static readonly Color Preview = Color.FromArgb(53, 30, 33);
+        public static readonly Color Preview = Color.FromArgb(49, 43, 28);
         public static readonly Color Green = Color.FromArgb(172, 189, 167);
         public static readonly Color Disabled = Color.FromArgb(45, 50, 53);
     }
@@ -54,7 +54,7 @@ namespace PBZKeyForge
             int textWidth = Math.Min(TextRenderer.MeasureText(text, Font).Width, Math.Max(20, bounds.Width - badgeWidth - badgeGap - dirtyWidth));
             TextRenderer.DrawText(e.Graphics, text, Font, new Rectangle(bounds.X, bounds.Y, textWidth, bounds.Height), Selected ? EditorTheme.Ink : EditorTheme.Muted, flags);
             if (Dirty)
-                using (var brush = new SolidBrush(EditorTheme.AccentHover))
+                using (var brush = new SolidBrush(BindingStatus.Pending))
                     e.Graphics.FillEllipse(brush, bounds.X + textWidth + 5 * scale, Height / 2f - 3 * scale, 6 * scale, 6 * scale);
             if (badgeWidth > 0)
             {
@@ -67,6 +67,27 @@ namespace PBZKeyForge
                 e.Graphics.DrawLine(pen, 0, Height - (underline + 1) / 2 - 1, Width, Height - (underline + 1) / 2 - 1);
             int focusInset = (int)Math.Round(4 * scale);
             if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, new Rectangle(focusInset, focusInset, Width - focusInset * 2, Height - focusInset * 3));
+        }
+    }
+
+    public sealed class PresetApplyButton : EditorButton
+    {
+        PresetApplyMode mode;
+        public PresetApplyMode Mode { get { return mode; } set { mode = value; Invalidate(); } }
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            float scale = e.Graphics.DpiX / 96f;
+            Color tone = Mode == PresetApplyMode.Append ? Color.FromArgb(132, 174, 231)
+                : Mode == PresetApplyMode.Replace ? Color.FromArgb(114, 199, 182) : Color.FromArgb(193, 153, 228);
+            Color fill = !Enabled ? EditorTheme.Surface : Color.FromArgb(30 + tone.R / 12, 34 + tone.G / 12, 38 + tone.B / 12);
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            using (var shape = EditorArtwork.Rounded(new RectangleF(.5f, .5f, Width - 1.5f, Height - 1.5f), 4 * scale))
+            using (var brush = new SolidBrush(fill))
+            using (var pen = new Pen(Enabled ? tone : EditorTheme.Line, Hovered ? 2 : 1))
+            { e.Graphics.FillPath(brush, shape); e.Graphics.DrawPath(pen, shape); }
+            TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, Enabled ? tone : EditorTheme.Muted,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+            if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, new Rectangle(3, 3, Width - 7, Height - 7));
         }
     }
 

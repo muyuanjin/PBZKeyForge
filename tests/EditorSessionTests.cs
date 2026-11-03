@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using PBZKeyForge;
 
-// Compile with Gvas.cs, GameSchemeSettings.cs, I18n.cs, I18n.Editor.cs, I18n.Extended.cs, KeyboardDefaults.cs, Presets.cs and EditorSession.cs.
+// Compile against the application sources with /main:EditorSessionTests; see tests/README.md.
 // Every write is made to a freshly created fixture copy; original game saves are never inputs.
 public static class EditorSessionTests
 {
@@ -318,10 +318,13 @@ public static class EditorSessionTests
         Assert(scopedReset.GamepadKeysFor(Custom1).SelectMany(keys => keys.Items).All(item => SaveFile.Field(item, "Key") == SaveFile.Field(item, "DefaultKey")), "current-scheme reset restores each controller family's defaults");
 
         var resetPreview = Open(NewInput("current-scheme-reset-preview"));
+        resetPreview.SelectPreset("vanilla_current");
+        Assert(!resetPreview.HasChanges && !resetPreview.HasAnyDrafts, "restoring effective factory bindings does not create a draft");
+        resetPreview.SelectPreset(null);
         resetPreview.SetKeyboard("IA_Guard", 0, "F8");
         resetPreview.SetGamepad("IA_Guard", 0, "Gamepad_FaceButton_Top");
         resetPreview.SelectPreset("vanilla_current");
-        Assert(resetPreview.GetKeyboard("IA_Guard", 0) == null, "current-scheme reset previews default keyboard inheritance");
+        Assert(resetPreview.GetKeyboard("IA_Guard", 0) == "RightMouseButton", "restoring a draft to its saved effective keys clears the draft without changing records");
         Assert(resetPreview.GetGamepad("IA_Guard", 0) != "Gamepad_FaceButton_Top", "current-scheme reset previews the controller default");
         resetPreview.SelectPreset(null);
         Assert(resetPreview.GetKeyboard("IA_Guard", 0) == "F8" && resetPreview.GetGamepad("IA_Guard", 0) == "Gamepad_FaceButton_Top", "cancel restores the pre-reset draft");
@@ -430,7 +433,31 @@ public static class EditorSessionTests
             string path = NewInput("preset-metadata-parity-" + preset.Id); File.WriteAllBytes(path, sourceBytes);
             var session = Open(path); session.SelectPreset(preset.Id);
             Assert(session.Apply().Success, preset.Id + " GUI metadata fixture applies");
-            Assert(expected.ToBytes().SequenceEqual(File.ReadAllBytes(path)), preset.Id + " GUI and CLI shared transformation produce byte-identical metadata-preserving output");
+            var actual = SaveFile.Load(path);
+            var actions = source.RecordFor(Custom1).Entries.Select(entry => entry.Name).Union(expected.RecordFor(Custom1).Entries.Select(entry => entry.Name)).Distinct();
+            foreach (string action in actions.Where(InputDefaults.HasAction))
+            {
+                Func<SaveFile, string[]> keys = save => InputDefaults.ResolveKeys(action, false, save.RecordFor(Custom1).Entries
+                    .Where(entry => entry.Name == action && !Presets.IsGamepadOverride(save.GamepadKeysFor(Custom1), entry))
+                    .Select(entry => new KeyValuePair<int, string>(entry.Slot, entry.Key)));
+                Assert(!keys(expected).Except(keys(actual)).Any() && !keys(actual).Except(keys(expected)).Any(), preset.Id + " GUI and CLI have the same effective keyboard bindings: " + action);
+            }
+            for (int family = 0; family < actual.GamepadKeysFor(Custom1).Count; family++)
+                foreach (string action in expected.GamepadKeysFor(Custom1)[family].Items.Select(item => SaveFile.Field(item, "MappingName")).Distinct().Where(InputDefaults.HasAction))
+                {
+                    Func<SaveFile, string[]> keys = save => InputDefaults.ResolveKeys(action, true, save.GamepadKeysFor(Custom1)[family].Items
+                        .Where(item => SaveFile.Field(item, "MappingName") == action && InputDefaults.ForRawSlot(action, true, InputDefaults.RawSlot(SaveFile.Field(item, "Slot"))) == SaveFile.Field(item, "DefaultKey"))
+                        .Select(item => new KeyValuePair<int, string>(InputDefaults.RawSlot(SaveFile.Field(item, "Slot")), SaveFile.Field(item, "Key"))));
+                    Assert(!keys(expected).Except(keys(actual)).Any() && !keys(actual).Except(keys(expected)).Any(), preset.Id + " GUI and CLI have the same effective controller bindings: " + action);
+                }
+            ApplyTarget(actual, preset);
+            foreach (var save in new[] { expected, actual })
+            {
+                save.RecordFor(Custom1).Entries = save.RecordFor(Custom1).Entries.OrderBy(entry => entry.Name).ThenBy(entry => entry.Slot).ToList();
+                foreach (var keys in save.GamepadKeysFor(Custom1))
+                    keys.Items = keys.Items.OrderBy(item => SaveFile.Field(item, "MappingName")).ThenBy(item => SaveFile.Field(item, "Slot")).ToList();
+            }
+            Assert(expected.ToBytes().SequenceEqual(actual.ToBytes()), preset.Id + " preserves metadata and unrelated data when unchanged bindings retain their saved records");
         }
     }
 
@@ -619,7 +646,7 @@ public static class EditorSessionTests
         ConfigureGuard(guiSource, new[] { "RightMouseButton", "F8", "None" }, delegate { return new[] { "Gamepad_LeftShoulder", "None" }; });
         guiSource.Save(guiPath);
         var expected = SaveFile.Load(guiPath); ApplyTarget(expected, onekey);
-        var gui = Open(guiPath); gui.SelectPreset("onekey"); Assert(gui.HasChanges && gui.KeyboardChangeCount > 0 && gui.GamepadChangeCount > 0, "GUI materializes actual additive changes for both devices");
+        var gui = Open(guiPath); gui.SelectPreset("onekey", PresetApplyMode.Append); Assert(gui.HasChanges && gui.KeyboardChangeCount > 0 && gui.GamepadChangeCount > 0, "GUI materializes actual additive changes for both devices");
         Assert(gui.Apply().Success, "GUI additive preset applies through shared planner");
         Assert(expected.ToBytes().SequenceEqual(File.ReadAllBytes(guiPath)), "GUI and CLI planner produce corresponding byte-identical output");
         Assert(ContainsBoth(GuardKeyboard(SaveFile.Load(guiPath)), "RightMouseButton", "LeftMouseButton"), "saved GUI output independently retains both mouse guard buttons");
@@ -627,7 +654,7 @@ public static class EditorSessionTests
         string failedPath = NewInput("additive-failed-preview"); fullKeyboard.Save(failedPath);
         var failedPreview = Open(failedPath); failedPreview.SetKeyboard("IA_Jump", 0, "F8"); ExternalKeyboard(failedPath, Custom1, "IA_Jump", 0, "F9"); failedPreview.Refresh();
         failedPreview.SelectPreset("onekey_dodge"); string conflictId = failedPreview.Conflicts.Single().Id;
-        rejected = false; try { failedPreview.SelectPreset("onekey"); } catch (InvalidOperationException) { rejected = true; }
+        rejected = false; try { failedPreview.SelectPreset("onekey", PresetApplyMode.Append); } catch (InvalidOperationException) { rejected = true; }
         Assert(rejected && failedPreview.PresetId == "onekey_dodge" && failedPreview.GetKeyboard("IA_Guard", 0) == "LeftMouseButton" && failedPreview.GetKeyboard("IA_Dodge", 2) == "RightMouseButton", "rejected additive switch preserves complete previous preview");
         Assert(failedPreview.Conflicts.Single().Id == conflictId && failedPreview.GetKeyboard("IA_Jump", 0) == "F8", "rejected additive switch preserves pending conflict and draft");
         failedPreview.SelectPreset(null);

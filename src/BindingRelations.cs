@@ -43,7 +43,7 @@ namespace PBZKeyForge
     {
         public string Action, Family;
         public int FamilyIndex;
-        public bool Gamepad, BeforeComplete, AfterComplete, RecordOnly;
+        public bool Gamepad, BeforeComplete, AfterComplete;
         public string[] BeforeKeys, AfterKeys, DefaultKeys;
         public string[] AddedKeys { get { return AfterKeys.Except(BeforeKeys).Where(k => BeforeComplete || DefaultKeys != null && !DefaultKeys.Contains(k)).ToArray(); } }
         public string[] RemovedKeys { get { return BeforeKeys.Except(AfterKeys).Where(k => AfterComplete || DefaultKeys != null && !DefaultKeys.Contains(k)).ToArray(); } }
@@ -135,26 +135,20 @@ namespace PBZKeyForge
             var records = ActionBindingRecords(action, gamepad, familyIndex, beforeEdit);
             string[] defaults;
             bool complete;
-            string[] keys;
             if (gamepad)
             {
                 bool known = InputDefaults.HasAction(action);
-                var inherited = InputDefaults.RegisteredSlots(action, true).Where(slot => !records.Any(r => InputDefaults.RawSlot(r.Slot) == slot))
-                    .Select(slot => InputDefaults.ForRawSlot(action, true, slot));
                 defaults = known ? InputDefaults.ForAction(action, true)
                     : records.Any(r => r.DefaultKey == null) ? null : DistinctKeys(records.Select(r => r.DefaultKey));
                 complete = known || records.Length > 0;
-                keys = DistinctKeys(records.Select(r => r.Key).Concat(inherited));
             }
             else
             {
                 defaults = FactoryKeyboardKeys(action);
                 complete = defaults != null;
-                var inherited = InputDefaults.RegisteredSlots(action, false)
-                    .Where(slot => !records.Any(r => r.Slot == slot.ToString()))
-                    .Select(slot => InputDefaults.ForRawSlot(action, false, slot));
-                keys = DistinctKeys(records.Select(r => r.Key).Concat(inherited).Concat(InputDefaults.FixedForAction(action, false)));
             }
+            string[] keys = InputDefaults.ResolveKeys(action, gamepad, records.Select(record =>
+                new KeyValuePair<int, string>(gamepad ? InputDefaults.RawSlot(record.Slot) : int.Parse(record.Slot), record.Key)));
             return new ActionRelations { Action = action, Keys = keys, DefaultKeys = defaults, Complete = complete,
                 Changed = !beforeEdit && (records.Any(r => r.Changed) || draft.Edits.Keys.Any(id => Address(id).Profile == SelectedProfile
                     && Address(id).Action == action && Address(id).IsGamepad == gamepad && (!gamepad || Address(id).FamilyIndex == familyIndex))) };
@@ -192,11 +186,10 @@ namespace PBZKeyForge
                 bool complete = factory ? keys != null : before.Complete;
                 if (keys == null) continue;
                 bool same = !keys.Except(current.Keys).Any() && !current.Keys.Except(keys).Any();
-                if (complete && current.Complete ? same && (factory || !current.Changed)
+                if (complete && current.Complete ? same
                     : factory ? !current.Keys.Except(keys).Any() : !current.Changed) continue;
                 differences.Add(new BindingDifference { Action = action, Gamepad = gamepad, FamilyIndex = familyIndex,
-                    Family = family, BeforeKeys = keys, AfterKeys = current.Keys, DefaultKeys = current.DefaultKeys, BeforeComplete = complete, AfterComplete = current.Complete,
-                    RecordOnly = same && complete && current.Complete });
+                    Family = family, BeforeKeys = keys, AfterKeys = current.Keys, DefaultKeys = current.DefaultKeys, BeforeComplete = complete, AfterComplete = current.Complete });
             }
         }
 
@@ -233,11 +226,19 @@ namespace PBZKeyForge
         public void RestoreAction(string action, bool gamepad, int familyIndex)
         {
             EnsureEditable(); EndPreview();
+            var current = Relations(action, gamepad, familyIndex);
+            if (current.CanCompare && SameKeys(current.Keys, current.DefaultKeys)) return;
             foreach (var record in BindingRecords(gamepad, familyIndex).Where(r => r.Action == action))
             {
                 var cell = Address(record.Id);
                 Edit(cell, gamepad ? cell.DefaultKey ?? Current(cell) : null);
             }
+            var restored = Relations(action, gamepad, familyIndex);
+            var before = RelationsBeforeEdit(action, gamepad, familyIndex);
+            if (restored.Complete && before.Complete && SameKeys(restored.Keys, before.Keys))
+                foreach (string id in draft.Edits.Keys.Where(id => Address(id).Profile == SelectedProfile && Address(id).Action == action
+                    && Address(id).IsGamepad == gamepad && (!gamepad || Address(id).FamilyIndex == familyIndex)).ToArray())
+                { draft.Edits.Remove(id); draft.Conflicts.Remove(id); }
         }
 
         public void ChangeRelationship(string action, string key, bool add, bool gamepad, int familyIndex)

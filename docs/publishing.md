@@ -15,12 +15,14 @@ git push origin v1.0.0
 
 | Asset | Contents |
 | --- | --- |
-| `PBZKeyForge-<tag>.zip` | `PBZKeyForge.exe`, `presets\*.sav`, `README.md`, `LICENSE` |
-| `PBZKeyForge-<tag>-presets-only.zip` | only the generated `.sav` files, for players who do not want to run an executable |
+| `PBZKeyForge-<tag>.zip` | `PBZKeyForge.exe`, `presets\*.sav`, `presets\PRESETS.md`, `README.md`, `LICENSE`, `THIRD-PARTY-NOTICES.md` |
+| `PBZKeyForge-<tag>-presets-only.zip` | generated `.sav` files, `PRESETS.md` and `README.md`, without an executable |
 
 `PBZKeyForge-cli.exe` is built in the same pipeline but is not shipped to players: the workflow uses it to generate the presets and to run the round-trip self test.
 
-The workflow fails if `--selftest` does not report `roundtrip=IDENTICAL` on the shipped base file.
+The workflow fails if `--selftest` does not report `roundtrip=IDENTICAL` on the shipped base file. It also verifies the PBZ2 Protobuf share format, frozen factory baseline, and device scopes with `PresetShareTests`. protobuf-net is embedded in each executable; no separate dependency DLL is shipped. `THIRD-PARTY-NOTICES.md` includes its Apache-2.0 license.
+
+`--gen-presets` generates eight saves from `Presets.All()`: seven custom layouts and one factory layout (`vanilla`). The selected-scheme restore (`vanilla_current`) remains an editor operation and is omitted from the package. Generation removes its old output file when reusing a directory. The saves use the same factory-based preset transformation as the editor. The generated bilingual `PRESETS.md` takes names and descriptions from the application's translations and identifies the target scheme. The shipped base targets Custom 1; players must select it in game after copying a file. The preset package test compares every file with the hover preview, Replace and Preset only modes on the factory base, and saved/reopened editor output. It also checks generation from a customized input against Preset only mode and regeneration over the old file set. Any mismatch stops packaging.
 
 ## 2. Nexus Mods setup (once)
 

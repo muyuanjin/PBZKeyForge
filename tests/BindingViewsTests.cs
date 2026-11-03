@@ -198,7 +198,9 @@ public static class BindingViewsTests
                 form.ShowInTaskbar = false; form.Opacity = 0; form.UiSmoke(path); form.Show(); Application.DoEvents();
                 form.SelectProfile(custom); Field<ComboBox>(form, "cbLang").SelectedIndex = 0;
                 Assert(!form.ActionView, "Key view should be the default.");
+                Field<Button>(form, "btnPresetMode").PerformClick();
                 Field<ComboBox>(form, "cbPreset").SelectedItem = Field<ComboBox>(form, "cbPreset").Items.OfType<Preset>().Single(p => p.Id == "mouse_guard");
+                Assert(form.Session.PresetMode == PresetApplyMode.Replace, "Binding-view setup must replace its existing custom bindings.");
                 int count = form.Session.ScopeChangeCount;
                 Field<EditorTab>(form, "tabActions").PerformClick();
                 Assert(form.ActionView && form.Session.ScopeChangeCount == count, "View switch changed the draft.");
@@ -278,23 +280,23 @@ public static class BindingViewsTests
                 foreach (var family in demo.ControllerFamilies)
                     foreach (string action in demo.BindingActions(true, family.Index)) demo.RestoreAction(action, true, family.Index);
                 Apply(demo);
-                var gray = Color.FromArgb(128, 143, 153); var orange = Color.FromArgb(240, 178, 78); var red = Color.FromArgb(226, 66, 83);
+                var gray = Color.FromArgb(128, 143, 153); var blue = Color.FromArgb(64, 158, 255); var yellow = Color.FromArgb(240, 178, 78);
                 Badge(form, "LeftMouseButton", 1, gray);
-                demo.ChangeRelationship(Guard, "LeftMouseButton", true, false, -1); Badge(form, "LeftMouseButton", 2, red);
+                demo.ChangeRelationship(Guard, "LeftMouseButton", true, false, -1); Badge(form, "LeftMouseButton", 2, yellow);
                 demo.Undo(); Badge(form, "LeftMouseButton", 1, gray);
-                demo.ChangeRelationship(Guard, "LeftMouseButton", true, false, -1); Apply(demo); Badge(form, "LeftMouseButton", 2, orange);
-                demo.RestoreKey("LeftMouseButton", false, -1); Badge(form, "LeftMouseButton", 1, red);
+                demo.ChangeRelationship(Guard, "LeftMouseButton", true, false, -1); Apply(demo); Badge(form, "LeftMouseButton", 2, blue);
+                demo.RestoreKey("LeftMouseButton", false, -1); Badge(form, "LeftMouseButton", 1, yellow);
                 Apply(demo); Badge(form, "LeftMouseButton", 1, gray);
-                demo.ChangeRelationship("IA_HeavyAttack", "F", false, false, -1); Badge(form, "F", 0, red);
-                Apply(demo); Badge(form, "F", 0, orange);
-                demo.RestoreKey("F", false, -1); Badge(form, "F", 1, red); Apply(demo); Badge(form, "F", 1, gray);
+                demo.ChangeRelationship("IA_HeavyAttack", "F", false, false, -1); Badge(form, "F", 0, yellow);
+                Apply(demo); Badge(form, "F", 0, blue);
+                demo.RestoreKey("F", false, -1); Badge(form, "F", 1, yellow); Apply(demo); Badge(form, "F", 1, gray);
                 demo.ChangeRelationship(Guard, "LeftMouseButton", true, false, -1); Apply(demo);
                 demo.ChangeRelationship("IA_HeavyAttack", "RightMouseButton", true, false, -1);
                 int familyIndex = demo.ControllerFamilies[0].Index;
                 string oldJump = demo.Relations("IA_Jump", true, familyIndex).Keys.First();
                 string newJump = oldJump == "Gamepad_FaceButton_Right" ? "Gamepad_FaceButton_Top" : "Gamepad_FaceButton_Right";
                 demo.ReplaceRelationship("IA_Jump", oldJump, newJump, true, familyIndex);
-                Badge(form, "LeftMouseButton", 2, orange); Badge(form, "RightMouseButton", 2, red); Badge(form, "F", 1, gray);
+                Badge(form, "LeftMouseButton", 2, blue); Badge(form, "RightMouseButton", 2, yellow); Badge(form, "F", 1, gray);
                 var changes = demo.SchemeDifferences(false);
                 Assert(changes.Length == 2 && changes.Any(d => d.Gamepad) && changes.Any(d => !d.Gamepad), "Saved comparison must include both devices.");
                 Assert(changes.Sum(d => d.AddedKeys.Length) == 2 && changes.Sum(d => d.RemovedKeys.Length) == 1, "Whole-scheme relationship totals are incorrect.");
@@ -364,7 +366,7 @@ public static class BindingViewsTests
                 Assert(Descendants(Field<Control>(form, "keyBindings")).Any(c => c.GetType().Name == "RelationshipButton" && c.Text == I18n.Str("act." + Guard)),
                     "Right mouse must retain guard from its inherited slot.");
                 Apply(demo); form.RenderSession();
-                Badge(form, "LeftMouseButton", 2, orange);
+                Badge(form, "LeftMouseButton", 2, blue);
                 var leftState = Field<IDictionary>(Diagram(form), "states")["LeftMouseButton"];
                 Assert((string)leftState.GetType().GetProperty("Number").GetValue(leftState, null) == "2", "Known left mouse additions must keep an exact count despite other inherited slots.");
                 SelectKey(form, "LeftMouseButton");
@@ -375,12 +377,12 @@ public static class BindingViewsTests
                 Assert(demo.SchemeDifferences(true).Any(d => d.Action == Guard && d.AddedKeys.Contains("LeftMouseButton")), "Factory diff must retain confirmed additions from partial overrides.");
                 Shot(form, Path.Combine(root, "saved-partial-guard.png"));
                 diff.GetType().GetMethod("SetComparison").Invoke(diff, new object[] { false });
-                demo.SetKeyboard(Guard, 1, "J"); Badge(form, "J", 1, red);
+                demo.SetKeyboard(Guard, 1, "J"); Badge(form, "J", 1, yellow);
                 Assert(demo.SchemeDifferences(false).Single(d => d.Action == Guard).AddedKeys.SequenceEqual(new[] { "J" }),
                     "Partial saved baselines must count a confirmed nonfactory addition.");
                 demo.ChangeRelationship(Guard, "J", false, false, -1);
                 Assert(!demo.RelationshipPending(Guard, "J", false, -1), "Removing an unsaved confirmed addition must clear its pending relationship.");
-                demo.Undo(); demo.RestoreKey("LeftMouseButton", false, -1); Badge(form, "LeftMouseButton", 1, red);
+                demo.Undo(); demo.RestoreKey("LeftMouseButton", false, -1); Badge(form, "LeftMouseButton", 1, yellow);
                 Assert(demo.SchemeDifferences(false).Single(d => d.Action == Guard).RemovedKeys.Contains("LeftMouseButton"),
                     "Partial restoration must count the removed explicit left mouse relationship.");
                 var removedGuard = Descendants(Field<Control>(form, "keyBindings")).Single(c => c.GetType().Name == "RelationshipButton" && c.Text == I18n.Str("act." + Guard));

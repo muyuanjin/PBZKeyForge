@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -64,6 +64,7 @@ namespace PBZKeyForge
         public string ActiveProfile { get; private set; }
         public string SchemeError { get; private set; }
         public string PresetId { get; private set; }
+        public PresetApplyMode PresetMode { get; private set; }
         public bool ActivationPending { get; private set; }
         public bool IsResetPending { get { return resetCheckpoint != null; } }
         public string[] Profiles { get { return disk.Records.Select(r => r.ProfileId).ToArray(); } }
@@ -353,6 +354,31 @@ namespace PBZKeyForge
 
         static string Normalize(string key) { return string.IsNullOrWhiteSpace(key) ? null : key.Trim(); }
 
+        public EditorSession PreviewPreset(string id)
+        {
+            Preset preset = Presets.ById(id);
+            if (preset == null) throw new ArgumentException("Unknown quick configuration.", "id");
+            return PreviewPreset(preset);
+        }
+
+        public EditorSession PreviewPreset(Preset preset)
+        {
+            var baseline = SaveFile.FromBytes(diskBytes);
+            Presets.Apply(baseline, Presets.ById("vanilla_current"), baseline.RecordFor(SelectedProfile));
+            byte[] baselineBytes = baseline.ToBytes();
+            SaveFile planned = SaveFile.FromBytes(baselineBytes);
+            if (preset.IsUser) Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile), PresetApplyMode.Replace);
+            else Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile));
+            var snapshot = new EditorSession { disk = baseline, diskBytes = baselineBytes, cells = Extract(baseline),
+                SelectedProfile = SelectedProfile, ActiveProfile = ActiveProfile };
+            snapshot.Remember(snapshot.cells);
+            var result = Extract(planned);
+            snapshot.Remember(result);
+            foreach (string bindingId in snapshot.cells.Keys.Union(result.Keys))
+                if (Value(snapshot.cells, bindingId) != Value(result, bindingId)) snapshot.draft.Edits[bindingId] = Value(result, bindingId);
+            return snapshot;
+        }
+
         void Edit(Cell cell, string key)
         {
             if (key == Value(cells, cell.Id)) draft.Edits.Remove(cell.Id);
@@ -368,7 +394,7 @@ namespace PBZKeyForge
             ActivationPending = enabled && SelectedProfile != ActiveProfile;
         }
 
-        void EndPreview()
+        internal void EndPreview()
         {
             previewCheckpoint = null;
             previewProfile = null;
@@ -376,6 +402,9 @@ namespace PBZKeyForge
         }
 
         public void SelectPreset(string id)
+        { SelectPreset(id, PresetApplyMode.Replace); }
+
+        public void SelectPreset(string id, PresetApplyMode mode)
         {
             EnsureEditable();
             if (id == null)
@@ -386,6 +415,12 @@ namespace PBZKeyForge
             }
             Preset preset = Presets.ById(id);
             if (preset == null) throw new ArgumentException("Unknown quick configuration.", "id");
+            StagePreset(preset, mode);
+        }
+
+        public void StagePreset(Preset preset, PresetApplyMode mode)
+        {
+            EnsureEditable();
             if (preset.Vanilla) throw new InvalidOperationException("Use ResetAll for the global default reset.");
             // The CLI and editor use the same save transformation. Materialize it on
             // an isolated checkpoint so failed planning cannot alter drafts/conflicts.
@@ -393,7 +428,7 @@ namespace PBZKeyForge
             SaveFile planned = SaveFile.FromBytes(diskBytes);
             ApplyEdits(planned, checkpoint.Edits.ToArray());
             var before = Extract(planned);
-            Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile));
+            Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile), mode);
             var after = Extract(planned);
             Remember(after);
             if (previewCheckpoint == null || previewProfile != SelectedProfile)
@@ -402,9 +437,66 @@ namespace PBZKeyForge
                 previewProfile = SelectedProfile;
             }
             draft = checkpoint.Copy();
-            foreach (string changed in before.Keys.Union(after.Keys))
-                if (Value(before, changed) != Value(after, changed)) Edit(Address(changed), Value(after, changed));
-            PresetId = id;
+            foreach (var group in before.Keys.Union(after.Keys).Where(bindingId => Value(before, bindingId) != Value(after, bindingId))
+                .GroupBy(bindingId => new { Address(bindingId).Profile, Address(bindingId).Action, Address(bindingId).IsGamepad, Address(bindingId).FamilyIndex }))
+            {
+                var owner = Address(group.First());
+                if (InputDefaults.HasAction(owner.Action))
+                {
+                    string[] result = EffectiveKeys(after, owner);
+                    if (SameKeys(EffectiveKeys(before, owner), result)) continue;
+                    if (SameKeys(EffectiveKeys(cells, owner), result))
+                    {
+                        foreach (string edit in draft.Edits.Keys.Where(bindingId => SameBindingGroup(Address(bindingId), owner)).ToArray())
+                        { draft.Edits.Remove(edit); draft.Conflicts.Remove(edit); }
+                        continue;
+                    }
+                }
+                foreach (string changed in group) Edit(Address(changed), Value(after, changed));
+            }
+            PresetId = preset.Id;
+            PresetMode = mode;
+        }
+
+        public void CheckPreset(Preset preset, PresetApplyMode mode)
+        {
+            EnsureEditable();
+            var checkpoint = previewCheckpoint != null && previewProfile == SelectedProfile ? previewCheckpoint : draft;
+            var planned = SaveFile.FromBytes(diskBytes);
+            ApplyEdits(planned, checkpoint.Edits.ToArray());
+            Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile), mode);
+        }
+
+        static bool SameBindingGroup(Cell cell, Cell owner)
+        { return cell.Profile == owner.Profile && cell.Action == owner.Action && cell.IsGamepad == owner.IsGamepad && cell.FamilyIndex == owner.FamilyIndex; }
+
+        static bool SameKeys(string[] before, string[] after)
+        { return !before.Except(after).Any() && !after.Except(before).Any(); }
+
+        static string[] EffectiveKeys(Dictionary<string, Cell> snapshot, Cell owner)
+        {
+            var bindings = snapshot.Values.Where(cell => SameBindingGroup(cell, owner));
+            if (owner.IsGamepad)
+                bindings = bindings.Where(cell => cell.Keys != null && InputDefaults.RegisteredSlots(owner.Action, true).Contains(InputDefaults.RawSlot(cell.Slot))
+                    && cell.DefaultKey == InputDefaults.ForRawSlot(owner.Action, true, InputDefaults.RawSlot(cell.Slot)));
+            return InputDefaults.ResolveKeys(owner.Action, owner.IsGamepad, bindings.Select(cell =>
+                new KeyValuePair<int, string>(cell.IsGamepad ? InputDefaults.RawSlot(cell.Slot) : int.Parse(cell.Slot), cell.Key)));
+        }
+
+        public byte[] ExportCurrentScheme()
+        {
+            Refresh();
+            if (Conflicts.Length > 0) throw new InvalidOperationException(I18n.Str("editor.conflictinfo"));
+            var output = SaveFile.FromBytes(diskBytes);
+            ApplyEdits(output, draft.Edits.Where(edit => Address(edit.Key).Profile == SelectedProfile).ToArray());
+            return output.ToBytes();
+        }
+
+        public void ExportCurrentScheme(string path)
+        {
+            if (string.Equals(Path.GetFullPath(path), InputPath, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException(I18n.Str("preset.exportotherpath"));
+            File.WriteAllBytes(path, ExportCurrentScheme());
         }
 
         public void ResetAll()

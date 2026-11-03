@@ -171,17 +171,47 @@ namespace PBZKeyForge
         static int GenPresets(string input, string outDir)
         {
             Directory.CreateDirectory(outDir);
-            foreach (var p in Presets.All())
+            var source = SaveFile.Load(input);
+            string schemeResetFile = Path.Combine(outDir, "PBZKeyForge-vanilla_current.sav");
+            if (File.Exists(schemeResetFile)) File.Delete(schemeResetFile);
+            string profile = source.ActiveProfile;
+            string schemeKey = profile == "InputUserSettings.Profiles.Default" ? "scheme.default"
+                : profile == "PBZ.KeyProfile.Custom1" ? "scheme.custom1"
+                : profile == "PBZ.KeyProfile.Custom2" ? "scheme.custom2" : null;
+            var index = new StringBuilder();
+            index.AppendLine("# Ready-made presets / 现成预设");
+            index.AppendLine();
+            index.AppendLine("Each file contains the same preset shown in the editor's hover preview: factory bindings plus that preset. It corresponds to Preset only mode. Back up your save, close the game, copy one file over EnhancedInputUserSettings.sav, and select the scheme listed below in game. Copying this file does not change the active game scheme.");
+            index.AppendLine();
+            index.AppendLine("每个文件与程序悬浮预览的预设一致：原厂布局加上该预设，对应“仅用预设”模式。备份存档并退出游戏，将选中的文件覆盖为 EnhancedInputUserSettings.sav，再进游戏选择表中方案。替换文件不会自动切换游戏当前方案。");
+            index.AppendLine();
+            index.AppendLine("| File / 文件 | Name | 名称 | Scheme / 游戏中选择 | Description / 说明 |");
+            index.AppendLine("| --- | --- | --- | --- | --- |");
+            string language = I18n.Current;
+            try
             {
-                var sav = SaveFile.Load(input);
-                var rec = sav.RecordFor(sav.ActiveProfile);
-                Presets.Apply(sav, p, rec);
-                string name = "PBZKeyForge-" + p.Id + ".sav";
-                sav.Save(Path.Combine(outDir, name));
-                Console.WriteLine(name);
+                foreach (var p in Presets.All().Where(preset => !preset.CurrentProfileVanilla))
+                {
+                    var sav = Presets.FactoryPreview(source, p, profile);
+                    string name = "PBZKeyForge-" + p.Id + ".sav";
+                    sav.Save(Path.Combine(outDir, name));
+                    Console.WriteLine(name);
+                    I18n.Current = "en";
+                    string englishName = p.Name, englishDesc = p.Desc, englishScheme = schemeKey == null ? profile : I18n.Str(schemeKey);
+                    I18n.Current = "zh-Hans";
+                    string scheme = p.Vanilla ? "All schemes / 全部方案" : englishScheme + " / " + (schemeKey == null ? profile : I18n.Str(schemeKey));
+                    index.AppendLine("| `" + name + "` | " + MarkdownCell(englishName) + " | " + MarkdownCell(p.Name) + " | " + scheme
+                        + " | " + MarkdownCell(englishDesc) + " / " + MarkdownCell(p.Desc) + " |");
+                }
             }
+            finally { I18n.Current = language; }
+            index.AppendLine();
+            index.AppendLine("Target profile / 目标方案：`" + profile + "`. Restore all defaults resets every scheme; any scheme can then be selected. 恢复全部默认会重置全部方案，之后可选择任一方案。");
+            File.WriteAllText(Path.Combine(outDir, "PRESETS.md"), index.ToString(), new UTF8Encoding(true));
             return 0;
         }
+
+        static string MarkdownCell(string text) { return text.Replace("|", "&#124;").Replace("\r", "").Replace("\n", "<br>"); }
     }
 }
 

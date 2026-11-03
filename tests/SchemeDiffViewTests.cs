@@ -56,7 +56,7 @@ public static class SchemeDiffViewTests
             type.GetMethod("UpdateDifference").Invoke(row, new object[] { replacement, "replacement", 0, new[] { "G" } });
             Assert(Parts(row).SequenceEqual(new[] { "+G", "F", "−右键" }), "Combined must order additions, retained keys, then removals.");
             object[] tokens = Tokens(row);
-            Assert(Field<Color>(tokens[0], "Color") == Color.FromArgb(226, 66, 83), "Pending addition must be red.");
+            Assert(Field<Color>(tokens[0], "Color") == Color.FromArgb(240, 178, 78), "Pending addition must be yellow.");
             Assert(Field<bool>(tokens[2], "Removed") && Field<Color>(tokens[2], "Color") == Color.FromArgb(139, 145, 148), "Removal must be gray and struck through.");
             Shot(row, Path.Combine(output, "replacement-combined.png"));
             Click(row, true); Assert(Parts(row).SequenceEqual(new[] { "+G", "−右键" }), "Changes-only must omit retained keys: mode=" + Field<int>(row, "Mode") + " " + string.Join(" ", Parts(row)));
@@ -70,10 +70,7 @@ public static class SchemeDiffViewTests
             type.GetMethod("UpdateDifference").Invoke(row, new object[] { replacement, "unbound", 0, new string[0] });
             Assert(Parts(row).SequenceEqual(new[] { "无绑定", "−F", "−右键" }), "Full removal must state unbound before showing gray removed keys.");
             Shot(row, Path.Combine(output, "unbound-combined.png"));
-            replacement.AfterKeys = replacement.BeforeKeys; replacement.RecordOnly = true;
-            type.GetMethod("UpdateDifference").Invoke(row, new object[] { replacement, "record", 1, new string[0] });
-            Assert(Parts(row).SequenceEqual(new[] { "记录变更" }), "Record-only edits must not invent key additions or removals.");
-            replacement.RecordOnly = false; replacement.BeforeComplete = false; replacement.AfterComplete = false;
+            replacement.BeforeComplete = false; replacement.AfterComplete = false;
             replacement.AfterKeys = new[] { "G" };
             type.GetMethod("UpdateDifference").Invoke(row, new object[] { replacement, "partial", 0, new[] { "G" } });
             Assert(!Parts(row).Any(p => p.StartsWith("−")) && Parts(row).Contains("未确认"), "Incomplete baselines must not invent removals.");
@@ -96,6 +93,33 @@ public static class SchemeDiffViewTests
                 form.ShowInTaskbar = false; form.Opacity = 0; form.UiSmoke(input); form.Show(); Application.DoEvents();
                 var language = Field<ComboBox>(form, "cbLang"); language.SelectedIndex = 0;
                 var session = form.Session; var view = Field<Control>(form, "schemeDiff");
+                session.SelectPreset("vanilla_current"); form.RenderSession();
+                Assert(!session.HasChanges && !session.HasAnyDrafts && Rows(view).Length == 0,
+                    "Restoring unchanged factory bindings must not show pending changes or difference rows.");
+                Assert(!Field<Button>(form, "btnApply").Enabled && !Field<Control>(form, "btnUndo").Visible,
+                    "An unchanged factory preview must not offer Apply or Undo.");
+                foreach (Size size in new[] { form.Size, form.MinimumSize })
+                {
+                    form.Size = size;
+                    var bodyBounds = Field<Control>(form, "body").Bounds;
+                    foreach (var preset in Presets.All().Where(preset => !preset.Vanilla))
+                    {
+                        session.SelectPreset(preset.Id); form.RenderSession(); Application.DoEvents();
+                        Assert(Field<Control>(form, "body").Bounds == bodyBounds,
+                            "Selecting a quick configuration changed the workspace layout: " + preset.Id + " at " + size);
+                    }
+                }
+                session.SelectPreset("vanilla_current"); form.RenderSession(); Application.DoEvents();
+                Shot(form, Path.Combine(output, "preview-minimum.png"));
+                form.Size = new Size(1240, 840); form.RenderSession(); Application.DoEvents();
+                Shot(form, Path.Combine(output, "unchanged-factory.png"));
+                session.SelectPreset(null);
+                session.SetKeyboard("IA_Guard", 0, "RightMouseButton"); form.RenderSession();
+                Assert(Rows(view).Length == 0, "A record edit with unchanged effective keys must not appear in the scheme diff.");
+                session.Undo();
+                session.ChangeRelationship("IA_Guard", "LeftMouseButton", true, false, -1);
+                session.RestoreAction("IA_Guard", false, -1); form.RenderSession();
+                Assert(!session.HasAnyDrafts && Rows(view).Length == 0, "Restoring an edited action to its saved factory bindings must clear its draft.");
                 session.ReplaceRelationship("IA_HeavyAttack", "F", "G", false, -1); form.RenderSession();
                 Control row = Rows(view).Single(r => Field<BindingDifference>(r, "Difference").Action == "IA_HeavyAttack");
                 Assert(Parts(row).SequenceEqual(new[] { "+G", "−F" }), "Actual session replacement must use combined presentation by default.");
@@ -147,14 +171,14 @@ public static class SchemeDiffViewTests
                 foreach (Control savedRow in Rows(view))
                 {
                     while (Field<int>(savedRow, "Mode") != 0) Click(savedRow, true);
-                    Assert(Tokens(savedRow).Where(t => Field<string>(t, "Text").StartsWith("+")).All(t => Field<Color>(t, "Color") == Color.FromArgb(240, 178, 78)),
-                        "Saved factory additions must use amber rather than pending red.");
+                    Assert(Tokens(savedRow).Where(t => Field<string>(t, "Text").StartsWith("+")).All(t => Field<Color>(t, "Color") == Color.FromArgb(64, 158, 255)),
+                        "Saved factory additions must use blue while pending additions use yellow.");
                 }
                 Shot(form, Path.Combine(output, "saved-custom.png")); Shot(view, Path.Combine(output, "saved-custom-panel.png"));
                 session.ReplaceRelationship("IA_HeavyAttack", "F", "G", false, -1); form.RenderSession();
                 row = Rows(view).Single(r => Field<BindingDifference>(r, "Difference").Action == "IA_HeavyAttack");
-                Assert(Tokens(row).Any(t => Field<string>(t, "Text") == "+右键" && Field<Color>(t, "Color") == Color.FromArgb(240, 178, 78))
-                    && Tokens(row).Any(t => Field<string>(t, "Text") == "+G" && Field<Color>(t, "Color") == Color.FromArgb(226, 66, 83)),
+                Assert(Tokens(row).Any(t => Field<string>(t, "Text") == "+右键" && Field<Color>(t, "Color") == Color.FromArgb(64, 158, 255))
+                    && Tokens(row).Any(t => Field<string>(t, "Text") == "+G" && Field<Color>(t, "Color") == Color.FromArgb(240, 178, 78)),
                     "One row must distinguish saved additions from pending additions.");
                 Shot(view, Path.Combine(output, "mixed-status-panel.png"));
                 Assert(fixture.SequenceEqual(File.ReadAllBytes(args[0])), "Original fixture must remain unchanged.");

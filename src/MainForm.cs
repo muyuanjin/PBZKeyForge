@@ -46,19 +46,22 @@ namespace PBZKeyForge
         }.Select(s => new ActionInfo(s)).ToList();
 
         public EditorSession Session { get; private set; }
-        readonly ComboBox cbLang = new EditorComboBox(), cbPreset = new EditorComboBox();
+        readonly ComboBox cbLang = new EditorComboBox(), cbPreset = new PresetPicker();
+        readonly Button btnPresetManager = new EditorButton();
         readonly Button btnRefresh = new EditorButton(), btnMore = new EditorButton(), btnApply = new PrimaryActionButton();
         readonly EditorTab[] schemeTabs = { new EditorTab(), new EditorTab(), new EditorTab() };
         readonly EditorTab tabKb = new EditorTab(), tabPad = new EditorTab();
         readonly Label lblTitle = new Label(), lblPath = new Label(), lblGame = new Label();
-        readonly Label lblPreset = new Label(), lblPreview = new Label(), lblHint = new Label();
+        readonly Label lblPreset = new Label();
+        readonly PresetApplyButton btnPresetMode = new PresetApplyButton();
+        PresetApplyMode presetCycleCursor = PresetApplyMode.Append;
+        PresetApplyMode presetMode = PresetApplyMode.Append;
         readonly Label lblStatus = new Label(), lblScope = new Label(), lblBackup = new Label(), lblEmpty = new Label();
         readonly Button btnUndo = new EditorButton();
         readonly LinkLabel btnConflicts = new LinkLabel(), btnChoose = new LinkLabel();
         readonly CheckBox chkActivate = new EditorCheckBox();
         readonly ToolTip tip = new ToolTip();
-        TableLayoutPanel editorRoot;
-        readonly Panel preview = new EditorPanel(), body = new EditorPanel(), empty = new EditorPanel(), footer = new EditorPanel();
+        readonly Panel body = new EditorPanel(), empty = new EditorPanel(), footer = new EditorPanel();
         readonly Panel kbHost = new EditorPanel(), padHost = new EditorPanel();
         readonly Dictionary<string, BindingButton[]> kbButtons = new Dictionary<string, BindingButton[]>();
         readonly Dictionary<string, BindingButton[]> padButtons = new Dictionary<string, BindingButton[]>();
@@ -71,6 +74,7 @@ namespace PBZKeyForge
         object[] messageArgs;
         bool messageError;
         Bitmap backgroundCache;
+        PresetHoverPreview presetHoverPreview;
 
         public MainForm()
         {
@@ -97,12 +101,12 @@ namespace PBZKeyForge
             BackColor = EditorTheme.Background;
             ForeColor = EditorTheme.Ink;
             try { Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath); } catch { }
-            var root = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 8, Padding = new Padding(16, 6, 16, 6), Margin = Padding.Empty, BackColor = Color.Transparent };
+            var root = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 6, Padding = new Padding(16, 6, 16, 6), Margin = Padding.Empty, BackColor = Color.Transparent };
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            int[] heights = { 72, 22, 36, 44, 0, 0, 0, 94 };
+            int[] heights = { 72, 22, 36, 44, 0, 94 };
             for (int rowIndex = 0; rowIndex < heights.Length; rowIndex++)
-                root.RowStyles.Add(rowIndex == 5 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, heights[rowIndex]));
-            editorRoot = root; Controls.Add(root);
+                root.RowStyles.Add(rowIndex == 4 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, heights[rowIndex]));
+            Controls.Add(root);
 
             var header = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 1, Margin = Padding.Empty, BackColor = Color.Transparent };
             header.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
@@ -174,30 +178,42 @@ namespace PBZKeyForge
 
             var toolbar = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
             toolbar.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45)); toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 55));
+            toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35)); toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65));
             var devices = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
             devices.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             devices.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50)); devices.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             tabKb.Dock = DockStyle.Fill; tabKb.Margin = Padding.Empty; tabKb.Click += delegate { ShowGamepad(false); };
             tabPad.Dock = DockStyle.Fill; tabPad.Margin = Padding.Empty; tabPad.Click += delegate { ShowGamepad(true); };
             devices.Controls.Add(tabKb, 0, 0); devices.Controls.Add(tabPad, 1, 0); toolbar.Controls.Add(devices, 0, 0);
-            var presets = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
+            var presets = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 1, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
             presets.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            presets.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 132)); presets.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            presets.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80)); presets.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); presets.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 112)); presets.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 108));
             lblPreset.Dock = DockStyle.Fill; lblPreset.TextAlign = ContentAlignment.MiddleRight; lblPreset.Margin = new Padding(0, 0, 12, 0);
             cbPreset.Dock = DockStyle.Fill; cbPreset.Margin = new Padding(0, 10, 12, 8); cbPreset.DropDownStyle = ComboBoxStyle.DropDownList; cbPreset.DropDownWidth = 570;
             cbPreset.SelectedIndexChanged += delegate
             {
                 if (loading || Session == null) return;
-                TryAction(delegate { var preset = cbPreset.SelectedItem as Preset; Session.SelectPreset(preset == null ? null : preset.Id); });
+                TryAction(delegate {
+                    var preset = cbPreset.SelectedItem as Preset;
+                    if (preset == null) Session.SelectPreset(null, presetMode); else Session.StagePreset(preset, presetMode);
+                    presetCycleCursor = presetMode;
+                });
             };
+            btnPresetManager.Dock = DockStyle.Fill; btnPresetManager.Margin = new Padding(0, 7, 8, 7); btnPresetManager.Click += delegate { ManagePresets(); };
+            btnPresetMode.Dock = DockStyle.Fill; btnPresetMode.Margin = new Padding(0, 7, 8, 7);
+            btnPresetMode.Click += delegate {
+                if (loading || Session == null) return;
+                var mode = (PresetApplyMode)(((int)presetCycleCursor + 1) % 3);
+                presetCycleCursor = mode;
+                TryAction(delegate {
+                    var preset = cbPreset.SelectedItem as Preset;
+                    if (preset != null) Session.StagePreset(preset, mode);
+                    presetMode = mode;
+                });
+            };
+            presets.Controls.Add(btnPresetMode, 2, 0); presets.Controls.Add(btnPresetManager, 3, 0);
             presets.Controls.Add(lblPreset, 0, 0); presets.Controls.Add(cbPreset, 1, 0); toolbar.Controls.Add(presets, 1, 0); root.Controls.Add(toolbar, 0, 3);
-
-            preview.Dock = DockStyle.Fill; preview.Margin = new Padding(0, 0, 0, 8); preview.Padding = new Padding(12, 4, 10, 4);
-            lblPreview.Dock = DockStyle.Fill; lblPreview.TextAlign = ContentAlignment.MiddleLeft; lblPreview.AutoEllipsis = true;
-            btnConflicts.Dock = DockStyle.Right; btnConflicts.Width = 176; btnConflicts.TextAlign = ContentAlignment.MiddleRight; StyleLink(btnConflicts);
-            btnConflicts.Click += delegate { ResolveConflicts(); };
-            preview.Controls.Add(lblPreview); preview.Controls.Add(btnConflicts); root.Controls.Add(preview, 0, 4);
+            presetHoverPreview = new PresetHoverPreview(cbPreset, delegate { return Session; }, delegate { return gamepad; }, delegate { return SelectedFamilyIndex; });
 
             body.Dock = DockStyle.Fill; body.Margin = Padding.Empty;
             BuildBindingTable(kbHost, kbButtons, false); BuildBindingTable(padHost, padButtons, true);
@@ -206,23 +222,23 @@ namespace PBZKeyForge
             empty.Dock = DockStyle.Fill; empty.BackColor = EditorTheme.Background;
             lblEmpty.TextAlign = ContentAlignment.MiddleCenter; lblEmpty.Dock = DockStyle.Fill; lblEmpty.ForeColor = EditorTheme.Muted;
             btnChoose.Dock = DockStyle.Bottom; btnChoose.Height = 70; btnChoose.TextAlign = ContentAlignment.TopCenter; StyleLink(btnChoose); btnChoose.Click += delegate { Browse(); };
-            empty.Controls.Add(lblEmpty); empty.Controls.Add(btnChoose); body.Controls.Add(empty); root.Controls.Add(body, 0, 5);
-            lblHint.Dock = DockStyle.Fill; lblHint.TextAlign = ContentAlignment.MiddleLeft; lblHint.ForeColor = EditorTheme.Muted; lblHint.Font = new Font(Font.FontFamily, 9f); lblHint.AutoEllipsis = true; lblHint.BackColor = Color.Transparent;
-            root.Controls.Add(lblHint, 0, 6);
+            empty.Controls.Add(lblEmpty); empty.Controls.Add(btnChoose); body.Controls.Add(empty); root.Controls.Add(body, 0, 4);
 
             footer.Dock = DockStyle.Fill; footer.Margin = Padding.Empty; footer.BackColor = EditorTheme.Surface;
             footer.Paint += delegate(object s, PaintEventArgs e) { using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawLine(pen, 0, 0, footer.Width, 0); };
             chkActivate.SetBounds(8, 12, 700, 30); chkActivate.AutoEllipsis = true;
             chkActivate.CheckedChanged += delegate { if (!loading && Session != null) TryAction(delegate { Session.SetActivation(chkActivate.Checked); }); };
             lblScope.SetBounds(8, 46, 700, 24); lblScope.AutoEllipsis = true; lblScope.Font = new Font(Font.FontFamily, 9f);
+            btnConflicts.TextAlign = ContentAlignment.MiddleLeft; btnConflicts.AutoEllipsis = true; StyleLink(btnConflicts);
+            btnConflicts.Font = lblScope.Font; btnConflicts.Click += delegate { ResolveConflicts(); };
             lblStatus.SetBounds(8, 72, 900, 23); lblStatus.AutoEllipsis = true; lblStatus.Font = new Font(Font.FontFamily, 9f);
             StyleButton(btnUndo, false); btnUndo.Dock = DockStyle.None;
             btnUndo.Click += delegate { TryAction(delegate { Session.Undo(); }); };
             StyleButton(btnApply, true); btnApply.Dock = DockStyle.None; btnApply.SetBounds(890, 15, 196, 46); btnApply.Font = new Font(Font.FontFamily, 12f, FontStyle.Bold); btnApply.Click += delegate { ApplyChanges(); };
             lblBackup.SetBounds(890, 64, 196, 23); lblBackup.TextAlign = ContentAlignment.MiddleCenter; lblBackup.AutoEllipsis = true; lblBackup.ForeColor = EditorTheme.Muted; lblBackup.Font = new Font(Font.FontFamily, 8.5f);
-            footer.Controls.AddRange(new Control[] { chkActivate, lblScope, lblStatus, btnUndo, btnApply, lblBackup });
+            footer.Controls.AddRange(new Control[] { chkActivate, lblScope, btnConflicts, lblStatus, btnUndo, btnApply, lblBackup });
             footer.Resize += delegate { LayoutFooter(); };
-            root.Controls.Add(footer, 0, 7);
+            root.Controls.Add(footer, 0, 5);
             AutoScaleDimensions = new SizeF(96f, 96f);
             PerformAutoScale();
             alignHeaderControls();
@@ -238,8 +254,9 @@ namespace PBZKeyForge
             int left = gap, scopeWidth = Math.Max(100, btnUndo.Left - gap * 2);
             chkActivate.SetBounds(left, (int)(12 * scale), scopeWidth, (int)(28 * scale));
             lblScope.SetBounds(left, (int)(44 * scale), scopeWidth, (int)(24 * scale));
+            btnConflicts.Bounds = lblScope.Bounds;
             lblBackup.SetBounds(btnApply.Left, (int)(64 * scale), actionWidth, (int)(20 * scale));
-            lblStatus.SetBounds(left, (int)(70 * scale), Math.Max(100, footer.ClientSize.Width - gap * 2), (int)(20 * scale));
+            lblStatus.SetBounds(left, (int)(70 * scale), Math.Max(0, btnApply.Left - gap - left), (int)(20 * scale));
         }
 
         static void StyleButton(Button button, bool primary)
@@ -339,15 +356,14 @@ namespace PBZKeyForge
                 Text = "PBZKeyForge · " + I18n.Str("app.title"); lblTitle.Text = I18n.Str("editor.subtitle");
                 btnRefresh.Text = I18n.Str("editor.refresh"); btnApply.Text = I18n.Str("editor.apply");
                 lblPreset.Text = I18n.Str("editor.quick"); btnUndo.Text = I18n.Str("editor.undo");
-                lblHint.Text = I18n.Str("editor.hint"); lblBackup.Text = I18n.Str("editor.backup");
+                lblBackup.Text = I18n.Str("editor.backup");
                 lblEmpty.Text = I18n.Str("editor.empty"); btnChoose.Text = I18n.Str("editor.choose");
-                SetTip(btnMore, I18n.Str("editor.more")); SetTip(cbPreset, I18n.Str("editor.previewrule"));
+                SetTip(btnMore, I18n.Str("editor.more"));
                 foreach (var label in actionLabels) label.Text = I18n.Str("act." + label.Tag);
                 foreach (var label in headings) label.Text = (int)label.Tag == 0 ? I18n.Str("col.action") : (int)label.Tag == 1
                     ? I18n.Str("views.factory", "").TrimEnd(' ', ':', '：') : I18n.Str("editor.binding", (int)label.Tag - 1);
                 cbLang.SelectedIndex = Array.IndexOf(I18n.Languages, I18n.Current);
-                cbPreset.Items.Clear(); cbPreset.Items.Add(I18n.Str("editor.nopreset"));
-                foreach (var preset in Presets.All().Where(p => !p.Vanilla)) cbPreset.Items.Add(preset);
+                PopulatePresets(); btnPresetManager.Text = I18n.Str("preset.manage");
             }
             finally { loading = false; }
             RenderSession();
@@ -380,12 +396,24 @@ namespace PBZKeyForge
                     button.Dirty = loaded && button.Tag != null && Session.HasProfileDraft((string)button.Tag); button.Enabled = loaded;
                 }
                 cbPreset.Enabled = loaded && !Session.IsResetPending;
+                btnPresetManager.Enabled = cbPreset.Enabled;
                 int presetIndex = 0;
                 if (loaded && Session.PresetId != null)
                 {
                     for (int i = 1; i < cbPreset.Items.Count; i++) if (((Preset)cbPreset.Items[i]).Id == Session.PresetId) presetIndex = i;
                 }
                 cbPreset.SelectedIndex = presetIndex;
+                if (loaded && Session.PresetId != null && presetMode != Session.PresetMode) presetMode = presetCycleCursor = Session.PresetMode;
+                bool restoringFactory = loaded && Session.PresetId == "vanilla_current";
+                string[] modeKeys = { "preset.append", "preset.replace", "preset.only" };
+                btnPresetMode.Mode = presetMode;
+                btnPresetMode.Text = I18n.Str(modeKeys[(int)presetMode]) + " ↻";
+                btnPresetMode.AccessibleName = I18n.Str("preset.mode") + ": " + I18n.Str(modeKeys[(int)presetMode]);
+                btnPresetMode.Enabled = loaded && !Session.IsResetPending && !restoringFactory;
+                SetTip(btnPresetMode, I18n.Str("preset.mode") + ": " + I18n.Str(modeKeys[(int)presetMode]) + "\n"
+                    + I18n.Str(restoringFactory ? "preset.restore.help" : presetMode == PresetApplyMode.OnlyPreset
+                        && cbPreset.SelectedItem is Preset && ((Preset)cbPreset.SelectedItem).IsUser ? "preset.only.scopehelp" : modeKeys[(int)presetMode] + ".help") + "\n"
+                    + I18n.Str("preset.nextmode", I18n.Str(modeKeys[((int)presetCycleCursor + 1) % 3])));
                 foreach (var action in Actions)
                     for (int slot = 0; slot < 3; slot++)
                     {
@@ -439,21 +467,15 @@ namespace PBZKeyForge
                 btnApply.Enabled = loaded && Session.HasChanges && !lastRunning && Session.Conflicts.Length == 0; btnUndo.Visible = loaded && Session.HasChanges;
                 lblScope.Text = !loaded ? "" : Session.IsResetPending ? I18n.Str("editor.resetscope", Session.ScopeChangeCount)
                     : I18n.Str(Session.HasChanges ? "editor.scope" : "editor.clean", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount) + (Session.ActivationPending ? I18n.Str("editor.activationscope") : "");
-                lblScope.ForeColor = loaded && Session.HasChanges ? Color.FromArgb(228, 167, 154) : EditorTheme.Muted;
-                lblStatus.Text = loaded && Session.SchemeError != null ? I18n.Str("editor.schemeunknown")
+                lblScope.ForeColor = loaded && Session.HasChanges ? BindingStatus.Pending : EditorTheme.Muted;
+                int conflictCount = loaded ? Session.Conflicts.Length : 0;
+                btnConflicts.Visible = conflictCount > 0; btnConflicts.Text = I18n.Str("editor.conflicts", conflictCount);
+                lblScope.Visible = conflictCount == 0;
+                lblStatus.Text = conflictCount > 0 ? I18n.Str("editor.conflictinfo") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
+                    : loaded && Session.SchemeError != null ? I18n.Str("editor.schemeunknown")
                     + (messageKey != null && messageKey != "editor.refreshed" ? " " + I18n.Str(messageKey, messageArgs) : "")
                     : loaded && lastRunning ? I18n.Str("editor.exittoapply") : messageKey != null ? I18n.Str(messageKey, messageArgs) : I18n.Str("editor.ready");
                 lblStatus.ForeColor = messageError ? Color.FromArgb(238, 171, 156) : EditorTheme.Muted; SetTip(lblStatus, lblStatus.Text);
-                int conflictCount = loaded ? Session.Conflicts.Length : 0; btnConflicts.Visible = conflictCount > 0; btnConflicts.Text = I18n.Str("editor.conflicts", conflictCount);
-                var selectedPreset = cbPreset.SelectedItem as Preset;
-                lblPreview.Text = conflictCount > 0 ? I18n.Str("editor.conflictinfo") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
-                    : selectedPreset != null ? I18n.Str("editor.preview", selectedPreset.Desc) : gamepad ? I18n.Str("editor.sharedinfo") : I18n.Str("editor.directinfo");
-                bool showPreview = conflictCount > 0 || selectedPreset != null || loaded && Session.IsResetPending;
-                preview.Visible = showPreview; lblHint.Visible = false;
-                editorRoot.RowStyles[4].Height = showPreview ? 30 * CurrentAutoScaleDimensions.Width / 96f : 0;
-                preview.BackColor = conflictCount > 0 || selectedPreset != null || loaded && Session.IsResetPending ? EditorTheme.Preview : EditorTheme.Floating;
-                lblPreview.ForeColor = selectedPreset != null || conflictCount > 0 ? EditorTheme.Ink : EditorTheme.Muted;
-                SetTip(lblPreview, lblPreview.Text + (selectedPreset != null ? "\n" + I18n.Str("editor.previewrule") : ""));
             }
             finally { footer.ResumeLayout(true); body.ResumeLayout(true); ResumeLayout(true); loading = false; }
         }
@@ -613,6 +635,33 @@ namespace PBZKeyForge
             return menu;
         }
 
+        void PopulatePresets()
+        {
+            cbPreset.Items.Clear(); cbPreset.Items.Add(I18n.Str("editor.nopreset"));
+            foreach (var preset in Presets.All().Where(preset => !preset.Vanilla)) cbPreset.Items.Add(preset);
+            try { foreach (var preset in UserPresetStore.Default().Load()) cbPreset.Items.Add(preset); }
+            catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
+        }
+
+        void ManagePresets()
+        {
+            if (Session == null) return;
+            modalActive = true;
+            try
+            {
+                using (var dialog = new UserPresetDialog(Session, UserPresetStore.Default(), presetMode))
+                {
+                    if (dialog.ShowDialog(this) == DialogResult.OK) presetMode = presetCycleCursor = dialog.ChosenMode;
+                }
+            }
+            catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
+            finally
+            {
+                modalActive = false; loading = true;
+                try { PopulatePresets(); } finally { loading = false; RenderSession(); }
+            }
+        }
+
         public void UiSmoke(string path) { OpenPath(path); }
         protected override void OnPaintBackground(PaintEventArgs e)
         {
@@ -637,7 +686,7 @@ namespace PBZKeyForge
         }
         protected override void Dispose(bool disposing)
         {
-            if (disposing) { gameTimer.Dispose(); tip.Dispose(); if (moreMenu != null) moreMenu.Dispose(); if (backgroundCache != null) backgroundCache.Dispose(); }
+            if (disposing) { gameTimer.Dispose(); tip.Dispose(); if (presetHoverPreview != null) presetHoverPreview.Dispose(); if (moreMenu != null) moreMenu.Dispose(); if (backgroundCache != null) backgroundCache.Dispose(); }
             base.Dispose(disposing);
         }
     }

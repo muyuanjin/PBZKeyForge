@@ -147,7 +147,6 @@ namespace PBZKeyForge
                     foreach (string key in diff.RemovedKeys)
                         parts.Add(new Part("−" + BindingButton.FriendlyKey(key), RemovedColor, true));
                     if (!diff.BeforeComplete || !diff.AfterComplete) parts.Add(new Part(I18n.Str("editor.defaultunknown"), EditorTheme.Muted, false));
-                    if (diff.RecordOnly) parts.Add(new Part(I18n.Str("views.recordchange"), EditorTheme.Muted, false));
                 }
                 return parts.ToArray();
             }
