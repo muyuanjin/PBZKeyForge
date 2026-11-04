@@ -46,7 +46,7 @@ namespace PBZKeyForge
             string key = keys.SelectedItem as string;
             add.Enabled = !session.IsResetPending && session.RelationshipCapacity(action, pad, family).CanAdd;
             change.Enabled = remove.Enabled = !session.IsResetPending && key != null
-                && !InputDefaults.FixedForAction(action, pad).Contains(key)
+                && !session.Defaults.FixedForAction(action, pad).Contains(key)
                 && (relation.Complete || relation.DefaultKeys != null && !relation.DefaultKeys.Contains(key));
         }
         void Render()
@@ -106,8 +106,8 @@ namespace PBZKeyForge
             Action selection = delegate
             {
                 var record = rows.SelectedItems.Count == 0 ? null : rows.SelectedItems[0].Tag as BindingRecord;
-                edit.Enabled = record != null && record.Id != null && !session.IsResetPending;
-                detail.Text = record == null || record.Id == null ? I18n.Str("help.inherited") : I18n.Str("views.recordid", record.Slot);
+                edit.Enabled = record != null && record.Id != null && !record.ReadOnly && !session.IsResetPending;
+                detail.Text = record != null && record.ReadOnly ? I18n.Str("views.readonlyrecord") : record == null || record.Id == null ? I18n.Str("help.inherited") : I18n.Str("views.recordid", record.Slot);
             };
             Action renderRows = delegate
             {
@@ -119,17 +119,17 @@ namespace PBZKeyForge
                     if (action != null)
                     {
                         var records = session.BindingRecords(pad, family).Where(r => r.Action == action).ToList();
-                        foreach (int raw in InputDefaults.RegisteredSlots(action, pad))
+                        foreach (int raw in session.Defaults.RegisteredSlots(action, pad))
                             if (!records.Any(r => pad ? InputDefaults.RawSlot(r.Slot) == raw : r.Slot == raw.ToString()))
                             {
-                                string factory = InputDefaults.ForRawSlot(action, pad, raw);
+                                string factory = session.Defaults.ForRawSlot(action, pad, raw);
                                 records.Add(new BindingRecord { Action = action, Slot = raw.ToString(), Key = factory, DefaultKey = factory });
                             }
-                        foreach (string key in InputDefaults.FixedForAction(action, pad))
+                        foreach (string key in session.Defaults.FixedForAction(action, pad))
                             records.Add(new BindingRecord { Action = action, Slot = "", Key = key, DefaultKey = key });
                         foreach (var record in records.OrderBy(r => r.Slot))
                         {
-                            string status = I18n.Str(record.Id == null ? "help.inheritshort" : record.Changed ? session.IsOffline ? "offline.pending" : "views.pending" : record.DefaultKey == null ? "editor.defaultunknown"
+                            string status = I18n.Str(record.ReadOnly ? "views.readonlyrecord" : record.Id == null ? "help.inheritshort" : record.Changed ? session.IsOffline ? "offline.pending" : "views.pending" : record.DefaultKey == null ? "editor.defaultunknown"
                                 : record.Key == record.DefaultKey ? "views.original" : "views.savedcustom");
                             var item = new ListViewItem(new[] { BindingButton.FriendlyKey(record.Key),
                                 record.DefaultKey == null ? I18n.Str("editor.defaultunknown") : BindingButton.FriendlyKey(record.DefaultKey), status }) { Tag = record };
@@ -168,7 +168,7 @@ namespace PBZKeyForge
             {
                 if (rows.SelectedItems.Count == 0 || session.IsResetPending) return;
                 var record = (BindingRecord)rows.SelectedItems[0].Tag;
-                if (record.Id == null) return;
+                if (record.Id == null || record.ReadOnly) return;
                 using (var dialog = new BindingDialog(BindingViewText.ActionName(record.Action), pad, record.Key,
                     record.DefaultKey == null ? null : new[] { record.DefaultKey }, pad && record.DefaultKey != null && record.Key == record.DefaultKey))
                     if (dialog.ShowDialog(this) == DialogResult.OK)

@@ -529,7 +529,7 @@ namespace PBZKeyForge
                     var raw = rawRelations.First(r => r.Action == relation.Action);
                     item.InputKeys = (isRemoved ? (raw.DefaultKeys ?? new string[0]).Concat(rawBefore[raw.Action].Keys) : raw.Keys)
                         .Where(k => BindingViewText.PhysicalKey(k) == selectedKey).ToArray();
-                    bool fixedBinding = InputDefaults.FixedForAction(relation.Action, pad).Any(k => BindingViewText.PhysicalKey(k) == selectedKey);
+                    bool fixedBinding = session.Defaults.FixedForAction(relation.Action, pad).Any(k => BindingViewText.PhysicalKey(k) == selectedKey);
                     operation.Enabled = !fixedBinding && (relation.Complete || !isRemoved && relation.DefaultKeys != null && !relation.DefaultKeys.Contains(selectedKey)) && !session.IsResetPending;
                     operation.AccessibleName = I18n.Str(isRemoved ? "views.restore" : "views.remove") + " " + BindingViewText.ActionName(relation.Action);
                     edit.ActionId = relation.Action; edit.Text = BindingViewText.ActionName(relation.Action);

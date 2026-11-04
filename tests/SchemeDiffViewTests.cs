@@ -12,6 +12,7 @@ public static class SchemeDiffViewTests
 {
     const BindingFlags Hidden = BindingFlags.Instance | BindingFlags.NonPublic;
     [DllImport("user32.dll")] static extern IntPtr SendMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
+    [DllImport("dwmapi.dll")] static extern int DwmFlush();
     static int checks;
     static void Assert(bool value, string message) { checks++; if (!value) throw new Exception(message); }
     static T Field<T>(object owner, string name)
@@ -43,6 +44,131 @@ public static class SchemeDiffViewTests
         using (var bitmap = new Bitmap(control.Width, control.Height))
         { control.DrawToBitmap(bitmap, control.ClientRectangle); bitmap.Save(path); }
     }
+    static void PartialPaint(Control row, string output)
+    {
+        using (var bitmap = new Bitmap(row.Width, row.Height))
+        using (var graphics = Graphics.FromImage(bitmap))
+        {
+            Color untouched = Color.Magenta;
+            graphics.Clear(untouched);
+            var clip = new Rectangle(0, 0, row.Width, 1);
+            graphics.SetClip(clip);
+            row.GetType().GetMethod("OnPaint", Hidden).Invoke(row, new object[] { new PaintEventArgs(graphics, clip) });
+            int outside = 0;
+            for (int y = 1; y < bitmap.Height; y++)
+                for (int x = 0; x < bitmap.Width; x++)
+                    if (bitmap.GetPixel(x, y).ToArgb() != untouched.ToArgb()) outside++;
+            if (outside != 0) bitmap.Save(Path.Combine(output, "partial-paint-outside-clip.png"));
+            Assert(outside == 0, "A partially exposed difference row painted outside its scroll clip: " + outside + " pixels; mode=" + Field<int>(row, "Mode"));
+        }
+    }
+    static Bitmap ScreenImage(Control control)
+    {
+        Application.DoEvents(); DwmFlush();
+        var bitmap = new Bitmap(control.ClientSize.Width, control.ClientSize.Height);
+        using (var graphics = Graphics.FromImage(bitmap))
+            graphics.CopyFromScreen(control.PointToScreen(Point.Empty), Point.Empty, bitmap.Size);
+        return bitmap;
+    }
+    static void ScrollPaint(string output)
+    {
+        var session = EditorSession.CreateOffline();
+        foreach (var action in MainForm.Actions)
+        {
+            if (session.HasKeyboardSlot(action.Id, 0)) session.SetKeyboard(action.Id, 0, "F12");
+            if (session.HasGamepadSlot(action.Id, 0, 0)) session.SetGamepadFamily(action.Id, 0, 0, "Gamepad_FaceButton_Left");
+        }
+        Type type = typeof(MainForm).Assembly.GetType("PBZKeyForge.SchemeDiffView");
+        using (var host = new Form { ClientSize = new Size(1100, 260), ShowInTaskbar = false, TopMost = true, StartPosition = FormStartPosition.CenterScreen })
+        using (var view = (Control)Activator.CreateInstance(type, true))
+        {
+            view.Font = new Font("Microsoft YaHei UI", 10); view.Dock = DockStyle.Fill;
+            host.Controls.Add(view); host.Show();
+            type.GetMethod("Render", new[] { typeof(EditorSession) }).Invoke(view, new object[] { session });
+            Application.DoEvents();
+            var rows = Field<Panel>(view, "rows");
+            Assert(rows.VerticalScroll.Visible, "Scroll regression needs a list longer than its viewport.");
+            foreach (int command in new[] { 1, 1, 3, 7, 0, 6 })
+            {
+                int previous = rows.AutoScrollPosition.Y;
+                SendMessage(rows.Handle, 0x115, new IntPtr(command), IntPtr.Zero);
+                int offset = -rows.AutoScrollPosition.Y;
+                Assert(rows.AutoScrollPosition.Y != previous, "Native scroll message did not move the list; command=" + command);
+                using (var scrolled = ScreenImage(rows))
+                {
+                    rows.Invalidate(true); rows.Update();
+                    using (var repainted = ScreenImage(rows))
+                    {
+                        int different = 0;
+                        // The native Form's rounded corners expose desktop compositor pixels.
+                        int inset;
+                        using (var graphics = rows.CreateGraphics()) inset = (int)Math.Ceiling(8 * graphics.DpiX / 96f);
+                        for (int y = 0; y < scrolled.Height; y++)
+                            for (int x = inset; x < scrolled.Width - inset; x++)
+                            {
+                                Color actual = scrolled.GetPixel(x, y), expected = repainted.GetPixel(x, y);
+                                // Scaled icon edges can round one channel differently when clipped.
+                                if (Math.Abs(actual.R - expected.R) > 1 || Math.Abs(actual.G - expected.G) > 1 || Math.Abs(actual.B - expected.B) > 1) different++;
+                            }
+                        scrolled.Save(Path.Combine(output, "scroll-" + offset + ".png"));
+                        if (different != 0) repainted.Save(Path.Combine(output, "repaint-" + offset + ".png"));
+                        Assert(different == 0, "Native scrolling left stale row pixels until a full repaint: " + different + "; offset=" + offset);
+                    }
+                }
+            }
+        }
+    }
+    static void MainScrollPaint(string output)
+    {
+        using (var form = new MainForm(new EditorPreferences(Path.Combine(output, "scroll-prefs"))))
+        {
+            form.UiOffline(); form.ShowInTaskbar = false; form.TopMost = true;
+            form.Size = form.MinimumSize; form.StartPosition = FormStartPosition.CenterScreen;
+            foreach (var action in MainForm.Actions)
+            {
+                if (form.Session.HasKeyboardSlot(action.Id, 0)) form.Session.SetKeyboard(action.Id, 0, "F12");
+                if (form.Session.HasGamepadSlot(action.Id, 0, 0)) form.Session.SetGamepadFamily(action.Id, 0, 0, "Gamepad_FaceButton_Left");
+            }
+            form.RenderSession(); form.Show(); Application.DoEvents();
+            var view = Field<Control>(form, "schemeDiff"); Compare(view, true);
+            var rows = Field<Panel>(view, "rows");
+            for (int step = 0; step < 20; step++)
+            {
+                Point point = rows.PointToScreen(new Point(rows.Width / 2, rows.Height / 2));
+                int delta = step < 8 ? -120 : 120;
+                int previous = rows.AutoScrollPosition.Y;
+                if (step < 12)
+                    SendMessage(rows.Handle, 0x20a, new IntPtr(delta << 16), new IntPtr((point.Y << 16) | (point.X & 65535)));
+                else if (step < 18)
+                    SendMessage(rows.Handle, 0x115, new IntPtr(new[] { 1, 1, 3, 7, 0, 6 }[step - 12]), IntPtr.Zero);
+                else
+                    for (int burst = 0; burst < 4; burst++)
+                        SendMessage(rows.Handle, 0x20a, new IntPtr((step == 18 ? -120 : 120) << 16), new IntPtr((point.Y << 16) | (point.X & 65535)));
+                Application.DoEvents();
+                Assert(previous != rows.AutoScrollPosition.Y, "MainForm scroll did not move the list; step=" + step);
+                var visible = Rows(view).Where(r => r.Bottom > 0 && r.Top < rows.ClientSize.Height).OrderBy(r => r.Top).ToArray();
+                for (int i = 1; i < visible.Length; i++) Assert(visible[i - 1].Bottom <= visible[i].Top, "Scrolled difference row bounds overlap.");
+                using (var scrolled = ScreenImage(view))
+                {
+                    view.Invalidate(true); view.Update();
+                    using (var repainted = ScreenImage(view))
+                    {
+                        int different = 0;
+                        for (int y = 0; y < scrolled.Height; y++)
+                            for (int x = 0; x < scrolled.Width; x++)
+                            {
+                                Color a = scrolled.GetPixel(x, y), b = repainted.GetPixel(x, y);
+                                if (Math.Abs(a.R-b.R)>1 || Math.Abs(a.G-b.G)>1 || Math.Abs(a.B-b.B)>1) different++;
+                            }
+                        scrolled.Save(Path.Combine(output, "main-wheel-" + step + ".png"));
+                        if (different != 0) repainted.Save(Path.Combine(output, "main-repaint-" + step + ".png"));
+                        Assert(different == 0, "MainForm wheel scroll differs from full repaint: " + different + " pixels; step=" + step);
+                    }
+                }
+                if (step == 4) form.RenderSession();
+            }
+        }
+    }
     static void Synthetic(string output)
     {
         Type type = typeof(MainForm).Assembly.GetType("PBZKeyForge.SchemeDiffView+DifferenceRow");
@@ -58,12 +184,16 @@ public static class SchemeDiffViewTests
             object[] tokens = Tokens(row);
             Assert(Field<Color>(tokens[0], "Color") == Color.FromArgb(240, 178, 78), "Pending addition must be yellow.");
             Assert(Field<bool>(tokens[2], "Removed") && Field<Color>(tokens[2], "Color") == Color.FromArgb(139, 145, 148), "Removal must be gray and struck through.");
+            PartialPaint(row, output);
             Shot(row, Path.Combine(output, "replacement-combined.png"));
             Click(row, true); Assert(Parts(row).SequenceEqual(new[] { "+G", "−右键" }), "Changes-only must omit retained keys: mode=" + Field<int>(row, "Mode") + " " + string.Join(" ", Parts(row)));
+            PartialPaint(row, output);
             Shot(row, Path.Combine(output, "replacement-changes.png"));
             Click(row, true); Assert(Parts(row).SequenceEqual(new[] { "F / G" }), "Result must list retained keys before new keys, regardless of record ordering.");
+            PartialPaint(row, output);
             Shot(row, Path.Combine(output, "replacement-result.png"));
             Click(row, true); Assert(Parts(row).SequenceEqual(new[] { "F / 右键" }), "Before must show the selected baseline exactly.");
+            PartialPaint(row, output);
             Shot(row, Path.Combine(output, "replacement-before.png"));
             Click(row, true);
             replacement.AfterKeys = new string[0];
@@ -88,6 +218,8 @@ public static class SchemeDiffViewTests
             string input = Path.Combine(output, "EnhancedInputUserSettings.sav"); File.WriteAllBytes(input, fixture);
             File.WriteAllBytes(Path.Combine(output, "PBZSharedSetting.sav"), new byte[] { 1 });
             Synthetic(output);
+            ScrollPaint(output);
+            MainScrollPaint(output);
             using (var form = new MainForm())
             {
                 form.ShowInTaskbar = false; form.Opacity = 0; form.UiSmoke(input); form.Show(); Application.DoEvents();

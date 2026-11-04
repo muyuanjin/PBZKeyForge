@@ -28,7 +28,7 @@
 | `IA_UseTopItem.png` | 使用上方药 | 药瓶与上箭头 |
 | `IA_UseBottomItem.png` | 使用下方药 | 药瓶与下箭头 |
 
-源图位于 `sources/`：`action-atlas.png` 为动作图集，`detail-atlas.png` 为影之武装、格挡与闪避图集，`slow-walk.png` 为慢走源图。图集处理脚本为 `build/prepare-action-icons.py`，清理柔光、统一颜色并输出透明图标与全套预览。图集使用各自的行列和动作顺序，按 `--columns`、`--actions` 和 `--row-boundaries` 指定：
+源图位于 `sources/`：`action-atlas.png` 为动作图集，`detail-atlas.png` 为影之武装、格挡与闪避图集，`slow-walk.png` 为慢走源图，`interact.png` 为交互源图。图集处理脚本为 `build/prepare-action-icons.py`，清理柔光、统一颜色并输出透明图标与全套预览。图集使用各自的行列和动作顺序，按 `--columns`、`--actions` 和 `--row-boundaries` 指定：
 
 ```powershell
 python build\prepare-action-icons.py <atlas.png>
@@ -41,10 +41,11 @@ python build\prepare-action-icons.py <detail-atlas.png> --columns 3 --actions IA
 python build\prepare-action-icons.py --preview-only
 ```
 
-慢走源图保存在 `sources/slow-walk.png`，单独处理：
+慢走与交互源图单独处理：
 
 ```powershell
 python build\prepare-action-icons.py assets\ui\actions\sources\slow-walk.png --columns 1 --actions IA_MoveSlow
+python build\prepare-action-icons.py assets\ui\actions\sources\interact.png --columns 1 --actions IA_Interact
 ```
 
 预览输出到 `dist/action-icons-preview.png`，同时展示 128px 与 32px 图形。

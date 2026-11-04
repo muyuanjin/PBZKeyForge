@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +8,7 @@ namespace PBZKeyForge
     {
         public string Id, Action, Key, DefaultKey, Slot;
         public int SlotIndex, FamilyIndex;
-        public bool Changed;
+        public bool Changed, ReadOnly;
     }
 
     public sealed class ControllerFamily
@@ -111,7 +111,8 @@ namespace PBZKeyForge
             return addresses.Values.Where(c => c.Profile == SelectedProfile && c.IsGamepad == gamepad
                 && (!gamepad || c.FamilyIndex == familyIndex) && (action == null || c.Action == action) && value(c) != null)
                 .Select(c => new BindingRecord { Id = c.Id, Action = c.Action, Key = value(c), DefaultKey = c.DefaultKey,
-                    Slot = c.Slot, SlotIndex = c.SlotIndex, FamilyIndex = c.FamilyIndex, Changed = !beforeEdit && draft.Edits.ContainsKey(c.Id) })
+                    Slot = c.Slot, SlotIndex = c.SlotIndex, FamilyIndex = c.FamilyIndex, Changed = !beforeEdit && draft.Edits.ContainsKey(c.Id),
+                    ReadOnly = Defaults.IsMirroredSlot(c.Action, c.IsGamepad ? InputDefaults.RawSlot(c.Slot) : int.Parse(c.Slot)) })
                 .OrderBy(c => c.Action).ThenBy(c => c.Slot).ThenBy(c => c.Id).ToArray();
         }
 
@@ -120,6 +121,8 @@ namespace PBZKeyForge
             EnsureEditable();
             Cell cell = Address(id);
             if (cell.Profile != SelectedProfile) throw new InvalidOperationException("Select the binding's scheme first.");
+            if (Defaults.IsMirroredSlot(cell.Action, cell.IsGamepad ? InputDefaults.RawSlot(cell.Slot) : int.Parse(cell.Slot)))
+                throw new InvalidOperationException(I18n.Str("views.readonlyrecord"));
             EndPreview();
             Edit(cell, Normalize(key) ?? (cell.IsGamepad ? cell.DefaultKey ?? Current(cell) : null));
         }
@@ -131,7 +134,7 @@ namespace PBZKeyForge
             if (owner == null) throw new ArgumentException("Choose a controller family.", "familyIndex");
             if (!HasGamepadSlot(action, slotIndex, familyIndex)) throw new InvalidOperationException(I18n.Str("views.capacity"));
             string slot = InputDefaults.SlotName(PadRawSlots(SelectedProfile, cells.Values.First(c => c.IsGamepad && c.Profile == SelectedProfile && c.FamilyIndex == familyIndex).Family, action)[slotIndex]);
-            string defaultKey = InputDefaults.ForRawSlot(action, true, InputDefaults.RawSlot(slot));
+            string defaultKey = Defaults.ForRawSlot(action, true, InputDefaults.RawSlot(slot));
             var targets = addresses.Values.Where(c => c.IsGamepad && c.Profile == SelectedProfile && c.Action == action
                 && c.FamilyIndex == familyIndex && c.Slot == slot && c.DefaultKey == defaultKey && Current(c) != null).ToArray();
             if (targets.Length == 0)
@@ -142,7 +145,7 @@ namespace PBZKeyForge
 
         public string[] FactoryKeyboardKeys(string action)
         {
-            return KeyboardDefaults.ForAction(action);
+            return Defaults.ForAction(action, false);
         }
 
         Cell KeyboardAddressForRaw(string action, int raw)
@@ -153,7 +156,7 @@ namespace PBZKeyForge
             {
                 cell = new Cell { Id = id, Profile = SelectedProfile, Action = action, Slot = slot,
                     SlotIndex = Array.IndexOf(KeyboardRawSlots(SelectedProfile, action), raw), FamilyIndex = -1,
-                    DefaultKey = InputDefaults.ForRawSlot(action, false, raw) };
+                    DefaultKey = Defaults.ForRawSlot(action, false, raw) };
                 addresses[id] = cell;
             }
             return cell;
@@ -170,9 +173,9 @@ namespace PBZKeyForge
 
         BindingRecord[] ActionBindingRecords(string action, bool gamepad, int familyIndex, bool beforeEdit)
         {
-            return BindingRecords(gamepad, familyIndex, beforeEdit, action).Where(r => !gamepad || !InputDefaults.HasAction(action)
-                || InputDefaults.RegisteredSlots(action, true).Contains(InputDefaults.RawSlot(r.Slot))
-                    && r.DefaultKey == InputDefaults.ForRawSlot(action, true, InputDefaults.RawSlot(r.Slot))).ToArray();
+            return BindingRecords(gamepad, familyIndex, beforeEdit, action).Where(r => !r.ReadOnly).Where(r => !gamepad || !Defaults.HasAction(action)
+                || Defaults.EditableRegisteredSlots(action, true).Contains(InputDefaults.RawSlot(r.Slot))
+                    && r.DefaultKey == Defaults.ForRawSlot(action, true, InputDefaults.RawSlot(r.Slot))).ToArray();
         }
 
         ActionRelations Relations(string action, bool gamepad, int familyIndex, bool beforeEdit)
@@ -182,8 +185,8 @@ namespace PBZKeyForge
             bool complete;
             if (gamepad)
             {
-                bool known = InputDefaults.HasAction(action);
-                defaults = known ? InputDefaults.ForAction(action, true)
+                bool known = Defaults.HasAction(action);
+                defaults = known ? Defaults.ForAction(action, true)
                     : records.Any(r => r.DefaultKey == null) ? null : DistinctKeys(records.Select(r => r.DefaultKey));
                 complete = known || records.Length > 0;
             }
@@ -192,7 +195,7 @@ namespace PBZKeyForge
                 defaults = FactoryKeyboardKeys(action);
                 complete = defaults != null;
             }
-            string[] keys = InputDefaults.ResolveKeys(action, gamepad, records.Select(record =>
+            string[] keys = Defaults.ResolveKeys(action, gamepad, records.Select(record =>
                 new KeyValuePair<int, string>(gamepad ? InputDefaults.RawSlot(record.Slot) : int.Parse(record.Slot), record.Key)));
             return new ActionRelations { Action = action, Keys = keys, DefaultKeys = defaults, Complete = complete,
                 Changed = !beforeEdit && (records.Any(r => r.Changed) || draft.Edits.Keys.Any(id => Address(id).Profile == SelectedProfile
@@ -256,7 +259,7 @@ namespace PBZKeyForge
             EnsureEditable(); EndPreview();
             var current = Relations(action, gamepad, familyIndex);
             if (current.CanCompare && SameKeys(current.Keys, current.DefaultKeys)) return;
-            foreach (var record in BindingRecords(gamepad, familyIndex).Where(r => r.Action == action))
+            foreach (var record in ActionBindingRecords(action, gamepad, familyIndex, false))
             {
                 var cell = Address(record.Id);
                 Edit(cell, gamepad ? cell.DefaultKey ?? Current(cell) : null);
@@ -277,7 +280,7 @@ namespace PBZKeyForge
             if (!relation.Complete && (add || relation.DefaultKeys == null || relation.DefaultKeys.Contains(key)))
                 throw new InvalidOperationException(I18n.Str("views.incomplete"));
             if (relation.Keys.Contains(key) == add) return;
-            if (!add && InputDefaults.FixedForAction(action, gamepad).Contains(key))
+            if (!add && Defaults.FixedForAction(action, gamepad).Contains(key))
                 throw new InvalidOperationException(I18n.Str("views.fixedbinding"));
             var records = ActionBindingRecords(action, gamepad, familyIndex, false);
             string family = gamepad ? cells.Values.First(c => c.IsGamepad && c.Profile == SelectedProfile && c.FamilyIndex == familyIndex).Family : null;
@@ -288,11 +291,11 @@ namespace PBZKeyForge
                 EndPreview();
                 foreach (var record in records.Where(r => r.Key == key)) Edit(Address(record.Id), "None");
                 if (!gamepad)
-                    foreach (int raw in InputDefaults.RegisteredSlots(action, false).Where(s => InputDefaults.ForRawSlot(action, false, s) == key
+                    foreach (int raw in Defaults.EditableRegisteredSlots(action, false).Where(s => Defaults.ForRawSlot(action, false, s) == key
                         && !records.Any(r => r.Slot == s.ToString())))
                     { var cell = KeyboardAddressForRaw(action, raw); Edit(cell, "None"); }
                 else
-                    foreach (int raw in InputDefaults.RegisteredSlots(action, true).Where(s => InputDefaults.ForRawSlot(action, true, s) == key
+                    foreach (int raw in Defaults.EditableRegisteredSlots(action, true).Where(s => Defaults.ForRawSlot(action, true, s) == key
                         && !records.Any(r => rawSlot(r) == s)))
                         SetGamepadFamily(action, Array.IndexOf(rawSlots, raw), familyIndex, "None");
                 return;
@@ -309,8 +312,8 @@ namespace PBZKeyForge
             int[] rawSlots = gamepad ? PadRawSlots(SelectedProfile, family, action) : KeyboardRawSlots(SelectedProfile, action);
             var relation = Relations(action, gamepad, familyIndex);
             return new BindingCapacity {
-                Used = relation.Keys.Except(InputDefaults.FixedForAction(action, gamepad)).Count(),
-                Limit = rawSlots.Count(raw => !gamepad || InputDefaults.RegisteredSlots(action, true).Contains(raw)),
+                Used = relation.Keys.Except(Defaults.FixedForAction(action, gamepad)).Count(),
+                Limit = rawSlots.Count(raw => !gamepad || Defaults.EditableRegisteredSlots(action, true).Contains(raw)),
                 CanAdd = relation.Complete && AvailableRelationshipSlot(action, gamepad, familyIndex) >= 0 };
         }
 
@@ -323,14 +326,14 @@ namespace PBZKeyForge
             for (int slot = 0; slot < rawSlots.Length; slot++)
             {
                 int raw = rawSlots[slot];
-                if (gamepad && !InputDefaults.RegisteredSlots(action, true).Contains(raw)) continue;
+                if (gamepad && !Defaults.EditableRegisteredSlots(action, true).Contains(raw)) continue;
                 var group = records.Where(r => rawSlot(r) == raw).ToArray();
-                string inheritedKey = InputDefaults.ForRawSlot(action, gamepad, raw);
+                string inheritedKey = Defaults.ForRawSlot(action, gamepad, raw);
                 string[] provided = group.Length == 0 ? new[] { inheritedKey ?? "None" } : group.Select(r => r.Key).ToArray();
                 var remaining = records.Where(r => rawSlot(r) != raw).Select(r => r.Key)
-                    .Concat(InputDefaults.RegisteredSlots(action, gamepad).Where(s => s != raw && !records.Any(r => rawSlot(r) == s))
-                        .Select(s => InputDefaults.ForRawSlot(action, gamepad, s)))
-                    .Concat(InputDefaults.FixedForAction(action, gamepad));
+                    .Concat(Defaults.EditableRegisteredSlots(action, gamepad).Where(s => s != raw && !records.Any(r => rawSlot(r) == s))
+                        .Select(s => Defaults.ForRawSlot(action, gamepad, s)))
+                    .Concat(Defaults.FixedForAction(action, gamepad));
                 if (provided.All(k => k == "None" || string.IsNullOrEmpty(k) || remaining.Contains(k)))
                     return slot;
             }
@@ -346,18 +349,18 @@ namespace PBZKeyForge
                 throw new InvalidOperationException(I18n.Str("views.incomplete"));
             if (!relation.Keys.Contains(oldKey)) return;
             var records = ActionBindingRecords(action, gamepad, familyIndex, false);
-            if (InputDefaults.FixedForAction(action, gamepad).Contains(oldKey)) throw new InvalidOperationException(I18n.Str("views.fixedbinding"));
+            if (Defaults.FixedForAction(action, gamepad).Contains(oldKey)) throw new InvalidOperationException(I18n.Str("views.fixedbinding"));
             EndPreview();
             foreach (var record in records.Where(r => r.Key == oldKey)) Edit(Address(record.Id), newKey);
             if (!gamepad)
-                foreach (int raw in InputDefaults.RegisteredSlots(action, false).Where(s => InputDefaults.ForRawSlot(action, false, s) == oldKey
+                foreach (int raw in Defaults.EditableRegisteredSlots(action, false).Where(s => Defaults.ForRawSlot(action, false, s) == oldKey
                     && !records.Any(r => r.Slot == s.ToString())))
                 { var cell = KeyboardAddressForRaw(action, raw); Edit(cell, newKey); }
             else
             {
                 string family = cells.Values.First(c => c.IsGamepad && c.Profile == SelectedProfile && c.FamilyIndex == familyIndex).Family;
                 int[] slots = PadRawSlots(SelectedProfile, family, action);
-                foreach (int raw in InputDefaults.RegisteredSlots(action, true).Where(s => InputDefaults.ForRawSlot(action, true, s) == oldKey
+                foreach (int raw in Defaults.EditableRegisteredSlots(action, true).Where(s => Defaults.ForRawSlot(action, true, s) == oldKey
                     && !records.Any(r => InputDefaults.RawSlot(r.Slot) == s)))
                     SetGamepadFamily(action, Array.IndexOf(slots, raw), familyIndex, newKey);
             }

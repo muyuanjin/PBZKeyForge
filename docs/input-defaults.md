@@ -2,7 +2,7 @@
 
 “无绑定”在目标槽写入 `Key = None`，保留显式覆盖。“默认”和“清除覆盖”删除键鼠覆盖，或恢复手柄记录的 `DefaultKey`。解绑一个槽不代表解绑整个动作；其他槽仍可提供输入。
 
-默认值来自支持构建 CL-301524 的输入映射资源，保存在 [`assets/input-defaults.json`](../assets/input-defaults.json)，区分动作的有效原厂键集合与可重绑的逐槽默认值。“澄心洞照”对应 `IA_Sense_Default`；地图默认键包含 M 和 Tab。手柄已保存条目的 `DefaultKey` 也可直接读取。
+默认值来自游戏输入映射资源及原生注册规则，区分动作的有效原厂键集合与可重绑的逐槽默认值。“澄心洞照”对应 `IA_Sense_Default`；地图默认键包含 M 和 Tab。两版影之武装槽 2 的归属不同，不能仅凭资源条目或旧存档中的 `DefaultKey` 判断新版投影。两版程序、方案认证路径和交互改键的验证边界见[游戏版本兼容](game-version-compatibility.md)。
 
 ## 从安装资源提取
 
@@ -12,13 +12,17 @@
 python build\extract-input-defaults.py --game-exe <platform\steam\PBZ.exe> --paks <ProjectPBZ\Content\Paks> --oodle <oo2core_8_win64.dll> --output dist\input-defaults.json
 ```
 
-更新项目数据时添加 `--compact --output assets\input-defaults.json`。精简模式与完整研究输出使用同一次资源解析结果，保留构建、三个方案、`bindings` 中的 60 条资源注册输入、`effectiveBindings` 中的 59 条最终默认及其来源，以及按 InputAction、设备和按键合并的固定映射；不包含内部属性头、导出序号或完整目录数据。
+旧版维护数据为 [`assets/input-defaults.json`](../assets/input-defaults.json)，新版为 [`assets/input-defaults-302256.json`](../assets/input-defaults-302256.json)。生成新版精简数据时使用 `--build CL-302256 --compact --output assets\input-defaults-302256.json`。精简模式与完整研究输出使用同一次资源解析结果，保留构建、三个方案、`bindings` 中的 60 条资源注册输入、`effectiveBindings` 中的 59 条最终默认及其来源，以及按 InputAction、设备和按键合并的固定映射；不包含内部属性头、导出序号或完整目录数据。
+
+提取器默认使用 CL-301524 的位置；新版添加 `--build CL-302256`，旧版可显式添加 `--build CL-301524`。两版资源解密位置分别登记，不能混用。
 
 脚本只输出输入映射字段及资源来源，不输出资源密钥、解密后的资源包、完整资源目录或 `.uasset`。密钥在内存中从支持 EXE 的固定指令立即数位置读取，用解密后的目录挂载点验证。映射资产采用 Zen 包格式和无版本属性；脚本完整解析根对象的属性头与数据，遇到未支持的字段即停止，避免把未解析的方案覆盖误当作不存在。
 
-该构建提取出 19 个 IMC、60 条按资源设备分类的可重绑注册输入，以及 84 条固定映射。跨 IMC 同身份输入合并后，最终为 59 条可重绑默认。各 IMC 只序列化 `DefaultKeyMappings`，没有 `MappingProfileOverrides`；各可重绑设置没有方案限制。因此三个方案使用相同原厂默认，方案中的自定义覆盖分别保存。
+新版 AssetRegistry 按类枚举得到 20 个 IMC、98 个 InputAction。20 个 IMC 共 173 条映射；正确解析自身或继承的可重绑设置后，71 条来源映射可重绑、102 条固定。注册来源去重为 60 条，按原生身份合并后为 59 条最终默认；固定来源去重为 86 组。各 IMC 只序列化 `DefaultKeyMappings`，没有 `MappingProfileOverrides`；各可重绑设置没有方案限制。因此三个方案使用相同原厂默认，方案中的自定义覆盖分别保存。
 
-## 已确认的逐槽默认值
+`SettingsBehavior = 0` 使用 InputAction 的 `PlayerMappableKeySettings`，1 使用映射自身的设置，2 不提供可重绑设置。`IMC_OnlyMap`、`IMC_OnlySense`、`IMC_OnlyChangeWeapon` 有 7 条继承注册来源；不能仅凭没有映射自身的 Override 将其归为固定。提取器枚举全目录的 `IMC_` 资源，新版结果与 AssetRegistry 的 InputMappingContext 类集合一致；`IMC_QTE` 的 25 条固定来源也包含在内。
+
+## CL-301524 的逐槽默认值
 
 槽号从 0 开始。`First` 至 `Seventh` 对应 0 至 6；7 是 `Unspecified`，8 是 `Max`，不能作为额外显式槽分配。表中列出最终 profile 默认；多槽具有同一按键时仍保留全部槽号。
 
@@ -49,6 +53,12 @@ python build\extract-input-defaults.py --game-exe <platform\steam\PBZ.exe> --pak
 `IMC_Default` 的第 31 条映射将 Left Ctrl 以 `InputTriggerHold` 连接到 `IA_ShachiAbility_LongPress`，没有可重绑设置；第 32 条将 Right Trigger 连接到同一 InputAction，并提供 `IA_ShadowArm_LongPress` 的手柄设置。因此长按影之武装的动作级键鼠默认包含 Left Ctrl，但该固定映射不属于独立的键鼠可重绑槽。`IMC_Locomotion` 的 WASD、方向键、Mouse2D 和手柄摇杆等固定映射同样保留在提取 JSON 的 `contexts[].mappings` 中。
 
 `IA_ShadowArm` 的手柄槽 2 注册输入来自 `IMC_Interaction_ShaChiBroken`，槽 1 / 3 来自 `IMC_Default`；`IMC_Default` 同时提供键鼠槽 2 注册输入。两者共享原生槽身份，不能并存为两个 profile 映射。基线三个方案的槽 2 均保存不可变的 `DefaultKey = Gamepad_RightTriggerAxis`，据此最终投影保留手柄槽 2；键鼠 Ctrl 仍由槽 0 提供。该结果依据真实保存的注册结果，不假设 AssetRegistry 的枚举顺序。
+
+### CL-302256 的影之武装槽
+
+新版注册器在基类注册后，将 `IA_ShadowArm` 槽 2 的原厂键设为 Left Ctrl，当前键复制槽 0。全部上下文注册完成后，键鼠注册槽为 0、2，手柄为 1、3；槽 2 是槽 0 的镜像，不是独立可编辑来源。编辑器保留键鼠独立列 0、4、5，手柄列为 1、3。槽 0 显式解绑后，槽 2 不会重新提供 Ctrl；额外键鼠槽 4、5 仍可独立使用。
+
+存档中的旧手柄槽 2 保留原记录，但不计入新版有效手柄关系。新版加载存档后才执行注册规范，单独保存不同于槽 0 的键鼠槽 2 也会被游戏覆盖。程序按每份存档所属安装的原生注册器识别规则，预览和导出保留该规则；不会用全局版本开关影响另一份存档。对应的 vtable、注册和加载地址见[游戏版本兼容](game-version-compatibility.md)。
 
 ## 键鼠槽与游戏界面
 
@@ -90,18 +100,19 @@ GVAS 的 Blob 记录保存共享 profile 的变化覆盖，不是固有的键鼠
 
 ## 验证范围
 
-提取器从安装资源读取 19 个 IMC，并检查每个根对象完整消费。提取出的 30 条手柄默认槽与 `samples/vanilla-base.sav` 三个方案中的全部 90 条 `(mapping name, slot, DefaultKey)` 完全一致，包含蹲伏槽 0 和特殊交互影之武装槽 2。
+旧版已提取数据覆盖 19 个 IMC，30 条手柄默认槽与 `samples/vanilla-base.sav` 三个方案中的全部 90 条 `(mapping name, slot, DefaultKey)` 一致。新版重新读取完整 20 个 IMC，逐个检查映射根对象完整消费，并以原生注册规范确定 29 条最终手柄槽；不能把旧版 90 条记录直接当成新版默认表。
 
-独立检查将运行时代码的 60 条资源注册输入和 59 条最终默认与项目资源数据比较，核对动作集合去重、地图双键、蹲伏原始槽、影之武装槽 2 合并和固定 Ctrl 长按，并只读对照三方案的 90 条手柄记录：
+独立检查将运行时代码的 60 条资源注册输入和 59 条最终默认与对应构建的数据比较，核对动作集合去重、地图双键、蹲伏原始槽、影之武装槽 2 合并和固定 Ctrl 长按。旧版另只读对照基线三方案的 90 条手柄记录：
 
 ```powershell
 $compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
-& $compiler /nologo /out:dist\InputDefaultsTests.exe /r:System.Core.dll /r:System.Web.Extensions.dll src\Gvas.cs src\KeyboardDefaults.cs tests\InputDefaultsTests.cs
+& $compiler /nologo /out:dist\InputDefaultsTests.exe /r:System.Core.dll /r:System.Web.Extensions.dll /r:dist\PBZKeyForge.exe tests\InputDefaultsTests.cs
 .\dist\InputDefaultsTests.exe assets\input-defaults.json samples\vanilla-base.sav
+.\dist\InputDefaultsTests.exe assets\input-defaults-302256.json samples\vanilla-base.sav
 ```
 
 集成检查覆盖 `None` 的保存、重开、撤销、恢复默认及方案隔离。界面检查覆盖默认与无绑定的选择、键鼠捕获和截图布局，默认只测简体中文；15 种语言遍历仅在针对性测试时通过 `--all-languages` 启用。
 
 ## 已知限制
 
-资源与原生静态证据适用于 CL-301524，不能代替游戏内解绑实测。AssetRegistry 的完整枚举顺序未建立；影之武装槽 2 的最终归属使用三个基线方案共同记录的 DefaultKey 裁决。
+两版原生规则和新版完整资源枚举均为静态证据，不能代替游戏内解绑实测。旧版资源容器当前不在本机，旧资源比较仅覆盖已提取数据；旧版影之武装槽 2 的最终归属由三个基线方案共同记录的 DefaultKey 确认。新版槽 2 的规范由实际虚表派发和存档加载后的调用顺序确认，不依赖资源枚举顺序。CommonUI 菜单、相机、QTE 和调试等固定输入不提供 GVAS 的可重绑槽，不能通过添加同名保存记录伪造支持。

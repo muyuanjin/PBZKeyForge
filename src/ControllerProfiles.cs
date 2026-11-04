@@ -23,29 +23,38 @@ namespace PBZKeyForge
         }
 
         internal static SaveFile FactorySave()
+        { return FactorySave(InputDefaultSet.Legacy); }
+
+        internal static SaveFile FactorySave(InputDefaultSet defaults)
         {
-            var save = SaveFile.FromBytes(FactoryBytes);
+            var save = SaveFile.FromBytes(FactoryBytes, defaults);
             save.ClearKeyboardOverrides();
             save.ResetGamepadToDefaults();
+            foreach (var keys in save.GamepadKeys)
+                keys.Items.RemoveAll(item => defaults.HasAction(SaveFile.Field(item, "MappingName"))
+                    && !defaults.RegisteredSlots(SaveFile.Field(item, "MappingName"), true).Contains(InputDefaults.RawSlot(SaveFile.Field(item, "Slot"))));
             return save;
         }
 
-        internal static GamepadProfile Create(string profileId, string family)
+        internal static GamepadProfile Create(string profileId, string family, InputDefaultSet defaults)
         {
             var fields = FactoryProfileFields.Select(SaveFile.CloneNode).ToList();
             SaveFile.SetField(fields, "ProfileId", profileId);
             SaveFile.SetField(fields, "Family", family);
             var keys = fields.First(node => node.Name == "Keys");
+            keys.Items.RemoveAll(item => defaults.HasAction(SaveFile.Field(item, "MappingName"))
+                && !defaults.RegisteredSlots(SaveFile.Field(item, "MappingName"), true).Contains(InputDefaults.RawSlot(SaveFile.Field(item, "Slot"))));
             return new GamepadProfile { ProfileId = profileId, Family = family, Fields = fields, Keys = keys };
         }
 
-        internal static IEnumerable<List<Node>> EditingKeys(GamepadProfile profile)
+        internal static IEnumerable<List<Node>> EditingKeys(GamepadProfile profile, InputDefaultSet defaults)
         {
             foreach (var item in profile.Keys.Items) yield return item;
             foreach (var item in FactoryProfileFields.First(node => node.Name == "Keys").Items)
             {
                 string action = SaveFile.Field(item, "MappingName"), slot = SaveFile.Field(item, "Slot"), defaultKey = SaveFile.Field(item, "DefaultKey");
-                if (!profile.Keys.Items.Any(existing => SaveFile.Field(existing, "MappingName") == action
+                if ((!defaults.HasAction(action) || defaults.RegisteredSlots(action, true).Contains(InputDefaults.RawSlot(slot)))
+                    && !profile.Keys.Items.Any(existing => SaveFile.Field(existing, "MappingName") == action
                     && SaveFile.Field(existing, "Slot") == slot && SaveFile.Field(existing, "DefaultKey") == defaultKey))
                     yield return item.Select(SaveFile.CloneNode).ToList();
             }
@@ -94,7 +103,7 @@ namespace PBZKeyForge
                 foreach (string family in SupportedFamilies)
                     if (!existing.Any(profile => profile.ProfileId == record.ProfileId && profile.Family == family))
                     {
-                        var profile = Create(record.ProfileId, family);
+                        var profile = Create(record.ProfileId, family, save.Defaults);
                         profile.Index = index++;
                         yield return profile;
                     }
@@ -112,7 +121,7 @@ namespace PBZKeyForge
                 container.Items.Clear();
                 save.Props.Insert(save.Props.FindIndex(node => node.IsTerm), container);
             }
-            var created = Create(profileId, family);
+            var created = Create(profileId, family, save.Defaults);
             container.Items.Add(created.Fields);
             InitializeStorage(save);
             return save.GamepadProfiles.Last();

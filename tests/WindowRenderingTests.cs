@@ -58,6 +58,19 @@ public static class WindowRenderingTests
                 if ((color & 255) > 180 && ((color >> 8) & 255) > 180 && ((color >> 16) & 255) > 180) bright++;
             }
             Assert(bright < 4, state + ": native light frame painted over custom chrome (" + bright + " samples).");
+            uint background = (uint)(form.BackColor.R | form.BackColor.G << 8 | form.BackColor.B << 16);
+            bool solid = true;
+            for (int x = 16; x < form.Width - 16; x += 8)
+            {
+                for (int y = 1; y < form.Padding.Top; y++) solid &= GetPixel(dc, x, y) == background;
+                for (int y = form.Height - form.Padding.Bottom; y < form.Height - 1; y++) solid &= GetPixel(dc, x, y) == background;
+            }
+            for (int y = 16; y < form.Height - 16; y += 8)
+            {
+                for (int x = 1; x < form.Padding.Left; x++) solid &= GetPixel(dc, x, y) == background;
+                for (int x = form.Width - form.Padding.Right; x < form.Width - 1; x++) solid &= GetPixel(dc, x, y) == background;
+            }
+            Assert(solid, state + ": wallpaper leaked into the window frame padding.");
         }
         finally { ReleaseDC(form.Handle, dc); }
         using (var image = new Bitmap(form.Width, form.Height))

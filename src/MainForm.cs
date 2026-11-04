@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -89,7 +89,7 @@ namespace PBZKeyForge
         public static MainForm OpenDefault(EditorPreferences preferences)
         {
             var initialSession = Task.Run(delegate {
-                return SaveDiscovery.Open(preferences, true) ?? EditorSession.CreateOffline();
+                return SaveDiscovery.Open(preferences, true, false) ?? EditorSession.CreateOffline();
             });
             var form = new MainForm(preferences);
             try { form.Session = initialSession.GetAwaiter().GetResult(); }
@@ -112,7 +112,8 @@ namespace PBZKeyForge
             finally { ResumeLayout(true); }
             HandleCreated += delegate { EditorArtwork.DarkCaption(this); };
             Shown += delegate {
-                Activated += delegate { if (Session != null && !Session.IsOffline && !loading && !modalActive) RefreshFromDisk(); };
+                StartSchemeDiscovery();
+                Activated += delegate { if (Session != null && !Session.IsOffline && !loading && !modalActive) RefreshFromDisk(false); };
             };
             FormClosing += delegate(object sender, FormClosingEventArgs e) { if (IsApplying || !ConfirmDiscard()) e.Cancel = true; };
             gameTimer.Interval = 1500;
@@ -365,7 +366,7 @@ namespace PBZKeyForge
                                 if (dialog.ShowDialog(this) == DialogResult.OK)
                                     TryAction(delegate { if (pad) Session.SetGamepadFamily(action.Id, binding, SelectedFamilyIndex, dialog.Result); else Session.SetKeyboard(action.Id, binding, dialog.Result); });
                             }
-                            finally { modalActive = false; }
+                            finally { EndModal(); }
                         }
                     };
                     buttons[slot] = button; grid.Controls.Add(button, slot + 2, row);
@@ -446,7 +447,6 @@ namespace PBZKeyForge
                 lblPath.Text = offline ? I18n.Str("offline.location") : loaded ? I18n.Str("editor.location", DisplaySaveDirectory(Session.InputPath)) : I18n.Str("editor.nofile");
                 SetTip(lblPath, offline ? I18n.Str("offline.help") : loaded ? Session.InputPath : I18n.Str("editor.empty"));
                 btnRefresh.Text = I18n.Str(offline ? "editor.choose" : "editor.refresh");
-                btnApply.Text = I18n.Str(offline ? "offline.export" : "editor.apply");
                 lblBackup.Text = I18n.Str(offline ? "offline.exporthelp" : "editor.backup");
                 empty.Visible = !loaded; if (!loaded) empty.BringToFront();
                 RenderBindingViews();
@@ -481,7 +481,8 @@ namespace PBZKeyForge
                 SetTip(lblOffline, I18n.Str("offline.help"));
                 chkActivate.Checked = loaded && (Session.SelectedProfile == Session.ActiveProfile || Session.ActivationPending);
                 chkActivate.Enabled = loaded && !Session.IsResetPending && Session.ActiveProfile != null && Session.SelectedProfile != Session.ActiveProfile;
-                SetTip(chkActivate, loaded && Session.SchemeError != null ? I18n.Str("status.schemeunknown") + "\n" + Session.SchemeError : I18n.Str("editor.activatehelp"));
+                SetTip(chkActivate, loaded && Session.SchemeDiscoveryRequired && SchemeProbePending ? I18n.Str("editor.discovering")
+                    : loaded && Session.SchemeError != null ? I18n.Str("status.schemeunknown") + "\n" + Session.SchemeError : I18n.Str("editor.activatehelp"));
                 btnUndo.Visible = loaded && Session.HasChanges;
                 lblScope.Text = !loaded ? "" : offline ? I18n.Str("offline.scope", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount)
                     : Session.IsResetPending ? I18n.Str("editor.resetscope", Session.ScopeChangeCount)
@@ -524,7 +525,7 @@ namespace PBZKeyForge
                 {
                     var button = buttons[action.Id][slot];
                     var bindings = records[action.Id].Where(r => r.SlotIndex == slot && (!gamepad
-                        || r.DefaultKey == InputDefaults.ForRawSlot(action.Id, true, InputDefaults.RawSlot(r.Slot)))).ToArray();
+                        || r.DefaultKey == Session.Defaults.ForRawSlot(action.Id, true, InputDefaults.RawSlot(r.Slot)))).ToArray();
                     button.IsOffline = Session.IsOffline;
                     button.Value = bindings.Select(r => r.Key).FirstOrDefault();
                     string defaultKey = gamepad ? Session.GetGamepadDefault(action.Id, slot, SelectedFamilyIndex) : Session.GetKeyboardDefault(action.Id, slot);
@@ -566,13 +567,18 @@ namespace PBZKeyForge
         void RenderGameStatus()
         {
             bool loaded = Session != null, offline = loaded && Session.IsOffline;
+            bool gameRunning = loaded && !offline && lastRunning;
             lblGame.Text = "●  " + I18n.Str(offline ? "offline.mode" : lastRunning ? "editor.running" : "editor.closed");
             lblGame.ForeColor = offline ? EditorTheme.Muted : lastRunning ? EditorTheme.Amber : EditorTheme.Green;
+            ((ApplyActionButton)btnApply).GameRunning = gameRunning;
+            btnApply.Text = I18n.Str(offline ? "offline.export" : gameRunning ? "editor.applyrunning" : "editor.apply");
             btnApply.Enabled = loaded && (offline || Session.HasChanges && !lastRunning && Session.Conflicts.Length == 0);
-            lblStatus.Text = loaded && Session.Conflicts.Length > 0 ? I18n.Str("editor.conflictinfo") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
+            lblStatus.Text = loaded && Session.Conflicts.Length > 0 ? I18n.Str("editor.conflictinfo")
+                : gameRunning ? I18n.Str("editor.exittoapply") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
+                : loaded && Session.SchemeDiscoveryRequired && SchemeProbePending ? I18n.Str("editor.discovering")
                 : loaded && Session.SchemeError != null ? I18n.Str("editor.schemeunknown")
                 + (messageKey != null && messageKey != "editor.refreshed" ? " " + I18n.Str(messageKey, messageArgs) : "")
-                : loaded && !offline && lastRunning ? I18n.Str("editor.exittoapply") : messageKey != null ? I18n.Str(messageKey, messageArgs) : I18n.Str(offline ? "offline.help" : "editor.ready");
+                : messageKey != null ? I18n.Str(messageKey, messageArgs) : I18n.Str(offline ? "offline.help" : "editor.ready");
             lblStatus.ForeColor = messageError ? Color.FromArgb(238, 171, 156) : EditorTheme.Muted; SetTip(lblStatus, lblStatus.Text);
         }
 
@@ -611,7 +617,9 @@ namespace PBZKeyForge
         }
         public void SelectProfile(string profile) { if (Session != null) TryAction(delegate { Session.SwitchProfile(profile); }); }
         public void ShowGamepad(bool show) { gamepad = show; RenderSession(); }
-        public void RefreshFromDisk()
+        public void RefreshFromDisk() { RefreshFromDisk(true); }
+
+        void RefreshFromDisk(bool allowDiscoveryRetry)
         {
             if (loading || modalActive || IsApplying) return;
             if (Session == null) { AutoFind(false); return; }
@@ -619,6 +627,7 @@ namespace PBZKeyForge
             try { Session.Refresh(); SetMessage("editor.refreshed", false); }
             catch (Exception ex) { SetMessage("editor.refreshfail", true, ex.Message); }
             RenderSession();
+            StartSchemeDiscovery(allowDiscoveryRetry);
         }
         void ResolveConflicts()
         {
@@ -636,14 +645,14 @@ namespace PBZKeyForge
                     Session.ResolveConflict(conflict.Id, answer == DialogResult.Yes);
                 }
             }
-            finally { modalActive = false; RenderSession(); }
+            finally { EndModal(); RenderSession(); }
         }
         bool ConfirmDiscard()
         {
             if (Session == null || !Session.HasAnyDrafts && !Session.HasChanges) return true;
             modalActive = true;
             try { return EditorDialogs.Show(this, I18n.Str(Session.IsOffline ? "offline.discard" : "editor.discard"), I18n.Str("editor.drafttitle"), MessageBoxButtons.YesNo) == DialogResult.Yes; }
-            finally { modalActive = false; }
+            finally { EndModal(); }
         }
         void Browse()
         {
@@ -652,16 +661,17 @@ namespace PBZKeyForge
             {
                 modalActive = true;
                 try { if (dialog.ShowDialog(this) == DialogResult.OK) OpenPath(dialog.FileName); }
-                finally { modalActive = false; }
+                finally { EndModal(); }
             }
         }
         void OpenPath(string path, bool remember = true)
         {
             TryAction(delegate {
-                Session = EditorSession.Open(path);
+                Session = EditorSession.Open(path, false);
                 UpdateGameState();
                 if (remember) preferences.SaveInputPath(Session.InputPath);
             });
+            StartSchemeDiscovery();
         }
         public void NewOfflineScheme()
         {
@@ -673,12 +683,13 @@ namespace PBZKeyForge
             if (confirm && !ConfirmDiscard()) return;
             try
             {
-                var found = SaveDiscovery.Open(preferences, !confirm);
+                var found = SaveDiscovery.Open(preferences, !confirm, false);
                 if (found != null) { Session = found; UpdateGameState(); messageKey = null; messageError = false; RenderSession(); }
                 else if (Session == null) NewOfflineScheme();
                 else { SetMessage("editor.empty", false); RenderSession(); }
             }
             catch (Exception ex) { if (Session == null) NewOfflineScheme(); SetMessage("editor.failed", true, ex.Message); RenderSession(); }
+            StartSchemeDiscovery();
         }
 
         void ShowMore()
@@ -707,7 +718,7 @@ namespace PBZKeyForge
                     if (EditorDialogs.Show(this, I18n.Str("editor.resetconfirm"), I18n.Str("editor.resetall"), MessageBoxButtons.OKCancel) == DialogResult.OK)
                         TryAction(delegate { Session.ResetAll(); });
                 }
-                finally { modalActive = false; }
+                finally { EndModal(); }
             });
             reset.Name = "editor.resetall";
             menu.Items.Add(I18n.Str("editor.openbackup"), null, delegate
@@ -716,7 +727,7 @@ namespace PBZKeyForge
                 catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); RenderSession(); }
             }).Name = "editor.openbackup";
             menu.Items.Add(new ToolStripSeparator());
-            menu.Items.Add(I18n.Str("btn.about"), null, delegate { modalActive = true; try { EditorDialogs.Show(this, I18n.Str("about.text"), "PBZKeyForge " + Program.Version, MessageBoxButtons.OK); } finally { modalActive = false; } }).Name = "btn.about";
+            menu.Items.Add(I18n.Str("btn.about"), null, delegate { modalActive = true; try { EditorDialogs.Show(this, I18n.Str("about.text"), "PBZKeyForge " + Program.Version, MessageBoxButtons.OK); } finally { EndModal(); } }).Name = "btn.about";
             foreach (ToolStripItem item in menu.Items) item.Padding = new Padding(10, 6, 10, 6);
             // WinForms still uses the menu after Closed while dispatching an item click.
             // Keep it alive across openings; MainForm.Dispose owns its lifetime.
@@ -746,7 +757,7 @@ namespace PBZKeyForge
             catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
             finally
             {
-                modalActive = false; loading = true;
+                EndModal(); loading = true;
                 try { PopulatePresets(); } finally { loading = false; RenderSession(); }
             }
         }

@@ -8,7 +8,17 @@ namespace PBZKeyForge
 {
     internal sealed class SchemeDiffView : Panel
     {
-        readonly Panel rows = new EditorPanel { Dock = DockStyle.Fill, AutoScroll = true };
+        sealed class DifferenceRows : Panel
+        {
+            public DifferenceRows() { DoubleBuffered = true; ResizeRedraw = true; }
+            protected override void OnScroll(ScrollEventArgs e)
+            { base.OnScroll(e); Invalidate(true); }
+            protected override void OnMouseWheel(MouseEventArgs e)
+            { base.OnMouseWheel(e); Invalidate(true); }
+            protected override void WndProc(ref Message message)
+            { if (!EditorWindow.PassResizeHit(this, ref message)) base.WndProc(ref message); }
+        }
+        readonly Panel rows = new DifferenceRows { Dock = DockStyle.Fill, AutoScroll = true };
         readonly TableLayoutPanel header = new EditorLayout { Dock = DockStyle.Top, ColumnCount = 4, RowCount = 1 };
         readonly Label title = new Label(), total = new Label();
         readonly EditorTab saved = new EditorTab(), factory = new EditorTab();
@@ -113,7 +123,8 @@ namespace PBZKeyForge
             HashSet<string> pendingKeys = new HashSet<string>();
             static readonly Color[] ModeColors = { Color.Empty, Color.FromArgb(89, 161, 219), Color.FromArgb(61, 175, 154), Color.FromArgb(171, 132, 208) };
             static readonly Color RemovedColor = Color.FromArgb(139, 145, 148);
-            const TextFormatFlags Flags = TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.NoPadding | TextFormatFlags.EndEllipsis;
+            const TextFormatFlags LabelFlags = TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.PreserveGraphicsClipping;
+            const TextFormatFlags Flags = LabelFlags | TextFormatFlags.NoPadding;
             public string ModeName { get { return I18n.Str(new[] { "views.diffcombined", "views.diffchanges", "views.diffresult", "views.diffbefore" }[Mode]); } }
             public DifferenceRow()
             {
@@ -186,10 +197,10 @@ namespace PBZKeyForge
                 var device = new Rectangle(inset, 0, Width * 22 / 100 - inset, Height);
                 var action = new Rectangle(Width * 22 / 100 + iconSize + inset, 0, Width * 23 / 100 - iconSize - inset, Height);
                 var keys = KeyArea();
-                TextRenderer.DrawText(e.Graphics, DeviceName(diff), Font, device, EditorTheme.Muted, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+                TextRenderer.DrawText(e.Graphics, DeviceName(diff), Font, device, EditorTheme.Muted, LabelFlags);
                 Image icon = EditorArtwork.ActionIcon(diff.Action);
                 if (icon != null) e.Graphics.DrawImage(icon, new Rectangle(Width * 22 / 100, (Height - iconSize) / 2, iconSize, iconSize));
-                TextRenderer.DrawText(e.Graphics, BindingViewText.ActionName(diff.Action), Font, action, EditorTheme.Ink, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+                TextRenderer.DrawText(e.Graphics, BindingViewText.ActionName(diff.Action), Font, action, EditorTheme.Ink, LabelFlags);
                 if (keys.Width > 0 && keys.Height > 0)
                 {
                     int left = keys.Left + (int)(8 * scale), gap = (int)(16 * scale);
@@ -203,7 +214,7 @@ namespace PBZKeyForge
                         TextRenderer.DrawText(e.Graphics, ModeName, Font, label, color, Flags | TextFormatFlags.HorizontalCenter);
                         left = label.Right + gap;
                     }
-                    var clip = e.Graphics.Save(); e.Graphics.SetClip(keys);
+                    var clip = e.Graphics.Save(); e.Graphics.SetClip(keys, System.Drawing.Drawing2D.CombineMode.Intersect);
                     using (var removedFont = new Font(Font, Font.Style | FontStyle.Strikeout))
                     foreach (var part in Parts())
                     {

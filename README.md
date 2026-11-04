@@ -112,7 +112,7 @@ Activating a scheme edits only `KeyBindingScheme` in the adjacent `PBZSharedSett
 - **Do not open the in-game keybind screen and press apply or reset after using this tool.** The game validates on its own save and rewrites the whole file, discarding these bindings. If you do, just re-apply.
 - Only one mod that replaces `EnhancedInputUserSettings.sav` can be active at a time.
 - Editing an inactive scheme's keyboard and gamepad bindings is supported. Check *Set game scheme to…* and press *Apply changes* when you want the game to use it. Gamepad records are matched by `ProfileId`; another scheme's records are preserved even when their `Family` values are identical.
-- Tested against the Steam launch build (`CL-301524`). A game update may change the file layout; the tool refuses to write if it cannot parse the file.
+- Supports the Steam launch build (`CL-301524`) and patch 1.0302256 (`CL-302256`), including their different Phantom Edge slot rules and both scheme-activation readers. Later builds with the same key-derivation instructions and PBZS format can be discovered and authenticated locally; initial discovery runs in the background. Find interaction rebinding under *Action view → Interact / Talk*, or select E / B / Circle in Key view. Existing presets/share codes remain compatible. See [version evidence and validation scope](docs/game-version-compatibility.md). The tool refuses to write files it cannot parse or authenticate.
 
 ## Build from source
 
@@ -208,7 +208,7 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 - 切换方案会重新读取磁盘最新数据；“刷新”保留未应用草稿，同一绑定被双方修改时需选择保留哪一项。键鼠和手柄草稿均按方案保存，只应用当前编辑方案，底栏显示此次范围。
 - 编辑非当前方案后，勾选“设为游戏当前方案”再“应用更改”即可启用；不勾选可只保存键位。连续选择快速配置会替换上一次预览，手动编辑后保留为自定义；“更多 → 全部恢复默认”先预览全部方案的键鼠和手柄重置，再统一应用。游戏运行时会单独提示并禁用应用，仍可编辑草稿。手柄记录按 `ProfileId` 匹配，`Family` 相同也不会顺带改动其他方案。
 - 方案启用只修改同目录 `PBZSharedSetting.sav` 的 `KeyBindingScheme` 字段，先在游戏目录外备份，再认证回读校验。需完全退出游戏，并能找到支持版本的 Steam 游戏程序。`EnhancedInputUserSettings.sav` 内的方案标识不决定游戏选择哪个方案。
-- 针对 Steam 首发版本（`CL-301524`）验证；游戏大更新后文件结构可能变化，工具解析不了时会拒绝写入。
+- 同时支持 Steam 首发构建（`CL-301524`）和 1.0302256 补丁（`CL-302256`），分别处理影之武装槽位规则，保留两版方案启用路径。后续构建保持密钥派生指令与 PBZS 格式时，可从本地程序自动定位并认证；首次发现放在后台完成。交互改键位于“动作视图 → 对话/交互”，也可在“按键视图”点击 E / B / 圆圈。已有预设与分享码继续兼容。详见[版本依据与验证范围](docs/game-version-compatibility.md)。无法解析或认证时拒绝写入。
 
 ### 从源码构建
 

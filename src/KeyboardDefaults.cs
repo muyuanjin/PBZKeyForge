@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace PBZKeyForge
 {
-    /// <summary>Player-mappable registrations decoded from the CL-301524 input contexts.</summary>
-    public static class InputDefaults
+    /// <summary>Factory registrations and independent editing slots for one native input implementation.</summary>
+    public sealed class InputDefaultSet
     {
         sealed class FactoryBinding
         {
@@ -15,6 +15,15 @@ namespace PBZKeyForge
             public FactoryBinding(string action, bool gamepad, int slot, string key)
             { Action = action; Gamepad = gamepad; Slot = slot; Key = key; }
         }
+
+        public static readonly InputDefaultSet Legacy = new InputDefaultSet(false);
+        public static readonly InputDefaultSet Current = new InputDefaultSet(true);
+        readonly bool shadowArmMirror;
+
+        InputDefaultSet(bool shadowArmMirror) { this.shadowArmMirror = shadowArmMirror; }
+
+        public bool IsMirroredSlot(string action, int rawSlot)
+        { return shadowArmMirror && action == "IA_ShadowArm" && rawSlot == 2; }
 
         static readonly string[] SlotNames = { "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Unspecified" };
         static readonly FactoryBinding[] Bindings =
@@ -81,14 +90,16 @@ namespace PBZKeyForge
             new FactoryBinding("IA_ShadowArm", true, 2, "Gamepad_RightTriggerAxis"),
         };
 
-        // The captured profiles resolve the shared Shadow Arm slot 2 to the controller registration.
-        static readonly FactoryBinding[] EffectiveBindings = Bindings.Where(binding =>
-            !(binding.Action == "IA_ShadowArm" && !binding.Gamepad && binding.Slot == 2)).ToArray();
+        IEnumerable<FactoryBinding> EffectiveBindings
+        {
+            get { return Bindings.Where(binding => binding.Action != "IA_ShadowArm" || binding.Slot != 2
+                || binding.Gamepad != shadowArmMirror); }
+        }
 
-        public static bool HasAction(string action)
+        public bool HasAction(string action)
         { return EffectiveBindings.Any(binding => binding.Action == action); }
 
-        public static string[] ForAction(string action, bool gamepad)
+        public string[] ForAction(string action, bool gamepad)
         {
             if (!HasAction(action)) return null;
             var keys = EffectiveBindings.Where(binding => binding.Action == action && binding.Gamepad == gamepad).OrderBy(binding => binding.Slot).Select(binding => binding.Key);
@@ -96,44 +107,47 @@ namespace PBZKeyForge
         }
 
         /// <summary>Mappings without a player-mappable registration remain active independently of overrides.</summary>
-        public static string[] FixedForAction(string action, bool gamepad)
+        public string[] FixedForAction(string action, bool gamepad)
         {
             return !gamepad && action == "IA_ShadowArm_LongPress" ? new[] { "LeftControl" } : new string[0];
         }
 
-        public static string ForRawSlot(string action, bool gamepad, int rawSlot)
+        public string ForRawSlot(string action, bool gamepad, int rawSlot)
         {
             FactoryBinding binding = EffectiveBindings.FirstOrDefault(item => item.Action == action && item.Gamepad == gamepad && item.Slot == rawSlot);
             return binding != null ? binding.Key : HasAction(action) ? "None" : null;
         }
 
-        public static int[] RegisteredSlots(string action, bool gamepad)
+        public int[] RegisteredSlots(string action, bool gamepad)
         { return EffectiveBindings.Where(binding => binding.Action == action && binding.Gamepad == gamepad).Select(binding => binding.Slot).Distinct().OrderBy(slot => slot).ToArray(); }
 
-        public static string[] ResolveKeys(string action, bool gamepad, IEnumerable<KeyValuePair<int, string>> overrides)
+        public int[] EditableRegisteredSlots(string action, bool gamepad)
+        { return RegisteredSlots(action, gamepad).Where(slot => !IsMirroredSlot(action, slot)).ToArray(); }
+
+        public string[] ResolveKeys(string action, bool gamepad, IEnumerable<KeyValuePair<int, string>> overrides)
         {
-            var saved = overrides.ToArray();
-            var inherited = RegisteredSlots(action, gamepad).Where(slot => !saved.Any(binding => binding.Key == slot))
+            var saved = overrides.Where(binding => !IsMirroredSlot(action, binding.Key)).ToArray();
+            var inherited = EditableRegisteredSlots(action, gamepad).Where(slot => !saved.Any(binding => binding.Key == slot))
                 .Select(slot => ForRawSlot(action, gamepad, slot));
             return saved.Select(binding => binding.Value).Concat(inherited).Concat(FixedForAction(action, gamepad))
                 .Where(key => !string.IsNullOrEmpty(key) && key != "None").Distinct().ToArray();
         }
 
-        static List<int> OwnedSlots(string action, bool gamepad, IEnumerable<int> existingSlots)
+        List<int> OwnedSlots(string action, bool gamepad, IEnumerable<int> existingSlots)
         {
-            return RegisteredSlots(action, gamepad).Concat(existingSlots.Where(slot => slot >= 0 && slot < SlotNames.Length - 1)).Distinct().ToList();
+            return EditableRegisteredSlots(action, gamepad).Concat(existingSlots.Where(slot => slot >= 0 && slot < SlotNames.Length - 1 && !IsMirroredSlot(action, slot))).Distinct().ToList();
         }
 
-        static int[] FillSlots(string action, bool gamepad, List<int> owned, IEnumerable<int> other)
+        int[] FillSlots(string action, bool gamepad, List<int> owned, IEnumerable<int> other)
         {
-            int[] registered = RegisteredSlots(action, gamepad);
+            int[] registered = EditableRegisteredSlots(action, gamepad);
             var occupied = new HashSet<int>(other);
             for (int raw = 0; owned.Count < 3 && raw < SlotNames.Length - 1; raw++)
-                if (!owned.Contains(raw) && !occupied.Contains(raw)) owned.Add(raw);
+                if (!owned.Contains(raw) && !occupied.Contains(raw) && !IsMirroredSlot(action, raw)) owned.Add(raw);
             return registered.Concat(owned.Except(registered).OrderBy(slot => slot)).Take(3).ToArray();
         }
 
-        public static int[] Slots(string action, bool gamepad, IEnumerable<int> existingSlots, IEnumerable<int> otherDeviceSlots)
+        public int[] Slots(string action, bool gamepad, IEnumerable<int> existingSlots, IEnumerable<int> otherDeviceSlots)
         {
             var own = existingSlots.ToArray();
             var other = otherDeviceSlots.ToArray();
@@ -143,7 +157,7 @@ namespace PBZKeyForge
             return gamepad ? FillSlots(action, true, controller, keyboardSlots.Concat(keyboard)) : keyboardSlots;
         }
 
-        public static int[] Slots(string action, bool gamepad)
+        public int[] Slots(string action, bool gamepad)
         { return Slots(action, gamepad, new int[0], new int[0]); }
 
         public static string SlotName(int rawSlot)
@@ -151,6 +165,23 @@ namespace PBZKeyForge
 
         public static int RawSlot(string slotName)
         { return Array.IndexOf(SlotNames, (slotName ?? "").Replace("EPlayerMappableKeySlot::", "")); }
+    }
+
+    /// <summary>The frozen launch-build defaults used by byte-only and offline callers.</summary>
+    public static class InputDefaults
+    {
+        public static bool HasAction(string action) { return InputDefaultSet.Legacy.HasAction(action); }
+        public static string[] ForAction(string action, bool gamepad) { return InputDefaultSet.Legacy.ForAction(action, gamepad); }
+        public static string[] FixedForAction(string action, bool gamepad) { return InputDefaultSet.Legacy.FixedForAction(action, gamepad); }
+        public static string ForRawSlot(string action, bool gamepad, int rawSlot) { return InputDefaultSet.Legacy.ForRawSlot(action, gamepad, rawSlot); }
+        public static int[] RegisteredSlots(string action, bool gamepad) { return InputDefaultSet.Legacy.RegisteredSlots(action, gamepad); }
+        public static string[] ResolveKeys(string action, bool gamepad, IEnumerable<KeyValuePair<int, string>> overrides)
+        { return InputDefaultSet.Legacy.ResolveKeys(action, gamepad, overrides); }
+        public static int[] Slots(string action, bool gamepad, IEnumerable<int> existingSlots, IEnumerable<int> otherDeviceSlots)
+        { return InputDefaultSet.Legacy.Slots(action, gamepad, existingSlots, otherDeviceSlots); }
+        public static int[] Slots(string action, bool gamepad) { return InputDefaultSet.Legacy.Slots(action, gamepad); }
+        public static string SlotName(int rawSlot) { return InputDefaultSet.SlotName(rawSlot); }
+        public static int RawSlot(string slotName) { return InputDefaultSet.RawSlot(slotName); }
     }
 
     public static class KeyboardDefaults

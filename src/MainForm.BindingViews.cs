@@ -107,7 +107,7 @@ namespace PBZKeyForge
                 using (var dialog = new RelationEditorDialog(Session, action, gamepad, SelectedFamilyIndex,
                     delegate { RenderSession(); }, delegate { ShowActionView(true); })) dialog.ShowDialog(this);
             }
-            finally { modalActive = false; RenderSession(); }
+            finally { EndModal(); RenderSession(); }
         }
 
         void ShowRecords()
@@ -118,7 +118,7 @@ namespace PBZKeyForge
             {
                 using (var dialog = new BindingRecordsDialog(Session, gamepad, SelectedFamilyIndex, delegate { RenderSession(); })) dialog.ShowDialog(this);
             }
-            finally { modalActive = false; RenderSession(); }
+            finally { EndModal(); RenderSession(); }
         }
     }
 }
