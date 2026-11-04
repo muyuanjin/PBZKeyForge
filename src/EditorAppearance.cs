@@ -29,8 +29,10 @@ namespace PBZKeyForge
         public static readonly Image AppMark = Load("PBZKeyForge.AppMark");
         public static readonly Image Mouse = Load("PBZKeyForge.Device.mouse");
         public static readonly Image Keyboard = Load("PBZKeyForge.Device.keyboard");
-        public static readonly Image Xbox = Load("PBZKeyForge.Device.xbox");
-        public static readonly Image PlayStation = Load("PBZKeyForge.Device.playstation");
+        static readonly Lazy<Image> xbox = new Lazy<Image>(() => Load("PBZKeyForge.Device.xbox"));
+        static readonly Lazy<Image> playStation = new Lazy<Image>(() => Load("PBZKeyForge.Device.playstation"));
+        public static Image Xbox { get { return xbox.Value; } }
+        public static Image PlayStation { get { return playStation.Value; } }
         static readonly Dictionary<string, Image> actionIcons = new Dictionary<string, Image>();
         public static Image ActionIcon(string action)
         {
@@ -45,7 +47,12 @@ namespace PBZKeyForge
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name))
             {
                 if (stream == null) return null;
-                using (var source = Image.FromStream(stream)) return new Bitmap(source);
+                using (var source = Image.FromStream(stream))
+                {
+                    var bitmap = new Bitmap(source.Width, source.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                    using (var graphics = Graphics.FromImage(bitmap)) graphics.DrawImageUnscaled(source, 0, 0);
+                    return bitmap;
+                }
             }
         }
         public static void PaintBackground(Graphics graphics, Rectangle bounds)
