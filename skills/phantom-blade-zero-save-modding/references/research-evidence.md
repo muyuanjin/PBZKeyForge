@@ -28,6 +28,7 @@ EXE 哈希用于离线识别精确取证对象；编辑器正常读写不计算�
 | [docs/gamepad-profile-evidence.md](../../../docs/gamepad-profile-evidence.md) | fixture 转储及游戏原生读取/存储路径的静态证据 | 含构建、地址和比较条件；没有把只读机器码分析当成游戏运行实测。 |
 | [docs/input-defaults.md](../../../docs/input-defaults.md)、[默认映射与有效绑定](default-bindings.md) | IMC 按方案选择、槽位注册、默认与覆盖合并、默认数据的取得与使用 | 保存格式和注册算法不代替资源中的逐槽键值；动作级集合不能反推槽号。 |
 | [docs/game-version-compatibility.md](../../../docs/game-version-compatibility.md) | 新版全类资源枚举、InputAction 继承设置、RegisterIMC 虚表派发和影之武装镜像槽 | 基类注册函数相同不证明实际行为相同；必须核对调用虚槽的最终目标及覆盖加载后的执行顺序。 |
+| [防御输入与战斗行为](deflect-behavior.md) | Guard 按名称聚合槽、完防连点惩罚、输入释放与两层架势状态、可重绑身份分离原型及取证位置 | 原厂消费与战斗逻辑来自 CL-302256 的静态证据；不能推广为旧版或游戏实测，输入改名与战斗补丁的验证范围分别记录。 |
 | [tests/README.md](../../../tests/README.md) 及独立测试程序 | 格式往返、方案隔离、认证、并发冲突、部分成功/重试的可运行检查 | 只能为当次构建和测试对象提供证据；旧的共享假设测试不能用于确认正确的游戏语义。 |
 
 调查过程的会话时间与本机记录位置不属于运行或复核所需信息，故不保存在公开仓库。技能只依赖本文件引用的源码、样本和测试文档。

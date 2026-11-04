@@ -21,6 +21,7 @@ description: 为《影之刃零》开发存档型键位 mod 或编辑工具，�
 ## 按任务读取资料
 
 - 读写动作、槽位、手柄记录、制作一键攻防：[键位格式与编辑](references/input-bindings.md)。
+- 排查攻防同键的完防表现、解释绑定列或分离点按与架势：[防御输入与战斗行为](references/deflect-behavior.md)。
 - 提取或展示原厂键、解释默认继承、计算差异与功能数：[默认映射与有效绑定](references/default-bindings.md)。
 - 读取当前生效方案、实现启用功能、处理 PBZS 加密：[生效方案与认证容器](references/scheme-activation.md)。
 - 判断旧指引是否可信、适配游戏更新、说明验证程度：[研究依据与版本边界](references/research-evidence.md)。
@@ -28,6 +29,8 @@ description: 为《影之刃零》开发存档型键位 mod 或编辑工具，�
 ## 实施入口
 
 从明确的目标 `ProfileId` 开始。用户要求编辑“游戏当前方案”时，先读取 `GameSchemeSettings.ProfileId`；读取失败就报告无法确定，不以 `SaveFile.ActiveProfile` 或第一条记录冒充真实选择。
+
+先按目标区分绑定与战斗行为：增加防御按键仍编辑 `IA_Guard` 的有效集合；点按防御与持续架势共用这个可重绑名称，不能靠分配不同保存槽拆开。连点导致完防窗口衰减时，按[防御输入与战斗行为](references/deflect-behavior.md)核对共用计数与输入间隔；真正分离点按和架势需要检查输入释放事件及两层能力状态，不能承诺通过存档改键完成。
 
 支持构建的默认数据入口是 [InputDefaults](../../src/KeyboardDefaults.cs)，资源提取入口是 [extract-input-defaults.py](../../build/extract-input-defaults.py)。60 条资源注册输入按原生身份合并为 59 条最终默认，动作级集合由最终默认和固定映射生成。先按所属安装的原生注册规则确定槽归属，再合并对应方案的共享覆盖及手柄家族覆盖，不能按当前按键类别归属槽，也不能将旧存档的默认字段推广为新版注册结果。CL-302256 的影之武装槽 2 为键鼠槽 0 的镜像；CL-301524 的槽 2 属于手柄。适配新构建时同时检查资源自身设置、InputAction 继承设置及实际虚表派发的注册路径，不能由存档缺少键鼠 `DefaultKey` 推断默认值不可得。完整性应以 AssetRegistry 的类枚举核对，路径或文件名前缀筛选的结果不能单独证明无遗漏。
 
