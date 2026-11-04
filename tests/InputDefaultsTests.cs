@@ -41,6 +41,7 @@ public static class InputDefaultsTests
     }
 
     static int checks;
+    static InputDefaultSet Defaults;
 
     static void Assert(bool value, string message)
     {
@@ -59,12 +60,12 @@ public static class InputDefaultsTests
 
     static void ModelMatchesResources(Dataset data)
     {
-        Assert(data.build == "CL-301524" && data.profileDefaultsIdentical, "Dataset build and profile scope");
+        Assert((data.build == "CL-301524" || data.build == "CL-302256") && data.profileDefaultsIdentical, "Dataset build and profile scope");
         Assert(data.profiles.SequenceEqual(new[] { "InputUserSettings.Profiles.Default", "PBZ.KeyProfile.Custom1", "PBZ.KeyProfile.Custom2" }), "Three resource profiles");
         Assert(data.bindings.Length == 60 && Rows(data.bindings).Count == 60, "60 unique resource registrations");
 
         var actual = new HashSet<string>();
-        var bindings = (IEnumerable)typeof(InputDefaults).GetField("Bindings", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+        var bindings = (IEnumerable)typeof(InputDefaultSet).GetField("Bindings", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
         int count = 0;
         foreach (object binding in bindings)
         {
@@ -81,41 +82,44 @@ public static class InputDefaultsTests
         Assert(data.effectiveBindings.Length == 59 && Rows(data.effectiveBindings).Count == 59, "59 effective profile registrations");
         foreach (string action in data.effectiveBindings.Select(binding => binding.action).Distinct())
         {
-            Assert(InputDefaults.HasAction(action), "Known resource action: " + action);
+            Assert(Defaults.HasAction(action), "Known resource action: " + action);
             foreach (bool gamepad in new[] { false, true })
             {
                 Binding[] expected = data.effectiveBindings.Where(binding => binding.action == action && (binding.device == "Gamepad") == gamepad).OrderBy(binding => binding.rawSlot).ToArray();
-                Assert(InputDefaults.RegisteredSlots(action, gamepad).SequenceEqual(expected.Select(binding => binding.rawSlot)), "Registered raw slots: " + action);
-                string[] keys = expected.Select(binding => binding.key).Concat(InputDefaults.FixedForAction(action, gamepad)).Distinct().ToArray();
-                string[] actualKeys = InputDefaults.ForAction(action, gamepad);
+                Assert(Defaults.RegisteredSlots(action, gamepad).SequenceEqual(expected.Select(binding => binding.rawSlot)), "Registered raw slots: " + action);
+                string[] keys = expected.Select(binding => binding.key).Concat(Defaults.FixedForAction(action, gamepad)).Distinct().ToArray();
+                string[] actualKeys = Defaults.ForAction(action, gamepad);
                 Assert(actualKeys.Length == actualKeys.Distinct().Count() && actualKeys.SequenceEqual(keys), "Action keys must deduplicate actual resource slots: " + action);
                 for (int slot = 0; slot < 8; slot++)
                 {
                     Binding binding = expected.SingleOrDefault(item => item.rawSlot == slot);
-                    Assert(InputDefaults.ForRawSlot(action, gamepad, slot) == (binding == null ? "None" : binding.key), "Raw slot default: " + action + "/" + slot);
+                    Assert(Defaults.ForRawSlot(action, gamepad, slot) == (binding == null ? "None" : binding.key), "Raw slot default: " + action + "/" + slot);
                 }
             }
         }
-        Assert(!InputDefaults.HasAction("IA_UnregisteredTestAction") && InputDefaults.ForAction("IA_UnregisteredTestAction", false) == null, "Unknown action must remain distinct from a known action without device registrations");
+        Assert(!Defaults.HasAction("IA_UnregisteredTestAction") && Defaults.ForAction("IA_UnregisteredTestAction", false) == null, "Unknown action must remain distinct from a known action without device registrations");
         Assert(data.bindings.All(binding => binding.sources.Length != 0 && binding.sources.All(source => source.context.EndsWith(".uasset") && source.mappingIndex >= 0)), "Every registration retains resource provenance");
     }
 
     static void SpecialCases(Dataset data)
     {
-        Assert(InputDefaults.RegisteredSlots("IA_Crouch", false).SequenceEqual(new[] { 1 }) && InputDefaults.RegisteredSlots("IA_Crouch", true).SequenceEqual(new[] { 0 }), "Crouch uses keyboard slot 1 and controller slot 0");
-        Assert(InputDefaults.ForRawSlot("IA_Crouch", false, 1) == "C" && InputDefaults.ForRawSlot("IA_Crouch", true, 0) == "Gamepad_LeftThumbstick", "Crouch key/device association");
-        Assert(InputDefaults.RegisteredSlots("IA_OpenMapMenu", false).SequenceEqual(new[] { 0, 2 }), "Map preserves distinct keyboard slots");
-        Assert(InputDefaults.ForRawSlot("IA_OpenMapMenu", false, 0) == "M" && InputDefaults.ForRawSlot("IA_OpenMapMenu", false, 2) == "Tab", "Map per-slot defaults");
-        Assert(InputDefaults.ForAction("IA_OpenMapMenu", false).SequenceEqual(new[] { "M", "Tab" }), "Map action defaults retain M and Tab");
-        Assert(InputDefaults.RegisteredSlots("IA_ShadowArm", false).SequenceEqual(new[] { 0 })
-            && InputDefaults.RegisteredSlots("IA_ShadowArm", true).SequenceEqual(new[] { 1, 2, 3 }), "Captured profile resolves shared Shadow Arm slot 2 to the controller");
+        Assert(Defaults.RegisteredSlots("IA_Crouch", false).SequenceEqual(new[] { 1 }) && Defaults.RegisteredSlots("IA_Crouch", true).SequenceEqual(new[] { 0 }), "Crouch uses keyboard slot 1 and controller slot 0");
+        Assert(Defaults.ForRawSlot("IA_Crouch", false, 1) == "C" && Defaults.ForRawSlot("IA_Crouch", true, 0) == "Gamepad_LeftThumbstick", "Crouch key/device association");
+        Assert(Defaults.RegisteredSlots("IA_OpenMapMenu", false).SequenceEqual(new[] { 0, 2 }), "Map preserves distinct keyboard slots");
+        Assert(Defaults.ForRawSlot("IA_OpenMapMenu", false, 0) == "M" && Defaults.ForRawSlot("IA_OpenMapMenu", false, 2) == "Tab", "Map per-slot defaults");
+        Assert(Defaults.ForAction("IA_OpenMapMenu", false).SequenceEqual(new[] { "M", "Tab" }), "Map action defaults retain M and Tab");
+        bool current = data.build == "CL-302256";
+        Assert(Defaults.RegisteredSlots("IA_ShadowArm", false).SequenceEqual(current ? new[] { 0, 2 } : new[] { 0 })
+            && Defaults.RegisteredSlots("IA_ShadowArm", true).SequenceEqual(current ? new[] { 1, 3 } : new[] { 1, 2, 3 }), "Build-specific Shadow Arm shared slot ownership");
+        Assert(Defaults.EditableRegisteredSlots("IA_ShadowArm", false).SequenceEqual(new[] { 0 })
+            && Defaults.Slots("IA_ShadowArm", false).SequenceEqual(new[] { 0, 4, 5 }), "Mirror is reserved while extra keyboard slots remain editable");
         Assert(data.bindings.Count(b => b.action == "IA_ShadowArm" && b.rawSlot == 2) == 2
             && data.effectiveBindings.Count(b => b.action == "IA_ShadowArm" && b.rawSlot == 2) == 1, "Resource inputs retain both contexts while the effective profile has a single shared identity");
         FixedMapping longPress = data.fixedMappings.Single(mapping => mapping.inputAction == "/PBZInput/InputActions/IA_ShachiAbility_LongPress" && mapping.device == "KeyboardMouse" && mapping.key == "LeftControl");
         Assert(longPress.actions.SequenceEqual(new[] { "IA_ShadowArm_LongPress" }) && longPress.sources.Any(source => source.context.EndsWith("/IMC_Default.uasset") && source.mappingIndex == 31 && source.triggers.Contains("InputTriggerHold")), "Fixed Ctrl long press retains action, context and trigger provenance");
-        Assert(InputDefaults.RegisteredSlots("IA_ShadowArm_LongPress", false).Length == 0, "Fixed Ctrl mapping must not become a registered keyboard slot");
-        Assert(InputDefaults.FixedForAction("IA_ShadowArm_LongPress", false).SequenceEqual(new[] { "LeftControl" }) && InputDefaults.ForAction("IA_ShadowArm_LongPress", false).SequenceEqual(new[] { "LeftControl" }), "Fixed Ctrl mapping contributes to action defaults");
-        Assert(InputDefaults.ForRawSlot("IA_ShadowArm_LongPress", false, 0) == "None" && InputDefaults.ForRawSlot("IA_ShadowArm_LongPress", true, 0) == "Gamepad_RightTrigger", "Long press fixed mapping and controller registration remain distinct");
+        Assert(Defaults.RegisteredSlots("IA_ShadowArm_LongPress", false).Length == 0, "Fixed Ctrl mapping must not become a registered keyboard slot");
+        Assert(Defaults.FixedForAction("IA_ShadowArm_LongPress", false).SequenceEqual(new[] { "LeftControl" }) && Defaults.ForAction("IA_ShadowArm_LongPress", false).SequenceEqual(new[] { "LeftControl" }), "Fixed Ctrl mapping contributes to action defaults");
+        Assert(Defaults.ForRawSlot("IA_ShadowArm_LongPress", false, 0) == "None" && Defaults.ForRawSlot("IA_ShadowArm_LongPress", true, 0) == "Gamepad_RightTrigger", "Long press fixed mapping and controller registration remain distinct");
     }
 
     static void FixtureMatchesResources(Dataset data, string fixture)
@@ -149,6 +153,7 @@ public static class InputDefaultsTests
         {
             var serializer = new JavaScriptSerializer();
             Dataset data = serializer.Deserialize<Dataset>(File.ReadAllText(args[0]));
+            Defaults = data.build == "CL-302256" ? InputDefaultSet.Current : InputDefaultSet.Legacy;
             ModelMatchesResources(data);
             SpecialCases(data);
             FixtureMatchesResources(data, args[1]);

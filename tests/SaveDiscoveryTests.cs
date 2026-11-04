@@ -17,7 +17,7 @@ public static class SaveDiscoveryTests
     { return (IEnumerable<string>)Discovery.GetMethod("InstalledSaves", Hidden).Invoke(null, new object[] { steam, fallback }); }
     static EditorSession Open(EditorPreferences preferences, IEnumerable<string> paths)
     {
-        try { return (EditorSession)Discovery.GetMethod("OpenCandidates", Hidden).Invoke(null, new object[] { preferences, paths }); }
+        try { return (EditorSession)Discovery.GetMethod("OpenCandidates", Hidden).Invoke(null, new object[] { preferences, paths, true }); }
         catch (TargetInvocationException ex) { throw ex.InnerException; }
     }
     static string Save(string library, string install, byte[] bytes)

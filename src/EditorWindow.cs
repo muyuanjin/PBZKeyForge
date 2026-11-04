@@ -148,6 +148,13 @@ namespace PBZKeyForge
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+            using (var brush = new SolidBrush(BackColor))
+            {
+                e.Graphics.FillRectangle(brush, 0, 0, ClientSize.Width, Padding.Top);
+                e.Graphics.FillRectangle(brush, 0, ClientSize.Height - Padding.Bottom, ClientSize.Width, Padding.Bottom);
+                e.Graphics.FillRectangle(brush, 0, 0, Padding.Left, ClientSize.Height);
+                e.Graphics.FillRectangle(brush, ClientSize.Width - Padding.Right, 0, Padding.Right, ClientSize.Height);
+            }
             using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawRectangle(pen, 0, 0, Math.Max(0, ClientSize.Width - 1), Math.Max(0, ClientSize.Height - 1));
         }
         void ToggleMaximize()

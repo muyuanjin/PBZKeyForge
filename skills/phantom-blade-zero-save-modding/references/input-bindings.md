@@ -46,9 +46,9 @@ profileId: FString
 
 `X/Y/opaquePadding` 是序列化的硬件描述符；样本中 `X/Y` 常为 `"None"`、padding 常为零。修改已有记录时保留它们，不按当前 Key 的类别改写硬件身份，也不把“常见值”当成重建所有记录的理由。尾部不是无用垃圾，不能截掉。
 
-原始槽使用 `EPlayerMappableKeySlot` 枚举，`First` 至 `Seventh` 对应 0 至 6；7 是 `Unspecified`，8 是 `Max`，均不能作为额外显式槽分配。槽号随动作和 IMC 注册顺序变化，不按键鼠／手柄全局奇偶分配。工具界面的“绑定 1 / 2 / 3”和 API 的 `slotIndex=0/1/2` 是逻辑编号，通过 `InputDefaults.Slots` 或 `EditorSession.GetKeyboardRawSlot/GetGamepadRawSlot` 转为当前动作的真实原始槽。
+原始槽使用 `EPlayerMappableKeySlot` 枚举，`First` 至 `Seventh` 对应 0 至 6；7 是 `Unspecified`，8 是 `Max`，均不能作为额外显式槽分配。槽号随动作和 IMC 注册顺序变化，不按键鼠／手柄全局奇偶分配。工具界面的“绑定 1 / 2 / 3”和 API 的 `slotIndex=0/1/2` 是逻辑编号，通过 `save.Defaults.Slots` 或 `EditorSession.GetKeyboardRawSlot/GetGamepadRawSlot` 转为当前动作的真实原始槽。
 
-格挡的键鼠默认槽为 0、2，手柄为 1、3；蹲伏的键鼠默认槽为 1，手柄为 0。影之武装最终键鼠只有槽 0，手柄为槽 1、2、3；资源中键鼠和手柄的同一槽 2 合并为手柄默认。逐槽完整表、共享覆盖与手柄家族覆盖的优先级见[默认映射与有效绑定](default-bindings.md)。游戏界面按原厂键合并后的主／副列不能作为原始槽号。
+格挡的键鼠默认槽为 0、2，手柄为 1、3；蹲伏的键鼠默认槽为 1，手柄为 0。CL-301524 的影之武装最终键鼠只有槽 0，手柄为槽 1、2、3；CL-302256 的最终键鼠槽为 0、2，槽 2 当前键强制跟随槽 0，手柄只有槽 1、3。新版槽 2 不能独立编辑；原始旧条目应保留但不能计为新版有效手柄槽。逐槽完整表、共享覆盖与手柄家族覆盖的优先级见[默认映射与有效绑定](default-bindings.md)。游戏界面按原厂键合并后的主／副列不能作为原始槽号。
 
 常用动作及键名：
 

@@ -44,6 +44,21 @@ public static class ApplyResponsivenessTests
                     if (!release.WaitOne(10000)) throw new IOException("Test writer was not released.");
                 });
                 var apply = Field<Button>(form, "btnApply");
+                bool observeTransitions = false;
+                int transitions = 0;
+                apply.EnabledChanged += delegate
+                {
+                    if (!observeTransitions) return;
+                    transitions++;
+                    Assert((bool)apply.GetType().GetProperty("Busy").GetValue(apply, null), "Apply exposed an idle button while changing enabled state.");
+                    using (var image = new Bitmap(apply.Width, apply.Height))
+                    {
+                        apply.DrawToBitmap(image, apply.ClientRectangle);
+                        Color fill = image.GetPixel(image.Width / 2, 8);
+                        Assert(fill.R > fill.G * 2, "Apply flashed a disabled background during the operation.");
+                    }
+                };
+                observeTransitions = true;
                 apply.PerformClick(); PumpUntil(() => reached.WaitOne(0));
                 Assert(form.IsApplying && !apply.Enabled && !form.captionClose.Enabled, "Busy apply disables editing and close.");
                 Assert((bool)apply.GetType().GetProperty("Busy").GetValue(apply, null), "Apply displays busy spinner.");
@@ -55,18 +70,24 @@ public static class ApplyResponsivenessTests
                 Assert(writes == 1, "A second apply cannot start while busy.");
                 form.Close(); Assert(!form.IsDisposed && form.Visible, "Close waits for apply to finish.");
                 release.Set(); PumpUntil(() => !form.IsApplying);
+                observeTransitions = false;
+                Assert(transitions >= 2, "Apply did not exercise both entry and completion appearance transitions.");
                 Assert(!form.Session.HasChanges && form.captionClose.Enabled, "Successful apply restores controls and clears draft.");
                 Assert(!(bool)apply.GetType().GetProperty("Busy").GetValue(apply, null), "Spinner stops after completion.");
                 Assert(EditorSession.Open(input).GetKeyboard("IA_Jump", 0) == "F9", "Applied key persisted.");
 
                 form.Session.SetKeyboard("IA_Jump", 0, "F10"); form.RenderSession();
                 typeof(EditorSession).GetField("BeforeInputReplace", Hidden).SetValue(form.Session, (Action)delegate { throw new IOException("Write interrupted."); });
+                observeTransitions = true;
                 apply.PerformClick(); PumpUntil(() => !form.IsApplying);
+                observeTransitions = false;
                 Assert(form.Session.HasChanges && apply.Enabled && form.captionClose.Enabled, "Failed apply restores controls and retains draft for retry.");
                 Assert(Field<Label>(form, "lblStatus").Text.Contains("Write interrupted."), "Failed apply explains the error.");
                 Assert(EditorSession.Open(input).GetKeyboard("IA_Jump", 0) == "F9", "Failed replacement preserves the saved key.");
                 typeof(EditorSession).GetField("BeforeInputReplace", Hidden).SetValue(form.Session, null);
+                observeTransitions = true;
                 apply.PerformClick(); PumpUntil(() => !form.IsApplying);
+                observeTransitions = false;
                 Assert(!form.Session.HasChanges && EditorSession.Open(input).GetKeyboard("IA_Jump", 0) == "F10", "Retry saves the remaining draft.");
             }
             Console.WriteLine("PASS: " + checks + " apply responsiveness assertions.");

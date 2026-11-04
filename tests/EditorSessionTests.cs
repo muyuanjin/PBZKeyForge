@@ -441,7 +441,7 @@ public static class EditorSessionTests
             foreach (string action in actions.Where(InputDefaults.HasAction))
             {
                 Func<SaveFile, string[]> keys = save => InputDefaults.ResolveKeys(action, false, save.RecordFor(Custom1).Entries
-                    .Where(entry => entry.Name == action && !Presets.IsGamepadOverride(save.GamepadKeysFor(Custom1), entry))
+                    .Where(entry => entry.Name == action && !Presets.IsGamepadOverride(save.GamepadKeysFor(Custom1), entry, save.Defaults))
                     .Select(entry => new KeyValuePair<int, string>(entry.Slot, entry.Key)));
                 Assert(!keys(expected).Except(keys(actual)).Any() && !keys(actual).Except(keys(expected)).Any(), preset.Id + " GUI and CLI have the same effective keyboard bindings: " + action);
             }
@@ -559,6 +559,34 @@ public static class EditorSessionTests
         Assert(session.Apply().Success && session.ActiveProfile == Custom1, "editing inactive scheme does not activate it");
         session.SetActivation(true); session.SwitchProfile(Custom1);
         Assert(!session.ActivationPending, "scheme switch drops previous hidden activation intention");
+
+        var interaction = Open(input);
+        var beforeInteraction = SaveFile.Load(input);
+        int psFamily = interaction.ControllerFamilies.Single(family => family.Name == "PS").Index;
+        interaction.SetKeyboard("IA_Interact", 0, "F11");
+        interaction.SetGamepadFamily("IA_Interact", 0, psFamily, "Gamepad_FaceButton_Top");
+        interaction.SetActivation(true);
+        Assert(interaction.Apply().Success, "interaction bindings and authenticated activation apply together");
+        var interacted = SaveFile.Load(input);
+        Assert(Keyboard(input, Custom1, "IA_Interact", 0) == "F11", "interaction keyboard override uses raw slot 0");
+        var psInteraction = interacted.GamepadProfiles.Single(profile => profile.ProfileId == Custom1 && profile.Family == "PS").Keys.Items
+            .Single(item => SaveFile.Field(item, "MappingName") == "IA_Interact" && SaveFile.Field(item, "Slot") == "EPlayerMappableKeySlot::Second");
+        Assert(SaveFile.Field(psInteraction, "Key") == "Gamepad_FaceButton_Top"
+            && SaveFile.Field(psInteraction, "DefaultKey") == "Gamepad_FaceButton_Right", "interaction controller override preserves its registered slot and default");
+        foreach (string profile in new[] { "InputUserSettings.Profiles.Default", Custom2 })
+            Assert(ProfileSnapshot(beforeInteraction, profile).SequenceEqual(ProfileSnapshot(interacted, profile)), "interaction edit preserves other profiles: " + profile);
+        Assert(GameSchemeSettings.Load(shared, executable).ProfileId == Custom1, "interaction edit activates the intended scheme");
+        interaction = Open(input);
+        psFamily = interaction.ControllerFamilies.Single(family => family.Name == "PS").Index;
+        Assert(interaction.GetKeyboard("IA_Interact", 0) == "F11"
+            && interaction.Relations("IA_Interact", true, psFamily).Keys.SequenceEqual(new[] { "Gamepad_FaceButton_Top" }), "interaction edits survive reopening");
+        interaction.SetKeyboard("IA_Interact", 0, null);
+        interaction.SetGamepadFamily("IA_Interact", 0, psFamily, null);
+        Assert(interaction.Apply().Success, "interaction bindings restore to defaults");
+        interaction = Open(input);
+        psFamily = interaction.ControllerFamilies.Single(family => family.Name == "PS").Index;
+        Assert(interaction.Relations("IA_Interact", false, -1).Keys.SequenceEqual(new[] { "E" })
+            && interaction.Relations("IA_Interact", true, psFamily).Keys.SequenceEqual(new[] { "Gamepad_FaceButton_Right" }), "restored interaction inherits E and controller B/Circle");
         Assert(sourceInputBytes.SequenceEqual(File.ReadAllBytes(sourceInput)) && sourceSharedBytes.SequenceEqual(File.ReadAllBytes(sourceShared)), "authenticated source save copies remain unchanged");
         Console.WriteLine("Authenticated test copies: " + newInstall);
     }

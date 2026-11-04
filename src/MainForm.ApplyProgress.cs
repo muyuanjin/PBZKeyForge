@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -10,25 +11,55 @@ namespace PBZKeyForge
     internal sealed class ApplyActionButton : EditorButton
     {
         readonly Timer animation = new Timer { Interval = 30 };
+        readonly Stopwatch elapsed = new Stopwatch();
         int angle;
-        bool busy;
+        bool busy, gameRunning;
+        public bool GameRunning
+        {
+            get { return gameRunning; }
+            set { if (gameRunning != value) { gameRunning = value; Invalidate(); } }
+        }
         public bool Busy
         {
             get { return busy; }
-            set { busy = value; animation.Enabled = value; Invalidate(); }
+            set
+            {
+                if (busy == value) return;
+                busy = value;
+                if (value) { angle = 0; elapsed.Restart(); }
+                else elapsed.Stop();
+                animation.Enabled = value;
+                Invalidate();
+            }
         }
         public ApplyActionButton()
         {
             Primary = true;
-            animation.Tick += delegate { angle = (angle + 12) % 360; Invalidate(); };
+            animation.Tick += delegate
+            {
+                if (elapsed.ElapsedMilliseconds < 150) return;
+                angle = (angle + 12) % 360;
+                Invalidate();
+            };
         }
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (!busy) { base.OnPaint(e); return; }
+            if (!busy && !gameRunning) { base.OnPaint(e); return; }
             float scale = e.Graphics.DpiX / 96f;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            Color warning = Color.FromArgb(240, 178, 78);
             using (var shape = EditorArtwork.Rounded(new RectangleF(0.5f, 0.5f, Width - 1.5f, Height - 1.5f), 5 * scale))
-            using (var brush = new SolidBrush(EditorTheme.Accent)) e.Graphics.FillPath(brush, shape);
+            using (var brush = new SolidBrush(busy ? EditorTheme.Accent : EditorTheme.Disabled))
+            {
+                e.Graphics.FillPath(brush, shape);
+                if (!busy) using (var pen = new Pen(warning, scale)) e.Graphics.DrawPath(pen, shape);
+            }
+            if (!busy || elapsed.ElapsedMilliseconds < 150)
+            {
+                TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, busy ? EditorTheme.Ink : warning,
+                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+                return;
+            }
             float diameter = 17 * scale, left = 16 * scale;
             using (var pen = new Pen(EditorTheme.Ink, 2 * scale))
             {
@@ -64,16 +95,16 @@ namespace PBZKeyForge
                         }
                 }
                 catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
-                finally { modalActive = false; RenderSession(); }
+                finally { EndModal(); RenderSession(); }
                 return;
             }
             var disabled = Controls.Cast<Control>().Where(control => control != Caption && control.Enabled).ToArray();
             IsApplying = true;
             gameTimer.Stop();
             cbPreset.DroppedDown = false;
+            ((ApplyActionButton)btnApply).Busy = true;
             foreach (var control in disabled) control.Enabled = false;
             captionClose.Enabled = false;
-            ((ApplyActionButton)btnApply).Busy = true;
             lblStatus.Text = I18n.Str("editor.applying");
             try
             {
@@ -86,11 +117,12 @@ namespace PBZKeyForge
             finally
             {
                 IsApplying = false;
-                ((ApplyActionButton)btnApply).Busy = false;
+                ConsumeSchemeDiscovery();
                 foreach (var control in disabled) control.Enabled = true;
                 captionClose.Enabled = true;
-                gameTimer.Start();
                 RenderSession();
+                ((ApplyActionButton)btnApply).Busy = false;
+                gameTimer.Start();
             }
         }
     }

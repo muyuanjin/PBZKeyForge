@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+- Support Steam patch 1.0302256 (`CL-302256_JKS-17280`) scheme activation while retaining launch-build support.
+- Discover relocated PBZS key derivations in later x64 builds, authenticate each candidate, and keep first-time discovery off the UI thread.
+- Defer discovered scheme selection until modal editing finishes, preserving the scheme receiving confirmed bindings.
+- Use separate input rules for both builds; patch 1.0302256 mirrors the Phantom Edge keyboard slot 2 to slot 0 and retains controller slots 1 and 3.
+- Extract InputAction-inherited registrations and QTE mappings across the archive; preserve the existing preset/share-code baseline.
+- Check interaction rebinding and restoration through authenticated installation copies.
+- Refresh the interaction hand icon in both binding views.
+- Keep Apply's busy appearance stable through control updates and delay the spinner for brief saves.
+- Show a distinct game-running Apply button and exit guidance until the game closes.
+- Preserve row clipping while scrolling scheme comparisons to prevent overlapping text.
+
 ## 1.2.2 — 2026-11-04
 
 - Load and authenticate the detected save while building the interface, then display the completed first frame.

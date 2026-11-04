@@ -12,9 +12,9 @@ namespace PBZKeyForge
     {
         const string SaveName = @"ProjectPBZ\Saved\EnhancedInputUserSettings.sav";
 
-        public static EditorSession Open(EditorPreferences preferences, bool useLastPath)
+        public static EditorSession Open(EditorPreferences preferences, bool useLastPath, bool allowDiscovery = true)
         {
-            return OpenCandidates(preferences, Candidates(preferences, useLastPath));
+            return OpenCandidates(preferences, Candidates(preferences, useLastPath), allowDiscovery);
         }
 
         static IEnumerable<string> Candidates(EditorPreferences preferences, bool useLastPath)
@@ -23,14 +23,14 @@ namespace PBZKeyForge
             foreach (string path in InstalledSaves(SteamRoot(), FallbackLibraries())) yield return path;
         }
 
-        static EditorSession OpenCandidates(EditorPreferences preferences, IEnumerable<string> candidates)
+        static EditorSession OpenCandidates(EditorPreferences preferences, IEnumerable<string> candidates, bool allowDiscovery)
         {
             Exception failure = null;
             foreach (string path in candidates.Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 if (!File.Exists(path)) continue;
                 EditorSession session;
-                try { session = EditorSession.Open(path); }
+                try { session = EditorSession.Open(path, allowDiscovery); }
                 catch (Exception ex) { failure = ex; continue; }
                 preferences.SaveInputPath(session.InputPath);
                 return session;

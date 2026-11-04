@@ -1,4 +1,4 @@
-﻿# Local verification
+# Local verification
 
 Integration checks use Simplified Chinese by default. Full language sweeps are opt-in and reserved for targeted localization testing: append `--all-languages` to the relevant command, for example `.\dist\SchemeDiffViewTests.exe samples\vanilla-base.sav dist\diff-language-check --all-languages`. The dedicated `I18nTranslationTests` is also run separately only for localization work; it is not part of routine verification.
 
@@ -38,7 +38,7 @@ Check responsive application and recovery using fixture copies:
 .\dist\ApplyResponsivenessTests.exe samples\vanilla-base.sav dist\apply-responsiveness-check
 ```
 
-The check pauses a background write at the replacement boundary while pumping UI messages. It verifies the spinner advances, editing and closing remain disabled, a second Apply cannot start, and the file stays untouched until the writer continues. An interrupted write retains the draft and restores controls; retry saves it. A screenshot captures the busy state.
+The check pauses a background write at the replacement boundary while pumping UI messages. It verifies the spinner advances, editing and closing remain disabled, a second Apply cannot start, and the file stays untouched until the writer continues. It forces button paints during enabled-state transitions to check that entry and completion retain the busy appearance. An interrupted write retains the draft and restores controls; retry saves it. A screenshot captures the busy state.
 
 Check the mouse attack/guard preset independently, including the retained F heavy attack binding:
 
@@ -59,21 +59,32 @@ This checks all eight packaged presets, keyboard and each controller family in e
 
 For authenticated activation checks, set `$gameExe`, `$sharedSave`, and `$inputSave` to files in a supported installed Steam build. Set `$activationArtifacts` to a **new** directory on the game's volume. The harness copies saves and creates a read-only executable hard link; it never edits the source saves.
 
+Run the same built application against both `CL-301524_JKS-17219` and `CL-302256_JKS-17280` (1.0302256) when checking version compatibility. The authenticated session checks also edit and restore interaction on keyboard and PlayStation, check raw slots and inherited defaults, and preserve the other schemes. Close the game before write checks, including checks against copies.
+
 ```powershell
 & $compiler /nologo /win32manifest:build\app.manifest /out:dist\SchemeActivationTests.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\SchemeActivationTests.cs
 .\dist\SchemeActivationTests.exe dist\PBZKeyForge.exe $gameExe $sharedSave $inputSave $activationArtifacts
 ```
 
-The first authentication must read less than 1 MB through process I/O, including initial runtime work, so a complete EXE scan fails the harness. Both modes reject a full-sized executable with an unknown key fingerprint as well as truncated executables and tampered containers. The reported reader identity must not claim an exact executable build.
+The first authentication must read less than 1 MB through process I/O, including initial runtime work, so a complete EXE scan fails the harness. Both modes reject a full-sized executable without a supported key-derivation function as well as truncated executables and tampered containers. The reported reader identity must not claim an exact executable build.
 
-When the game is running, use the harness's read-only PBZS checks instead. They validate the recognized key fingerprint, reject an unknown executable and tampered containers, and verify the copied save remains unchanged; they do not activate a scheme or require closing the game:
+When the game is running, use the harness's read-only PBZS checks instead. They validate the registered fast reader, reject unsupported executables and tampered containers, and verify the copied save remains unchanged; they do not activate a scheme or require closing the game:
 
 ```powershell
 & $compiler /nologo /win32manifest:build\app.manifest /out:dist\SchemeActivationTests.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\SchemeActivationTests.cs
 .\dist\SchemeActivationTests.exe --read-only dist\PBZKeyForge.exe $gameExe $sharedSave $newReadOnlyArtifacts
 ```
 
-The resulting directory is a copied installation layout. Use it as the source for session tests that inject an activation failure after bindings have been saved, then verify that retry writes only the remaining activation:
+For future-build discovery and GUI responsiveness, run the synthetic x64 PE checks:
+
+```powershell
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\SchemeDiscoveryTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\SchemeDiscoveryTests.cs
+.\dist\SchemeDiscoveryTests.exe --read-only samples\vanilla-base.sav dist\scheme-discovery-check
+```
+
+These checks build executable/data sections with unrelated raw offsets and RVAs, signed RIP references, a function crossing a scan block, an earlier incorrect candidate, nonexecutable decoys and new keys. They exercise cache invalidation, fresh authentication, damaged-save recovery and same-path EXE updates. GUI checks run in the WinForms message loop and cover a timer heartbeat, profile/draft preservation, stale-session results, automatic discovery after an EXE version change, suppression of repeated failures for the same EXE, explicit retry and completion deferred during Apply. Real binding dialogs remain open until discovery completes; confirming must edit the original scheme, while cancellation leaves no draft. Closing either dialog consumes the deferred result. The synthetic EXEs are fixtures, not launched games. Remove `--read-only` after closing the game to also test activation with a replaced key and with a relocated function using the same key; all writes remain inside the new artifact directory, with ordinary backups outside it.
+
+Use `$activationArtifacts`, the copied installation created by `SchemeActivationTests`, as the source for session tests that inject an activation failure after bindings have been saved, then verify that retry writes only the remaining activation:
 
 ```powershell
 .\dist\EditorSessionTests.exe samples\vanilla-base.sav $activationArtifacts $newSessionArtifacts
@@ -164,16 +175,27 @@ Check the bottom comparison panel's four presentation modes:
 .\dist\SchemeDiffViewTests.exe samples\vanilla-base.sav dist\diff-mode-check
 ```
 
-This invokes each row's mouse-click handler at content/action coordinates and sends keyboard messages to the control. It checks combined/additions-first content, gray struck-through removals, changes-only/result-only/before modes, stable result ordering, empty bindings, omission of unchanged effective bindings, factory restore without pending edits, incomplete baselines, saved/pending colors and mode retention across schemes and comparisons. Display-only interactions must leave the copied save and draft unchanged. Screenshots include all four modes at minimum size in Simplified Chinese (`--all-languages` enables all 15 languages); the test does not measure physical mouse hit detection through overlapping desktop windows.
+This invokes each row's mouse-click handler at content/action coordinates and sends keyboard messages to the control. It checks combined/additions-first content, gray struck-through removals, changes-only/result-only/before modes, stable result ordering, empty bindings, omission of unchanged effective bindings, factory restore without pending edits, incomplete baselines, saved/pending colors and mode retention across schemes and comparisons. All four modes must preserve partial-paint clipping. Visible topmost windows exercise both the isolated list and the actual composited MainForm. Native line/page/top/bottom messages, bidirectional wheel messages and rapid wheel bursts must move the list without overlapping row bounds; desktop captures after scrolling must match a full repaint, allowing one channel level of rounding at scaled icon edges. The native Form host comparison excludes narrow side margins outside row text to omit system corner composition. MainForm also refreshes the session while scrolled. Display-only interactions must leave the copied save and draft unchanged. Screenshots include all four modes at minimum size in Simplified Chinese (`--all-languages` enables all 15 languages); the test does not measure physical mouse hit detection through overlapping desktop windows.
 
 Compare both levels of factory data with the extracted resources and all 90 recorded controller defaults:
 
 ```powershell
-& $compiler /nologo /out:dist\InputDefaultsTests.exe /r:System.Core.dll /r:System.Web.Extensions.dll src\Gvas.cs src\KeyboardDefaults.cs tests\InputDefaultsTests.cs
+& $compiler /nologo /out:dist\InputDefaultsTests.exe /r:System.Core.dll /r:System.Web.Extensions.dll /r:dist\PBZKeyForge.exe tests\InputDefaultsTests.cs
 .\dist\InputDefaultsTests.exe assets\input-defaults.json samples\vanilla-base.sav
+.\dist\InputDefaultsTests.exe assets\input-defaults-302256.json samples\vanilla-base.sav
 ```
 
-The dataset retains 60 resource registration inputs and 59 effective profile defaults. Extraction and native registration evidence are documented in [docs/input-defaults.md](../docs/input-defaults.md).
+The launch dataset preserves its recorded 19 contexts. The patch dataset includes all 20 contexts, InputAction-inherited mapping names and the native Shadow Arm mirror rule. Both contain 60 unique registration rows and 59 effective defaults; provenance retains repeated registrations across contexts. The captured launch fixture remains a raw 90-record comparison, not evidence for the patch's runtime projection.
+
+Check native layout identification, independent session defaults, mirrored-slot editing and installation updates:
+
+```powershell
+& $compiler /nologo /out:dist\NativeInputDefaultsTests.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:dist\PBZKeyForge.exe tests\NativeInputDefaultsTests.cs
+.\dist\NativeInputDefaultsTests.exe samples\vanilla-base.sav dist\native-input-check $oldInputSave $newInputSave
+python tests\InputDefaultsExtractionTests.py
+```
+
+Use the input saves adjacent to each verified native installation for the last two arguments; omit them for synthetic-only checks. The native harness maps constructor, vtable and RegisterIMC fixtures to unrelated PE raw offsets, rejects incomplete evidence, checks both real installations when supplied, keeps simultaneous sessions isolated, preserves inactive raw records, and verifies keyboard additions/restoration, preset previews and new controller families. Same-path native updates retain compatible drafts and reject an obsolete independent-slot draft. All changes use generated files in the new artifact directory; source saves stay unchanged. The Python checks cover inherited, overridden and disabled mappings, zero masks, virtual mounts, slot counting, all-context discovery and build-specific effective selection.
 
 ## Visible window rendering
 
@@ -184,14 +206,14 @@ Check refresh scope and action-table creation using fixture copies:
 .\dist\RefreshScopeTests.exe samples\vanilla-base.sav dist\refresh-scope-check
 ```
 
-This check starts a temporary process named `PBZ` to exercise game-state detection without running the game. It verifies that rendering uses the last detected state, timer updates leave binding data intact, selecting keys preserves relationship data and hit targets, action tables are created on first use, and returning to a hidden table refreshes its contents. Tables first opened before or after showing the window must retain correct DPI sizing and aligned columns after resizing. It also checks offline status and source-save preservation.
+This check starts a temporary process named `PBZ` to exercise game-state detection without running the game. It verifies that rendering uses the last detected state, timer updates leave binding data intact, selecting keys preserves relationship data and hit targets, action tables are created on first use, and returning to a hidden table refreshes its contents. Tables first opened before or after showing the window must retain correct DPI sizing and aligned columns after resizing. It captures the game-running Apply button, checks exit guidance despite unavailable scheme authentication, and verifies that game exit restores the ordinary button and draft application. It also checks offline export status and source-save preservation.
 
 ```powershell
 & $compiler /nologo /win32manifest:build\app.manifest /out:dist\WindowRenderingTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\WindowRenderingTests.cs
 .\dist\WindowRenderingTests.exe samples\vanilla-base.sav dist\window-rendering-check
 ```
 
-This check briefly shows a topmost window and captures the actual desktop pixels. It checks that automatic discovery completes before the initial window is shown, reading installed saves when available and using offline mode otherwise. It verifies stable device controls and keyboard focus across refreshes, key selection, perspective changes and modal return; reused relationship buttons must edit the currently selected action and key. It exercises nonclient activation/frame drawing, samples the border for native white chrome, and checks resize hit testing, maximize bounds and restore size. Screenshots cover startup, the main window and a dialog. Bindings are edited only in memory against a copied fixture; neither input file is written. These checks complement the transparent layout captures and do not measure every transient frame during repainting.
+This check briefly shows a topmost window and captures the actual desktop pixels. It checks that input-save discovery and known PBZS fast paths complete before the initial window is shown, reading installed saves when available and using offline mode otherwise. Unknown reader locations are discovered in the background by `SchemeDiscoveryTests`. It verifies stable device controls and keyboard focus across refreshes, key selection, perspective changes and modal return; reused relationship buttons must edit the currently selected action and key. It exercises nonclient activation/frame drawing, samples the border for native white chrome, and checks resize hit testing, maximize bounds and restore size. Screenshots cover startup, the main window and a dialog. Bindings are edited only in memory against a copied fixture; neither input file is written. These checks complement the transparent layout captures and do not measure every transient frame during repainting.
 
 ## Binding dialog and explanations
 

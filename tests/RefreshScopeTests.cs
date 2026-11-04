@@ -69,6 +69,12 @@ public static class RefreshScopeTests
                 form.Opacity = 0; form.ShowInTaskbar = false; form.UiSmoke(input);
                 Assert(Field<bool>(form, "lastRunning"), "Opening an installed save must query the current process state.");
                 form.Show(); Application.DoEvents();
+                var apply = Field<Button>(form, "btnApply");
+                Assert(!apply.Enabled && apply.Text == I18n.Str("editor.applyrunning"), "Running game did not explain the disabled Apply button.");
+                Assert((bool)apply.GetType().GetProperty("GameRunning").GetValue(apply, null), "Running game did not use the blocked appearance.");
+                Assert(Field<Label>(form, "lblStatus").Text == I18n.Str("editor.exittoapply"), "Scheme authentication feedback hid the instruction to exit the game.");
+                using (var image = new Bitmap(form.Width, form.Height))
+                { form.DrawToBitmap(image, form.ClientRectangle); image.Save(Path.Combine(output, "game-running.png")); }
                 var keyboard = Field<IDictionary>(form, "kbButtons"); var controller = Field<IDictionary>(form, "padButtons");
                 Assert(keyboard.Count == 0 && controller.Count == 0, "Hidden action tables were created during startup.");
                 var view = Field<Control>(form, "keyBindings");
@@ -109,8 +115,16 @@ public static class RefreshScopeTests
                 Assert(pad.Value == "Gamepad_FaceButton_Top", "The visible controller table was not refreshed.");
                 form.ShowGamepad(false); form.ShowActionView(false); form.Session.Undo(); form.RenderSession();
                 Assert(ReferenceEquals(diagram, Field<Control>(view, "diagram")), "Switching views replaced the device diagram.");
+                game.Kill(); game.WaitForExit(); Tick(form);
+                Assert(!Field<bool>(form, "lastRunning") && apply.Text == I18n.Str("editor.apply"), "Game exit did not restore the Apply label.");
+                Assert(!(bool)apply.GetType().GetProperty("GameRunning").GetValue(apply, null), "Game exit retained the blocked appearance.");
+                Assert(!apply.Enabled, "Game exit enabled Apply without a draft.");
+                form.Session.SetKeyboard("IA_Guard", 0, "G"); form.RenderSession();
+                Assert(apply.Enabled, "Game exit did not allow applying a draft.");
+                form.Session.Undo(); form.RenderSession();
                 form.UiOffline(); Tick(form);
                 Assert(!Field<bool>(form, "lastRunning") && Field<Label>(form, "lblGame").Text.Contains(I18n.Str("offline.mode")), "Offline editing retained a game-running status.");
+                Assert(apply.Enabled && apply.Text == I18n.Str("offline.export"), "Offline export retained the game-running button state.");
                 Assert(original.SequenceEqual(File.ReadAllBytes(input)), "Display updates wrote the input save.");
             }
             Console.WriteLine("RefreshScopeTests PASS: " + checks + " checks."); return 0;

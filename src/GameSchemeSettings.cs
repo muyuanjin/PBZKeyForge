@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -10,14 +9,18 @@ using System.Text.RegularExpressions;
 namespace PBZKeyForge
 {
     /// <summary>The game's actual keyboard scheme selector, separate from Enhanced Input metadata.</summary>
-    public sealed class GameSchemeSettings
+    public sealed partial class GameSchemeSettings
     {
         static readonly byte[] Header = { 0x50, 0x42, 0x5a, 0x53, 1, 1, 0, 0 };
         static readonly BuildProfile[] VerifiedKeyProfiles = {
             new BuildProfile("Steam CL-301524_JKS-17219",
                 "65b75c306a77eb2df3ed5a7e6b3f8dbef360f6abefa74c465196cfa19af9637c",
                 new ReaderPath("PBZS v1/1, verified file offsets", Header, 8, 20, 36,
-                    new long[] { 0xc1c7b48, 0xc1c7b28, 0xc1c7b38, 0xc1c7b58 }))
+                    new long[] { 0xc1c7b48, 0xc1c7b28, 0xc1c7b38, 0xc1c7b58 })),
+            new BuildProfile("Steam CL-302256_JKS-17280",
+                "65b75c306a77eb2df3ed5a7e6b3f8dbef360f6abefa74c465196cfa19af9637c",
+                new ReaderPath("PBZS v1/1, CL-302256 file offsets", Header, 8, 20, 36,
+                    new long[] { 0xc2392c8, 0xc2392a8, 0xc2392b8, 0xc2392d8 }))
         };
         static readonly Encoding Utf8 = new UTF8Encoding(false, true);
         static readonly Regex SchemeField = new Regex("\"KeyBindingScheme\"\\s*:\\s*\"(?<value>[^\"]*)\"");
@@ -27,19 +30,17 @@ namespace PBZKeyForge
         readonly byte[] plain;
         readonly string json;
         readonly Match field;
-        readonly ReaderPath readerPath;
 
         public string ProfileId { get; private set; }
         public string GameBuild { get; private set; }
 
-        GameSchemeSettings(string path, string executable, byte[] original, byte[] plain, string gameBuild, ReaderPath readerPath)
+        GameSchemeSettings(string path, string executable, byte[] original, byte[] plain, string gameBuild)
         {
             this.path = path;
             this.executable = executable;
             this.original = original;
             this.plain = plain;
             GameBuild = gameBuild;
-            this.readerPath = readerPath;
             if (plain.Length < 6 || BitConverter.ToInt32(plain, 0) != plain.Length - 4 || plain[plain.Length - 1] != 0)
                 throw new InvalidDataException("Unsupported PBZ settings string format.");
             json = Utf8.GetString(plain, 4, plain.Length - 5);
@@ -50,35 +51,22 @@ namespace PBZKeyForge
         }
 
         public static GameSchemeSettings LoadForInputSave(string inputSave)
+        { return LoadForInputSave(inputSave, true); }
+
+        internal static GameSchemeSettings LoadForInputSave(string inputSave, bool allowDiscovery)
         {
             string dir = Path.GetDirectoryName(Path.GetFullPath(inputSave));
-            string exe = FindExecutable(dir);
-            return Load(Path.Combine(dir, "PBZSharedSetting.sav"), exe);
+            return Load(Path.Combine(dir, "PBZSharedSetting.sav"), FindExecutable(dir), allowDiscovery);
         }
 
         public static GameSchemeSettings Load(string settingsPath, string executablePath)
+        { return Load(settingsPath, executablePath, true); }
+
+        static GameSchemeSettings Load(string settingsPath, string executablePath, bool allowDiscovery)
         {
             byte[] encoded = File.ReadAllBytes(settingsPath);
-            BuildProfile build;
-            string buildId;
-            List<ReaderKey> keys = ReadKeys(executablePath, out build, out buildId);
-            try
-            {
-                Exception last = null;
-                foreach (var candidate in keys)
-                {
-                    byte[] plain;
-                    try { plain = Unseal(encoded, candidate.Path, candidate.Key); }
-                    catch (InvalidDataException ex) { last = ex; continue; }
-                    catch (CryptographicException ex) { last = ex; continue; }
-
-                    // Authentication succeeded. Never reinterpret authenticated but invalid content
-                    // using another path; doing so would turn format errors into plaintext guessing.
-                    return new GameSchemeSettings(settingsPath, executablePath, encoded, plain, buildId, candidate.Path);
-                }
-                throw new InvalidDataException("No verified PBZS reader authenticated this settings file for " + build.Name + ". The file was not changed.", last);
-            }
-            finally { ClearKeys(keys); }
+            using (var resolved = Resolve(encoded, executablePath, allowDiscovery))
+                return new GameSchemeSettings(settingsPath, executablePath, encoded, resolved.Plain, resolved.Build);
         }
 
         static string FindExecutable(string dir)
@@ -111,74 +99,11 @@ namespace PBZKeyForge
             { Name = name; Header = header; NonceOffset = nonceOffset; TagOffset = tagOffset; CipherOffset = cipherOffset; KeyOffsets = keyOffsets; }
         }
 
-        sealed class ReaderKey
-        {
-            public readonly ReaderPath Path;
-            public readonly byte[] Key;
-            public ReaderKey(ReaderPath path, byte[] key) { Path = path; Key = key; }
-        }
-
-        static List<ReaderKey> ReadKeys(string exe, out BuildProfile build, out string buildId)
-        {
-            build = null;
-            buildId = null;
-            var keys = new List<ReaderKey>();
-            try
-            {
-                using (var stream = new FileStream(exe, FileMode.Open, FileAccess.Read, FileShare.Read, 16, FileOptions.RandomAccess))
-                {
-                    // Registered locations identify a reader only when its key fingerprint matches.
-                    foreach (var known in VerifiedKeyProfiles)
-                    foreach (var path in known.Paths)
-                    {
-                        if (path.KeyOffsets.Length != 4)
-                            throw new InvalidDataException("Invalid registered PBZS reader path: " + path.Name);
-                        long requiredLength = path.KeyOffsets[0] + 16;
-                        foreach (long offset in path.KeyOffsets) requiredLength = Math.Max(requiredLength, offset + 16);
-                        if (stream.Length < requiredLength) continue;
-                        var parts = new byte[4][];
-                        for (int i = 0; i < path.KeyOffsets.Length; i++)
-                        {
-                            stream.Position = path.KeyOffsets[i];
-                            parts[i] = new byte[16];
-                            if (stream.Read(parts[i], 0, parts[i].Length) != parts[i].Length)
-                                throw new InvalidDataException("The verified PBZ executable is truncated at a registered key location.");
-                        }
-                        var key = new byte[32];
-                        for (int i = 0; i < 16; i++)
-                        {
-                            key[i] = (byte)(parts[0][i] ^ parts[1][i]);
-                            key[i + 16] = (byte)(parts[2][i] ^ parts[3][i]);
-                        }
-                        string keyDigest;
-                        using (var sha = SHA256.Create()) keyDigest = Hex(sha.ComputeHash(key));
-                        if (keyDigest == known.KeySha256)
-                        {
-                            keys.Add(new ReaderKey(path, key));
-                            if (build == null) build = known;
-                        }
-                        else Array.Clear(key, 0, key.Length);
-                        foreach (var part in parts) Array.Clear(part, 0, part.Length);
-                    }
-                }
-                if (keys.Count == 0)
-                    throw new InvalidDataException("Unsupported PBZ game build. No verified key fingerprint matched; switch the scheme in the game. The save was not changed.");
-                buildId = build.Name + " (verified PBZS reader; exact build unknown)";
-                return keys;
-            }
-            catch { ClearKeys(keys); throw; }
-        }
-
         static string Hex(byte[] bytes)
         {
             var result = new StringBuilder(bytes.Length * 2);
             foreach (byte value in bytes) result.Append(value.ToString("x2"));
             return result.ToString();
-        }
-
-        static void ClearKeys(List<ReaderKey> keys)
-        {
-            foreach (var item in keys) Array.Clear(item.Key, 0, item.Key.Length);
         }
 
         public static string ValueFor(string profile)
@@ -220,34 +145,17 @@ namespace PBZKeyForge
             EnsureGameClosed();
             if (!Same(original, File.ReadAllBytes(path)))
                 throw new IOException("PBZ settings changed since loading; load the save again.");
-            if (profile == ProfileId) return null;
-
             byte[] expected = ChangedPlain(profile);
-            BuildProfile build;
-            string buildId;
-            List<ReaderKey> keys = ReadKeys(executable, out build, out buildId);
-            if (build == null || string.IsNullOrEmpty(buildId))
-            {
-                ClearKeys(keys);
-                throw new InvalidDataException("No verified PBZS key profile is available for this game build.");
-            }
-            ReaderKey selected = null;
-            foreach (var candidate in keys)
-                if (candidate.Path == readerPath) { selected = candidate; break; }
-            if (selected == null)
-            {
-                ClearKeys(keys);
-                throw new InvalidDataException("The authenticated PBZS reader path is no longer available for this game build.");
-            }
-            byte[] key = selected.Key;
             byte[] encoded;
-            try
+            using (var resolved = Resolve(original, executable, true))
             {
-                encoded = Seal(expected, readerPath, key);
-                if (!Same(expected, Unseal(encoded, readerPath, key)))
+                if (!Same(plain, resolved.Plain))
+                    throw new InvalidDataException("PBZ settings authentication changed since loading; load the save again.");
+                if (profile == ProfileId) return null;
+                encoded = Seal(expected, resolved.Path, resolved.Key);
+                if (!Same(expected, Unseal(encoded, resolved.Path, resolved.Key)))
                     throw new InvalidDataException("PBZ settings verification failed.");
             }
-            finally { ClearKeys(keys); }
 
             string temp = path + ".pbzforge-" + Guid.NewGuid().ToString("N") + ".tmp";
             try

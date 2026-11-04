@@ -2,15 +2,15 @@
 
 ## 数据与提取入口
 
-支持构建为 CL-301524。逐槽默认及原生注册证据见[默认键表](../../../docs/input-defaults.md)，可维护资源数据为 [assets/input-defaults.json](../../../assets/input-defaults.json)。`bindings` 保存 60 条资源注册输入，`effectiveBindings` 保存按原生身份合并的 59 条最终默认。[InputDefaults](../../../src/KeyboardDefaults.cs) 的公开查询使用最终默认，提供动作集合、逐槽默认、已注册槽及逻辑列到原始槽的转换；`FixedForAction` 保留不经过可重绑注册的动作输入。界面显示、功能数量、原厂差异、编辑和恢复均使用这份来源。
+支持构建为 CL-301524 和 1.0302256 / CL-302256；两版影之武装槽 2 的设备归属不同，见[游戏版本兼容](../../../docs/game-version-compatibility.md)。逐槽默认及原生注册证据见[默认键表](../../../docs/input-defaults.md)，数据分别保存在 [input-defaults.json](../../../assets/input-defaults.json) 和 [input-defaults-302256.json](../../../assets/input-defaults-302256.json)。`bindings` 保存 60 条资源注册输入，`effectiveBindings` 保存按原生身份合并的 59 条最终默认。默认查询必须使用当前存档的规则实例，提供动作集合、逐槽默认、已注册槽、可独立编辑槽及逻辑列到原始槽的转换；`FixedForAction` 保留不经过可重绑注册的动作输入。预览、克隆、预设和导出必须继承同一实例；不可全局切换静态表来处理不同安装。
 
-[提取器](../../../build/extract-input-defaults.py) 从安装包读取 19 个 IMC，输出默认条目、固定映射、资源路径、InputAction 和触发器。它不启动游戏、不读取玩家存档。依赖 Python、`pycryptodome` 和调用者提供的 Oodle 8 DLL，从仓库根目录运行：
+[提取器](../../../build/extract-input-defaults.py) 枚举安装包全目录中的 IMC，输出默认条目、固定映射、资源路径、InputAction 和触发器。新版的 20 个 IMC 已与 AssetRegistry 的 InputMappingContext 类集合独立核对一致。它不启动游戏、不读取玩家存档。依赖 Python、`pycryptodome` 和调用者提供的 Oodle 8 DLL，从仓库根目录运行：
 
 ```powershell
 python build\extract-input-defaults.py --game-exe <platform\steam\PBZ.exe> --paks <ProjectPBZ\Content\Paks> --oodle <oo2core_8_win64.dll> --output dist\input-defaults.json
 ```
 
-输出含 60 条资源注册输入、59 条最终默认，以及 `contexts[].mappings` 中的 84 条固定映射。每个注册输入保留 IMC 和 mappingIndex 来源。维护项目数据时添加 `--compact --output assets\input-defaults.json`；完整研究输出保留原始映射细节。资源密钥只在进程内存中使用，输出不含密钥、完整目录或解密资源包。
+提取新版时添加 `--build CL-302256`，默认仍为 `CL-301524`。新版输出含 60 条资源注册输入、59 条最终默认，以及 `contexts[].mappings` 中的 102 条固定来源映射。每个注册输入保留 IMC 和 mappingIndex 来源。完整研究输出保留原始映射细节。资源密钥只在进程内存中使用，输出不含密钥、完整目录或解密资源包。
 
 ## 方案、设备与槽号
 
@@ -18,17 +18,17 @@ python build\extract-input-defaults.py --game-exe <platform\steam\PBZ.exe> --pak
 
 显式原始槽为 `EPlayerMappableKeySlot::First` 至 `Seventh`（0 至 6），7 是 `Unspecified`，8 是 `Max`。每个 IMC 注册时重新计数，同一 mapping name 与硬件标识的键鼠和手柄条目按资源顺序共用计数；不能用奇偶判断设备。当前硬件标识为 None。手柄家族投影复制原始槽和默认键，Family 不改变原厂键，但各家族的保存覆盖仍须分别定位。
 
-共享 profile 的注册身份由 mapping name、raw slot 和硬件 Primary 决定。原生 `0x144860ad1–0x144860ae7` 比较槽与硬件 Primary，`0x144850970` 返回全零硬件描述符；键鼠和手柄资源键本身不构成独立身份。影之武装的两个资源槽 2 因此合并，基线三个方案共同保存的 `DefaultKey = Gamepad_RightTriggerAxis` 确定最终归属。原生初始化会枚举全部 IMC 库，而非只注册当前输入模式；完整地址与路径见默认键表。
+共享 profile 的注册身份由 mapping name、raw slot 和硬件 Primary 决定。原生 `0x144860ad1–0x144860ae7` 比较槽与硬件 Primary，`0x144850970` 返回全零硬件描述符；键鼠和手柄资源键本身不构成独立身份。影之武装的两个资源槽 2 因此合并。旧版基线三个方案共同保存的 `DefaultKey = Gamepad_RightTriggerAxis` 确定旧版最终归属；新版虚表派发到额外注册规范，将槽 2 改为 LeftControl、当前键复制槽 0。原生初始化会枚举全部 IMC 库，而非只注册当前输入模式；完整地址与路径见默认键表。
 
 | 情形 | 真实映射与处理 |
 | --- | --- |
 | 格挡 | 键鼠原厂槽 0、2 均为右键；手柄槽 1、3 均为 LB。键鼠槽 4 没有原厂绑定。 |
 | 蹲伏 | 键鼠槽 1 为 C，手柄槽 0 为左摇杆按下；菜单和药品也使用键鼠槽 1、手柄槽 0。 |
 | 地图 | 键鼠槽 0 为 M、槽 2 为 Tab，动作集合保留两个不同键。 |
-| 影之武装 | 最终键鼠槽 0 为 Left Ctrl；手柄槽 1、2、3 为 Right Trigger Axis。资源中的键鼠槽 2 不形成独立最终映射。 |
+| 影之武装 | 旧版键鼠槽 0 为 Left Ctrl、手柄槽 1、2、3 为 Right Trigger Axis；新版键鼠槽 2 镜像槽 0，手柄仅槽 1、3。两版独立键鼠编辑列均保留 0、4、5。 |
 | 影之武装长按 | 键鼠 Left Ctrl 是带 Hold 触发器的固定映射，没有独立可重绑槽；手柄 Right Trigger 在槽 0。 |
 
-`InputDefaults.Slots(action, gamepad, existingSlots, otherDeviceSlots)` 将已注册槽和已有保存槽映射到工具的三个逻辑编辑列，并选择可用的额外槽。调用 `EditorSession.GetKeyboardRawSlot` 或 `GetGamepadRawSlot` 获取当前列的真实槽号；不要将列号当 raw slot，也不要套用固定的 `0/2/4` 或 `1/3/5`。
+`save.Defaults.Slots(action, gamepad, existingSlots, otherDeviceSlots)` 将已注册槽和已有保存槽映射到工具的三个逻辑编辑列，并选择可用的额外槽。调用 `EditorSession.GetKeyboardRawSlot` 或 `GetGamepadRawSlot` 获取当前列的真实槽号；不要将列号当 raw slot，也不要套用固定的 `0/2/4` 或 `1/3/5`。静态 `InputDefaults` 仅代表旧版及离线基线。
 
 ## 手柄家族与离线基线
 
@@ -64,10 +64,10 @@ python build\extract-input-defaults.py --game-exe <platform\steam\PBZ.exe> --pak
 
 ## 验证默认数据
 
-最终 30 条手柄默认槽与基线三个方案中的全部 90 条 `(mapping name, slot, DefaultKey)` 一致。动作级原厂集合必须包含固定映射，并与最终逐槽表去重后的结果一致；游戏页面的主／副列是按原厂键分组的显示结果，不能反推 raw slot。
+旧版最终 30 条手柄默认槽与基线三个方案中的全部 90 条 `(mapping name, slot, DefaultKey)` 一致；新版最终有 29 条手柄槽，旧基线仅提供保留未知字段的结构模板，不能直接拿其槽 2 当新版投影。动作级原厂集合必须包含固定映射，并与最终逐槽表去重后的结果一致；游戏页面的主／副列是按原厂键分组的显示结果，不能反推 raw slot。
 
 默认数据变更后检查槽继承、显式解绑、同键重复槽、地图多键、蹲伏原始槽 1、影之武装跨 IMC 同槽合并和固定 Ctrl 长按。保存后继续新增或移除关系，应同时更新功能数、三色徽标、修改前／原厂差异与恢复行为。零修改序列化检查保护存档格式，不能单独证明默认表正确。
 
 ## 已知限制
 
-AssetRegistry 的完整枚举顺序未建立；影之武装槽 2 的最终默认以三个方案保存的同一 DefaultKey 为依据。资源与原生静态证据不代替实际游戏输入验证。
+旧版资源容器当前不可用，旧资源比较以已提取数据为界；旧版影之武装槽 2 的最终默认以三个方案保存的同一 DefaultKey 为依据。新版槽 2 以实际虚表派发、加载顺序和注册代码为依据，不受 IMC 枚举顺序影响。PBZS 认证成功不证明输入注册规则相同；输入规则识别只验证上述两版，未知程序回退旧规则。资源与原生静态证据不代替实际游戏输入验证。

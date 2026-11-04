@@ -29,7 +29,7 @@ description: 为《影之刃零》开发存档型键位 mod 或编辑工具，�
 
 从明确的目标 `ProfileId` 开始。用户要求编辑“游戏当前方案”时，先读取 `GameSchemeSettings.ProfileId`；读取失败就报告无法确定，不以 `SaveFile.ActiveProfile` 或第一条记录冒充真实选择。
 
-支持构建的默认数据入口是 [InputDefaults](../../src/KeyboardDefaults.cs)，维护数据是 [assets/input-defaults.json](../../assets/input-defaults.json)，资源提取入口是 [extract-input-defaults.py](../../build/extract-input-defaults.py)。60 条资源注册输入按原生身份合并为 59 条最终默认，动作级集合由最终默认和固定映射生成。先按原厂注册确定槽归属，再合并对应方案的共享覆盖及手柄家族覆盖，不能按当前按键类别归属槽。适配新构建时沿 IMC 资源和注册路径重新取得两级数据，不能由存档缺少键鼠 `DefaultKey` 推断默认值不可得。
+支持构建的默认数据入口是 [InputDefaults](../../src/KeyboardDefaults.cs)，资源提取入口是 [extract-input-defaults.py](../../build/extract-input-defaults.py)。60 条资源注册输入按原生身份合并为 59 条最终默认，动作级集合由最终默认和固定映射生成。先按所属安装的原生注册规则确定槽归属，再合并对应方案的共享覆盖及手柄家族覆盖，不能按当前按键类别归属槽，也不能将旧存档的默认字段推广为新版注册结果。CL-302256 的影之武装槽 2 为键鼠槽 0 的镜像；CL-301524 的槽 2 属于手柄。适配新构建时同时检查资源自身设置、InputAction 继承设置及实际虚表派发的注册路径，不能由存档缺少键鼠 `DefaultKey` 推断默认值不可得。完整性应以 AssetRegistry 的类枚举核对，路径或文件名前缀筛选的结果不能单独证明无遗漏。
 
 Xbox 的标准保存 Family 为 `Xbox`，PlayStation 为 `PS`；显示名称不直接充当
 保存身份。设备编辑选项不以已连接硬件或已有家族记录为条件。没有游戏或存档

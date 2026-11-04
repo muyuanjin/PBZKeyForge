@@ -62,8 +62,10 @@ public static class SchemeActivationTests
             ulong bytes = after.ReadBytes - before.ReadBytes;
             Assert(bytes < 1024 * 1024, "Initial authentication scanned the executable: " + bytes + " bytes read.");
             Console.WriteLine("Initial authentication I/O: " + bytes + " bytes read.");
-            Assert(GameBuild(settings) == "Steam CL-301524_JKS-17219 (verified PBZS reader; exact build unknown)",
+            Assert(GameBuild(settings) == "Steam CL-301524_JKS-17219 (verified PBZS reader; exact build unknown)"
+                || GameBuild(settings) == "Steam CL-302256_JKS-17280 (verified PBZS reader; exact build unknown)",
                 "A compatible reader must not claim an exact executable build.");
+            Console.WriteLine("Authenticated reader: " + GameBuild(settings));
             return settings;
         }
     }
@@ -74,7 +76,7 @@ public static class SchemeActivationTests
         using (var file = new FileStream(wrongKey, FileMode.CreateNew, FileAccess.Write))
             file.SetLength(new FileInfo(GameExe).Length);
         MustFail(delegate { Settings.GetMethod("Load").Invoke(null, new object[] { settingsPath, wrongKey }); },
-            "An executable of the right size with an unknown key fingerprint must be rejected.");
+            "An executable of the right size without a supported derivation must be rejected.");
         File.Delete(wrongKey);
         Assert(Profile(Load(settingsPath)) != null, "A failed reader lookup affected the next valid authentication.");
     }
@@ -123,7 +125,6 @@ public static class SchemeActivationTests
         Assert(Profile(settings) == "InputUserSettings.Profiles.Default"
             || Profile(settings) == "PBZ.KeyProfile.Custom1"
             || Profile(settings) == "PBZ.KeyProfile.Custom2", "Authenticated settings returned an unknown scheme.");
-        Assert(GameBuild(settings).StartsWith("Steam CL-301524_JKS-17219", StringComparison.Ordinal), "Known key fingerprint was not resolved.");
 
         string unknownExe = Path.Combine(root, "unsupported-build.exe");
         File.WriteAllBytes(unknownExe, new byte[] { 0x4d, 0x5a, 0x00 });

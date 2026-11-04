@@ -50,6 +50,10 @@ namespace PBZKeyForge
     /// </summary>
     public class SaveFile
     {
+        public InputDefaultSet Defaults { get; internal set; }
+
+        public SaveFile() { Defaults = InputDefaultSet.Legacy; }
+
         public byte[] Header;
         public List<Node> Props = new List<Node>();
         public int BlobA, BlobB;
@@ -131,12 +135,20 @@ namespace PBZKeyForge
 
         public static SaveFile Load(string path)
         {
-            return FromBytes(File.ReadAllBytes(path));
+            return FromBytes(File.ReadAllBytes(path), GameSchemeSettings.InputDefaultsForSave(path));
         }
 
+        public static SaveFile Load(string path, InputDefaultSet defaults)
+        { return FromBytes(File.ReadAllBytes(path), defaults); }
+
+        public SaveFile Clone() { return FromBytes(ToBytes(), Defaults); }
+
         public static SaveFile FromBytes(byte[] bytes)
+        { return FromBytes(bytes, InputDefaultSet.Legacy); }
+
+        public static SaveFile FromBytes(byte[] bytes, InputDefaultSet defaults)
         {
-            var s = new SaveFile();
+            var s = new SaveFile { Defaults = defaults ?? InputDefaultSet.Legacy };
             s.d = (byte[])bytes.Clone();
             if (s.d.Length < 32 || Encoding.ASCII.GetString(s.d, 0, 4) != "GVAS")
                 throw new InvalidDataException("Not a GVAS save file.");

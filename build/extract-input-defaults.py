@@ -1,4 +1,4 @@
-"""Read CL-301524 input defaults from an installed game without running it.
+"""Read CL-301524 or CL-302256 input defaults without running the game.
 
 Requires Python, pycryptodome, and a caller-supplied Oodle 8 DLL. Archive keys
 remain in memory. Only input mapping metadata is written to the output JSON.
@@ -13,10 +13,16 @@ import struct
 from Crypto.Cipher import AES
 
 
-KEY_PART_OFFSETS = (
-    0x1964332C, 0x19643333, 0x1964333A, 0x19643341,
-    0x1964334C, 0x19643353, 0x1964335A, 0x19643361,
-)
+KEY_PART_OFFSETS = {
+    "CL-301524": (
+        0x1964332C, 0x19643333, 0x1964333A, 0x19643341,
+        0x1964334C, 0x19643353, 0x1964335A, 0x19643361,
+    ),
+    "CL-302256": (
+        0x18DC40CC, 0x18DC40D3, 0x18DC40DA, 0x18DC40E1,
+        0x18DC40EC, 0x18DC40F3, 0x18DC40FA, 0x18DC4101,
+    ),
+}
 PROFILES = (
     "InputUserSettings.Profiles.Default",
     "PBZ.KeyProfile.Custom1", "PBZ.KeyProfile.Custom2",
@@ -133,7 +139,16 @@ class Package:
             raise ValueError("Unsupported player mappable key settings")
         return reader.name()
 
-    def context(self, path):
+    def input_action_settings(self):
+        reader = Reader(self.exports[0][1], self.names)
+        fields = reader.header()
+        if fields.get(10, True):
+            return None
+        if any(field < 10 and not zero for field, zero in fields.items()):
+            raise ValueError("Unsupported InputAction properties before PlayerMappableKeySettings")
+        return self.settings(reader.number())
+
+    def context(self, path, resolve_action_settings):
         reader = Reader(self.exports[0][1], self.names)
         # UInputMappingContext.DefaultKeyMappings / FInputMappingProfile.Mappings.
         # Any MappingProfileOverrides or added schema field requires decoding.
@@ -144,7 +159,7 @@ class Package:
         counters = collections.Counter()
         for index in range(count):
             fields = reader.header()
-            mapping = {"mappingIndex": index}
+            mapping = {"mappingIndex": index, "settingsBehavior": 0}
             settings_pointer = 0
             for field, zero in fields.items():
                 if field in (0, 1):
@@ -167,12 +182,19 @@ class Package:
                     settings_pointer = 0 if zero else reader.number()
                 else:
                     raise ValueError("Unsupported mapping property: " + str(field))
-            mapping["action"] = self.settings(settings_pointer)
+            behavior = mapping["settingsBehavior"]
+            if behavior == 0:
+                action = mapping.get("inputAction")
+                mapping["action"] = resolve_action_settings(action) if action else None
+            elif behavior == 1:
+                mapping["action"] = self.settings(settings_pointer)
+            elif behavior == 2:
+                mapping["action"] = None
+            else:
+                raise ValueError("Unsupported mapping settings behavior: " + str(behavior))
             key = mapping["key"]
             mapping["device"] = "Gamepad" if key.startswith(("Gamepad_", "PBZ_Touchpad_")) else "KeyboardMouse"
             if mapping["action"]:
-                if mapping["settingsBehavior"] != 1:
-                    raise ValueError("Expected mapping settings override")
                 mapping["rawSlot"] = counters[mapping["action"]]
                 counters[mapping["action"]] += 1
             mappings.append(mapping)
@@ -182,10 +204,10 @@ class Package:
 
 
 class Archive:
-    def __init__(self, game_exe, paks, oodle):
+    def __init__(self, game_exe, paks, oodle, build):
         with game_exe.open("rb") as stream:
             parts = []
-            for offset in KEY_PART_OFFSETS:
+            for offset in KEY_PART_OFFSETS[build]:
                 stream.seek(offset)
                 parts.append(stream.read(4))
         if any(len(part) != 4 for part in parts):
@@ -206,6 +228,8 @@ class Archive:
         if directory[:13] != b"\x0a\0\0\0../../../":
             raise ValueError("Unsupported executable or archive encryption")
         self.files = self.directory(directory)
+        self.packages = self.package_paths(self.files)
+        self.action_settings = {}
         self.handles = {}
         self.blocks = {}
         self.dll = ctypes.WinDLL(str(oodle))
@@ -238,6 +262,29 @@ class Archive:
 
         walk(0, "")
         return result
+
+    @staticmethod
+    def package_paths(files):
+        result = {}
+        for path, entry in files.items():
+            prefix, separator, relative = path.partition("/Content/")
+            if not separator or not relative.endswith(".uasset"):
+                continue
+            mount = "Game" if prefix == "../../../ProjectPBZ" else prefix.rsplit("/", 1)[-1]
+            package = ("/" + mount + "/" + relative[:-7]).casefold()
+            if package in result and result[package] != entry:
+                raise ValueError("Duplicate archive package: " + package)
+            result[package] = entry
+        return result
+
+    def input_action_settings(self, package):
+        identity = package.casefold()
+        if identity not in self.action_settings:
+            if identity not in self.packages:
+                raise ValueError("InputAction package not found: " + package)
+            data = self.resource(self.packages[identity])
+            self.action_settings[identity] = Package(data).input_action_settings()
+        return self.action_settings[identity]
 
     def block(self, index):
         if index in self.blocks:
@@ -280,7 +327,7 @@ class Archive:
             stream.close()
 
 
-def effective_bindings(bindings):
+def effective_bindings(bindings, build="CL-301524"):
     groups = collections.defaultdict(list)
     for binding in bindings:
         groups[(binding["action"], binding["rawSlot"])].append(binding)
@@ -290,23 +337,22 @@ def effective_bindings(bindings):
             result.extend(candidates)
         elif identity == ("IA_ShadowArm", 2) and {(b["device"], b["key"]) for b in candidates} == {
                 ("KeyboardMouse", "LeftControl"), ("Gamepad", "Gamepad_RightTriggerAxis")}:
-            # All three captured profiles retain the controller DefaultKey for this shared identity.
-            result.extend(b for b in candidates if b["device"] == "Gamepad")
+            # CL-302256 RegisterIMC mirrors slot 0 into slot 2 after base registration.
+            device = "KeyboardMouse" if build == "CL-302256" else "Gamepad"
+            result.extend(b for b in candidates if b["device"] == device)
         else:
             raise ValueError("Unresolved shared registration: " + str(identity))
     return sorted(result, key=lambda item: (item["action"], item["device"], item["rawSlot"]))
 
 
-def extract(game_exe, paks, oodle):
-    archive = Archive(game_exe, paks, oodle)
+def extract(game_exe, paks, oodle, build="CL-301524"):
+    archive = Archive(game_exe, paks, oodle, build)
     contexts = []
     try:
         for path, entry in sorted(archive.files.items()):
             if not path.endswith(".uasset") or not path.rsplit("/", 1)[-1].startswith("IMC_"):
                 continue
-            if "/PBZInput/Content/" not in path and "/PBZContent/Input/" not in path:
-                continue
-            contexts.append(Package(archive.resource(entry)).context(path.removeprefix("../../../")))
+            contexts.append(Package(archive.resource(entry)).context(path.removeprefix("../../../"), archive.input_action_settings))
     finally:
         archive.close()
     bindings = {}
@@ -322,11 +368,13 @@ def extract(game_exe, paks, oodle):
             if bindings[identity]["key"] != mapping["key"]:
                 raise ValueError("Conflicting context defaults: " + str(identity))
             bindings[identity]["sources"].append({"context": context["context"], "mappingIndex": mapping["mappingIndex"]})
-    return {"build": "CL-301524", "profiles": PROFILES, "profileDefaultsIdentical": True,
+    return {"build": build, "profiles": PROFILES, "profileDefaultsIdentical": True,
             "hardwareIdentifier": "None", "contexts": contexts,
             "bindings": sorted(bindings.values(), key=lambda item: (item["action"], item["device"], item["rawSlot"])),
-            "effectiveBindings": effective_bindings(bindings.values()),
-            "projectionEvidence": "CL-301524 native registration identity and the three captured profile DefaultKey tables; docs/input-defaults.md"}
+            "effectiveBindings": effective_bindings(bindings.values(), build),
+            "projectionEvidence": ("CL-302256 RegisterIMC override mirrors Shadow Arm raw slot 0 into slot 2; docs/input-defaults.md"
+                                   if build == "CL-302256" else
+                                   "CL-301524 native registration identity and the three captured profile DefaultKey tables; docs/input-defaults.md")}
 
 
 def compact(result):
@@ -362,10 +410,11 @@ def main():
     parser.add_argument("--game-exe", type=pathlib.Path, required=True)
     parser.add_argument("--paks", type=pathlib.Path, required=True)
     parser.add_argument("--oodle", type=pathlib.Path, required=True)
+    parser.add_argument("--build", choices=KEY_PART_OFFSETS, default="CL-301524")
     parser.add_argument("--output", type=pathlib.Path, required=True)
     parser.add_argument("--compact", action="store_true", help="Write the maintained mapping dataset without per-context decoding details")
     args = parser.parse_args()
-    result = extract(args.game_exe, args.paks, args.oodle)
+    result = extract(args.game_exe, args.paks, args.oodle, args.build)
     output = compact(result) if args.compact else result
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

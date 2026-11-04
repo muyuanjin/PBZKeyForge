@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -49,6 +49,9 @@ namespace PBZKeyForge
             }
         }
 
+        bool allowSchemeDiscovery = true, selectDiscoveredProfile;
+        internal SchemeDiscoveryRequiredException SchemeDiscoveryRequest { get; private set; }
+        internal bool SchemeDiscoveryRequired { get { return SchemeDiscoveryRequest != null; } }
         byte[] diskBytes;
         SaveFile disk;
         Dictionary<string, Cell> cells;
@@ -60,6 +63,7 @@ namespace PBZKeyForge
         string previewProfile;
         string resetActivationProfile;
         bool resetActivation;
+        public InputDefaultSet Defaults { get { return disk.Defaults; } }
         public string InputPath { get; private set; }
         public bool IsOffline { get { return InputPath == null; } }
         public string SelectedProfile { get; private set; }
@@ -105,13 +109,17 @@ namespace PBZKeyForge
         }
 
         public static EditorSession Open(string inputPath)
+        { return Open(inputPath, true); }
+
+        internal static EditorSession Open(string inputPath, bool allowDiscovery)
         {
-            var session = new EditorSession { InputPath = Path.GetFullPath(inputPath) };
+            var session = new EditorSession { InputPath = Path.GetFullPath(inputPath), allowSchemeDiscovery = allowDiscovery };
             session.diskBytes = File.ReadAllBytes(session.InputPath);
-            session.disk = SaveFile.FromBytes(session.diskBytes);
+            session.disk = SaveFile.FromBytes(session.diskBytes, GameSchemeSettings.InputDefaultsForSave(session.InputPath));
             session.cells = session.Extract(session.disk);
             session.Remember(session.cells);
             session.ReadScheme();
+            session.selectDiscoveredProfile = session.SchemeDiscoveryRequired;
             session.SelectedProfile = session.disk.RecordFor(session.ActiveProfile) != null ? session.ActiveProfile : session.disk.ActiveProfile;
             if (session.disk.RecordFor(session.SelectedProfile) == null)
                 session.SelectedProfile = session.Profiles.FirstOrDefault();
@@ -121,8 +129,10 @@ namespace PBZKeyForge
 
         void ReadScheme()
         {
+            SchemeDiscoveryRequest = null;
             if (IsOffline) { ActiveProfile = null; SchemeError = null; ActivationPending = false; return; }
-            try { ActiveProfile = GameSchemeSettings.LoadForInputSave(InputPath).ProfileId; SchemeError = null; }
+            try { ActiveProfile = GameSchemeSettings.LoadForInputSave(InputPath, allowSchemeDiscovery).ProfileId; SchemeError = null; }
+            catch (SchemeDiscoveryRequiredException ex) { ActiveProfile = null; SchemeError = ex.Message; SchemeDiscoveryRequest = ex; }
             catch (Exception ex) { ActiveProfile = null; SchemeError = ex.Message; }
             if (ActiveProfile == SelectedProfile) ActivationPending = false;
         }
@@ -130,6 +140,7 @@ namespace PBZKeyForge
         public void SwitchProfile(string profile)
         {
             if (disk.RecordFor(profile) == null) throw new ArgumentException("Unknown keyboard scheme.", "profile");
+            selectDiscoveredProfile = false;
             EndPreview();
             Refresh();
             SelectedProfile = profile;
@@ -139,10 +150,17 @@ namespace PBZKeyForge
         public void Refresh()
         {
             if (IsOffline) return;
+            InputDefaultSet incomingDefaults = GameSchemeSettings.InputDefaultsForSave(InputPath);
+            bool defaultsChanged = incomingDefaults != Defaults;
+            var pendingIds = draft.Edits.Keys.Concat(previewCheckpoint == null ? Enumerable.Empty<string>() : previewCheckpoint.Edits.Keys)
+                .Concat(resetCheckpoint == null ? Enumerable.Empty<string>() : resetCheckpoint.Edits.Keys);
+            if (defaultsChanged && pendingIds.Any(id => incomingDefaults.IsMirroredSlot(Address(id).Action,
+                Address(id).IsGamepad ? InputDefaults.RawSlot(Address(id).Slot) : int.Parse(Address(id).Slot))))
+                throw new IOException(I18n.Str("editor.inputruleschanged"));
             byte[] latest = File.ReadAllBytes(InputPath);
-            if (!Same(latest, diskBytes))
+            if (defaultsChanged || !Same(latest, diskBytes))
             {
-                SaveFile incoming = SaveFile.FromBytes(latest);
+                SaveFile incoming = SaveFile.FromBytes(latest, incomingDefaults);
                 var incomingCells = Extract(incoming);
                 Remember(incomingCells);
                 Merge(draft, cells, incomingCells);
@@ -154,13 +172,24 @@ namespace PBZKeyForge
                 // A global reset also owns overrides that arrived after it was staged.
                 if (IsResetPending)
                     foreach (var cell in cells.Values)
-                        if (!draft.Edits.ContainsKey(cell.Id) && !resetExcluded.Contains(cell.Id) && cell.Key != ResetValue(cell))
+                        if (!IsDependentCell(cell) && !draft.Edits.ContainsKey(cell.Id) && !resetExcluded.Contains(cell.Id) && cell.Key != ResetValue(cell))
                         {
                             draft.Edits[cell.Id] = ResetValue(cell);
                             draft.Conflicts[cell.Id] = Conflict(cell, ResetValue(cell), cell.Key);
                         }
             }
             ReadScheme();
+        }
+
+        internal void RefreshSchemeAfterDiscovery(Exception failure)
+        {
+            Refresh();
+            if (SchemeDiscoveryRequired && failure != null) SchemeError = failure.Message;
+            if (ActiveProfile != null && selectDiscoveredProfile)
+            {
+                if (!HasAnyDrafts && disk.RecordFor(ActiveProfile) != null) SelectedProfile = ActiveProfile;
+                selectDiscoveredProfile = false;
+            }
         }
 
         static string Value(Dictionary<string, Cell> map, string id)
@@ -214,7 +243,7 @@ namespace PBZKeyForge
         {
             Cell cell = PadAddresses(action, slotIndex, false).FirstOrDefault();
             int rawSlot = GetGamepadRawSlot(action, slotIndex);
-            return rawSlot < 0 ? null : InputDefaults.ForRawSlot(action, true, rawSlot);
+            return rawSlot < 0 ? null : Defaults.ForRawSlot(action, true, rawSlot);
         }
 
         public string GetGamepadDefault(string action, int slotIndex, int familyIndex)
@@ -224,7 +253,7 @@ namespace PBZKeyForge
             if (owner == null) return null;
             int[] slots = PadRawSlots(SelectedProfile, owner.Family, action);
             if (slotIndex >= slots.Length) return null;
-            return InputDefaults.ForRawSlot(action, true, slots[slotIndex]);
+            return Defaults.ForRawSlot(action, true, slots[slotIndex]);
         }
 
         public bool IsGamepadDefault(string action, int slotIndex)
@@ -274,7 +303,7 @@ namespace PBZKeyForge
             if (!addresses.TryGetValue(id, out cell))
             {
                 cell = new Cell { Id = id, Profile = SelectedProfile, Action = action, Slot = slot, SlotIndex = slotIndex, FamilyIndex = -1,
-                    DefaultKey = InputDefaults.ForRawSlot(action, false, int.Parse(slot)) };
+                    DefaultKey = Defaults.ForRawSlot(action, false, int.Parse(slot)) };
                 addresses[id] = cell;
             }
             return cell;
@@ -289,7 +318,7 @@ namespace PBZKeyForge
                 int[] slots = PadRawSlots(SelectedProfile, group.Key, action);
                 if (slotIndex >= slots.Length) continue;
                 string slot = InputDefaults.SlotName(slots[slotIndex]);
-                string defaultKey = InputDefaults.ForRawSlot(action, true, slots[slotIndex]);
+                string defaultKey = Defaults.ForRawSlot(action, true, slots[slotIndex]);
                 Cell cell = addresses.Values.FirstOrDefault(candidate => candidate.Family == group.Key && candidate.Action == action && candidate.Slot == slot && candidate.DefaultKey == defaultKey);
                 if (cell == null)
                 {
@@ -308,13 +337,13 @@ namespace PBZKeyForge
 
         int[] KeyboardRawSlots(string profile, string action)
         {
-            return InputDefaults.Slots(action, false,
+            return Defaults.Slots(action, false,
                 cells.Values.Where(cell => cell.Profile == profile && cell.Action == action && !cell.IsGamepad).Select(cell => int.Parse(cell.Slot)),
                 cells.Values.Where(cell => cell.Profile == profile && cell.Action == action && cell.IsGamepad).Select(cell => InputDefaults.RawSlot(cell.Slot)));
         }
 
         int[] PadRawSlots(string profile, string family, string action)
-        { return InputDefaults.RegisteredSlots(action, true); }
+        { return Defaults.RegisteredSlots(action, true); }
 
         public bool HasKeyboardSlot(string action, int slotIndex)
         { CheckSlot(slotIndex); return slotIndex < KeyboardRawSlots(SelectedProfile, action).Length; }
@@ -336,7 +365,7 @@ namespace PBZKeyForge
         {
             CheckSlot(slotIndex);
             Cell template = cells.Values.FirstOrDefault(cell => cell.Profile == SelectedProfile && cell.Action == action && cell.IsGamepad && cell.Family != null);
-            int[] slots = template == null ? InputDefaults.RegisteredSlots(action, true) : PadRawSlots(SelectedProfile, template.Family, action);
+            int[] slots = template == null ? Defaults.RegisteredSlots(action, true) : PadRawSlots(SelectedProfile, template.Family, action);
             return slotIndex < slots.Length ? slots[slotIndex] : -1;
         }
 
@@ -379,10 +408,10 @@ namespace PBZKeyForge
 
         public EditorSession PreviewPreset(Preset preset)
         {
-            var baseline = SaveFile.FromBytes(diskBytes);
+            var baseline = SaveFile.FromBytes(diskBytes, Defaults);
             Presets.Apply(baseline, Presets.ById("vanilla_current"), baseline.RecordFor(SelectedProfile));
             byte[] baselineBytes = baseline.ToBytes();
-            SaveFile planned = SaveFile.FromBytes(baselineBytes);
+            SaveFile planned = SaveFile.FromBytes(baselineBytes, Defaults);
             if (preset.IsUser) Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile), PresetApplyMode.Replace);
             else Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile));
             var snapshot = new EditorSession { disk = baseline, diskBytes = baselineBytes, cells = Extract(baseline),
@@ -442,7 +471,7 @@ namespace PBZKeyForge
             // The CLI and editor use the same save transformation. Materialize it on
             // an isolated checkpoint so failed planning cannot alter drafts/conflicts.
             Draft checkpoint = previewCheckpoint != null && previewProfile == SelectedProfile ? previewCheckpoint : draft;
-            SaveFile planned = SaveFile.FromBytes(diskBytes);
+            SaveFile planned = SaveFile.FromBytes(diskBytes, Defaults);
             ApplyEdits(planned, checkpoint.Edits.ToArray());
             var before = Extract(planned);
             Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile), mode);
@@ -458,7 +487,7 @@ namespace PBZKeyForge
                 .GroupBy(bindingId => new { Address(bindingId).Profile, Address(bindingId).Action, Address(bindingId).IsGamepad, Address(bindingId).FamilyIndex }))
             {
                 var owner = Address(group.First());
-                if (InputDefaults.HasAction(owner.Action))
+                if (Defaults.HasAction(owner.Action))
                 {
                     string[] result = EffectiveKeys(after, owner);
                     if (SameKeys(EffectiveKeys(before, owner), result)) continue;
@@ -479,7 +508,7 @@ namespace PBZKeyForge
         {
             EnsureEditable();
             var checkpoint = previewCheckpoint != null && previewProfile == SelectedProfile ? previewCheckpoint : draft;
-            var planned = SaveFile.FromBytes(diskBytes);
+            var planned = SaveFile.FromBytes(diskBytes, Defaults);
             ApplyEdits(planned, checkpoint.Edits.ToArray());
             Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile), mode);
         }
@@ -490,13 +519,13 @@ namespace PBZKeyForge
         static bool SameKeys(string[] before, string[] after)
         { return !before.Except(after).Any() && !after.Except(before).Any(); }
 
-        static string[] EffectiveKeys(Dictionary<string, Cell> snapshot, Cell owner)
+        string[] EffectiveKeys(Dictionary<string, Cell> snapshot, Cell owner)
         {
             var bindings = snapshot.Values.Where(cell => SameBindingGroup(cell, owner));
             if (owner.IsGamepad)
-                bindings = bindings.Where(cell => cell.Keys != null && InputDefaults.RegisteredSlots(owner.Action, true).Contains(InputDefaults.RawSlot(cell.Slot))
-                    && cell.DefaultKey == InputDefaults.ForRawSlot(owner.Action, true, InputDefaults.RawSlot(cell.Slot)));
-            return InputDefaults.ResolveKeys(owner.Action, owner.IsGamepad, bindings.Select(cell =>
+                bindings = bindings.Where(cell => cell.Keys != null && Defaults.RegisteredSlots(owner.Action, true).Contains(InputDefaults.RawSlot(cell.Slot))
+                    && cell.DefaultKey == Defaults.ForRawSlot(owner.Action, true, InputDefaults.RawSlot(cell.Slot)));
+            return Defaults.ResolveKeys(owner.Action, owner.IsGamepad, bindings.Select(cell =>
                 new KeyValuePair<int, string>(cell.IsGamepad ? InputDefaults.RawSlot(cell.Slot) : int.Parse(cell.Slot), cell.Key)));
         }
 
@@ -504,7 +533,7 @@ namespace PBZKeyForge
         {
             Refresh();
             if (Conflicts.Length > 0) throw new InvalidOperationException(I18n.Str("editor.conflictinfo"));
-            var output = SaveFile.FromBytes(diskBytes);
+            var output = SaveFile.FromBytes(diskBytes, Defaults);
             ApplyEdits(output, draft.Edits.Where(edit => Address(edit.Key).Profile == SelectedProfile).ToArray());
             return output.ToBytes();
         }
@@ -536,12 +565,15 @@ namespace PBZKeyForge
             resetActivationProfile = SelectedProfile;
             ActivationPending = false;
             draft = new Draft();
-            foreach (Cell cell in cells.Values)
+            foreach (Cell cell in cells.Values.Where(cell => !IsDependentCell(cell)))
             {
                 string key = ResetValue(cell);
                 if (key != cell.Key) draft.Edits[cell.Id] = key;
             }
         }
+
+        bool IsDependentCell(Cell cell)
+        { return Defaults.IsMirroredSlot(cell.Action, cell.IsGamepad ? InputDefaults.RawSlot(cell.Slot) : int.Parse(cell.Slot)); }
 
         static string ResetValue(Cell cell) { return cell.Entry != null || !cell.IsGamepad ? null : (cell.DefaultKey ?? cell.Key); }
 
@@ -597,11 +629,11 @@ namespace PBZKeyForge
                 var edits = draft.Edits.Where(p => InScope(p.Key)).ToArray();
                 if (edits.Length > 0)
                 {
-                    SaveFile output = SaveFile.FromBytes(diskBytes);
+                    SaveFile output = SaveFile.FromBytes(diskBytes, Defaults);
                     ApplyEdits(output, edits);
                     byte[] encoded = output.ToBytes();
                     // Serialization must be stable before it may replace the live save.
-                    if (!Same(encoded, SaveFile.FromBytes(encoded).ToBytes()))
+                    if (!Same(encoded, SaveFile.FromBytes(encoded, Defaults).ToBytes()))
                         throw new InvalidDataException("Input settings verification failed.");
                     result.InputBackup = WriteInput(encoded);
                     result.BindingsSaved = true;
@@ -732,17 +764,17 @@ namespace PBZKeyForge
                 var occurrences = new Dictionary<string, int>();
                 var gamepadKeys = save.GamepadKeysFor(record.ProfileId);
                 var keyboardSlots = record.Entries.Select(entry => entry.Name).Distinct()
-                    .ToDictionary(action => action, action => KeyboardRawSlots(record, gamepadKeys, action));
+                    .ToDictionary(action => action, action => KeyboardRawSlots(record, gamepadKeys, action, save.Defaults));
                 foreach (BlobEntry entry in record.Entries)
                 {
                     string group = entry.Name + "\u001f" + entry.Slot;
                     int ordinal;
                     occurrences.TryGetValue(group, out ordinal); occurrences[group] = ordinal + 1;
-                    bool gamepad = Presets.IsGamepadOverride(gamepadKeys, entry);
+                    bool gamepad = Presets.IsGamepadOverride(gamepadKeys, entry, save.Defaults);
                     string id = (gamepad ? "B" : "K") + KeyboardId(record.ProfileId, entry.Name, entry.Slot.ToString(), ordinal).Substring(1);
                     map[id] = new Cell { Id = id, Profile = record.ProfileId, Action = entry.Name, Key = entry.Key,
                         IsGamepad = gamepad, Slot = gamepad ? InputDefaults.SlotName(entry.Slot) : entry.Slot.ToString(),
-                        DefaultKey = InputDefaults.ForRawSlot(entry.Name, gamepad, entry.Slot),
+                        DefaultKey = save.Defaults.ForRawSlot(entry.Name, gamepad, entry.Slot),
                         SlotIndex = gamepad ? -1 : Array.IndexOf(keyboardSlots[entry.Name], (int)entry.Slot), FamilyIndex = -1, Entry = entry, Record = record };
                 }
             }
@@ -762,7 +794,7 @@ namespace PBZKeyForge
                         familyIndices[identity] = familyIndex;
                     }
                     var occurrences = new Dictionary<string, int>();
-                    foreach (var item in ControllerProfiles.EditingKeys(profile))
+                    foreach (var item in ControllerProfiles.EditingKeys(profile, save.Defaults))
                     {
                         string action = SaveFile.Field(item, "MappingName"), slot = SaveFile.Field(item, "Slot");
                         if (action == null || slot == null) continue;
@@ -770,7 +802,7 @@ namespace PBZKeyForge
                         int ordinal;
                         occurrences.TryGetValue(group, out ordinal); occurrences[group] = ordinal + 1;
                         string id = PadId(identity, action, slot, ordinal);
-                        map[id] = new Cell { Id = id, Profile = profile.ProfileId, IsGamepad = true, Action = action, Slot = slot, SlotIndex = SaveFile.Field(item, "DefaultKey") == InputDefaults.ForRawSlot(action, true, InputDefaults.RawSlot(slot)) ? Array.IndexOf(InputDefaults.RegisteredSlots(action, true), InputDefaults.RawSlot(slot)) : -1,
+                        map[id] = new Cell { Id = id, Profile = profile.ProfileId, IsGamepad = true, Action = action, Slot = slot, SlotIndex = SaveFile.Field(item, "DefaultKey") == save.Defaults.ForRawSlot(action, true, InputDefaults.RawSlot(slot)) ? Array.IndexOf(save.Defaults.RegisteredSlots(action, true), InputDefaults.RawSlot(slot)) : -1,
                         Family = identity, FamilyName = profile.Family, FamilyIndex = familyIndex,
                         VirtualBinding = !keys.Items.Contains(item),
                         Key = SaveFile.Field(item, "Key"), DefaultKey = SaveFile.Field(item, "DefaultKey"), Keys = keys, Item = item };
@@ -779,11 +811,11 @@ namespace PBZKeyForge
             return map;
         }
 
-        static int[] KeyboardRawSlots(BlobRecord record, List<Node> gamepad, string action)
+        static int[] KeyboardRawSlots(BlobRecord record, List<Node> gamepad, string action, InputDefaultSet defaults)
         {
-            return InputDefaults.Slots(action, false, record.Entries.Where(entry => entry.Name == action && !Presets.IsGamepadOverride(gamepad, entry)).Select(entry => (int)entry.Slot),
+            return defaults.Slots(action, false, record.Entries.Where(entry => entry.Name == action && !Presets.IsGamepadOverride(gamepad, entry, defaults)).Select(entry => (int)entry.Slot),
                 gamepad.SelectMany(keys => keys.Items).Where(item => SaveFile.Field(item, "MappingName") == action).Select(item => InputDefaults.RawSlot(SaveFile.Field(item, "Slot")))
-                    .Concat(record.Entries.Where(entry => entry.Name == action && Presets.IsGamepadOverride(gamepad, entry)).Select(entry => (int)entry.Slot)));
+                    .Concat(record.Entries.Where(entry => entry.Name == action && Presets.IsGamepadOverride(gamepad, entry, defaults)).Select(entry => (int)entry.Slot)));
         }
 
         static string FamilyIdentity(List<Node> family)
