@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PBZKeyForge
@@ -79,20 +80,55 @@ namespace PBZKeyForge
 
         public MainForm() : this(EditorPreferences.Default()) { }
 
+        public static MainForm OpenDefault()
+        {
+            var initialSession = Task.Run(delegate {
+                string path = FindInputSave();
+                return path == null ? EditorSession.CreateOffline() : EditorSession.Open(path);
+            });
+            var form = new MainForm();
+            try { form.Session = initialSession.GetAwaiter().GetResult(); }
+            catch (Exception ex)
+            {
+                form.NewOfflineScheme();
+                form.SetMessage("editor.failed", true, ex.Message);
+            }
+            form.RenderSession();
+            return form;
+        }
+
         public MainForm(EditorPreferences preferences)
         {
             this.preferences = preferences;
             presetMode = preferences.LoadPresetMode();
             I18n.Current = I18n.Detect();
-            Build();
-            ApplyLanguage();
+            SuspendLayout();
+            try { Build(); ApplyLanguage(); }
+            finally { ResumeLayout(true); }
             HandleCreated += delegate { EditorArtwork.DarkCaption(this); };
-            Shown += delegate { if (Session == null) AutoFind(false); };
-            Activated += delegate { if (Session != null && !Session.IsOffline && !loading && !modalActive) RefreshFromDisk(); };
+            Shown += delegate {
+                Activated += delegate { if (Session != null && !Session.IsOffline && !loading && !modalActive) RefreshFromDisk(); };
+            };
             FormClosing += delegate(object sender, FormClosingEventArgs e) { if (IsApplying || !ConfirmDiscard()) e.Cancel = true; };
             gameTimer.Interval = 1500;
             gameTimer.Tick += delegate { if (EditorSession.IsGameRunning != lastRunning) RenderSession(); };
             gameTimer.Start();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            if (Session == null) AutoFind(false);
+            base.OnLoad(e);
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var value = base.CreateParams;
+                value.ExStyle |= 0x02000000; // WS_EX_COMPOSITED paints child windows together.
+                return value;
+            }
         }
 
         void Build()
@@ -107,11 +143,11 @@ namespace PBZKeyForge
             ForeColor = EditorTheme.Ink;
             try { Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath); } catch { }
             var root = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 6, Padding = new Padding(16, 6, 16, 6), Margin = Padding.Empty, BackColor = Color.Transparent };
+            root.SuspendLayout();
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             int[] heights = { 72, 22, 36, 64, 0, 94 };
             for (int rowIndex = 0; rowIndex < heights.Length; rowIndex++)
                 root.RowStyles.Add(rowIndex == 4 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, heights[rowIndex]));
-            Controls.Add(root);
 
             var header = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 1, Margin = Padding.Empty, BackColor = Color.Transparent };
             header.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
@@ -251,6 +287,8 @@ namespace PBZKeyForge
             footer.Controls.AddRange(new Control[] { chkActivate, lblOffline, lblScope, btnConflicts, lblStatus, btnUndo, btnApply, lblBackup });
             footer.Resize += delegate { LayoutFooter(); };
             root.Controls.Add(footer, 0, 5);
+            root.ResumeLayout(false);
+            Controls.Add(root);
             AutoScaleDimensions = new SizeF(96f, 96f);
             PerformAutoScale();
             alignHeaderControls();
@@ -288,6 +326,7 @@ namespace PBZKeyForge
             var scroll = new EditorPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = EditorTheme.Surface };
             scroll.HandleCreated += delegate { EditorArtwork.DarkScrollbars(scroll); };
             var grid = new BindingTable { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 5, RowCount = Actions.Count, Margin = Padding.Empty, BackColor = EditorTheme.Surface, CellBorderStyle = TableLayoutPanelCellBorderStyle.None, Font = new Font(Font.FontFamily, 10.5f) };
+            grid.SuspendLayout();
             grid.CellPaint += delegate(object sender, TableLayoutCellPaintEventArgs e)
             {
                 var rowLabel = grid.GetControlFromPosition(0, e.Row);
@@ -328,9 +367,11 @@ namespace PBZKeyForge
                 }
                 boxes[action.Id] = buttons; row++;
             }
+            grid.ResumeLayout(false);
             scroll.Controls.Add(grid);
             var headerViewport = new EditorPanel { Dock = DockStyle.Top, Height = 36, BackColor = EditorTheme.Floating };
             var header = new BindingTable { ColumnCount = 5, BackColor = headerViewport.BackColor, CellBorderStyle = TableLayoutPanelCellBorderStyle.None };
+            header.SuspendLayout();
             SetColumns(header);
             for (int i = 0; i < 5; i++)
             {
@@ -343,6 +384,7 @@ namespace PBZKeyForge
                     label.Controls.Add(question); label.Padding = new Padding(0, 0, 24, 0);
                 }
             }
+            header.ResumeLayout(false);
             headerViewport.Controls.Add(header);
             // Use the laid-out body width, including the scrollbar's actual effect.
             // System scrollbar metrics may already be DPI scaled before WinForms
@@ -429,14 +471,16 @@ namespace PBZKeyForge
                 btnPresetMode.Enabled = loaded && !Session.IsResetPending && !restoringFactory;
                 var modeHeading = btnPresetMode.Parent.Controls.Find("presetModeLabel", false).FirstOrDefault();
                 if (modeHeading != null) modeHeading.Text = I18n.Str("preset.mode");
+                var keyboardRecords = loaded ? Session.BindingRecords(false, -1).ToLookup(r => r.Action) : null;
+                var gamepadRecords = loaded ? Session.BindingRecords(true, SelectedFamilyIndex).ToLookup(r => r.Action) : null;
                 foreach (var action in Actions)
                     for (int slot = 0; slot < 3; slot++)
                     {
                         var kb = kbButtons[action.Id][slot]; var pad = padButtons[action.Id][slot];
                         kb.IsOffline = pad.IsOffline = offline;
-                        var padRecords = loaded ? Session.BindingRecords(true, SelectedFamilyIndex).Where(r => r.Action == action.Id && r.SlotIndex == slot
+                        var padRecords = loaded ? gamepadRecords[action.Id].Where(r => r.SlotIndex == slot
                             && r.DefaultKey == InputDefaults.ForRawSlot(action.Id, true, InputDefaults.RawSlot(r.Slot))).ToArray() : new BindingRecord[0];
-                        var kbRecords = loaded ? Session.BindingRecords(false, -1).Where(r => r.Action == action.Id && r.SlotIndex == slot).ToArray() : new BindingRecord[0];
+                        var kbRecords = loaded ? keyboardRecords[action.Id].Where(r => r.SlotIndex == slot).ToArray() : new BindingRecord[0];
                         kb.Value = kbRecords.Select(r => r.Key).FirstOrDefault(); pad.Value = padRecords.Select(r => r.Key).FirstOrDefault();
                         string keyboardDefault = loaded ? Session.GetKeyboardDefault(action.Id, slot) : null;
                         kb.DefaultKeys = keyboardDefault == null ? null : new[] { keyboardDefault }; kb.ActionLevelDefault = false; kb.UsesDefault = kb.Value == null;
@@ -460,12 +504,13 @@ namespace PBZKeyForge
                 {
                     var source = i < Actions.Count ? kbButtons : padButtons;
                     string action = (string)actionLabels[i].Tag;
-                    string[] defaults = !loaded ? null : i < Actions.Count ? Session.FactoryKeyboardKeys(action) : Session.Relations(action, true, SelectedFamilyIndex).DefaultKeys;
+                    var relations = loaded ? Session.Relations(action, i >= Actions.Count, SelectedFamilyIndex) : null;
+                    string[] defaults = relations == null ? null : relations.DefaultKeys;
                     actionLabels[i].Text = BindingViewText.ActionName(action);
                     var actionLabel = actionLabels[i] as ActionNameLabel;
                     if (actionLabel != null)
                     {
-                        string keys = !loaded ? "" : BindingViewText.Keys(Session.Relations(action, i >= Actions.Count, SelectedFamilyIndex).Keys);
+                        string keys = !loaded ? "" : BindingViewText.Keys(relations.Keys);
                         actionLabel.KeySummary = loaded ? I18n.Str("help.keysummary", keys) : "";
                         SetTip(actionLabel, action + "\n" + actionLabel.KeySummary); actionLabel.Invalidate();
                     }
@@ -590,23 +635,28 @@ namespace PBZKeyForge
             if (confirm && !ConfirmDiscard()) return;
             try
             {
-                var roots = new List<string>();
-                var steam = Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", null) as string;
-                if (!string.IsNullOrEmpty(steam))
-                {
-                    roots.Add(steam.Replace('/', '\\'));
-                    string libraries = Path.Combine(steam, @"steamapps\libraryfolders.vdf");
-                    if (File.Exists(libraries))
-                        foreach (System.Text.RegularExpressions.Match match in System.Text.RegularExpressions.Regex.Matches(File.ReadAllText(libraries), "\"path\"\\s*\"([^\"]+)\""))
-                            roots.Add(match.Groups[1].Value.Replace("\\\\", "\\"));
-                }
-                foreach (var drive in DriveInfo.GetDrives()) if (drive.DriveType == DriveType.Fixed) roots.Add(Path.Combine(drive.Name, "SteamLibrary"));
-                string found = roots.Select(root => Path.Combine(root, @"steamapps\common\PBZ\ProjectPBZ\Saved\EnhancedInputUserSettings.sav")).FirstOrDefault(File.Exists);
+                string found = FindInputSave();
                 if (found != null) OpenPath(found);
                 else if (Session == null) NewOfflineScheme();
                 else { SetMessage("editor.empty", false); RenderSession(); }
             }
             catch (Exception ex) { if (Session == null) NewOfflineScheme(); SetMessage("editor.failed", true, ex.Message); RenderSession(); }
+        }
+
+        static string FindInputSave()
+        {
+            var roots = new List<string>();
+            var steam = Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", null) as string;
+            if (!string.IsNullOrEmpty(steam))
+            {
+                roots.Add(steam.Replace('/', '\\'));
+                string libraries = Path.Combine(steam, @"steamapps\libraryfolders.vdf");
+                if (File.Exists(libraries))
+                    foreach (System.Text.RegularExpressions.Match match in System.Text.RegularExpressions.Regex.Matches(File.ReadAllText(libraries), "\"path\"\\s*\"([^\"]+)\""))
+                        roots.Add(match.Groups[1].Value.Replace("\\\\", "\\"));
+            }
+            foreach (var drive in DriveInfo.GetDrives()) if (drive.DriveType == DriveType.Fixed) roots.Add(Path.Combine(drive.Name, "SteamLibrary"));
+            return roots.Select(root => Path.Combine(root, @"steamapps\common\PBZ\ProjectPBZ\Saved\EnhancedInputUserSettings.sav")).FirstOrDefault(File.Exists);
         }
         void ShowMore()
         {
@@ -686,11 +736,10 @@ namespace PBZKeyForge
             if (backgroundCache == null || backgroundCache.Size != ClientSize)
             {
                 if (backgroundCache != null) backgroundCache.Dispose();
-                backgroundCache = new Bitmap(ClientSize.Width, ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                backgroundCache = new Bitmap(ClientSize.Width, ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
                 using (var graphics = Graphics.FromImage(backgroundCache)) EditorArtwork.PaintBackground(graphics, ClientRectangle);
             }
-            Rectangle clip = Rectangle.Intersect(ClientRectangle, Rectangle.Ceiling(e.Graphics.ClipBounds));
-            if (clip.Width > 0 && clip.Height > 0) e.Graphics.DrawImage(backgroundCache, clip, clip, GraphicsUnit.Pixel);
+            e.Graphics.DrawImageUnscaled(backgroundCache, 0, 0);
         }
         public void AutoApply(string inPath, string outPath, string presetId, string scheme, bool activate)
         {

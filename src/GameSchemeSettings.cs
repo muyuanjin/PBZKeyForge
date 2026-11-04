@@ -135,7 +135,7 @@ namespace PBZKeyForge
             bool exactExecutable = false;
             try
             {
-                using (var stream = new FileStream(exe, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var stream = new FileStream(exe, FileMode.Open, FileAccess.Read, FileShare.Read, 1024 * 1024, FileOptions.SequentialScan))
                 {
                     executableDigest = ExecutableDigest(exe, stream);
                     foreach (var known in VerifiedKeyProfiles)

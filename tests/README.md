@@ -171,7 +171,7 @@ The dataset retains 60 resource registration inputs and 59 effective profile def
 .\dist\WindowRenderingTests.exe samples\vanilla-base.sav dist\window-rendering-check
 ```
 
-This check briefly shows a topmost window and captures the actual desktop pixels. It verifies stable device controls and keyboard focus across refreshes, key selection, perspective changes and modal return; reused relationship buttons must edit the currently selected action and key. It exercises nonclient activation/frame drawing, samples the border for native white chrome, and checks resize hit testing, maximize bounds and restore size. Screenshots cover the main window and a dialog. Bindings are edited only in memory against a copied fixture; neither input file is written. These checks complement the transparent layout captures and do not measure every transient frame during repainting.
+This check briefly shows a topmost window and captures the actual desktop pixels. It checks that automatic discovery completes before the initial window is shown, reading installed saves when available and using offline mode otherwise. It verifies stable device controls and keyboard focus across refreshes, key selection, perspective changes and modal return; reused relationship buttons must edit the currently selected action and key. It exercises nonclient activation/frame drawing, samples the border for native white chrome, and checks resize hit testing, maximize bounds and restore size. Screenshots cover startup, the main window and a dialog. Bindings are edited only in memory against a copied fixture; neither input file is written. These checks complement the transparent layout captures and do not measure every transient frame during repainting.
 
 ## Binding dialog and explanations
 

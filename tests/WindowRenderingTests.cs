@@ -76,6 +76,18 @@ public static class WindowRenderingTests
             string output = Path.GetFullPath(args[1]); Directory.CreateDirectory(output);
             byte[] original = File.ReadAllBytes(args[0]);
             string input = Path.Combine(output, "EnhancedInputUserSettings.sav"); File.WriteAllBytes(input, original);
+            using (var startup = MainForm.OpenDefault())
+            {
+                bool readyBeforeShow = false;
+                startup.Load += delegate { readyBeforeShow = startup.Session != null; };
+                startup.StartPosition = FormStartPosition.Manual; startup.TopMost = true;
+                startup.Size = startup.MinimumSize; startup.Location = Screen.PrimaryScreen.WorkingArea.Location;
+                startup.Show(); Application.DoEvents();
+                Assert(readyBeforeShow, "Automatic discovery must finish before the first visible frame.");
+                Assert(!startup.Session.HasAnyDrafts && !startup.Session.HasChanges, "Starting the editor created pending changes.");
+                Frame(startup, output, "startup");
+                startup.Close();
+            }
             using (var form = new MainForm())
             {
                 form.UiSmoke(input); form.StartPosition = FormStartPosition.Manual; form.TopMost = true;

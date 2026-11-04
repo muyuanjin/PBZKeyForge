@@ -66,11 +66,11 @@ namespace PBZKeyForge
         public BindingRecord[] BindingRecords(bool gamepad, int familyIndex)
         { return BindingRecords(gamepad, familyIndex, false); }
 
-        BindingRecord[] BindingRecords(bool gamepad, int familyIndex, bool beforeEdit)
+        BindingRecord[] BindingRecords(bool gamepad, int familyIndex, bool beforeEdit, string action = null)
         {
             Func<Cell, string> value = c => beforeEdit ? Value(cells, c.Id) : Current(c);
             return addresses.Values.Where(c => c.Profile == SelectedProfile && c.IsGamepad == gamepad
-                && (!gamepad || c.FamilyIndex == familyIndex) && value(c) != null)
+                && (!gamepad || c.FamilyIndex == familyIndex) && (action == null || c.Action == action) && value(c) != null)
                 .Select(c => new BindingRecord { Id = c.Id, Action = c.Action, Key = value(c), DefaultKey = c.DefaultKey,
                     Slot = c.Slot, SlotIndex = c.SlotIndex, FamilyIndex = c.FamilyIndex, Changed = !beforeEdit && draft.Edits.ContainsKey(c.Id) })
                 .OrderBy(c => c.Action).ThenBy(c => c.Slot).ThenBy(c => c.Id).ToArray();
@@ -131,9 +131,9 @@ namespace PBZKeyForge
 
         BindingRecord[] ActionBindingRecords(string action, bool gamepad, int familyIndex, bool beforeEdit)
         {
-            return BindingRecords(gamepad, familyIndex, beforeEdit).Where(r => r.Action == action
-                && (!gamepad || !InputDefaults.HasAction(action) || InputDefaults.RegisteredSlots(action, true).Contains(InputDefaults.RawSlot(r.Slot))
-                    && r.DefaultKey == InputDefaults.ForRawSlot(action, true, InputDefaults.RawSlot(r.Slot)))).ToArray();
+            return BindingRecords(gamepad, familyIndex, beforeEdit, action).Where(r => !gamepad || !InputDefaults.HasAction(action)
+                || InputDefaults.RegisteredSlots(action, true).Contains(InputDefaults.RawSlot(r.Slot))
+                    && r.DefaultKey == InputDefaults.ForRawSlot(action, true, InputDefaults.RawSlot(r.Slot))).ToArray();
         }
 
         ActionRelations Relations(string action, bool gamepad, int familyIndex, bool beforeEdit)
