@@ -62,7 +62,8 @@ public static class UserPresetUiTests
             var store = new UserPresetStore(Path.Combine(output, "presets")); store.Delete(store.Load());
             store.Save(imported, "本地攻防"); store.Save(imported, "手柄攻防");
             int draft = session.ScopeChangeCount;
-            using (var dialog = new UserPresetDialog(session, store, PresetApplyMode.Append))
+            var preferences = new EditorPreferences(Path.Combine(output, "preferences", "preset-mode.txt"));
+            using (var dialog = new UserPresetDialog(session, store, PresetApplyMode.Append, preferences))
             {
                 dialog.Opacity = 0; dialog.ShowInTaskbar = false; dialog.Show(); Application.DoEvents();
                 var currentName = Field<TextBox>(dialog, "nameBox");
@@ -128,6 +129,15 @@ public static class UserPresetUiTests
                 Assert(sharedPad.Scopes.Single().Family == "Xbox" && sharedPad.UserMappings.Count == 0, "Unchanged controller can be shared with explicit reset scope");
                 Assert(session.ScopeChangeCount == draft && store.Load().Count == 2 && session.PresetId == null, "Sharing device selection never changes library or draft");
                 scopes.SelectedIndex = 0;
+                string originalPayload = Field<string>(dialog, "sharePayload");
+                Field<TextBox>(dialog, "previewName").Text = "";
+                Assert(!Button(dialog, "copyShare").Enabled && Field<string>(dialog, "shareCode") == null, "Empty share name disables copying immediately");
+                foreach (string partial in new[] { "导", "导入", "导入少主", "导入少主剑" })
+                {
+                    Field<TextBox>(dialog, "previewName").Text = partial;
+                    Assert(ReferenceEquals(originalPayload, Field<string>(dialog, "sharePayload")), "Typing a name reuses the encoded bindings");
+                    Assert(UserPresetStore.ParseShare(Field<string>(dialog, "shareCode")).Name == partial, "Share name updates without waiting");
+                }
                 Field<TextBox>(dialog, "previewName").Text = "导入少主剑";
                 dialog.Size = dialog.MinimumSize; Application.DoEvents();
                 Assert(Field<TextBox>(dialog, "previewName").Text == "导入少主剑", "Resize preserves imported name edit");
@@ -181,7 +191,7 @@ public static class UserPresetUiTests
                 Mode(Field<PresetModeSelector>(dialog, "modeButton"), PresetApplyMode.Replace); Button(dialog, "usePreset").PerformClick();
                 Assert(dialog.AppliedPreset != null && session.PresetId == dialog.AppliedPreset.Id && session.PresetMode == PresetApplyMode.Replace, "Explicit use stages selected mode");
             }
-            using (var dialog = new UserPresetDialog(session, store, PresetApplyMode.Append))
+            using (var dialog = new UserPresetDialog(session, store, PresetApplyMode.Append, preferences))
             {
                 dialog.Opacity = 0; dialog.ShowInTaskbar = false; dialog.Show(); Application.DoEvents();
                 var list = Field<CheckedListBox>(dialog, "list"); list.SetItemChecked(0, true); Application.DoEvents();
@@ -201,7 +211,7 @@ public static class UserPresetUiTests
             int secondFamily = secondFamilySession.ControllerFamilies.Single(item => item.Name == "PS").Index;
             secondFamilySession.SetGamepadFamily("IA_Guard", 0, secondFamily, "Gamepad_FaceButton_Left");
             var padPreset = UserPresetStore.Capture(secondFamilySession, "第二家族"); secondFamilySession.Undo();
-            using (var dialog = new UserPresetDialog(secondFamilySession, store, PresetApplyMode.Replace))
+            using (var dialog = new UserPresetDialog(secondFamilySession, store, PresetApplyMode.Replace, preferences))
             {
                 dialog.Opacity = 0; dialog.ShowInTaskbar = false; dialog.Show(); Application.DoEvents();
                 Field<TextBox>(dialog, "shareBox").Text = UserPresetStore.Share(padPreset); Button(dialog, "previewShare").PerformClick();

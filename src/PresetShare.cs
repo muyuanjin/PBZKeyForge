@@ -48,6 +48,8 @@ namespace PBZKeyForge
 
     internal static class PresetShare
     {
+        static PresetShare() { PresetDependencies.Initialize(); }
+
         const uint LiteralStart = 16384;
         // Permanent one-based IDs; independent of KeyNames and display ordering.
         static readonly string[] Keys = {
@@ -90,6 +92,15 @@ namespace PBZKeyForge
         }
 
         public static string Encode(Preset preset)
+        { return WithName(preset.Name, EncodePayload(preset)); }
+
+        internal static string WithName(string name, string payload)
+        {
+            UserPresetStore.ValidateName(name);
+            return "PBZ2:" + name.Replace('\r', ' ').Replace('\n', ' ').Trim() + ":" + payload;
+        }
+
+        internal static string EncodePayload(Preset preset)
         {
             var document = new ShareDocument { Baseline = preset.BaselineId };
             foreach (var scope in preset.Scopes.OrderBy(scope => scope.Family, StringComparer.Ordinal))
@@ -116,8 +127,7 @@ namespace PBZKeyForge
             byte[] payload = compress ? compressed : raw;
             var envelope = new byte[payload.Length + 1]; envelope[0] = compress ? (byte)1 : (byte)0;
             Buffer.BlockCopy(payload, 0, envelope, 1, payload.Length);
-            return "PBZ2:" + preset.Name.Replace('\r', ' ').Replace('\n', ' ').Trim() + ":"
-                + Convert.ToBase64String(envelope).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+            return Convert.ToBase64String(envelope).TrimEnd('=').Replace('+', '-').Replace('/', '_');
         }
 
         public static Preset Decode(string name, byte[] envelope)

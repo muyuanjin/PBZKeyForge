@@ -64,6 +64,8 @@ namespace PBZKeyForge
         void RenderBindingViews()
         {
             bool loaded = Session != null;
+            kbHost.Visible = loaded && actionView && !gamepad;
+            padHost.Visible = loaded && actionView && gamepad;
             bindingWorkspace.Visible = loaded;
             viewBar.Visible = loaded; keyBindings.Visible = loaded && !actionView;
             tabKeys.Text = I18n.Str("views.keyview"); tabActions.Text = I18n.Str("views.actionview");
@@ -86,8 +88,14 @@ namespace PBZKeyForge
             cbFamily.Visible = gamepad; cbFamily.Enabled = loaded && families.Length > 0;
             cbFamily.AccessibleName = I18n.Str("editor.gamepad");
             viewBar.PerformLayout();
-            if (loaded && !actionView) keyBindings.Render(Session, gamepad, SelectedFamilyIndex);
-            if (loaded) schemeDiff.Render(Session);
+            if (loaded)
+            {
+                var snapshots = Session.BindingSnapshots();
+                var selected = snapshots.Single(s => s.Gamepad == gamepad && (!gamepad || s.FamilyIndex == SelectedFamilyIndex));
+                if (actionView) RenderActionTable(selected);
+                else keyBindings.Render(Session, selected);
+                schemeDiff.Render(Session, snapshots);
+            }
         }
 
         void ShowActionRelations(string action)

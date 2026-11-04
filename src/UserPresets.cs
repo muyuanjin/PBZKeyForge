@@ -17,17 +17,21 @@ namespace PBZKeyForge
 
     public sealed class UserPresetStore
     {
-        static UserPresetStore() { PresetDependencies.Initialize(); }
         readonly string directory;
-        readonly JavaScriptSerializer json = new JavaScriptSerializer();
         public UserPresetStore(string directory) { this.directory = directory; }
         public static UserPresetStore Default()
         { return new UserPresetStore(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PBZKeyForge", "Presets")); }
 
         public List<Preset> Load()
         {
-            if (!Directory.Exists(directory)) return new List<Preset>();
-            return Directory.GetFiles(directory, "*.json").Select(path => {
+            var paths = Directory.Exists(directory) ? Directory.GetFiles(directory, "*.json") : new string[0];
+            return paths.Length == 0 ? new List<Preset>() : LoadFiles(paths);
+        }
+
+        static List<Preset> LoadFiles(string[] paths)
+        {
+            var json = new JavaScriptSerializer();
+            return paths.Select(path => {
                 var document = json.Deserialize<UserPresetDocument>(File.ReadAllText(path, Encoding.UTF8));
                 var preset = new Preset { Id = Path.GetFileNameWithoutExtension(path), UserName = document.Name,
                     BaselineId = document.BaselineId, Scopes = document.Scopes, UserMappings = document.Mappings };
@@ -37,33 +41,43 @@ namespace PBZKeyForge
         }
 
         public Preset Save(Preset preset, string name)
+        { return Save(preset, name, Load()); }
+
+        internal Preset Save(Preset preset, string name, List<Preset> library)
         {
             name = NormalizeName(name);
             var result = new Preset { Id = "user_" + Guid.NewGuid().ToString("N"), UserName = name,
                 BaselineId = preset.BaselineId, Scopes = preset.Scopes, UserMappings = preset.UserMappings };
             Validate(result);
-            if (Load().Any(item => string.Equals(item.Name, name, StringComparison.CurrentCultureIgnoreCase)))
+            if (library.Any(item => string.Equals(item.Name, name, StringComparison.CurrentCultureIgnoreCase)))
                 throw new InvalidOperationException(I18n.Str("preset.duplicatename"));
             var document = new UserPresetDocument { Name = name, BaselineId = result.BaselineId, Scopes = result.Scopes, Mappings = result.UserMappings };
             Directory.CreateDirectory(directory);
             string temporary = Path.Combine(directory, result.Id + ".tmp");
             try
             {
-                File.WriteAllText(temporary, json.Serialize(document), new UTF8Encoding(false));
+                File.WriteAllText(temporary, new JavaScriptSerializer().Serialize(document), new UTF8Encoding(false));
                 File.Move(temporary, Path.Combine(directory, result.Id + ".json"));
             }
             finally { if (File.Exists(temporary)) File.Delete(temporary); }
+            library.Add(result);
+            library.Sort((first, second) => StringComparer.CurrentCultureIgnoreCase.Compare(first.Name, second.Name));
             return result;
         }
 
         public void Delete(IEnumerable<Preset> presets)
+        { Delete(presets, Load()); }
+
+        internal void Delete(IEnumerable<Preset> presets, List<Preset> library)
         {
-            var owned = Load().ToDictionary(preset => preset.Id);
-            foreach (var preset in presets)
+            var selected = presets.ToArray();
+            var owned = library.ToDictionary(preset => preset.Id);
+            foreach (var preset in selected)
             {
                 if (!preset.IsUser || !owned.ContainsKey(preset.Id)) throw new InvalidOperationException(I18n.Str("preset.builtinreadonly"));
             }
-            foreach (var preset in presets) File.Delete(Path.Combine(directory, preset.Id + ".json"));
+            foreach (var preset in selected) File.Delete(Path.Combine(directory, preset.Id + ".json"));
+            library.RemoveAll(preset => selected.Any(item => item.Id == preset.Id));
         }
 
         public static Preset Capture(EditorSession session, string name)
@@ -133,10 +147,12 @@ namespace PBZKeyForge
         static string NormalizeName(string name)
         { return (name ?? "").Replace('\r', ' ').Replace('\n', ' ').Trim(); }
 
+        internal static void ValidateName(string name)
+        { if (string.IsNullOrWhiteSpace(name) || name.Length > 80) throw new InvalidDataException(I18n.Str("preset.namerequired")); }
+
         public static void Validate(Preset preset)
         {
-            string name = preset.Name;
-            if (string.IsNullOrWhiteSpace(name) || name.Length > 80) throw new InvalidDataException(I18n.Str("preset.namerequired"));
+            ValidateName(preset.Name);
             PresetBaseline.Require(preset.BaselineId);
             var mappings = preset.UserMappings;
             if (preset.Scopes == null || preset.Scopes.Count == 0 || preset.Scopes.Any(scope => scope == null

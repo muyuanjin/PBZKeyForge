@@ -91,6 +91,7 @@ namespace PBZKeyForge
     internal sealed class DeviceDiagram : ScrollableControl
     {
         readonly Dictionary<string, RectangleF> targets = new Dictionary<string, RectangleF>();
+        KeyValuePair<string, RectangleF>[] hitTargets = new KeyValuePair<string, RectangleF>[0];
         readonly Dictionary<string, RectangleF> badges = new Dictionary<string, RectangleF>();
         readonly Dictionary<string, KeyBadgeState> states = new Dictionary<string, KeyBadgeState>();
         readonly Dictionary<string, string> devices = new Dictionary<string, string>();
@@ -130,6 +131,8 @@ namespace PBZKeyForge
             UpdateToolTip();
             Invalidate();
         }
+        public void SelectKey(string key)
+        { selectedKey = key; Invalidate(); }
         static Image Artwork(string device)
         { return device == "keyboard" ? EditorArtwork.Keyboard : device == "mouse" ? EditorArtwork.Mouse : device == "xbox" ? EditorArtwork.Xbox : EditorArtwork.PlayStation; }
         static RectangleF Fit(Image image, RectangleF area)
@@ -170,8 +173,8 @@ namespace PBZKeyForge
                 targets[key] = box; devices[key] = "extra";
                 states[key] = stateForKey(key); AddBadge(key);
             }
+            hitTargets = targets.OrderBy(t => t.Value.Width * t.Value.Height).ToArray();
         }
-        protected override void OnSizeChanged(EventArgs e) { base.OnSizeChanged(e); PerformLayout(); }
         protected override void OnScroll(ScrollEventArgs e) { base.OnScroll(e); PerformLayout(); Invalidate(); }
         void AddDevice(string device, RectangleF area)
         {
@@ -229,7 +232,7 @@ namespace PBZKeyForge
         {
             foreach (var badge in badges)
                 if (states[badge.Key].Visible && badge.Value.Contains(location)) return badge.Key;
-            foreach (var target in targets.OrderBy(t => t.Value.Width * t.Value.Height))
+            foreach (var target in hitTargets)
                 if (target.Value.Contains(location)) return target.Key;
             return null;
         }
@@ -395,6 +398,8 @@ namespace PBZKeyForge
             actionView = new EditorButton { Dock = DockStyle.Top };
         readonly List<RelationshipRow> actionRows = new List<RelationshipRow>();
         DeviceDiagram diagram;
+        ActionRelations[] rawRelations, relations;
+        Dictionary<string, ActionRelations> rawBefore, before;
         EditorSession currentSession;
         bool currentPad;
         int currentFamily;
@@ -446,32 +451,48 @@ namespace PBZKeyForge
         { base.Dispose(disposing); if (disposing && headingFont != null) { headingFont.Dispose(); headingFont = null; } }
         public void Render(EditorSession session, bool pad, int familyIndex)
         {
-            if (session == null) return;
+            if (session != null) Render(session, new BindingSnapshot(session, pad, familyIndex,
+                session.ControllerFamilies.Where(f => f.Index == familyIndex).Select(f => f.Name).FirstOrDefault()));
+        }
+        internal void Render(EditorSession session, BindingSnapshot snapshot)
+        {
+            bool pad = snapshot.Gamepad;
+            int familyIndex = snapshot.FamilyIndex;
             legend.IsOffline = session.IsOffline; legend.Invalidate();
             currentSession = session; currentPad = pad; currentFamily = familyIndex;
             if (selectedKey == null || pad != selectedKey.StartsWith("Gamepad_", StringComparison.Ordinal)) selectedKey = pad ? "Gamepad_FaceButton_Left" : "LeftMouseButton";
-            var rawRelations = session.BindingActions(pad, familyIndex).Select(a => session.Relations(a, pad, familyIndex)).ToArray();
-            var relations = rawRelations.Select(BindingViewText.PhysicalRelations).ToArray();
-            var before = relations.ToDictionary(r => r.Action, r => BindingViewText.PhysicalRelations(session.RelationsBeforeEdit(r.Action, pad, familyIndex)));
+            rawRelations = snapshot.Current;
+            relations = rawRelations.Select(BindingViewText.PhysicalRelations).ToArray();
+            rawBefore = snapshot.Before;
+            before = rawBefore.ToDictionary(r => r.Key, r => BindingViewText.PhysicalRelations(r.Value));
             string[] known = relations.SelectMany(r => r.Keys).Concat(relations.Where(r => r.DefaultKeys != null).SelectMany(r => r.DefaultKeys))
                 .Concat(before.Values.SelectMany(r => r.Keys)).Concat(new[] { selectedKey }).Distinct().ToArray();
-            Func<string, KeyBadgeState> state = key => new KeyBadgeState {
+            string familyName = snapshot.Family;
+            var physical = pad ? DeviceHotspots.ForDevice("xbox").Keys.Concat(DeviceHotspots.ForDevice("playstation").Keys)
+                : DeviceHotspots.ForDevice("keyboard").Keys.Concat(DeviceHotspots.ForDevice("mouse").Keys);
+            var states = physical.Concat(known).Distinct().ToDictionary(key => key, key => new KeyBadgeState {
                 IsOffline = session.IsOffline,
                 Count = relations.Count(r => r.Keys.Contains(key)), Complete = relations.All(r => r.KnowsKey(key)),
                 Differs = relations.Any(r => r.DefaultKeys != null && (r.Keys.Contains(key) && !r.DefaultKeys.Contains(key)
                     || r.Complete && !r.Keys.Contains(key) && r.DefaultKeys.Contains(key))),
                 Pending = relations.Any(r => r.Keys.Contains(key) != before[r.Action].Keys.Contains(key)
-                    && r.KnowsKey(key) && before[r.Action].KnowsKey(key)) };
-            var family = session.ControllerFamilies.FirstOrDefault(f => f.Index == familyIndex);
-            string familyName = family == null ? null : family.Name;
+                    && r.KnowsKey(key) && before[r.Action].KnowsKey(key)) });
+            Func<string, KeyBadgeState> state = key => states[key];
             if (diagram == null)
             {
                 diagram = new DeviceDiagram(pad, familyName, state,
-                    delegate(string key) { selectedKey = key; Render(currentSession, currentPad, currentFamily); }, selectedKey, known);
+                    delegate(string key) { selectedKey = key; diagram.SelectKey(key); RenderSelectedKey(); }, selectedKey, known);
                 devices.Controls.Add(diagram); diagram.BringToFront();
             }
             else diagram.UpdateBindings(pad, familyName, state, selectedKey, known);
             hint.Text = I18n.Str("views.clickkey"); hint.Height = Font.Height + 10;
+            RenderSelectedKey();
+        }
+
+        void RenderSelectedKey()
+        {
+            var session = currentSession;
+            bool pad = currentPad;
             heading.Text = BindingButton.FriendlyKey(selectedKey); heading.Height = Font.Height + 16;
             var summary = new KeyRelations { Key = selectedKey,
                 Current = relations.Where(r => r.Keys.Contains(selectedKey)).ToArray(),
@@ -506,7 +527,7 @@ namespace PBZKeyForge
                     item.Height = Font.Height * 2 + 20;
                     operation.Width = Font.Height + 16; operation.Text = isRemoved ? "↶" : "−";
                     var raw = rawRelations.First(r => r.Action == relation.Action);
-                    item.InputKeys = (isRemoved ? (raw.DefaultKeys ?? new string[0]).Concat(session.RelationsBeforeEdit(raw.Action, pad, familyIndex).Keys) : raw.Keys)
+                    item.InputKeys = (isRemoved ? (raw.DefaultKeys ?? new string[0]).Concat(rawBefore[raw.Action].Keys) : raw.Keys)
                         .Where(k => BindingViewText.PhysicalKey(k) == selectedKey).ToArray();
                     bool fixedBinding = InputDefaults.FixedForAction(relation.Action, pad).Any(k => BindingViewText.PhysicalKey(k) == selectedKey);
                     operation.Enabled = !fixedBinding && (relation.Complete || !isRemoved && relation.DefaultKeys != null && !relation.DefaultKeys.Contains(selectedKey)) && !session.IsResetPending;

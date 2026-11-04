@@ -64,10 +64,13 @@ namespace PBZKeyForge
         }
         void Closed(object sender, EventArgs e)
         {
-            Hide();
+            DisposePopup();
             if (list.Handle != IntPtr.Zero) list.ReleaseHandle();
         }
         void Hide()
+        { if (popup != null) popup.Hide(); }
+
+        void DisposePopup()
         {
             if (popup != null) { popup.Dispose(); popup = null; }
             hovered = null;
@@ -75,7 +78,7 @@ namespace PBZKeyForge
         void CheckPointer(object sender, EventArgs e)
         {
             Point pointer = Cursor.Position;
-            if (popup != null && popup.Bounds.Contains(pointer)) return;
+            if (popup != null && popup.Visible && popup.Bounds.Contains(pointer)) return;
             NativeRect rectangle;
             if (list.Handle != IntPtr.Zero && GetWindowRect(list.Handle, out rectangle)
                 && Rectangle.FromLTRB(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom).Contains(pointer)) return;
@@ -93,26 +96,31 @@ namespace PBZKeyForge
             int index = item & 0xffff;
             Preset candidate = (item >> 16) == 0 && index < picker.Items.Count ? picker.Items[index] as Preset : null;
             if (candidate == null) { Hide(); return; }
-            if (ReferenceEquals(candidate, hovered) && popup != null) return;
-            Hide(); hovered = candidate;
+            bool reuse = ReferenceEquals(candidate, hovered) && popup != null;
+            if (reuse && popup.Visible) return;
             NativeRect rectangle; GetWindowRect(handle, out rectangle);
             Rectangle anchor = Rectangle.FromLTRB(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
             Rectangle work = Screen.FromControl(picker).WorkingArea;
             int leftSpace = anchor.Left - work.Left - 8, rightSpace = work.Right - anchor.Right - 8;
             bool left = leftSpace >= rightSpace;
             var available = new Rectangle(work.Left, work.Top, Math.Max(1, Math.Max(leftSpace, rightSpace)), work.Height);
-            try
+            if (!reuse)
             {
-                var snapshot = session().PreviewPreset(candidate);
-                bool pad = candidate.IsUser ? !candidate.Scopes.Any(scope => scope.Family == null)
-                    || candidate.UserMappings.Any(mapping => mapping.Family != null) && !candidate.UserMappings.Any(mapping => mapping.Family == null)
-                    : candidate.Gamepad.Count > 0 && candidate.Keyboard.Count == 0 || candidate.Gamepad.Count == 0 && candidate.Keyboard.Count == 0 && gamepad();
-                popup = new PreviewWindow(picker.Font, candidate, snapshot, pad, family(), available);
+                DisposePopup(); hovered = candidate;
+                try
+                {
+                    var snapshot = session().PreviewPreset(candidate);
+                    bool pad = candidate.IsUser ? !candidate.Scopes.Any(scope => scope.Family == null)
+                        || candidate.UserMappings.Any(mapping => mapping.Family != null) && !candidate.UserMappings.Any(mapping => mapping.Family == null)
+                        : candidate.Gamepad.Count > 0 && candidate.Keyboard.Count == 0 || candidate.Gamepad.Count == 0 && candidate.Keyboard.Count == 0 && gamepad();
+                    popup = new PreviewWindow(picker.Font, candidate, snapshot, pad, family(), available);
+                }
+                catch (Exception ex) { popup = new PreviewWindow(picker.Font, candidate.Name, ex.Message); }
+                MonitorPointer(popup);
             }
-            catch (Exception ex) { popup = new PreviewWindow(picker.Font, candidate.Name, ex.Message); }
             int x = left ? anchor.Left - popup.Width - 8 : anchor.Right + 8;
             int y = Math.Max(work.Top, Math.Min(anchor.Top + local.Y - popup.Height / 3, work.Bottom - popup.Height));
-            MonitorPointer(popup); popup.ShowAt(picker.FindForm().Handle, new Point(x, y));
+            popup.ShowAt(picker.FindForm().Handle, new Point(x, y));
         }
         public void Dispose()
         {
@@ -138,7 +146,7 @@ namespace PBZKeyForge
             public void ShowAt(IntPtr owner, Point location)
             {
                 this.owner = owner; Location = location;
-                CreateControl(); PerformLayout();
+                CreateControl(); PerformLayout(); Show();
                 SetWindowPos(Handle, new IntPtr(-1), location.X, location.Y, Width, Height, 0x50);
             }
             protected override void WndProc(ref Message message)

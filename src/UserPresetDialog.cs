@@ -68,7 +68,7 @@ namespace PBZKeyForge
         readonly Label modeHelp = new Label(), libraryCount = new Label(), nameHint = new Label();
         readonly ComboBox shareScope = new EditorComboBox();
         readonly ToolTip tips = new ToolTip { AutoPopDelay = 20000, ShowAlways = true };
-        string shareCode;
+        string shareCode, sharePayload;
         Preset displayed;
         bool refreshing, rendering;
         public PresetApplyMode ChosenMode { get; private set; }
@@ -106,8 +106,9 @@ namespace PBZKeyForge
                     nameBox.Focus(); nameBox.Parent.Invalidate(); return;
                 }
                 Run(delegate {
-                    var preset = store.Save(UserPresetStore.Capture(session, nameBox.Text), nameBox.Text);
-                    Reload(preset.Id); Message("preset.saved");
+                    var savedPresets = store.Load();
+                    var preset = store.Save(UserPresetStore.Capture(session, nameBox.Text), nameBox.Text, savedPresets);
+                    Reload(preset.Id, savedPresets); Message("preset.saved");
                 });
             });
             save.Name = "saveCurrent"; save.ForeColor = EditorTheme.Muted;
@@ -148,7 +149,7 @@ namespace PBZKeyForge
             var detailName = CreateRow(2); detailName.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 88)); detailName.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             detailName.Controls.Add(Label("preset.name"), 0, 0); StyleInput(previewName); previewName.MaxLength = 80; previewName.AccessibleName = I18n.Str("preset.name");
             detailName.Controls.Add(InputHost(previewName), 1, 0); detail.Controls.Add(detailName, 0, 1);
-            previewName.TextChanged += delegate { if (!rendering) UpdateShare(); };
+            previewName.TextChanged += delegate { if (!rendering) UpdateShareName(); };
             preview.Dock = DockStyle.Fill; preview.AutoScroll = true; preview.BackColor = EditorTheme.Background; preview.Margin = new Padding(0, 6, 0, 6); detail.Controls.Add(preview, 0, 2);
             preview.Layout += delegate { LayoutPreview(); };
             preview.HandleCreated += delegate { EditorArtwork.DarkScrollbars(preview); };
@@ -197,7 +198,10 @@ namespace PBZKeyForge
             var inspect = Button("preset.preview", delegate { Run(delegate { Display(UserPresetStore.ParseShare(shareBox.Text)); Message("preset.importhelp"); }); }); inspect.Name = "previewShare";
             import.Controls.Add(inspect, 1, 0);
             saveImport.Text = I18n.Str("preset.saveimport"); saveImport.Dock = DockStyle.Fill; saveImport.Margin = new Padding(8, 2, 0, 2); saveImport.Name = "saveImport";
-            saveImport.Click += delegate { Run(delegate { var value = store.Save(displayed, previewName.Text); Reload(value.Id); Message("preset.saved"); }); };
+            saveImport.Click += delegate { Run(delegate {
+                var savedPresets = store.Load();
+                var value = store.Save(displayed, previewName.Text, savedPresets); Reload(value.Id, savedPresets); Message("preset.saved");
+            }); };
             import.Controls.Add(saveImport, 2, 0); importCard.Controls.Add(import, 0, 1); root.Controls.Add(importCard, 0, 2);
             var footer = CreateRow(2); footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); footer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 112));
             status.Dock = DockStyle.Fill; status.ForeColor = EditorTheme.Muted; status.Text = I18n.Str("preset.emptyhelp"); status.TextAlign = ContentAlignment.MiddleLeft; status.Margin = new Padding(0, 4, 12, 0);
@@ -270,32 +274,49 @@ namespace PBZKeyForge
         Preset SelectedShare()
         {
             if (displayed == null || shareScope.SelectedIndex < 0) return null;
-            var value = UserPresetStore.SelectScopes(displayed, ((ShareChoice)shareScope.SelectedItem).Scopes);
-            value.UserName = previewName.Text; return value;
+            return UserPresetStore.SelectScopes(displayed, ((ShareChoice)shareScope.SelectedItem).Scopes);
         }
 
         void UpdateShare()
         {
-            shareCode = null; shareLength.Text = "";
+            sharePayload = null;
             try
             {
                 var value = SelectedShare();
-                if (value != null) { shareCode = UserPresetStore.Share(value); shareLength.Text = I18n.Str("preset.sharelength", shareCode.Length); }
+                if (value != null) sharePayload = PresetShare.EncodePayload(value);
             }
             catch (InvalidDataException) { }
-            share.Enabled = shareCode != null;
+            UpdateShareName();
             var row = (TableLayoutPanel)shareLength.Parent;
             row.ColumnStyles[0].Width = TextRenderer.MeasureText(I18n.Str("preset.sharescope"), Font).Width + 8;
             row.ColumnStyles[2].Width = TextRenderer.MeasureText(share.Text, Font).Width + 24;
             row.ColumnStyles[3].Width = TextRenderer.MeasureText(I18n.Str("preset.sharelength", 9999), Font).Width + 12;
         }
+
+        void UpdateShareName()
+        {
+            shareCode = null; shareLength.Text = "";
+            try
+            {
+                if (sharePayload != null)
+                {
+                    shareCode = PresetShare.WithName(previewName.Text, sharePayload);
+                    shareLength.Text = I18n.Str("preset.sharelength", shareCode.Length);
+                }
+            }
+            catch (InvalidDataException) { }
+            share.Enabled = shareCode != null;
+        }
         void Reload(string selectedId)
+        { Reload(selectedId, store.Load()); }
+
+        void Reload(string selectedId, System.Collections.Generic.List<Preset> library)
         {
             refreshing = true;
             try
             {
                 list.Items.Clear();
-                foreach (var preset in store.Load()) list.Items.Add(preset, preset.Id == selectedId);
+                foreach (var preset in library) list.Items.Add(preset, preset.Id == selectedId);
                 for (int index = 0; index < list.Items.Count; index++) if (((Preset)list.Items[index]).Id == selectedId) list.SelectedIndex = index;
                 if (list.SelectedIndex < 0 && list.Items.Count > 0) list.SelectedIndex = 0;
             }
@@ -355,7 +376,8 @@ namespace PBZKeyForge
                 preview.Controls.Add(scopeLabel); top += scopeLabel.Height + 12;
                 var title = new Label { Text = I18n.Str("preset.previewchanges"), Left = 10, Top = top, Width = Math.Max(100, preview.ClientSize.Width - 28), ForeColor = BindingStatus.Custom, AutoSize = true };
                 preview.Controls.Add(title); top += title.Height + 12;
-                foreach (var difference in snapshot.SchemeDifferences(true))
+                var differences = snapshot.SchemeDifferences(true);
+                foreach (var difference in differences)
                 {
                     var label = new Label { Text = I18n.Str(difference.Gamepad ? "editor.gamepad" : "editor.keyboard")
                         + (difference.Gamepad ? " · " + difference.Family : "") + " · " + BindingViewText.ActionName(difference.Action)
@@ -363,7 +385,7 @@ namespace PBZKeyForge
                         Left = 10, Top = top, ForeColor = BindingStatus.Custom, AutoSize = true, MaximumSize = new Size(Math.Max(120, preview.ClientSize.Width - 32), 0) };
                     preview.Controls.Add(label); top += label.Height + 12;
                 }
-                if (snapshot.SchemeDifferences(true).Length == 0)
+                if (differences.Length == 0)
                     preview.Controls.Add(new Label { Text = I18n.Str("views.nofactorydiff"), Left = 10, Top = top, AutoSize = true, ForeColor = BindingStatus.Factory });
                 bool pad = !preset.Scopes.Any(scope => scope.Family == null)
                     || preset.UserMappings.Any(mapping => mapping.Family != null) && !preset.UserMappings.Any(mapping => mapping.Family == null);
@@ -422,9 +444,10 @@ namespace PBZKeyForge
             Run(delegate {
                 var presets = list.CheckedItems.Cast<Preset>().ToArray(); if (presets.Length == 0) return;
                 if (EditorDialogs.Show(this, I18n.Str("preset.deleteconfirm", string.Join("\n", presets.Select(preset => preset.Name))), I18n.Str("preset.delete"), MessageBoxButtons.OKCancel) != DialogResult.OK) return;
-                store.Delete(presets);
+                var library = store.Load();
+                store.Delete(presets, library);
                 if (presets.Any(preset => preset.Id == session.PresetId)) session.EndPreview();
-                Reload(null); Message("preset.deleted");
+                Reload(null, library); Message("preset.deleted");
             });
         }
         void Export()

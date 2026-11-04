@@ -202,7 +202,7 @@ public static class BindingViewsTests
             Assert(missing.Relations(Guard, true, missingFamily).Keys.SequenceEqual(new[] { "Gamepad_FaceButton_Left" }), "Replacing an inherited controller relation must not leave its original key.");
 
             byte[] beforeUi = File.ReadAllBytes(path);
-            using (var form = new MainForm())
+            using (var form = new MainForm(new EditorPreferences(Path.Combine(root, "preferences.txt"))))
             {
                 form.ShowInTaskbar = false; form.Opacity = 0; form.UiSmoke(path); form.Show(); Application.DoEvents();
                 form.SelectProfile(custom); Field<ComboBox>(form, "cbLang").SelectedIndex = 0;
@@ -283,7 +283,7 @@ public static class BindingViewsTests
                 form.Session.Undo(); form.RenderSession();
             }
             File.WriteAllBytes(path, fixture);
-            using (var form = new MainForm())
+            using (var form = new MainForm(new EditorPreferences(Path.Combine(root, "preferences.txt"))))
             {
                 form.ShowInTaskbar = false; form.Opacity = 0; form.UiSmoke(path); form.Show();
                 Field<ComboBox>(form, "cbLang").SelectedIndex = 0; form.SelectProfile(custom); form.ShowActionView(false);

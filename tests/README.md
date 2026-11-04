@@ -13,6 +13,15 @@ $sessionSources = @(Get-ChildItem src -Filter *.cs | ForEach-Object { $_.FullNam
 
 The session checks create fresh temporary copies. They cover disk refresh and conflicts, per-scheme keyboard and controller drafts, isolation between profiles with the same controller family, preview replacement/cancellation, global reset/undo, unknown data preservation, interrupted writes, resource-based raw slots for crouch/menu/items, all three Shadow Arm controller slots, shared Blob ownership, and rejection of unregistered controller slots. No game installation is required for this command.
 
+Check remembered paths and Steam discovery with temporary libraries and save copies:
+
+```powershell
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\SaveDiscoveryTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\SaveDiscoveryTests.cs
+.\dist\SaveDiscoveryTests.exe samples\vanilla-base.sav dist\save-discovery-check
+```
+
+These checks cover custom install names, Unicode and spaces, manifest precedence over old folders, unreadable or malformed Steam metadata, absent registry roots, disk fallback, missing or corrupt remembered files, early return before disk enumeration, manual selection, fresh rediscovery and unwritable preferences. The UI startup opens a remembered fixture before its first frame; screenshot helpers preserve the player's preference. Source saves remain unchanged.
+
 Check offline editing and controller families without device records:
 
 ```powershell
@@ -55,6 +64,8 @@ For authenticated activation checks, set `$gameExe`, `$sharedSave`, and `$inputS
 .\dist\SchemeActivationTests.exe dist\PBZKeyForge.exe $gameExe $sharedSave $inputSave $activationArtifacts
 ```
 
+The first authentication must read less than 1 MB through process I/O, including initial runtime work, so a complete EXE scan fails the harness. Both modes reject a full-sized executable with an unknown key fingerprint as well as truncated executables and tampered containers. The reported reader identity must not claim an exact executable build.
+
 When the game is running, use the harness's read-only PBZS checks instead. They validate the recognized key fingerprint, reject an unknown executable and tampered containers, and verify the copied save remains unchanged; they do not activate a scheme or require closing the game:
 
 ```powershell
@@ -75,7 +86,7 @@ The resulting directory is a copied installation layout. Use it as the source fo
 .\dist\EditorUiTests.exe "$activationArtifacts\ProjectPBZ\Saved\EnhancedInputUserSettings.sav" $screenshots
 ```
 
-The GUI check intentionally edits the supplied **copy** through the real Apply button. It opens and cancels every editable keyboard/controller binding cell after scrolling it into view, verifies unavailable slots are disabled, checks clear-override actions, distinguishes left/right modifiers, switches quick configurations, and verifies navigation reads external changes while retaining drafts. Scheme/device tabs, Refresh, Undo and Apply use their control events. Conflict resolution exercises Cancel, Use game and Keep draft through the link's click event and real dialog buttons; this does not test physical mouse hit detection on that link. After applying Custom 1, it compares the other profiles and unrelated data byte-for-byte. It uses the application's DPI manifest and checks custom window controls, centered binding headings, toolbar alignment and the footer. Windows stay transparent during automated screenshots to avoid flashing every test state on the desktop. Inspect the images for clipping and consistency; these checks do not establish actual game startup behavior or every Windows DPI setting. Add `--controls-only` to skip screenshot capture while retaining control assertions. Language selection is independent: `--all-languages` explicitly enables all 15 languages, including with `--controls-only`.
+The GUI check intentionally edits the supplied **copy** through the real Apply button. It runs inside the WinForms main message loop so modal dialogs and asynchronous Apply use the same UI synchronization context as the application. It opens and cancels every editable keyboard/controller binding cell after scrolling it into view, verifies unavailable slots are disabled, checks clear-override actions, distinguishes left/right modifiers, switches quick configurations, and verifies navigation reads external changes while retaining drafts. Scheme/device tabs, Refresh, Undo and Apply use their control events. Conflict resolution exercises Cancel, Use game and Keep draft through the link's click event and real dialog buttons; this does not test physical mouse hit detection on that link. After applying Custom 1, it compares the other profiles and unrelated data byte-for-byte and verifies controller-family isolation. It uses the application's DPI manifest and checks custom window controls, centered binding headings, toolbar alignment and the footer. Windows stay transparent during automated screenshots to avoid flashing every test state on the desktop. Inspect the images for clipping and consistency; these checks do not establish actual game startup behavior or every Windows DPI setting. Add `--controls-only` to skip screenshot capture while retaining control assertions. Language selection is independent: `--all-languages` explicitly enables all 15 languages, including with `--controls-only`.
 
 To check only the custom confirmation dialog's action row without a supported game installation, pass a copy of `samples\vanilla-base.sav` and an artifact directory containing any adjacent `PBZSharedSetting.sav` file, then add `--dialog-only`. This asserts that all three buttons remain inside the client area and the Cancel action can be clicked.
 
@@ -165,6 +176,15 @@ Compare both levels of factory data with the extracted resources and all 90 reco
 The dataset retains 60 resource registration inputs and 59 effective profile defaults. Extraction and native registration evidence are documented in [docs/input-defaults.md](../docs/input-defaults.md).
 
 ## Visible window rendering
+
+Check refresh scope and action-table creation using fixture copies:
+
+```powershell
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\RefreshScopeTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\RefreshScopeTests.cs
+.\dist\RefreshScopeTests.exe samples\vanilla-base.sav dist\refresh-scope-check
+```
+
+This check starts a temporary process named `PBZ` to exercise game-state detection without running the game. It verifies that rendering uses the last detected state, timer updates leave binding data intact, selecting keys preserves relationship data and hit targets, action tables are created on first use, and returning to a hidden table refreshes its contents. Tables first opened before or after showing the window must retain correct DPI sizing and aligned columns after resizing. It also checks offline status and source-save preservation.
 
 ```powershell
 & $compiler /nologo /win32manifest:build\app.manifest /out:dist\WindowRenderingTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\WindowRenderingTests.cs

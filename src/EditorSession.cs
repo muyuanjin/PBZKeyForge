@@ -441,7 +441,7 @@ namespace PBZKeyForge
             if (preset.Vanilla) throw new InvalidOperationException("Use ResetAll for the global default reset.");
             // The CLI and editor use the same save transformation. Materialize it on
             // an isolated checkpoint so failed planning cannot alter drafts/conflicts.
-            Draft checkpoint = previewCheckpoint != null && previewProfile == SelectedProfile ? previewCheckpoint.Copy() : draft.Copy();
+            Draft checkpoint = previewCheckpoint != null && previewProfile == SelectedProfile ? previewCheckpoint : draft;
             SaveFile planned = SaveFile.FromBytes(diskBytes);
             ApplyEdits(planned, checkpoint.Edits.ToArray());
             var before = Extract(planned);
@@ -450,7 +450,7 @@ namespace PBZKeyForge
             Remember(after);
             if (previewCheckpoint == null || previewProfile != SelectedProfile)
             {
-                previewCheckpoint = checkpoint.Copy();
+                previewCheckpoint = checkpoint;
                 previewProfile = SelectedProfile;
             }
             draft = checkpoint.Copy();
@@ -730,17 +730,20 @@ namespace PBZKeyForge
             foreach (BlobRecord record in save.Records)
             {
                 var occurrences = new Dictionary<string, int>();
+                var gamepadKeys = save.GamepadKeysFor(record.ProfileId);
+                var keyboardSlots = record.Entries.Select(entry => entry.Name).Distinct()
+                    .ToDictionary(action => action, action => KeyboardRawSlots(record, gamepadKeys, action));
                 foreach (BlobEntry entry in record.Entries)
                 {
                     string group = entry.Name + "\u001f" + entry.Slot;
                     int ordinal;
                     occurrences.TryGetValue(group, out ordinal); occurrences[group] = ordinal + 1;
-                    bool gamepad = Presets.IsGamepadOverride(save.GamepadKeysFor(record.ProfileId), entry);
+                    bool gamepad = Presets.IsGamepadOverride(gamepadKeys, entry);
                     string id = (gamepad ? "B" : "K") + KeyboardId(record.ProfileId, entry.Name, entry.Slot.ToString(), ordinal).Substring(1);
                     map[id] = new Cell { Id = id, Profile = record.ProfileId, Action = entry.Name, Key = entry.Key,
                         IsGamepad = gamepad, Slot = gamepad ? InputDefaults.SlotName(entry.Slot) : entry.Slot.ToString(),
                         DefaultKey = InputDefaults.ForRawSlot(entry.Name, gamepad, entry.Slot),
-                        SlotIndex = gamepad ? -1 : Array.IndexOf(KeyboardRawSlots(save, record, entry.Name), (int)entry.Slot), FamilyIndex = -1, Entry = entry, Record = record };
+                        SlotIndex = gamepad ? -1 : Array.IndexOf(keyboardSlots[entry.Name], (int)entry.Slot), FamilyIndex = -1, Entry = entry, Record = record };
                 }
             }
             var familyOccurrences = new Dictionary<string, int>();
@@ -767,7 +770,7 @@ namespace PBZKeyForge
                         int ordinal;
                         occurrences.TryGetValue(group, out ordinal); occurrences[group] = ordinal + 1;
                         string id = PadId(identity, action, slot, ordinal);
-                        map[id] = new Cell { Id = id, Profile = profile.ProfileId, IsGamepad = true, Action = action, Slot = slot, SlotIndex = SaveFile.Field(item, "DefaultKey") == InputDefaults.ForRawSlot(action, true, InputDefaults.RawSlot(slot)) ? Array.IndexOf(PadRawSlots(save, profile, action), InputDefaults.RawSlot(slot)) : -1,
+                        map[id] = new Cell { Id = id, Profile = profile.ProfileId, IsGamepad = true, Action = action, Slot = slot, SlotIndex = SaveFile.Field(item, "DefaultKey") == InputDefaults.ForRawSlot(action, true, InputDefaults.RawSlot(slot)) ? Array.IndexOf(InputDefaults.RegisteredSlots(action, true), InputDefaults.RawSlot(slot)) : -1,
                         Family = identity, FamilyName = profile.Family, FamilyIndex = familyIndex,
                         VirtualBinding = !keys.Items.Contains(item),
                         Key = SaveFile.Field(item, "Key"), DefaultKey = SaveFile.Field(item, "DefaultKey"), Keys = keys, Item = item };
@@ -776,16 +779,12 @@ namespace PBZKeyForge
             return map;
         }
 
-        static int[] KeyboardRawSlots(SaveFile save, BlobRecord record, string action)
+        static int[] KeyboardRawSlots(BlobRecord record, List<Node> gamepad, string action)
         {
-            List<Node> gamepad = save.GamepadKeysFor(record.ProfileId);
             return InputDefaults.Slots(action, false, record.Entries.Where(entry => entry.Name == action && !Presets.IsGamepadOverride(gamepad, entry)).Select(entry => (int)entry.Slot),
                 gamepad.SelectMany(keys => keys.Items).Where(item => SaveFile.Field(item, "MappingName") == action).Select(item => InputDefaults.RawSlot(SaveFile.Field(item, "Slot")))
                     .Concat(record.Entries.Where(entry => entry.Name == action && Presets.IsGamepadOverride(gamepad, entry)).Select(entry => (int)entry.Slot)));
         }
-
-        static int[] PadRawSlots(SaveFile save, GamepadProfile profile, string action)
-        { return InputDefaults.RegisteredSlots(action, true); }
 
         static string FamilyIdentity(List<Node> family)
         {

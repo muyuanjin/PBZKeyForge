@@ -15,20 +15,12 @@ namespace PBZKeyForge
         static readonly byte[] Header = { 0x50, 0x42, 0x5a, 0x53, 1, 1, 0, 0 };
         static readonly BuildProfile[] VerifiedKeyProfiles = {
             new BuildProfile("Steam CL-301524_JKS-17219",
-                "7b4fcd286a350780faf0824d73aa150b21cbf1bccde883e6a96386cbe09973b4",
                 "65b75c306a77eb2df3ed5a7e6b3f8dbef360f6abefa74c465196cfa19af9637c",
                 new ReaderPath("PBZS v1/1, verified file offsets", Header, 8, 20, 36,
                     new long[] { 0xc1c7b48, 0xc1c7b28, 0xc1c7b38, 0xc1c7b58 }))
         };
         static readonly Encoding Utf8 = new UTF8Encoding(false, true);
         static readonly Regex SchemeField = new Regex("\"KeyBindingScheme\"\\s*:\\s*\"(?<value>[^\"]*)\"");
-        static readonly Dictionary<string, ExecutableIdentity> executableIdentities = new Dictionary<string, ExecutableIdentity>(StringComparer.OrdinalIgnoreCase);
-        sealed class ExecutableIdentity
-        {
-            public long Length;
-            public DateTime LastWrite;
-            public string Digest;
-        }
         readonly string path;
         readonly string executable;
         readonly byte[] original;
@@ -103,10 +95,10 @@ namespace PBZKeyForge
 
         sealed class BuildProfile
         {
-            public readonly string Name, ExecutableSha256, KeySha256;
+            public readonly string Name, KeySha256;
             public readonly ReaderPath[] Paths;
-            public BuildProfile(string name, string executableSha256, string keySha256, params ReaderPath[] paths)
-            { Name = name; ExecutableSha256 = executableSha256; KeySha256 = keySha256; Paths = paths; }
+            public BuildProfile(string name, string keySha256, params ReaderPath[] paths)
+            { Name = name; KeySha256 = keySha256; Paths = paths; }
         }
 
         sealed class ReaderPath
@@ -131,18 +123,11 @@ namespace PBZKeyForge
             build = null;
             buildId = null;
             var keys = new List<ReaderKey>();
-            string executableDigest = null;
-            bool exactExecutable = false;
             try
             {
-                using (var stream = new FileStream(exe, FileMode.Open, FileAccess.Read, FileShare.Read, 1024 * 1024, FileOptions.SequentialScan))
+                using (var stream = new FileStream(exe, FileMode.Open, FileAccess.Read, FileShare.Read, 16, FileOptions.RandomAccess))
                 {
-                    executableDigest = ExecutableDigest(exe, stream);
-                    foreach (var known in VerifiedKeyProfiles)
-                        if (executableDigest == known.ExecutableSha256) { build = known; exactExecutable = true; break; }
-
-                    // If an update changes unrelated executable bytes, probe only previously
-                    // verified locations and accept a derived key only by its known fingerprint.
+                    // Registered locations identify a reader only when its key fingerprint matches.
                     foreach (var known in VerifiedKeyProfiles)
                     foreach (var path in known.Paths)
                     {
@@ -177,27 +162,11 @@ namespace PBZKeyForge
                     }
                 }
                 if (keys.Count == 0)
-                    throw new InvalidDataException("Unsupported PBZ game build (EXE SHA-256 " + executableDigest + "). No verified key fingerprint matched; switch the scheme in the game. The save was not changed.");
-                buildId = build.Name + (exactExecutable ? "" : " (verified PBZS key fingerprint; exact build unknown)");
+                    throw new InvalidDataException("Unsupported PBZ game build. No verified key fingerprint matched; switch the scheme in the game. The save was not changed.");
+                buildId = build.Name + " (verified PBZS reader; exact build unknown)";
                 return keys;
             }
             catch { ClearKeys(keys); throw; }
-        }
-
-        static string ExecutableDigest(string executable, FileStream stream)
-        {
-            string fullPath = Path.GetFullPath(executable);
-            DateTime lastWrite = File.GetLastWriteTimeUtc(fullPath);
-            lock (executableIdentities)
-            {
-                ExecutableIdentity identity;
-                if (executableIdentities.TryGetValue(fullPath, out identity) && identity.Length == stream.Length && identity.LastWrite == lastWrite)
-                    return identity.Digest;
-                string digest;
-                using (var sha = SHA256.Create()) digest = Hex(sha.ComputeHash(stream));
-                executableIdentities[fullPath] = new ExecutableIdentity { Length = stream.Length, LastWrite = lastWrite, Digest = digest };
-                return digest;
-            }
         }
 
         static string Hex(byte[] bytes)

@@ -54,6 +54,8 @@ Two ways to use it:
 
 **A. The GUI** — run `PBZKeyForge.exe`; it finds and reads the save automatically. Choose a scheme, edit bindings or select a quick configuration, then press *Apply changes*. Switching schemes reads the latest disk data; *Refresh* also preserves unsaved drafts and asks you to resolve conflicting edits. Use *More* to choose another save.
 
+The editor remembers the last successfully opened file and reads it again at startup. If it has moved or cannot be opened, discovery continues through Steam's registered libraries and installation manifests, then common `SteamLibrary` locations. **More → Find game again** searches the installation locations afresh. If several installations exist, manually choose the one you want; that choice is used on the next launch.
+
 If no save is found, the editor opens an offline scheme using built-in factory bindings. You can also choose **More → New offline scheme**. Select Keyboard/mouse or Controller, then choose Xbox or PlayStation in the controller selector. Save or share the layout through Preset manager, or use **Export game bindings** in the footer to create a `.sav` file. Offline editing does not require a game installation or a connected controller; applying directly to the game requires opening its save.
 
 Keyboard and gamepad drafts both belong to the selected scheme. Applying saves that scheme's bindings; other schemes' drafts stay pending. The footer lists what will be applied. Check *Set game scheme to…* to activate it in the same operation, or leave it unchecked to edit an inactive scheme. Consecutive quick configuration selections replace the previous preview; manual edits keep the result as a custom draft. *Restore all defaults* lives in *More* and previews a reset of both devices in every scheme before applying.
@@ -184,6 +186,8 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 - **图形界面**：运行 `PBZKeyForge.exe` 自动查找并读取存档 → 选方案 → 直接改键或选择快速配置 → 应用更改。“更多”中可以更换存档。
 - **现成预设文件**：按 `presets\PRESETS.md` 中的名称和说明选择文件，覆盖到 `EnhancedInputUserSettings.sav`，进游戏选择表中的方案。发布包中的预设作用于**自定义 1**，替换文件不会自动切换游戏当前方案。纯配置、不含可执行文件。
+
+程序记住上次成功打开的文件，启动时重新读取。文件已移动或无法打开时，继续按 Steam 登记的游戏库和安装清单查找，再尝试常见的 `SteamLibrary` 位置。“更多 → 重新查找游戏”会重新按安装位置检测。存在多份安装时，手动选择要编辑的那份，下次启动会沿用这一选择。
 
 没有找到存档时，程序直接打开内置原厂键位的离线方案，也可通过“更多 → 新建离线方案”进入。切换到“手柄”后，在家族选择器中选 Xbox 或 PlayStation，两者独立编辑。在预设管理中保存、分享，或通过底栏“导出游戏键位文件”生成 `.sav`，均不需要安装游戏或连接手柄；直接写入游戏时再打开自己的存档。
 
