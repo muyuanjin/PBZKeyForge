@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.2 — 2026-11-04
+
+- Load and authenticate the detected save while building the interface, then display the completed first frame.
+- Batch initial layouts, defer controller artwork until first use, and use premultiplied images for drawing.
+- Reduce repeated binding scans and sorting during interface refreshes; buffer executable reads for build authentication.
+- Add startup readiness and clean-session assertions to the visible window checks.
+
 ## 1.2.0 — 2026-11-04
 
 - Reorganized preset management around saving the current scheme, browsing personal presets and importing share codes; added name-field focus, placeholder and interactive empty-name guidance.
