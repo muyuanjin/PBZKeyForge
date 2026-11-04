@@ -67,8 +67,9 @@ namespace PBZKeyForge
         readonly BindingLegend kbLegend = new BindingLegend(), padLegend = new BindingLegend();
         readonly Dictionary<string, BindingButton[]> kbButtons = new Dictionary<string, BindingButton[]>();
         readonly Dictionary<string, BindingButton[]> padButtons = new Dictionary<string, BindingButton[]>();
-        readonly List<Label> actionLabels = new List<Label>(), headings = new List<Label>();
-        readonly List<Label> factoryLabels = new List<Label>();
+        readonly List<Label>[] actionLabels = { new List<Label>(), new List<Label>() };
+        readonly List<Label>[] factoryLabels = { new List<Label>(), new List<Label>() };
+        readonly List<Label> headings = new List<Label>();
         readonly Timer gameTimer = new Timer();
         bool loading, gamepad, modalActive, lastRunning;
         ContextMenuStrip moreMenu;
@@ -82,11 +83,15 @@ namespace PBZKeyForge
 
         public static MainForm OpenDefault()
         {
+            return OpenDefault(EditorPreferences.Default());
+        }
+
+        public static MainForm OpenDefault(EditorPreferences preferences)
+        {
             var initialSession = Task.Run(delegate {
-                string path = FindInputSave();
-                return path == null ? EditorSession.CreateOffline() : EditorSession.Open(path);
+                return SaveDiscovery.Open(preferences, true) ?? EditorSession.CreateOffline();
             });
-            var form = new MainForm();
+            var form = new MainForm(preferences);
             try { form.Session = initialSession.GetAwaiter().GetResult(); }
             catch (Exception ex)
             {
@@ -111,13 +116,14 @@ namespace PBZKeyForge
             };
             FormClosing += delegate(object sender, FormClosingEventArgs e) { if (IsApplying || !ConfirmDiscard()) e.Cancel = true; };
             gameTimer.Interval = 1500;
-            gameTimer.Tick += delegate { if (EditorSession.IsGameRunning != lastRunning) RenderSession(); };
+            gameTimer.Tick += delegate { UpdateGameState(); };
             gameTimer.Start();
         }
 
         protected override void OnLoad(EventArgs e)
         {
             if (Session == null) AutoFind(false);
+            UpdateGameState();
             base.OnLoad(e);
         }
 
@@ -263,8 +269,7 @@ namespace PBZKeyForge
             presetHoverPreview = new PresetHoverPreview(cbPreset, delegate { return Session; }, delegate { return gamepad; }, delegate { return SelectedFamilyIndex; });
 
             body.Dock = DockStyle.Fill; body.Margin = Padding.Empty;
-            BuildBindingTable(kbHost, kbButtons, false); BuildBindingTable(padHost, padButtons, true);
-            kbHost.Dock = DockStyle.Fill; padHost.Dock = DockStyle.Fill; body.Controls.Add(kbHost); body.Controls.Add(padHost);
+            kbHost.Dock = DockStyle.Fill; padHost.Dock = DockStyle.Fill;
             BuildBindingViews();
             empty.Dock = DockStyle.Fill; empty.BackColor = EditorTheme.Background;
             lblEmpty.TextAlign = ContentAlignment.MiddleCenter; lblEmpty.Dock = DockStyle.Fill; lblEmpty.ForeColor = EditorTheme.Muted;
@@ -340,10 +345,10 @@ namespace PBZKeyForge
             {
                 grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 42));
                 var label = new ActionNameLabel { ActionId = action.Id, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Margin = Padding.Empty, Padding = new Padding(15, 0, 4, 0), AutoEllipsis = true, Tag = action.Id };
-                actionLabels.Add(label); SetTip(label, action.Id); grid.Controls.Add(label, 0, row);
+                actionLabels[pad ? 1 : 0].Add(label); SetTip(label, action.Id); grid.Controls.Add(label, 0, row);
                 var factoryLabel = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, Margin = Padding.Empty, AutoEllipsis = true,
                     ForeColor = EditorTheme.Muted, Tag = action.Id };
-                factoryLabels.Add(factoryLabel); grid.Controls.Add(factoryLabel, 1, row);
+                factoryLabels[pad ? 1 : 0].Add(factoryLabel); grid.Controls.Add(factoryLabel, 1, row);
                 var buttons = new BindingButton[3];
                 for (int slot = 0; slot < 3; slot++)
                 {
@@ -370,33 +375,35 @@ namespace PBZKeyForge
             grid.ResumeLayout(false);
             scroll.Controls.Add(grid);
             var headerViewport = new EditorPanel { Dock = DockStyle.Top, Height = 36, BackColor = EditorTheme.Floating };
-            var header = new BindingTable { ColumnCount = 5, BackColor = headerViewport.BackColor, CellBorderStyle = TableLayoutPanelCellBorderStyle.None };
+            var header = new BindingTable { ColumnCount = 5, RowCount = 1, BackColor = headerViewport.BackColor, CellBorderStyle = TableLayoutPanelCellBorderStyle.None };
             header.SuspendLayout();
+            header.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             SetColumns(header);
             for (int i = 0; i < 5; i++)
             {
                 var label = new Label { Dock = DockStyle.Fill, TextAlign = i == 0 ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter,
                     Font = new Font(Font, FontStyle.Bold), Margin = Padding.Empty, Padding = i == 0 ? new Padding(15, 0, 0, 0) : Padding.Empty, Tag = i };
-                headings.Add(label); header.Controls.Add(label, i, 0);
+                label.Text = HeadingText(i); headings.Add(label); header.Controls.Add(label, i, 0);
                 if (i == 1 || i == 2)
                 {
                     var question = new BindingHelpButton(i == 1 ? "help.defaults" : "help.slots") { Dock = DockStyle.Right, Width = 24 };
-                    label.Controls.Add(question); label.Padding = new Padding(0, 0, 24, 0);
+                    label.Controls.Add(question); label.Padding = new Padding(24, 0, 24, 0);
                 }
             }
             header.ResumeLayout(false);
             headerViewport.Controls.Add(header);
-            // Use the laid-out body width, including the scrollbar's actual effect.
-            // System scrollbar metrics may already be DPI scaled before WinForms
-            // scales control padding, so reserving that metric as padding scales twice.
-            Action alignHeader = delegate { header.SetBounds(grid.Left, 0, grid.Width, headerViewport.ClientSize.Height); };
-            grid.SizeChanged += delegate { alignHeader(); };
-            headerViewport.SizeChanged += delegate { alignHeader(); };
-            host.Layout += delegate { alignHeader(); };
             host.Controls.Add(scroll); host.Controls.Add(headerViewport);
             var legend = pad ? padLegend : kbLegend;
             legend.Dock = DockStyle.Bottom; legend.Height = 28; legend.BackColor = EditorTheme.Surface;
             host.Controls.Add(legend);
+            float scale = CurrentAutoScaleDimensions.Width / 96f;
+            if (scale != 1f) host.Scale(new SizeF(scale, scale));
+            // Align after scaling so resize handlers use the final header height.
+            Action alignHeader = delegate { header.SetBounds(grid.Left, 0, grid.Width, headerViewport.ClientSize.Height); };
+            grid.SizeChanged += delegate { alignHeader(); };
+            headerViewport.SizeChanged += delegate { alignHeader(); };
+            host.Layout += delegate { alignHeader(); };
+            alignHeader();
         }
         static void SetColumns(TableLayoutPanel table)
         {
@@ -416,14 +423,13 @@ namespace PBZKeyForge
                 lblBackup.Text = I18n.Str("editor.backup");
                 lblEmpty.Text = I18n.Str("editor.empty"); btnChoose.Text = I18n.Str("editor.choose");
                 SetTip(btnMore, I18n.Str("editor.more"));
-                foreach (var label in actionLabels) label.Text = I18n.Str("act." + label.Tag);
-                foreach (var label in headings) label.Text = (int)label.Tag == 0 ? I18n.Str("col.action") : (int)label.Tag == 1
-                    ? I18n.Str("views.factory", "").TrimEnd(' ', ':', '：') : I18n.Str("editor.binding", (int)label.Tag - 1);
+                foreach (var label in actionLabels.SelectMany(labels => labels)) label.Text = I18n.Str("act." + label.Tag);
+                foreach (var label in headings) label.Text = HeadingText((int)label.Tag);
                 cbLang.SelectedIndex = Array.IndexOf(I18n.Languages, I18n.Current);
                 PopulatePresets(); btnPresetManager.Text = I18n.Str("preset.manage");
             }
             finally { loading = false; }
-            RenderSession();
+            if (Session != null) RenderSession();
             foreach (var row in kbButtons.Values.Concat(padButtons.Values)) foreach (var button in row) button.Invalidate();
         }
 
@@ -437,14 +443,12 @@ namespace PBZKeyForge
                 bool loaded = Session != null;
                 bool offline = loaded && Session.IsOffline;
                 kbLegend.IsOffline = padLegend.IsOffline = offline;
-                lastRunning = EditorSession.IsGameRunning;
-                lblGame.Text = "●  " + I18n.Str(offline ? "offline.mode" : lastRunning ? "editor.running" : "editor.closed"); lblGame.ForeColor = offline ? EditorTheme.Muted : lastRunning ? EditorTheme.Amber : EditorTheme.Green;
                 lblPath.Text = offline ? I18n.Str("offline.location") : loaded ? I18n.Str("editor.location", DisplaySaveDirectory(Session.InputPath)) : I18n.Str("editor.nofile");
                 SetTip(lblPath, offline ? I18n.Str("offline.help") : loaded ? Session.InputPath : I18n.Str("editor.empty"));
                 btnRefresh.Text = I18n.Str(offline ? "editor.choose" : "editor.refresh");
                 btnApply.Text = I18n.Str(offline ? "offline.export" : "editor.apply");
                 lblBackup.Text = I18n.Str(offline ? "offline.exporthelp" : "editor.backup");
-                empty.Visible = !loaded; kbHost.Visible = loaded && actionView && !gamepad; padHost.Visible = loaded && actionView && gamepad; if (!loaded) empty.BringToFront();
+                empty.Visible = !loaded; if (!loaded) empty.BringToFront();
                 RenderBindingViews();
                 tabKb.Text = I18n.Str("editor.keyboard"); tabPad.Text = I18n.Str("editor.gamepad"); tabKb.Selected = !gamepad; tabPad.Selected = gamepad;
                 tabKb.Dirty = loaded && Session.KeyboardChangeCount > 0; tabPad.Dirty = loaded && Session.GamepadChangeCount > 0;
@@ -471,56 +475,6 @@ namespace PBZKeyForge
                 btnPresetMode.Enabled = loaded && !Session.IsResetPending && !restoringFactory;
                 var modeHeading = btnPresetMode.Parent.Controls.Find("presetModeLabel", false).FirstOrDefault();
                 if (modeHeading != null) modeHeading.Text = I18n.Str("preset.mode");
-                var keyboardRecords = loaded ? Session.BindingRecords(false, -1).ToLookup(r => r.Action) : null;
-                var gamepadRecords = loaded ? Session.BindingRecords(true, SelectedFamilyIndex).ToLookup(r => r.Action) : null;
-                foreach (var action in Actions)
-                    for (int slot = 0; slot < 3; slot++)
-                    {
-                        var kb = kbButtons[action.Id][slot]; var pad = padButtons[action.Id][slot];
-                        kb.IsOffline = pad.IsOffline = offline;
-                        var padRecords = loaded ? gamepadRecords[action.Id].Where(r => r.SlotIndex == slot
-                            && r.DefaultKey == InputDefaults.ForRawSlot(action.Id, true, InputDefaults.RawSlot(r.Slot))).ToArray() : new BindingRecord[0];
-                        var kbRecords = loaded ? keyboardRecords[action.Id].Where(r => r.SlotIndex == slot).ToArray() : new BindingRecord[0];
-                        kb.Value = kbRecords.Select(r => r.Key).FirstOrDefault(); pad.Value = padRecords.Select(r => r.Key).FirstOrDefault();
-                        string keyboardDefault = loaded ? Session.GetKeyboardDefault(action.Id, slot) : null;
-                        kb.DefaultKeys = keyboardDefault == null ? null : new[] { keyboardDefault }; kb.ActionLevelDefault = false; kb.UsesDefault = kb.Value == null;
-                        string padDefault = loaded ? Session.GetGamepadDefault(action.Id, slot, SelectedFamilyIndex) : null;
-                        pad.DefaultKeys = padRecords.Length == 0 ? padDefault == null ? null : new[] { padDefault }
-                            : padRecords.Any(r => r.DefaultKey == null) ? null : padRecords.Select(r => r.DefaultKey).Distinct().ToArray();
-                        pad.UsesDefault = padRecords.Length == 0 || padRecords.All(r => r.Key == r.DefaultKey);
-                        kb.Changed = loaded && Session.IsKeyboardChanged(action.Id, slot); pad.Changed = padRecords.Any(r => r.Changed);
-                        pad.Mixed = padRecords.Select(r => r.Key).Distinct().Skip(1).Any(); kb.Mixed = kbRecords.Select(r => r.Key).Distinct().Skip(1).Any();
-                        kb.Unavailable = loaded && !Session.HasKeyboardSlot(action.Id, slot);
-                        pad.Unavailable = loaded && !Session.HasGamepadSlot(action.Id, slot, SelectedFamilyIndex);
-                        kb.Enabled = loaded && !Session.IsResetPending && !kb.Unavailable;
-                        pad.Enabled = loaded && !Session.IsResetPending && !pad.Unavailable;
-                        kb.AccessibleName = action.Label + " " + I18n.Str("editor.binding", slot + 1) + ": " + kb.DisplayText + " · " + kb.StatusText;
-                        pad.AccessibleName = action.Label + " " + I18n.Str("editor.binding", slot + 1) + ": " + pad.DisplayText + " · " + pad.StatusText;
-                        SetTip(kb, action.Id + "\n" + kb.DisplayText + " · " + kb.StatusText + (kb.UsesDefault ? "\n" + I18n.Str("editor.keyboarddefaulthelp") : ""));
-                        SetTip(pad, action.Id + "\n" + pad.DisplayText + " · " + pad.StatusText + (pad.Mixed ? "\n" + I18n.Str("editor.mixedhelp") : ""));
-                        kb.Invalidate(); pad.Invalidate();
-                    }
-                for (int i = 0; i < actionLabels.Count; i++)
-                {
-                    var source = i < Actions.Count ? kbButtons : padButtons;
-                    string action = (string)actionLabels[i].Tag;
-                    var relations = loaded ? Session.Relations(action, i >= Actions.Count, SelectedFamilyIndex) : null;
-                    string[] defaults = relations == null ? null : relations.DefaultKeys;
-                    actionLabels[i].Text = BindingViewText.ActionName(action);
-                    var actionLabel = actionLabels[i] as ActionNameLabel;
-                    if (actionLabel != null)
-                    {
-                        string keys = !loaded ? "" : BindingViewText.Keys(relations.Keys);
-                        actionLabel.KeySummary = loaded ? I18n.Str("help.keysummary", keys) : "";
-                        SetTip(actionLabel, action + "\n" + actionLabel.KeySummary); actionLabel.Invalidate();
-                    }
-                    factoryLabels[i].Text = defaults == null ? I18n.Str("editor.defaultunknown") : BindingViewText.Keys(defaults);
-                    SetTip(factoryLabels[i], I18n.Str("views.factory", factoryLabels[i].Text));
-                    Color rowColor = source[(string)actionLabels[i].Tag].Any(b => b.Changed) ? EditorTheme.Preview : i % 2 == 0 ? EditorTheme.Surface : EditorTheme.RowAlternate;
-                    actionLabels[i].BackColor = rowColor;
-                    factoryLabels[i].BackColor = rowColor;
-                    foreach (var button in source[(string)actionLabels[i].Tag]) if (button.BackColor != rowColor) button.BackColor = rowColor;
-                }
                 chkActivate.Text = I18n.Str("editor.activate", loaded ? SchemeLabel(Session.SelectedProfile) : "—");
                 chkActivate.Visible = !offline; lblOffline.Visible = offline;
                 lblOffline.Text = I18n.Str("offline.mode");
@@ -528,7 +482,7 @@ namespace PBZKeyForge
                 chkActivate.Checked = loaded && (Session.SelectedProfile == Session.ActiveProfile || Session.ActivationPending);
                 chkActivate.Enabled = loaded && !Session.IsResetPending && Session.ActiveProfile != null && Session.SelectedProfile != Session.ActiveProfile;
                 SetTip(chkActivate, loaded && Session.SchemeError != null ? I18n.Str("status.schemeunknown") + "\n" + Session.SchemeError : I18n.Str("editor.activatehelp"));
-                btnApply.Enabled = loaded && (offline || Session.HasChanges && !lastRunning && Session.Conflicts.Length == 0); btnUndo.Visible = loaded && Session.HasChanges;
+                btnUndo.Visible = loaded && Session.HasChanges;
                 lblScope.Text = !loaded ? "" : offline ? I18n.Str("offline.scope", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount)
                     : Session.IsResetPending ? I18n.Str("editor.resetscope", Session.ScopeChangeCount)
                     : I18n.Str(Session.HasChanges ? "editor.scope" : "editor.clean", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount) + (Session.ActivationPending ? I18n.Str("editor.activationscope") : "");
@@ -536,13 +490,90 @@ namespace PBZKeyForge
                 int conflictCount = loaded ? Session.Conflicts.Length : 0;
                 btnConflicts.Visible = conflictCount > 0; btnConflicts.Text = I18n.Str("editor.conflicts", conflictCount);
                 lblScope.Visible = conflictCount == 0;
-                lblStatus.Text = conflictCount > 0 ? I18n.Str("editor.conflictinfo") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
-                    : loaded && Session.SchemeError != null ? I18n.Str("editor.schemeunknown")
-                    + (messageKey != null && messageKey != "editor.refreshed" ? " " + I18n.Str(messageKey, messageArgs) : "")
-                    : loaded && !offline && lastRunning ? I18n.Str("editor.exittoapply") : messageKey != null ? I18n.Str(messageKey, messageArgs) : I18n.Str(offline ? "offline.help" : "editor.ready");
-                lblStatus.ForeColor = messageError ? Color.FromArgb(238, 171, 156) : EditorTheme.Muted; SetTip(lblStatus, lblStatus.Text);
+                RenderGameStatus();
             }
             finally { footer.ResumeLayout(true); body.ResumeLayout(true); ResumeLayout(true); loading = false; }
+        }
+
+        static string HeadingText(int column)
+        {
+            return column == 0 ? I18n.Str("col.action") : column == 1
+                ? I18n.Str("views.factory", "").TrimEnd(' ', ':', '：') : I18n.Str("editor.binding", column - 1);
+        }
+
+        void RenderActionTable(BindingSnapshot snapshot)
+        {
+            var host = gamepad ? padHost : kbHost;
+            var buttons = gamepad ? padButtons : kbButtons;
+            if (buttons.Count == 0)
+            {
+                host.SuspendLayout();
+                try
+                {
+                    BuildBindingTable(host, buttons, gamepad);
+                }
+                finally { host.ResumeLayout(true); }
+            }
+            var records = Session.BindingRecords(gamepad, SelectedFamilyIndex).ToLookup(r => r.Action);
+            var labels = actionLabels[gamepad ? 1 : 0];
+            var defaults = factoryLabels[gamepad ? 1 : 0];
+            for (int row = 0; row < Actions.Count; row++)
+            {
+                var action = Actions[row];
+                for (int slot = 0; slot < 3; slot++)
+                {
+                    var button = buttons[action.Id][slot];
+                    var bindings = records[action.Id].Where(r => r.SlotIndex == slot && (!gamepad
+                        || r.DefaultKey == InputDefaults.ForRawSlot(action.Id, true, InputDefaults.RawSlot(r.Slot)))).ToArray();
+                    button.IsOffline = Session.IsOffline;
+                    button.Value = bindings.Select(r => r.Key).FirstOrDefault();
+                    string defaultKey = gamepad ? Session.GetGamepadDefault(action.Id, slot, SelectedFamilyIndex) : Session.GetKeyboardDefault(action.Id, slot);
+                    button.DefaultKeys = !gamepad || bindings.Length == 0 ? defaultKey == null ? null : new[] { defaultKey }
+                        : bindings.Any(r => r.DefaultKey == null) ? null : bindings.Select(r => r.DefaultKey).Distinct().ToArray();
+                    button.ActionLevelDefault = false;
+                    button.UsesDefault = gamepad ? bindings.Length == 0 || bindings.All(r => r.Key == r.DefaultKey) : button.Value == null;
+                    button.Changed = gamepad ? bindings.Any(r => r.Changed) : Session.IsKeyboardChanged(action.Id, slot);
+                    button.Mixed = bindings.Select(r => r.Key).Distinct().Skip(1).Any();
+                    button.Unavailable = gamepad ? !Session.HasGamepadSlot(action.Id, slot, SelectedFamilyIndex) : !Session.HasKeyboardSlot(action.Id, slot);
+                    button.Enabled = !Session.IsResetPending && !button.Unavailable;
+                    button.AccessibleName = action.Label + " " + I18n.Str("editor.binding", slot + 1) + ": " + button.DisplayText + " · " + button.StatusText;
+                    SetTip(button, action.Id + "\n" + button.DisplayText + " · " + button.StatusText
+                        + (!gamepad && button.UsesDefault ? "\n" + I18n.Str("editor.keyboarddefaulthelp") : gamepad && button.Mixed ? "\n" + I18n.Str("editor.mixedhelp") : ""));
+                    button.Invalidate();
+                }
+                var relation = snapshot.Current.First(r => r.Action == action.Id);
+                var label = (ActionNameLabel)labels[row];
+                label.Text = BindingViewText.ActionName(action.Id);
+                label.KeySummary = I18n.Str("help.keysummary", BindingViewText.Keys(relation.Keys));
+                SetTip(label, action.Id + "\n" + label.KeySummary); label.Invalidate();
+                defaults[row].Text = relation.DefaultKeys == null ? I18n.Str("editor.defaultunknown") : BindingViewText.Keys(relation.DefaultKeys);
+                SetTip(defaults[row], I18n.Str("views.factory", defaults[row].Text));
+                Color rowColor = buttons[action.Id].Any(b => b.Changed) ? EditorTheme.Preview : row % 2 == 0 ? EditorTheme.Surface : EditorTheme.RowAlternate;
+                label.BackColor = defaults[row].BackColor = rowColor;
+                foreach (var button in buttons[action.Id]) if (button.BackColor != rowColor) button.BackColor = rowColor;
+            }
+        }
+
+        void UpdateGameState()
+        {
+            if (IsApplying) return;
+            bool running = Session != null && !Session.IsOffline && EditorSession.IsGameRunning;
+            if (running == lastRunning) return;
+            lastRunning = running;
+            RenderGameStatus();
+        }
+
+        void RenderGameStatus()
+        {
+            bool loaded = Session != null, offline = loaded && Session.IsOffline;
+            lblGame.Text = "●  " + I18n.Str(offline ? "offline.mode" : lastRunning ? "editor.running" : "editor.closed");
+            lblGame.ForeColor = offline ? EditorTheme.Muted : lastRunning ? EditorTheme.Amber : EditorTheme.Green;
+            btnApply.Enabled = loaded && (offline || Session.HasChanges && !lastRunning && Session.Conflicts.Length == 0);
+            lblStatus.Text = loaded && Session.Conflicts.Length > 0 ? I18n.Str("editor.conflictinfo") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
+                : loaded && Session.SchemeError != null ? I18n.Str("editor.schemeunknown")
+                + (messageKey != null && messageKey != "editor.refreshed" ? " " + I18n.Str(messageKey, messageArgs) : "")
+                : loaded && !offline && lastRunning ? I18n.Str("editor.exittoapply") : messageKey != null ? I18n.Str(messageKey, messageArgs) : I18n.Str(offline ? "offline.help" : "editor.ready");
+            lblStatus.ForeColor = messageError ? Color.FromArgb(238, 171, 156) : EditorTheme.Muted; SetTip(lblStatus, lblStatus.Text);
         }
 
         void SetTip(Control control, string text)
@@ -624,40 +655,32 @@ namespace PBZKeyForge
                 finally { modalActive = false; }
             }
         }
-        void OpenPath(string path) { TryAction(delegate { var next = EditorSession.Open(path); Session = next; }); }
+        void OpenPath(string path, bool remember = true)
+        {
+            TryAction(delegate {
+                Session = EditorSession.Open(path);
+                UpdateGameState();
+                if (remember) preferences.SaveInputPath(Session.InputPath);
+            });
+        }
         public void NewOfflineScheme()
         {
             if (!ConfirmDiscard()) return;
-            TryAction(delegate { Session = EditorSession.CreateOffline(); });
+            TryAction(delegate { Session = EditorSession.CreateOffline(); UpdateGameState(); });
         }
         void AutoFind(bool confirm)
         {
             if (confirm && !ConfirmDiscard()) return;
             try
             {
-                string found = FindInputSave();
-                if (found != null) OpenPath(found);
+                var found = SaveDiscovery.Open(preferences, !confirm);
+                if (found != null) { Session = found; UpdateGameState(); messageKey = null; messageError = false; RenderSession(); }
                 else if (Session == null) NewOfflineScheme();
                 else { SetMessage("editor.empty", false); RenderSession(); }
             }
             catch (Exception ex) { if (Session == null) NewOfflineScheme(); SetMessage("editor.failed", true, ex.Message); RenderSession(); }
         }
 
-        static string FindInputSave()
-        {
-            var roots = new List<string>();
-            var steam = Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", null) as string;
-            if (!string.IsNullOrEmpty(steam))
-            {
-                roots.Add(steam.Replace('/', '\\'));
-                string libraries = Path.Combine(steam, @"steamapps\libraryfolders.vdf");
-                if (File.Exists(libraries))
-                    foreach (System.Text.RegularExpressions.Match match in System.Text.RegularExpressions.Regex.Matches(File.ReadAllText(libraries), "\"path\"\\s*\"([^\"]+)\""))
-                        roots.Add(match.Groups[1].Value.Replace("\\\\", "\\"));
-            }
-            foreach (var drive in DriveInfo.GetDrives()) if (drive.DriveType == DriveType.Fixed) roots.Add(Path.Combine(drive.Name, "SteamLibrary"));
-            return roots.Select(root => Path.Combine(root, @"steamapps\common\PBZ\ProjectPBZ\Saved\EnhancedInputUserSettings.sav")).FirstOrDefault(File.Exists);
-        }
         void ShowMore()
         {
             if (moreMenu == null) moreMenu = CreateMoreMenu();
@@ -728,7 +751,7 @@ namespace PBZKeyForge
             }
         }
 
-        public void UiSmoke(string path) { OpenPath(path); }
+        public void UiSmoke(string path) { OpenPath(path, false); }
         public void UiOffline() { NewOfflineScheme(); }
         protected override void OnPaintBackground(PaintEventArgs e)
         {

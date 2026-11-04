@@ -43,6 +43,42 @@ public static class SchemeActivationTests
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     static extern bool CreateHardLink(string name, string existing, IntPtr security);
 
+    [StructLayout(LayoutKind.Sequential)]
+    struct IoCounters
+    {
+        public ulong ReadOperations, WriteOperations, OtherOperations, ReadBytes, WriteBytes, OtherBytes;
+    }
+    [DllImport("kernel32.dll", SetLastError = true)]
+    static extern bool GetProcessIoCounters(IntPtr process, out IoCounters counters);
+
+    static object FirstLoad(string path)
+    {
+        using (var process = System.Diagnostics.Process.GetCurrentProcess())
+        {
+            IoCounters before, after;
+            Assert(GetProcessIoCounters(process.Handle, out before), "Cannot measure initial authentication reads.");
+            object settings = Load(path);
+            Assert(GetProcessIoCounters(process.Handle, out after), "Cannot measure completed authentication reads.");
+            ulong bytes = after.ReadBytes - before.ReadBytes;
+            Assert(bytes < 1024 * 1024, "Initial authentication scanned the executable: " + bytes + " bytes read.");
+            Console.WriteLine("Initial authentication I/O: " + bytes + " bytes read.");
+            Assert(GameBuild(settings) == "Steam CL-301524_JKS-17219 (verified PBZS reader; exact build unknown)",
+                "A compatible reader must not claim an exact executable build.");
+            return settings;
+        }
+    }
+
+    static void RejectWrongKey(string root, string settingsPath)
+    {
+        string wrongKey = Path.Combine(root, "wrong-key.exe");
+        using (var file = new FileStream(wrongKey, FileMode.CreateNew, FileAccess.Write))
+            file.SetLength(new FileInfo(GameExe).Length);
+        MustFail(delegate { Settings.GetMethod("Load").Invoke(null, new object[] { settingsPath, wrongKey }); },
+            "An executable of the right size with an unknown key fingerprint must be rejected.");
+        File.Delete(wrongKey);
+        Assert(Profile(Load(settingsPath)) != null, "A failed reader lookup affected the next valid authentication.");
+    }
+
     [STAThread]
     public static int Main(string[] args)
     {
@@ -83,7 +119,7 @@ public static class SchemeActivationTests
         Directory.CreateDirectory(root);
         string copy = Path.Combine(root, "PBZSharedSetting.copy.sav");
         File.WriteAllBytes(copy, original);
-        object settings = Load(copy);
+        object settings = FirstLoad(copy);
         Assert(Profile(settings) == "InputUserSettings.Profiles.Default"
             || Profile(settings) == "PBZ.KeyProfile.Custom1"
             || Profile(settings) == "PBZ.KeyProfile.Custom2", "Authenticated settings returned an unknown scheme.");
@@ -93,6 +129,7 @@ public static class SchemeActivationTests
         File.WriteAllBytes(unknownExe, new byte[] { 0x4d, 0x5a, 0x00 });
         MustFail(delegate { Settings.GetMethod("Load").Invoke(null, new object[] { copy, unknownExe }); }, "Unknown executable build must be rejected before key lookup.");
         Assert(Same(original, File.ReadAllBytes(copy)), "Unknown-build rejection changed the copied settings.");
+        RejectWrongKey(root, copy);
 
         foreach (int position in new[] { 0, 4, 8, 20, 36, original.Length - 1 })
         {
@@ -119,7 +156,8 @@ public static class SchemeActivationTests
         Directory.CreateDirectory(root);
         string test = Path.Combine(root, "PBZSharedSetting.test.sav");
         File.WriteAllBytes(test, source);
-        Assert(GameBuild(Load(test)) == "Steam CL-301524_JKS-17219", "A verified executable was not identified by its registered build.");
+        FirstLoad(test);
+        RejectWrongKey(root, test);
         string baseline = WithoutScheme(Json(Load(test)));
         string[] profiles = { "InputUserSettings.Profiles.Default", "PBZ.KeyProfile.Custom1", "PBZ.KeyProfile.Custom2" };
 

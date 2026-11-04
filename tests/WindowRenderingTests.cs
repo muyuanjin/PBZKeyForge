@@ -76,7 +76,9 @@ public static class WindowRenderingTests
             string output = Path.GetFullPath(args[1]); Directory.CreateDirectory(output);
             byte[] original = File.ReadAllBytes(args[0]);
             string input = Path.Combine(output, "EnhancedInputUserSettings.sav"); File.WriteAllBytes(input, original);
-            using (var startup = MainForm.OpenDefault())
+            var startupPreferences = new EditorPreferences(Path.Combine(output, "startup-preferences", "mode.txt"));
+            startupPreferences.SaveInputPath(input);
+            using (var startup = MainForm.OpenDefault(startupPreferences))
             {
                 bool readyBeforeShow = false;
                 startup.Load += delegate { readyBeforeShow = startup.Session != null; };
@@ -84,6 +86,7 @@ public static class WindowRenderingTests
                 startup.Size = startup.MinimumSize; startup.Location = Screen.PrimaryScreen.WorkingArea.Location;
                 startup.Show(); Application.DoEvents();
                 Assert(readyBeforeShow, "Automatic discovery must finish before the first visible frame.");
+                Assert(startup.Session.InputPath == input, "Startup did not restore the remembered save.");
                 Assert(!startup.Session.HasAnyDrafts && !startup.Session.HasChanges, "Starting the editor created pending changes.");
                 Frame(startup, output, "startup");
                 startup.Close();

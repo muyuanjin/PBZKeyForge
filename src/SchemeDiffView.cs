@@ -43,14 +43,17 @@ namespace PBZKeyForge
         }
         public void Render(EditorSession value)
         {
-            session = value; if (session == null) return;
+            if (value != null) Render(value, value.BindingSnapshots());
+        }
+        internal void Render(EditorSession value, BindingSnapshot[] snapshots)
+        {
+            session = value;
             header.Height = Font.Height + 18;
             title.Text = I18n.Str("views.schemediff"); saved.Text = I18n.Str("views.vssaved"); factory.Text = I18n.Str("views.vsfactory");
             saved.Selected = !compareFactory; factory.Selected = compareFactory;
             tip.SetToolTip(saved, I18n.Str("views.savedhelp")); tip.SetToolTip(factory, factory.Text);
-            var changes = session.SchemeDifferences(compareFactory);
-            bool incomplete = compareFactory ? session.BindingActions(false, -1).Any(a => !session.Relations(a, false, -1).CanCompare)
-                || session.ControllerFamilies.Any(f => session.BindingActions(true, f.Index).Any(a => !session.Relations(a, true, f.Index).CanCompare))
+            var changes = snapshots.SelectMany(s => s.Differences(compareFactory)).ToArray();
+            bool incomplete = compareFactory ? snapshots.Any(s => s.Current.Any(r => !r.CanCompare))
                 : changes.Any(d => !d.BeforeComplete || !d.AfterComplete);
             int added = changes.Sum(d => d.AddedKeys.Length);
             int removed = changes.Sum(d => d.RemovedKeys.Length);
@@ -80,7 +83,10 @@ namespace PBZKeyForge
                     string identity = RowId(session.SelectedProfile, change); int mode;
                     rowModes.TryGetValue(identity, out mode);
                     row.Height = Font.Height + 18;
-                    row.UpdateDifference(change, identity, mode, change.AddedKeys.Where(key => session.RelationshipPending(change.Action, key, change.Gamepad, change.FamilyIndex)));
+                    var snapshot = snapshots.Single(s => s.Gamepad == change.Gamepad && s.FamilyIndex == change.FamilyIndex);
+                    var before = snapshot.Before[change.Action];
+                    var current = snapshot.Current.First(r => r.Action == change.Action);
+                    row.UpdateDifference(change, identity, mode, change.AddedKeys.Where(key => current.RelationshipPending(before, key)));
                     SetRowTip(row);
                 }
             }

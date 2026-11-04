@@ -26,6 +26,8 @@ public static class EditorUiTests
     }
     static T Field<T>(object owner, string name)
     { return (T)owner.GetType().GetField(name, Hidden).GetValue(owner); }
+    static void DetectGameState(MainForm form)
+    { typeof(Timer).GetMethod("OnTick", Hidden).Invoke(Field<Timer>(form, "gameTimer"), new object[] { EventArgs.Empty }); }
     static IEnumerable<Control> Descendants(Control root)
     {
         foreach (Control child in root.Controls)
@@ -392,10 +394,9 @@ public static class EditorUiTests
             if (before.Records[i].ProfileId == editedProfile) after.Records[i] = before.Records[i];
         var beforeFamilies = before.Props.First(n => n.Name == "GamepadFamilyProfiles");
         var afterFamilies = after.Props.First(n => n.Name == "GamepadFamilyProfiles");
-        Assert(beforeFamilies.Items.Count == afterFamilies.Items.Count, "Editing one scheme changed the controller profile inventory.");
-        for (int i = 0; i < beforeFamilies.Items.Count; i++)
-            if (SaveFile.Field(beforeFamilies.Items[i], "ProfileId") == editedProfile)
-                afterFamilies.Items[i] = beforeFamilies.Items[i];
+        // Editing a profile may materialize its previously virtual controller families.
+        beforeFamilies.Items.RemoveAll(item => SaveFile.Field(item, "ProfileId") == editedProfile);
+        afterFamilies.Items.RemoveAll(item => SaveFile.Field(item, "ProfileId") == editedProfile);
         Assert(before.ToBytes().SequenceEqual(after.ToBytes()),
             "Applying the selected scheme changed another scheme or unrelated save data.");
     }
@@ -417,6 +418,13 @@ public static class EditorUiTests
                     Assert(dialog.FormBorderStyle == FormBorderStyle.None, "Binding dialog did not share the custom window frame.");
                     var choices = Field<ComboBox>(dialog, "keys");
                     var capture = Descendants(dialog).First(c => c.GetType().Name == "KeyCaptureBox");
+                    if (!gamepad)
+                    {
+                        IntPtr point = new IntPtr(10 | 10 << 16);
+                        SendMessage(capture.Handle, 0x201, new IntPtr(1), point);
+                        SendMessage(capture.Handle, 0x202, IntPtr.Zero, point);
+                        Assert(capture.Focused, "The binding capture click did not activate input capture.");
+                    }
                     string[] modifiers = { "LeftShift", "RightShift", "LeftControl", "RightControl", "LeftAlt", "RightAlt" };
                     int[] virtualKeys = { 0x10, 0x10, 0x11, 0x11, 0x12, 0x12 }, scans = { 0x2a, 0x36, 0x1d, 0x1d, 0x38, 0x38 };
                     for (int m = 0; !gamepad && m < modifiers.Length; m++)
@@ -445,9 +453,20 @@ public static class EditorUiTests
     [STAThread]
     public static int Main(string[] args)
     {
+        Application.EnableVisualStyles();
+        Control.CheckForIllegalCrossThreadCalls = true;
+        int result = 1;
+        EventHandler run = null;
+        run = delegate { Application.Idle -= run; result = Run(args); Application.ExitThread(); };
+        Application.Idle += run;
+        Application.Run();
+        return result;
+    }
+
+    static int Run(string[] args)
+    {
         try
         {
-            Application.EnableVisualStyles();
             bool controlsOnly = args.Contains("--controls-only");
             int languageCount = args.Contains("--all-languages") ? I18n.Languages.Length : 1;
             captureImages = !controlsOnly;
@@ -533,6 +552,9 @@ public static class EditorUiTests
                 Assert(Enumerable.Range(0, 3).All(i => form.Session.GetKeyboard("IA_Dodge", i) == originalDodge[i]), "Quick configurations accumulated an earlier dodge preview.");
                 EditKeyboard(form, "IA_Jump", 0, "F8", output);
                 ClickDevice(form, true);
+                string editedFamily = form.Session.ControllerFamilies.Single(family => family.Index == form.SelectedFamilyIndex).Name;
+                var otherFamilyJump = form.Session.ControllerFamilies.Where(family => family.Name != editedFamily)
+                    .ToDictionary(family => family.Name, family => form.Session.Relations("IA_Jump", true, family.Index).Keys);
                 EditKeyboard(form, "IA_Jump", 0, "Gamepad_Special_Right", output, true);
                 ClickProfile(form, other);
                 Assert(form.Session.GetGamepad("IA_Jump", 0) == otherPadJump, "A controller draft leaked into another scheme.");
@@ -563,15 +585,19 @@ public static class EditorUiTests
                 ClickDevice(form, true); ColumnsAlign(form, "padHost"); Shot(form, output, "gamepad-zh-Hans");
                 ClickDevice(form, false);
                 Assert(apply.Enabled, "Draft apply unexpectedly disabled.");
-                apply.PerformClick(); Application.DoEvents();
+                ClickButton(form, "btnApply");
                 Assert(SaveFile.Load(input).RecordFor(editing).Entries.Any(e => e.Name == "IA_Jump" && e.Slot == 0 && e.Key == "F8"), "Apply button did not save the binding draft.");
                 Assert(SaveFile.Load(input).RecordFor(editing).Entries.Any(e => e.Name == "IA_Interact" && e.Slot == 0 && e.Key == "F9"), "Apply lost the unrelated external binding.");
                 Assert(initialShared.SequenceEqual(File.ReadAllBytes(shared)), "Editing an inactive scheme unexpectedly activated it.");
                 OtherProfilesUnchanged(initialInput, File.ReadAllBytes(input), editing);
-                var savedPadGroups = SaveFile.Load(input).GamepadKeysFor(editing);
-                Assert(savedPadGroups.Count > 0 && savedPadGroups.All(keys => keys.Items.Any(item => SaveFile.Field(item, "MappingName") == "IA_Jump"
+                var savedPadGroups = SaveFile.Load(input).GamepadProfiles.Where(profile => profile.ProfileId == editing && profile.Family == editedFamily).ToArray();
+                Assert(savedPadGroups.Length > 0 && savedPadGroups.All(profile => profile.Keys.Items.Any(item => SaveFile.Field(item, "MappingName") == "IA_Jump"
                     && SaveFile.Field(item, "Slot") == "EPlayerMappableKeySlot::Second" && SaveFile.Field(item, "Key") == "Gamepad_Special_Right")),
-                    "Apply did not save the selected scheme's controller edit.");
+                    "Apply did not save the selected scheme and controller family's edit.");
+                var savedSession = EditorSession.Open(input); savedSession.SwitchProfile(editing);
+                foreach (var family in savedSession.ControllerFamilies.Where(family => family.Name != editedFamily))
+                    Assert(savedSession.Relations("IA_Jump", true, family.Index).Keys.SequenceEqual(otherFamilyJump[family.Name]),
+                        "Editing one controller family changed another family's Jump binding.");
                 Assert(form.Session.HasGamepadDraft(other), "Applying one scheme discarded another scheme's controller draft.");
                 Assert(!apply.Enabled && !form.Session.HasChanges, "Successful apply left stale dirty UI.");
                 form.Session.ResetAll(); form.RenderSession();
@@ -596,13 +622,13 @@ public static class EditorUiTests
                     try
                     {
                         Assert(process.StandardOutput.ReadLine() == "ready", "Game-process fixture did not start.");
-                        form.RenderSession();
+                        DetectGameState(form);
                         Assert(!apply.Enabled && form.Session.HasChanges, "Running game must block applying while preserving drafts.");
                         Shot(form, output, "running-zh-Hans");
                     }
                     finally { if (!process.HasExited) process.Kill(); process.WaitForExit(); }
                 }
-                form.RenderSession();
+                DetectGameState(form);
                 Assert(apply.Enabled, "Exited game left Apply disabled.");
                 disk = SaveFile.Load(input); record = disk.RecordFor(editing);
                 record.Entries.First(e => e.Name == "IA_Jump" && e.Slot == 0).Key = "F11"; disk.Save(input);

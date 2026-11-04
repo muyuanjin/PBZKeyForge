@@ -26,6 +26,11 @@ namespace PBZKeyForge
         public bool CanCompare { get { return Complete && DefaultKeys != null; } }
         public bool KnowsKey(string key)
         { return Complete || Keys.Contains(key) || DefaultKeys != null && !DefaultKeys.Contains(key); }
+        internal bool RelationshipPending(ActionRelations before, string key)
+        {
+            bool now = Keys.Contains(key), saved = before.Keys.Contains(key);
+            return now && !saved && before.KnowsKey(key) || saved && !now && KnowsKey(key);
+        }
     }
 
     public sealed class BindingCapacity
@@ -53,6 +58,40 @@ namespace PBZKeyForge
         public string[] BeforeKeys, AfterKeys, DefaultKeys;
         public string[] AddedKeys { get { return AfterKeys.Except(BeforeKeys).Where(k => BeforeComplete || DefaultKeys != null && !DefaultKeys.Contains(k)).ToArray(); } }
         public string[] RemovedKeys { get { return BeforeKeys.Except(AfterKeys).Where(k => AfterComplete || DefaultKeys != null && !DefaultKeys.Contains(k)).ToArray(); } }
+    }
+
+    internal sealed class BindingSnapshot
+    {
+        public readonly bool Gamepad;
+        public readonly int FamilyIndex;
+        public readonly string Family;
+        public readonly ActionRelations[] Current;
+        public readonly Dictionary<string, ActionRelations> Before;
+
+        public BindingSnapshot(EditorSession session, bool gamepad, int familyIndex, string family)
+        {
+            Gamepad = gamepad; FamilyIndex = familyIndex; Family = family;
+            Current = session.BindingActions(gamepad, familyIndex).Select(a => session.Relations(a, gamepad, familyIndex)).ToArray();
+            Before = Current.ToDictionary(r => r.Action, r => session.RelationsBeforeEdit(r.Action, gamepad, familyIndex));
+        }
+
+        public BindingDifference[] Differences(bool factory)
+        {
+            var differences = new List<BindingDifference>();
+            foreach (var current in Current)
+            {
+                var before = Before[current.Action];
+                string[] keys = factory ? current.DefaultKeys : before.Keys;
+                bool complete = factory ? keys != null : before.Complete;
+                if (keys == null) continue;
+                bool same = !keys.Except(current.Keys).Any() && !current.Keys.Except(keys).Any();
+                if (complete && current.Complete ? same : factory ? !current.Keys.Except(keys).Any() : !current.Changed) continue;
+                differences.Add(new BindingDifference { Action = current.Action, Gamepad = Gamepad, FamilyIndex = FamilyIndex,
+                    Family = Family, BeforeKeys = keys, AfterKeys = current.Keys, DefaultKeys = current.DefaultKeys,
+                    BeforeComplete = complete, AfterComplete = current.Complete });
+            }
+            return differences.ToArray();
+        }
     }
 
     public sealed partial class EditorSession
@@ -170,34 +209,17 @@ namespace PBZKeyForge
         {
             var current = Relations(action, gamepad, familyIndex);
             var before = RelationsBeforeEdit(action, gamepad, familyIndex);
-            bool now = current.Keys.Contains(key), saved = before.Keys.Contains(key);
-            return now && !saved && before.KnowsKey(key) || saved && !now && current.KnowsKey(key);
+            return current.RelationshipPending(before, key);
+        }
+
+        internal BindingSnapshot[] BindingSnapshots()
+        {
+            return new[] { new BindingSnapshot(this, false, -1, null) }.Concat(ControllerFamilies.Select(f =>
+                new BindingSnapshot(this, true, f.Index, f.Name))).ToArray();
         }
 
         public BindingDifference[] SchemeDifferences(bool factory)
-        {
-            var differences = new List<BindingDifference>();
-            AddDifferences(differences, false, -1, null, factory);
-            foreach (var family in ControllerFamilies) AddDifferences(differences, true, family.Index, family.Name, factory);
-            return differences.ToArray();
-        }
-
-        void AddDifferences(List<BindingDifference> differences, bool gamepad, int familyIndex, string family, bool factory)
-        {
-            foreach (string action in BindingActions(gamepad, familyIndex))
-            {
-                var current = Relations(action, gamepad, familyIndex);
-                var before = RelationsBeforeEdit(action, gamepad, familyIndex);
-                string[] keys = factory ? current.DefaultKeys : before.Keys;
-                bool complete = factory ? keys != null : before.Complete;
-                if (keys == null) continue;
-                bool same = !keys.Except(current.Keys).Any() && !current.Keys.Except(keys).Any();
-                if (complete && current.Complete ? same
-                    : factory ? !current.Keys.Except(keys).Any() : !current.Changed) continue;
-                differences.Add(new BindingDifference { Action = action, Gamepad = gamepad, FamilyIndex = familyIndex,
-                    Family = family, BeforeKeys = keys, AfterKeys = current.Keys, DefaultKeys = current.DefaultKeys, BeforeComplete = complete, AfterComplete = current.Complete });
-            }
-        }
+        { return BindingSnapshots().SelectMany(snapshot => snapshot.Differences(factory)).ToArray(); }
 
         public KeyRelations RelationsForKey(string key, bool gamepad, int familyIndex)
         {

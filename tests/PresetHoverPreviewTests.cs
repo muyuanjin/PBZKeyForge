@@ -86,6 +86,7 @@ public static class PresetHoverPreviewTests
         Cursor.Position = header;
         Exception failure = null; bool finished = false; int stage = 0;
         Rectangle listBounds = Rectangle.Empty;
+        Control firstPopup = null;
         var elapsed = Stopwatch.StartNew(); var overall = Stopwatch.StartNew();
         using (var driver = new Timer { Interval = 50 })
         {
@@ -100,6 +101,7 @@ public static class PresetHoverPreviewTests
                     { HoverItem(picker, "mouse_guard", out listBounds); stage = 1; }
                     else if (stage == 1 && popup != null && popup.Visible && hovered != null && hovered.Id == "mouse_guard")
                     {
+                        firstPopup = popup;
                         Assert(picker.DroppedDown && Field<Preset>(hover, "hovered").Id == "mouse_guard", "Hover closed the dropdown or displayed the wrong preset.");
                         Assert(!popup.Bounds.IntersectsWith(listBounds), "Preview covers dropdown options.");
                         Rectangle capture = Rectangle.Union(form.Bounds, popup.Bounds);
@@ -113,10 +115,13 @@ public static class PresetHoverPreviewTests
                         PostMessage(info.List, 0x2A3, IntPtr.Zero, IntPtr.Zero);
                         stage = 2; elapsed.Restart();
                     }
-                    else if (stage == 2 && popup == null && elapsed.ElapsedMilliseconds >= 600)
+                    else if (stage == 2 && popup != null && !popup.Visible && elapsed.ElapsedMilliseconds >= 600)
                     { HoverItem(picker, "mouse_guard", out listBounds); stage = 3; }
                     else if (stage == 3 && popup != null && popup.Visible)
-                    { HoverItem(picker, "mouse_guard_space", out listBounds); stage = 4; }
+                    {
+                        Assert(ReferenceEquals(firstPopup, popup), "Returning to the same item reuses its preview during this dropdown.");
+                        HoverItem(picker, "mouse_guard_space", out listBounds); stage = 4;
+                    }
                     else if (stage == 4 && popup != null && popup.Visible && hovered != null && hovered.Id == "mouse_guard_space")
                     {
                         Assert(!popup.Bounds.IntersectsWith(listBounds), "Mouse + Space preview covers dropdown options.");
@@ -138,6 +143,7 @@ public static class PresetHoverPreviewTests
                     {
                         Assert(picker.SelectedIndex == 0 && form.Session.PresetId == null && form.Session.ScopeChangeCount == count, "Cancelling hover selected a preset or changed the draft.");
                         Assert(Field<Control>(hover, "popup") == null, "Closing the dropdown left its preview visible.");
+                        Assert(firstPopup.IsDisposed, "Closing or switching disposes the retained preview.");
                         finished = true; driver.Stop();
                     }
                 }
