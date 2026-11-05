@@ -4,10 +4,8 @@ If something doesn't work, please post your tool version, device/layout and a sc
 
 [b]Close the game before applying changes. Applying or resetting bindings in the game's own binding screen will overwrite your layout.
 [/b][/center][center][size=5][color=#e8b96a][b]Changelog[/b][/color][/size][/center]
-[center][color=#1e84cc][b]V1.2.3 — current release[/b][/color]
-New since V1.2.2: optional Perfect guard: no rapid-click penalty, off by default. Repeated attack inputs also trigger guard when both share a key, which normally shortens or stops refreshing the perfect-guard window. Enable the option in the footer and click Apply changes to remove this penalty; uncheck and apply to restore it. Close the game before either operation. Difficulty, accessories and the game's current base window still apply. The presets-only download does not include this gameplay mod.
-
-Added Steam 1.0302256 support with the correct Phantom Edge binding slots. The editor remembers your last save and finds the game through Steam records. Startup, refreshes and preset operations are faster; smaller-window layouts, comparison scrolling and Apply feedback are improved. The eight preset layouts and PBZ2 share codes retain their baseline.
+[center][color=#1e84cc][b]V1.2.3[/b][/color]
+Added optional removal of the perfect-guard rapid-click penalty, off by default. Added Steam 1.0302256 support, remembered saves and Steam-based game discovery. Improved editing speed, small-window layouts and Apply feedback.
 
 [color=#1e84cc][b]V1.2.2[/b][/color]
 Faster startup and a smoother first display: the editor loads the save while building the interface, then shows the complete window together. Reduced layout work, repeated binding calculations and image loading for faster refreshes.
