@@ -5,13 +5,13 @@ Build with Windows PowerShell 5.1 and use a new isolated directory for each inte
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\build.ps1
 $compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
-python tests\PerfectDeflectModBuildTests.py
-& $compiler /nologo /win32manifest:build\app.manifest /out:dist\PerfectDeflectModTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll /r:System.Web.Extensions.dll tests\PerfectDeflectModTests.cs
-.\dist\PerfectDeflectModTests.exe dist\perfect-deflect-check
-& $compiler /nologo /out:dist\DeflectEmbeddedResourceTests.exe /r:System.Core.dll tests\DeflectEmbeddedResourceTests.cs
-.\dist\DeflectEmbeddedResourceTests.exe dist\PBZKeyForge.exe assets\perfect-deflect-mod
+python tests\PerfectDeflectNoRapidClickPenaltyModBuildTests.py
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\PerfectDeflectNoRapidClickPenaltyModTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll /r:System.Web.Extensions.dll tests\PerfectDeflectNoRapidClickPenaltyModTests.cs
+.\dist\PerfectDeflectNoRapidClickPenaltyModTests.exe dist\perfect-deflect-no-rapid-click-penalty-check
+& $compiler /nologo /out:dist\PerfectDeflectNoRapidClickPenaltyEmbeddedResourceTests.exe /r:System.Core.dll tests\PerfectDeflectNoRapidClickPenaltyEmbeddedResourceTests.cs
+.\dist\PerfectDeflectNoRapidClickPenaltyEmbeddedResourceTests.exe dist\PBZKeyForge.exe assets\perfect-deflect-no-rapid-click-penalty
 & $compiler /nologo /win32manifest:build\app.manifest /out:dist\MainResourceModTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\MainResourceModTests.cs
-.\dist\MainResourceModTests.exe 'dist\perfect-deflect-check\游戏 with spaces' dist\main-resource-mod-check
+.\dist\MainResourceModTests.exe 'dist\perfect-deflect-no-rapid-click-penalty-check\游戏 with spaces' dist\main-resource-mod-check
 ```
 
 The generator suite checks the five difficulty data assets and their numeric-only cooldown change. The installation harness checks enable/disable, no-op, incomplete repair, modified/foreign-file conflicts, the running-game guard, failure/retry and preservation of unrelated files. Embedded-resource comparison ensures the application installs the checked containers.
@@ -266,7 +266,7 @@ An optional independent IOStore extraction uses the development-only CUE4Parse h
 
 ```powershell
 dotnet build tests\DeflectSchemaAudit\DeflectSchemaAudit.csproj
-dotnet tests\DeflectSchemaAudit\bin\Debug\net10.0\DeflectSchemaAudit.dll --container assets\perfect-deflect-mod\PBZKeyForge_PerfectDeflect_P.utoc dist\deflect-container-read
+dotnet tests\DeflectSchemaAudit\bin\Debug\net10.0\DeflectSchemaAudit.dll --container assets\perfect-deflect-no-rapid-click-penalty\PBZKeyForge_PerfectDeflectNoRapidClickPenalty_P.utoc dist\deflect-container-read
 ```
 
 The harness uses `GAME_UE5_7` and requires an empty companion PAK. Container mode extracts raw chunks without deserializing their Zen headers. It is separate from the dependency-free application runtime and does not establish game loading or combat behavior.

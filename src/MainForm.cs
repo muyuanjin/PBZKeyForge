@@ -290,9 +290,9 @@ namespace PBZKeyForge
             btnUndo.Click += delegate { TryAction(delegate { Session.Undo(); resourceModDraft = null; }); };
             StyleButton(btnApply, true); btnApply.Dock = DockStyle.None; btnApply.SetBounds(890, 15, 196, 46); btnApply.Font = new Font(Font.FontFamily, 12f, FontStyle.Bold); btnApply.Click += delegate { ApplyChanges(); };
             lblBackup.SetBounds(890, 64, 196, 23); lblBackup.TextAlign = ContentAlignment.MiddleCenter; lblBackup.AutoEllipsis = true; lblBackup.ForeColor = EditorTheme.Muted; lblBackup.Font = new Font(Font.FontFamily, 8.5f);
-            chkPerfectDeflect.CheckedChanged += delegate { StageResourceMod(); };
+            chkPerfectDeflectNoRapidClickPenalty.CheckedChanged += delegate { StageResourceMod(); };
             btnModHelp.Font = new Font(Font.FontFamily, 9f); btnModHelp.Click += delegate { ShowResourceModHelp(); };
-            footer.Controls.AddRange(new Control[] { chkActivate, lblOffline, lblScope, btnConflicts, lblStatus, btnUndo, btnApply, lblBackup, chkPerfectDeflect, btnModHelp });
+            footer.Controls.AddRange(new Control[] { chkActivate, lblOffline, lblScope, btnConflicts, lblStatus, btnUndo, btnApply, lblBackup, chkPerfectDeflectNoRapidClickPenalty, btnModHelp });
             btnModHelp.BringToFront();
             footer.Resize += delegate { LayoutFooter(); };
             root.Controls.Add(footer, 0, 5);
@@ -312,15 +312,15 @@ namespace PBZKeyForge
             int undoWidth = (int)(88 * scale);
             btnUndo.SetBounds(btnApply.Left - gap - undoWidth, btnApply.Top, undoWidth, actionHeight);
             int modWidth = Math.Max((int)(300 * scale), Math.Min((int)(420 * scale), (int)(footer.ClientSize.Width * 0.36f)));
-            chkPerfectDeflect.SetBounds(btnUndo.Left - gap - modWidth, (int)(8 * scale), modWidth, (int)(82 * scale));
-            using (var graphics = chkPerfectDeflect.CreateGraphics())
+            chkPerfectDeflectNoRapidClickPenalty.SetBounds(btnUndo.Left - gap - modWidth, (int)(8 * scale), modWidth, (int)(82 * scale));
+            using (var graphics = chkPerfectDeflectNoRapidClickPenalty.CreateGraphics())
             {
-                var header = chkPerfectDeflect.MeasureHeader(graphics);
+                var header = chkPerfectDeflectNoRapidClickPenalty.MeasureHeader(graphics);
                 Rectangle helpBounds = header.Help;
-                helpBounds.Offset(chkPerfectDeflect.Location);
+                helpBounds.Offset(chkPerfectDeflectNoRapidClickPenalty.Location);
                 btnModHelp.Bounds = helpBounds;
             }
-            int left = gap, scopeWidth = Math.Max(100, chkPerfectDeflect.Left - gap * 2);
+            int left = gap, scopeWidth = Math.Max(100, chkPerfectDeflectNoRapidClickPenalty.Left - gap * 2);
             chkActivate.SetBounds(left, (int)(12 * scale), scopeWidth, (int)(28 * scale));
             lblOffline.Bounds = chkActivate.Bounds;
             lblScope.SetBounds(left, (int)(44 * scale), scopeWidth, (int)(24 * scale));

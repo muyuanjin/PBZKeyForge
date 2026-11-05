@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web.Script.Serialization;
 using PBZKeyForge;
 
-public static class PerfectDeflectModTests
+public static class PerfectDeflectNoRapidClickPenaltyModTests
 {
     public sealed class Metadata { public string[] RequiredChunks { get; set; } }
     static int checks;
@@ -17,7 +17,7 @@ public static class PerfectDeflectModTests
     public static void WriteToc(string path)
     {
         string[] chunks;
-        using (var stream = typeof(PerfectDeflectMod).Assembly.GetManifestResourceStream("PBZKeyForge.PerfectDeflect.json"))
+        using (var stream = typeof(PerfectDeflectNoRapidClickPenaltyMod).Assembly.GetManifestResourceStream("PBZKeyForge.PerfectDeflectNoRapidClickPenalty.json"))
         using (var reader = new StreamReader(stream))
             chunks = new JavaScriptSerializer().Deserialize<Metadata>(reader.ReadToEnd()).RequiredChunks;
         using (var writer = new BinaryWriter(File.Create(path)))
@@ -48,8 +48,8 @@ public static class PerfectDeflectModTests
             byte[] originalSave = File.ReadAllBytes(save);
             string other = Path.Combine(paks, @"~mods\OtherMod\untouched.pak");
             Directory.CreateDirectory(Path.GetDirectoryName(other)); File.WriteAllText(other, "preserve");
-            var mod = new PerfectDeflectMod(root);
-            Assert(PerfectDeflectMod.FindGameDirectory(save) == root, "Game directory resolution.");
+            var mod = new PerfectDeflectNoRapidClickPenaltyMod(root);
+            Assert(PerfectDeflectNoRapidClickPenaltyMod.FindGameDirectory(save) == root, "Game directory resolution.");
             Assert(mod.HasTargetResource(), "All five resources in a TOC with an extended header must be found.");
             Assert(mod.ReadState() == ResourceModState.Disabled, "Default state must be disabled.");
             mod.Apply(false); mod.Apply(true);
@@ -83,7 +83,7 @@ public static class PerfectDeflectModTests
             Assert(File.ReadAllBytes(save).SequenceEqual(originalSave) && File.ReadAllBytes(toc).SequenceEqual(originalToc), "Mod operation changed source saves or archives.");
             Assert(File.ReadAllText(exe) == "fixture, never launched" && File.ReadAllText(other) == "preserve", "Unrelated files changed.");
             Assert(!Directory.GetDirectories(Path.Combine(root, @"ProjectPBZ\Content"), "*.tmp*").Any(), "Staging directory leaked.");
-            Console.WriteLine("PerfectDeflectModTests PASS: " + checks + " assertions; fixture=" + root);
+            Console.WriteLine("PerfectDeflectNoRapidClickPenaltyModTests PASS: " + checks + " assertions; fixture=" + root);
             return 0;
         }
         catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }

@@ -91,7 +91,7 @@ LastDeflectClick = now
 
 工具若支持这种 Mod，必须按实际补丁后的资源身份重新建立动作、默认槽及手柄家族记录；不能沿用原厂 Guard 的槽位表并仅修改显示名称。已有 Guard 覆盖与新增 Stance 名称的初始化也需要分别处理。
 
-程序提供[完美防御无连点惩罚](perfect-deflect-mod.md)：仅将五个难度配置中的 `Deflect Quickclick Punish Cooldown` 从 `0.4` 改为 `0`，使原逻辑在每次点击时重置连点计数。每次点击仍使用游戏当前计算的基础窗口，保留难度、破防、饰品、配置帧率与普通防御资格。Combined getter、Passive、Base、Player 及其他战斗函数均保持原样。
+程序提供[完美防御无连点惩罚](perfect-deflect-no-rapid-click-penalty-mod.md)：仅将五个难度配置中的 `Deflect Quickclick Punish Cooldown` 从 `0.4` 改为 `0`，使原逻辑在每次点击时重置连点计数。每次点击仍使用游戏当前计算的基础窗口，保留难度、破防、饰品、配置帧率与普通防御资格。Combined getter、Passive、Base、Player 及其他战斗函数均保持原样。
 
 旧完整取消连点惩罚的窗口效果已有用户实测。本次五配置纯数值容器仍需独立游戏加载与战斗复测。仅拆分 Stance 名称不能避免左键继续触发 Deflect 的连点计数。
 
@@ -117,4 +117,4 @@ Blueprint 解码检查完整消费序列化字节，并核对重建后的 VM 内
 
 源资源的 FProperty 顺序确定字段身份，各难度 Combined getter 读取各自 Combat 配置中的冷却。`Give Perfect Window` 比较 `now >= LastDeflectClick + QuickclickPunishCooldown`，因此冷却为零时每次点击回到计数零，原倍率数组的首项仍提供未受连点惩罚的动态基础窗口。普通窗口、结果分类、角色与武器资格沿用原逻辑。
 
-开发端由 `build/make-perfect-deflect-mod.py` 复用 `build/extract-input-defaults.py` 的 Archive/Package 读取器，定位并替换这一 double，再打包五个原包及其必要容器信息。运行端安装程序内置的完成容器。验收入口为 `tests/PerfectDeflectModBuildTests.py`、`tests/PerfectDeflectModTests.cs` 和 `tests/DeflectEmbeddedResourceTests.cs`；独立原始 IOStore 提取可使用 `tests/DeflectSchemaAudit/`。数值、容器和安装验证各自覆盖对应对象，不代替实际游戏加载和战斗结果。
+开发端由 `build/make-perfect-deflect-no-rapid-click-penalty-mod.py` 复用 `build/extract-input-defaults.py` 的 Archive/Package 读取器，定位并替换这一 double，再打包五个原包及其必要容器信息。运行端安装程序内置的完成容器。验收入口为 `tests/PerfectDeflectNoRapidClickPenaltyModBuildTests.py`、`tests/PerfectDeflectNoRapidClickPenaltyModTests.cs` 和 `tests/PerfectDeflectNoRapidClickPenaltyEmbeddedResourceTests.cs`；独立原始 IOStore 提取可使用 `tests/DeflectSchemaAudit/`。数值、容器和安装验证各自覆盖对应对象，不代替实际游戏加载和战斗结果。

@@ -7,7 +7,7 @@ import struct
 import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
-SPEC=importlib.util.spec_from_file_location('mod_builder',ROOT/'build/make-perfect-deflect-mod.py')
+SPEC=importlib.util.spec_from_file_location('mod_builder',ROOT/'build/make-perfect-deflect-no-rapid-click-penalty-mod.py')
 builder=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(builder)
 OPTIONS=None
 
@@ -33,9 +33,9 @@ def chunks(folder):
     return result
 
 
-class PerfectDeflectModBuildTests(unittest.TestCase):
+class PerfectDeflectNoRapidClickPenaltyModBuildTests(unittest.TestCase):
     def test_five_data_assets_and_native_header_layout(self):
-        folder=ROOT/'assets/perfect-deflect-mod'
+        folder=ROOT/'assets/perfect-deflect-no-rapid-click-penalty'
         layout=json.loads((folder/'layout.json').read_text())
         resources=chunks(folder)
         self.assertEqual(len(resources),6)
@@ -58,7 +58,7 @@ class PerfectDeflectModBuildTests(unittest.TestCase):
 
     def test_only_cooldown_numeric_bytes_differ_from_original(self):
         if not OPTIONS or not OPTIONS.game_exe:self.skipTest('Pass local archive arguments for original-package comparison')
-        folder=ROOT/'assets/perfect-deflect-mod';layout=json.loads((folder/'layout.json').read_text());resources=chunks(folder)
+        folder=ROOT/'assets/perfect-deflect-no-rapid-click-penalty';layout=json.loads((folder/'layout.json').read_text());resources=chunks(folder)
         archive=builder.e.Archive(OPTIONS.game_exe,OPTIONS.paks,OPTIONS.oodle,OPTIONS.build)
         try:
             for identity,info in zip(layout['RequiredChunks'],layout['Packages']):

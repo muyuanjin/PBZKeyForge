@@ -7,20 +7,20 @@ namespace PBZKeyForge
 {
     public enum ResourceModState { Disabled, Enabled, Incomplete, Conflict }
 
-    public sealed class PerfectDeflectMod
+    public sealed class PerfectDeflectNoRapidClickPenaltyMod
     {
-        const string Stem = "PBZKeyForge_PerfectDeflect_P";
+        const string Stem = "PBZKeyForge_PerfectDeflectNoRapidClickPenalty_P";
         static readonly string[] Extensions = { ".pak", ".utoc", ".ucas" };
         public string GameDirectory { get; private set; }
         public string InstallDirectory { get; private set; }
         readonly string contentDirectory, paksDirectory;
 
-        public PerfectDeflectMod(string gameDirectory)
+        public PerfectDeflectNoRapidClickPenaltyMod(string gameDirectory)
         {
             GameDirectory = Path.GetFullPath(gameDirectory);
             contentDirectory = Path.Combine(GameDirectory, @"ProjectPBZ\Content");
             paksDirectory = Path.Combine(contentDirectory, "Paks");
-            InstallDirectory = Path.Combine(paksDirectory, @"~mods\PBZKeyForge_PerfectDeflect");
+            InstallDirectory = Path.Combine(paksDirectory, @"~mods\PBZKeyForge_PerfectDeflectNoRapidClickPenalty");
         }
 
         public static string FindGameDirectory(string inputSave)
@@ -76,7 +76,7 @@ namespace PBZKeyForge
 
         static string[] ReadMetadata()
         {
-            using (var stream = typeof(PerfectDeflectMod).Assembly.GetManifestResourceStream("PBZKeyForge.PerfectDeflect.json"))
+            using (var stream = typeof(PerfectDeflectNoRapidClickPenaltyMod).Assembly.GetManifestResourceStream("PBZKeyForge.PerfectDeflectNoRapidClickPenalty.json"))
             using (var reader = new StreamReader(stream))
                 return new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<Metadata>(reader.ReadToEnd()).RequiredChunks;
         }
@@ -85,7 +85,7 @@ namespace PBZKeyForge
         {
             var result = new System.Collections.Generic.Dictionary<string, byte[]>();
             foreach (string extension in Extensions)
-            using (var stream = typeof(PerfectDeflectMod).Assembly.GetManifestResourceStream("PBZKeyForge.PerfectDeflect" + extension))
+            using (var stream = typeof(PerfectDeflectNoRapidClickPenaltyMod).Assembly.GetManifestResourceStream("PBZKeyForge.PerfectDeflectNoRapidClickPenalty" + extension))
             using (var buffer = new MemoryStream())
             { stream.CopyTo(buffer); result.Add(extension, buffer.ToArray()); }
             return result;
@@ -121,7 +121,7 @@ namespace PBZKeyForge
             if (state == expected) return;
             if (enabled && !HasTargetResource()) throw new InvalidDataException(I18n.Str("mod.unsupported"));
             if (!Directory.Exists(contentDirectory)) throw new DirectoryNotFoundException(I18n.Str("mod.unsupported"));
-            string staging = Path.Combine(contentDirectory, "PBZKeyForge_PerfectDeflect_" + Guid.NewGuid().ToString("N") + ".tmp");
+            string staging = Path.Combine(contentDirectory, "PBZKeyForge_PerfectDeflectNoRapidClickPenalty_" + Guid.NewGuid().ToString("N") + ".tmp");
             string retired = staging + ".old";
             bool replaced = false;
             try

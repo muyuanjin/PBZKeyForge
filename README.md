@@ -39,7 +39,7 @@ The in-game screen validates on **save**, not at runtime, and it rejects any bin
 - **15 languages** — English, 简体中文, 繁體中文, 日本語, 한국어, Français, Deutsch, Español (España / Latinoamérica), Português (Brasil / Portugal), Русский, Italiano, ไทย, Tiếng Việt. Auto-detected from Windows, switchable in the toolbar.
 - **Explicit binding choices.** Default inherits the factory key; Unbound removes it. Unrelated save data is preserved.
 - **Safe writes.** The game must be closed, a timestamped backup is written first, and the file is re-read and verified after saving.
-- **Optional removal of the perfect-guard rapid-click penalty.** The **Perfect guard: no rapid-click penalty** checkbox and **GAMEPLAY MOD** badge on the right side of the footer enable or remove the rapid-guard penalty override through **Apply changes**. Applies to every difficulty and guard key; no exact game-version gate. See [installation and compatibility](docs/perfect-deflect-mod.md).
+- **Optional removal of the perfect-guard rapid-click penalty.** The **Perfect guard: no rapid-click penalty** checkbox and **GAMEPLAY MOD** badge on the right side of the footer enable or remove the rapid-guard penalty override through **Apply changes**. Applies to every difficulty and guard key; no exact game-version gate. See [installation and compatibility](docs/perfect-deflect-no-rapid-click-penalty-mod.md).
 
 ## Install
 
@@ -71,7 +71,7 @@ Choose **Unbound** to write an explicit empty binding for a slot. **Default**, b
 
 Check **Perfect guard: no rapid-click penalty** on the right side of the footer, then click **Apply changes** to remove the rapid-guard penalty. The option is off by default. Click **?** for a short explanation; uncheck and apply to restore the original rules. Exit the game before applying. All schemes and guard keys share this change.
 
-Each click uses the game’s current base perfect-guard window, including its difficulty, accessory and guard-break rules. The patch changes one cooldown value in each of five difficulty configuration assets and preserves the game’s combat scripts. Installation uses embedded resources and requires no Python, retoc, Oodle or network connection. See [installation and known limits](docs/perfect-deflect-mod.md).
+Each click uses the game’s current base perfect-guard window, including its difficulty, accessory and guard-break rules. The patch changes one cooldown value in each of five difficulty configuration assets and preserves the game’s combat scripts. Installation uses embedded resources and requires no Python, retoc, Oodle or network connection. See [installation and known limits](docs/perfect-deflect-no-rapid-click-penalty-mod.md).
 
 ## My presets and sharing
 
@@ -204,7 +204,7 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 原版连点防御会缩短、甚至停止刷新完美防御窗口；攻防同键时，连点攻击也会触发该惩罚。主页面底部右侧勾选 **完美防御无连点惩罚**，再点 **应用更改** 即可取消连点惩罚。默认关闭，点击旁边的 **?** 查看简短说明；取消勾选并应用即可恢复原规则。启用或关闭前请退出游戏，所有键位方案和防御按键共同生效。
 
-每次点击仍按游戏当前基础窗口判定，难度、饰品、破防状态和普通防御资格保留原规则。补丁只修改五个难度配置各一个冷却数值，保留战斗脚本。补丁内置，使用时不需要 Python、retoc、Oodle 或联网。见[使用与已知限制](docs/perfect-deflect-mod.md)。
+每次点击仍按游戏当前基础窗口判定，难度、饰品、破防状态和普通防御资格保留原规则。补丁只修改五个难度配置各一个冷却数值，保留战斗脚本。补丁内置，使用时不需要 Python、retoc、Oodle 或联网。见[使用与已知限制](docs/perfect-deflect-no-rapid-click-penalty-mod.md)。
 
 ### 重要提醒
 

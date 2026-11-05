@@ -15,7 +15,7 @@ description: 为《影之刃零》开发键位编辑与资源 Mod 功能，提�
 | 手柄绑定 | 同文件 `GamepadFamilyProfiles` → `(ProfileId, Family)` → `Keys` | 同为 Xbox 的记录也可能属于不同方案；不能全部一起改。 |
 | 原厂绑定与继承后的有效按键 | 游戏 IMC 按方案选择的映射 → 注册槽位；手柄另有保存的 `DefaultKey` | 原厂集合、逐槽默认与当前覆盖是三种数据，不能相互冒充。 |
 | 游戏采用哪个方案 | `PBZSharedSetting.sav` 认证解密后的 JSON `KeyBindingScheme` | 单改 GVAS 的 `CurrentProfileIdentifierString` 不能代替它。 |
-| 取消完美防御连点惩罚 | `ProjectPBZ/Content/Paks/~mods/PBZKeyForge_PerfectDeflect/` | 独立资源 Mod，所有方案、难度及防御按键共享；主页面勾选后随“应用更改”安装或移除，不改存档。 |
+| 取消完美防御连点惩罚 | `ProjectPBZ/Content/Paks/~mods/PBZKeyForge_PerfectDeflectNoRapidClickPenalty/` | 独立资源 Mod，所有方案、难度及防御按键共享；主页面勾选后随“应用更改”安装或移除，不改存档。 |
 
 已研究的 Steam 安装中，两份存档在游戏根目录的 `ProjectPBZ/Saved/`，实际原生程序在 `platform/steam/PBZ.exe`。不要把较小启动器当作该程序，也不要把此路径推广到未经检查的其他发行版。
 
@@ -26,7 +26,7 @@ description: 为《影之刃零》开发键位编辑与资源 Mod 功能，提�
 - 提取或展示原厂键、解释默认继承、计算差异与功能数：[默认映射与有效绑定](references/default-bindings.md)。
 - 读取当前生效方案、实现启用功能、处理 PBZS 加密：[生效方案与认证容器](references/scheme-activation.md)。
 - 判断旧指引是否可信、适配游戏更新、说明验证程度：[研究依据与版本边界](references/research-evidence.md)。
-- 启用/关闭完美防御无连点惩罚、资源来源与跨版本限制：[资源 Mod](../../docs/perfect-deflect-mod.md)、[内置补丁与重建](../../assets/perfect-deflect-mod/README.md)。
+- 启用/关闭完美防御无连点惩罚、资源来源与跨版本限制：[资源 Mod](../../docs/perfect-deflect-no-rapid-click-penalty-mod.md)、[内置补丁与重建](../../assets/perfect-deflect-no-rapid-click-penalty/README.md)。
 
 ## 实施入口
 
@@ -48,8 +48,8 @@ Xbox 的标准保存 Family 为 `Xbox`，PlayStation 为 `PS`；显示名称不�
 ## 验收与交付
 
 - 完美防御无连点惩罚仅覆盖 `/PBZCombatAsset/Config/GlobalConfig_Combat_{Easy,Normal,Hard,Nightmare,Handicapped}` 五个配置包，各将 `Deflect Quickclick Punish Cooldown` 的 double 从 `0.4` 改为 `0`。每包其余字节须与源资源相同；Combined getter、Passive、Base、Player 与其他函数保持原样。通过原逻辑取消连点惩罚，保留动态基础窗口、普通防御窗口及原生资格判定。
-- 重建入口为 `build/make-perfect-deflect-mod.py`，复用 `build/extract-input-defaults.py` 的资源读取器；运行 `tests/PerfectDeflectModBuildTests.py` 验证五包范围、数值与容器关系。需要独立提取容器时使用 `DeflectSchemaAudit --container`，它只提取原始 chunk，不验证游戏实际加载。不得把实验分支的新增函数、曲线或概率测试重新作为主线验收条件。
-- `PerfectDeflectMod` 管理独立目录，默认关闭。主页面勾选仅暂存，点击“应用更改”安装，取消勾选后应用移除；启用/关闭前要求退出游戏。按目标资源身份识别，不设精确版本号门槛；资源存在不等于未来数据兼容。只处理本工具文件，不接管内容不同的旧补丁；旧测试版先由安装它的程序关闭。原始容器与存档不替换。
+- 重建入口为 `build/make-perfect-deflect-no-rapid-click-penalty-mod.py`，复用 `build/extract-input-defaults.py` 的资源读取器；运行 `tests/PerfectDeflectNoRapidClickPenaltyModBuildTests.py` 验证五包范围、数值与容器关系。需要独立提取容器时使用 `DeflectSchemaAudit --container`，它只提取原始 chunk，不验证游戏实际加载。不得把实验分支的新增函数、曲线或概率测试重新作为主线验收条件。
+- `PerfectDeflectNoRapidClickPenaltyMod` 管理独立目录，默认关闭。主页面勾选仅暂存，点击“应用更改”安装，取消勾选后应用移除；启用/关闭前要求退出游戏。按目标资源身份识别，不设精确版本号门槛；资源存在不等于未来数据兼容。只管理本工具独立目录中的文件，未知或被修改的文件报冲突并保留。原始容器与存档不替换。
 - 单方案修改后，另外两套键鼠及手柄记录、其他动作、未知字段和尾部数据保持不变；全局恢复默认是明确的例外操作。
 - “新增左键防御”必须保留右键，手柄对应保留 LB 并新增 X。槽满时拒绝，不能静默替换不同的已有键；“移动防御到左键”则是另一种操作。手柄普通编辑只使用已注册槽；没有投影的额外家族条目不会在方案激活时应用。
 - 默认按键、实际功能数、原厂差异、恢复操作共用同一映射来源。逐槽恢复按具体默认值执行；缺失覆盖从原厂槽继承，显式 `None` 保持解绑。已确认的新增关系独立显示为自定义，不能被其他槽的未知状态吞掉。
