@@ -9,7 +9,7 @@
 - Improve keyboard/mouse and action-table layout at smaller window sizes, refresh the interaction icon, and prevent overlapping text while scrolling scheme comparisons.
 - Show explicit exit-game guidance on Apply while the game is running; stabilize save progress feedback and avoid a spinner flash for brief writes.
 
-The new five-asset numeric gameplay patch has passed offline data and installation checks; in-game loading and combat stability still need verification. It is included only in the editor, not the presets-only archive.
+The optional gameplay patch is included only in the editor, not the presets-only archive.
 
 ## 1.2.2 — 2026-11-04
 

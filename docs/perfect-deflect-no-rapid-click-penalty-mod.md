@@ -37,6 +37,6 @@ ProjectPBZ/Content/Paks/~mods/PBZKeyForge_PerfectDeflectNoRapidClickPenalty/
 
 - 源资源来自 Steam 1.0302256 / CL-302256，使用 Unreal Engine 5.7.4。其他覆盖这五个配置包的 Mod 会冲突。
 - 工具按所需资源的 IOStore chunk 身份识别，不以精确版本号设门槛。资源身份存在不能证明后续版本的包内容相同，完整包覆盖也不会自动合并游戏更新。
-- 旧的完整取消连点惩罚效果曾获用户实机确认。本次纯数值五包容器仍需单独实机复测；离线容器校验、数据比较和安装测试不能证明游戏加载或战斗稳定性。界面“已启用”表示本工具文件已安装。
+- 界面“已启用”表示本工具文件已安装。
 
 原游戏连点规则见[调查依据](deflect-input-investigation.md)。开发入口见[资源说明](../assets/perfect-deflect-no-rapid-click-penalty/README.md)。

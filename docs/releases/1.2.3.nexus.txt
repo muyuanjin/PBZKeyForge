@@ -1,11 +1,1 @@
-PBZKeyForge 1.2.3 — editor and presets
-
-New since 1.2.2: optional Perfect guard: no rapid-click penalty, off by default. Check the option in the footer and click Apply changes to install it; uncheck and apply to restore the original rules. Exit the game before either operation. It applies to every scheme, difficulty and guard key, including shared attack/guard bindings. Each input still uses the game's current base timing and original difficulty, accessory and guard-break rules.
-
-Steam patch 1.0302256 / CL-302256 is supported alongside the launch build, with scheme activation and the correct Phantom Edge slots for each build. The editor remembers the last opened save, follows Steam's installation records, and discovers compatible later-build scheme settings in the background. Startup, binding refreshes and preset operations are faster. Smaller-window layouts, scheme-comparison scrolling and Apply feedback are improved.
-
-The main download contains the editor, the embedded optional gameplay patch, eight ready-made preset files and documentation. The eight layouts and PBZ2 share-code baseline are unchanged from 1.2.2. For a packaged preset, back up EnhancedInputUserSettings.sav, copy the selected file over it, and select Custom 1 in game. Do not apply or reset bindings in the game's own binding screen afterwards, which rewrites them.
-
-Known limits: the new five-asset numeric gameplay patch has passed offline data and installation checks but still needs in-game loading and combat-stability verification. Its source is Steam 1.0302256; mods replacing the same difficulty assets conflict, and future game updates may need a new patch. The presets-only download does not include this optional mod.
-
-Source and release: https://github.com/muyuanjin/PBZKeyForge/releases/tag/v1.2.3
+PBZKeyForge 1.2.3: optional Perfect guard: no rapid-click penalty (off by default), Steam 1.0302256 support, improved save discovery, faster editing and Apply feedback. Close the game before applying. Includes eight presets; see Changelogs for details.

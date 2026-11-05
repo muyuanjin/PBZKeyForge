@@ -79,7 +79,7 @@ Windows 10/11, Steam launch build [b]CL-301524[/b] and patch [b]1.0302256 / CL-3
 Restore your save backup to remove binding changes, or preview and apply [b]More → Restore all defaults[/b] to return to factory bindings. Remove the optional gameplay mod separately by unchecking it and applying with the game closed.
 
 [color=#e8b96a][b]KNOWN LIMITS[/b][/color]
-The new five-asset numeric gameplay patch has passed offline data and installation checks. [b]In-game loading and combat stability still need verification.[/b] The patch uses Steam 1.0302256 assets and conflicts with mods replacing the same difficulty configuration assets. Finding the required resources does not establish compatibility with future game updates; a new game patch may require an updated mod. Scheme authentication and save-file checks do not verify physical-controller or combat behavior in game.
+The optional gameplay patch uses Steam 1.0302256 difficulty assets and conflicts with mods replacing the same assets. A new game patch may require an updated mod.
 
 [color=#e8b96a][b]SOURCE AND BUILDS[/b][/color]
 [url=https://github.com/muyuanjin/PBZKeyForge]Source, documentation and issues[/url] · [url=https://github.com/muyuanjin/PBZKeyForge/releases]Version downloads and update notes[/url]
