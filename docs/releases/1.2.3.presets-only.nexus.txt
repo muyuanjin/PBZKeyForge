@@ -1,0 +1,9 @@
+PBZKeyForge 1.2.3 — presets only
+
+This archive contains eight ready-made game settings files, the bilingual PRESETS.md guide and README. The eight layouts are unchanged from 1.2.2; this package updates the documentation and installation guidance. It contains no executable and no optional Perfect guard: no rapid-click penalty gameplay mod. Copying one of these presets changes bindings only and retains the game's rapid-guard penalty.
+
+Close the game and back up ProjectPBZ/Saved/EnhancedInputUserSettings.sav. Choose one layout using PRESETS.md, copy it over that file, then select Custom 1 in game. Replacing the file replaces your existing saved layouts. Do not apply or reset bindings in the game's own binding screen afterwards, as it rewrites shared bindings. Restore your backup to uninstall.
+
+The layouts retain their factory baseline and device scopes. For editing and combining existing settings, personal presets, share codes, or the optional gameplay mod, use the main editor download. The 1.2.3 editor supports Steam CL-301524 and patch 1.0302256 / CL-302256 and applies each build's native binding-slot rules.
+
+Source and release: https://github.com/muyuanjin/PBZKeyForge/releases/tag/v1.2.3

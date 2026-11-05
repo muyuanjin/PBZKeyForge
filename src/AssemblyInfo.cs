@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("PBZKeyForge")]
 [assembly: AssemblyCopyright("MIT License")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.2.2.0")]
-[assembly: AssemblyFileVersion("1.2.2.0")]
+[assembly: AssemblyVersion("1.2.3.0")]
+[assembly: AssemblyFileVersion("1.2.3.0")]
 
 
 

@@ -1,18 +1,15 @@
 # Changelog
 
-## Unreleased
+## 1.2.3 — 2026-11-05
 
-- Add “Perfect guard: no rapid-click penalty”: an optional footer checkbox removes the rapid-guard penalty through Apply changes. The embedded patch changes only the cooldown value in five difficulty configuration assets, preserving the game’s combat scripts and dynamic base windows. Includes click-to-open help in all 15 interface languages and isolated installation checks.
-- Support Steam patch 1.0302256 (`CL-302256_JKS-17280`) scheme activation while retaining launch-build support.
-- Discover relocated PBZS key derivations in later x64 builds, authenticate each candidate, and keep first-time discovery off the UI thread.
-- Defer discovered scheme selection until modal editing finishes, preserving the scheme receiving confirmed bindings.
-- Use separate input rules for both builds; patch 1.0302256 mirrors the Phantom Edge keyboard slot 2 to slot 0 and retains controller slots 1 and 3.
-- Extract InputAction-inherited registrations and QTE mappings across the archive; preserve the existing preset/share-code baseline.
-- Check interaction rebinding and restoration through authenticated installation copies.
-- Refresh the interaction hand icon in both binding views.
-- Keep Apply's busy appearance stable through control updates and delay the spinner for brief saves.
-- Show a distinct game-running Apply button and exit guidance until the game closes.
-- Preserve row clipping while scrolling scheme comparisons to prevent overlapping text.
+- Add optional “Perfect guard: no rapid-click penalty” in the footer, off by default. Check it and Apply changes to install; uncheck and apply to restore the original rules. It applies across schemes, difficulties and guard keys while retaining the game's base timing and eligibility rules.
+- Support Steam patch 1.0302256 (`CL-302256`) alongside the launch build, including scheme activation and the updated Phantom Edge binding slots. Existing built-in layouts and PBZ2 share codes keep the same baseline.
+- Remember the last opened save and use Steam's installation records to find the current game folder. Discover compatible scheme settings in later builds in the background, preserving bindings confirmed while editing.
+- Reduce startup, binding refresh, preset preview and preset-library overhead.
+- Improve keyboard/mouse and action-table layout at smaller window sizes, refresh the interaction icon, and prevent overlapping text while scrolling scheme comparisons.
+- Show explicit exit-game guidance on Apply while the game is running; stabilize save progress feedback and avoid a spinner flash for brief writes.
+
+The new five-asset numeric gameplay patch has passed offline data and installation checks; in-game loading and combat stability still need verification. It is included only in the editor, not the presets-only archive.
 
 ## 1.2.2 — 2026-11-04
 
