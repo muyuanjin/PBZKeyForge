@@ -22,14 +22,16 @@ namespace PBZKeyForge
     internal sealed class BindingHelpDialog : EditorWindow
     {
         public BindingHelpDialog(string topic)
+            : this(I18n.Str("help.title"), I18n.Str(topic) + "\n\n" + I18n.Str("help.example")) { }
+        public BindingHelpDialog(string title, string body)
         {
-            Text = I18n.Str("help.title"); Font = new Font("Microsoft YaHei UI", 10f);
+            Text = title; Font = new Font("Microsoft YaHei UI", 10f);
             AutoScaleMode = AutoScaleMode.Dpi; AutoScaleDimensions = new SizeF(96, 96);
             ClientSize = new Size(660, 480); MinimumSize = new Size(450, 330);
             StartPosition = FormStartPosition.CenterParent; MinimizeBox = false; MaximizeBox = false;
             BackColor = EditorTheme.Background; ForeColor = EditorTheme.Ink;
             var content = new EditorPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = EditorTheme.Surface };
-            var text = new Label { AutoSize = true, Text = I18n.Str(topic) + "\n\n" + I18n.Str("help.example"), ForeColor = EditorTheme.Ink };
+            var text = new Label { AutoSize = true, Text = body, ForeColor = EditorTheme.Ink };
             content.Controls.Add(text);
             content.Layout += delegate {
                 float scale = CurrentAutoScaleDimensions.Width / 96f; int inset = (int)(24 * scale);

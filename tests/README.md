@@ -1,6 +1,35 @@
 # Local verification
 
+Build with Windows PowerShell 5.1 and use a new isolated directory for each integration run. Resource tests never launch the game or modify its installation.
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\build.ps1
+$compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+python tests\PerfectDeflectModBuildTests.py
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\PerfectDeflectModTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll /r:System.Web.Extensions.dll tests\PerfectDeflectModTests.cs
+.\dist\PerfectDeflectModTests.exe dist\perfect-deflect-check
+& $compiler /nologo /out:dist\DeflectEmbeddedResourceTests.exe /r:System.Core.dll tests\DeflectEmbeddedResourceTests.cs
+.\dist\DeflectEmbeddedResourceTests.exe dist\PBZKeyForge.exe assets\perfect-deflect-mod
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\MainResourceModTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\MainResourceModTests.cs
+.\dist\MainResourceModTests.exe 'dist\perfect-deflect-check\游戏 with spaces' dist\main-resource-mod-check
+```
+
+The generator suite checks the five difficulty data assets and their numeric-only cooldown change. The installation harness checks enable/disable, no-op, incomplete repair, modified/foreign-file conflicts, the running-game guard, failure/retry and preservation of unrelated files. Embedded-resource comparison ensures the application installs the checked containers.
+
+The main-window harness checks the default-off footer checkbox, adjacent gameplay badge and click-to-open help, pending changes, Apply, Undo, warning, unavailable state and screenshots. It uses an isolated synthetic game fixture and does not launch the game.
+
+These checks cover data, containers and editor installation behavior. The previous full cancellation effect has user gameplay confirmation; this five-package numeric container still needs its own game-loading and combat check.
+
 Integration checks use Simplified Chinese by default. Full language sweeps are opt-in and reserved for targeted localization testing: append `--all-languages` to the relevant command, for example `.\dist\SchemeDiffViewTests.exe samples\vanilla-base.sav dist\diff-language-check --all-languages`. The dedicated `I18nTranslationTests` is also run separately only for localization work; it is not part of routine verification.
+
+For a targeted translation dictionary check across all 15 languages:
+
+```powershell
+$compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+$i18nSources = @(Get-ChildItem src -Filter 'I18n*.cs' | ForEach-Object { $_.FullName })
+& $compiler /nologo /out:dist\I18nTranslationTests.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll @i18nSources tests\I18nTranslationTests.cs
+.\dist\I18nTranslationTests.exe
+```
 
 Run from the repository root after `powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\build.ps1`. These checks use Windows' bundled .NET Framework compiler:
 
@@ -232,3 +261,12 @@ Checks the visible dropdown arrow through mouse messages, text entry through the
 ```
 
 Checks a fourth-key rejection without losing existing bindings, visible current keys and capacity, action-specific controller limits, disabled full-capacity confirmation, and gray removed action names/icons/status. Screenshots capture the full-capacity picker, action details and removed relationship. Saves are not written.
+
+An optional independent IOStore extraction uses the development-only CUE4Parse harness:
+
+```powershell
+dotnet build tests\DeflectSchemaAudit\DeflectSchemaAudit.csproj
+dotnet tests\DeflectSchemaAudit\bin\Debug\net10.0\DeflectSchemaAudit.dll --container assets\perfect-deflect-mod\PBZKeyForge_PerfectDeflect_P.utoc dist\deflect-container-read
+```
+
+The harness uses `GAME_UE5_7` and requires an empty companion PAK. Container mode extracts raw chunks without deserializing their Zen headers. It is separate from the dependency-free application runtime and does not establish game loading or combat behavior.

@@ -20,7 +20,7 @@ python build\extract-input-defaults.py --game-exe <platform\steam\PBZ.exe> --pak
 
 共享 profile 的注册身份由 mapping name、raw slot 和硬件 Primary 决定。原生 `0x144860ad1–0x144860ae7` 比较槽与硬件 Primary，`0x144850970` 返回全零硬件描述符；键鼠和手柄资源键本身不构成独立身份。影之武装的两个资源槽 2 因此合并。旧版基线三个方案共同保存的 `DefaultKey = Gamepad_RightTriggerAxis` 确定旧版最终归属；新版虚表派发到额外注册规范，将槽 2 改为 LeftControl、当前键复制槽 0。原生初始化会枚举全部 IMC 库，而非只注册当前输入模式；完整地址与路径见默认键表。
 
-资源 Mod 改变可重绑名称时，以实际修改后的输入资源重新提取动作身份，并按注册顺序重建默认槽和手柄家族记录。例如将 Stance 的名称从 `IA_Guard` 改为 `IA_Guard_0` 后，原厂 Guard 槽表不能直接用于新名称，也不能只修改界面文字；原 Guard 覆盖的保留和新身份的初始化分别处理。FName 的 number 会影响解析后的名称，核对时包含该部分。此规则用于输入身份变更；只修改战斗配置 getter 的完防连点保护不改变绑定身份。相关原型与消费路径见[防御输入与战斗行为](deflect-behavior.md)。
+资源 Mod 改变可重绑名称时，以实际修改后的输入资源重新提取动作身份，并按注册顺序重建默认槽和手柄家族记录。例如将 Stance 的名称从 `IA_Guard` 改为 `IA_Guard_0` 后，原厂 Guard 槽表不能直接用于新名称，也不能只修改界面文字；原 Guard 覆盖的保留和新身份的初始化分别处理。FName 的 number 会影响解析后的名称，核对时包含该部分。此规则用于输入身份变更；“完美防御无连点惩罚”只修改五个难度战斗配置中的冷却数值，不改变绑定身份。相关原型与消费路径见[防御输入与战斗行为](deflect-behavior.md)。
 
 | 情形 | 真实映射与处理 |
 | --- | --- |

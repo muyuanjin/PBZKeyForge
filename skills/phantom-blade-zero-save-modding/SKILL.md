@@ -1,11 +1,11 @@
 ---
 name: phantom-blade-zero-save-modding
-description: 为《影之刃零》开发存档型键位 mod 或编辑工具，提取动作与逐槽原厂映射，解析无损写回 EnhancedInputUserSettings.sav，并认证读写 PBZSharedSetting.sav 中真正生效的方案选择。适用于默认键信息、多动作同键、新增绑定及方案切换排查。
+description: 为《影之刃零》开发键位编辑与资源 Mod 功能，提取动作与逐槽原厂映射，无损读写 EnhancedInputUserSettings.sav，认证读写 PBZSharedSetting.sav 中的方案选择，并管理完美防御无连点惩罚资源补丁。
 ---
 
 # 影之刃零：键位与方案存档开发
 
-本技能记录 PBZKeyForge 的输入映射、存档格式和实现方法。默认值研究包含读取游戏资源及静态程序分析；修改落点仍是存档，不隐含启动、注入或修改游戏程序的授权。
+本技能记录 PBZKeyForge 的输入映射、存档格式和资源 Mod。普通改键与方案选择写存档，完美防御无连点惩罚使用独立资源容器；静态研究本身不隐含启动、注入或安装 Mod 的授权。
 
 ## 先区分修改对象
 
@@ -15,22 +15,24 @@ description: 为《影之刃零》开发存档型键位 mod 或编辑工具，�
 | 手柄绑定 | 同文件 `GamepadFamilyProfiles` → `(ProfileId, Family)` → `Keys` | 同为 Xbox 的记录也可能属于不同方案；不能全部一起改。 |
 | 原厂绑定与继承后的有效按键 | 游戏 IMC 按方案选择的映射 → 注册槽位；手柄另有保存的 `DefaultKey` | 原厂集合、逐槽默认与当前覆盖是三种数据，不能相互冒充。 |
 | 游戏采用哪个方案 | `PBZSharedSetting.sav` 认证解密后的 JSON `KeyBindingScheme` | 单改 GVAS 的 `CurrentProfileIdentifierString` 不能代替它。 |
+| 取消完美防御连点惩罚 | `ProjectPBZ/Content/Paks/~mods/PBZKeyForge_PerfectDeflect/` | 独立资源 Mod，所有方案、难度及防御按键共享；主页面勾选后随“应用更改”安装或移除，不改存档。 |
 
 已研究的 Steam 安装中，两份存档在游戏根目录的 `ProjectPBZ/Saved/`，实际原生程序在 `platform/steam/PBZ.exe`。不要把较小启动器当作该程序，也不要把此路径推广到未经检查的其他发行版。
 
 ## 按任务读取资料
 
 - 读写动作、槽位、手柄记录、制作一键攻防：[键位格式与编辑](references/input-bindings.md)。
-- 排查攻防同键的完防表现、解释绑定列或分离点按与架势：[防御输入与战斗行为](references/deflect-behavior.md)。
+- 排查攻防同键的完美防御表现、解释绑定列或分离点按与架势：[防御输入与战斗行为](references/deflect-behavior.md)。
 - 提取或展示原厂键、解释默认继承、计算差异与功能数：[默认映射与有效绑定](references/default-bindings.md)。
 - 读取当前生效方案、实现启用功能、处理 PBZS 加密：[生效方案与认证容器](references/scheme-activation.md)。
 - 判断旧指引是否可信、适配游戏更新、说明验证程度：[研究依据与版本边界](references/research-evidence.md)。
+- 启用/关闭完美防御无连点惩罚、资源来源与跨版本限制：[资源 Mod](../../docs/perfect-deflect-mod.md)、[内置补丁与重建](../../assets/perfect-deflect-mod/README.md)。
 
 ## 实施入口
 
 从明确的目标 `ProfileId` 开始。用户要求编辑“游戏当前方案”时，先读取 `GameSchemeSettings.ProfileId`；读取失败就报告无法确定，不以 `SaveFile.ActiveProfile` 或第一条记录冒充真实选择。
 
-先按目标区分绑定与战斗行为：增加防御按键仍编辑 `IA_Guard` 的有效集合；点按防御与持续架势共用这个可重绑名称，不能靠分配不同保存槽拆开。连点导致完防窗口衰减时，按[防御输入与战斗行为](references/deflect-behavior.md)核对共用计数与输入间隔；真正分离点按和架势需要检查输入释放事件及两层能力状态，不能承诺通过存档改键完成。
+先按目标区分绑定与战斗行为：增加防御按键仍编辑 `IA_Guard` 的有效集合；点按防御与持续架势共用这个可重绑名称，不能靠分配不同保存槽拆开。连点导致完美防御窗口衰减时，按[防御输入与战斗行为](references/deflect-behavior.md)核对共用计数与输入间隔；真正分离点按和架势需要检查输入释放事件及两层能力状态，不能承诺通过存档改键完成。
 
 支持构建的默认数据入口是 [InputDefaults](../../src/KeyboardDefaults.cs)，资源提取入口是 [extract-input-defaults.py](../../build/extract-input-defaults.py)。60 条资源注册输入按原生身份合并为 59 条最终默认，动作级集合由最终默认和固定映射生成。先按所属安装的原生注册规则确定槽归属，再合并对应方案的共享覆盖及手柄家族覆盖，不能按当前按键类别归属槽，也不能将旧存档的默认字段推广为新版注册结果。CL-302256 的影之武装槽 2 为键鼠槽 0 的镜像；CL-301524 的槽 2 属于手柄。适配新构建时同时检查资源自身设置、InputAction 继承设置及实际虚表派发的注册路径，不能由存档缺少键鼠 `DefaultKey` 推断默认值不可得。完整性应以 AssetRegistry 的类枚举核对，路径或文件名前缀筛选的结果不能单独证明无遗漏。
 
@@ -45,6 +47,9 @@ Xbox 的标准保存 Family 为 `Xbox`，PlayStation 为 `PS`；显示名称不�
 
 ## 验收与交付
 
+- 完美防御无连点惩罚仅覆盖 `/PBZCombatAsset/Config/GlobalConfig_Combat_{Easy,Normal,Hard,Nightmare,Handicapped}` 五个配置包，各将 `Deflect Quickclick Punish Cooldown` 的 double 从 `0.4` 改为 `0`。每包其余字节须与源资源相同；Combined getter、Passive、Base、Player 与其他函数保持原样。通过原逻辑取消连点惩罚，保留动态基础窗口、普通防御窗口及原生资格判定。
+- 重建入口为 `build/make-perfect-deflect-mod.py`，复用 `build/extract-input-defaults.py` 的资源读取器；运行 `tests/PerfectDeflectModBuildTests.py` 验证五包范围、数值与容器关系。需要独立提取容器时使用 `DeflectSchemaAudit --container`，它只提取原始 chunk，不验证游戏实际加载。不得把实验分支的新增函数、曲线或概率测试重新作为主线验收条件。
+- `PerfectDeflectMod` 管理独立目录，默认关闭。主页面勾选仅暂存，点击“应用更改”安装，取消勾选后应用移除；启用/关闭前要求退出游戏。按目标资源身份识别，不设精确版本号门槛；资源存在不等于未来数据兼容。只处理本工具文件，不接管内容不同的旧补丁；旧测试版先由安装它的程序关闭。原始容器与存档不替换。
 - 单方案修改后，另外两套键鼠及手柄记录、其他动作、未知字段和尾部数据保持不变；全局恢复默认是明确的例外操作。
 - “新增左键防御”必须保留右键，手柄对应保留 LB 并新增 X。槽满时拒绝，不能静默替换不同的已有键；“移动防御到左键”则是另一种操作。手柄普通编辑只使用已注册槽；没有投影的额外家族条目不会在方案激活时应用。
 - 默认按键、实际功能数、原厂差异、恢复操作共用同一映射来源。逐槽恢复按具体默认值执行；缺失覆盖从原厂槽继承，显式 `None` 保持解绑。已确认的新增关系独立显示为自定义，不能被其他槽的未知状态吞掉。

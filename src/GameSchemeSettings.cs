@@ -69,7 +69,7 @@ namespace PBZKeyForge
                 return new GameSchemeSettings(settingsPath, executablePath, encoded, resolved.Plain, resolved.Build);
         }
 
-        static string FindExecutable(string dir)
+        internal static string FindExecutable(string dir)
         {
             // Installed Steam layout. A different build must authenticate successfully before any write.
             var parent = new DirectoryInfo(dir);

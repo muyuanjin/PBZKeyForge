@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -108,10 +108,29 @@ namespace PBZKeyForge
             lblStatus.Text = I18n.Str("editor.applying");
             try
             {
-                var result = await Task.Run(() => Session.Apply());
+                var result = await Task.Run(() => Session.HasChanges ? Session.Apply() : new EditorApplyResult { Success = true });
                 if (result.PartialSuccess) SetMessage("editor.partial", true, result.Error);
                 else if (!result.Success) SetMessage("editor.failed", true, result.Error);
-                else SetMessage("editor.saved", false);
+                else
+                {
+                    try
+                    {
+                        if (ResourceModPending)
+                        {
+                            bool enabled = resourceModDraft.Value;
+                            var target = footerMod;
+                            await Task.Run(delegate { target.Apply(enabled); });
+                            resourceModBaseline = enabled;
+                            resourceModDraft = null;
+                        }
+                        SetMessage("editor.saved", false);
+                    }
+                    catch (Exception ex)
+                    {
+                        SetMessage(result.BindingsSaved || result.ActivationSaved ? "mod.partial" : "editor.failed", true, ex.Message);
+                    }
+                    RefreshFooterResourceMod(true);
+                }
             }
             catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
             finally

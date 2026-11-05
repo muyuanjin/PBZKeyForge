@@ -41,6 +41,25 @@ public static class BindingViewsTests
         Assert(diagram.Top >= hint.Bottom && !diagram.Bounds.IntersectsWith(hint.Bounds),
             "The device canvas must start below the instruction label.");
     }
+    static void CompleteKeyboard(MainForm form, string screenshot)
+    {
+        var diagram = Diagram(form);
+        var images = Field<System.Collections.Generic.Dictionary<string, RectangleF>>(diagram, "imageBounds");
+        Shot(form, screenshot);
+        foreach (var image in images)
+            Assert(image.Value.Left >= 0 && image.Value.Top >= 0
+                && image.Value.Right <= diagram.ClientSize.Width + 1 && image.Value.Bottom <= diagram.ClientSize.Height + 1,
+                "The complete " + image.Key + " must fit without scrolling: " + image.Value + "; viewport " + diagram.ClientSize);
+        Assert(!((ScrollableControl)diagram).VerticalScroll.Visible, "Standard keyboard and mouse must not require scrolling.");
+        var targets = Field<System.Collections.Generic.Dictionary<string, RectangleF>>(diagram, "targets");
+        foreach (string key in new[] { "Escape", "LeftControl", "SpaceBar", "RightControl", "Down", "ThumbMouseButton" })
+        {
+            var target = targets[key];
+            Assert(diagram.ClientRectangle.Contains(Point.Round(new PointF(target.Left + target.Width / 2, target.Top + target.Height / 2))),
+                "Physical key must be visible before clicking: " + key);
+            SelectKey(form, key);
+        }
+    }
     static void Badge(MainForm form, string key, int count, Color color)
     {
         form.RenderSession(); var states = Field<IDictionary>(Diagram(form), "states"); object state = states[key];
@@ -67,6 +86,24 @@ public static class BindingViewsTests
             string root = Path.GetFullPath(args[1]); Directory.CreateDirectory(root);
             string path = Path.Combine(root, "EnhancedInputUserSettings.sav");
             byte[] fixture = File.ReadAllBytes(args[0]); File.WriteAllBytes(path, fixture);
+            if (args.Contains("--layout-only"))
+            {
+                I18n.Current = "zh-Hans";
+                using (var form = new MainForm(new EditorPreferences(Path.Combine(root, "preferences.txt"))))
+                {
+                    form.UiSmoke(path); form.Show(); form.ShowActionView(false); Application.DoEvents();
+                    Size regular = form.Size;
+                    CompleteKeyboard(form, Path.Combine(root, "keys-zh-Hans.png"));
+                    form.Size = form.MinimumSize; Application.DoEvents();
+                    UnobstructedDiagram(form); CompleteKeyboard(form, Path.Combine(root, "minimum-zh-Hans.png"));
+                    form.Size = new Size(regular.Width, form.MinimumSize.Height); Application.DoEvents();
+                    CompleteKeyboard(form, Path.Combine(root, "keys-wide-short.png"));
+                    Assert(!form.Session.HasChanges, "Layout and key selection must not create binding changes.");
+                    form.Close();
+                }
+                Assert(fixture.SequenceEqual(File.ReadAllBytes(args[0])) && fixture.SequenceEqual(File.ReadAllBytes(path)), "Layout checks changed a save.");
+                Console.WriteLine("BindingViewsTests PASS: " + checks + " layout checks; artifacts " + root); return 0;
+            }
             string shared = Path.Combine(root, "PBZSharedSetting.sav"); File.WriteAllBytes(shared, new byte[] { 1 });
             var session = EditorSession.Open(path);
             string custom = session.Profiles.First(p => p.EndsWith("Custom1"));
@@ -260,7 +297,7 @@ public static class BindingViewsTests
                     Field<ComboBox>(form, "cbLang").SelectedIndex = lang;
                     form.Size = regular; form.ShowActionView(false); Application.DoEvents();
                     Inside(form, Field<Control>(form, "keyBindings")); Inside(form, Field<Control>(form, "schemeDiff"));
-                    Shot(form, Path.Combine(root, "keys-" + I18n.Languages[lang] + ".png"));
+                    CompleteKeyboard(form, Path.Combine(root, "keys-" + I18n.Languages[lang] + ".png"));
                     form.ShowActionView(true); Shot(form, Path.Combine(root, "actions-" + I18n.Languages[lang] + ".png"));
                     form.Size = form.MinimumSize; form.ShowActionView(false); Application.DoEvents();
                     UnobstructedDiagram(form);
@@ -268,10 +305,11 @@ public static class BindingViewsTests
                     var minimumDiagram = Descendants(keyView).Single(c => c.GetType().Name == "DeviceDiagram");
                     var images = Field<System.Collections.Generic.Dictionary<string, RectangleF>>(minimumDiagram, "imageBounds");
                     Assert(images.Values.All(r => r.Right <= minimumDiagram.Width + 1), "Device images must fit the canvas width.");
-                    Assert(images["keyboard"].Width >= minimumDiagram.ClientSize.Width * .70f, "Minimum keyboard must use available width to keep key labels readable.");
                     Inside(form, schemeDiff);
-                    Shot(form, Path.Combine(root, "minimum-" + I18n.Languages[lang] + ".png"));
+                    CompleteKeyboard(form, Path.Combine(root, "minimum-" + I18n.Languages[lang] + ".png"));
                 }
+                form.Size = new Size(regular.Width, form.MinimumSize.Height); Application.DoEvents();
+                CompleteKeyboard(form, Path.Combine(root, "keys-wide-short.png"));
                 form.Size = regular; Field<ComboBox>(form, "cbLang").SelectedIndex = 0; form.ShowGamepad(true);
                 var familyCombo = Field<ComboBox>(form, "cbFamily"); familyCombo.SelectedIndex = 1;
                 Assert(form.SelectedFamilyIndex == families[1].Index, "UI family selector chose the wrong record.");

@@ -154,7 +154,8 @@ namespace PBZKeyForge
                 extras[key] = new RectangleF(left, top, width, 27 * scale); left += width + 8 * scale;
             }
             float extraHeight = extraKeys.Count == 0 ? 0 : top + rowHeight;
-            float minimumHeight = pad ? 250 * scale : (ClientSize.Width - 3 * inset) * .79f * EditorArtwork.Keyboard.Height / EditorArtwork.Keyboard.Width;
+            float keyboardHeight = (ClientSize.Width - 3 * inset) * .79f * EditorArtwork.Keyboard.Height / EditorArtwork.Keyboard.Width;
+            float minimumHeight = pad ? 250 * scale : Math.Max(1, Math.Min(keyboardHeight, ClientSize.Height - 2 * inset));
             float availableHeight = Math.Max(minimumHeight, ClientSize.Height - 2 * inset - extraHeight);
             AutoScrollMinSize = new Size(0, (int)Math.Ceiling(availableHeight + 2 * inset + extraHeight));
             // Update native scroll ranges before placing hotspots at the current offset.

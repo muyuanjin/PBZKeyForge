@@ -1,0 +1,37 @@
+{
+  "RequiredChunks": [
+    "0a4052738fe9115300000001",
+    "890f9384b7a9192400000001",
+    "cecc5fccc37fe33200000001",
+    "b6c64e8a7906f6a400000001",
+    "6999c966dfefae7e00000001"
+  ],
+  "SourceBuild": "CL-302256",
+  "Packages": [
+    {
+      "Path": "/PBZCombatAsset/Config/GlobalConfig_Combat_Easy",
+      "Bytes": 4446,
+      "CooldownOffset": 1489
+    },
+    {
+      "Path": "/PBZCombatAsset/Config/GlobalConfig_Combat_Normal",
+      "Bytes": 4056,
+      "CooldownOffset": 1425
+    },
+    {
+      "Path": "/PBZCombatAsset/Config/GlobalConfig_Combat_Hard",
+      "Bytes": 4294,
+      "CooldownOffset": 1511
+    },
+    {
+      "Path": "/PBZCombatAsset/Config/GlobalConfig_Combat_Nightmare",
+      "Bytes": 4302,
+      "CooldownOffset": 1519
+    },
+    {
+      "Path": "/PBZCombatAsset/Config/GlobalConfig_Combat_Handicapped",
+      "Bytes": 1355,
+      "CooldownOffset": 927
+    }
+  ]
+}
