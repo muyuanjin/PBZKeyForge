@@ -22,7 +22,7 @@ EXE 哈希用于离线识别精确取证对象；编辑器正常读写不计算�
 
 CL-302256 原生 `platform/steam/PBZ.exe` 为 498913272 字节，文件偏移 `0x0C9E32B8` 的 UTF-16 字符串为 `Unreal Engine 5.7.4`。基线 GVAS 在字节 16 的 engine version 为 `(5, 7, 4)`、changelist 为 `301524`。
 
-主线补丁只覆盖五个 `GlobalConfig_Combat_*` 难度数据包，各把 `Deflect Quickclick Punish Cooldown` 的 double 从 `0.4` 改为 `0`。其余包内字节与源资源一致，不新增字段、函数、名字、导入或导出，不改 Combined getter、Passive、Base 或 Player 的代码。`build/make-perfect-deflect-mod.py` 使用 `build/extract-input-defaults.py` 读取原始包，`tests/PerfectDeflectModBuildTests.py` 验证修改范围及构建结果。
+主线补丁只覆盖五个 `GlobalConfig_Combat_*` 难度数据包，各把 `Deflect Quickclick Punish Cooldown` 的 double 从 `0.4` 改为 `0`。其余包内字节与源资源一致，不新增字段、函数、名字、导入或导出，不改 Combined getter、Passive、Base 或 Player 的代码。`build/make-perfect-deflect-no-rapid-click-penalty-mod.py` 使用 `build/extract-input-defaults.py` 读取原始包，`tests/PerfectDeflectNoRapidClickPenaltyModBuildTests.py` 验证修改范围及构建结果。
 
 独立 IOStore 提取使用 CUE4Parse `GAME_UE5_7`。`DeflectSchemaAudit --container` 提取原始 chunk，不反序列化 Zen 头；提取成功与数值比较不能代替真实游戏加载和战斗验证。旧完整取消惩罚效果有用户实机反馈，本次五包纯数据容器仍须独立复测。复杂曲线与概率原型保存在 `experimental/perfect-deflect-curve` 分支，其新增函数与脚本验收不属于主线补丁。
 

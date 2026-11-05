@@ -18,7 +18,7 @@
 
 解除连点窗口惩罚需要独立的战斗资源 Mod。本工具仅把五个难度配置 `GlobalConfig_Combat_{Easy,Normal,Hard,Nightmare,Handicapped}` 中的 `Deflect Quickclick Punish Cooldown` 从 `0.4` 改为 `0`，使原逻辑在每次点击时重置连点计数。只把倍率数组全部改为 1 不充分，因为计数越界仍返回零。此修改影响战斗规则，不能通过存档改键或拆分 Stance 名称代替。
 
-每包只改一个 double，其余字节保持原样，Combined getter、Passive、Base、Player 和其他战斗函数均不变。难度、饰品、破防状态与逻辑帧率继续决定每次动态基础窗口，普通防御和武器资格也保留原规则。主页面勾选“完美防御无连点惩罚”后应用安装，取消勾选后应用移除，默认关闭。范围和验证边界见[资源 Mod](../../../docs/perfect-deflect-mod.md)。
+每包只改一个 double，其余字节保持原样，Combined getter、Passive、Base、Player 和其他战斗函数均不变。难度、饰品、破防状态与逻辑帧率继续决定每次动态基础窗口，普通防御和武器资格也保留原规则。主页面勾选“完美防御无连点惩罚”后应用安装，取消勾选后应用移除，默认关闭。范围和验证边界见[资源 Mod](../../../docs/perfect-deflect-no-rapid-click-penalty-mod.md)。
 
 ## 输入资源改名后的模型
 

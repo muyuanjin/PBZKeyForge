@@ -76,9 +76,9 @@ namespace PBZKeyForge
 
     public partial class MainForm
     {
-        readonly ResourceModToggle chkPerfectDeflect = new ResourceModToggle();
+        readonly ResourceModToggle chkPerfectDeflectNoRapidClickPenalty = new ResourceModToggle();
         readonly EditorButton btnModHelp = new EditorButton();
-        PerfectDeflectMod footerMod;
+        PerfectDeflectNoRapidClickPenaltyMod footerMod;
         EditorSession footerModSession;
         string footerModError;
         ResourceModState footerModState;
@@ -105,7 +105,7 @@ namespace PBZKeyForge
                 {
                     try
                     {
-                        footerMod = new PerfectDeflectMod(PerfectDeflectMod.FindGameDirectory(input));
+                        footerMod = new PerfectDeflectNoRapidClickPenaltyMod(PerfectDeflectNoRapidClickPenaltyMod.FindGameDirectory(input));
                         footerModState = footerMod.ReadState(); footerModReady = footerMod.HasTargetResource();
                         if (footerModState != ResourceModState.Conflict)
                             resourceModBaseline = footerModState == ResourceModState.Enabled || footerModState == ResourceModState.Incomplete;
@@ -119,17 +119,17 @@ namespace PBZKeyForge
                 }
             }
             renderingResourceMod = true;
-            try { chkPerfectDeflect.Checked = ResourceModEnabled; }
+            try { chkPerfectDeflectNoRapidClickPenalty.Checked = ResourceModEnabled; }
             finally { renderingResourceMod = false; }
-            chkPerfectDeflect.Text = I18n.Str("mod.checkbox");
-            chkPerfectDeflect.Detail = I18n.Str("mod.warning");
+            chkPerfectDeflectNoRapidClickPenalty.Text = I18n.Str("mod.checkbox");
+            chkPerfectDeflectNoRapidClickPenalty.Detail = I18n.Str("mod.warning");
             btnModHelp.Text = "?"; btnModHelp.AccessibleName = I18n.Str("mod.title") + " · " + I18n.Str("mod.help");
-            chkPerfectDeflect.AccessibleName = chkPerfectDeflect.Text;
-            chkPerfectDeflect.AccessibleDescription = I18n.Str(ResourceModEnabled ? "mod.enabled" : "mod.disabled")
-                + (ResourceModPending ? " · " + I18n.Str("views.pending") : "") + "\n" + chkPerfectDeflect.Detail;
-            SetTip(chkPerfectDeflect, "");
+            chkPerfectDeflectNoRapidClickPenalty.AccessibleName = chkPerfectDeflectNoRapidClickPenalty.Text;
+            chkPerfectDeflectNoRapidClickPenalty.AccessibleDescription = I18n.Str(ResourceModEnabled ? "mod.enabled" : "mod.disabled")
+                + (ResourceModPending ? " · " + I18n.Str("views.pending") : "") + "\n" + chkPerfectDeflectNoRapidClickPenalty.Detail;
+            SetTip(chkPerfectDeflectNoRapidClickPenalty, "");
             SetTip(btnModHelp, I18n.Str("mod.help"));
-            UpdateResourceModAvailability(); chkPerfectDeflect.Invalidate();
+            UpdateResourceModAvailability(); chkPerfectDeflectNoRapidClickPenalty.Invalidate();
         }
 
         void ShowResourceModHelp()
@@ -151,13 +151,13 @@ namespace PBZKeyForge
 
         void UpdateResourceModAvailability()
         {
-            chkPerfectDeflect.Enabled = !IsApplying && footerMod != null;
+            chkPerfectDeflectNoRapidClickPenalty.Enabled = !IsApplying && footerMod != null;
         }
 
         void StageResourceMod()
         {
             if (loading || renderingResourceMod) return;
-            bool enabled = chkPerfectDeflect.Checked;
+            bool enabled = chkPerfectDeflectNoRapidClickPenalty.Checked;
             resourceModDraft = enabled != resourceModBaseline || enabled && footerModState == ResourceModState.Incomplete ? (bool?)enabled : null;
             RenderSession();
         }

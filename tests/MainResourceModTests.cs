@@ -28,7 +28,7 @@ public static class MainResourceModTests
     static void Shot(MainForm form, string output, string name)
     {
         form.BringToFront(); form.Activate(); form.Refresh(); Application.DoEvents();
-        var card = Field<CheckBox>(form, "chkPerfectDeflect"); var help = Field<Button>(form, "btnModHelp");
+        var card = Field<CheckBox>(form, "chkPerfectDeflectNoRapidClickPenalty"); var help = Field<Button>(form, "btnModHelp");
         using (var graphics = card.CreateGraphics())
         {
             object header = card.GetType().GetMethod("MeasureHeader").Invoke(card, new object[] { graphics });
@@ -93,7 +93,7 @@ public static class MainResourceModTests
             if (Directory.Exists(output)) throw new Exception("Use a new screenshot directory.");
             Directory.CreateDirectory(output);
             bool layoutOnly = args.Contains("--layout-only");
-            var mod = new PerfectDeflectMod(root); if (!layoutOnly) mod.Apply(false);
+            var mod = new PerfectDeflectNoRapidClickPenaltyMod(root); if (!layoutOnly) mod.Apply(false);
             string save = Path.Combine(root, @"ProjectPBZ\Saved\EnhancedInputUserSettings.sav");
             byte[] original = File.ReadAllBytes(save);
             Exception failure = null;
@@ -103,7 +103,7 @@ public static class MainResourceModTests
                 form.Shown += delegate { form.BeginInvoke(new Action(delegate {
                     try
                     {
-                        var card = Field<CheckBox>(form, "chkPerfectDeflect");
+                        var card = Field<CheckBox>(form, "chkPerfectDeflectNoRapidClickPenalty");
                         var apply = Field<Button>(form, "btnApply"); var undo = Field<Button>(form, "btnUndo");
                         form.RenderSession(); Application.DoEvents();
                         Assert(!card.Checked && card.Enabled && !apply.Enabled, "Protection must default off.");

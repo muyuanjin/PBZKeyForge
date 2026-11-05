@@ -45,9 +45,9 @@ foreach ($actionAsset in Get-ChildItem "$root\assets\ui\actions" -Filter *.png -
     $artworkArgs += "/resource:$($actionAsset.FullName),PBZKeyForge.Action.$($actionAsset.BaseName)"
 }
 foreach ($extension in @("pak", "utoc", "ucas")) {
-    $artworkArgs += "/resource:$root\assets\perfect-deflect-mod\PBZKeyForge_PerfectDeflect_P.$extension,PBZKeyForge.PerfectDeflect.$extension"
+    $artworkArgs += "/resource:$root\assets\perfect-deflect-no-rapid-click-penalty\PBZKeyForge_PerfectDeflectNoRapidClickPenalty_P.$extension,PBZKeyForge.PerfectDeflectNoRapidClickPenalty.$extension"
 }
-$artworkArgs += "/resource:$root\assets\perfect-deflect-mod\layout.json,PBZKeyForge.PerfectDeflect.json"
+$artworkArgs += "/resource:$root\assets\perfect-deflect-no-rapid-click-penalty\layout.json,PBZKeyForge.PerfectDeflectNoRapidClickPenalty.json"
 
 Write-Host "Compiling GUI with $csc"
 $guiArgs = @("/nologo", "/optimize+", "/target:winexe", "/out:$OutputDir\PBZKeyForge.exe", "/win32manifest:$manifest") + $iconArg + $artworkArgs + $refs + $sources

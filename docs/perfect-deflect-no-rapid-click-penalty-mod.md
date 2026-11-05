@@ -23,13 +23,13 @@
 容器内置于程序，使用时不需要 Python、retoc、Oodle 或联网。工具管理以下三个文件：
 
 ```text
-ProjectPBZ/Content/Paks/~mods/PBZKeyForge_PerfectDeflect/
-    PBZKeyForge_PerfectDeflect_P.pak
-    PBZKeyForge_PerfectDeflect_P.utoc
-    PBZKeyForge_PerfectDeflect_P.ucas
+ProjectPBZ/Content/Paks/~mods/PBZKeyForge_PerfectDeflectNoRapidClickPenalty/
+    PBZKeyForge_PerfectDeflectNoRapidClickPenalty_P.pak
+    PBZKeyForge_PerfectDeflectNoRapidClickPenalty_P.utoc
+    PBZKeyForge_PerfectDeflectNoRapidClickPenalty_P.ucas
 ```
 
-启用时准备并验证容器，再安装到独立目录；关闭时只移除本工具的补丁文件。游戏原始容器、程序和存档保持不变。应用可以补齐内容仍属于本版本的残缺安装。其他文件或内容不同的补丁会显示冲突并保留；若安装过旧测试版本，请先用安装它的旧程序取消勾选并应用，再启用本版本。
+启用时准备并验证容器，再安装到独立目录；关闭时只移除本工具的补丁文件。游戏原始容器、程序和存档保持不变。应用可以补齐内容仍属于本版本的残缺安装。其他文件或内容不同的补丁会显示冲突并保留。
 
 键位、方案和玩法 Mod 分别写入。部分成功时，提示会指出未完成部分，再次应用只重试未完成更改。
 
@@ -39,4 +39,4 @@ ProjectPBZ/Content/Paks/~mods/PBZKeyForge_PerfectDeflect/
 - 工具按所需资源的 IOStore chunk 身份识别，不以精确版本号设门槛。资源身份存在不能证明后续版本的包内容相同，完整包覆盖也不会自动合并游戏更新。
 - 旧的完整取消连点惩罚效果曾获用户实机确认。本次纯数值五包容器仍需单独实机复测；离线容器校验、数据比较和安装测试不能证明游戏加载或战斗稳定性。界面“已启用”表示本工具文件已安装。
 
-原游戏连点规则见[调查依据](deflect-input-investigation.md)。开发入口见[资源说明](../assets/perfect-deflect-mod/README.md)。
+原游戏连点规则见[调查依据](deflect-input-investigation.md)。开发入口见[资源说明](../assets/perfect-deflect-no-rapid-click-penalty/README.md)。

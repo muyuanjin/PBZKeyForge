@@ -15,7 +15,7 @@ import tempfile
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 SPEC=importlib.util.spec_from_file_location('input_extract',ROOT/'build/extract-input-defaults.py')
 e=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(e)
-STEM='PBZKeyForge_PerfectDeflect_P'
+STEM='PBZKeyForge_PerfectDeflectNoRapidClickPenalty_P'
 DIFFICULTIES=('Easy','Normal','Hard','Nightmare','Handicapped')
 
 
@@ -41,7 +41,7 @@ def cooldown_offset(data):
 def pack(args,packages,metadata,source_header):
     output=args.output
     output.mkdir(parents=True,exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix='perfect-deflect-') as temporary:
+    with tempfile.TemporaryDirectory(prefix='perfect-deflect-no-rapid-click-penalty-') as temporary:
         work=pathlib.Path(temporary);raw=work/'raw';chunks=raw/'chunks';chunks.mkdir(parents=True)
         manifest={'chunk_paths':{metadata[path]['chunk'].hex():metadata[path]['path'] for path in packages},'version':'ReplaceIoChunkHashWithIoHash','mount_point':'../../../'}
         (raw/'manifest.json').write_text(json.dumps(manifest),encoding='utf8')
@@ -66,7 +66,7 @@ def pack(args,packages,metadata,source_header):
         container_header=struct.pack('<II',0x496f436e,5)+container_id+struct.pack('<I',len(package_ids))+b''.join(struct.pack('<Q',p) for p in package_ids)+struct.pack('<I',len(store))+store+struct.pack('<IIIIIqq',0,0,0,0,0,0,0)
         (chunks/(container_id+bytes([0,0,0,6])).hex()).write_bytes(container_header)
         run('pack-raw',raw,toc)
-        companion=ROOT/'assets/perfect-deflect-mod/companion.pak'
+        companion=ROOT/'assets/perfect-deflect-no-rapid-click-penalty/companion.pak'
         shutil.copyfile(companion,toc.with_suffix('.pak'))
         toc_data=toc.read_bytes()
         entries,blocks=struct.unpack_from('<II',toc_data,24);seeds=struct.unpack_from('<I',toc_data,84)[0];overflow=struct.unpack_from('<I',toc_data,96)[0]
@@ -80,7 +80,7 @@ def pack(args,packages,metadata,source_header):
         layout={'RequiredChunks':[metadata[path]['chunk'].hex() for path in packages],
                 'SourceBuild':args.build,'Packages':[{'Path':path,'Bytes':len(data),'CooldownOffset':metadata[path]['offset']} for path,data in packages.items()]}
         (output/'layout.json').write_text(json.dumps(layout,indent=2)+'\n',encoding='utf8')
-        print('PerfectDeflect:',len(packages),'data assets; cooldown 0.4 -> 0; all other package bytes unchanged')
+        print('PerfectDeflectNoRapidClickPenalty:',len(packages),'data assets; cooldown 0.4 -> 0; all other package bytes unchanged')
 
 
 def main(args):
@@ -108,5 +108,5 @@ if __name__=='__main__':
     parser.add_argument('--oodle',type=pathlib.Path,required=True)
     parser.add_argument('--retoc',type=pathlib.Path,required=True)
     parser.add_argument('--build',choices=e.KEY_PART_OFFSETS,default='CL-302256')
-    parser.add_argument('--output',type=pathlib.Path,default=ROOT/'assets/perfect-deflect-mod')
+    parser.add_argument('--output',type=pathlib.Path,default=ROOT/'assets/perfect-deflect-no-rapid-click-penalty')
     main(parser.parse_args())
