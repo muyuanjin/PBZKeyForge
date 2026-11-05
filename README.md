@@ -8,13 +8,13 @@ A key binding editor for **Phantom Blade Zero** that writes the game's own input
 
 `PBZKeyForge.exe` · single file · no installer · no .NET runtime download · Windows 10/11
 
-![PBZKeyForge 1.2.1 in English with the preset list expanded](assets/screenshots/1.2.1/main-en.png)
+![PBZKeyForge 1.2.3 in English with the preset list expanded](assets/screenshots/1.2.3/main-en.png)
 
-![PBZKeyForge 1.2.1 Xbox view with the preset list expanded](assets/screenshots/1.2.1/main-gamepad-en.png)
+![PBZKeyForge 1.2.3 Xbox view with the preset list expanded](assets/screenshots/1.2.3/main-gamepad-en.png)
 
-![PBZKeyForge 1.2.1 PlayStation view with the preset list expanded](assets/screenshots/1.2.1/main-playstation-en.png)
+![PBZKeyForge 1.2.3 PlayStation view with the preset list expanded](assets/screenshots/1.2.3/main-playstation-en.png)
 
-[Feature screenshots: editing, saving presets, sharing and importing](assets/screenshots/1.2.1/README.md)
+[Feature screenshots: editing, saving presets, sharing and importing](assets/screenshots/1.2.3/README.md)
 
 ---
 
@@ -153,13 +153,13 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 `PBZKeyForge.exe` · 单文件 · 免安装 · 不需要额外下载 .NET 运行时 · Windows 10/11
 
-![PBZKeyForge 1.2.1 中文主界面，预设下拉框已展开](assets/screenshots/1.2.1/main-zh-Hans.png)
+![PBZKeyForge 1.2.3 中文主界面，预设下拉框已展开](assets/screenshots/1.2.3/main-zh-Hans.png)
 
-![PBZKeyForge 1.2.1 中文 Xbox 视图，预设下拉框已展开](assets/screenshots/1.2.1/main-gamepad-zh-Hans.png)
+![PBZKeyForge 1.2.3 中文 Xbox 视图，预设下拉框已展开](assets/screenshots/1.2.3/main-gamepad-zh-Hans.png)
 
-![PBZKeyForge 1.2.1 中文 PlayStation 视图，预设下拉框已展开](assets/screenshots/1.2.1/main-playstation-zh-Hans.png)
+![PBZKeyForge 1.2.3 中文 PlayStation 视图，预设下拉框已展开](assets/screenshots/1.2.3/main-playstation-zh-Hans.png)
 
-[功能截图：编辑绑定、保存预设、分享与导入](assets/screenshots/1.2.1/README.md)
+[功能截图：编辑绑定、保存预设、分享与导入](assets/screenshots/1.2.3/README.md)
 
 ### 为什么需要它
 

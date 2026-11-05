@@ -1,22 +1,29 @@
 [color=#e8b96a][b]ONE KEY, SEVERAL ACTIONS[/b][/color]
 Phantom Blade Zero's binding screen rejects shared keys. PBZKeyForge edits the game's own settings file so a single key can trigger several actions: attack and guard together, dodge on your former guard button, or your own keyboard and controller layout.
 
-Single-file Windows app. No installer, mod loader, DLL injection or extra runtime download. Open source; release downloads are built and uploaded by GitHub Actions.
+Single-file Windows app with an optional perfect-guard gameplay mod. No installer, mod loader, DLL injection or extra runtime download. Open source; release downloads are built and uploaded by GitHub Actions.
 
 [color=#e8b96a][b]DOWNLOADS AND INSTALLATION[/b][/color]
 [list=1]
 [*]Close the game completely. Back up [b]ProjectPBZ/Saved/EnhancedInputUserSettings.sav[/b].
 [*][b]Main download:[/b] extract the archive and run PBZKeyForge.exe. It finds your save automatically. Choose Default, Custom 1 or Custom 2, then edit bindings or preview a preset.
 [*]Click [b]Apply changes[/b] to save. Check [b]Set game scheme to…[/b] if you also want to make the edited scheme active. Writes are backed up automatically.
-[*][b]Presets-only download:[/b] choose one file using PRESETS.md, copy it over EnhancedInputUserSettings.sav, then select [b]Custom 1[/b] in game. This replaces your saved layouts; use the editor when you want to keep and combine existing custom settings. The presets-only archive contains no executable.
+[*][b]Presets-only download:[/b] choose one file using PRESETS.md, copy it over EnhancedInputUserSettings.sav, then select [b]Custom 1[/b] in game. This replaces your saved layouts; use the editor when you want to keep and combine existing custom settings. The presets-only archive contains no executable or gameplay mod.
 [/list]
-Switching schemes reads the latest settings. Refresh preserves drafts and asks you to resolve conflicting changes. Both editing views share the same draft; switching views does not save it.
+The editor remembers the last opened save and follows Steam's installation records to find the game. Switching schemes reads the latest settings. Refresh preserves drafts and asks you to resolve conflicting changes. Both editing views share the same draft; switching views does not save it.
 
 [b]No game or save yet?[/b] The editor opens an offline scheme with built-in factory bindings. Keyboard/mouse, Xbox and PlayStation are available even if no controller has ever been connected. Choose Controller, then Xbox or PlayStation to edit each family independently. Save or share through Preset manager, or use [b]Export game bindings[/b] in the footer to create a .sav file. You can also start with [b]More → New offline scheme[/b]. Open your own save when you want to apply directly to the game.
 
 [color=#cc4125][b]IMPORTANT[/b][/color]
 [quote][b]Do not apply or reset bindings in the game's own key binding screen afterwards.[/b] The game rewrites these settings. If this happens, reapply your layout with PBZKeyForge.[/quote]
 Only one mod replacing EnhancedInputUserSettings.sav can be installed at a time. Shared bindings trigger multiple actions; this tool does not add timed input sequences or guarantee a particular combination skill.
+
+[color=#e8b96a][b]OPTIONAL: PERFECT GUARD WITHOUT THE RAPID-CLICK PENALTY[/b][/color]
+Repeated guard inputs shorten or stop refreshing the original perfect-guard window. When attack and guard share a key, repeated attacks can trigger the same penalty.
+
+The [b]Perfect guard: no rapid-click penalty[/b] option is [b]off by default[/b]. Check it on the right side of the footer, then click [b]Apply changes[/b] to install. The checkbox only stages the change. Click [b]?[/b] for an explanation. All schemes, difficulties and guard keys share this gameplay change. Each input still uses the game's current base perfect-guard window; difficulty, accessories, guard-break state and eligibility follow the original rules.
+
+The embedded patch changes one cooldown value in each of five difficulty configuration assets and preserves the game's combat scripts. It installs in its own Paks/~mods/PBZKeyForge_PerfectDeflectNoRapidClickPenalty folder without replacing original game containers or saves. [b]Exit the game before enabling or disabling it.[/b] Uncheck the option and apply to remove it and restore the original rules. The presets-only archive does not include this mod.
 
 [color=#e8b96a][b]CHOOSE HOW A PRESET CHANGES YOUR KEYS[/b][/color]
 Three choices stay visible beside the preset picker. Hover over a choice for details.
@@ -25,7 +32,7 @@ Three choices stay visible beside the preset picker. Hover over a choice for det
 [*][b]Replace keys:[/b] replace the bindings of the actions covered by the preset; other actions stay as they are.
 [*][b]Preset only:[/b] start from factory bindings for the devices included in the preset, then use that preset's layout. Devices outside its scope keep their settings.
 [/list]
-The initial choice is Preset only, and your choice is remembered. Selecting a preset creates a draft. [b]Apply changes[/b] writes it to the game. Applying shows a spinning progress indicator; if a write fails, your draft remains available to retry.
+The initial choice is Preset only, and your choice is remembered. Selecting a preset creates a draft. [b]Apply changes[/b] writes it to the game. Longer writes show a spinning progress indicator; if a write fails, your draft remains available to retry. While the game is running, Apply asks you to exit; you can keep editing your draft.
 
 [color=#e8b96a][b]SEE AND EDIT YOUR BINDINGS[/b][/color]
 [b]By key:[/b] click a key on the keyboard, mouse or controller diagram to see and edit its actions on the right. The keyboard and mouse appear together. Number badges count actions: gray matches factory settings, blue marks saved customization, and yellow marks edits waiting to be applied. Removed actions are gray and crossed out.
@@ -67,7 +74,12 @@ Paste a share code, click [b]Preview[/b], and inspect the included devices and c
 The included [b]PRESETS.md[/b] lists the factory-based layouts used by the eight ready-made settings files. Add keys mode can retain additional existing bindings; the hover preview shows the preset relative to factory settings.
 
 [color=#e8b96a][b]COMPATIBILITY AND UNINSTALL[/b][/color]
-Windows 10/11, Steam CL-301524. The tool supports keyboard/mouse and controller bindings. Game updates may require new defaults or scheme-activation support. Restore your backup to uninstall, or preview and apply [b]More → Restore all defaults[/b] to return to factory bindings.
+Windows 10/11, Steam launch build [b]CL-301524[/b] and patch [b]1.0302256 / CL-302256[/b]. Keyboard/mouse and controller bindings use the installed build's slot rules, including Phantom Edge's changed slots in 1.0302256. Existing preset layouts and PBZ2 share codes keep the same baseline. Compatible later-build scheme settings can be discovered and authenticated locally in the background; later input-rule changes may still need an update.
+
+Restore your save backup to remove binding changes, or preview and apply [b]More → Restore all defaults[/b] to return to factory bindings. Remove the optional gameplay mod separately by unchecking it and applying with the game closed.
+
+[color=#e8b96a][b]KNOWN LIMITS[/b][/color]
+The new five-asset numeric gameplay patch has passed offline data and installation checks. [b]In-game loading and combat stability still need verification.[/b] The patch uses Steam 1.0302256 assets and conflicts with mods replacing the same difficulty configuration assets. Finding the required resources does not establish compatibility with future game updates; a new game patch may require an updated mod. Scheme authentication and save-file checks do not verify physical-controller or combat behavior in game.
 
 [color=#e8b96a][b]SOURCE AND BUILDS[/b][/color]
 [url=https://github.com/muyuanjin/PBZKeyForge]Source, documentation and issues[/url] · [url=https://github.com/muyuanjin/PBZKeyForge/releases]Version downloads and update notes[/url]

@@ -12,9 +12,9 @@ Versioned media sources: `assets/screenshots/<version>/README.md` indexes ten sc
 | --- | --- |
 | Mod name | PBZKeyForge |
 | Category | Tools |
-| Version | 1.2.1 |
+| Version | 1.2.3 |
 | Author | muyuanjin |
-| Short description | One key can drive several actions. Edits Phantom Blade Zero's own key binding file directly, so bindings the in-game screen rejects actually work. Open source, built by CI, with eight ready-made presets. |
+| Short description | Shared-key bindings, keyboard and controller presets, and optional removal of the perfect-guard rapid-click penalty. Supports Steam 1.0302256. Open source, built by CI, with eight ready-made layouts. |
 | File ID | 8297694 |
 | Mod ID | 402 |
 

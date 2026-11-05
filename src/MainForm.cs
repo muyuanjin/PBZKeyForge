@@ -311,7 +311,7 @@ namespace PBZKeyForge
             btnApply.SetBounds(footer.ClientSize.Width - actionWidth - gap, (int)(14 * scale), actionWidth, actionHeight);
             int undoWidth = (int)(88 * scale);
             btnUndo.SetBounds(btnApply.Left - gap - undoWidth, btnApply.Top, undoWidth, actionHeight);
-            int modWidth = Math.Max((int)(300 * scale), Math.Min((int)(420 * scale), (int)(footer.ClientSize.Width * 0.36f)));
+            int modWidth = (int)(420 * scale);
             chkPerfectDeflectNoRapidClickPenalty.SetBounds(btnUndo.Left - gap - modWidth, (int)(8 * scale), modWidth, (int)(82 * scale));
             using (var graphics = chkPerfectDeflectNoRapidClickPenalty.CreateGraphics())
             {
