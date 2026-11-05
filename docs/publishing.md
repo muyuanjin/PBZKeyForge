@@ -57,6 +57,7 @@ second entry differs from `NEXUSMODS_FILE_ID`.
 - Keep the previous version downloadable unless it is broken; only then set
   `archive_existing_version=true`.
 - Add the release notes from the GitHub Release to the page's changelog section.
+- Update the existing **Posts** sticky announcement from `docs/nexus-pinned-post.bbcode.txt`: list the supported game builds and put the new release above the historical changelog entries. Verify the public Posts tab separately from the Description and Files tabs.
 
 ## Versioned screenshots and page description
 

@@ -1,0 +1,41 @@
+[center][size=5][color=#e8b96a][b]Supported game versions[/b][/color][/size]
+[color=#1e84cc][b]Steam CL-301524 and 1.0302256 / CL-302256 ✅[/b][/color] · Windows 10/11[/center][center]
+If something doesn't work, please post your tool version, device/layout and a screenshot.
+
+[b]Close the game before applying changes. Applying or resetting bindings in the game's own binding screen will overwrite your layout.
+[/b][/center][center][size=5][color=#e8b96a][b]Changelog[/b][/color][/size][/center]
+[center][color=#1e84cc][b]V1.2.3 — current release[/b][/color]
+New since V1.2.2: optional Perfect guard: no rapid-click penalty, off by default. Repeated attack inputs also trigger guard when both share a key, which normally shortens or stops refreshing the perfect-guard window. Enable the option in the footer and click Apply changes to remove this penalty; uncheck and apply to restore it. Close the game before either operation. Difficulty, accessories and the game's current base window still apply. The presets-only download does not include this gameplay mod.
+
+Added Steam 1.0302256 support with the correct Phantom Edge binding slots. The editor remembers your last save and finds the game through Steam records. Startup, refreshes and preset operations are faster; smaller-window layouts, comparison scrolling and Apply feedback are improved. The eight preset layouts and PBZ2 share codes retain their baseline.
+
+[color=#1e84cc][b]V1.2.2[/b][/color]
+Faster startup and a smoother first display: the editor loads the save while building the interface, then shows the complete window together. Reduced layout work, repeated binding calculations and image loading for faster refreshes.
+
+[color=#1e84cc][b]V1.2.1[/b][/color]
+Xbox and PlayStation no longer require existing controller data in your save. Edit, save, share and export layouts offline—even without the game or a save file. Fixed clipped controller diagrams.
+
+[color=#1e84cc][b]V1.2.0[/b][/color]
+Added clickable device diagrams, key/action views, factory comparisons and explicit unbinding. Added personal presets, device-specific share codes, file export and three preset modes: Add keys / Replace keys / Preset only. Added combat/auto-sprint presets, clearer binding-limit feedback and faster Apply with a progress indicator.
+
+[color=#1e84cc][b]V1.1.1[/b][/color]
+Fixed crashes when using More-menu actions, including Open backup folder. About now shows the running version.
+
+[color=#1e84cc][b]V1.1.0[/b][/color]
+Redesigned the editor with separate scheme drafts, preset previews, refresh/conflict handling and undo. Fixed game-scheme activation, added per-scheme reset and expanded support to 15 languages.
+
+[color=#1e84cc][b]V1.0.4[/b][/color]
+Added automatic save detection, step-by-step guidance, a One-key guard button and clearer empty-slot indicators.
+
+[color=#1e84cc][b]V1.0.3[/b][/color]
+Fixed lower actions being inaccessible in small windows by making the binding table scrollable.
+
+[color=#1e84cc][b]V1.0.2[/b][/color]
+Simplified the download to the editor and presets; removed the separate CLI executable. Added source and build links.
+
+[color=#1e84cc][b]V1.0.1[/b][/color]
+Updated action names across five languages and fixed existing saves appearing empty after loading.
+
+[color=#1e84cc][b]V1.0.0[/b][/color]
+Initial release: shared-key bindings, three editable schemes, seven presets, five languages, automatic backups and a presets-only download.[/center]
+[center][size=5][color=#e8b96a][b]Gameplay mod compatibility[/b][/color][/size][/center][center]The optional gameplay mod uses Steam 1.0302256 difficulty assets and conflicts with mods replacing the same assets. Game updates may require an updated mod.[/center]
