@@ -54,7 +54,10 @@ namespace PBZKeyForge
             bindingWorkspace.Controls.Add(kbHost); bindingWorkspace.Controls.Add(padHost); bindingWorkspace.Controls.Add(keyBindings);
             bindingWorkspace.Controls.Add(schemeDiff);
             bindingWorkspace.Layout += delegate
-            { schemeDiff.Height = (int)(138 * CurrentAutoScaleDimensions.Width / 96f); };
+            {
+                float scale = CurrentAutoScaleDimensions.Width / 96f;
+                schemeDiff.Height = Math.Max((int)(64 * scale), Math.Min((int)(138 * scale), bindingWorkspace.ClientSize.Height / 4));
+            };
             body.Controls.Add(bindingWorkspace); body.Controls.Add(viewBar);
         }
 

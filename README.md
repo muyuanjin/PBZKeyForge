@@ -39,6 +39,7 @@ The in-game screen validates on **save**, not at runtime, and it rejects any bin
 - **15 languages** — English, 简体中文, 繁體中文, 日本語, 한국어, Français, Deutsch, Español (España / Latinoamérica), Português (Brasil / Portugal), Русский, Italiano, ไทย, Tiếng Việt. Auto-detected from Windows, switchable in the toolbar.
 - **Explicit binding choices.** Default inherits the factory key; Unbound removes it. Unrelated save data is preserved.
 - **Safe writes.** The game must be closed, a timestamped backup is written first, and the file is re-read and verified after saving.
+- **Optional removal of the perfect-guard rapid-click penalty.** The **Perfect guard: no rapid-click penalty** checkbox and **GAMEPLAY MOD** badge on the right side of the footer enable or remove the rapid-guard penalty override through **Apply changes**. Applies to every difficulty and guard key; no exact game-version gate. See [installation and compatibility](docs/perfect-deflect-mod.md).
 
 ## Install
 
@@ -65,6 +66,12 @@ Keyboard and gamepad drafts both belong to the selected scheme. Applying saves t
 **By key** shows a clickable keyboard and mouse together. Number badges count actions: gray for factory mappings, blue for applied customization, yellow for pending changes. Controller face-button and D-pad badges spread outward; LT/RT include both axis and digital inputs. Select a key to edit its actions on the right. The full-width bottom panel compares the entire scheme with either its saved state or factory defaults, including controller changes. Each row shows additions first, retained keys next, and gray struck-through removals last. Click its binding content to cycle through combined, changes-only, result-only and before views. **By action** lists factory keys and editable slots. Both perspectives share the same draft.
 
 Choose **Unbound** to write an explicit empty binding for a slot. **Default**, blank input, and **Clear override** restore that slot’s factory value. The dialog identifies **Default | actual key** or **Default | Unbound**; table cells show concrete keys, with empty slots shown as a quiet dash and binding status available on hover. Both the full action key set and the raw slot defaults come from the supported game’s input resources. The fixed Ctrl hold mapping for Phantom Edges remains active independently of editable slots. See [default binding sources and limits](docs/input-defaults.md).
+
+## Perfect guard: no rapid-click penalty
+
+Check **Perfect guard: no rapid-click penalty** on the right side of the footer, then click **Apply changes** to remove the rapid-guard penalty. The option is off by default. Click **?** for a short explanation; uncheck and apply to restore the original rules. Exit the game before applying. All schemes and guard keys share this change.
+
+Each click uses the game’s current base perfect-guard window, including its difficulty, accessory and guard-break rules. The patch changes one cooldown value in each of five difficulty configuration assets and preserves the game’s combat scripts. Installation uses embedded resources and requires no Python, retoc, Oodle or network connection. See [installation and known limits](docs/perfect-deflect-mod.md).
 
 ## My presets and sharing
 
@@ -192,6 +199,12 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 没有找到存档时，程序直接打开内置原厂键位的离线方案，也可通过“更多 → 新建离线方案”进入。切换到“手柄”后，在家族选择器中选 Xbox 或 PlayStation，两者独立编辑。在预设管理中保存、分享，或通过底栏“导出游戏键位文件”生成 `.sav`，均不需要安装游戏或连接手柄；直接写入游戏时再打开自己的存档。
 
 8 个预设文件（7 个改键预设及 1 个原厂键位文件）和中英对照说明均由程序内同一套预设定义生成，内容为原厂布局加上对应预设，与悬浮预览和“仅用预设”模式一致。“双键攻防，自动疾跑”将左键设为轻攻击＋防御、右键设为重攻击＋防御、空格同时绑定闪避／跳跃，W／A／D 绑定高速移动，保留 F 重攻击和 Shift 闪避，仅修改键鼠。程序还在快速配置中提供恢复本方案原厂，在“更多”中提供恢复全部方案原厂；两者使用同一套原厂键位，恢复范围不同。
+
+### 完美防御无连点惩罚
+
+原版连点防御会缩短、甚至停止刷新完美防御窗口；攻防同键时，连点攻击也会触发该惩罚。主页面底部右侧勾选 **完美防御无连点惩罚**，再点 **应用更改** 即可取消连点惩罚。默认关闭，点击旁边的 **?** 查看简短说明；取消勾选并应用即可恢复原规则。启用或关闭前请退出游戏，所有键位方案和防御按键共同生效。
+
+每次点击仍按游戏当前基础窗口判定，难度、饰品、破防状态和普通防御资格保留原规则。补丁只修改五个难度配置各一个冷却数值，保留战斗脚本。补丁内置，使用时不需要 Python、retoc、Oodle 或联网。见[使用与已知限制](docs/perfect-deflect-mod.md)。
 
 ### 重要提醒
 

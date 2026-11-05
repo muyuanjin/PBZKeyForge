@@ -476,6 +476,7 @@ namespace PBZKeyForge
             ApplyProgressStrings();
             ExtendedStrings();
             SchemeDiscoveryStrings();
+            ResourceModStrings();
         }
     }
 }

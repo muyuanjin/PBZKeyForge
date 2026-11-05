@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add “Perfect guard: no rapid-click penalty”: an optional footer checkbox removes the rapid-guard penalty through Apply changes. The embedded patch changes only the cooldown value in five difficulty configuration assets, preserving the game’s combat scripts and dynamic base windows. Includes click-to-open help in all 15 interface languages and isolated installation checks.
 - Support Steam patch 1.0302256 (`CL-302256_JKS-17280`) scheme activation while retaining launch-build support.
 - Discover relocated PBZS key derivations in later x64 builds, authenticate each candidate, and keep first-time discovery off the UI thread.
 - Defer discovered scheme selection until modal editing finishes, preserving the scheme receiving confirmed bindings.

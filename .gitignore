@@ -10,3 +10,4 @@ presets/
 docs/*.tmp
 __pycache__/
 *.pyc
+vendor/

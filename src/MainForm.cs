@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -287,10 +287,13 @@ namespace PBZKeyForge
             btnConflicts.Font = lblScope.Font; btnConflicts.Click += delegate { ResolveConflicts(); };
             lblStatus.SetBounds(8, 72, 900, 23); lblStatus.AutoEllipsis = true; lblStatus.Font = new Font(Font.FontFamily, 9f);
             StyleButton(btnUndo, false); btnUndo.Dock = DockStyle.None;
-            btnUndo.Click += delegate { TryAction(delegate { Session.Undo(); }); };
+            btnUndo.Click += delegate { TryAction(delegate { Session.Undo(); resourceModDraft = null; }); };
             StyleButton(btnApply, true); btnApply.Dock = DockStyle.None; btnApply.SetBounds(890, 15, 196, 46); btnApply.Font = new Font(Font.FontFamily, 12f, FontStyle.Bold); btnApply.Click += delegate { ApplyChanges(); };
             lblBackup.SetBounds(890, 64, 196, 23); lblBackup.TextAlign = ContentAlignment.MiddleCenter; lblBackup.AutoEllipsis = true; lblBackup.ForeColor = EditorTheme.Muted; lblBackup.Font = new Font(Font.FontFamily, 8.5f);
-            footer.Controls.AddRange(new Control[] { chkActivate, lblOffline, lblScope, btnConflicts, lblStatus, btnUndo, btnApply, lblBackup });
+            chkPerfectDeflect.CheckedChanged += delegate { StageResourceMod(); };
+            btnModHelp.Font = new Font(Font.FontFamily, 9f); btnModHelp.Click += delegate { ShowResourceModHelp(); };
+            footer.Controls.AddRange(new Control[] { chkActivate, lblOffline, lblScope, btnConflicts, lblStatus, btnUndo, btnApply, lblBackup, chkPerfectDeflect, btnModHelp });
+            btnModHelp.BringToFront();
             footer.Resize += delegate { LayoutFooter(); };
             root.Controls.Add(footer, 0, 5);
             root.ResumeLayout(false);
@@ -306,14 +309,24 @@ namespace PBZKeyForge
             float scale = CurrentAutoScaleDimensions.Width / 96f;
             int actionWidth = (int)(184 * scale), actionHeight = (int)(44 * scale), gap = (int)(12 * scale);
             btnApply.SetBounds(footer.ClientSize.Width - actionWidth - gap, (int)(14 * scale), actionWidth, actionHeight);
-            btnUndo.SetBounds(btnApply.Left - gap - actionWidth, btnApply.Top, actionWidth, actionHeight);
-            int left = gap, scopeWidth = Math.Max(100, btnUndo.Left - gap * 2);
+            int undoWidth = (int)(88 * scale);
+            btnUndo.SetBounds(btnApply.Left - gap - undoWidth, btnApply.Top, undoWidth, actionHeight);
+            int modWidth = Math.Max((int)(300 * scale), Math.Min((int)(420 * scale), (int)(footer.ClientSize.Width * 0.36f)));
+            chkPerfectDeflect.SetBounds(btnUndo.Left - gap - modWidth, (int)(8 * scale), modWidth, (int)(82 * scale));
+            using (var graphics = chkPerfectDeflect.CreateGraphics())
+            {
+                var header = chkPerfectDeflect.MeasureHeader(graphics);
+                Rectangle helpBounds = header.Help;
+                helpBounds.Offset(chkPerfectDeflect.Location);
+                btnModHelp.Bounds = helpBounds;
+            }
+            int left = gap, scopeWidth = Math.Max(100, chkPerfectDeflect.Left - gap * 2);
             chkActivate.SetBounds(left, (int)(12 * scale), scopeWidth, (int)(28 * scale));
             lblOffline.Bounds = chkActivate.Bounds;
             lblScope.SetBounds(left, (int)(44 * scale), scopeWidth, (int)(24 * scale));
             btnConflicts.Bounds = lblScope.Bounds;
             lblBackup.SetBounds(btnApply.Left, (int)(64 * scale), actionWidth, (int)(20 * scale));
-            lblStatus.SetBounds(left, (int)(70 * scale), Math.Max(0, btnApply.Left - gap - left), (int)(20 * scale));
+            lblStatus.SetBounds(left, (int)(70 * scale), scopeWidth, (int)(20 * scale));
         }
 
         static void StyleButton(Button button, bool primary)
@@ -483,11 +496,14 @@ namespace PBZKeyForge
                 chkActivate.Enabled = loaded && !Session.IsResetPending && Session.ActiveProfile != null && Session.SelectedProfile != Session.ActiveProfile;
                 SetTip(chkActivate, loaded && Session.SchemeDiscoveryRequired && SchemeProbePending ? I18n.Str("editor.discovering")
                     : loaded && Session.SchemeError != null ? I18n.Str("status.schemeunknown") + "\n" + Session.SchemeError : I18n.Str("editor.activatehelp"));
-                btnUndo.Visible = loaded && Session.HasChanges;
+                RefreshFooterResourceMod();
+                LayoutFooter();
+                btnUndo.Visible = loaded && (Session.HasChanges || ResourceModPending);
                 lblScope.Text = !loaded ? "" : offline ? I18n.Str("offline.scope", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount)
                     : Session.IsResetPending ? I18n.Str("editor.resetscope", Session.ScopeChangeCount)
-                    : I18n.Str(Session.HasChanges ? "editor.scope" : "editor.clean", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount) + (Session.ActivationPending ? I18n.Str("editor.activationscope") : "");
-                lblScope.ForeColor = loaded && Session.HasChanges ? BindingStatus.Pending : EditorTheme.Muted;
+                    : I18n.Str(Session.HasChanges || ResourceModPending ? "editor.scope" : "editor.clean", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount) + (Session.ActivationPending ? I18n.Str("editor.activationscope") : "");
+                if (ResourceModPending) lblScope.Text += " · " + I18n.Str("mod.badge") + " " + I18n.Str("views.pending");
+                lblScope.ForeColor = loaded && (Session.HasChanges || ResourceModPending) ? BindingStatus.Pending : EditorTheme.Muted;
                 int conflictCount = loaded ? Session.Conflicts.Length : 0;
                 btnConflicts.Visible = conflictCount > 0; btnConflicts.Text = I18n.Str("editor.conflicts", conflictCount);
                 lblScope.Visible = conflictCount == 0;
@@ -572,7 +588,8 @@ namespace PBZKeyForge
             lblGame.ForeColor = offline ? EditorTheme.Muted : lastRunning ? EditorTheme.Amber : EditorTheme.Green;
             ((ApplyActionButton)btnApply).GameRunning = gameRunning;
             btnApply.Text = I18n.Str(offline ? "offline.export" : gameRunning ? "editor.applyrunning" : "editor.apply");
-            btnApply.Enabled = loaded && (offline || Session.HasChanges && !lastRunning && Session.Conflicts.Length == 0);
+            btnApply.Enabled = loaded && (offline || (Session.HasChanges || ResourceModPending) && !lastRunning && Session.Conflicts.Length == 0);
+            UpdateResourceModAvailability();
             lblStatus.Text = loaded && Session.Conflicts.Length > 0 ? I18n.Str("editor.conflictinfo")
                 : gameRunning ? I18n.Str("editor.exittoapply") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
                 : loaded && Session.SchemeDiscoveryRequired && SchemeProbePending ? I18n.Str("editor.discovering")
@@ -626,6 +643,7 @@ namespace PBZKeyForge
             if (Session.IsOffline) return;
             try { Session.Refresh(); SetMessage("editor.refreshed", false); }
             catch (Exception ex) { SetMessage("editor.refreshfail", true, ex.Message); }
+            RefreshFooterResourceMod(true);
             RenderSession();
             StartSchemeDiscovery(allowDiscoveryRetry);
         }
@@ -649,9 +667,9 @@ namespace PBZKeyForge
         }
         bool ConfirmDiscard()
         {
-            if (Session == null || !Session.HasAnyDrafts && !Session.HasChanges) return true;
+            if (Session == null || !Session.HasAnyDrafts && !Session.HasChanges && !ResourceModPending) return true;
             modalActive = true;
-            try { return EditorDialogs.Show(this, I18n.Str(Session.IsOffline ? "offline.discard" : "editor.discard"), I18n.Str("editor.drafttitle"), MessageBoxButtons.YesNo) == DialogResult.Yes; }
+            try { return EditorDialogs.Show(this, I18n.Str(ResourceModPending ? "mod.discard" : Session.IsOffline ? "offline.discard" : "editor.discard"), I18n.Str("editor.drafttitle"), MessageBoxButtons.YesNo) == DialogResult.Yes; }
             finally { EndModal(); }
         }
         void Browse()

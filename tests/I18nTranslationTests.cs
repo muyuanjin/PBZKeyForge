@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading;
 using PBZKeyForge;
 
 // A direct dictionary check catches missing translations even when Lookup would
-// silently return English. Compile with all three I18n partial source files.
+// silently return English. Compile with all I18n partial source files.
 public static class I18nTranslationTests
 {
     static int assertions;
@@ -43,6 +43,7 @@ public static class I18nTranslationTests
             Assert(official.All(I18n.Languages.Contains), "Every official interface language, including regional variants, is selectable");
             var table = (Dictionary<string, Dictionary<string, string>>)typeof(I18n).GetField("T", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
             var english = table["en"];
+            var modKeys = new[] { "discard", "badge", "checkbox", "help", "protectionhelp", "warning", "partial", "title", "note", "enabled", "disabled", "incomplete", "conflict", "unsupported", "running", "verifyfailed", "drafthint" };
             object[] sample = { "{SCHEME}", 2, 3, "{DRAFT}", "{GAME}", 6, 7, 8 };
             foreach (string language in I18n.Languages)
             {
@@ -50,6 +51,9 @@ public static class I18nTranslationTests
                 Assert(!string.IsNullOrWhiteSpace(I18n.DisplayName(language)), "Missing native language name: " + language);
                 if (language != "en") Assert(I18n.DisplayName(language) != "English", "Language name incorrectly falls back to English: " + language);
                 I18n.Current = language;
+                foreach (string modKey in modKeys)
+                    Assert(table[language].ContainsKey("mod." + modKey), "Missing gameplay Mod translation: " + language + " / " + modKey);
+                Assert(table[language].Keys.Count(key => key.StartsWith("mod.")) == modKeys.Length, "Unexpected gameplay Mod translation: " + language);
                 foreach (var pair in english)
                 {
                     string value;
