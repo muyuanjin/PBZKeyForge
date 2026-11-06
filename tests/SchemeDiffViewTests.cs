@@ -228,7 +228,7 @@ public static class SchemeDiffViewTests
                 session.SelectPreset("vanilla_current"); form.RenderSession();
                 Assert(!session.HasChanges && !session.HasAnyDrafts && Rows(view).Length == 0,
                     "Restoring unchanged factory bindings must not show pending changes or difference rows.");
-                Assert(!Field<Button>(form, "btnApply").Enabled && !Field<Control>(form, "btnUndo").Visible,
+                Assert(!Field<Button>(form, "btnApply").Enabled && Field<Control>(form, "btnUndo").Visible && !Field<Control>(form, "btnUndo").Enabled,
                     "An unchanged factory preview must not offer Apply or Undo.");
                 foreach (Size size in new[] { form.Size, form.MinimumSize })
                 {

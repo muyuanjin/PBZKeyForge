@@ -54,7 +54,7 @@ namespace PBZKeyForge
         readonly Button btnRefresh = new EditorButton(), btnMore = new EditorButton(), btnApply = new ApplyActionButton();
         readonly EditorTab[] schemeTabs = { new EditorTab(), new EditorTab(), new EditorTab() };
         readonly EditorTab tabKb = new EditorTab(), tabPad = new EditorTab();
-        readonly Label lblTitle = new EditorLabel(), lblPath = new EditorLabel(), lblGame = new EditorLabel();
+        readonly Label lblTitle = new EditorLabel(), lblPath = new EditorLabel(), lblGame = new ConnectionStatusLabel();
         readonly Label lblPreset = new EditorLabel();
         readonly PresetModeSelector btnPresetMode = new PresetModeSelector();
         readonly EditorPreferences preferences;
@@ -358,7 +358,7 @@ namespace PBZKeyForge
             lblOffline.Bounds = chkActivate.Bounds;
             lblScope.SetBounds(activationLeft, (int)(36 * scale), scopeWidth, (int)(20 * scale));
             btnConflicts.Bounds = lblScope.Bounds;
-            int backupLeft = btnUndo.Visible ? btnUndo.Right + (int)(4 * scale) : btnApply.Left;
+            int backupLeft = btnUndo.Right + (int)(4 * scale);
             lblBackup.SetBounds(backupLeft, secondaryTop, Math.Max(1, btnApply.Right - backupLeft), (int)(18 * scale));
             lblStatus.SetBounds(activationLeft, (int)(57 * scale), scopeWidth, Math.Max(lblStatus.Font.Height + 2, footer.Height - (int)(61 * scale)));
             if (compactLayout)
@@ -382,6 +382,7 @@ namespace PBZKeyForge
                     options.Offset(chkPerfectDeflectNoRapidClickPenalty.Location); btnResourceModMore.Bounds = options;
                 }
             }
+            if (feedbackPanel != null) feedbackPanel.Bounds = lblStatus.Bounds;
             footer.Invalidate();
         }
 
@@ -556,7 +557,8 @@ namespace PBZKeyForge
                 SetTip(chkActivate, loaded && Session.SchemeDiscoveryRequired && SchemeProbePending ? I18n.Str("editor.discovering")
                     : loaded && Session.SchemeError != null ? I18n.Str("status.schemeunknown") + "\n" + Session.SchemeError : I18n.Str("editor.activatehelp"));
                 RefreshFooterResourceMod();
-                btnUndo.Visible = loaded && (HasBindingHistory || Session.HasChanges || ResourceModPending || KeyEnhancementPending);
+                btnUndo.Visible = loaded;
+                btnUndo.Enabled = loaded && (HasBindingHistory || Session.HasChanges || ResourceModPending || KeyEnhancementPending);
                 LayoutFooter();
                 lblScope.Text = !loaded ? "" : PendingBindingSummary();
                 SetTip(lblScope, lblScope.Text);
@@ -661,7 +663,7 @@ namespace PBZKeyForge
                 }
                 SetTip(keyEnhancementBar, liveStatus.Detail);
             }
-            lblGame.Text = "●  " + I18n.Str(offline ? "offline.mode" : neverConnected ? "flow.notconnected" : waiting ? "live.waiting" : live
+            lblGame.Text = I18n.Str(offline ? "offline.mode" : neverConnected ? "flow.notconnected" : waiting ? "live.waiting" : live
                 ? liveStatus.RoutingEnabled ? "live.connected" : "live.paused" : lastRunning ? "editor.running" : "editor.closed");
             lblGame.ForeColor = offline ? EditorTheme.Muted : live && liveStatus.RoutingEnabled ? EditorTheme.LiveConnected
                 : waiting ? Color.FromArgb(240, 178, 78) : lastRunning ? EditorTheme.Amber : EditorTheme.Green;

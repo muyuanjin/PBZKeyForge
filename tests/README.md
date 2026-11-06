@@ -22,6 +22,18 @@ These checks cover data, containers and editor installation behavior. The previo
 
 Integration checks use Simplified Chinese by default. Full language sweeps are opt-in and reserved for targeted localization testing: append `--all-languages` to the relevant command, for example `.\dist\SchemeDiffViewTests.exe samples\vanilla-base.sav dist\diff-language-check --all-languages`. The dedicated `I18nTranslationTests` is also run separately only for localization work; it is not part of routine verification.
 
+Check visual anchors across editing states at minimum, compact and large window sizes:
+
+```powershell
+$compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+& $compiler /nologo /out:dist\VisualPositionTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\VisualPositionTests.cs
+.\dist\VisualPositionTests.exe dist\visual-position-check
+```
+
+The checks cover diagram position and scale, fixed binding commands, extra-input wrapping, footer feedback, action filtering, status indicators, trigger selection, binding-detail scroll and focus, and the expanded differences review. Screenshots accompany geometry assertions; all editing uses offline fixtures.
+
+To check the desktop's native scaling, compile this harness with `/win32manifest:build\app.manifest` and run it in a separate output directory. Add `--desktop-shots` to capture the trigger editor from the desktop as well as `DrawToBitmap`; use this flag only with the DPI-aware build.
+
 For a targeted translation dictionary check across all 15 languages:
 
 ```powershell

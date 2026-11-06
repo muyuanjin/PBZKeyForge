@@ -120,7 +120,7 @@ namespace PBZKeyForge
                 || family.IndexOf("dual", StringComparison.OrdinalIgnoreCase) >= 0 || family.Equals("PS", StringComparison.OrdinalIgnoreCase) || family.Equals("PS4", StringComparison.OrdinalIgnoreCase) || family.Equals("PS5", StringComparison.OrdinalIgnoreCase));
             string nextController = sony ? "playstation" : "xbox";
             var physical = pad ? DeviceHotspots.ForDevice(nextController).Keys : DeviceHotspots.ForDevice("keyboard").Keys.Concat(DeviceHotspots.ForDevice("mouse").Keys);
-            var extras = knownKeys.Except(physical).Where(k => k != "None" && !string.IsNullOrEmpty(k)).Distinct().ToList();
+            var extras = knownKeys.Except(physical).Where(k => k != "None" && !string.IsNullOrEmpty(k)).Distinct().OrderBy(k => k, StringComparer.Ordinal).ToList();
             bool layout = this.pad != pad || controller != nextController || !extraKeys.SequenceEqual(extras);
             this.pad = pad; this.stateForKey = stateForKey; this.selectedKey = selectedKey;
             controller = sony ? "playstation" : "xbox";
@@ -178,21 +178,21 @@ namespace PBZKeyForge
                 hitTargets = new KeyValuePair<string, RectangleF>[0]; AutoScrollMinSize = Size.Empty;
                 base.OnLayout(e); return;
             }
-            var extras = ExtraTargets(ClientSize.Width, inset);
+            float canvasWidth = preview ? ClientSize.Width : Math.Max(1, Width - SystemInformation.VerticalScrollBarWidth);
+            var extras = ExtraTargets(canvasWidth, inset);
             float extraHeight = extras.Count == 0 ? 0 : extras.Values.Max(box => box.Top) + 36 * scale;
-            float keyboardHeight = (ClientSize.Width - 3 * inset) * .79f * EditorArtwork.Keyboard.Height / EditorArtwork.Keyboard.Width;
-            float minimumHeight = pad ? preview ? 0 : 250 * scale : Math.Max(1, Math.Min(keyboardHeight, ClientSize.Height - 2 * inset));
-            float availableHeight = Math.Max(minimumHeight, ClientSize.Height - 2 * inset - extraHeight);
-            AutoScrollMinSize = new Size(0, (int)Math.Ceiling(availableHeight + 2 * inset + extraHeight));
+            float minimumHeight = pad && !preview ? 250 * scale : 1;
+            float availableHeight = Math.Max(minimumHeight, ClientSize.Height - 2 * inset - (preview ? extraHeight : 36 * scale));
+            AutoScrollMinSize = new Size(0, (int)Math.Ceiling(availableHeight + 2 * inset + (preview ? extraHeight : Math.Max(36 * scale, extraHeight))));
             // Update native scroll ranges before placing hotspots at the current offset.
             base.OnLayout(e);
             float scrollY = AutoScrollPosition.Y;
-            if (pad) AddDevice(controller, new RectangleF(inset, inset + scrollY, ClientSize.Width - 2 * inset, availableHeight));
+            if (pad) AddDevice(controller, new RectangleF(inset, inset + scrollY, canvasWidth - 2 * inset, availableHeight));
             else
             {
-                float keyboardWidth = (ClientSize.Width - 3 * inset) * .79f;
+                float keyboardWidth = (canvasWidth - 3 * inset) * .79f;
                 AddDevice("keyboard", new RectangleF(inset, inset + scrollY, keyboardWidth, availableHeight));
-                AddDevice("mouse", new RectangleF(keyboardWidth + 2 * inset, inset + scrollY, ClientSize.Width - keyboardWidth - 3 * inset, availableHeight));
+                AddDevice("mouse", new RectangleF(keyboardWidth + 2 * inset, inset + scrollY, canvasWidth - keyboardWidth - 3 * inset, availableHeight));
             }
             foreach (var item in extras)
             {
@@ -464,6 +464,7 @@ namespace PBZKeyForge
         readonly TableLayoutPanel columns = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
         readonly Panel devices = new EditorPanel(), selected = new EditorPanel();
         readonly Panel detail = new EditorPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = EditorTheme.Surface };
+        readonly TableLayoutPanel keyCommands = new EditorLayout { Dock = DockStyle.Bottom, ColumnCount = 3, RowCount = 1, Margin = Padding.Empty };
         readonly Label hint = BindingViewText.Label("", 24), heading = BindingViewText.Label("", 30), count = BindingViewText.Label("", 24);
         readonly Label notice = BindingViewText.Label("", 40);
         readonly BindingLegend legend = new BindingLegend { Dock = DockStyle.Bottom, Height = 28 };
@@ -498,9 +499,27 @@ namespace PBZKeyForge
             Controls.Add(legend);
             hint.ForeColor = notice.ForeColor = EditorTheme.Muted;
             UpdateHeadingFont();
-            devices.Controls.Add(hint); selected.Controls.Add(detail); selected.Controls.Add(heading);
+            devices.Controls.Add(hint); selected.Controls.Add(detail); selected.Controls.Add(keyCommands); selected.Controls.Add(count); selected.Controls.Add(heading);
+            keyCommands.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 44));
+            keyCommands.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34));
+            keyCommands.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22));
+            keyCommands.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            keyCommands.Height = Font.Height + 24;
+            add.Dock = reset.Dock = keyTools.Dock = DockStyle.Fill;
+            add.Margin = reset.Margin = keyTools.Margin = new Padding(1, 3, 1, 3);
+            keyCommands.Controls.Add(add, 0, 0); keyCommands.Controls.Add(reset, 1, 0); keyCommands.Controls.Add(keyTools, 2, 0);
+            foreach (var command in new[] { add, reset, keyTools })
+            {
+                var button = command;
+                button.TextChanged += delegate { ownershipTip.SetToolTip(button, button.Text); };
+            }
             detail.HandleCreated += delegate { EditorArtwork.DarkScrollbars(detail); };
-            detail.Controls.AddRange(new Control[] { actionView, notice, keyTools, reset, add, count });
+            detail.Controls.AddRange(new Control[] { actionView, notice });
+            detail.Layout += delegate {
+                // Keep the scrollbar gutter reserved when the list is short.
+                int right = detail.VerticalScroll.Visible ? 0 : SystemInformation.VerticalScrollBarWidth;
+                if (detail.Padding.Right != right) detail.Padding = new Padding(0, 0, right, 0);
+            };
             add.Click += delegate {
                 if (currentSession == null) return;
                 if (AddFunctionRequested != null) { AddFunctionRequested(selectedKey); return; }
@@ -529,6 +548,7 @@ namespace PBZKeyForge
             if (heading == null) return;
             Font previous = headingFont;
             heading.Font = headingFont = new Font(Font, FontStyle.Bold);
+            if (keyCommands != null) keyCommands.Height = Font.Height + 24;
             if (previous != null) previous.Dispose();
         }
         protected override void OnFontChanged(EventArgs e)
@@ -658,7 +678,7 @@ namespace PBZKeyForge
                 notice.Height = Font.Height * 2 + 4; notice.Text = I18n.Str("views.partial");
                 actionView.Height = Font.Height + 16; actionView.Text = I18n.Str("views.actionview");
                 notice.Visible = actionView.Visible = !summary.CurrentComplete || !summary.FactoryComplete;
-                var order = new Control[] { count }.Concat(actionRows.Cast<Control>()).Concat(new Control[] { add, reset, keyTools, notice, actionView }).Reverse().ToArray();
+                var order = actionRows.Cast<Control>().Concat(new Control[] { notice, actionView }).Reverse().ToArray();
                 for (int i = 0; i < order.Length; i++)
                     if (detail.Controls.GetChildIndex(order[i]) != i) detail.Controls.SetChildIndex(order[i], i);
             }
@@ -723,7 +743,7 @@ namespace PBZKeyForge
                 add.Height = Font.Height + 18; add.Text = "+ " + I18n.Str("views.addaction"); add.Enabled = !currentSession.IsResetPending;
                 reset.Height = Font.Height + 18; reset.Text = I18n.Str("views.restorekey"); reset.Enabled = !currentSession.IsResetPending && entries.Any(entry => !entry.IsDefault || entry.Suppressed || !entry.Enabled || entry.Pending);
                 notice.Visible = actionView.Visible = false;
-                var order = new Control[] { count }.Concat(actionRows.Cast<Control>()).Concat(new Control[] { add, reset, keyTools, notice, actionView }).Reverse().ToArray();
+                var order = actionRows.Cast<Control>().Concat(new Control[] { notice, actionView }).Reverse().ToArray();
                 for (int i = 0; i < order.Length; i++) detail.Controls.SetChildIndex(order[i], i);
             }
             finally { detail.ResumeLayout(true); }

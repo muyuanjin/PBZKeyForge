@@ -70,22 +70,25 @@ namespace PBZKeyForge
         void BuildEditingSupport()
         {
             companionHotkeyEnabled = preferences.LoadCompanionHotkey();
-            feedbackPanel = new NoticeCard { Dock = DockStyle.Top, Height = 44, Visible = false, Padding = new Padding(52, 6, 12, 6) };
+            feedbackPanel = new NoticeCard { Visible = false, Font = lblStatus.Font };
             feedbackDetails = UnifiedBindingUi.Button(I18n.Str("feedback.details"), "feedbackDetails");
+            feedbackDetails.AutoSize = false; feedbackDetails.MinimumSize = Size.Empty;
             feedbackDetails.ForeColor = NoticeCard.Accent;
             feedbackDetails.Click += delegate { ShowFullFeedback(); };
-            var dismiss = UnifiedBindingUi.Button("×", "dismissFeedback"); dismiss.AccessibleName = I18n.Str("editor.close"); dismiss.MinimumSize = new Size(34, 30); dismiss.Click += delegate { feedbackDismissed = true; feedbackPanel.Visible = false; RenderGameStatus(); };
+            var dismiss = UnifiedBindingUi.Button("×", "dismissFeedback"); dismiss.AccessibleName = I18n.Str("editor.close"); dismiss.AutoSize = false; dismiss.MinimumSize = Size.Empty; dismiss.Click += delegate { feedbackDismissed = true; feedbackPanel.Visible = false; RenderGameStatus(); };
             feedbackText = new Label { AutoEllipsis = true, TextAlign = ContentAlignment.MiddleLeft,
                 BackColor = Color.Transparent, ForeColor = Color.FromArgb(255, 222, 157), UseMnemonic = false };
             feedbackPanel.Controls.Add(feedbackText); feedbackPanel.Controls.Add(feedbackDetails); feedbackPanel.Controls.Add(dismiss);
             feedbackPanel.Layout += delegate {
                 float scale = CurrentAutoScaleDimensions.Width / 96f;
-                int closeWidth = (int)(30 * scale), detailsWidth = Math.Max((int)(84 * scale), feedbackDetails.PreferredSize.Width);
-                dismiss.SetBounds(feedbackPanel.Width - (int)(12 * scale) - closeWidth, (feedbackPanel.Height - closeWidth) / 2, closeWidth, closeWidth);
-                feedbackDetails.SetBounds(dismiss.Left - (int)(10 * scale) - detailsWidth, (feedbackPanel.Height - (int)(34 * scale)) / 2, detailsWidth, (int)(34 * scale));
-                feedbackText.SetBounds((int)(52 * scale), (int)(10 * scale), Math.Max(1, feedbackDetails.Left - (int)(64 * scale)), feedbackPanel.Height - (int)(20 * scale));
+                int gap = Math.Max(1, (int)(2 * scale)), height = Math.Max(1, feedbackPanel.Height - gap * 2);
+                int closeWidth = Math.Max((int)(18 * scale), height), detailsWidth = TextRenderer.MeasureText(feedbackDetails.Text, feedbackPanel.Font).Width + (int)(12 * scale);
+                dismiss.SetBounds(feedbackPanel.Width - gap - closeWidth, gap, closeWidth, height);
+                feedbackDetails.SetBounds(dismiss.Left - gap - detailsWidth, gap, detailsWidth, height);
+                int left = Math.Min((int)(25 * scale), Math.Max((int)(12 * scale), feedbackPanel.Height - (int)(10 * scale))) + (int)(12 * scale);
+                feedbackText.SetBounds(left, gap, Math.Max(1, feedbackDetails.Left - left - gap), height);
             };
-            body.Controls.Add(feedbackPanel); body.Controls.SetChildIndex(bindingWorkspace, 0); body.Controls.SetChildIndex(feedbackPanel, 1);
+            footer.Controls.Add(feedbackPanel); feedbackPanel.BringToFront();
             var agent = new EditorButton { Name = "agentHelp", Text = "AI / CLI", Width = 100, Height = 34, Top = 5, Anchor = AnchorStyles.Top | AnchorStyles.Right };
             agent.Click += delegate { ShowAgentHelp(); };
             SetTip(agent, I18n.Str("ai.title")); viewBar.Controls.Add(agent);

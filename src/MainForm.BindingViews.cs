@@ -80,17 +80,43 @@ namespace PBZKeyForge
             bindingWorkspace.Dock = DockStyle.Fill;
             bindingWorkspace.Controls.Add(kbHost); bindingWorkspace.Controls.Add(padHost); bindingWorkspace.Controls.Add(keyBindings);
             bindingWorkspace.Controls.Add(schemeDiff);
+            schemeDiff.ReviewRequested += ShowSchemeDifferences;
             unifiedActions.Dock = DockStyle.Fill; bindingWorkspace.Controls.Add(unifiedActions);
             bindingWorkspace.Layout += delegate
             {
                 float scale = CurrentAutoScaleDimensions.Width / 96f;
-                schemeDiff.Height = Math.Max((int)((actionView ? 48 : 64) * scale), Math.Min((int)((actionView ? 56 : 138) * scale), bindingWorkspace.ClientSize.Height / 4));
+                schemeDiff.Compact = actionView;
+                schemeDiff.Height = actionView ? schemeDiff.Font.Height + 18
+                    : Math.Max((int)(72 * scale), Math.Min((int)(104 * scale), bindingWorkspace.ClientSize.Height / 5));
             };
             body.Controls.Add(bindingWorkspace); body.Controls.Add(viewBar);
         }
 
         public void ShowActionView(bool show)
         { actionView = show; RenderSession(); }
+
+        void ShowSchemeDifferences()
+        {
+            if (Session == null) return;
+            modalActive = true;
+            try
+            {
+                using (var dialog = new EditorWindow())
+                {
+                    UnifiedBindingUi.Form(dialog, I18n.Str("views.schemediff"), new Size(850, 480), new Size(620, 320));
+                    var review = new SchemeDiffView { Dock = DockStyle.Fill, Font = dialog.Font };
+                    review.SetComparison(schemeDiff.CompareFactory);
+                    var workspaces = new[] { ViewWorkspace(false, -1) }.Concat(Session.ControllerFamilies.Select(family => ViewWorkspace(true, family.Index)));
+                    review.Render(Session, workspaces.Select(workspace => workspace.Snapshot()).ToArray());
+                    var close = UnifiedBindingUi.Button(I18n.Str("editor.close"), "close");
+                    close.Dock = DockStyle.Bottom; close.DialogResult = DialogResult.Cancel;
+                    dialog.Controls.Add(review); dialog.Controls.Add(close); dialog.CancelButton = close;
+                    dialog.ShowDialog(this);
+                    schemeDiff.SetComparison(review.CompareFactory);
+                }
+            }
+            finally { EndModal(); }
+        }
 
         void RenderBindingViews()
         {

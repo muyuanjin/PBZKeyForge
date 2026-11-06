@@ -20,7 +20,8 @@ namespace PBZKeyForge
         }
         readonly Panel rows = new DifferenceRows { Dock = DockStyle.Fill, AutoScroll = true };
         readonly TableLayoutPanel header = new EditorLayout { Dock = DockStyle.Top, ColumnCount = 4, RowCount = 1 };
-        readonly Label title = new EditorLabel(), total = new EditorLabel();
+        readonly EditorButton title = new EditorButton();
+        readonly Label total = new EditorLabel();
         readonly EditorTab saved = new EditorTab(), factory = new EditorTab();
         readonly ToolTip tip = new ToolTip();
         readonly Label empty = BindingViewText.Label("", 30);
@@ -28,6 +29,13 @@ namespace PBZKeyForge
         EditorSession session;
         BindingSnapshot[] bindingSnapshots;
         bool compareFactory;
+        bool compact;
+        public event Action ReviewRequested;
+        public bool Compact
+        {
+            get { return compact; }
+            set { compact = value; rows.Visible = !value; }
+        }
         static string RowId(string profile, BindingDifference difference)
         { return profile + "\u001f" + difference.Gamepad + "\u001f" + difference.FamilyIndex + "\u001f" + difference.Family + "\u001f" + difference.Action; }
         public bool CompareFactory { get { return compareFactory; } }
@@ -41,6 +49,8 @@ namespace PBZKeyForge
             header.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 29));
             header.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             title.Dock = total.Dock = DockStyle.Fill; title.TextAlign = ContentAlignment.MiddleLeft;
+            title.Margin = Padding.Empty;
+            title.Click += delegate { if (ReviewRequested != null) ReviewRequested(); };
             total.TextAlign = ContentAlignment.MiddleRight; total.AutoEllipsis = title.AutoEllipsis = true;
             title.Padding = new Padding(8, 0, 0, 0); total.Padding = new Padding(0, 0, 10, 0);
             saved.Dock = factory.Dock = DockStyle.Fill;
@@ -61,13 +71,15 @@ namespace PBZKeyForge
             session = value;
             bindingSnapshots = snapshots;
             header.Height = Font.Height + 18;
-            title.Text = I18n.Str("views.schemediff"); saved.Text = I18n.Str("views.vssaved"); factory.Text = I18n.Str("views.vsfactory");
+            title.Text = I18n.Str("views.schemediff") + (ReviewRequested == null ? "" : "…");
+            title.Enabled = ReviewRequested != null;
+            saved.Text = I18n.Str("views.vssaved"); factory.Text = I18n.Str("views.vsfactory");
             saved.Selected = !compareFactory; factory.Selected = compareFactory;
             tip.SetToolTip(saved, I18n.Str("views.savedhelp")); tip.SetToolTip(factory, factory.Text);
             var changes = snapshots.SelectMany(s => s.Differences(compareFactory)).ToArray();
             bool incomplete = compareFactory ? snapshots.Any(s => s.Current.Any(r => !r.CanCompare))
                 : changes.Any(d => !d.BeforeComplete || !d.AfterComplete);
-            Visible = changes.Length > 0 || incomplete;
+            Visible = true;
             int added = changes.Sum(d => d.AddedKeys.Length);
             int removed = changes.Sum(d => d.RemovedKeys.Length);
             total.Text = (incomplete ? "≥ " : "") + "+" + added + " / −" + removed;

@@ -32,6 +32,21 @@ namespace PBZKeyForge
         { base.OnPaintBackground(e); if (BackColor.A == 255) EditorArtwork.PaintEffect(this, e.Graphics); }
     }
 
+    internal sealed class ConnectionStatusLabel : EditorLabel
+    {
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            float scale = e.Graphics.DpiX / 96f;
+            int size = Math.Max(4, (int)(6 * scale));
+            using (var brush = new SolidBrush(ForeColor))
+                e.Graphics.FillEllipse(brush, (int)(6 * scale), (Height - size) / 2, size, size);
+            int left = (int)(20 * scale);
+            TextRenderer.DrawText(e.Graphics, Text, Font, new Rectangle(left, 0, Math.Max(0, Width - left), Height), ForeColor,
+                TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis
+                | TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+        }
+    }
+
     internal sealed class EditorLinkLabel : LinkLabel
     {
         protected override void OnPaintBackground(PaintEventArgs e)

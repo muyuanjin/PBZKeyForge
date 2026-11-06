@@ -87,7 +87,7 @@ namespace PBZKeyForge
 
         public UnifiedActionView()
         {
-            Dock = DockStyle.Fill; BackColor = EditorTheme.Surface; Padding = new Padding(8);
+            Dock = DockStyle.Fill; BackColor = EditorTheme.Surface; Padding = new Padding(8, 4, 8, 4);
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); root.RowCount = 3;
             root.RowStyles.Add(new RowStyle(SizeType.Absolute, 38)); root.RowStyles.Add(new RowStyle(SizeType.Absolute, 0)); root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             var searchBar = UnifiedBindingUi.Grid(2); searchBar.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize)); searchBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
@@ -297,9 +297,10 @@ namespace PBZKeyForge
         void LayoutNotice()
         {
             if (workspace == null) return;
-            bool showNotice = workspace.KeyEnhancementEnabled ? ClientSize.Height >= Scale(360) : rows.Any(row => row.Function.RequiresKeyEnhancement);
-            keyEnhancementNotice.Visible = showNotice;
-            root.RowStyles[1].Height = showNotice ? Scale(28) : 0;
+            keyEnhancementNotice.Visible = true;
+            root.RowStyles[1].Height = Scale(28);
+            if (!workspace.KeyEnhancementEnabled && !rows.Any(row => row.Function.RequiresKeyEnhancement))
+                keyEnhancementNotice.Text = I18n.Str("enhancement.title") + ": " + I18n.Str("mod.disabled");
             scopeTip.SetToolTip(searchTitle, keyEnhancementNotice.Text);
             scopeTip.SetToolTip(search, keyEnhancementNotice.Text);
         }

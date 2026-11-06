@@ -32,7 +32,8 @@ namespace PBZKeyForge
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
                 e.Graphics.FillPath(fill, shape); e.Graphics.DrawPath(border, shape);
             }
-            var icon = new Rectangle((int)(15 * scale), (Height - (int)(25 * scale)) / 2, (int)(25 * scale), (int)(25 * scale));
+            int size = Math.Min((int)(25 * scale), Math.Max((int)(12 * scale), Height - (int)(10 * scale)));
+            var icon = new Rectangle((int)(6 * scale), (Height - size) / 2, size, size);
             using (var brush = new SolidBrush(Accent)) e.Graphics.FillEllipse(brush, icon);
             TextRenderer.DrawText(e.Graphics, "!", Font, icon, Color.FromArgb(36, 30, 19),
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);

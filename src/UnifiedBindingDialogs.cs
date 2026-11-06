@@ -439,35 +439,49 @@ namespace PBZKeyForge
                     tip.SetToolTip(link, I18n.Str("binding.related.open")); nativeEntries.Controls.Add(link);
                 }
             updatingNativeAbilityTrigger = true; nativeAbilityTrigger.Checked = workspace.UsesNativeTrigger(function.Id); updatingNativeAbilityTrigger = false;
-            foreach (Control child in bindings.Controls.Cast<Control>().ToArray()) child.Dispose();
+            var previousRows = bindings.Controls.Cast<TableLayoutPanel>().ToArray();
+            var anchor = previousRows.FirstOrDefault(row => row.Bottom > 0);
+            string anchorId = anchor == null ? null : ((BindingEntry)anchor.Tag).Id;
+            int anchorTop = anchor == null ? 0 : anchor.Top;
+            var focusedRow = previousRows.FirstOrDefault(row => row.ContainsFocus);
+            string focusName = focusedRow == null ? null : focusedRow.GetControlFromPosition(1, 0).Controls.Cast<Control>().Where(control => control.Focused).Select(control => control.Name).FirstOrDefault();
+            var existing = previousRows.ToDictionary(row => ((BindingEntry)row.Tag).Id);
             var entries = workspace.Entries(function.Id);
-            foreach (var entry in entries)
+            bindings.SuspendLayout();
+            try
             {
-                var item = entry; var row = UnifiedBindingUi.Grid(2); row.Dock = DockStyle.None; row.AutoSize = false; row.Height = Font.Height * 3 + 28; row.Padding = new Padding(4); row.Margin = new Padding(0, 0, 0, 8);
-                row.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-                row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); row.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-                string explanation = UnifiedBindingUi.EntryExecution(entry) + Environment.NewLine + UnifiedBindingUi.EntryPolicy(entry);
-                var text = UnifiedBindingUi.Label(UnifiedBindingUi.EntryDescription(entry) + Environment.NewLine + UnifiedBindingUi.EntryScope(entry) + Environment.NewLine + UnifiedBindingUi.EntryState(entry)); text.Name = "bindingExecution"; text.ForeColor = entry.Suppressed || !entry.Active ? EditorTheme.Muted : EditorTheme.Ink;
-                row.Controls.Add(text, 0, 0); var operations = new FlowLayoutPanel { AutoSize = true, WrapContents = false, Dock = DockStyle.Fill };
-                var edit = UnifiedBindingUi.Button(UnifiedBindingUi.Text("edit"), "editBinding"); edit.Click += delegate { Edit(item); };
+                for (int i = 0; i < entries.Length; i++)
                 {
-                    var toggle = UnifiedBindingUi.Button(I18n.Str(entry.Enabled ? "binding.disable" : "binding.enable"), "toggleBinding");
-                    toggle.Click += delegate { Apply(delegate { workspace.SetEnabled(item, !item.Enabled); }); }; operations.Controls.Add(toggle);
+                    var entry = entries[i]; TableLayoutPanel row;
+                    if (!existing.TryGetValue(entry.Id, out row)) { row = CreateBindingRow(); bindings.Controls.Add(row); }
+                    row.Tag = entry;
+                    var text = (Label)row.GetControlFromPosition(0, 0);
+                    text.Text = UnifiedBindingUi.EntryDescription(entry) + Environment.NewLine + UnifiedBindingUi.EntryScope(entry) + Environment.NewLine + UnifiedBindingUi.EntryState(entry);
+                    text.ForeColor = entry.Suppressed || !entry.Active ? EditorTheme.Muted : EditorTheme.Ink;
+                    var operations = row.GetControlFromPosition(1, 0);
+                    operations.Controls["toggleBinding"].Text = I18n.Str(entry.Enabled ? "binding.disable" : "binding.enable");
+                    operations.Controls["removeBinding"].Text = I18n.Str(entry.Suppressed ? "views.restore" : "binding.unbind");
+                    string explanation = UnifiedBindingUi.EntryExecution(entry) + Environment.NewLine + UnifiedBindingUi.EntryPolicy(entry);
+                    tip.SetToolTip(text, function.TechnicalName + Environment.NewLine + explanation + (entry.Shared ? Environment.NewLine + UnifiedBindingUi.Text("shared") : ""));
+                    if (bindings.Controls.GetChildIndex(row) != i) bindings.Controls.SetChildIndex(row, i);
                 }
-                var remove = UnifiedBindingUi.Button(entry.Suppressed ? I18n.Str("views.restore") : I18n.Str("binding.unbind"), "removeBinding");
-                remove.Click += delegate { Apply(delegate { if (item.Suppressed) workspace.Restore(item); else workspace.Remove(item); }); };
-                operations.Controls.Add(edit); operations.Controls.Add(remove);
-                var tools = UnifiedBindingUi.Button("⋯", "bindingTools"); tools.MinimumSize = new Size(34, 34); tools.AccessibleName = I18n.Str("editing.copy"); operations.Controls.Add(tools); row.Controls.Add(operations, 1, 0); bindings.Controls.Add(row);
-                var menu = new ContextMenuStrip();
-                menu.Items.Add(I18n.Str("editing.copy"), null, delegate {
-                    using (var picker = new UnifiedActionChoiceDialog(workspace, item.Keys.FirstOrDefault(), enableRequested, changed, item))
-                        picker.ShowDialog(this);
-                    RenderBindings();
-                });
-                tools.Click += delegate { menu.Show(tools, new Point(0, tools.Height)); };
-                row.ContextMenuStrip = text.ContextMenuStrip = menu;
-                row.Disposed += delegate { menu.Dispose(); };
-                tip.SetToolTip(text, function.TechnicalName + Environment.NewLine + explanation + (entry.Shared ? Environment.NewLine + UnifiedBindingUi.Text("shared") : ""));
+                foreach (var row in previousRows.Where(row => !entries.Any(entry => entry.Id == ((BindingEntry)row.Tag).Id)))
+                { tip.SetToolTip(row.GetControlFromPosition(0, 0), null); row.Dispose(); }
+                SizeRows();
+            }
+            finally { bindings.ResumeLayout(true); }
+            var currentRows = bindings.Controls.Cast<TableLayoutPanel>().ToArray();
+            if (focusedRow != null && focusedRow.IsDisposed && currentRows.Length > 0)
+            {
+                var next = currentRows[Math.Min(Array.IndexOf(previousRows, focusedRow), currentRows.Length - 1)];
+                var button = next.GetControlFromPosition(1, 0).Controls[focusName ?? "editBinding"];
+                if (button != null) button.Focus();
+            }
+            if (anchorId != null && currentRows.Length > 0)
+            {
+                var next = currentRows.FirstOrDefault(row => ((BindingEntry)row.Tag).Id == anchorId)
+                    ?? currentRows[Math.Min(Array.IndexOf(previousRows, anchor), currentRows.Length - 1)];
+                bindings.AutoScrollPosition = new Point(0, Math.Max(0, next.Top - bindings.AutoScrollPosition.Y - anchorTop));
             }
             editCustomFunction.Enabled = true;
             status.Text = bindings.Controls.Count == 0 ? UnifiedBindingUi.ShowsIndependentBindings(function) ? UnifiedBindingUi.Text("additionalnone") : I18n.Str("editor.unbound") : ""; SizeRows();
@@ -480,8 +494,33 @@ namespace PBZKeyForge
             else if (workspace.KeyEnhancementEnabled && entries.Any(entry => entry.ExecutionOwner == "uncovered")) status.Text = I18n.Str("ownership.owner.uncovered");
             tip.SetToolTip(status, UnifiedBindingUi.CoverageSummary(workspace));
         }
+        TableLayoutPanel CreateBindingRow()
+        {
+            var row = UnifiedBindingUi.Grid(2); row.Dock = DockStyle.None; row.AutoSize = false; row.Height = Font.Height * 3 + 28; row.Padding = new Padding(4); row.Margin = new Padding(0, 0, 0, 8);
+            row.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); row.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            var text = UnifiedBindingUi.Label(""); text.Name = "bindingExecution"; row.Controls.Add(text, 0, 0);
+            var operations = new FlowLayoutPanel { AutoSize = true, WrapContents = false, Dock = DockStyle.Fill };
+            var toggle = UnifiedBindingUi.Button("", "toggleBinding");
+            toggle.Click += delegate { var item = (BindingEntry)row.Tag; Apply(delegate { workspace.SetEnabled(item, !item.Enabled); }); };
+            var edit = UnifiedBindingUi.Button(UnifiedBindingUi.Text("edit"), "editBinding"); edit.Click += delegate { Edit((BindingEntry)row.Tag); };
+            var remove = UnifiedBindingUi.Button("", "removeBinding");
+            remove.Click += delegate { var item = (BindingEntry)row.Tag; Apply(delegate { if (item.Suppressed) workspace.Restore(item); else workspace.Remove(item); }); };
+            var tools = UnifiedBindingUi.Button("⋯", "bindingTools"); tools.MinimumSize = new Size(34, 34); tools.AccessibleName = I18n.Str("editing.copy");
+            operations.Controls.AddRange(new Control[] { toggle, edit, remove, tools }); row.Controls.Add(operations, 1, 0);
+            var menu = new ContextMenuStrip();
+            menu.Items.Add(I18n.Str("editing.copy"), null, delegate {
+                var item = (BindingEntry)row.Tag;
+                using (var picker = new UnifiedActionChoiceDialog(workspace, item.Keys.FirstOrDefault(), enableRequested, changed, item)) picker.ShowDialog(this);
+                RenderBindings();
+            });
+            tools.Click += delegate { menu.Show(tools, new Point(0, tools.Height)); };
+            row.ContextMenuStrip = text.ContextMenuStrip = menu;
+            row.Disposed += delegate { menu.Dispose(); };
+            return row;
+        }
         void SizeRows()
-        { foreach (Control row in bindings.Controls) row.Width = Math.Max(260, bindings.ClientSize.Width - SystemInformation.VerticalScrollBarWidth - 8); }
+        { foreach (Control row in bindings.Controls) row.Width = Math.Max(260, bindings.Width - SystemInformation.VerticalScrollBarWidth - 8); }
         void Edit(BindingEntry entry)
         {
             using (var dialog = new UnifiedBindingEditDialog(workspace, function.Id, entry, null, enableRequested))
@@ -554,11 +593,17 @@ namespace PBZKeyForge
             root.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             var scroll = new EditorPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = EditorTheme.Surface }; scroll.HandleCreated += delegate { EditorArtwork.DarkScrollbars(scroll); };
             var fields = new EditorLayout { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, ColumnCount = 1 }; fields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            scroll.SizeChanged += delegate { fields.MaximumSize = new Size(Math.Max(1, scroll.Width - SystemInformation.VerticalScrollBarWidth), 0); };
             fields.SuspendLayout(); scroll.SuspendLayout();
             scopeHint.Name = "bindingScope"; AddField(fields, scopeHint, 30);
             nativeMode.Name = "nativeTriggerMode"; nativeMode.DropDownStyle = ComboBoxStyle.DropDownList;
             nativeMode.Items.Add(I18n.Str("binding.mode.add")); nativeMode.Items.Add(I18n.Str("binding.mode.replace")); nativeMode.SelectedIndex = workspace.UsesNativeTrigger(functionId) ? 0 : 1;
             AddField(fields, nativeMode, 38); ShowField(nativeMode, function.Targets.Any(target => target.Kind == "ability"));
+            var label = UnifiedBindingUi.Label(UnifiedBindingUi.Text("trigger")); AddField(fields, label, 30);
+            trigger.DropDownStyle = ComboBoxStyle.DropDownList; trigger.Name = "bindingTrigger";
+            foreach (string id in TriggerIds) trigger.Items.Add(UnifiedBindingUi.Text("trigger." + id));
+            AddField(fields, trigger, 38);
+            preview.ForeColor = EditorTheme.Muted; preview.Name = "triggerPreview"; AddField(fields, preview, 40);
             AddField(fields, keyTitle, 26);
             mainKey.DropDownStyle = ComboBoxStyle.DropDownList; mainKey.Dock = DockStyle.Fill; mainKey.Name = "bindingKey";
             foreach (string key in DeviceKeys()) mainKey.Items.Add(new KeyChoice(key));
@@ -590,11 +635,6 @@ namespace PBZKeyForge
             };
             addKey.Click += delegate { additionalKey.Visible = true; additionalKey.Focus(); additionalKey.DroppedDown = true; };
             combinationCommands.Dock = DockStyle.Fill; combinationCommands.AutoSize = true; combinationCommands.Controls.Add(addKey); combinationCommands.Controls.Add(additionalKey); AddField(fields, combinationCommands, 0);
-            var label = UnifiedBindingUi.Label(UnifiedBindingUi.Text("trigger")); AddField(fields, label, 30);
-            trigger.DropDownStyle = ComboBoxStyle.DropDownList; trigger.Name = "bindingTrigger";
-            foreach (string id in TriggerIds) trigger.Items.Add(UnifiedBindingUi.Text("trigger." + id));
-            AddField(fields, trigger, 38);
-            preview.ForeColor = EditorTheme.Muted; preview.Name = "triggerPreview"; AddField(fields, preview, 40);
             secondsRow = Parameter(UnifiedBindingUi.Text("duration"), seconds); AddField(fields, secondsRow, 0);
             intervalRow = Parameter(UnifiedBindingUi.Text("interval"), interval); AddField(fields, intervalRow, 0);
             count.DecimalPlaces = 0; count.Minimum = 1; count.Increment = 1; countRow = Parameter(UnifiedBindingUi.Text("count"), count); AddField(fields, countRow, 0);
