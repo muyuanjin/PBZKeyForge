@@ -198,7 +198,7 @@ end
 function NativeInput:prepare()
     local backend, expanded, sources, maintained = self.backend, {}, {}, {}
     local candidates = {}; for _, action in ipairs(backend.config.native_actions or {}) do candidates[action] = true end
-    local coverage = {}
+    local coverage, active_actions = {}, {}
     self.maintained = {}
     for name, target in pairs(backend.config.targets or {}) do
         if target.kind == "mapping" then expanded[name] = {} end
@@ -226,6 +226,7 @@ function NativeInput:prepare()
         local current = row(mapping)
         local key = self:original_key(index, mapping, current)
         local actionPath = path(mapping.Action)
+        active_actions[actionPath] = true
         local candidate = backend.config.unified_native and candidates[actionPath] or not backend.config.unified_native and movement[actionPath] and continuous_pipeline(current)
         local supported, reason = schedulable(current, key)
         if candidate and key ~= "None" and supported and (backend.config.unified_native or not backend:baseline_suppressed(mapping.Action, key)) then
@@ -257,10 +258,11 @@ function NativeInput:prepare()
         self.coverage_signature = signature
         backend.log("Gameplay input ownership:\n" .. signature)
     end
+    local expand
     if next(expanded) then
         local nativePaths = {}
         for name in pairs(expanded) do nativePaths[name] = {} end
-        local function expand(mapping, suffix, fallback)
+        expand = function(mapping, suffix, fallback)
             local current = row(mapping)
             local key = fallback and mapping.Key.KeyName:ToString() or self:original_key(suffix, mapping, current)
             if key == "None" then return end
@@ -285,18 +287,30 @@ function NativeInput:prepare()
             end
         end
         mappings:ForEach(function(index, entry) expand(entry:get(), index, false) end)
-        local contexts = backend.controller.PlayerInput:GetPropertyValue("AppliedInputContextData")
-        contexts:ForEach(function(key)
-            local context = key:get()
-            local defaults = context.DefaultKeyMappings.Mappings
-            defaults:ForEach(function(index, entry)
-                expand(entry:get(), "template_" .. tostring(context:GetAddress()) .. "_" .. index, true)
-            end)
+    end
+    local contexts = backend.controller.PlayerInput:GetPropertyValue("AppliedInputContextData")
+    contexts:ForEach(function(key)
+        local context = key:get()
+        local defaults = context.DefaultKeyMappings.Mappings
+        defaults:ForEach(function(index, entry)
+            local mapping = entry:get()
+            active_actions[path(mapping.Action)] = true
+            if expand then expand(mapping, "template_" .. tostring(context:GetAddress()) .. "_" .. index, true) end
         end)
+    end)
+    local function active_target(target)
+        -- Scene contexts may remove an action entirely; its bindings wait for that context to return.
+        for _, action in ipairs(target.actions or {}) do
+            if active_actions[action:gsub("%.[^./]+$", "")] then return true end
+        end
+        return false
     end
     if backend.live_validation then
         for name, outputs in pairs(expanded) do
-            if #outputs == 0 then error("No runtime input pipeline for " .. tostring(backend.config.targets[name].mapping or name), 0) end
+            local target = backend.config.targets[name]
+            if #outputs == 0 and not target.native_override and active_target(target) then
+                error("No runtime input pipeline for " .. tostring(target.mapping or name), 0)
+            end
         end
     end
     do
@@ -307,8 +321,8 @@ function NativeInput:prepare()
                 for name, outputs in pairs(expanded) do
                     local target = backend.config.targets[name]
                     if #outputs > 0 and target.device == override.device then
-                        for _, action in ipairs(target.actions or {}) do
-                            if action:gsub("%.[^./]+$", "") == actionPath then captured = true end
+                        for _, output in ipairs(outputs) do
+                            if path(sources[output].object) == actionPath then captured = true end
                         end
                     end
                 end
@@ -318,7 +332,7 @@ function NativeInput:prepare()
                         if self.maintained[index] then captured = true else count = count + 1 end
                     end
                 end)
-                if not captured and #override.keys > count then
+                if active_actions[actionPath] and (count > 0 or not captured) and #override.keys > count then
                     error("Native input " .. tostring(override["function"]) .. " has " .. count .. " active runtime slots for " .. override.device .. "; requested " .. #override.keys, 0)
                 end
             end

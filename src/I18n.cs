@@ -495,6 +495,7 @@ namespace PBZKeyForge
             FeedbackUpdateStrings();
             BindingWorkflowStrings();
             SchemeStrings();
+            CompleteMoveStrings();
         }
     }
 }

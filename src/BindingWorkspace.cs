@@ -182,7 +182,7 @@ namespace PBZKeyForge
                     function.FactoryKeys = function.NativeAction != null ? session.Relations(function.NativeAction, pad, family).DefaultKeys
                         : function.FixedKeys ?? ActionCatalogLabels.FactoryKeys(function.Id, pad);
                     FunctionLocalization localization;
-                    bool localized = Localizations.TryGetValue(function.Id, out localization) && localization.labels != null && localization.labels.ContainsKey(I18n.Current);
+                    bool localized = Localizations.TryGetValue(CompleteMoveCatalog.SourceId(function.Id), out localization) && localization.labels != null && localization.labels.ContainsKey(I18n.Current);
                     function.LabelSource = localized && !ActionCatalogLabels.IsSemantic(function.Id) && function.Id != "action:" + KeyboardMovement && function.Id != "action:/SGameLocomotionDriver/Input/IA_JoystickMoveInput" ? localization.source : "semantic";
                     function.SearchNames = new[] { function.Label }.Concat(PlayerAliases(function.Id))
                         .Concat(function.NativeAction == null && localization != null ? localization.aliases ?? new string[0] : new string[0])
@@ -224,6 +224,12 @@ namespace PBZKeyForge
         static string BaseFunctionLabel(string id)
         {
             if (string.IsNullOrEmpty(id)) return id;
+            if (CompleteMoveCatalog.Contains(id))
+            {
+                string sourceId = CompleteMoveCatalog.SourceId(id);
+                string source = ActionCatalogLabels.Prefix(sourceId, BaseFunctionLabel(sourceId));
+                return source + " · " + CompleteMoveCatalog.LabelSuffix(id);
+            }
             if (id.StartsWith("movement:", StringComparison.Ordinal)) return I18n.Str("unified.movement." + id.Substring(9));
             if (id == "action:" + KeyboardMovement) return I18n.Str("unified.movement.keyboard");
             if (id == "action:/SGameLocomotionDriver/Input/IA_JoystickMoveInput") return I18n.Str("unified.movement.joystick");
@@ -374,6 +380,7 @@ namespace PBZKeyForge
         static string OutputFunction(KeyEnhancementOutput output)
         {
             if (output.Kind == "scheme") return "scheme:" + output.Tag;
+            if (output.Kind == "move") return output.Tag;
             if (!string.IsNullOrEmpty(output.FunctionId)) return output.FunctionId;
             if (!string.IsNullOrWhiteSpace(output.Id)) return "custom:" + output.Id;
             if (output.Kind == "mapping") return output.MappingName;
@@ -584,7 +591,7 @@ namespace PBZKeyForge
                 if (detail.Trigger == "custom" && specification.Trigger != "custom") rule.EvaluateLua = null;
             }
             rule.Keys = specification.Keys.ToList(); rule.Axis = specification.Axis;
-            rule.Trigger = specification.Trigger == "default" ? (function.Id.StartsWith("ability:", StringComparison.Ordinal) || function.Id == ChangeArmed ? "press" : "down") : specification.Trigger;
+            rule.Trigger = specification.Trigger == "default" ? (function.Id.StartsWith("ability:", StringComparison.Ordinal) || function.Id.StartsWith("move:", StringComparison.Ordinal) || function.Id == ChangeArmed ? "press" : "down") : specification.Trigger;
             rule.NormalizeInput();
             rule.Seconds = specification.Seconds; rule.Interval = specification.Interval; rule.Threshold = specification.Threshold;
             rule.Count = specification.Count; rule.Priority = specification.Priority; rule.Enabled = specification.Enabled;

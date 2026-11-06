@@ -1,4 +1,5 @@
 local PhysicalInput = require("physical-input")
+local CompleteMoves = require("complete-moves")
 local Backend = {}
 Backend.__index = Backend
 
@@ -489,6 +490,7 @@ function Backend:dispatch(spec, phase, value, bindingId)
             return true
         end
         if spec.kind == "mapping" then return true end
+        if spec.kind == "move" then return CompleteMoves.dispatch(self, spec, phase) end
         if spec.kind == "lua" then
             return spec.run(self, {phase = phase, value = value, binding = bindingId,
                 state = self:context()})

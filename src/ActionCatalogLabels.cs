@@ -28,32 +28,41 @@ namespace PBZKeyForge
             Detail detail;
             if (id == null || !id.Contains(":") || !Details.TryGetValue(id, out detail) || detail.parts.Length == 0) return nativeLabel;
             var parts = detail.parts.Select(part => part.StartsWith("@", StringComparison.Ordinal) ? I18n.Str(part.Substring(1)) : part);
+            string prefix = Prefix(id, nativeLabel);
+            return string.Join(" · ", (string.IsNullOrWhiteSpace(prefix) ? Enumerable.Empty<string>() : new[] { prefix }).Concat(parts));
+        }
+
+        internal static string Prefix(string id, string nativeLabel)
+        {
+            Detail detail;
+            if (id == null || !Details.TryGetValue(id, out detail)) return nativeLabel;
             string prefix = detail.prefix == "none" ? "" : nativeLabel;
             if (detail.prefix == "weapon")
             {
                 int separator = (prefix ?? "").IndexOf(" · ", StringComparison.Ordinal);
                 if (separator >= 0) prefix = prefix.Substring(0, separator);
             }
-            return string.Join(" · ", (string.IsNullOrWhiteSpace(prefix) ? Enumerable.Empty<string>() : new[] { prefix }).Concat(parts));
+            return prefix;
         }
 
         public static string SearchAliases(string id)
         {
+            if (CompleteMoveCatalog.Contains(id)) return CompleteMoveCatalog.SearchAliases(id);
             Detail detail;
             if (id == null || !Details.TryGetValue(id, out detail)) return "";
             return string.Join(" ", detail.aliases.Concat(new[] { detail.variant ?? "" }));
         }
 
         public static bool IsSemantic(string id)
-        { Detail detail; return id != null && Details.TryGetValue(id, out detail) && detail.semantic; }
+        { Detail detail; return CompleteMoveCatalog.Contains(id) || id != null && Details.TryGetValue(id, out detail) && detail.semantic; }
 
         public static string Section(string id)
-        { Detail detail; return id != null && Details.TryGetValue(id, out detail) ? detail.section : ""; }
+        { Detail detail; return id != null && Details.TryGetValue(CompleteMoveCatalog.SourceId(id), out detail) ? detail.section : ""; }
 
         public static string[] Category(string id)
         {
             Detail detail;
-            return id != null && Details.TryGetValue(id, out detail) && !string.IsNullOrEmpty(detail.category)
+            return id != null && Details.TryGetValue(CompleteMoveCatalog.SourceId(id), out detail) && !string.IsNullOrEmpty(detail.category)
                 ? detail.category.Split('/') : new string[0];
         }
 
@@ -61,7 +70,7 @@ namespace PBZKeyForge
         { Detail detail; return id != null && Details.TryGetValue(id, out detail) && detail.nativeMapping; }
 
         internal static int Order(string id)
-        { Detail detail; return id != null && Details.TryGetValue(id, out detail) ? detail.order : 0; }
+        { Detail detail; return id != null && Details.TryGetValue(CompleteMoveCatalog.SourceId(id), out detail) ? detail.order : 0; }
 
         public static string[] FactoryKeys(string id, bool pad)
         {

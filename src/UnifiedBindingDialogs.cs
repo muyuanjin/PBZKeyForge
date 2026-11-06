@@ -56,6 +56,7 @@ namespace PBZKeyForge
         {
             string kind = function.NativeAction != null ? Text("nativefunction")
                 : function.FixedKeys != null ? I18n.Str("unified.groups.movement")
+                : function.Id.StartsWith("move:", StringComparison.Ordinal) ? I18n.Str("moves.kind")
                 : function.Id.StartsWith("action:", StringComparison.Ordinal) ? I18n.Str("binding.function.action")
                 : function.Id.StartsWith("ability:", StringComparison.Ordinal) ? I18n.Str("binding.function.ability") : Text("customtarget");
             return kind + " · " + UnifiedActionChoiceDialog.FunctionCode(function);

@@ -156,7 +156,10 @@ namespace PBZKeyForge
                             (string.IsNullOrWhiteSpace(suppression.Key) || suppression.Key == key)
                             && System.Text.RegularExpressions.Regex.Replace(suppression.ActionPath, "\\.[^./]+$", "") == System.Text.RegularExpressions.Regex.Replace(path, "\\.[^./]+$", ""))).ToArray() };
                     if (!KeyEnhancementInputPlan.SupportsMapping(output)) continue;
-                    string name = "native_override_" + targets.Count; targets.Add(name, Target(output, true));
+                    string name = "native_override_" + targets.Count;
+                    var target = (Dictionary<string, object>)Target(output, true);
+                    target["native_override"] = true;
+                    targets.Add(name, target);
                     bindings.Add(new Dictionary<string, object> { {"id", name + ":" + key}, {"keys", new[] {key}}, {"trigger", "down"}, {"outputs", new[] {name}}, {"priority", -1000000} });
                 }
             }
@@ -171,7 +174,9 @@ namespace PBZKeyForge
             }).ToArray();
             config["native_actions"] = KeyEnhancementInputPlan.Actions.Select(action => action.path).ToArray();
             config["unified_native"] = true;
-            return "local config = " + Lua(config) + "\n" + (CustomLua ?? "") + "\nreturn config\n";
+            string dependencies = Rules.Any(rule => rule.Enabled && rule.Outputs.Any(output => output.Kind == "move"))
+                ? "require(\"complete-moves\")\n" : "";
+            return dependencies + "local config = " + Lua(config) + "\n" + (CustomLua ?? "") + "\nreturn config\n";
         }
 
         void ValidateStructure()
@@ -217,6 +222,7 @@ namespace PBZKeyForge
         }
         static object Target(KeyEnhancementOutput output, bool requireScheduledMapping)
         {
+            if (output.Kind == "move") return CompleteMoveCatalog.Target(output);
             if (!new[] { "action", "mapping", "ability", "event", "function", "property", "lua", "scheme" }.Contains(output.Kind))
                 throw Invalid("Output.Kind=" + output.Kind);
             if ((output.Kind == "action" || output.Kind == "function") && string.IsNullOrWhiteSpace(output.Path)) throw Invalid("Output.Path: InputAction / UFunction");
@@ -318,7 +324,7 @@ namespace PBZKeyForge
                         string tag = (string)entry["tag"];
                         result.Add(new KeyEnhancementCatalogEntry { Id = "ability:" + tag, Kind = "ability", Tag = tag, Name = tag });
                     }
-                    return result.ToArray();
+                    return result.Concat(CompleteMoveCatalog.Targets).ToArray();
                 }
             }
         }

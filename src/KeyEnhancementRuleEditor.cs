@@ -371,6 +371,7 @@ namespace PBZKeyForge
             if (output.Kind == "mapping") return BindingWorkspace.FunctionLabel(output.MappingName);
             if (output.Kind == "action") return BindingWorkspace.FunctionLabel("action:" + ActionPath(output.Path));
             if (output.Kind == "ability") return BindingWorkspace.FunctionLabel("ability:" + output.Tag);
+            if (output.Kind == "move") return BindingWorkspace.FunctionLabel(output.Tag);
             string name = !string.IsNullOrEmpty(output.Tag) ? output.Tag : !string.IsNullOrEmpty(output.Path) ? output.Path : output.Property ?? output.Kind ?? "";
             return name;
         }

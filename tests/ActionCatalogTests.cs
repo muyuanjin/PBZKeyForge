@@ -44,7 +44,7 @@ class ActionCatalogTests
     static void Run()
     {
         I18n.Current = "zh-Hans";
-        Check(KeyEnhancementCatalog.Targets.Length == 334 && KeyEnhancementCatalog.Targets.Count(item => item.Kind == "action") == 98
+        Check(KeyEnhancementCatalog.Targets.Length == 334 + CompleteMoveCatalog.Targets.Length && KeyEnhancementCatalog.Targets.Count(item => item.Kind == "action") == 98
             && KeyEnhancementCatalog.Targets.Count(item => item.Kind == "ability") == 236, "The audited underlying action inventory changed.");
         foreach (bool pad in new[] { false, true })
         {
@@ -104,7 +104,7 @@ class ActionCatalogTests
         string[] roots = { "locomotion", "targeting", "offense", "defense", "weapons", "shadow", "interaction", "scene", "interface", "debug" };
         int[] counts = { 16, 8, 48, 13, 105, 79, 13, 17, 17, 22 };
         for (int i = 0; i < roots.Length; i++)
-            Check(functions.Count(function => function.GroupPath[0] == roots[i]) == counts[i], "Incomplete player category: " + roots[i]);
+            Check(functions.Count(function => function.GroupPath[0] == roots[i]) == counts[i] + CompleteMoveCatalog.Targets.Count(move => ActionCatalogLabels.Category(move.Id)[0] == roots[i]), "Incomplete player category: " + roots[i]);
         foreach (var target in KeyEnhancementCatalog.Targets)
             Check(ActionCatalogLabels.Category(target.Id).Length >= 2 && functions.Single(function => function.Id == target.Id).GroupPath[0] != "custom",
                 "A known target has no audited player category: " + target.Id);

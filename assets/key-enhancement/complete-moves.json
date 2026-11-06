@@ -1,0 +1,80 @@
+{
+  "build": "CL-302256",
+  "moves": [
+    {
+      "id": "move:Ability.Action.Hun.Heavy.BronzeSword.BHold.Release2",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.BronzeSword.BHold",
+      "tag": "Ability.Action.Hun.Heavy.BronzeSword.BHold",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold.GA_Hun_BronzeSword_B_Hold_C",
+      "entryPoint": "EndSuccess",
+      "inputAction": "/PBZInput/InputActions/IA_AttackH_PressLong.IA_AttackH_PressLong",
+      "requiredTags": ["CharacterState.Space.Ground", "Weapon.Type.BronzeSword"],
+      "priority": 3,
+      "code": "BHold · Release2",
+      "labelParts": ["catalog.charge", "moves.release"],
+      "searchAliases": ["BHold", "Release2", "蓄力释放"]
+    },
+    {
+      "id": "move:Ability.Action.Hun.Light.Air.AA",
+      "sourceId": "ability:Ability.Action.Hun.Light.Air.A.Normal",
+      "tag": "Ability.Action.Hun.Light.Air.AA",
+      "inputAction": "/PBZInput/InputActions/IA_AttackL_Press.IA_AttackL_Press",
+      "requiredTags": ["CharacterState.Space.Air"],
+      "priority": 2,
+      "code": "Air · AA",
+      "labelParts": ["catalog.air", "2"],
+      "searchAliases": ["Air.AA", "空中普攻2"]
+    },
+    {
+      "id": "move:Ability.Action.Hun.Light.Air.AAA",
+      "sourceId": "ability:Ability.Action.Hun.Light.Air.A.Normal",
+      "tag": "Ability.Action.Hun.Light.Air.AAA",
+      "inputAction": "/PBZInput/InputActions/IA_AttackL_Press.IA_AttackL_Press",
+      "requiredTags": ["CharacterState.Space.Air"],
+      "priority": 2,
+      "code": "Air · AAA",
+      "labelParts": ["catalog.air", "3"],
+      "searchAliases": ["Air.AAA", "空中普攻3"]
+    },
+    {
+      "id": "move:Ability.Action.Hun.Heavy.ComboAtk_N3H3",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.ComboAtk_N3H2",
+      "tag": "Ability.Action.Hun.Heavy.ComboAtk_N3H3",
+      "inputAction": "/PBZInput/InputActions/IA_AttackH_Press.IA_AttackH_Press",
+      "requiredTags": ["CharacterState.Space.Ground"],
+      "priority": 2,
+      "code": "N3H3",
+      "labelParts": ["catalog.followup", "N3H3"],
+      "searchAliases": ["AAABBB", "ComboAtk_N3H3"]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA.Final",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA",
+      "tag": "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA.GA_Hun_HuoLiuXing_AAAA_C",
+      "entryPoint": "ToRelease",
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": ["CharacterState.Space.Ground", "CharacterState.WeaponUpgrade.HuoLiuXing.AAAA", "Weapon.Type.ShaqiWeapon.HuoLiuXing"],
+      "activeBooleanProperties": ["Current Shachi Reinforced"],
+      "priority": 3,
+      "code": "AAAA · Final",
+      "labelParts": ["catalog.attack", "AAAA", "moves.release"],
+      "searchAliases": ["HuoLiuXing.AAAA.Final", "ToRelease"]
+    },
+    {
+      "id": "move:Ability.Action.Hun.Heavy.GuiTouDao.BHold.Release",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.GuiTouDao.BHold.Start",
+      "tag": "Ability.Action.Hun.Heavy.GuiTouDao.BHold.Start",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start.GA_Hun_GuiTouBlade_B_Hold_Start_C",
+      "entryPoint": "EventReceived_7594CBDE4CE41BEBFC9ABFBA4E2D1DF1",
+      "entryArguments": [{}],
+      "inputAction": "/PBZInput/InputActions/IA_AttackH_PressLong.IA_AttackH_PressLong",
+      "requiredTags": ["CharacterState.Space.Ground", "CharacterState.WeaponUpgrade.GuiTouBlade.CanCharge", "Weapon.Type.GuiTouBlade"],
+      "ignoredTags": ["CharacterState.AbilityState.GuiTouBlade.InBHold"],
+      "priority": 2,
+      "code": "BHold · Release",
+      "labelParts": ["catalog.charge", "moves.release"],
+      "searchAliases": ["GuiTouDao.BHold.Release", "蓄力释放"]
+    }
+  ]
+}

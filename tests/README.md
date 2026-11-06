@@ -34,6 +34,20 @@ $compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
 
 The checks cover diagram position and scale, fixed binding commands, extra-input wrapping, footer feedback, action filtering, status indicators, trigger selection, binding-detail scroll and focus, and the expanded differences review. Screenshots accompany geometry assertions; all editing uses offline fixtures.
 
+For complete-move bindings, verify catalog labels, keyboard/controller binding, configuration persistence, native qualification and immediate release dispatch:
+
+```powershell
+$compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+& $compiler /nologo /out:dist\CompleteMoveCatalogTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll /r:System.Web.Extensions.dll /r:System.IO.Compression.dll tests\CompleteMoveCatalogTests.cs
+.\dist\CompleteMoveCatalogTests.exe dist\complete-move-catalog-check
+python tests\input-router\run_lua.py tests\input-router\CompleteMoveTests.lua
+$env:PBZ_COMPLETE_MOVE_CONFIG = 'dist/complete-move-catalog-check/complete-move.lua'
+python tests\input-router\run_lua.py tests\input-router\CompiledCompleteMoveTests.lua
+Remove-Item Env:\PBZ_COMPLETE_MOVE_CONFIG
+```
+
+The Lua checks reject airborne use of ground moves, missing live instances, active abilities and resource-failure branches; verify cancellation after release failure; and check that holding a press binding does not repeat an attack. These fixtures cover editor/runtime dispatch, not in-game animation or damage. Equipment and phase evidence is recorded in [complete moves](../docs/complete-moves.md).
+
 To check the desktop's native scaling, compile this harness with `/win32manifest:build\app.manifest` and run it in a separate output directory. Add `--desktop-shots` to capture the trigger editor from the desktop as well as `DrawToBitmap`; use this flag only with the DPI-aware build.
 
 For a targeted translation dictionary check across all 15 languages:
@@ -331,6 +345,8 @@ The model checks cover JSON isolation, mapping identities and generated Lua. Wit
 
 `UnifiedBackendTests.lua` exercises PBZ CommonUI Game/Menu/All input modes, unavailable or restored local-player routers, UI-only state, and keyboard/user focus in all four editable-text widget classes. Routing must yield to UI/text and restore native mappings, then resume only when gameplay owns input. `PhysicalInputTests.lua` checks independent keyboard/mouse-button sampling. `InputResumeTests.lua`, `MainInputRecoveryTests.lua` and the main-loop lifecycle checks distinguish held movement/sprint recovery from discrete attacks, jumps, taps, pulses and toggles: qualifying continuous movement resumes, while a held one-shot input waits for release rather than generating a fresh press. These mocks do not establish actual game behavior. `run_lua.py` accepts `--lua-dll` for an installed Lua 5.4 runtime.
 
+`NativeInputTests.lua` also runs the real main frame loop, backend refresh, native pipeline preparation and router together with mocked engine objects. It exercises scene appearance/removal, empty mapping arrays, live reload, scheme switching, menu return and pawn replacement while movement is held. Scene interaction waits for a fresh press; shutdown restores the current native rows. Native overrides retain cooldown/chord pipelines during live validation, while custom enhanced outputs still reject unsupported pipelines. Mixed scheduled/native mappings must reject retained-slot overflow without changing any native row, then accept a valid retry.
+
 ```powershell
 & $compiler /nologo /out:dist\KeyEnhancementInstallationTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.IO.Compression.dll tests\KeyEnhancementInstallationTests.cs
 .\dist\KeyEnhancementInstallationTests.exe dist\key-enhancement-installation-check
@@ -571,7 +587,7 @@ python tests\CliSchemeTests.py dist\PBZKeyForge-cli.exe dist\cli-schemes
 
 `SchemeSwitchTests` simulates dispatch on different schemes, release of old continuous outputs, movement recovery, suppression of held discrete inputs, switch-key latching, failed-target recovery, actual-scheme persistence/restart and deferred custom-script initialization. `CliSchemeTests` covers offline enable/create/select/edit/rename/delete, ZIP reopen, native save byte preservation, shared switch bindings, single-scheme sharing, status identities and disabled-mode rejection. These checks do not run the game or modify an installation.
 
-Scheme regressions also cover factory restoration of enhanced native bindings, unchanged other schemes/save bytes, deletion of a scheme referenced by the comparison baseline, and bounded sampling while a switch key is held. To validate the generated full factory library against simulated native pipelines in both startup and live modes, run `EnhancementSchemesTests` first, set `$env:PBZ_SCHEME_FIXTURES = (Resolve-Path dist\enhancement-schemes\checks).Path`, run `python tests\input-router\run_lua.py tests\input-router\NativeInputTests.lua`, then `Remove-Item Env:\PBZ_SCHEME_FIXTURES`. Empty overrides for absent devices are accepted; populated overrides without a runtime pipeline remain rejected.
+Scheme regressions also cover factory restoration of enhanced native bindings, unchanged other schemes/save bytes, deletion of a scheme referenced by the comparison baseline, and bounded sampling while a switch key is held. To validate the generated full factory library against simulated native pipelines in both startup and live modes, run `EnhancementSchemesTests` first, set `$env:PBZ_SCHEME_FIXTURES = (Resolve-Path dist\enhancement-schemes\checks).Path`, run `python tests\input-router\run_lua.py tests\input-router\NativeInputTests.lua`, then `Remove-Item Env:\PBZ_SCHEME_FIXTURES`. In all three compiled factory schemes, the tests retire and restore every configured native action individually, use cooldown/chord pipelines for crouch and keyboard weapon switching, and remove/restore all runtime mappings. Scene actions absent from both active mappings and applied context templates remain dormant until their context returns. The tests also remove and restore interaction mappings without interrupting movement or replaying held interaction keys. Empty overrides for absent devices are accepted; active actions with populated overrides but no device pipeline, and retained mappings with insufficient slots, remain rejected.
 
 
 `SchemePresetWorkflowTests` uses an isolated installation with synthetic authenticated settings. It exercises preset cancellation before apply, installation failure and retry, cancellation after successful offline/live acceptance, native-draft rejection in the GUI, and byte preservation of both game saves. The game must be closed; the harness never launches it.

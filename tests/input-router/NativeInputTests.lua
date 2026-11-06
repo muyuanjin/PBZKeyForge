@@ -5,6 +5,7 @@ local NativeInput = dofile(scripts .. "native-input.lua")
 local Backend = dofile(scripts .. "backend.lua")
 local Router = dofile(scripts .. "router.lua")
 local passed, failures, nextAddress = 0, {}, 100
+local stress_gc = true
 
 local function check(value, message)
     assert(value, message)
@@ -13,6 +14,7 @@ end
 
 local function test(name, run)
     local ok, message = pcall(run)
+    stress_gc = true
     if not ok then failures[#failures + 1] = name .. ": " .. tostring(message) end
 end
 
@@ -40,7 +42,7 @@ local function array(items, transform)
         local receiver = setmetatable({self}, {__mode = "v"})
         self = nil
         for index, value in ipairs(items) do
-            collectgarbage("collect")
+            if stress_gc then collectgarbage("collect") end
             assert(receiver[1], "native array receiver collected during ForEach")
             local item = transform and transform(value) or value
             callback(index - 1, {get = function() return item end})
@@ -809,13 +811,13 @@ test("startup overflow suspends routing and restores previously owned input", fu
     lifecycle.stop()
 end)
 
-test("empty overrides allow absent devices while populated overrides require a pipeline", function()
+test("empty overrides allow absent devices while active actions require a populated device pipeline", function()
     for _, live in ipairs({false,true}) do
         local backend,native,state=fixture({unified_native=true,native_bindings={
             {["function"]="IA_MoveSlow",device="gamepad",keys={},actions={"/Game/MoveSlow"}},
             {["function"]="IA_Jump",device="keyboard",keys={},actions={"/Game/Jump"}}
         }})
-        state.rows={mapping(object("/Game/Jump.Jump"),"SpaceBar")}
+        state.rows={mapping(object("/Game/Jump.Jump"),"SpaceBar"),mapping(object("/Game/MoveSlow.MoveSlow"),"LeftAlt")}
         backend.live_validation=live
         native:prepare();native:apply_masks()
         check(key(state.rows[1])=="None", "empty override did not unbind an existing device mapping")
@@ -827,8 +829,286 @@ test("empty overrides allow absent devices while populated overrides require a p
     end
 end)
 
+test("scene mappings wait for their context and resume without suspending other input", function()
+    for _, live in ipairs({false,true}) do
+        for _, device in ipairs({"keyboard","gamepad"}) do
+            local interactPath="/Game/PBZContent/Input/InputActions/IA_Interaction"
+            local movePath="/SGameLocomotionDriver/Input/IA_KeyboardMoveInput"
+            local nativeKey=device=="keyboard" and "E" or "Gamepad_FaceButton_Right"
+            local customKey=device=="keyboard" and "K" or "Gamepad_FaceButton_Top"
+            local action=object(interactPath .. ".IA_Interaction")
+            local move=object(movePath .. ".IA_KeyboardMoveInput")
+            local pressed=object("/Trigger.Pressed")
+            local backend,native,state=fixture({unified_native=true,native_actions={interactPath,movePath},
+                targets={interact={kind="mapping",mapping="IA_Interact",device=device,actions={interactPath}}, utility={kind="lua"}},
+                bindings={{id="interact",keys={customKey},trigger="down",outputs={"interact"}},
+                    {id="utility",keys={"F9"},trigger="press",outputs={"utility"}}},
+                native_bindings={{["function"]="IA_Interact",device=device,keys={customKey},actions={interactPath}}}})
+            backend.live_validation=live
+            state.rows={mapping(move,"W")}
+            local moveContext=state:add_context({mapping(move,"W")})
+            native:prepare()
+            local function binding(id)
+                for _, item in ipairs(backend.dynamic_config.bindings) do if item.id==id then return item end end
+            end
+            check(not binding("interact") and binding("utility"), "inactive scene mapping suspended or consumed unrelated bindings")
+            local router=Router.new(backend.dynamic_config,backend)
+            local held={W=1,[customKey]=1}
+            router:step(0,{},backend:context());router:step(.1,held,backend:context())
+            local sceneContext=state:add_context({mapping(action,nativeKey,{pressed})})
+            state:rebuild({mapping(move,"W"),mapping(action,nativeKey,{pressed})})
+            native:prepare()
+            check(binding("interact") and key(state.rows[2])=="None", "returning context failed to schedule the override or left duplicate native input")
+            state.calls={}
+            router=router:reconfigure(backend.dynamic_config,held,backend:context())
+            router:step(.2,held,backend:context())
+            for _,call in ipairs(state.calls) do
+                check(call.target.object~=action, "a held key fired interaction when its context first appeared")
+            end
+            router:step(.3,{W=1},backend:context());state.calls={}
+            router:step(.4,held,backend:context())
+            local fired=false
+            for _,call in ipairs(state.calls) do if call.target.object==action and call.value.x==1 then fired=true end end
+            check(fired, "scene interaction did not accept a fresh press")
+            state.contexts={moveContext};state:rebuild({mapping(move,"W")})
+            native:prepare();state.calls={}
+            router=router:reconfigure(backend.dynamic_config,held,backend:context())
+            check(not binding("interact") and binding("utility"), "removed context left a stale interaction binding")
+            local canceled=false
+            for _,call in ipairs(state.calls) do
+                if call.target.object==action then canceled=call.phase=="canceled"
+                else check(call.phase~="canceled", "removing scene interaction canceled unrelated movement") end
+            end
+            check(canceled, "context removal failed to cancel the active interaction pipeline")
+            state.calls={};router:step(.5,held,backend:context())
+            check(#state.calls==1 and state.calls[1].target.object==move, "movement stopped after scene interaction disappeared")
+            state.contexts={moveContext,sceneContext}
+            state:rebuild({mapping(move,"W"),mapping(action,nativeKey,{pressed})})
+            native:prepare();state.calls={}
+            router=router:reconfigure(backend.dynamic_config,held,backend:context())
+            router:step(.6,held,backend:context())
+            for _,call in ipairs(state.calls) do check(call.target.object~=action, "restoring a scene context replayed held interaction") end
+            router:step(.7,{W=1},backend:context());state.calls={}
+            router:step(.8,held,backend:context())
+            fired=false
+            for _,call in ipairs(state.calls) do if call.target.object==action and call.value.x==1 then fired=true end end
+            check(fired, "restored scene context did not rearm interaction")
+            native:restore()
+            check(key(state.rows[2])==nativeKey, "restoring native ownership lost the returning scene key")
+        end
+    end
+end)
+
+test("active context templates still reject an unavailable requested device pipeline", function()
+    local action=object("/Game/Interaction.Interaction")
+    local backend,native,state=fixture({unified_native=true,native_actions={"/Game/Interaction"},
+        targets={interact={kind="mapping",mapping="IA_Interact",device="gamepad",actions={"/Game/Interaction"}}},
+        bindings={{id="interact",keys={"Gamepad_FaceButton_Right"},outputs={"interact"}}}})
+    backend.live_validation=true
+    state:add_context({mapping(action,"E")})
+    local ok,err=pcall(function() native:prepare() end)
+    check(not ok and tostring(err):find("No runtime input pipeline",1,true),
+        "active context with no requested device pipeline was mistaken for an inactive scene")
+end)
+
+test("native overrides retain dependent pipelines during startup and live apply", function()
+    for _, live in ipairs({false,true}) do
+        for _, triggerName in ipairs({"Cooldown","ChordAction"}) do
+            local actionPath=triggerName=="Cooldown" and "/SGameLocomotionDriver/Input/IA_Crouch"
+                or "/SGameCombatSystem/Weapon/Input/IA_ChangeWeapon"
+            local action=object(actionPath .. "." .. actionPath:match("/([^/]+)$"))
+            local target={kind="mapping",mapping="native",device="keyboard",actions={actionPath},native_override=true}
+            local backend,native,state=fixture({unified_native=true,native_actions={actionPath},
+                targets={native=target},bindings={{id="native",keys={"J"},outputs={"native"}}},
+                native_bindings={{["function"]="native",device="keyboard",keys={"J"},actions={actionPath}}}})
+            backend.live_validation=live
+            state.rows={mapping(action,"C",{object("/Trigger." .. triggerName)})}
+            native:prepare()
+            check(key(state.rows[1])=="J" and #backend.dynamic_config.bindings==0,
+                "valid native dependent pipeline was rejected or duplicated by the scheduler")
+            native:prepare();native:restore()
+            check(key(state.rows[1])=="C", "native dependent pipeline lost its original key")
+            target.native_override=nil
+            backend.live_validation=true
+            local ok,err=pcall(function() native:prepare() end)
+            check(not ok and tostring(err):find("No runtime input pipeline",1,true),
+                "custom enhanced output accepted an unsupported dependent pipeline")
+        end
+    end
+end)
+
+test("scheduled outputs do not hide retained capacity failures", function()
+    for _, live in ipairs({false,true}) do
+        for _, sameAction in ipairs({false,true}) do
+            local firstPath="/Game/First"
+            local secondPath=sameAction and firstPath or "/Game/Second"
+            local first=object(firstPath .. ".First")
+            local second=sameAction and first or object(secondPath .. ".Second")
+            local actions=sameAction and {firstPath} or {firstPath,secondPath}
+            local backend,native,state=fixture({unified_native=true,native_actions=actions,
+                targets={mixed={kind="mapping",mapping="mixed",device="keyboard",actions=actions,native_override=true}},
+                bindings={{id="mixed",keys={"J"},outputs={"mixed"}}},
+                native_bindings={{["function"]="mixed",device="keyboard",keys={"J","K"},actions=actions}}})
+            backend.live_validation=live
+            state.rows={mapping(first,"E"),mapping(second,"E",{object("/Trigger.ChordAction")})}
+            local ok,err=pcall(function() native:prepare() end)
+            check(not ok and tostring(err):find("active runtime slots",1,true),
+                "a scheduled pipeline hid a retained pipeline's insufficient key slots")
+            check(key(state.rows[1])=="E" and key(state.rows[2])=="E", "capacity rejection partially changed native input")
+            backend.config.native_bindings[1].keys={"J"}
+            native:prepare()
+            check(key(state.rows[1])=="None" and key(state.rows[2])=="J", "valid mixed ownership could not recover after rejection")
+            native:restore()
+            check(key(state.rows[1])=="E" and key(state.rows[2])=="E", "mixed ownership failed to restore original input")
+        end
+    end
+end)
+
+test("frame lifecycle keeps routing through context changes, live reload and pawn replacement", function()
+    local interactPath="/Game/PBZContent/Input/InputActions/IA_Interaction"
+    local movePath="/SGameLocomotionDriver/Input/IA_KeyboardMoveInput"
+    local crouchPath="/SGameLocomotionDriver/Input/IA_Crouch"
+    local interact=object(interactPath .. ".IA_Interaction")
+    local move=object(movePath .. ".IA_KeyboardMoveInput")
+    local crouch=object(crouchPath .. ".IA_Crouch")
+    local pressed,cooldown=object("/Trigger.Pressed"),object("/Trigger.Cooldown")
+    local function config(key)
+        return {enabled=true,require_foreground=false,unified_native=true,dynamic_capture=true,runtime_hotkeys=false,
+            native_actions={interactPath,movePath,crouchPath},
+            targets={interact={kind="mapping",mapping="IA_Interact",device="keyboard",actions={interactPath}},
+                crouch={kind="mapping",mapping="IA_Crouch",device="keyboard",actions={crouchPath},native_override=true}},
+            bindings={{id="interact",keys={key},trigger="down",outputs={"interact"}},
+                {id="crouch",keys={"J"},trigger="down",outputs={"crouch"}}},
+            native_bindings={{["function"]="IA_Crouch",device="keyboard",keys={"J"},actions={crouchPath}}}}
+    end
+    local current=config("K")
+    local backend,native,state=fixture(current)
+    backend.refresh,backend.shutdown=Backend.refresh,Backend.shutdown
+    state.pawn,backend.pawn=object("/Pawn.First"),nil
+    local subsystem=backend.subsystem
+    state.input_layer=true
+    function backend:gameplay_input_layer() return state.input_layer end
+    function backend:library() return subsystem end
+    function backend:scheme_notice() end
+    local nativeInvoke,nativeObject=backend.invoke,backend.object
+    function backend:object(path)
+        if path=="/Script/EnhancedInput.EnhancedInputLocalPlayerSubsystem" then return subsystem end
+        return nativeObject(self,path)
+    end
+    function backend:invoke(receiver,path,...)
+        if path=="/Script/Engine.Controller:K2_GetPawn" then return state.pawn end
+        if path=="/Script/Engine.Controller:IsMoveInputIgnored" or path=="/Script/Engine.GameplayStatics:IsGamePaused" then return false end
+        if path=="/Script/Engine.SubsystemBlueprintLibrary:GetLocalPlayerSubSystemFromPlayerController" then return subsystem end
+        return nativeInvoke(self,receiver,path,...)
+    end
+    local function scene(active)
+        local rows={mapping(move,"W"),mapping(crouch,"C",{cooldown})}
+        if active then rows[#rows+1]=mapping(interact,"E",{pressed}) end
+        state:rebuild(rows)
+    end
+    scene(false)
+    package.loaded.backend,package.loaded.router,package.loaded["router-config"]=nil,nil,nil
+    package.preload.backend=function() return {new=function() return backend end} end
+    package.preload.router=function() return Router end
+    package.preload["router-config"]=function() return current end
+    local frame
+    EngineTickAvailable=true
+    function LoopInGameThreadAfterFrames(_,callback) frame=callback;return 1 end
+    function CancelDelayedAction() end
+    function StaticFindObject() return nil end
+    local handle=dofile(scripts .. "main.lua")
+    frame()
+    state.physical.W,state.physical.K=1,1
+    local function fires(action)
+        state.calls={};frame()
+        for _,call in ipairs(state.calls) do if call.target.object==action and call.value.x==1 then return true end end
+        return false
+    end
+    check(fires(move), "initial absent scene suspended the real backend frame loop")
+    scene(true)
+    check(not fires(interact), "context activation replayed held interaction through the frame loop")
+    state.physical.K=0;frame();state.physical.K=1
+    check(fires(interact), "returning interaction could not execute through the frame loop")
+    scene(false)
+    check(fires(move), "context removal suspended the frame loop")
+    current=config("L")
+    check(handle.reload() and key(state.rows[2])=="C", "live reload rejected dormant interaction or retained cooldown, or failed to restore native input")
+    check(fires(move) and key(state.rows[2])=="J", "live reload failed to resume movement and native ownership")
+    local first,second=backend.config,config("M")
+    first.schemes={first=first,second=second};first.scheme_order={"first","second"}
+    check(handle.switch_scheme("second") and backend.config==second, "scheme switch rejected a dormant scene action")
+    check(fires(move), "scheme switch stopped unrelated movement")
+    state.input_layer=false
+    check(not fires(move) and key(state.rows[1])=="W", "menu transition did not restore native movement")
+    state.input_layer=true
+    check(fires(move), "return from menu failed to resume movement")
+    state.pawn=object("/Pawn.Second");scene(true)
+    check(fires(move), "pawn replacement failed to rebuild native input")
+    state.physical.M=1
+    check(fires(interact), "replacement pawn did not receive a fresh scene interaction")
+    state:rebuild({});frame();scene(true)
+    check(fires(move), "an empty mapping context permanently suspended routing")
+    handle.stop()
+    check(key(state.rows[1])=="W" and key(state.rows[2])=="C" and key(state.rows[3])=="E",
+        "lifecycle shutdown failed to restore the current native rows")
+end)
+
 local schemeFixtures = os.getenv("PBZ_SCHEME_FIXTURES")
 if schemeFixtures then
+    test("every compiled native action tolerates context retirement with mixed pipeline ownership", function()
+        -- Wrapper lifetime is stressed by the focused tests; this sweep varies action availability.
+        stress_gc=false
+        for _, live in ipairs({false,true}) do
+            local compiled=dofile(schemeFixtures .. "/factory-schemes.lua")
+            for _, id in ipairs(compiled.scheme_order) do
+                local config=compiled.schemes[id]
+                local backend,native,state=fixture(config)
+                local originals,seen,actions={},{},{}
+                for name,target in pairs(config.targets) do
+                    if name:match("^native_override_") then check(target.native_override==true, "compiler lost native override ownership") end
+                end
+                for _,override in ipairs(config.native_bindings) do
+                    for _,action in ipairs(override.actions) do
+                        local package=action:gsub("%.[^./]+$", "")
+                        if not seen[package] then actions[#actions+1]=package;seen[package]=true end
+                        local identity=package .. ":" .. override.device
+                        if not seen[identity] then
+                            seen[identity]=true
+                            local triggers={}
+                            if package:match("/IA_Crouch$") then triggers={object("/Trigger.Cooldown")}
+                            elseif override.device=="keyboard" and package:match("/IA_ChangeWeapon$") then triggers={object("/Trigger.ChordAction")} end
+                            local actionObject=object(package .. "." .. package:match("/([^/]+)$"))
+                            for _,key in ipairs(override.keys) do originals[#originals+1]={action=actionObject,key=key,triggers=triggers,path=package} end
+                        end
+                    end
+                end
+                backend.live_validation=live
+                local function rebuild(absent)
+                    local rows={}
+                    for _,source in ipairs(originals) do
+                        if source.path~=absent then rows[#rows+1]=mapping(source.action,source.key,source.triggers) end
+                    end
+                    state:rebuild(rows)
+                end
+                rebuild();native:prepare();native:restore()
+                for _,absent in ipairs(actions) do
+                    rebuild(absent);native:prepare()
+                    for _,target in pairs(backend.dynamic_config.targets) do
+                        if target.source_relation then check(target.object:GetFullName():gsub("^%S+ ", ""):gsub("%.[^./]+$", "")~=absent,
+                            "retired compiled action kept a scheduled pipeline: " .. absent) end
+                    end
+                    check(#backend.dynamic_config.bindings>0, "retiring one action suspended the compiled scheme")
+                    native:restore();rebuild();native:prepare();native:restore()
+                end
+                state:rebuild({});native:prepare()
+                check(native.expanded~=nil, "empty runtime contexts rejected the compiled scheme")
+                rebuild();native:prepare()
+                check(#backend.dynamic_config.bindings>0, "compiled scheme could not recover after empty runtime contexts")
+                native:restore()
+            end
+        end
+    end)
+
     test("compiled factory schemes prepare with absent device mappings", function()
         for _, live in ipairs({false,true}) do
             local compiled=dofile(schemeFixtures .. "/factory-schemes.lua")
@@ -852,6 +1132,28 @@ if schemeFixtures then
                 backend.live_validation=live
                 native:prepare();native:apply_masks()
                 check(native.expanded~=nil, "compiled scheme did not prepare native input")
+                native:restore()
+                local original,sceneRows={},{}
+                for _,row in ipairs(state.rows) do
+                    original[#original+1]={action=row.Action,key=key(row)}
+                    if not row.Action:GetFullName():find("/IA_Interaction",1,true) then
+                        sceneRows[#sceneRows+1]=mapping(row.Action,key(row))
+                    end
+                end
+                check(#sceneRows<#original, "compiled scheme fixture did not contain interaction mappings")
+                state:rebuild(sceneRows)
+                native:prepare()
+                check(native.expanded~=nil and #backend.dynamic_config.bindings>0,
+                    "compiled scheme suspended unrelated input while the interaction context was absent")
+                local restored={}
+                for _,row in ipairs(original) do restored[#restored+1]=mapping(row.action,row.key) end
+                state:rebuild(restored)
+                native:prepare()
+                local interaction=false
+                for _,target in pairs(backend.dynamic_config.targets) do
+                    if target.source_relation and target.object:GetFullName():find("/IA_Interaction",1,true) then interaction=true end
+                end
+                check(interaction, "compiled scheme failed to restore returning interaction mappings")
                 native:restore()
             end
         end

@@ -55,6 +55,7 @@ $artworkArgs += "/resource:$PSScriptRoot\ue4ss-sources.json,PBZKeyForge.UE4SS.so
 $artworkArgs += "/resource:$root\prototype\input-router\actions.json,PBZKeyForge.KeyEnhancement.actions.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\action-localization.json,PBZKeyForge.KeyEnhancement.action-localization.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\action-details.json,PBZKeyForge.KeyEnhancement.action-details.json"
+$artworkArgs += "/resource:$root\assets\key-enhancement\complete-moves.json,PBZKeyForge.KeyEnhancement.complete-moves.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\native-input-plan.json,PBZKeyForge.KeyEnhancement.native-input-plan.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\legacy-runtime.zip,PBZKeyForge.KeyEnhancement.legacy.zip"
 
@@ -94,5 +95,6 @@ if ($LASTEXITCODE -ne 0) { throw "CLI build failed" }
 Copy-Item "$root\THIRD-PARTY-NOTICES.md" $OutputDir
 New-Item -ItemType Directory -Path "$OutputDir\docs" -Force | Out-Null
 Copy-Item "$root\docs\cli.md", "$root\docs\key-enhancement.md" "$OutputDir\docs"
+Copy-Item "$root\docs\complete-moves.md", "$root\docs\complete-move-weapon-audit.md", "$root\docs\complete-move-shadow-audit.md", "$root\docs\complete-move-weapon-audit.json", "$root\docs\complete-move-shadow-audit.json" "$OutputDir\docs"
 
 Get-ChildItem "$OutputDir\PBZKeyForge*.exe" | Select-Object Name, Length | Format-Table -AutoSize
