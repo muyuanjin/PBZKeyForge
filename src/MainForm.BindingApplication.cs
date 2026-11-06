@@ -26,8 +26,8 @@ namespace PBZKeyForge
         {
             get
             {
-                var draft = keyEnhancement.Clone(); draft.Enabled = keyEnhancementBaseline.Enabled;
-                return draft.ToJson() != keyEnhancementBaseline.ToJson();
+                var draft = keyEnhancement.Clone(); draft.SetEnabled(keyEnhancementBaseline.Enabled);
+                return draft.DeploymentJson() != keyEnhancementBaseline.DeploymentJson();
             }
         }
 
@@ -38,7 +38,8 @@ namespace PBZKeyForge
             if (Session.IsOffline) { state.CanApply = !IsApplying; return state; }
             if (!lastRunning)
             {
-                state.CanApply = !IsApplying && Session.Conflicts.Length == 0 && (Session.HasChanges || ResourceModPending || KeyEnhancementPending);
+                state.CanApply = !IsApplying && Session.Conflicts.Length == 0 && (Session.HasChanges || ResourceModPending || KeyEnhancementPending
+                    || EnhancedSchemes && keyEnhancement.SelectedSchemeId != keyEnhancement.ActiveSchemeId);
                 return state;
             }
             state.Connection = keyEnhancementBaseline.Enabled && keyEnhancementInstallation != null ? keyEnhancementInstallation.LiveStatus() : null;
@@ -46,10 +47,12 @@ namespace PBZKeyForge
             state.Deferred = HasDeferredComponents;
             state.Reason = !state.Live ? state.Connection == null ? I18n.Str("live.unavailable") : state.Connection.Detail
                 : Session.IsResetPending ? I18n.Str("live.lifecycle")
-                : Session.SelectedProfile != Session.ActiveProfile || Session.ActivationPending || Session.SchemeError != null ? I18n.Str("live.scope")
+                : keyEnhancement.Schemes.Count > 0 && Session.HasAnyDrafts ? I18n.Str("schemes.nativepending")
+                : EnhancedSchemes && keyEnhancementRepair ? I18n.Str("live.lifecycle")
+                : keyEnhancement.Schemes.Count == 0 && (Session.SelectedProfile != Session.ActiveProfile || Session.ActivationPending || Session.SchemeError != null) ? I18n.Str("live.scope")
                 : Session.Conflicts.Length > 0 ? I18n.Str("editor.conflictinfo") : null;
             state.CanApply = !IsApplying && state.Live && state.Reason == null
-                && (Session.ScopeChangeCount > 0 || LiveBindingPending || !state.Connection.RoutingEnabled);
+                && (Session.ScopeChangeCount > 0 || LiveBindingPending || keyEnhancement.Enabled && keyEnhancement.SelectedSchemeId != state.Connection.ActiveSchemeId || !state.Connection.RoutingEnabled);
             if (state.Reason == null && state.Deferred) state.Reason = I18n.Str(state.CanApply ? "flow.deferred.withbindings" : "flow.deferred.only");
             return state;
         }
@@ -67,9 +70,11 @@ namespace PBZKeyForge
 
         void AcceptLiveBindings(KeyEnhancementConfiguration candidate, bool desiredEnabled, int family)
         {
-            Session.AcceptLiveDraft(family);
+            if (candidate.Schemes.Count == 0) Session.AcceptLiveDraft(family);
             keyEnhancementBaseline.ReplaceWith(candidate);
-            keyEnhancement.ReplaceWith(candidate); keyEnhancement.Enabled = desiredEnabled;
+            keyEnhancement.ReplaceWith(candidate); keyEnhancement.SetEnabled(desiredEnabled);
+            bindingWorkspaces.Clear();
+            if (candidate.Schemes.Count > 0) { EndEnhancementPresetPreview(); return; }
             // Applied save drafts become runtime bindings. Keep earlier undo steps in
             // that same representation so an undo cannot reintroduce a save edit.
             foreach (var saved in bindingHistory.Where(item => item.Session == Session))

@@ -145,10 +145,11 @@ namespace PBZKeyForge
                     if (keyEnhancementInstallation == null || !keyEnhancementBaseline.Enabled)
                         throw new InvalidOperationException(I18n.Str("live.unavailable"));
                     if (Session.IsResetPending) throw new InvalidOperationException(I18n.Str("live.lifecycle"));
+                    if (EnhancedSchemes && keyEnhancementRepair) throw new InvalidOperationException(I18n.Str("live.lifecycle"));
                     int family = SelectedFamilyIndex;
                     bool enabled = keyEnhancement.Enabled;
-                    var draft = keyEnhancement.Clone(); draft.Enabled = true;
-                    await Task.Run(() => Session.Refresh());
+                    var draft = keyEnhancement.Clone(); draft.SetEnabled(true);
+                    if (draft.Schemes.Count == 0) await Task.Run(() => Session.Refresh());
                     var candidate = await Task.Run(async delegate {
                         var plan = BindingLivePlan.Create(Session, draft, family);
                         await keyEnhancementInstallation.ApplyLive(plan).ConfigureAwait(false);
@@ -187,7 +188,7 @@ namespace PBZKeyForge
                 var errors = new List<string>();
                 KeyEnhancementUninstallResult uninstallResult = null;
                 bool saved = false;
-                var result = await Task.Run(() => Session.HasChanges ? Session.Apply() : new EditorApplyResult { Success = true });
+                var result = await Task.Run(() => Session.HasChanges && !EnhancedSchemes ? Session.Apply() : new EditorApplyResult { Success = true });
                 saved = result.BindingsSaved || result.ActivationSaved;
                 if (!result.Success || result.PartialSuccess) errors.Add(result.Error);
                 if (ResourceModPending)
@@ -202,12 +203,13 @@ namespace PBZKeyForge
                     }
                     catch (Exception ex) { errors.Add(I18n.Str("mod.title") + ": " + ex.Message); }
                 }
-                if (KeyEnhancementPending)
+                if (KeyEnhancementPending || EnhancedSchemes && keyEnhancement.SelectedSchemeId != keyEnhancement.ActiveSchemeId)
                 {
                     try
                     {
                         if (keyEnhancementInstallation == null) throw new InvalidOperationException(keyEnhancementError ?? I18n.Str("mod.unsupported"));
                         var configuration = keyEnhancement.Clone();
+                        if (EnhancedSchemes) configuration.ActiveSchemeId = configuration.SelectedSchemeId;
                         if (keyEnhancementUninstall)
                         {
                             uninstallResult = await Task.Run(() => keyEnhancementInstallation.Uninstall());
@@ -215,7 +217,8 @@ namespace PBZKeyForge
                             configuration = new KeyEnhancementConfiguration(); keyEnhancement = configuration;
                         }
                         else await Task.Run(delegate { keyEnhancementInstallation.Apply(configuration); });
-                        keyEnhancementBaseline = configuration.Clone(); keyEnhancementRepair = false; keyEnhancementError = null;
+                        keyEnhancement = configuration; keyEnhancementBaseline = configuration.Clone(); keyEnhancementRepair = false; keyEnhancementError = null;
+                        if (configuration.Schemes.Count > 0) EndEnhancementPresetPreview();
                         keyEnhancementState = configuration.Enabled ? KeyEnhancementInstallState.Enabled : KeyEnhancementInstallState.Disabled;
                         keyEnhancementExternalChange = false; saved = true;
                         if (configuration.Enabled) keyEnhancementBar.Celebrate();

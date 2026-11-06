@@ -69,6 +69,22 @@ namespace PBZKeyForge
         public void Delete(IEnumerable<Preset> presets)
         { Delete(presets, Load()); }
 
+        public Preset Update(string id, Preset preset, string name)
+        {
+            var library = Load();
+            if (!library.Any(item => item.Id == id && item.IsUser)) throw new InvalidOperationException(I18n.Str("preset.builtinreadonly"));
+            name = NormalizeName(name);
+            if (library.Any(item => item.Id != id && string.Equals(item.Name, name, StringComparison.CurrentCultureIgnoreCase)))
+                throw new InvalidOperationException(I18n.Str("preset.duplicatename"));
+            var result = new Preset { Id = id, UserName = name, BaselineId = preset.BaselineId, Scopes = preset.Scopes,
+                UserMappings = preset.UserMappings, KeyEnhancement = preset.KeyEnhancement == null ? null : preset.KeyEnhancement.CurrentOnly() };
+            Validate(result);
+            var document = new UserPresetDocument { Name = name, BaselineId = result.BaselineId, Scopes = result.Scopes,
+                Mappings = result.UserMappings, KeyEnhancement = result.KeyEnhancement };
+            KeyEnhancementInstallation.WriteAtomicText(Path.Combine(directory, id + ".json"), new JavaScriptSerializer().Serialize(document));
+            return result;
+        }
+
         internal void Delete(IEnumerable<Preset> presets, List<Preset> library)
         {
             var selected = presets.ToArray();
@@ -97,7 +113,7 @@ namespace PBZKeyForge
                 Action = change.Action, Family = change.Gamepad ? change.Family : null,
                 Added = change.AddedKeys, Removed = change.RemovedKeys }).ToList();
             var preset = new Preset { UserName = NormalizeName(name), BaselineId = PresetBaseline.CurrentId,
-                KeyEnhancement = enhancement == null ? null : enhancement.Clone(),
+                KeyEnhancement = enhancement == null ? null : enhancement.CurrentOnly(),
                 Scopes = new[] { new PresetScope() }.Concat(session.ControllerFamilies.Select(family => new PresetScope { Family = family.Name })).ToList(),
                 UserMappings = mappings };
             Validate(preset);

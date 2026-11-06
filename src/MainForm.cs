@@ -52,7 +52,7 @@ namespace PBZKeyForge
         readonly ComboBox cbLang = new EditorComboBox(), cbPreset = new PresetPicker();
         readonly Button btnPresetManager = new EditorButton();
         readonly Button btnRefresh = new EditorButton(), btnMore = new EditorButton(), btnApply = new ApplyActionButton();
-        readonly EditorTab[] schemeTabs = { new EditorTab(), new EditorTab(), new EditorTab() };
+        EditorTab[] schemeTabs = new EditorTab[0];
         readonly EditorTab tabKb = new EditorTab(), tabPad = new EditorTab();
         readonly Label lblTitle = new EditorLabel(), lblPath = new EditorLabel(), lblGame = new ConnectionStatusLabel();
         readonly Label lblPreset = new EditorLabel();
@@ -217,16 +217,7 @@ namespace PBZKeyForge
             pathBar.Paint += delegate(object s, PaintEventArgs e) { using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawLine(pen, 0, pathBar.Height - 1, pathBar.Width, pathBar.Height - 1); };
             root.Controls.Add(pathBar, 0, 1);
 
-            var schemeBar = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 3, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
-            for (int i = 0; i < 3; i++)
-            {
-                schemeBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333f));
-                var button = schemeTabs[i]; button.Dock = DockStyle.Fill; button.Margin = Padding.Empty;
-                button.Font = new Font(Font.FontFamily, 12f);
-                button.Click += delegate { if (button.Tag != null) SelectProfile((string)button.Tag); };
-                schemeBar.Controls.Add(button, i, 0);
-            }
-            root.Controls.Add(schemeBar, 0, 2);
+            root.Controls.Add(BuildSchemeBar(), 0, 2);
 
             var toolbar = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
             toolbar.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
@@ -526,24 +517,16 @@ namespace PBZKeyForge
                 tabKb.Text = I18n.Str("editor.keyboard"); tabPad.Text = I18n.Str("editor.gamepad"); tabKb.Selected = !gamepad; tabPad.Selected = gamepad;
                 tabKb.Dirty = loaded && keyboardBindingChanges > 0; tabPad.Dirty = loaded && gamepadBindingChanges > 0;
                 tabKb.Enabled = loaded; tabPad.Enabled = loaded;
-                string[] labels = { I18n.Str("scheme.default"), I18n.Str("scheme.custom1"), I18n.Str("scheme.custom2") };
-                string[] profiles = loaded ? Session.Profiles : new string[0];
-                for (int i = 0; i < schemeTabs.Length; i++)
-                {
-                    var button = schemeTabs[i]; button.Tag = i < profiles.Length ? profiles[i] : null; button.Text = i < profiles.Length ? SchemeLabel(profiles[i]) : labels[i];
-                    button.Selected = loaded && (string)button.Tag == Session.SelectedProfile;
-                    button.Badge = loaded && (string)button.Tag == Session.ActiveProfile ? I18n.Str("editor.current") : null;
-                    button.Dirty = loaded && button.Tag != null && Session.HasProfileDraft((string)button.Tag); button.Enabled = loaded;
-                }
+                RenderSchemeBar();
                 cbPreset.Enabled = loaded && !Session.IsResetPending;
                 btnPresetManager.Enabled = cbPreset.Enabled;
                 int presetIndex = 0;
-                if (loaded && Session.PresetId != null)
+                if (loaded && SelectedPresetId != null)
                 {
-                    for (int i = 1; i < cbPreset.Items.Count; i++) if (((Preset)cbPreset.Items[i]).Id == Session.PresetId) presetIndex = i;
+                    for (int i = 1; i < cbPreset.Items.Count; i++) if (((Preset)cbPreset.Items[i]).Id == SelectedPresetId) presetIndex = i;
                 }
                 cbPreset.SelectedIndex = presetIndex;
-                bool restoringFactory = loaded && Session.PresetId == "vanilla_current";
+                bool restoringFactory = loaded && SelectedPresetId == "vanilla_current";
                 btnPresetMode.RefreshLabels(); btnPresetMode.Mode = presetMode;
                 btnPresetMode.Enabled = loaded && !Session.IsResetPending && !restoringFactory;
                 var modeHeading = btnPresetMode.Parent.Controls.Find("presetModeLabel", false).FirstOrDefault();
@@ -554,6 +537,13 @@ namespace PBZKeyForge
                 SetTip(lblOffline, I18n.Str("offline.help"));
                 chkActivate.Checked = loaded && (Session.SelectedProfile == Session.ActiveProfile || Session.ActivationPending);
                 chkActivate.Enabled = loaded && !Session.IsResetPending && Session.ActiveProfile != null && Session.SelectedProfile != Session.ActiveProfile;
+                if (EnhancedSchemes && !offline)
+                {
+                    chkActivate.Visible = true; lblOffline.Visible = false;
+                    chkActivate.Text = I18n.Str("schemes.active", EnhancedSchemeLabel(keyEnhancement.ActiveSchemeId));
+                    chkActivate.Checked = keyEnhancement.SelectedSchemeId == keyEnhancement.ActiveSchemeId;
+                    chkActivate.Enabled = false;
+                }
                 SetTip(chkActivate, loaded && Session.SchemeDiscoveryRequired && SchemeProbePending ? I18n.Str("editor.discovering")
                     : loaded && Session.SchemeError != null ? I18n.Str("status.schemeunknown") + "\n" + Session.SchemeError : I18n.Str("editor.activatehelp"));
                 RefreshFooterResourceMod();
@@ -673,7 +663,8 @@ namespace PBZKeyForge
             btnApply.Text = I18n.Str(offline ? HasKeyEnhancementConfiguration ? "enhancement.exportbundle" : "offline.export" : live ? "live.apply" : neverConnected ? "flow.notconnected" : waiting ? "live.waiting" : gameRunning ? "editor.applyrunning" : "editor.apply");
             btnApply.Enabled = application.CanApply;
             SetTip(btnApply, application.Reason ?? btnApply.Text);
-            chkActivate.Enabled = !gameRunning && !IsApplying;
+            chkActivate.Enabled = !EnhancedSchemes && !gameRunning && !IsApplying;
+            if (EnhancedSchemes) RenderActiveEnhancedScheme(liveStatus);
             UpdateResourceModAvailability();
             lblStatus.Text = loaded && Session.Conflicts.Length > 0 ? I18n.Str("editor.conflictinfo")
                 : messageError && messageKey != null ? I18n.Str("flow.failed.details")
@@ -683,8 +674,8 @@ namespace PBZKeyForge
                 : live ? !liveStatus.RoutingEnabled ? liveStatus.Detail : I18n.Str("live.ready")
                 : waiting || neverConnected ? liveStatus.Detail
                 : gameRunning ? I18n.Str("editor.exittoapply") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
-                : loaded && Session.SchemeDiscoveryRequired && SchemeProbePending ? I18n.Str("editor.discovering")
-                : loaded && Session.SchemeError != null ? I18n.Str("editor.schemeunknown")
+                : loaded && !EnhancedSchemes && Session.SchemeDiscoveryRequired && SchemeProbePending ? I18n.Str("editor.discovering")
+                : loaded && !EnhancedSchemes && Session.SchemeError != null ? I18n.Str("editor.schemeunknown")
                 + (messageKey != null && messageKey != "editor.refreshed" ? " " + I18n.Str(messageKey, messageArgs) : "")
                 : messageKey != null ? I18n.Str(messageKey, messageArgs) : I18n.Str(offline ? "offline.help" : "editor.ready");
             lblStatus.ForeColor = messageError ? Color.FromArgb(238, 171, 156) : liveConfigured
@@ -737,7 +728,14 @@ namespace PBZKeyForge
                 feedbackDetails.Text = I18n.Str("feedback.details");
             }
         }
-        public void SelectProfile(string profile) { if (Session != null) TryAction(delegate { Session.SwitchProfile(profile); }); }
+        public void SelectProfile(string profile)
+        {
+            if (Session == null) return;
+            TryAction(delegate {
+                if (EnhancedSchemes) { keyEnhancement.SelectScheme(profile); AlignSchemeBaseline(); }
+                else Session.SwitchProfile(profile);
+            });
+        }
         public void ShowGamepad(bool show) { gamepad = show; RenderSession(); }
         public void RefreshFromDisk() { RefreshFromDisk(true); }
 

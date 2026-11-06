@@ -809,6 +809,55 @@ test("startup overflow suspends routing and restores previously owned input", fu
     lifecycle.stop()
 end)
 
+test("empty overrides allow absent devices while populated overrides require a pipeline", function()
+    for _, live in ipairs({false,true}) do
+        local backend,native,state=fixture({unified_native=true,native_bindings={
+            {["function"]="IA_MoveSlow",device="gamepad",keys={},actions={"/Game/MoveSlow"}},
+            {["function"]="IA_Jump",device="keyboard",keys={},actions={"/Game/Jump"}}
+        }})
+        state.rows={mapping(object("/Game/Jump.Jump"),"SpaceBar")}
+        backend.live_validation=live
+        native:prepare();native:apply_masks()
+        check(key(state.rows[1])=="None", "empty override did not unbind an existing device mapping")
+        native:restore()
+        check(key(state.rows[1])=="SpaceBar", "empty override lost the original native key")
+        backend.config.native_bindings[1].keys={"Gamepad_FaceButton_Bottom"}
+        local ok,err=pcall(function() native:prepare() end)
+        check(not ok and tostring(err):find("active runtime slots",1,true), "populated override accepted a missing device pipeline")
+    end
+end)
+
+local schemeFixtures = os.getenv("PBZ_SCHEME_FIXTURES")
+if schemeFixtures then
+    test("compiled factory schemes prepare with absent device mappings", function()
+        for _, live in ipairs({false,true}) do
+            local compiled=dofile(schemeFixtures .. "/factory-schemes.lua")
+            for _, id in ipairs(compiled.scheme_order) do
+                local config=compiled.schemes[id]
+                local backend,native,state=fixture(config)
+                local seen,empty={},false
+                for _, override in ipairs(config.native_bindings) do
+                    if override["function"]=="IA_MoveSlow" and override.device=="gamepad" and #override.keys==0 then empty=true end
+                    for _, action in ipairs(override.actions) do
+                        local package=action:gsub("%.[^./]+$", "")
+                        local identity=package .. ":" .. override.device
+                        if #override.keys>0 and not seen[identity] then
+                            seen[identity]=true
+                            local actionObject=object(package .. "." .. package:match("/([^/]+)$"))
+                            for _, key in ipairs(override.keys) do state.rows[#state.rows+1]=mapping(actionObject,key) end
+                        end
+                    end
+                end
+                check(empty, "compiled snapshot omitted absent IA_MoveSlow controller mapping")
+                backend.live_validation=live
+                native:prepare();native:apply_masks()
+                check(native.expanded~=nil, "compiled scheme did not prepare native input")
+                native:restore()
+            end
+        end
+    end)
+end
+
 local generated = os.getenv("PBZ_SUPPRESSION_FIXTURES")
 if generated then
     local function compiled(name, key)

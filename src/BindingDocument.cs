@@ -39,6 +39,7 @@ namespace PBZKeyForge
                 }
                 catch (FileNotFoundException) { }
             }
+            if (document.Configuration.Enabled) document.Configuration.EnsureSchemes(document.Session);
             if (document.Session.IsOffline) document.Configuration.CompileLua();
             return document;
         }

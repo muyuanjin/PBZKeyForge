@@ -1,4 +1,4 @@
-﻿# CLI 与 AI Agent 改键
+# CLI 与 AI Agent 改键
 
 `PBZKeyForge-cli.exe` 与界面程序放在同一目录。普通绑定、增强规则和高级功能使用与 GUI 相同的编辑模型。GUI 的 **AI / CLI** 按钮动态生成发给 Agent 的提示词，带入实际程序路径、当前文件、方案、设备和运行状态。用户说明在提示词外显示，“复制提示词”只复制 Agent 内容。有未应用编辑或离线配置时，会导出当前草稿的临时 ZIP，供 Agent 编辑后导出新 ZIP 再从 GUI 打开。
 
@@ -26,7 +26,7 @@
 
 只有 `source.exact=true` 才表示链接指向本次构建使用的完整源码。`modified=true` 表示构建包含本地修改，链接对应其基础提交，需要向构建者获取修改后的工作目录。没有 Git 信息的源码包构建会返回 `recorded=false`，应向发布者索取对应 release tag；不要用最新版分支代替当前程序源码。下载源码不会改变程序或游戏状态。
 
-输入支持 `.sav`、GUI 导出的 `.zip`、增强配置 `.json` 或 `new`（离线原厂基线）。ZIP 保留普通存档与增强配置，适合 Agent 与 GUI 之间交接。配置 JSON 不包含普通存档修改。读取失败时 CLI 不会把缺失的游戏方案猜成存档内的 profile 标识；修改未认证方案的 SAV 必须明确指定 `--scheme`，可选值来自检查结果。ZIP 和 `new` 使用包内或离线选择的方案。
+输入支持 `.sav`、GUI 导出的 `.zip`、增强配置 `.json` 或 `new`（离线原厂基线）。ZIP 保留普通存档与增强配置，适合 Agent 与 GUI 之间交接。配置 JSON 包含增强方案库，不包含普通模式的存档修改。普通模式下，读取失败时 CLI 不会把缺失的游戏方案猜成存档内的 profile 标识；修改未认证方案的 SAV 必须明确指定 `--scheme`。增强模式使用独立方案 ID，原生三个方案首次复制后也由程序模拟；`--scheme` 选择增强编辑目标，应用时切换到该目标。可选 ID 和名称来自 `--inspect` 的 `schemes`、`schemeNames`。ZIP 和 `new` 保留各自的编辑选择。
 
 把修改写成请求文件，例如 `request.json`：
 
@@ -57,9 +57,9 @@
 
 `--request -` 从标准输入读取 UTF-8 JSON。Windows PowerShell 5.1 管道容易受 `$OutputEncoding` 影响；优先用 UTF-8 请求文件（支持 BOM），例如 `$request | Set-Content request.json -Encoding UTF8`。所有操作按顺序规划，某一步失败就不进入导出或应用。请求里的 `function` 使用功能 ID；操作已有绑定时，用最新 `--inspect` 返回的 `Id`，不要根据显示名称或序号推测 ID。新建规则的 ID 在每次独立预览中生成，应用请求后重新检查。
 
-`--out` 生成独立副本，不能写入 Mod 的 `PBZInputRouter/configuration.json`；修改运行时配置请以安装存档为源，使用 `--apply` 或 `--live`。普通导出只包含所选方案的草稿；执行 `reset-all` 后导出 SAV 或 ZIP，则包含全部方案、全部设备的重置结果。
+`--out` 生成独立副本，不能写入 Mod 的 `PBZInputRouter/configuration.json`；修改运行时配置请以安装存档为源，使用 `--apply` 或 `--live`。普通模式导出只包含所选原生方案的草稿；增强模式的 ZIP 和 JSON 保留完整增强方案库。执行 `reset-all` 后导出 SAV 或 ZIP，则包含全部原生方案、全部设备的重置结果。
 
-ZIP 和 JSON 配置源会先完成增强配置的编译验证；缺少 ability Tag、无效 hook 等语义错误在导入时即被拒绝。实时规划也会拒绝同一动作上互不一致的原始记录草稿与运行时覆盖，保留原状态；预设中明确声明的两类绑定按各自用途保留。发送前重新读取并认证当前生效方案，不能依赖编辑开始时的状态。
+ZIP 和 JSON 配置源会先完成增强配置的编译验证；缺少 ability Tag、无效 hook 等语义错误在导入时即被拒绝。实时规划也会拒绝同一动作上互不一致的原始记录草稿与运行时覆盖，保留原状态；预设中明确声明的两类绑定按各自用途保留。普通模式写盘前重新读取并认证原生生效方案；增强方案的实时应用独立于原生方案选择。
 
 ## 应用
 
@@ -78,7 +78,7 @@ ZIP 和 JSON 配置源会先完成增强配置的编译验证；缺少 ability T
 
 `--inspect` 与 `--runtime-status` 的 `readiness` 提供 `canApply`、`canLiveApply`、`liveBlockedBy` 和下一步建议。常见阻塞值为 `game_closed`、`enhancement_disabled`、`waiting_for_runtime`、`scheme_unknown`、`scheme_not_active`、`not_installed_source`。状态检查本身成功不代表实时编辑已连接，必须读取 `canLiveApply`；加载期间等待后重新查询。实时请求最多等待约 6 秒，超时取消请求，避免进入场景后延迟生效。
 
-实时修改的原生键位存入增强配置的 `NativeBindings`，各方案及手柄共用；原存档保留。实时应用只允许编辑当前认证的生效方案，不能执行方案切换、组件安装卸载、关闭增强、资源 Mod 或全局重置。首次使用需关闭游戏并应用新版 Mod，再启动游戏。详见[实时编辑](key-enhancement.md#实时编辑与游戏伴随窗口)。
+增强普通键位存入当前方案的 `NativeBindings`，规则与屏蔽同样随方案隔离；手柄按通用引擎键名执行，原存档保留。实时应用部署完整方案库，并启用当前选中的增强方案，支持切换到其他增强方案；组件安装卸载、关闭增强、资源 Mod 或全局重置仍需退出游戏。`--runtime-status` 的 `activeScheme` 返回实际增强方案 ID，`nativeActiveScheme` 单独返回磁盘中的原生方案。首次使用需关闭游戏并应用新版 Mod，再启动游戏。详见[实时编辑](key-enhancement.md#实时编辑与游戏伴随窗口)。
 
 ## 编辑操作
 
@@ -103,10 +103,16 @@ ZIP 和 JSON 配置源会先完成增强配置的编译验证；缺少 ability T
 | `hook-set` | `hook`, 可选 `index`；新增或更新返回值 hook |
 | `hook-delete` | `index`；删除 hook（从零开始） |
 | `enhancement` | `enabled`；启停增强配置，关闭游戏后应用 |
-| `configuration` | `value`；替换完整增强配置，适用于高级脚本、条件、全局屏蔽和原生覆盖 |
+| `configuration` | `value`；替换完整增强配置，包含方案库、高级脚本、条件和运行时覆盖 |
+| `scheme-add` | `name`；复制当前增强方案并选中新方案 |
+| `scheme-select` | `scheme`；切换增强编辑目标，应用后才在游戏中启用 |
+| `scheme-rename` | `scheme`, `name`；重命名新增方案 |
+| `scheme-delete` | `scheme`；删除新增方案；内置或正在使用的方案不能删除 |
 | `preset` | `preset` ID 或 `share` 分享码，`mode=Append/Replace/OnlyPreset`；追加合并增强规则 |
 | `reset-all` | 恢复全部方案原厂，清空增强配置并关闭增强，需退出游戏 |
-| `activate` | 将 `--scheme` 所选方案设为游戏生效方案，需退出游戏 |
+| `activate` | 将当前选中方案设为应用目标；原生方案激活需退出游戏 |
+
+方案管理操作要求已开启增强。可在同一批次先执行 `enhancement(enabled=true)`，再执行 `scheme-add(name)` 和普通绑定操作；新方案会自动成为后续操作的编辑目标。预览与导出不切换游戏实际方案。
 
 `binding.Keys` 是同时按下的组合。`Trigger` 支持 `default`、`down`、`press`、`release`、`tap`、`hold`、`pulse`、`multi_tap`、`sequence`、`axis`、`toggle`、`custom`。默认触发沿用动作输入方式；时长用秒，`Count` 为次数，`Priority` 为处理优先级。
 
@@ -114,7 +120,7 @@ ZIP 和 JSON 配置源会先完成增强配置的编译验证；缺少 ability T
 - 顺序输入设置 `Rule.Steps`，例如 `[["J"],["RightControl","K"]]`。每步支持组合键。
 - `Rule.Consume=true` 消耗全部声明输入，`ConsumeKeys` 只消耗其中一部分。脚本通过 `Rule.Watch` 声明读取的按键和轴，同样遵守消耗规则。
 - `Rule.WhenLua` 为条件函数；`EvaluateLua` 为自定义识别器。完整字段及函数签名见 `--agent-help`。输出方向可用 `OutputValue={"x":1,"y":0,"z":0}`。
-- 高级输出 `Kind` 支持 `action`、`mapping`、`ability`、`event`、`function`、`property`、`lua`；对象引用使用 `{"object":"对象路径"}`，可以嵌入参数或复合返回值。hook 采用 `{"path":"UFunction路径","value":返回值}`，也支持 `when` 与 `evaluate`。
+- 高级输出 `Kind` 支持 `action`、`mapping`、`ability`、`event`、`function`、`property`、`lua`、`scheme`；`scheme` 使用 `Tag=方案 ID/next/previous`，对应绑定在方案间共用；对象引用使用 `{"object":"对象路径"}`，可以嵌入参数或复合返回值。hook 采用 `{"path":"UFunction路径","value":返回值}`，也支持 `when` 与 `evaluate`。
 
 ## 分享与组件
 
@@ -134,7 +140,7 @@ ZIP 和 JSON 配置源会先完成增强配置的编译验证；缺少 ability T
 .\PBZKeyForge-cli.exe --gameplay-mod "installed.sav" --action disable --json
 ```
 
-`--scope` 可选 `all`、`keyboard` 或检查结果中的手柄家族。设备筛选排除其他设备及混合输入规则；无设备归属的自定义定义、全局脚本、能力屏蔽与返回值 hook 仍属于共用设置。组件变更要求游戏关闭。旧的 `--apply-preset`、`--make-vanilla` 仅生成输出副本；写安装存档应使用带备份与验证的 `--edit --apply`。
+`--scope` 可选 `all`、`keyboard` 或检查结果中的手柄家族。设备筛选排除其他设备及混合输入规则；单方案预设与分享只包含当前方案，不包含方案库和共用切换绑定。无设备归属的能力屏蔽仍随当前方案保存；自定义定义、全局脚本与返回值 hook 为安装级设置。组件变更要求游戏关闭。旧的 `--apply-preset`、`--make-vanilla` 仅生成输出副本；写安装存档应使用带备份与验证的 `--edit --apply`。
 
 `--component` 管理键位增强；关闭保留配置，卸载返回 `uninstall.RemovedFiles`、`RetainedFiles`、`SharedLoaderRetained`，保留文件时退出码为 `1`，请据此判断卸载范围。启用使用程序内置运行时，不联网、不弹确认窗口；`check-update` 和不带 `--archive` 的 `update` 才会联网，更新返回备份路径。
 

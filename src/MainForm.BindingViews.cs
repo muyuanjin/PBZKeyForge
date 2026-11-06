@@ -130,6 +130,7 @@ namespace PBZKeyForge
             tabKeys.Selected = !actionView; tabActions.Selected = actionView;
             btnRecords.Text = I18n.Str("views.records");
             btnRecords.Visible = actionView;
+            btnRecords.Enabled = !EnhancedSchemes;
             bindingHelp.RefreshText();
             int selectedFamily = SelectedFamilyIndex;
             var previousFamily = cbFamily.SelectedItem as ControllerFamily;
@@ -199,7 +200,8 @@ namespace PBZKeyForge
 
         bool EnableKeyEnhancementEditing()
         {
-            keyEnhancement.Enabled = true;
+            keyEnhancement.SetEnabled(true);
+            keyEnhancement.EnsureSchemes(Session); AlignSchemeBaseline();
             keyEnhancementUninstall = false;
             return true;
         }

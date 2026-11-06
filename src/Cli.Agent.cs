@@ -105,16 +105,24 @@ namespace PBZKeyForge
                 if (command == "--component" || command == "--gameplay-mod")
                 { stage = "component"; return ManageComponent(command, source, options); }
                 stage = "open_source";
-                var document = BindingDocument.Open(source); var baseline = document.Configuration.Clone();
+                var document = BindingDocument.Open(source);
+                var runtime = document.Installation == null ? null : document.Installation.LiveStatus();
+                if (runtime != null && runtime.Available && document.Configuration.Schemes.Any(item => item.Id == runtime.ActiveSchemeId))
+                    document.Configuration.ActiveSchemeId = runtime.ActiveSchemeId;
+                var baseline = document.Configuration.Clone();
                 string scheme = Option(options, "--scheme", null);
-                if (scheme != null) document.Session.SwitchProfile(scheme);
+                if (scheme != null)
+                {
+                    if (document.Configuration.Enabled && document.Configuration.Schemes.Count > 0) document.Configuration.SelectScheme(scheme);
+                    else document.Session.SwitchProfile(scheme);
+                }
                 string device = Option(options, "--device", "keyboard");
                 var family = document.Session.ControllerFamilies.FirstOrDefault(item => item.Name.Equals(device, StringComparison.OrdinalIgnoreCase));
                 if (device != "keyboard" && family == null) throw new ArgumentException("Unknown device. Use keyboard, Xbox, PS, NS, or Other from --inspect.");
                 int familyIndex = family == null ? -1 : family.Index;
                 if (command == "--share")
                 {
-                    if (!document.Session.IsOffline && document.Session.ActiveProfile == null && scheme == null)
+                    if (!document.Configuration.Enabled && !document.Session.IsOffline && document.Session.ActiveProfile == null && scheme == null)
                         throw new ArgumentException("The active game scheme is unknown. Specify --scheme.");
                     var preset = UserPresetStore.Capture(document.Session, Option(options, "--name", "CLI bindings"), document.Configuration);
                     string scope = Option(options, "--scope", "all");
@@ -127,7 +135,13 @@ namespace PBZKeyForge
                     Console.WriteLine(AgentJson.Serialize(new { ok = true, share = UserPresetStore.Share(preset), preset = preset })); return 0;
                 }
                 if (command == "--runtime-status")
-                { Console.WriteLine(AgentJson.Serialize(new { ok = true, running = EditorSession.IsGameRunning, live = document.Installation == null ? null : document.Installation.LiveStatus(), activeScheme = document.Session.ActiveProfile, schemeError = document.Session.SchemeError, readiness = Readiness(document) })); return 0; }
+                {
+                    var live = document.Installation == null ? null : document.Installation.LiveStatus();
+                    Console.WriteLine(AgentJson.Serialize(new { ok = true, running = EditorSession.IsGameRunning, live = live,
+                        activeScheme = document.Configuration.Enabled ? live == null ? document.Configuration.ActiveSchemeId : live.ActiveSchemeId ?? document.Configuration.ActiveSchemeId : document.Session.ActiveProfile,
+                        nativeActiveScheme = document.Session.ActiveProfile,
+                        schemeError = document.Configuration.Enabled ? null : document.Session.SchemeError, readiness = Readiness(document) })); return 0;
+                }
                 var workspace = new BindingWorkspace(document.Session, document.Configuration, baseline, family != null, familyIndex);
                 workspace.LiveEditing = HasFlag(args, "--live");
                 if (command == "--edit")
@@ -135,7 +149,7 @@ namespace PBZKeyForge
                     if (new[] { "--apply", "--live", "--out" }.Count(flag => HasFlag(args, flag)) > 1) throw new ArgumentException("Choose one of --out, --apply or --live.");
                     bool preview = HasFlag(args, "--dry-run");
                     if (preview && (HasFlag(args, "--apply") || options.ContainsKey("--out"))) throw new ArgumentException("--dry-run may be used alone or with --live; it cannot be combined with --apply or --out.");
-                    if (!document.Session.IsOffline && document.Session.ActiveProfile == null && scheme == null)
+                    if (!document.Configuration.Enabled && !document.Session.IsOffline && document.Session.ActiveProfile == null && scheme == null)
                         throw new ArgumentException("The active game scheme is unknown. Specify --scheme using an ID from --inspect.");
                     string requestPath = Option(options, "--request", null);
                     if (requestPath == null) throw new ArgumentException("Specify --request <JSON file or ->. Without --out, --apply or --live this is a dry run.");
@@ -163,7 +177,7 @@ namespace PBZKeyForge
                     if (HasFlag(args, "--live"))
                     {
                         if (document.Installation == null) throw new InvalidOperationException("Live apply requires an installed game save.");
-                        document.Session.Refresh();
+                        if (document.Configuration.Schemes.Count == 0) document.Session.Refresh();
                         var candidate = BindingLivePlan.Create(document.Session, document.Configuration, familyIndex < 0 ? document.Session.ControllerFamilies.First().Index : familyIndex);
                         if (!candidate.Enabled || !baseline.Enabled) throw new InvalidOperationException("Live editing requires enabled enhancement. Close the game, use --component --action enable, then start the game.");
                         document.Configuration = candidate;
@@ -180,10 +194,11 @@ namespace PBZKeyForge
                         if (document.Session.IsOffline || document.Installation == null) throw new InvalidOperationException("Use --out for offline editing.");
                         if (EditorSession.IsGameRunning) throw new InvalidOperationException("The game is running. Use --live for bindings, or close the game for save/installation changes.");
                         stage = "save_bindings";
-                        var applied = document.Session.Apply(); outcome["bindingsSaved"] = applied.BindingsSaved; outcome["activationSaved"] = applied.ActivationSaved;
+                        var applied = document.Configuration.Enabled && document.Configuration.Schemes.Count > 0 ? new EditorApplyResult { Success = true } : document.Session.Apply(); outcome["bindingsSaved"] = applied.BindingsSaved; outcome["activationSaved"] = applied.ActivationSaved;
                         outcome["inputBackup"] = applied.InputBackup; outcome["activationBackup"] = applied.ActivationBackup;
                         if (!applied.Success) throw new IOException(applied.Error);
                         stage = "save_enhancement";
+                        if (document.Configuration.Enabled && document.Configuration.Schemes.Count > 0) document.Configuration.ActiveSchemeId = document.Configuration.SelectedSchemeId;
                         document.Installation.Apply(document.Configuration); outcome["enhancementSaved"] = true;
                     }
                     string output = Option(options, "--out", null);
@@ -195,8 +210,11 @@ namespace PBZKeyForge
                 var snapshot = workspace.GetSnapshot();
                 var data = new {
                     ok = true, command = command, dryRun = command == "--edit" && (HasFlag(args, "--dry-run") || !HasFlag(args, "--apply") && !HasFlag(args, "--live") && !options.ContainsKey("--out")), result = outcome,
-                    source = source, selectedScheme = document.Session.SelectedProfile, activeScheme = document.Session.ActiveProfile,
-                    schemeError = document.Session.SchemeError, schemes = document.Session.Profiles, device = device, devices = document.Session.ControllerFamilies,
+                    source = source, selectedScheme = document.Configuration.Enabled ? document.Configuration.SelectedSchemeId : document.Session.SelectedProfile,
+                    activeScheme = document.Configuration.Enabled ? document.Installation == null ? document.Configuration.ActiveSchemeId : document.Installation.LiveStatus().ActiveSchemeId ?? document.Configuration.ActiveSchemeId : document.Session.ActiveProfile,
+                    schemeError = document.Configuration.Enabled ? null : document.Session.SchemeError,
+                    schemes = document.Configuration.Enabled ? document.Configuration.Schemes.Select(item => item.Id).ToArray() : document.Session.Profiles,
+                    schemeNames = document.Configuration.Schemes.Select(item => new { item.Id, Name = KeyEnhancementConfiguration.SchemeName(item) }), device = device, devices = document.Session.ControllerFamilies,
                     running = EditorSession.IsGameRunning, live = document.Installation == null ? null : document.Installation.LiveStatus(),
                     readiness = Readiness(document, scheme != null),
                     functions = workspace.FindFunctions(query).Select(function => new { function.Id, function.Label, function.TechnicalName, function.GroupPath, function.GroupLabels,
@@ -237,6 +255,9 @@ namespace PBZKeyForge
                 case "hook-set": parameters = "index hook"; break;
                 case "hook-delete": parameters = "index"; break;
                 case "enhancement": parameters = "enabled"; break;
+                case "scheme-add": parameters = "name"; break;
+                case "scheme-rename": parameters = "scheme name"; break;
+                case "scheme-delete": case "scheme-select": parameters = "scheme"; break;
                 case "configuration": parameters = "value"; break;
                 case "preset": parameters = "preset share mode"; break;
                 case "restore-bindings": case "reset-all": case "activate": parameters = ""; break;
@@ -245,6 +266,8 @@ namespace PBZKeyForge
             var allowed = ("op device " + parameters).Split(' ');
             foreach (string key in operation.Keys)
                 if (!allowed.Contains(key)) throw new ArgumentException("Unsupported field for " + op + ": " + key);
+            if (op.StartsWith("scheme-", StringComparison.Ordinal) && !workspace.Configuration.Enabled)
+                throw new KeyEnhancementRequiredException();
             BindingEntry entry = id == null ? null : workspace.GetSnapshot().FirstOrDefault(item => item.Id == id);
             if (id != null && entry == null) throw new ArgumentException("Binding not found: " + id + ". Inspect again for current IDs.");
             switch (op)
@@ -264,7 +287,14 @@ namespace PBZKeyForge
                 case "custom-delete": workspace.DeleteCustomFunction(function); break;
                 case "hook-set": workspace.SetHook(operation.ContainsKey("index") ? ObjectValue<int>(operation, "index") : -1, ObjectValue<Dictionary<string, object>>(operation, "hook")); break;
                 case "hook-delete": workspace.Configuration.Hooks.RemoveAt(ObjectValue<int>(operation, "index")); break;
-                case "enhancement": workspace.Configuration.Enabled = ObjectValue<bool>(operation, "enabled"); break;
+                case "enhancement":
+                    workspace.Configuration.SetEnabled(ObjectValue<bool>(operation, "enabled"));
+                    if (workspace.Configuration.Enabled) workspace.Configuration.EnsureSchemes(document.Session);
+                    break;
+                case "scheme-add": workspace.Configuration.AddScheme(TextValue(operation, "name")); break;
+                case "scheme-rename": workspace.Configuration.RenameScheme(TextValue(operation, "scheme"), TextValue(operation, "name")); break;
+                case "scheme-delete": workspace.Configuration.DeleteScheme(TextValue(operation, "scheme")); break;
+                case "scheme-select": workspace.Configuration.SelectScheme(TextValue(operation, "scheme")); break;
                 case "configuration": workspace.Configuration.ReplaceWith(ObjectValue<KeyEnhancementConfiguration>(operation, "value")); break;
                 case "preset":
                     var preset = operation.ContainsKey("share") ? UserPresetStore.ParseShare(TextValue(operation, "share")) : Presets.All().Concat(UserPresetStore.Default().Load()).FirstOrDefault(item => item.Id == TextValue(operation, "preset"));
@@ -274,7 +304,10 @@ namespace PBZKeyForge
                     planned.Apply(document.Session); workspace.Configuration.ReplaceWith(planned.Configuration); break;
                 case "restore-bindings": workspace.Configuration.ReplaceWith(BindingLivePlan.RestoreBindings(document.Session, workspace.Configuration, workspace.FamilyIndex)); break;
                 case "reset-all": document.Session.ResetAll(); workspace.Configuration.ReplaceWith(new KeyEnhancementConfiguration()); break;
-                case "activate": document.Session.SetActivation(true); break;
+                case "activate":
+                    if (workspace.Configuration.Enabled && workspace.Configuration.Schemes.Count > 0) workspace.Configuration.ActiveSchemeId = workspace.Configuration.SelectedSchemeId;
+                    else document.Session.SetActivation(true);
+                    break;
                 default: throw new ArgumentException("Unknown operation: " + op);
             }
         }
@@ -304,10 +337,10 @@ namespace PBZKeyForge
                     "--component <installed.sav|game-directory> --action status|enable|disable|uninstall|check-update|update [--archive <ue4ss.zip>] --json",
                     "--gameplay-mod <installed.sav|game-directory> --action status|enable|disable|uninstall --json", "--version --json", "--activate <installed.sav> <profileId>",
                     "--selftest <sav>", "--list <sav>", "--schemes <sav>", "--apply-preset <in> <out> <presetId> [--scheme <id>]", "--make-vanilla <in> <out>", "--gen-presets <in> <directory>" },
-                workflow = "Inspect first. Use stable function IDs and current binding IDs. Submit all intended changes as one operations array. Preview with --edit and no output/apply option; use ZIP to retain all data. --apply saves with backups while the game is closed. --live waits for the running Mod acknowledgement, persists enhancement configuration, and never writes the game save or changes the active scheme. Native override bindings are shared enhancement settings.",
+                workflow = "Inspect first. Use stable function IDs and current binding IDs. Submit all intended changes as one operations array. Preview with --edit and no output/apply option; use ZIP to retain all data. Ordinary mode edits the three native save schemes. Enhancement mode uses independent simulated schemes, initially copied from the native schemes. --scheme selects the editing target; --apply or --live deploys the library and activates that target. Enhanced ordinary bindings, rules and suppressions belong to that scheme and never write game saves.",
                 liveWorkflow = "Close game -> --component <installed.sav> --action enable -> start game -> --runtime-status until readiness.canLiveApply -> --inspect for current IDs -> --edit --live --dry-run -> --edit --live using the same request -> inspect again. Preview does not send a request or write files. Lifecycle/activation/reset-all operations cannot be mixed into live requests. restore-bindings resets keyboard and the selected controller family in the runtime configuration, removes binding rules and suppressions, preserves enhancement/components/custom definitions, and does not change save files. Load screens may delay acknowledgement; timeout cancels pending requests. Read result.liveState before retrying.",
                 componentWorkflow = "--component manages key enhancement and shared UE4SS. Enable installs the bundled version without network prompts; disable preserves settings; uninstall returns RemovedFiles/RetainedFiles/SharedLoaderRetained and exit 1 if files remain. check-update queries online; update explicitly downloads a newer release, or uses --archive for a local validated package. --gameplay-mod separately manages Perfect Deflect No Rapid Click Penalty for all schemes/difficulties. All component writes require a closed game and take effect on the next launch.",
-                operations = new[] { "add(function,binding)", "add-functions(functions,binding)", "replace(id,binding)", "unbind(id)", "enable(id)", "disable(id)", "restore(function|id)", "restore-key(key)", "restore-bindings()", "move-key(from,to)", "swap-keys(from,to)", "copy(id,function)", "native-trigger(function,enabled)", "custom-add(name,target)", "custom-edit(function,name,target)", "custom-delete(function)", "hook-set(index?,hook)", "hook-delete(index)", "enhancement(enabled)", "configuration(value)", "preset(preset|share,mode=Append|Replace|OnlyPreset)", "reset-all()", "activate()" },
+                operations = new[] { "add(function,binding)", "add-functions(functions,binding)", "replace(id,binding)", "unbind(id)", "enable(id)", "disable(id)", "restore(function|id)", "restore-key(key)", "restore-bindings()", "move-key(from,to)", "swap-keys(from,to)", "copy(id,function)", "native-trigger(function,enabled)", "custom-add(name,target)", "custom-edit(function,name,target)", "custom-delete(function)", "hook-set(index?,hook)", "hook-delete(index)", "enhancement(enabled)", "scheme-add(name)", "scheme-rename(scheme,name)", "scheme-delete(scheme)", "scheme-select(scheme)", "configuration(value)", "preset(preset|share,mode=Append|Replace|OnlyPreset)", "reset-all()", "activate()" },
                 request = new { operations = new object[] { new { op = "add", function = "IA_Jump", device = "keyboard", binding = new BindingEntry { Keys = new[] { "RightControl", "J" }, Trigger = "hold", Seconds = .4, Rule = new KeyEnhancementRule { ConsumeKeys = new List<string> { "J" } } } } } },
                 semantics = new {
                     binding = "Keys is a simultaneous chord. Trigger=default uses native behavior. Sequence and script details belong to Rule; output vectors use OutputValue. Disabled enhancement settings may be edited without running them.",
@@ -315,12 +348,13 @@ namespace PBZKeyForge
                     rule = "Consume consumes all declared inputs; ConsumeKeys consumes a subset. Priority controls rule ordering. InputGroup lets tap/hold variants share one input; the editor creates this automatically.",
                     scripts = "WhenLua is a Lua function(context); EvaluateLua is function(now,snapshot,context,state) returning {active,pulse,reserve,value}. CustomLua extends compiled config. Use trusted local scripts.",
                     hooks = "{path=UFunction path,value=typed return,when=condition}; value may use {object=UObject path}, nested arrays/objects. evaluate is a Lua function expression for computed returns.",
-                    outputs = "Kind=action|mapping|ability|event|function|property|lua. Function uses Path, Receiver and Args; property uses Property and Value; event uses Tag and Payload; lua uses Code. UObject descriptors resolve recursively.",
-                    safety = "Dry runs and export do not change installed game state. A failed operation aborts the in-memory request; apply may partially save native/enhancement components, reported in result. Reinspect before retrying. Live apply requires updated Mod heartbeat and the authenticated active scheme. Native overrides are shared by schemes/controllers and preserve original saves. Native-only pipelines retain their available runtime slot count; unsupported plans are rejected, never silently dropped."
+                    outputs = "Kind=action|mapping|ability|event|function|property|lua|scheme. Function uses Path, Receiver and Args; property uses Property and Value; event uses Tag and Payload; lua uses Code. Scheme uses Tag=scheme ID|next|previous; these management bindings are shared across schemes and require enhancement. UObject descriptors resolve recursively.",
+                    schemes = "scheme-add copies and selects the current enhanced scheme. scheme-select changes only the editing target until apply/live. scheme-rename and scheme-delete manage additional schemes; built-in or active schemes cannot be deleted. Scheme operations require enabled enhancement. Presets and share codes contain only the selected scheme; ZIP/JSON retain the library. Custom definitions, CustomLua and hooks are installation-wide.",
+                    safety = "Dry runs and export do not change installed game state. A failed operation aborts the in-memory request; apply may partially save native/enhancement components, reported in result. Reinspect before retrying. Live apply requires updated Mod heartbeat. Enhanced scheme activation is independent of native scheme authentication. Native-only pipelines retain their available runtime slot count; unsupported plans are rejected, never silently dropped."
                 },
-                schema = new { binding = Fields(typeof(BindingEntry)), rule = Fields(typeof(KeyEnhancementRule)), output = Fields(typeof(KeyEnhancementOutput)), suppression = Fields(typeof(KeyEnhancementSuppression)), configuration = Fields(typeof(KeyEnhancementConfiguration)), nativeOverride = Fields(typeof(NativeBindingOverride)), triggers = new[] { "default" }.Concat(KeyEnhancementConfiguration.Triggers), axisDirections = new[] { "both", "positive", "negative" } },
+                schema = new { binding = Fields(typeof(BindingEntry)), rule = Fields(typeof(KeyEnhancementRule)), output = Fields(typeof(KeyEnhancementOutput)), suppression = Fields(typeof(KeyEnhancementSuppression)), configuration = Fields(typeof(KeyEnhancementConfiguration)), scheme = Fields(typeof(KeyEnhancementScheme)), nativeOverride = Fields(typeof(NativeBindingOverride)), triggers = new[] { "default" }.Concat(KeyEnhancementConfiguration.Triggers), axisDirections = new[] { "both", "positive", "negative" } },
                 exitCodes = new { success = 0, failedOrPartial = 1, invalidRequest = 2 },
-                legacy = "Legacy save conversion commands write output copies. Use --edit with --apply for installed saves. Never overwrite installed saves using a conversion command. If activeScheme is unknown, specify --scheme for editing; live apply requires an authenticated active scheme."
+                legacy = "Legacy save conversion commands write output copies of native schemes. Use --edit with --apply for installed saves. Never overwrite installed saves using a conversion command. In ordinary mode, if activeScheme is unknown, specify --scheme for editing. Enhanced schemes use their own IDs from --inspect and do not require native activation."
             };
         }
     }

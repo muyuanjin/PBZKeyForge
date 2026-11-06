@@ -557,3 +557,28 @@ python tests\ApplicationUpdateProcessTests.py dist\PBZKeyForge.exe dist\update-p
 
 
 Live review regressions preserve explicit preset override precedence after unrelated edits and undo, reject independent raw-record changes without clearing drafts, and reject live sends after an authenticated scheme switch or authentication failure while an editor stays open. Recovery must apply the retained draft; earlier conflicting undo checkpoints must survive a later successful preset application. Bundle import tests reject semantically invalid ability/hook outputs before replacing the current session, configuration or unsaved draft. CLI document imports use the same compilation validation.
+
+## Independent enhancement schemes
+
+```powershell
+& $compiler /nologo /out:dist\EnhancementSchemesTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll /r:System.IO.Compression.dll tests\EnhancementSchemesTests.cs
+.\dist\EnhancementSchemesTests.exe dist\enhancement-schemes\checks
+python tests\input-router\run_lua.py tests\input-router\SchemeSwitchTests.lua
+python tests\CliSchemeTests.py dist\PBZKeyForge-cli.exe dist\cli-schemes
+```
+
+`EnhancementSchemesTests` checks complete native key materialization, isolation of ordinary bindings/rules/suppressions, save byte preservation, copying, JSON/ZIP reopen, current-scheme presets and preset overwrite, sparse preset application, and independent mode drafts. Its screenshots cover expanded tabs, overflow access and minimum-window visibility of the selected tab and fixed add/save controls. It writes the compiled `dist/enhancement-schemes/checks/schemes.lua` fixture used by `SchemeSwitchTests`; run the C# harness first and create `dist/enhancement-schemes/runtime/Scripts` for the Lua runtime fixture.
+
+`SchemeSwitchTests` simulates dispatch on different schemes, release of old continuous outputs, movement recovery, suppression of held discrete inputs, switch-key latching, failed-target recovery, actual-scheme persistence/restart and deferred custom-script initialization. `CliSchemeTests` covers offline enable/create/select/edit/rename/delete, ZIP reopen, native save byte preservation, shared switch bindings, single-scheme sharing, status identities and disabled-mode rejection. These checks do not run the game or modify an installation.
+
+Scheme regressions also cover factory restoration of enhanced native bindings, unchanged other schemes/save bytes, deletion of a scheme referenced by the comparison baseline, and bounded sampling while a switch key is held. To validate the generated full factory library against simulated native pipelines in both startup and live modes, run `EnhancementSchemesTests` first, set `$env:PBZ_SCHEME_FIXTURES = (Resolve-Path dist\enhancement-schemes\checks).Path`, run `python tests\input-router\run_lua.py tests\input-router\NativeInputTests.lua`, then `Remove-Item Env:\PBZ_SCHEME_FIXTURES`. Empty overrides for absent devices are accepted; populated overrides without a runtime pipeline remain rejected.
+
+
+`SchemePresetWorkflowTests` uses an isolated installation with synthetic authenticated settings. It exercises preset cancellation before apply, installation failure and retry, cancellation after successful offline/live acceptance, native-draft rejection in the GUI, and byte preservation of both game saves. The game must be closed; the harness never launches it.
+
+```powershell
+& $compiler /nologo /out:dist\SchemePresetWorkflowTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\SchemePresetWorkflowTests.cs tests\AuthenticatedSchemeFixture.cs
+.\dist\SchemePresetWorkflowTests.exe dist\scheme-preset-workflow
+```
+
+Independent scheme checks also reject live planning with ordinary drafts without clearing them and initialize the full library when the first enhanced preset is applied. The CLI harness applies an enhanced share to `new`, adds a scheme in the same batch and reopens its ZIP while verifying native save byte preservation.

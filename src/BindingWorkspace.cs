@@ -26,17 +26,18 @@ namespace PBZKeyForge
     {
         public string Id, FunctionId, Axis, RuleId, Trigger = "default";
         public string ExecutionOwner;
+        public string DisplayName;
         public bool OriginalInputBlocked;
         public bool? KeepNativeTrigger;
         public string[] Keys = new string[0];
         public double Seconds = .25, Interval = .3, Threshold = .5;
         public int Count = 2, Priority, OutputIndex = -1;
-        public bool IsRuntimeBinding;
+        public bool IsRuntimeBinding, SchemeScoped;
         public bool IsNative, Enabled = true, Active, Pending, Suppressed, IsDefault, Shared, ReadOnly;
         public KeyEnhancementRule Rule;
         public object OutputValue;
         public string ActionId { get { return FunctionId; } }
-        public string Label { get { return BindingWorkspace.FunctionLabel(FunctionId); } }
+        public string Label { get { return DisplayName ?? BindingWorkspace.FunctionLabel(FunctionId); } }
     }
 
     public sealed class KeyEnhancementRequiredException : InvalidOperationException
@@ -133,6 +134,13 @@ namespace PBZKeyForge
         {
             if (session == null || config == null) throw new ArgumentNullException(session == null ? "session" : "config");
             this.session = session; this.config = config; this.baseline = baseline ?? new KeyEnhancementConfiguration(); this.pad = pad; this.family = family;
+            if (config.Enabled && config.Schemes.Count > 0)
+            {
+                this.baseline = this.baseline.Clone(); this.baseline.SetEnabled(config.Enabled); this.baseline.EnsureSchemes(session);
+                if (this.baseline.Schemes.Any(item => item.Id == config.SelectedSchemeId)) this.baseline.SelectScheme(config.SelectedSchemeId);
+                else this.baseline = config.Clone();
+                this.baseline.Enabled = config.Enabled;
+            }
         }
 
         public BindingFunction[] Functions
@@ -142,12 +150,19 @@ namespace PBZKeyForge
                 var customNames = config.CustomFunctions.Concat(config.Rules.SelectMany(rule => rule.Outputs))
                     .Select(output => OutputFunction(output) + "\n" + output.Name + "\n" + output.Kind + "\n"
                         + output.Path + "\n" + output.Tag + "\n" + output.Property + "\n" + output.Code + "\n" + output.MappingName).Distinct().ToArray();
-                if (functions != null && functionsLanguage == I18n.Current && functionsProfile == session.SelectedProfile
+                if (functions != null && functionsLanguage == I18n.Current && functionsProfile == session.SelectedProfile + config.SelectedSchemeId + string.Join(";", config.Schemes.Select(item => item.Id + item.Name))
                     && customNames.SequenceEqual(customFunctionNames))
                     return functions;
                 var result = session.BindingActions(pad, family).Select(id => new BindingFunction {
                     Id = id, NativeAction = id, Label = FunctionLabel(id), TechnicalName = id, Targets = KeyEnhancementCatalog.ForMapping(id)
                 }).ToList();
+                if (config.Schemes.Count > 0)
+                {
+                    result.Add(new BindingFunction { Id = "scheme:previous", Label = I18n.Str("schemes.previous"), TechnicalName = "scheme:previous", RequiresKeyEnhancement = true });
+                    result.Add(new BindingFunction { Id = "scheme:next", Label = I18n.Str("schemes.next"), TechnicalName = "scheme:next", RequiresKeyEnhancement = true });
+                    foreach (var scheme in config.Schemes)
+                        result.Add(new BindingFunction { Id = "scheme:" + scheme.Id, Label = I18n.Str("schemes.switch", KeyEnhancementConfiguration.SchemeName(scheme)), TechnicalName = "scheme:" + scheme.Id, RequiresKeyEnhancement = true });
+                }
                 for (int i = 0; i < Directions.Length; i++)
                     result.Add(new BindingFunction { Id = "movement:" + Directions[i], Label = FunctionLabel("movement:" + Directions[i]),
                         TechnicalName = KeyboardMovement + " · " + Directions[i], RequiresKeyEnhancement = true,
@@ -198,7 +213,7 @@ namespace PBZKeyForge
                 foreach (var group in result.GroupBy(function => new { function.Label, function.IdentityCode }).Where(group => group.Count() > 1))
                     foreach (var function in group) function.IdentityCode = function.Id;
                 functionsLanguage = I18n.Current;
-                functionsProfile = session.SelectedProfile; customFunctionNames = customNames;
+                functionsProfile = session.SelectedProfile + config.SelectedSchemeId + string.Join(";", config.Schemes.Select(item => item.Id + item.Name)); customFunctionNames = customNames;
                 return functions = OrderFunctions(result);
             }
         }
@@ -332,6 +347,7 @@ namespace PBZKeyForge
                 foreach (int i in indexes)
                     {
                         result.Add(new BindingEntry { Id = rule.Id + ":" + i, FunctionId = OutputFunction(rule.Outputs[i]), Keys = rule.Keys.ToArray(), Axis = rule.Axis,
+                            DisplayName = rule.Outputs[i].Kind == "scheme" ? SchemeBindingLabel(source, rule.Outputs[i].Tag) : null,
                             ExecutionOwner = !source.Enabled || !rule.Enabled ? "inactive" : KeyEnhancementInputPlan.SupportsMapping(rule.Outputs[i]) ? "scheduler" : "uncovered",
                             Trigger = rule.Outputs[i].Kind == "mapping" && rule.Trigger == "down" ? "default" : rule.Trigger,
                             Seconds = rule.Seconds, Interval = rule.Interval, Threshold = rule.Threshold, Count = rule.Count, Priority = rule.Priority,
@@ -340,6 +356,7 @@ namespace PBZKeyForge
                             Pending = pending });
                     }
             }
+            foreach (var entry in result) entry.SchemeScoped = source.Schemes.Count > 0 && (entry.Rule == null || entry.Rule.Outputs.Any(output => output.Kind != "scheme"));
             return result.ToArray();
         }
 
@@ -348,9 +365,15 @@ namespace PBZKeyForge
             var keys = rule.Keys.Concat(rule.Watch).Concat(rule.Steps.SelectMany(step => step)).Concat(string.IsNullOrEmpty(rule.Axis) ? new string[0] : new[] { rule.Axis }).ToArray();
             return keys.Length == 0 || keys.Any(key => IsPad(key) == pad);
         }
+        static string SchemeBindingLabel(KeyEnhancementConfiguration source, string id)
+        {
+            return id == "previous" ? I18n.Str("schemes.previous") : id == "next" ? I18n.Str("schemes.next")
+                : I18n.Str("schemes.switch", KeyEnhancementConfiguration.SchemeName(source.Schemes.First(item => item.Id == id)));
+        }
         static bool IsPad(string key) { return key.StartsWith("Gamepad_", StringComparison.Ordinal) || key.StartsWith("PBZ_Touchpad_", StringComparison.Ordinal); }
         static string OutputFunction(KeyEnhancementOutput output)
         {
+            if (output.Kind == "scheme") return "scheme:" + output.Tag;
             if (!string.IsNullOrEmpty(output.FunctionId)) return output.FunctionId;
             if (!string.IsNullOrWhiteSpace(output.Id)) return "custom:" + output.Id;
             if (output.Kind == "mapping") return output.MappingName;
@@ -376,7 +399,7 @@ namespace PBZKeyForge
         }
 
         bool UsesNativeOverride(string functionId, BindingEntry current)
-        { return LiveEditing || (current == null ? config.Enabled && NativeOverride(functionId, config) != null : current.IsRuntimeBinding); }
+        { return config.Enabled && config.Schemes.Count > 0 || LiveEditing || (current == null ? config.Enabled && NativeOverride(functionId, config) != null : current.IsRuntimeBinding); }
 
         public bool UsesSaveBinding(string functionId, BindingEntry specification, BindingEntry current)
         {
@@ -478,7 +501,8 @@ namespace PBZKeyForge
             var check = new KeyEnhancementRule(); check.Keys.Add("F9"); check.Outputs.Add(replacement); validation.Rules.Add(check); validation.CompileLua();
             config.CustomFunctions.RemoveAll(item => OutputFunction(item) == functionId);
             config.CustomFunctions.Add(replacement);
-            foreach (var rule in config.Rules)
+            config.StoreSelectedScheme();
+            foreach (var rule in config.Rules.Concat(config.Schemes.SelectMany(scheme => scheme.Rules)).Distinct())
                 for (int index = 0; index < rule.Outputs.Count; index++)
                     if (OutputFunction(rule.Outputs[index]) == functionId)
                         rule.Outputs[index] = new JavaScriptSerializer().Deserialize<KeyEnhancementOutput>(Serialize(replacement));
@@ -492,6 +516,16 @@ namespace PBZKeyForge
             foreach (var rule in config.Rules.ToArray())
                 for (int index = rule.Outputs.Count - 1; index >= 0; index--)
                     if (OutputFunction(rule.Outputs[index]) == functionId) RemoveOutput(rule, index, functionId, false);
+            config.StoreSelectedScheme();
+            foreach (var scheme in config.Schemes.Where(item => item.Id != config.SelectedSchemeId))
+            {
+                foreach (var rule in scheme.Rules)
+                {
+                    rule.Outputs.RemoveAll(output => OutputFunction(output) == functionId);
+                    rule.Suppressions.RemoveAll(item => item.FunctionId == functionId);
+                }
+                scheme.Rules.RemoveAll(rule => rule.Outputs.Count == 0);
+            }
             functions = null;
         }
         public void AddHook(Dictionary<string, object> hook)
@@ -522,6 +556,7 @@ namespace PBZKeyForge
         }
         KeyEnhancementOutput CreateOutput(BindingFunction function)
         {
+            if (function.Id.StartsWith("scheme:", StringComparison.Ordinal)) return new KeyEnhancementOutput { Kind = "scheme", Tag = function.Id.Substring(7), FunctionId = function.Id, Name = function.Label };
             if (function.NativeAction != null)
             {
                 if (function.Targets.Length == 0) throw new InvalidOperationException(I18n.Str("views.incomplete"));
@@ -650,7 +685,7 @@ namespace PBZKeyForge
                 if (!original.Intersect(keys).Any() && !relation.DefaultKeys.Intersect(keys).Any()) continue;
                 workspace.EditNative(function.Id).Keys = original.Except(keys).Concat(relation.DefaultKeys.Intersect(keys)).Distinct().ToList();
             }
-            if (!LiveEditing) session.RestoreKeys(keys, pad, family, config.Enabled ? (Action<string, string>)delegate(string action, string input) {
+            if (!LiveEditing && !(config.Enabled && config.Schemes.Count > 0)) session.RestoreKeys(keys, pad, family, config.Enabled ? (Action<string, string>)delegate(string action, string input) {
                 workspace.Add(action, new BindingEntry { Keys = new[] { input }, Trigger = "default" });
             } : null);
             config.NativeBindings = planned.NativeBindings; config.Rules = planned.Rules; config.CustomFunctions = planned.CustomFunctions; config.Suppressions = planned.Suppressions;
@@ -734,7 +769,7 @@ namespace PBZKeyForge
                 : function.Targets.Any(target => PackagePath(target.Path) == PackagePath(item.ActionPath));
             if (function.NativeAction != null)
             {
-                if (LiveEditing) EditNative(function.Id).Keys = session.Relations(function.NativeAction, pad, family).DefaultKeys.ToList();
+                if (LiveEditing || config.Enabled && config.Schemes.Count > 0) EditNative(function.Id).Keys = session.Relations(function.NativeAction, pad, family).DefaultKeys.ToList();
                 else session.RestoreAction(function.NativeAction, pad, family);
             }
             foreach (string tag in NativeTriggerTags(function)) config.NativeAbilitySuppressions.RemoveAll(item => item == tag);

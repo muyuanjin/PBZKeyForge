@@ -335,7 +335,11 @@ namespace PBZKeyForge
                     KeyEnhancementPrerequisites.EnsureAvailable(runtimeDirectory, libraryStream, proxyStream);
             }
             if (ConfigurationText == json && state == (candidate.Enabled ? KeyEnhancementInstallState.Enabled : KeyEnhancementInstallState.Disabled)
-                && !(LoaderSuspended && OtherModsPresent())) return;
+                && !(LoaderSuspended && OtherModsPresent()))
+            {
+                if (candidate.Schemes.Count > 0) WriteAtomicText(Path.Combine(InstallDirectory, "scheme-state.txt"), candidate.ActiveSchemeId);
+                return;
+            }
             string staging = Path.Combine(Path.GetDirectoryName(InstallDirectory), ".PBZKeyForge-" + Guid.NewGuid().ToString("N"));
             string retired = staging + ".old";
             string sourcePath = Path.Combine(runtimeDirectory, OwnershipFile);
@@ -420,6 +424,7 @@ namespace PBZKeyForge
                 WriteOwnership(source);
                 var expected = candidate.Enabled ? KeyEnhancementInstallState.Enabled : KeyEnhancementInstallState.Disabled;
                 if (ReadState() != expected) throw new IOException(I18n.Str("mod.verifyfailed"));
+                if (candidate.Schemes.Count > 0) WriteAtomicText(Path.Combine(InstallDirectory, "scheme-state.txt"), candidate.ActiveSchemeId);
                 ConfigurationText = json; configurationLoaded = true; complete = true;
             }
             finally

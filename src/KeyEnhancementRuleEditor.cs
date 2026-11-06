@@ -49,7 +49,7 @@ namespace PBZKeyForge
             gate.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); gate.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             locked.Text = S("locked"); locked.Dock = DockStyle.Fill; locked.TextAlign = ContentAlignment.MiddleLeft; locked.ForeColor = EditorTheme.Muted;
             enable.Text = S("enable"); enable.AutoSize = true; enable.Height = 32;
-            enable.Click += delegate { if (enableRequested != null) enableRequested(); this.editable = true; Configuration.Enabled = true; RefreshGate(); };
+            enable.Click += delegate { if (enableRequested != null) enableRequested(); this.editable = true; Configuration.SetEnabled(true); RefreshGate(); };
             gate.Controls.Add(locked, 0, 0); gate.Controls.Add(enable, 1, 0); root.Controls.Add(gate, 0, 1);
             var split = new SplitContainer { Size = new Size(1148, 590), Dock = DockStyle.Fill, SplitterDistance = 265, BackColor = EditorTheme.Background, FixedPanel = FixedPanel.Panel1 };
             split.Panel1MinSize = 205; split.Panel2MinSize = 480;

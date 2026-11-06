@@ -484,6 +484,10 @@ function Backend:dispatch(spec, phase, value, bindingId)
                 canceled and {} or spec.trigger_objects or self:object_array(spec.triggers, "InputTrigger"))
         end
         if phase == "completed" then return true end
+        if spec.kind == "scheme" then
+            if phase == "triggered" and self.request_scheme then return self.request_scheme(spec.scheme, bindingId) end
+            return true
+        end
         if spec.kind == "mapping" then return true end
         if spec.kind == "lua" then
             return spec.run(self, {phase = phase, value = value, binding = bindingId,
@@ -529,6 +533,14 @@ function Backend:dispatch(spec, phase, value, bindingId)
             self.dispatch_error)
     end
     return ok, result
+end
+
+function Backend:scheme_notice(name)
+    local ok, err = pcall(function()
+        self:invoke(self:library("Engine.KismetSystemLibrary"), "/Script/Engine.KismetSystemLibrary:PrintString",
+            self.controller, tostring(name), true, false, {R=.76,G=.60,B=1,A=1}, 2, "PBZKeyForgeScheme")
+    end)
+    if not ok then self:report("scheme-notice", tostring(err)) end
 end
 
 function Backend:shutdown()

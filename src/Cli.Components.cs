@@ -37,14 +37,15 @@ namespace PBZKeyForge
             var live = installation == null ? null : installation.LiveStatus();
             bool enabled = installation != null && installation.ConfigurationText != null
                 && KeyEnhancementConfiguration.FromJson(installation.ConfigurationText).Enabled;
+            bool enhanced = document.Configuration.Enabled && document.Configuration.Schemes.Count > 0;
             string reason = installation == null ? "not_installed_source"
                 : !running ? "game_closed"
                 : !enabled ? "enhancement_disabled"
-                : document.Session.SchemeError != null || document.Session.ActiveProfile == null ? "scheme_unknown"
-                : document.Session.SelectedProfile != document.Session.ActiveProfile ? "scheme_not_active"
+                : !enhanced && (document.Session.SchemeError != null || document.Session.ActiveProfile == null) ? "scheme_unknown"
+                : !enhanced && document.Session.SelectedProfile != document.Session.ActiveProfile ? "scheme_not_active"
                 : live == null || !live.Available ? "waiting_for_runtime" : null;
             return new {
-                canApply = installation != null && !running && (document.Session.ActiveProfile != null || explicitScheme),
+                canApply = installation != null && !running && (enhanced || document.Session.ActiveProfile != null || explicitScheme),
                 canLiveApply = reason == null, liveBlockedBy = reason,
                 enhancementEnabled = enabled,
                 next = reason == null ? "Preview with --edit --live --dry-run, then send the same request with --live."
@@ -96,7 +97,7 @@ namespace PBZKeyForge
             else if (action == "enable" || action == "disable")
             {
                 var configuration = installation.LoadConfiguration();
-                configuration.Enabled = action == "enable";
+                configuration.SetEnabled(action == "enable");
                 installation.Apply(configuration);
             }
             else if (action == "check-update" || action == "update")

@@ -14,6 +14,7 @@ namespace PBZKeyForge
         public bool NeverConnected;
         public DateTime UpdatedUtc;
         public string Detail;
+        public string ActiveSchemeId;
     }
 
     public sealed partial class KeyEnhancementInstallation
@@ -50,7 +51,10 @@ namespace PBZKeyForge
                         try { if (process.StartTime.ToUniversalTime() > lastLiveUpdate) seen = false; }
                         catch (InvalidOperationException) { }
                     }
-            return new KeyEnhancementLiveStatus { Available = connected, Waiting = !connected && seen, NeverConnected = !seen,
+            string scheme = null;
+            try { string schemePath = Path.Combine(InstallDirectory, "scheme-state.txt"); if (connected && File.Exists(schemePath)) scheme = File.ReadAllText(schemePath).Trim(); }
+            catch (IOException) { }
+            return new KeyEnhancementLiveStatus { Available = connected, Waiting = !connected && seen, NeverConnected = !seen, ActiveSchemeId = scheme,
                 Suspended = connected && lastLiveState == "suspended",
                 RoutingEnabled = connected && lastLiveState == "ready", UpdatedUtc = lastLiveUpdate,
                 Detail = !connected ? I18n.Str(seen ? "live.waitingdetail" : "flow.notconnected.detail") : lastLiveState == "suspended"
@@ -101,6 +105,7 @@ namespace PBZKeyForge
             if (!status.Available) throw new IOException(status.Detail);
             EnsureConfigurationUnchanged();
             var previous = LoadConfiguration();
+            if (previous.Schemes.Exists(item => item.Id == status.ActiveSchemeId)) previous.ActiveSchemeId = status.ActiveSchemeId;
             if (!previous.Enabled || !candidate.Enabled) throw new IOException(I18n.Str("live.lifecycle"));
             string lockPath = Path.Combine(InstallDirectory, "live-edit.lock");
             using (var editLock = new FileStream(lockPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))

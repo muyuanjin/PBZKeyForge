@@ -27,6 +27,12 @@ namespace PBZKeyForge
 
         public static KeyEnhancementConfiguration Create(EditorSession session, KeyEnhancementConfiguration configuration, int familyIndex)
         {
+            if (configuration.Schemes.Count > 0)
+            {
+                if (session.HasAnyDrafts) throw new InvalidOperationException(I18n.Str("schemes.nativepending"));
+                var candidate = configuration.Clone(); candidate.ActiveSchemeId = candidate.SelectedSchemeId;
+                candidate.CompileLua(); return candidate;
+            }
             if (session.ActivationPending || session.SelectedProfile != session.ActiveProfile || session.SchemeError != null)
                 throw new InvalidOperationException(I18n.Str("live.scope"));
             if (session.Conflicts.Length > 0) throw new InvalidOperationException(I18n.Str("editor.conflictinfo"));

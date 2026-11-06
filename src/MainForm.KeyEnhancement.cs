@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -121,7 +122,7 @@ namespace PBZKeyForge
         string keyEnhancementError;
         bool renderingKeyEnhancement, keyEnhancementExternalChange, keyEnhancementUninstall;
 
-        bool KeyEnhancementPending { get { return keyEnhancement.ToJson() != keyEnhancementBaseline.ToJson() || keyEnhancementRepair || keyEnhancementUninstall; } }
+        bool KeyEnhancementPending { get { return keyEnhancement.DeploymentJson() != keyEnhancementBaseline.DeploymentJson() || keyEnhancementRepair || keyEnhancementUninstall; } }
         bool HasKeyEnhancementConfiguration { get { return keyEnhancement.ToJson() != new KeyEnhancementConfiguration().ToJson(); } }
         bool keyEnhancementRepair;
         bool flameEffectsEnabled;
@@ -141,7 +142,8 @@ namespace PBZKeyForge
             {
                 if (loading || renderingKeyEnhancement) return;
                 RememberBindingEdit();
-                keyEnhancement.Enabled = keyEnhancementBar.Toggle.Checked;
+                keyEnhancement.SetEnabled(keyEnhancementBar.Toggle.Checked);
+                if (keyEnhancement.Enabled) { keyEnhancement.EnsureSchemes(Session); AlignSchemeBaseline(); }
                 UpdateKeyEnhancementEffects();
                 if (keyEnhancement.Enabled) keyEnhancementUninstall = false;
                 RenderSession();
@@ -184,6 +186,8 @@ namespace PBZKeyForge
                 }
                 catch (Exception ex) { keyEnhancementError = ex.Message; }
             }
+            if (Session != null && keyEnhancement.Enabled && keyEnhancement.Schemes.Count == 0) keyEnhancement.EnsureSchemes(Session);
+            AlignSchemeBaseline();
             renderingKeyEnhancement = true;
             try { keyEnhancementBar.Toggle.Checked = keyEnhancement.Enabled; }
             finally { renderingKeyEnhancement = false; }
@@ -241,47 +245,101 @@ namespace PBZKeyForge
             keyEnhancementUninstall = false;
         }
 
-        KeyEnhancementConfiguration presetEnhancementCheckpoint;
-        EditorSession presetEnhancementSession;
-        string presetEnhancementProfile, presetEnhancementPreview;
-        bool presetEnhancementUninstallCheckpoint;
+        sealed class EnhancementPresetPreview
+        {
+            internal KeyEnhancementConfiguration Before, After;
+            internal EditorSession Session;
+            internal string Profile;
+            internal bool Uninstall;
+        }
+
+        EnhancementPresetPreview nativePresetPreview;
+        readonly Dictionary<string, EnhancementPresetPreview> schemePresetPreviews = new Dictionary<string, EnhancementPresetPreview>();
+
+        EnhancementPresetPreview CurrentPresetPreview()
+        {
+            EnhancementPresetPreview preview;
+            if (!EnhancedSchemes) preview = nativePresetPreview;
+            else schemePresetPreviews.TryGetValue(EditingProfile, out preview);
+            return preview != null && preview.Session == Session && preview.Profile == EditingProfile && SelectedPresetId != null ? preview : null;
+        }
+
+        static string PresetValue(object value)
+        { return new System.Web.Script.Serialization.JavaScriptSerializer { MaxJsonLength = 16777216 }.Serialize(value); }
+
+        static string SchemePresetContent(KeyEnhancementConfiguration configuration, string id)
+        {
+            configuration.StoreSelectedScheme();
+            var scheme = configuration.Schemes.First(item => item.Id == id);
+            return PresetValue(new { scheme.NativeBindings, scheme.Rules, scheme.Suppressions, scheme.NativeAbilitySuppressions });
+        }
+
+        bool PresetPreviewEdited(EnhancementPresetPreview preview)
+        {
+            return keyEnhancementUninstall || (EnhancedSchemes
+                ? SchemePresetContent(keyEnhancement, EditingProfile) != SchemePresetContent(preview.After, EditingProfile)
+                : keyEnhancement.ToJson() != preview.After.ToJson());
+        }
+
+        KeyEnhancementConfiguration RestorePresetPreview(EnhancementPresetPreview preview)
+        {
+            if (!EnhancedSchemes || preview.Before.Schemes.Count == 0 && keyEnhancement.ToJson() == preview.After.ToJson())
+                return preview.Before.Clone();
+            var restored = keyEnhancement.Clone();
+            var before = preview.Before.Clone();
+            if (before.Schemes.Count == 0) { before.SetEnabled(true); before.EnsureSchemes(Session); }
+            var original = before.ConfigurationFor(EditingProfile);
+            restored.NativeBindings = original.NativeBindings; restored.Rules = original.Rules;
+            restored.Suppressions = original.Suppressions; restored.NativeAbilitySuppressions = original.NativeAbilitySuppressions;
+            if (restored.RuntimeHotkeys == preview.After.RuntimeHotkeys) restored.RuntimeHotkeys = preview.Before.RuntimeHotkeys;
+            if (PresetValue(restored.CustomFunctions) == PresetValue(preview.After.CustomFunctions)) restored.CustomFunctions = before.CustomFunctions;
+            if (PresetValue(restored.Hooks) == PresetValue(preview.After.Hooks)) restored.Hooks = before.Hooks;
+            if (restored.CustomLua == preview.After.CustomLua) restored.CustomLua = preview.Before.CustomLua;
+            // Switching shortcuts belong to the library, independently of a scheme's preset.
+            restored.Rules.RemoveAll(rule => rule.Outputs.Count > 0 && rule.Outputs.All(output => output.Kind == "scheme"));
+            restored.Rules.AddRange(restored.SchemeSwitchBindings);
+            restored.StoreSelectedScheme();
+            return restored;
+        }
+
+        void EndEnhancementPresetPreview()
+        {
+            schemePresetSelections.Clear();
+            schemePresetPreviews.Clear(); nativePresetPreview = null;
+        }
 
         BindingPresetPlan PlanBindingPreset(Preset preset, PresetApplyMode mode)
         {
-            bool preview = presetEnhancementCheckpoint != null && presetEnhancementSession == Session
-                && presetEnhancementProfile == Session.SelectedProfile && Session.PresetId != null;
+            var preview = CurrentPresetPreview();
             var source = Session;
-            if (preview && (keyEnhancement.ToJson() != presetEnhancementPreview || keyEnhancementUninstall))
-            { source = Session.CopyForPreset(); source.EndPreview(); preview = false; }
-            return BindingPresetPlan.Create(source, preview ? presetEnhancementCheckpoint : keyEnhancement, preset, mode, SelectedFamilyIndex);
+            if (preview != null && PresetPreviewEdited(preview))
+            { source = Session.CopyForPreset(); source.EndPreview(); preview = null; }
+            return BindingPresetPlan.Create(source, preview != null ? RestorePresetPreview(preview) : keyEnhancement, preset, mode, SelectedFamilyIndex);
         }
 
         void StageBindingPreset(Preset preset, PresetApplyMode mode)
         {
-            bool preview = presetEnhancementCheckpoint != null && presetEnhancementSession == Session
-                && presetEnhancementProfile == Session.SelectedProfile && Session.PresetId != null;
-            bool editedPreview = preview && (keyEnhancement.ToJson() != presetEnhancementPreview || keyEnhancementUninstall);
-            if (editedPreview)
-            {
-                preview = false;
-            }
-            var checkpoint = preview ? presetEnhancementCheckpoint : keyEnhancement.Clone();
-            bool uninstallCheckpoint = preview ? presetEnhancementUninstallCheckpoint : keyEnhancementUninstall;
+            var preview = CurrentPresetPreview();
+            bool editedPreview = preview != null && PresetPreviewEdited(preview);
+            if (editedPreview) preview = null;
+            var checkpoint = preview != null ? RestorePresetPreview(preview) : keyEnhancement.Clone();
+            bool uninstallCheckpoint = preview != null ? preview.Uninstall : keyEnhancementUninstall;
             if (preset == null)
             {
-                if (editedPreview) Session.EndPreview();
-                Session.SelectPreset(null, mode);
-                if (preview) { keyEnhancement = checkpoint.Clone(); keyEnhancementUninstall = uninstallCheckpoint; }
-                presetEnhancementCheckpoint = null;
+                if (editedPreview && !EnhancedSchemes) Session.EndPreview();
+                if (EnhancedSchemes) { schemePresetSelections.Remove(EditingProfile); schemePresetPreviews.Remove(EditingProfile); }
+                else { Session.SelectPreset(null, mode); nativePresetPreview = null; }
+                if (preview != null) { keyEnhancement = checkpoint; keyEnhancementUninstall = uninstallCheckpoint; }
                 return;
             }
             var plan = PlanBindingPreset(preset, mode);
             RememberBindingEdit();
-            plan.Apply(Session);
+            if (plan.Configuration.Enabled && plan.Configuration.Schemes.Count > 0) schemePresetSelections[plan.Configuration.SelectedSchemeId] = preset.Id;
+            else plan.Apply(Session);
             keyEnhancement = plan.Configuration; keyEnhancementUninstall = false;
-            presetEnhancementCheckpoint = checkpoint; presetEnhancementSession = Session;
-            presetEnhancementProfile = Session.SelectedProfile; presetEnhancementPreview = keyEnhancement.ToJson();
-            presetEnhancementUninstallCheckpoint = uninstallCheckpoint;
+            var next = new EnhancementPresetPreview { Before = checkpoint, After = keyEnhancement.Clone(), Session = Session,
+                Profile = EditingProfile, Uninstall = uninstallCheckpoint };
+            if (EnhancedSchemes) schemePresetPreviews[EditingProfile] = next; else nativePresetPreview = next;
         }
 
         internal static Action<string, string, string> PresetOverflow(KeyEnhancementConfiguration planned)

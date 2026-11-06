@@ -40,7 +40,7 @@ namespace PBZKeyForge
             menu.Items.Add(I18n.Str("enhancement.lifecycle.uninstall"), null, delegate {
                 if (keyEnhancementInstallation == null) return;
                 RememberBindingEdit();
-                keyEnhancement.Enabled = false; keyEnhancementUninstall = true; RenderSession();
+                keyEnhancement.SetEnabled(false); keyEnhancementUninstall = true; RenderSession();
             }).Name = "enhancement.lifecycle.uninstall";
             return menu;
         }

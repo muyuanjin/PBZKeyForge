@@ -494,6 +494,7 @@ namespace PBZKeyForge
             LiveConnectionStrings();
             FeedbackUpdateStrings();
             BindingWorkflowStrings();
+            SchemeStrings();
         }
     }
 }

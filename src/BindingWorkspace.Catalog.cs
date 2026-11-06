@@ -7,7 +7,7 @@ namespace PBZKeyForge
 {
     public sealed partial class BindingWorkspace
     {
-        static readonly string[] CatalogRoots = { "native", "locomotion", "targeting", "offense", "defense", "weapons", "shadow", "interaction", "scene", "interface", "custom", "debug" };
+        static readonly string[] CatalogRoots = { "native", "locomotion", "targeting", "offense", "defense", "weapons", "shadow", "interaction", "scene", "interface", "schemes", "custom", "debug" };
         static readonly string[] PlayerMappings = {
             "IA_MoveFast", "IA_MoveSlow", "IA_Jump", "IA_Crouch", "IA_LightAttack", "IA_HeavyAttack", "IA_Guard", "IA_Dodge",
             "IA_LockTarget", "IA_Execute", "IA_UltimateSkill", "IA_SwitchWeapon", "IA_ShadowArm", "IA_ShadowArm_LongPress",
@@ -90,13 +90,14 @@ namespace PBZKeyForge
 
         void SetGroups(BindingFunction function, FunctionLocalization localization)
         {
-            string[] path = function.NativeAction != null ? new[] { "native" }
+            string[] path = function.Id.StartsWith("scheme:", StringComparison.Ordinal) ? new[] { "schemes" } : function.NativeAction != null ? new[] { "native" }
                 : function.FixedKeys != null ? new[] { "locomotion", "movement" } : ActionCatalogLabels.Category(function.Id);
             if (path.Length == 0) path = new[] { "custom" };
             string[] labels = path.Select(PurposeLabel).ToArray();
             if (path.Length > 1 && (path[0] == "weapons" || path[0] == "shadow") && path[1] != "equipment" && path[1] != "special")
                 labels[1] = WeaponLabel(localization);
             if (path[0] == "custom") labels[0] = I18n.Str("unified.customtarget");
+            if (path[0] == "schemes") labels[0] = I18n.Str("schemes.group");
             function.GroupPath = path; function.GroupLabels = labels; function.GroupSearchText = string.Join(" ", labels);
         }
 

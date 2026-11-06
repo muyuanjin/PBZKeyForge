@@ -148,7 +148,7 @@ namespace PBZKeyForge
         { return Path.Combine(root, path.Replace('/', Path.DirectorySeparatorChar)); }
 
         static bool IsLiveFile(string relative)
-        { return new[] { "live-status.txt", "live-request.lua", "live-request.id", "live-response.txt", "live-edit.lock" }.Contains(relative, StringComparer.OrdinalIgnoreCase); }
+        { return new[] { "live-status.txt", "live-request.lua", "live-request.id", "live-response.txt", "live-edit.lock", "scheme-state.txt" }.Contains(relative, StringComparer.OrdinalIgnoreCase); }
 
         static bool IsGenerated(string relative)
         {

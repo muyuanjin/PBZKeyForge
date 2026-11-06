@@ -48,7 +48,7 @@ namespace PBZKeyForge
         internal static string BindingText(BindingEntry entry)
         { return BindingEntryText.BindingText(entry); }
         internal static string EntryScope(BindingEntry entry)
-        { return I18n.Str(entry.IsNative && !entry.IsRuntimeBinding && !entry.ReadOnly ? "binding.scope.scheme"
+        { return entry.SchemeScoped ? I18n.Str("schemes.scope") : I18n.Str(entry.IsNative && !entry.IsRuntimeBinding && !entry.ReadOnly ? "binding.scope.scheme"
             : entry.Keys.Concat(new[] { entry.Axis ?? "" }).Any(key => key.StartsWith("Gamepad_", StringComparison.Ordinal)) ? "binding.scope.gamepad" : "binding.scope.global"); }
         internal static string EntryDescription(BindingEntry entry)
         { return BindingEntryText.EntryDescription(entry); }

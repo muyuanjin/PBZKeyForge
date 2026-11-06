@@ -2,6 +2,23 @@ local Config = require("router-config")
 local Backend = require("backend")
 local Router = require("router")
 
+local source = debug.getinfo(1, "S").source:gsub("^@", "")
+local scheme_path = (source:match("^(.*[/\\])") or "") .. "../scheme-state.txt"
+if Config.schemes and io then
+    local file = io.open(scheme_path, "rb")
+    if file then
+        local id = file:read("*a"):match("^%s*(.-)%s*$"); file:close()
+        if Config.schemes[id] then
+            local schemes, order = Config.schemes, Config.scheme_order
+            Config = schemes[id]; Config.schemes, Config.scheme_order = schemes, order
+        end
+    end
+end
+
+if Config.configure_scheme and not Config.scheme_initialized then
+    Config.configure_scheme(Config); Config.scheme_initialized = true
+end
+
 local function log(message)
     print("[PBZInputRouter] " .. tostring(message) .. "\n")
 end
@@ -10,6 +27,13 @@ local runtime = {running = true, pending = false, generation = nil, last_error =
     suspended = false, hooks = {}, active = false}
 local backend = Backend.new(Config, log)
 local router = Router.new(Config, backend)
+
+local function publish_scheme()
+    if not Config.scheme_id or not io then return end
+    local file, err = io.open(scheme_path, "wb")
+    if not file then log("Could not save active scheme: " .. tostring(err)); return end
+    file:write(Config.scheme_id); file:close()
+end
 backend.on_retire = function() router:reset(true) end
 backend.on_release = function() router:reset(true) end
 
@@ -38,6 +62,11 @@ end
 
 local function apply_configuration(candidate)
     if not runtime.running then return false, "Router is stopped" end
+    if candidate.configure_scheme and not candidate.scheme_initialized then
+        local initialized, err = pcall(candidate.configure_scheme, candidate)
+        if not initialized then return false, err end
+        candidate.scheme_initialized = true
+    end
     local ok, candidateRouter = pcall(Router.new, candidate, backend)
     if not ok then
         log("Configuration rejected: " .. tostring(candidateRouter))
@@ -74,6 +103,49 @@ local function apply_configuration(candidate)
     runtime.active, runtime.suspended = false, false
     runtime.generation, runtime.config_generation, runtime.last_error = nil, nil, nil
     log("Configuration reloaded; bindings=" .. #Config.bindings)
+    publish_scheme()
+    return true
+end
+
+local function switch_scheme(id)
+    if not Config.schemes then return false, "No scheme library loaded" end
+    local order = Config.scheme_order or {}
+    if id == "next" or id == "previous" then
+        local index = 1
+        for i, value in ipairs(order) do if value == Config.scheme_id then index = i; break end end
+        id = order[(index - 1 + (id == "next" and 1 or -1)) % #order + 1]
+    end
+    local candidate = Config.schemes[id]
+    if not candidate then return false, "Unknown scheme: " .. tostring(id) end
+    if candidate == Config then return true end
+    local previous = Config
+    candidate.schemes, candidate.scheme_order = Config.schemes, order
+    local applied, err = apply_configuration(candidate)
+    if not applied then
+        local restored, restore_error = apply_configuration(previous)
+        if not restored then runtime.suspended = true; runtime.last_error = tostring(restore_error) end
+        log("Scheme rejected: " .. tostring(err))
+        return false, err
+    end
+    log("Active scheme: " .. tostring(Config.scheme_name))
+    if backend.scheme_notice then backend:scheme_notice(Config.scheme_name) end
+    return true
+end
+
+backend.request_scheme = function(id, binding_id)
+    if runtime.pending_scheme or runtime.switch_latch then return true end
+    local keys = {}
+    for _, binding in ipairs(Config.bindings) do
+        if binding.id == binding_id then
+            for _, key in ipairs(binding.keys or {}) do keys[key] = true end
+            for _, key in ipairs(binding.watch or {}) do keys[key] = true end
+            if binding.axis then keys[binding.axis] = true end
+            for _, step in ipairs(binding.steps or {}) do
+                if type(step) == "string" then keys[step] = true else for _, key in ipairs(step) do keys[key] = true end end
+            end
+        end
+    end
+    runtime.switch_latch, runtime.pending_scheme = keys, id
     return true
 end
 
@@ -164,7 +236,24 @@ local function tick()
             runtime.active = false
             return
         end
-        local snapshot = backend:snapshot(router:keys())
+        local watched = router:keys()
+        if runtime.switch_latch then
+            local samples, included = {}, {}
+            for _, key in ipairs(watched) do samples[#samples + 1] = key; included[key] = true end
+            for key in pairs(runtime.switch_latch) do
+                if not included[key] then samples[#samples + 1] = key; included[key] = true end
+            end
+            watched = samples
+        end
+        local snapshot = backend:snapshot(watched)
+        if runtime.switch_latch then
+            local held = false
+            for key in pairs(runtime.switch_latch) do
+                local value = snapshot[key]
+                if value == true or type(value) == "number" and math.abs(value) > .001 then held = true end
+            end
+            if not held then runtime.switch_latch = nil end
+        end
         context.raw_input = {}
         for key, value in pairs(snapshot) do context.raw_input[key] = value end
         if not runtime.active then
@@ -174,6 +263,10 @@ local function tick()
         backend.dispatch_error = nil
         router:step(backend:time(), snapshot, context)
         if backend.dispatch_error then error(backend.dispatch_error, 0) end
+        if runtime.pending_scheme then
+            local id = runtime.pending_scheme; runtime.pending_scheme = nil
+            switch_scheme(id)
+        end
     end, debug.traceback)
     if not ok then
         local restored, restoreError = pcall(restore)
@@ -241,5 +334,6 @@ end)
 end
 
 log("Loaded; bindings=" .. #(Config.bindings or {}) .. (Config.runtime_hotkeys ~= false and "; F8 toggles routing, F7 reloads configuration" or "; runtime hotkeys disabled"))
+publish_scheme()
 
-return {backend = backend, stop = stop, reload = reload}
+return {backend = backend, stop = stop, reload = reload, switch_scheme = switch_scheme}

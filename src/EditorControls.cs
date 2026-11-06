@@ -66,7 +66,7 @@ namespace PBZKeyForge
                 using (var brush = new SolidBrush(Color.FromArgb(43, 53, 46))) e.Graphics.FillRectangle(brush, badge);
                 TextRenderer.DrawText(e.Graphics, Badge, Font, badge, EditorTheme.Green, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine);
             }
-            using (var pen = new Pen(Selected ? EditorTheme.Amber : EditorTheme.Line, Selected ? underline : 1))
+            using (var pen = new Pen(Selected ? AccentColor.IsEmpty ? EditorTheme.Amber : AccentColor : EditorTheme.Line, Selected ? underline : 1))
                 e.Graphics.DrawLine(pen, 0, Height - (underline + 1) / 2 - 1, Width, Height - (underline + 1) / 2 - 1);
             int focusInset = (int)Math.Round(4 * scale);
             if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, new Rectangle(focusInset, focusInset, Width - focusInset * 2, Height - focusInset * 3));

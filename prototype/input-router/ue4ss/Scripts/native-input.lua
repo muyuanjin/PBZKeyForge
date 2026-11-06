@@ -321,9 +321,6 @@ function NativeInput:prepare()
                 if not captured and #override.keys > count then
                     error("Native input " .. tostring(override["function"]) .. " has " .. count .. " active runtime slots for " .. override.device .. "; requested " .. #override.keys, 0)
                 end
-                if not captured and count == 0 and #override.keys == 0 then
-                    error("No active runtime input pipeline for " .. tostring(override["function"]), 0)
-                end
             end
         end
     end

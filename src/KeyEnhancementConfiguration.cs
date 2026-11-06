@@ -49,7 +49,7 @@ namespace PBZKeyForge
         }
     }
 
-    public sealed class KeyEnhancementConfiguration
+    public sealed partial class KeyEnhancementConfiguration
     {
         public List<NativeBindingOverride> NativeBindings = new List<NativeBindingOverride>();
         public bool Enabled, RuntimeHotkeys;
@@ -62,19 +62,42 @@ namespace PBZKeyForge
         public static readonly string[] Triggers = { "down", "press", "release", "tap", "hold", "pulse", "multi_tap", "sequence", "axis", "toggle", "custom" };
 
         static JavaScriptSerializer Serializer() { return new JavaScriptSerializer { MaxJsonLength = 16777216 }; }
-        public string ToJson() { return Serializer().Serialize(this); }
+        public string ToJson() { StoreSelectedScheme(); return Serializer().Serialize(this); }
         public static KeyEnhancementConfiguration FromJson(string text)
         {
             var result = Serializer().Deserialize<KeyEnhancementConfiguration>(text);
             if (result == null || result.Rules == null || result.Suppressions == null || result.Hooks == null)
                 throw Invalid("Rules, Suppressions, Hooks: []");
             result.ValidateStructure();
+            result.ValidateSchemes();
+            if (result.Enabled && result.Schemes.Count > 0) result.LoadSelectedScheme();
             return result;
         }
         public KeyEnhancementConfiguration Clone() { return FromJson(ToJson()); }
         public string ToLua() { return CompileLua(); }
 
         public string CompileLua()
+        {
+            if (!Enabled || Schemes.Count == 0) return CompileSingleLua();
+            StoreSelectedScheme(); ValidateSchemes();
+            var text = new StringBuilder("local schemes = {}\nlocal order = {}\n");
+            foreach (var scheme in Schemes)
+            {
+                var current = ConfigurationFor(scheme.Id);
+                current.CustomLua = null;
+                text.Append("schemes[").Append(Lua(scheme.Id)).Append("] = (function()\n").Append(current.CompileSingleLua()).Append("\nend)()\n");
+                text.Append("schemes[").Append(Lua(scheme.Id)).Append("].scheme_id = ").Append(Lua(scheme.Id)).Append("\n");
+                text.Append("schemes[").Append(Lua(scheme.Id)).Append("].scheme_name = ").Append(Lua(scheme.Name ?? scheme.Id)).Append("\n");
+                text.Append("order[#order+1] = ").Append(Lua(scheme.Id)).Append("\n");
+            }
+            text.Append("local configure = function(config)\n").Append(CustomLua ?? "").Append("\nreturn config\nend\n");
+            text.Append("for _, scheme in pairs(schemes) do scheme.configure_scheme = configure end\n");
+            text.Append("local config = schemes[").Append(Lua(ActiveSchemeId ?? SelectedSchemeId)).Append("]\n");
+            text.Append("config.schemes = schemes\nconfig.scheme_order = order\nreturn config\n");
+            return text.ToString();
+        }
+
+        string CompileSingleLua()
         {
             ValidateStructure();
             var targets = new Dictionary<string, object>();
@@ -194,13 +217,14 @@ namespace PBZKeyForge
         }
         static object Target(KeyEnhancementOutput output, bool requireScheduledMapping)
         {
-            if (!new[] { "action", "mapping", "ability", "event", "function", "property", "lua" }.Contains(output.Kind))
+            if (!new[] { "action", "mapping", "ability", "event", "function", "property", "lua", "scheme" }.Contains(output.Kind))
                 throw Invalid("Output.Kind=" + output.Kind);
             if ((output.Kind == "action" || output.Kind == "function") && string.IsNullOrWhiteSpace(output.Path)) throw Invalid("Output.Path: InputAction / UFunction");
             if ((output.Kind == "ability" || output.Kind == "event") && string.IsNullOrWhiteSpace(output.Tag)) throw Invalid("Output.Tag: GameplayTag");
             if (output.Kind == "property" && string.IsNullOrWhiteSpace(output.Property)) throw Invalid("Output.Property: FName");
             if (output.Kind == "lua" && string.IsNullOrWhiteSpace(output.Code)) throw Invalid("Output.Code: function");
             var result = new Dictionary<string, object> { { "kind", output.Kind } };
+            if (output.Kind == "scheme") result["scheme"] = output.Tag;
             if (output.Kind == "mapping")
             {
                 if (string.IsNullOrWhiteSpace(output.MappingName) || output.MappingActions == null || output.MappingActions.Length == 0)
