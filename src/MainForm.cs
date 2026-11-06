@@ -644,30 +644,30 @@ namespace PBZKeyForge
             bool live = application.Live;
             bool waiting = liveConfigured && liveStatus.Waiting;
             bool neverConnected = liveConfigured && liveStatus.NeverConnected;
+            var diagnosticStatus = liveStatus ?? (!offline && keyEnhancementBaseline.Enabled && keyEnhancementInstallation != null
+                ? keyEnhancementInstallation.LiveStatus() : null);
+            runtimeFeedback = diagnosticStatus == null ? null : diagnosticStatus.ErrorDetail;
+            RefreshFeedback();
             if (liveConfigured)
             {
-                if (keyEnhancementBar.Status != liveStatus.Detail)
-                {
-                    keyEnhancementBar.Status = liveStatus.Detail;
-                    keyEnhancementBar.Invalidate();
-                }
-                SetTip(keyEnhancementBar, liveStatus.Detail);
+                RenderLiveEnhancementStatus(liveStatus);
             }
             lblGame.Text = I18n.Str(offline ? "offline.mode" : neverConnected ? "flow.notconnected" : waiting ? "live.waiting" : live
                 ? liveStatus.RoutingEnabled ? "live.connected" : "live.paused" : lastRunning ? "editor.running" : "editor.closed");
             lblGame.ForeColor = offline ? EditorTheme.Muted : live && liveStatus.RoutingEnabled ? EditorTheme.LiveConnected
                 : waiting ? Color.FromArgb(240, 178, 78) : lastRunning ? EditorTheme.Amber : EditorTheme.Green;
-            SetTip(lblGame, (liveConfigured ? liveStatus.Detail : lblGame.Text) + "\n" + I18n.Str("flow.connection.open"));
+            SetTip(lblGame, (liveConfigured && !liveStatus.Suspended ? liveStatus.Detail : lblGame.Text) + "\n" + I18n.Str("flow.connection.open"));
             ((ApplyActionButton)btnApply).GameRunning = gameRunning && !live;
             ((ApplyActionButton)btnApply).LiveConnected = live && liveStatus.RoutingEnabled;
             btnApply.Text = I18n.Str(offline ? HasKeyEnhancementConfiguration ? "enhancement.exportbundle" : "offline.export" : live ? "live.apply" : neverConnected ? "flow.notconnected" : waiting ? "live.waiting" : gameRunning ? "editor.applyrunning" : "editor.apply");
             btnApply.Enabled = application.CanApply;
-            SetTip(btnApply, application.Reason ?? btnApply.Text);
+            SetTip(btnApply, runtimeFeedback != null ? I18n.Str("flow.failed.details") : application.Reason ?? btnApply.Text);
             chkActivate.Enabled = !EnhancedSchemes && !gameRunning && !IsApplying;
             if (EnhancedSchemes) RenderActiveEnhancedScheme(liveStatus);
             UpdateResourceModAvailability();
             lblStatus.Text = loaded && Session.Conflicts.Length > 0 ? I18n.Str("editor.conflictinfo")
                 : messageError && messageKey != null ? I18n.Str("flow.failed.details")
+                : runtimeFeedback != null ? I18n.Str("flow.failed.details")
                 : live && (messageKey == "live.saved" || messageKey == "flow.saved.deferred") && !application.CanApply
                     ? I18n.Str(HasDeferredComponents ? "flow.saved.deferred" : "live.saved")
                 : application.Reason != null ? application.Reason
@@ -681,7 +681,7 @@ namespace PBZKeyForge
             lblStatus.ForeColor = messageError ? Color.FromArgb(238, 171, 156) : liveConfigured
                 ? live && liveStatus.RoutingEnabled ? EditorTheme.LiveConnected : waiting ? Color.FromArgb(240, 178, 78) : EditorTheme.Amber : EditorTheme.Muted;
             SetTip(lblStatus, lblStatus.Text);
-            lblStatus.Visible = !messageError || feedbackDismissed;
+            lblStatus.Visible = !(messageError || runtimeFeedback != null) || feedbackDismissed;
         }
 
         void SetTip(Control control, string text)
@@ -710,7 +710,7 @@ namespace PBZKeyForge
         void TryAction(Action action)
         {
             RememberBindingEdit();
-            try { action(); messageKey = null; messageError = false; feedbackDismissed = false; feedbackPanel.Visible = false; }
+            try { action(); messageKey = null; messageError = false; feedbackPanel.Visible = false; }
             catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
             DiscardUnchangedBindingEdit();
             RenderSession();
@@ -718,15 +718,8 @@ namespace PBZKeyForge
         void SetMessage(string key, bool error, params object[] args)
         {
             messageKey = key; messageArgs = args; messageError = error;
-            feedbackDismissed = false;
-            fullFeedback = I18n.Str(key, args);
-            if (feedbackPanel != null)
-            {
-                feedbackPanel.Visible = error;
-                feedbackText.Text = string.Join("  ", fullFeedback.Replace("\r", "").Split('\n').Where(line => !string.IsNullOrWhiteSpace(line)).Take(2));
-                SetTip(feedbackText, fullFeedback);
-                feedbackDetails.Text = I18n.Str("feedback.details");
-            }
+            if (error) feedbackDismissed = false;
+            if (feedbackPanel != null) RefreshFeedback();
         }
         public void SelectProfile(string profile)
         {

@@ -216,7 +216,6 @@ namespace PBZKeyForge
 
         bool MatchesManaged(string relative, byte[] actual)
         {
-            if (MatchesLegacy(relative, actual)) return true;
             var source = ReadOwnership(); byte[] previous;
             return source.PayloadBackup != null && OwnedPayload(source).TryGetValue(ModPrefix + relative, out previous) && actual.SequenceEqual(previous);
         }
@@ -482,7 +481,7 @@ namespace PBZKeyForge
                     string relative = path.Substring(InstallDirectory.Length + 1).Replace('\\', '/');
                     byte[] value, actual = File.ReadAllBytes(path);
                     bool owned = expected.TryGetValue(ModPrefix + relative, out value) && actual.SequenceEqual(value)
-                        || MatchesLegacy(relative, actual) || relative == ConfigurationFile && compiled != null
+                        || relative == ConfigurationFile && compiled != null
                         || relative == LuaConfigurationFile && compiled != null && File.ReadAllText(path, Utf8) == compiled
                         || relative == "enabled.txt" && actual.Length == 0 || IsLiveFile(relative);
                     if (owned) { File.Delete(path); removed.Add(path); } else retained.Add(path);

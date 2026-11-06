@@ -265,9 +265,10 @@ class EnhancedUsabilityTests
             int repaints = 0; Field<Control>(form, "keyEnhancementBar").Invalidated += delegate { repaints++; };
             Call(form, "RenderGameStatus");
             var status = Field<Label>(form, "lblStatus");
-            Check(status.Text.Contains("fixture pipeline unavailable") && !status.Text.Contains(I18n.Str("live.ready")), "Main window conceals runtime suspension");
+            Check(Field<string>(form, "fullFeedback").Contains("fixture pipeline unavailable") && !status.Visible
+                && Field<Panel>(form, "feedbackPanel").Visible, "Main window must show runtime suspension once in the feedback card");
             Check(Field<Button>(form, "btnApply").Enabled && !form.Session.HasChanges, "Suspended runtime cannot be retried without manufacturing an edit");
-            Check(Field<string>(Field<Control>(form, "keyEnhancementBar"), "Status").Contains("fixture pipeline unavailable"), "Component still reports normal routing");
+            Check(Field<string>(Field<Control>(form, "keyEnhancementBar"), "Status") == "", "Component repeats the runtime error");
             Check(repaints > 0, "Runtime status changed without repainting the component");
             Set(form, "fullFeedback", "previous operation"); bool details = false;
             using (var close = new Timer { Interval = 40 })

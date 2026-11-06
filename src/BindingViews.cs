@@ -627,6 +627,7 @@ namespace PBZKeyForge
                             foreach (string key in row.InputKeys.ToArray()) EditRelation(action, key, restore);
                         };
                         row.Edit.Click += delegate { if (EditAction != null) EditAction(row.Edit.ActionId); };
+                        row.Settings.Click += delegate { if (EditAction != null) EditAction(row.Edit.ActionId); };
                         actionRows.Add(row); detail.Controls.Add(row);
                     }
                     var relation = displayed[i]; bool isRemoved = i >= summary.Current.Length;
@@ -712,10 +713,12 @@ namespace PBZKeyForge
                     if (i == actionRows.Count)
                     {
                         var added = new RelationshipRow();
-                        added.Edit.Click += delegate {
+                        Action editBinding = delegate {
                             if (added.Entry.IsNative && added.Entry.Id == null) { if (EditAction != null) EditAction(added.Entry.FunctionId); }
                             else if (EditBindingRequested != null) EditBindingRequested(added.Entry);
                         };
+                        added.Edit.Click += delegate { editBinding(); };
+                        added.Settings.Click += delegate { editBinding(); };
                         added.Operation.Click += delegate {
                             var clicked = added.Entry;
                             if (clicked.Suppressed || !clicked.Enabled) { if (RestoreBindingRequested != null) RestoreBindingRequested(clicked); }
@@ -729,6 +732,8 @@ namespace PBZKeyForge
                     row.Edit.ActionId = entry.FunctionId; row.Edit.Text = function.Label;
                     row.Edit.IdentityText = UnifiedBindingUi.FunctionIdentity(function);
                     row.Edit.DetailText = UnifiedBindingUi.EntryDescription(entry) + " · " + UnifiedBindingUi.EntryScope(entry);
+                    row.Settings.Text = UnifiedBindingUi.Text("edit"); row.Settings.Enabled = !currentSession.IsResetPending;
+                    row.Settings.AccessibleName = UnifiedBindingUi.Text("edit") + " " + function.Label + " · " + UnifiedBindingUi.BindingText(entry);
                     row.Edit.Removed = entry.Suppressed || !entry.Active; row.Edit.Pending = entry.Pending; row.Edit.Custom = !entry.IsDefault;
                     row.Edit.KeyEnhancementOwned = entry.ExecutionOwner == "scheduler"; row.Edit.IsOffline = currentSession.IsOffline;
                     row.Operation.AutoSize = true; row.Operation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -754,9 +759,10 @@ namespace PBZKeyForge
             public BindingEntry Entry;
             public string[] InputKeys = new string[0];
             public readonly EditorButton Operation = new EditorButton { Dock = DockStyle.Right };
+            public readonly EditorButton Settings = new EditorButton { Name = "editBinding", Dock = DockStyle.Right, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(8, 0, 8, 0) };
             public readonly RelationshipButton Edit = new RelationshipButton { Dock = DockStyle.Fill };
             public RelationshipRow()
-            { DoubleBuffered = true; Dock = DockStyle.Top; Padding = new Padding(0, 3, 0, 3); BackColor = EditorTheme.Surface; Controls.Add(Edit); Controls.Add(Operation); }
+            { DoubleBuffered = true; Dock = DockStyle.Top; Padding = new Padding(0, 3, 0, 3); BackColor = EditorTheme.Surface; Settings.Text = UnifiedBindingUi.Text("edit"); Controls.Add(Edit); Controls.Add(Settings); Controls.Add(Operation); }
             protected override void WndProc(ref Message message)
             { if (!EditorWindow.PassResizeHit(this, ref message)) base.WndProc(ref message); }
         }

@@ -298,7 +298,9 @@ namespace PBZKeyForge
             return Run(delegate
             {
                 selected.Enabled = ruleEnabled.Checked; selected.Keys = ParseKeys(keys.Text).ToList(); selected.Axis = axis.Text.Trim();
-                selected.Trigger = Triggers[trigger.SelectedIndex]; selected.Steps = sequence.Text.Split(new[] { '>', '→' }, StringSplitOptions.RemoveEmptyEntries).Select(ParseKeys).ToList();
+                if (selected.Trigger != Triggers[trigger.SelectedIndex]) selected.DefaultTrigger = false;
+                selected.Trigger = Triggers[trigger.SelectedIndex];
+                selected.Steps = sequence.Text.Split(new[] { '>', '→' }, StringSplitOptions.RemoveEmptyEntries).Select(ParseKeys).ToList();
                 selected.Seconds = (double)seconds.Value; selected.Interval = (double)interval.Value; selected.Threshold = (double)threshold.Value;
                 selected.Count = (int)count.Value; selected.Priority = (int)priority.Value; selected.Consume = consume.Checked; selected.ConsumeKeys = ParseKeys(consumeKeys.Text).ToList();
                 selected.WhenLua = when.Text.Trim(); selected.EvaluateLua = evaluate.Text.Trim();

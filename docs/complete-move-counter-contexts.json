@@ -1,0 +1,108 @@
+{
+  "build": "CL-302256",
+  "evidenceType": "installed-cooked-assets-and-native-code-static",
+  "runtimeVerified": false,
+  "baiYingAssault": {
+    "id": "move:Ability.Action.Hun.BaiYing.Assault",
+    "equipment": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BaiYing/Weapon_Hun_BaiYing",
+    "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/GA_Hun_BaiYing_SpeicalAssault",
+    "channelAbility": "/PBZCombatAsset/Prototypes/Abilities/GA_PerformSpecialAttack",
+    "executionChannel": "SpecialAttack",
+    "executionType": "Execution.Type.CombatFar.Assault.BaiYing",
+    "upgradeTag": "CharacterState.WeaponUpgrade.BaiYing.CanAssault",
+    "targetRequiredTags": ["CharacterState.StatusInfliction.Frost.Effect"],
+    "targetIgnoredTags": [],
+    "requiresEquippedWeapon": true,
+    "requiresNavigation": false,
+    "inputAction": "/PBZInput/InputActions/IA_AttackH_Press.IA_AttackH_Press",
+    "originalInputMap": "/PBZCombatAsset/ActorData/Players/Hun/InputMap/AIM_Hun_HeavyAttack",
+    "priority": -5,
+    "parent": "/SGameExecution/GA/GA_ExecutionAbilityBase",
+    "attackResource": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/BaiYing/BulletData_Hun_BaiYing_SpeicalAssault_01",
+    "targetEffect": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BaiYing/GameplayEffects/GE_BaiYing_AssaultTriggered",
+    "initialization": "Original execution channel resolves its selected target and initializes CurrentExecutionInfo before the assault ability starts",
+    "afterActivation": "Original ability requests the original lock target and applies AssaultTriggered to that target"
+  },
+  "snakeDeflect": {
+    "id": "move:Ability.Action.Hun.Light.SnakeDual.A_Deflect",
+    "equipment": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SnakeDual/Weapon_Hun_SnakeDual",
+    "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/GA_Hun_SnakeDual_A_Deflect",
+    "parent": "/PBZCombatAsset/Prototypes/Abilities/Base/BP_LightAttack_SnakeDualCombo_Base",
+    "normalState": "CharacterState.AbilityState.SnakeDual.Normal",
+    "attackResource": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SnakeDual/Attack/B_Hun_SnakeDual_A_Deflect_01",
+    "timeline": "Main",
+    "originalInputMap": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SnakeDual/AIM_SnakeDual_LightAttack",
+    "originalInputRelation": "A_Deflect is a required predecessor of A_Deflect -> AA, not a TriggerTag in the original map",
+    "activation": "Normally activate the exact equipped class; original LightAttack and ComboMultiplier initialization plays Main without execution target or event payload"
+  },
+  "dualHookGrab": {
+    "status": "original-automatic-conditional-branch",
+    "source": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_DB",
+    "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_GEx",
+    "sourceImpactEvent": "GameplayEvent.Ability.Action.DualHook.DeflectAttack.Impact",
+    "targetRequestEvent": "GameplayEvent.Ability.Action.DualHook.DeflectAttack.RequestGrabTarget",
+    "successEvent": "GameplayEvent.Actor.HitGrab.ToGrabSuccess",
+    "originalActivationTag": "Ability.Action.Hun.Heavy.DualHook.Grab",
+    "qualification": "Real non-projectile impact source; CanDodgeAfterDeflect or PowerAttack; real source target is humanoid and is not driving",
+    "targetHandoff": "DB retains the real Deflect Target and writes its actor to the requested EventObjectPayload; GEx reads it into Target",
+    "success": "Grab base clears preexisting Execution Info while starting the attempt, then only plays GrabSuccess after the real HitGrab event provides native execution data",
+    "branchOffsets": {"impact": "0x23f", "target": "0x2bf", "qualification": "0x585", "activation": "0x7ea", "targetReply": "0xa60"}
+  },
+  "tigerCounter": {
+    "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.Counter",
+    "upgrade": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/UpgradeData/GE_ShachiWeapon_TigerCannon_CanCounter",
+    "passive": "/Script/PBZCombatAsset.GA_TigerCannon_CounterPassive",
+    "upgradeTag": "CharacterState.WeaponUpgrade.TigerCannon.CanCounter",
+    "equipment": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/Weapon_TigerCannon",
+    "attack": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Counter",
+    "targetTag": "CharacterState.AbilityState.TigerCannon.CanBeExecutionTarget",
+    "refreshEvent": "GameplayEvent.Execution.ForceRefresh",
+    "bulletQualification": [
+      "Bullet.Tag.Feature.Deflect.CanDodgeAfterDeflect",
+      "Bullet.Tag.Feature.Deflect.RedEye"
+    ],
+    "sourceId": "ability:Ability.Action.Execution.Channel.ShachiWeapon",
+    "tag": "Ability.Action.Execution.Channel.ShachiWeapon",
+    "executionChannel": "ShachiWeapon",
+    "executionType": "Execution.Type.Combat.ShachiWeapon.TigerCannon.Counter",
+    "rejectedExecutionType": "Execution.Type.Combat.ShachiWeapon.TigerCannon.Execution",
+    "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+    "originalInputMap": "/PBZCombatAsset/ActorData/Players/Hun/InputMap/AIM_Hun_ShachiAbility",
+    "priority": -6,
+    "channelAbility": "/PBZCombatAsset/Prototypes/Abilities/GA_PerformShachiWeaponExecution",
+    "channelBase": "/SGameExecution/GA/GA_PerformExecutionBase",
+    "executionBase": "/SGameExecution/GA/GA_ExecutionAbilityBase",
+    "timeline": "ExecutionTimeline",
+    "fee": {
+      "action": "GAA_ShachiBulletInstant_C_0",
+      "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+      "time": 0.18012799322605133,
+      "property": "ExplicitCost",
+      "value": 1.0,
+      "attribute": "SpiritShadow",
+      "nativeModifiers": ["StrengthSpecialty.Lv1", "EnableNotConsumeBullet"]
+    },
+    "bullet": {
+      "action": "GAAction_Bullet_Simple_C_0",
+      "time": 0.2022480070590973,
+      "resource": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiWeapon/TigerCannon/B_TigerCannon_Counter"
+    },
+    "native": {
+      "activate": "0x147e3cc10",
+      "end": "0x147e44ae0",
+      "frameHandler": "0x147e56c30",
+      "getResolvedExecutionType": "0x147a9bcb0",
+      "channelPropertyMetadata": "0x14c5ab2e0",
+      "returnPropertyMetadata": "0x14c5ab320"
+    },
+    "lifecycle": [
+      "Upgrade grants and activates the native passive",
+      "Passive subscribes to the player's real DeflectComponent and scans enabled, unconsumed frames",
+      "Qualified bullets provide real damage-source actors; passive maintains target tags and requests execution refresh",
+      "Binding requires the native ShachiWeapon channel to resolve to the Counter type",
+      "Original channel checks CanPerformExecution and actor state, then calls PerformExecution",
+      "Original execution base reads CurrentExecutionInfo before playing the retained fee and attack timeline",
+      "Original Counter restores temporary target locking; passive end removes its tracked target tags"
+    ]
+  }
+}

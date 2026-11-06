@@ -15,6 +15,13 @@ $source = Join-Path $PSScriptRoot 'focus.cpp'
 $object = Join-Path $OutputDirectory 'pbzinput-focus.obj'
 $library = Join-Path $OutputDirectory 'pbzinput-focus.lib'
 $binary = Join-Path $OutputDirectory 'pbzinput-focus.dll'
+$contextImport = Join-Path $OutputDirectory 'ue4ss-context.lib'
+& lib.exe /nologo /machine:x64 "/def:$PSScriptRoot\ue4ss-context.def" "/out:$contextImport"
+if ($LASTEXITCODE -ne 0) { throw "UE4SS context imports failed: $LASTEXITCODE" }
 & $compiler.Path /nologo /LD /O2 /MT "/Fo:$object" "/Fe:$binary" $source /link user32.lib "/IMPLIB:$library"
 if ($LASTEXITCODE -ne 0) { throw "Native input probe build failed: $LASTEXITCODE" }
+$contextBinary = Join-Path $OutputDirectory 'pbzability-context.dll'
+& $compiler.Path /nologo /LD /O2 /MD /EHsc /std:c++17 "/Fo:$OutputDirectory\script-context.obj" "/Fe:$contextBinary" "$PSScriptRoot\script-context.cpp" /link $contextImport "/IMPLIB:$OutputDirectory\pbzability-context.lib"
+if ($LASTEXITCODE -ne 0) { throw "Native ability context build failed: $LASTEXITCODE" }
 Write-Output $binary
+Write-Output $contextBinary

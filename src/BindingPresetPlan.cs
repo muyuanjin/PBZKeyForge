@@ -42,7 +42,10 @@ namespace PBZKeyForge
             var copy = session.CopyForPreset();
             var overflow = planned.Enabled ? Overflow(planned) : null;
             copy.StagePreset(preset, mode, overflow == null ? null : (Action<string, string, string>)delegate(string action, string key, string family) {
-                if (!planned.NativeBindings.Any(item => item.FunctionId == action && item.Device == (family == null ? "keyboard" : "gamepad"))) overflow(action, key, family);
+                var output = new KeyEnhancementOutput { Kind = "mapping", MappingName = action,
+                    MappingActions = KeyEnhancementCatalog.ForMapping(action).Select(target => target.Path).ToArray() };
+                if (!KeyEnhancementInputPlan.SupportsMapping(output)
+                    || !planned.NativeBindings.Any(item => item.FunctionId == action && item.Device == (family == null ? "keyboard" : "gamepad"))) overflow(action, key, family);
             });
             var factory = session.PreviewPreset(preset);
             foreach (bool pad in new[] { false, true })

@@ -171,7 +171,7 @@ class ExpandedBindingUxTests
             typeof(MainForm).GetProperty("Session").GetSetMethod(true).Invoke(form,new object[]{s}); typeof(MainForm).GetField("keyEnhancement",Hidden).SetValue(form,c);
             Call(form,"StageBindingPreset",Presets.ById("onekey"),PresetApplyMode.Append);
             var planned=Field<KeyEnhancementConfiguration>(form,"keyEnhancement");
-            Check(planned.Rules.Any(rule=>rule.Keys.Contains("LeftMouseButton")&&rule.Outputs.Any(o=>o.MappingName=="IA_Guard")),"Preset append did not use enhancement for full slots");
+            Check(planned.NativeBindings.Any(binding=>binding.FunctionId=="IA_Guard"&&binding.Device=="keyboard"&&binding.Keys.Contains("LeftMouseButton")),"Preset append did not use enhancement for full slots");
             Check(s.Relations("IA_Guard",false,-1).Keys.Contains("J"),"Preset append discarded existing native keys");
             Call(form,"StageBindingPreset",null,PresetApplyMode.Append);
             Check(Field<KeyEnhancementConfiguration>(form,"keyEnhancement").ToJson()==c.ToJson(),"Cancelling preset did not restore enhancement checkpoint");
@@ -190,12 +190,24 @@ class ExpandedBindingUxTests
         {
             typeof(MainForm).GetProperty("Session").GetSetMethod(true).Invoke(form,new object[]{s});
             typeof(MainForm).GetField("keyEnhancement",Hidden).SetValue(form,c);
-            var preset=new Preset {UserName="追加地图",BaselineId=1,Scopes=new List<PresetScope>{new PresetScope()},
+            var preset=new Preset {Id="user_map_retry",UserName="追加地图",BaselineId=1,Scopes=new List<PresetScope>{new PresetScope()},
                 UserMappings=new List<PresetMapping>{new PresetMapping {Action="IA_OpenMapMenu",Added=new[]{"F23"}}}};
             rejected=false;
             try {Call(form,"StageBindingPreset",preset,PresetApplyMode.Append);}catch(TargetInvocationException ex){rejected=ex.InnerException is InvalidDataException;}
             Check(rejected && bytes.SequenceEqual(s.ExportCurrentScheme()) && Field<KeyEnhancementConfiguration>(form,"keyEnhancement").ToJson()==json,
                 "Unroutable preset overflow changed existing drafts");
+            s.ChangeRelationship("IA_OpenMapMenu", "F22", false, false, -1);
+            s.ChangeRelationship("IA_OpenMapMenu", "F21", false, false, -1);
+            s.ChangeRelationship("IA_OpenMapMenu", "F20", false, false, -1);
+            byte[] retryBytes = s.ExportCurrentScheme();
+            Call(form,"StageBindingPreset",preset,PresetApplyMode.Append);
+            var restored=Field<KeyEnhancementConfiguration>(form,"keyEnhancement");
+            Check(restored.NativeBindings.Single(binding=>binding.FunctionId=="IA_OpenMapMenu"&&binding.Device=="keyboard").Keys.OrderBy(value=>value)
+                .SequenceEqual(s.Relations("IA_OpenMapMenu",false,-1).DefaultKeys.Concat(new[]{"F23"}).OrderBy(value=>value)) && retryBytes.SequenceEqual(s.ExportCurrentScheme()),
+                "Retry with a free native slot failed or changed the save draft");
+            Call(form,"StageBindingPreset",null,PresetApplyMode.Append);
+            Check(Field<KeyEnhancementConfiguration>(form,"keyEnhancement").ToJson()==KeyEnhancementConfiguration.FromJson(json).ToJson() && retryBytes.SequenceEqual(s.ExportCurrentScheme()),
+                "Cancelling a successful retry did not restore the enhancement checkpoint");
         }
     }
 }

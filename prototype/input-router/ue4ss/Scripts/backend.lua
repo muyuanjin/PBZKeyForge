@@ -1,5 +1,6 @@
 local PhysicalInput = require("physical-input")
 local CompleteMoves = require("complete-moves")
+local ResourceCosts = require("resource-costs")
 local ObjectPool = require("object-pool")
 local Backend = {}
 Backend.__index = Backend
@@ -144,6 +145,10 @@ function Backend:refresh()
             self.native_input:apply_masks()
         end
     end
+    if self.state.ready and self.state.gameplay and self.config.enabled ~= false then
+        if self.resource_costs then self.resource_costs:update() end
+        CompleteMoves.update(self)
+    end
     return self.state.ready
 end
 
@@ -205,6 +210,8 @@ function Backend:retire()
 end
 
 function Backend:release_capture()
+    CompleteMoves.reset(self)
+    if self.resource_costs then self.resource_costs:reset(); self.resource_costs = nil end
     if self.native_abilities then self.native_abilities:restore() end
     if self.native_input then self.native_input:restore() end
     local released, releaseError = true, nil
@@ -317,7 +324,7 @@ function Backend:pipeline_identity(spec)
     return table.concat(parts, "|")
 end
 
-function Backend:baseline_suppressed(action, key)
+function Backend:baseline_suppressed(action, key, mappingName)
     local actual = action:GetFullName():gsub("^%S+ ", "")
     local function path(value)
         local short = value:match("/([^/]+)$")
@@ -325,7 +332,9 @@ function Backend:baseline_suppressed(action, key)
     end
     local device = (key:match("^Gamepad_") or key:match("^PBZ_Touchpad_")) and "gamepad" or "keyboard"
     for _, override in ipairs(self.config.native_bindings or {}) do
-        if override.device == device then
+        local owned = mappingName and (not override["function"] or mappingName == override["function"])
+        for _, fixed in ipairs(override.fixed_keys or {}) do if not mappingName and fixed == key then owned = true end end
+        if override.device == device and owned then
             for _, value in ipairs(override.actions or {}) do if path(value) == path(actual) then return true end end
         end
     end
@@ -484,11 +493,39 @@ function Backend:object_array(paths, className)
     return result
 end
 
-function Backend:dispatch(spec, phase, value, bindingId)
+function Backend:activate_with_resources(spec, bypass, callback, settings)
+    return ResourceCosts.with(self,spec,bypass,callback,settings)
+end
+
+function Backend:prepare_input_settings(requests)
+    if not self.resource_costs then
+        for _,request in ipairs(requests) do
+            local s = request.settings or {}
+            if request.bypass_resources or (s.damage_multiplier or 1) ~= 1
+                or (s.startup_speed or 1) ~= 1 or (s.recovery_speed or 1) ~= 1 then
+                self.resource_costs = ResourceCosts.new(self)
+                break
+            end
+        end
+    end
+    if self.resource_costs then
+        for _,request in ipairs(requests) do
+            if request.target.kind == "action" then
+                self.resource_costs:input(request.target,request.bypass_resources,request.settings,request.rank)
+            else self.resource_costs:prepare(request.target,request.bypass_resources,request.settings,request.rank) end
+        end
+    end
+end
+
+function Backend:dispatch(spec, phase, value, bindingId, bypass, settings)
     if spec.kind == "action" and phase == "canceled" and (not valid(self.controller) or not valid(self.subsystem)) then return true end
     if not self.state.ready then return false end
-    local ok, result = pcall(function()
+    local ok, result = xpcall(function()
         if spec.kind == "action" then
+            if (self.resource_costs or bypass or settings and (settings.damage_multiplier or settings.startup_speed or settings.recovery_speed)) and phase ~= "completed" and phase ~= "canceled" then
+                if not self.resource_costs then self.resource_costs = ResourceCosts.new(self) end
+                self.resource_costs:input(spec,bypass,settings)
+            end
             local canceled = phase == "canceled"
             if canceled and spec.source_relation then self:reset_trigger_objects(spec.trigger_objects or {}) end
             local vector = (phase == "completed" or canceled) and {X = 0, Y = 0, Z = 0}
@@ -507,7 +544,7 @@ function Backend:dispatch(spec, phase, value, bindingId)
             return true
         end
         if spec.kind == "mapping" then return true end
-        if spec.kind == "move" then return CompleteMoves.dispatch(self, spec, phase) end
+        if spec.kind == "move" then return CompleteMoves.dispatch(self, spec, phase, bypass,settings) end
         if spec.kind == "lua" then
             return spec.run(self, {phase = phase, value = value, binding = bindingId,
                 state = self:context()})
@@ -516,9 +553,11 @@ function Backend:dispatch(spec, phase, value, bindingId)
             local component = self:receiver({receiver = "ability_input"})
             local method = spec.force and "ForceActivateExternalActionAbilityByTag"
                 or "TryActivateExternalActionAbilityInterruptLowerByTag"
-            return self:invoke(component, "/Script/SGameInputSystem.AbilityInputComponent:" .. method,
-                {TagName = FName(spec.tag)},
-                self:object(spec.input_action or "/PBZDeflectSystem/Input/IA_Dodge.IA_Dodge"), spec.priority or -5)
+            return self:activate_with_resources(spec,bypass,function()
+                return self:invoke(component, "/Script/SGameInputSystem.AbilityInputComponent:" .. method,
+                    {TagName = FName(spec.tag)},
+                    self:object(spec.input_action or "/PBZDeflectSystem/Input/IA_Dodge.IA_Dodge"), spec.priority or -5)
+            end,settings)
         end
         if spec.kind == "event" then
             local tag = {TagName = FName(spec.tag)}
@@ -545,7 +584,7 @@ function Backend:dispatch(spec, phase, value, bindingId)
             return true
         end
         error("Unsupported target kind: " .. tostring(spec.kind), 0)
-    end)
+    end, debug.traceback)
     if not ok then
         self.dispatch_error = "Dispatch failed [" .. tostring(bindingId) .. "]: " .. tostring(result)
         self:report("dispatch:" .. tostring(bindingId) .. ":" .. tostring(spec.path or spec.tag),

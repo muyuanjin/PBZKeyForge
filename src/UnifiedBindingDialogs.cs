@@ -69,6 +69,8 @@ namespace PBZKeyForge
         }
         internal static bool ShowsIndependentBindings(BindingFunction function)
         { return function.RequiresKeyEnhancement && function.NativeAction == null && function.FixedKeys == null; }
+        internal static bool HasNativeTrigger(BindingFunction function)
+        { return function.Targets.Any(target => target.Kind == "ability"); }
         internal static string[] PresetEnhancementDescriptions(EditorSession session, Preset preset)
         {
             if (preset.KeyEnhancement == null) return new string[0];
@@ -116,6 +118,10 @@ namespace PBZKeyForge
             if (entry.ExecutionOwner != "scheduler") return I18n.Str("ownership.policy.original");
             var parts = new List<string>();
             if (entry.OriginalInputBlocked) parts.Add(I18n.Str("ownership.policy.replaced"));
+            if (entry.BypassResources) parts.Add(I18n.Str("binding.resources.enabled"));
+            if (entry.DamageMultiplier != 1) parts.Add(I18n.Str("binding.tuning.damage") + " ×" + entry.DamageMultiplier.ToString("0.##"));
+            if (entry.StartupSpeed != 1) parts.Add(I18n.Str("binding.tuning.startup") + " ×" + entry.StartupSpeed.ToString("0.##"));
+            if (entry.RecoverySpeed != 1) parts.Add(I18n.Str("binding.tuning.recovery") + " ×" + entry.RecoverySpeed.ToString("0.##"));
             if (entry.Rule != null && entry.Rule.ConsumeKeys.Count > 0)
                 parts.Add(I18n.Str("ownership.policy.consumesome", string.Join(" + ", entry.Rule.ConsumeKeys.Select(BindingButton.FriendlyKey))));
             else if (entry.Rule != null && entry.Rule.Consume) parts.Add(I18n.Str("ownership.policy.consumeall"));
@@ -152,6 +158,7 @@ namespace PBZKeyForge
             BackColor = EditorTheme.Surface, ForeColor = EditorTheme.Muted, Margin = new Padding(4, 6, 4, 6) };
         Dictionary<string, BindingEntry[]> assigned = new Dictionary<string, BindingEntry[]>();
         readonly BindingEntry template;
+        readonly CheckBox nativeAbilityTrigger = new EditorCheckBox { Name = "nativeAbilityTrigger", Dock = DockStyle.Fill, AutoSize = true, ThreeState = true };
         string selectedGroup = "native";
         int hoveredFunction = -1;
         bool changingGroups;
@@ -202,22 +209,29 @@ namespace PBZKeyForge
             functions.HandleCreated += delegate { EditorArtwork.DarkScrollbars(functions); }; root.Controls.Add(functions, 0, 3);
             selectionDetails.HandleCreated += delegate { EditorArtwork.DarkScrollbars(selectionDetails); };
             root.Controls.Add(selectionDetails, 0, 4);
-            var footer = UnifiedBindingUi.Grid(2); footer.AutoSize = true; footer.RowCount = 3;
+            var footer = UnifiedBindingUi.Grid(2); footer.AutoSize = true; footer.RowCount = 4;
             footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50)); footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-            for (int row = 0; row < 3; row++) footer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            for (int row = 0; row < 4; row++) footer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             status.ForeColor = EditorTheme.Muted; status.AutoSize = true; footer.Controls.Add(status, 0, 0); footer.SetColumnSpan(status, 2);
+            nativeAbilityTrigger.Text = UnifiedBindingUi.Text("nativeAbilityTrigger");
+            tip.SetToolTip(nativeAbilityTrigger, UnifiedBindingUi.Text("nativeAbilityHelp"));
+            footer.Controls.Add(nativeAbilityTrigger, 0, 1); footer.SetColumnSpan(nativeAbilityTrigger, 2);
             var custom = UnifiedBindingUi.Button(UnifiedBindingUi.Text("addcustom"), "addCustomFunction"); custom.Click += delegate { AddCustom(); };
             var configure = UnifiedBindingUi.Button(I18n.Str("binding.configure"), "configureBinding");
             configure.Click += delegate {
-                var function = functions.SelectedItem as BindingFunction; if (function == null) return;
-                using (var dialog = new UnifiedBindingEditDialog(workspace, function.Id, null, key, enableRequested, functions.SelectedItems.Count > 1))
+                var selected = functions.SelectedItems.Cast<BindingFunction>().ToArray();
+                var function = selected.FirstOrDefault(UnifiedBindingUi.HasNativeTrigger) ?? selected.FirstOrDefault(); if (function == null) return;
+                using (var dialog = new UnifiedBindingEditDialog(workspace, function.Id, template, key, enableRequested, functions.SelectedItems.Count > 1))
+                {
+                    dialog.NativeTriggerChoice = NativeTriggerChoice;
                     if (dialog.ShowDialog(this) == DialogResult.OK)
-                        try { workspace.AddFunctions(functions.SelectedItems.Cast<BindingFunction>().Select(item => item.Id), dialog.Result); Result = function.Id; if (changed != null) changed(); DialogResult = DialogResult.OK; Close(); }
+                        try { workspace.AddFunctions(selected.Select(item => item.Id), dialog.Result); Result = function.Id; if (changed != null) changed(); DialogResult = DialogResult.OK; Close(); }
                         catch (Exception ex) { status.Text = ex.Message; }
+                }
             };
             var cancel = UnifiedBindingUi.Button(I18n.Str("editor.cancel"), "cancel"); cancel.DialogResult = DialogResult.Cancel;
             foreach (var button in new[] { custom, configure, cancel, accept }) button.Dock = DockStyle.Fill;
-            footer.Controls.Add(custom, 0, 1); footer.Controls.Add(configure, 1, 1); footer.Controls.Add(cancel, 0, 2); footer.Controls.Add(accept, 1, 2); root.Controls.Add(footer, 0, 5);
+            footer.Controls.Add(custom, 0, 2); footer.Controls.Add(configure, 1, 2); footer.Controls.Add(cancel, 0, 3); footer.Controls.Add(accept, 1, 3); root.Controls.Add(footer, 0, 5);
             accept.Click += delegate { AddSelected(); }; search.TextChanged += delegate { functions.SelectedIndex = -1; Populate(); }; Controls.Add(root); AcceptButton = accept; CancelButton = cancel; Populate();
         }
         void Populate()
@@ -241,10 +255,17 @@ namespace PBZKeyForge
         void UpdateSelection()
         {
             var function = functions.SelectedItem as BindingFunction; accept.Enabled = function != null;
+            var nativeFunctions = functions.SelectedItems.Cast<BindingFunction>().Where(UnifiedBindingUi.HasNativeTrigger).ToArray();
+            nativeAbilityTrigger.Visible = nativeFunctions.Length > 0;
+            bool[] choices = nativeFunctions.Select(item => workspace.UsesNativeTrigger(item.Id)).Distinct().ToArray();
+            nativeAbilityTrigger.ThreeState = choices.Length > 1;
+            nativeAbilityTrigger.CheckState = choices.Length == 1 ? choices[0] ? CheckState.Checked : CheckState.Unchecked : CheckState.Indeterminate;
             status.Text = functions.SelectedItems.Cast<BindingFunction>().Any(item => item.RequiresKeyEnhancement) && !workspace.KeyEnhancementEnabled ? UnifiedBindingUi.Text("requiresbrief") : "";
             status.ForeColor = function != null && function.RequiresKeyEnhancement && !workspace.KeyEnhancementEnabled ? EditorTheme.KeyEnhancement : EditorTheme.Muted;
             selectionDetails.Text = function == null ? "" : UnifiedBindingUi.FunctionIdentity(function) + Environment.NewLine
                 + string.Join(" / ", function.GroupLabels) + Environment.NewLine + AssignmentText(function, true);
+            string usage = function == null ? "" : CompleteMoveCatalog.Usage(function.Id);
+            if (usage.Length > 0) selectionDetails.Text = usage + Environment.NewLine + selectionDetails.Text;
             tip.SetToolTip(selectionDetails, function == null ? "" : function.TechnicalName);
         }
         string AssignmentText(BindingFunction function, bool full)
@@ -259,10 +280,15 @@ namespace PBZKeyForge
         void AddSelected()
         {
             var function = functions.SelectedItem as BindingFunction; if (function == null) return;
-            var entry = template ?? new BindingEntry { FunctionId = function.Id, Keys = new[] { key }, Trigger = "default" };
+            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            var entry = template == null ? new BindingEntry { FunctionId = function.Id, Keys = new[] { key }, Trigger = "default" }
+                : serializer.Deserialize<BindingEntry>(serializer.Serialize(template));
+            entry.KeepNativeTrigger = NativeTriggerChoice;
             try { workspace.AddFunctions(functions.SelectedItems.Cast<BindingFunction>().Select(item => item.Id), entry); Result = function.Id; if (changed != null) changed(); DialogResult = DialogResult.OK; Close(); }
             catch (Exception ex) { status.Text = ex.Message; status.ForeColor = EditorTheme.AccentHover; }
         }
+        bool? NativeTriggerChoice
+        { get { return !nativeAbilityTrigger.Visible || nativeAbilityTrigger.CheckState == CheckState.Indeterminate ? (bool?)null : nativeAbilityTrigger.Checked; } }
         void AddCustom()
         {
             using (var dialog = new AdvancedFunctionDialog(workspace.Configuration))
@@ -350,7 +376,7 @@ namespace PBZKeyForge
                 heading.ForeColor = workspace.KeyEnhancementEnabled ? EditorTheme.Ink : EditorTheme.Muted;
                 heading.Paint += delegate(object sender, PaintEventArgs e) { UnifiedBindingUi.PaintKeyEnhancementMark(e.Graphics, new Rectangle(4, (heading.Height - 16) / 2, 16, 16)); };
             }
-            bool hasAbility = function.Targets.Any(target => target.Kind == "ability");
+            bool hasAbility = UnifiedBindingUi.HasNativeTrigger(function);
             string originalHint = UnifiedBindingUi.NativeEntryHint(workspace, function);
             var nativeSettings = UnifiedBindingUi.Grid(1); nativeSettings.AutoSize = true; nativeSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); nativeSettings.Visible = hasAbility || originalHint.Length > 0;
             nativeAbilityTrigger.Name = "nativeAbilityTrigger"; nativeAbilityTrigger.Text = UnifiedBindingUi.Text("nativeAbilityTrigger"); nativeAbilityTrigger.Dock = DockStyle.Fill;
@@ -376,7 +402,7 @@ namespace PBZKeyForge
             var footer = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, WrapContents = true };
             var add = UnifiedBindingUi.Button(UnifiedBindingUi.Text("addbinding"), "addBinding"); add.Click += delegate { Edit(null); };
             var restore = UnifiedBindingUi.Button(I18n.Str("views.restore"), "restoreAction"); restore.Click += delegate { Apply(delegate { workspace.Restore(function.Id); }); };
-            if (function.NativeAction == null && function.Targets.Length == 0)
+            if (function.NativeAction == null && function.Targets.Length == 0 && !function.Id.StartsWith("scheme:", StringComparison.Ordinal))
             {
                 var editFunction = editCustomFunction;
                 editFunction.Click += delegate
@@ -545,7 +571,12 @@ namespace PBZKeyForge
         readonly bool multipleFunctions;
         readonly ComboBox mainKey = new EditorComboBox(), trigger = new EditorComboBox();
         readonly ComboBox additionalKey = new EditorComboBox();
-        readonly ComboBox nativeMode = new EditorComboBox();
+        readonly CheckBox nativeAbilityTrigger = new EditorCheckBox();
+        internal bool? NativeTriggerChoice
+        {
+            get { return !nativeAbilityTrigger.Visible || nativeAbilityTrigger.CheckState == CheckState.Indeterminate ? (bool?)null : nativeAbilityTrigger.Checked; }
+            set { nativeAbilityTrigger.CheckState = value.HasValue ? value.Value ? CheckState.Checked : CheckState.Unchecked : CheckState.Indeterminate; }
+        }
         readonly FlowLayoutPanel combination = new FlowLayoutPanel();
         readonly FlowLayoutPanel combinationCommands = new FlowLayoutPanel();
         readonly Label keyTitle = UnifiedBindingUi.Label(UnifiedBindingUi.Text("key"));
@@ -560,6 +591,8 @@ namespace PBZKeyForge
         readonly Panel axisDirectionRow;
         readonly Panel axisRow;
         readonly CheckBox bindingEnabled = new EditorCheckBox(), consume = new EditorCheckBox();
+        readonly CheckBox bypassResources = new EditorCheckBox { Name = "bypassResources", AutoSize = true };
+        readonly NumericUpDown damageMultiplier = Number(1), startupSpeed = Number(1), recoverySpeed = Number(1);
         readonly CheckedListBox consumeKeys = new CheckedListBox();
         readonly NumericUpDown priority = Number(0), outputX = Number(0), outputY = Number(0), outputZ = Number(0);
         readonly ComboBox outputMode = new EditorComboBox();
@@ -586,6 +619,7 @@ namespace PBZKeyForge
         public bool RemoveRequested { get; private set; }
         public UnifiedBindingEditDialog(BindingWorkspace workspace, string functionId, BindingEntry current, string initialKey, Func<bool> enableRequested, bool multipleFunctions = false)
         {
+            SuspendLayout();
             moreSettings.SuspendLayout(); sequenceSettings.SuspendLayout(); evaluatorSettings.SuspendLayout();
             this.workspace = workspace; this.function = workspace.Functions.First(item => item.Id == functionId); this.current = current; this.multipleFunctions = multipleFunctions;
             UnifiedBindingUi.Form(this, function.Label + " · " + UnifiedBindingUi.FunctionIdentity(function), new Size(680, 540), new Size(500, 440));
@@ -597,9 +631,24 @@ namespace PBZKeyForge
             scroll.SizeChanged += delegate { fields.MaximumSize = new Size(Math.Max(1, scroll.Width - SystemInformation.VerticalScrollBarWidth), 0); };
             fields.SuspendLayout(); scroll.SuspendLayout();
             scopeHint.Name = "bindingScope"; AddField(fields, scopeHint, 30);
-            nativeMode.Name = "nativeTriggerMode"; nativeMode.DropDownStyle = ComboBoxStyle.DropDownList;
-            nativeMode.Items.Add(I18n.Str("binding.mode.add")); nativeMode.Items.Add(I18n.Str("binding.mode.replace")); nativeMode.SelectedIndex = workspace.UsesNativeTrigger(functionId) ? 0 : 1;
-            AddField(fields, nativeMode, 38); ShowField(nativeMode, function.Targets.Any(target => target.Kind == "ability"));
+            nativeAbilityTrigger.Name = "nativeAbilityTrigger"; nativeAbilityTrigger.Text = UnifiedBindingUi.Text("nativeAbilityTrigger"); nativeAbilityTrigger.ThreeState = multipleFunctions;
+            tip.SetToolTip(nativeAbilityTrigger, UnifiedBindingUi.Text("nativeAbilityHelp"));
+            nativeAbilityTrigger.Checked = workspace.UsesNativeTrigger(functionId);
+            AddField(fields, nativeAbilityTrigger, 38); ShowField(nativeAbilityTrigger, UnifiedBindingUi.HasNativeTrigger(function));
+            string[] resourceKinds = workspace.ResourceKinds(functionId);
+            bypassResources.Text = I18n.Str("binding.resources.bypass", ResourceCostCatalog.Describe(resourceKinds));
+            bypassResources.Checked = current != null && current.BypassResources;
+            AddField(fields, bypassResources, 38); ShowField(bypassResources, resourceKinds.Length > 0 || bypassResources.Checked || multipleFunctions);
+            damageMultiplier.Name = "damageMultiplier"; startupSpeed.Name = "startupSpeed"; recoverySpeed.Name = "recoverySpeed";
+            damageMultiplier.Minimum = .01m; damageMultiplier.Maximum = 100;
+            startupSpeed.Minimum = recoverySpeed.Minimum = .1m; startupSpeed.Maximum = recoverySpeed.Maximum = 10;
+            SetNumber(damageMultiplier, current == null ? 1 : current.DamageMultiplier);
+            SetNumber(startupSpeed, current == null ? 1 : current.StartupSpeed); SetNumber(recoverySpeed, current == null ? 1 : current.RecoverySpeed);
+            bool combat = multipleFunctions || function.Targets.Any(target => target.Kind == "ability" || target.Kind == "move" || ResourceCostCatalog.IsCombatInput(target.Path)) || resourceKinds.Length > 0;
+            bool phaseSpeed = multipleFunctions || function.Targets.Any(target => target.Kind != "move" || CompleteMoveCatalog.SupportsPhaseSpeed(target.Tag));
+            var damageRow = Parameter(I18n.Str("binding.tuning.damage"), damageMultiplier); AddField(fields, damageRow, 0); ShowField(damageRow, combat);
+            var startupRow = Parameter(I18n.Str("binding.tuning.startup"), startupSpeed); AddField(fields, startupRow, 0); ShowField(startupRow, combat && phaseSpeed);
+            var recoveryRow = Parameter(I18n.Str("binding.tuning.recovery"), recoverySpeed); AddField(fields, recoveryRow, 0); ShowField(recoveryRow, combat && phaseSpeed);
             var label = UnifiedBindingUi.Label(UnifiedBindingUi.Text("trigger")); AddField(fields, label, 30);
             trigger.DropDownStyle = ComboBoxStyle.DropDownList; trigger.Name = "bindingTrigger";
             foreach (string id in TriggerIds) trigger.Items.Add(UnifiedBindingUi.Text("trigger." + id));
@@ -737,7 +786,8 @@ namespace PBZKeyForge
             else axis.SelectedIndex = 0;
             inputChanged = consumptionChanged = consumeInitialized = false; trigger.SelectedIndexChanged += delegate { inputChanged = true; Parameters(); RefreshConsumeKeys(); }; axis.SelectedIndexChanged += delegate { UpdateAxisDirection(); RefreshConsumeKeys(); }; RenderCombination(); Parameters(); RefreshConsumeKeys();
             watchedKeys.ItemCheck += delegate { if (IsHandleCreated) BeginInvoke((Action)RefreshConsumeKeys); };
-            foreach (var number in new[] { seconds, interval, count, threshold }) number.ValueChanged += delegate { UpdatePreview(); };
+            foreach (var number in new[] { seconds, interval, count, threshold, damageMultiplier, startupSpeed, recoverySpeed }) number.ValueChanged += delegate { UpdatePreview(); };
+            bypassResources.CheckedChanged += delegate { UpdatePreview(); };
             priority.ValueChanged += delegate { UpdatePreview(); };
             bindingEnabled.CheckedChanged += delegate { UpdatePreview(); }; consume.CheckedChanged += delegate { UpdatePreview(); };
             condition.SelectedIndexChanged += delegate { UpdatePreview(); }; outputMode.SelectedIndexChanged += delegate { UpdatePreview(); };
@@ -761,8 +811,9 @@ namespace PBZKeyForge
             };
             status.Cursor = Cursors.Hand;
             status.Click += delegate { if (directHost != null) directHost.ShowBindingFeedback(); };
-            moreSettings.ResumeLayout(true); sequenceSettings.ResumeLayout(true); evaluatorSettings.ResumeLayout(true);
-            fields.ResumeLayout(true); scroll.ResumeLayout(true); root.ResumeLayout(true);
+            moreSettings.ResumeLayout(false); sequenceSettings.ResumeLayout(false); evaluatorSettings.ResumeLayout(false);
+            fields.ResumeLayout(false); scroll.ResumeLayout(false); root.ResumeLayout(false);
+            ResumeLayout(true);
         }
         protected override bool ProcessCmdKey(ref Message message, Keys keyData)
         {
@@ -797,7 +848,10 @@ namespace PBZKeyForge
             conditionCode.Text = UnifiedBindingUi.ScriptText(when ?? "");
             condition.SelectedIndex = string.IsNullOrWhiteSpace(when) ? 0 : when == "function(context) return context.gameplay end" ? 1
                 : when == "function(context) return context.foreground end" ? 2 : when == "function(context) return not context.paused end" ? 3 : 4;
-            nativeMode.SelectedIndex = workspace.UsesNativeTrigger(function.Id) ? 0 : 1;
+            nativeAbilityTrigger.Checked = workspace.UsesNativeTrigger(function.Id);
+            bypassResources.Checked = current != null && current.BypassResources;
+            SetNumber(damageMultiplier, current == null ? 1 : current.DamageMultiplier);
+            SetNumber(startupSpeed, current == null ? 1 : current.StartupSpeed); SetNumber(recoverySpeed, current == null ? 1 : current.RecoverySpeed);
             LoadOutput(current == null ? function.DefaultOutputValue : current.OutputValue);
             consume.Checked = rule != null && (rule.Consume || rule.ConsumeKeys.Count > 0);
             if (rule != null) retainedConsume.AddRange(rule.ConsumeKeys.Except(keys.Concat(rule.Watch).Concat(rule.Steps.SelectMany(step => step)).Concat(string.IsNullOrEmpty(current.Axis) ? new string[0] : new[] { current.Axis })));
@@ -956,10 +1010,13 @@ namespace PBZKeyForge
             string id = TriggerIds[Math.Max(0, trigger.SelectedIndex)];
             preview.Text = I18n.Str("binding.triggerhelp." + id);
             bool plain = id == "default" && extraKeys.Count == 0 && bindingEnabled.Checked && priority.Value == 0 && condition.SelectedIndex == 0 && !consume.Checked && outputMode.SelectedIndex == 0;
-            var specification = new BindingEntry { Keys = string.IsNullOrEmpty(SelectedKey()) ? new string[0] : new[] { SelectedKey() }, Trigger = plain ? "default" : "press" };
+            var specification = new BindingEntry { Keys = string.IsNullOrEmpty(SelectedKey()) ? new string[0] : new[] { SelectedKey() }, Trigger = plain ? "default" : "press",
+                BypassResources = bypassResources.Checked, DamageMultiplier = (double)damageMultiplier.Value,
+                StartupSpeed = (double)startupSpeed.Value, RecoverySpeed = (double)recoverySpeed.Value };
             bool native = !multipleFunctions && workspace.UsesSaveBinding(function.Id, specification, current);
             bindingEnabled.Enabled = true;
-            scopeHint.Text = I18n.Str(native ? "binding.scope.scheme" : (specification.Keys.Concat(extraKeys).Any(key => key.StartsWith("Gamepad_", StringComparison.Ordinal))
+            bool schemeScoped = workspace.KeyEnhancementEnabled && workspace.Configuration.Schemes.Count > 0 && !function.Id.StartsWith("scheme:", StringComparison.Ordinal);
+            scopeHint.Text = I18n.Str(schemeScoped ? "schemes.scope" : native ? "binding.scope.scheme" : (specification.Keys.Concat(extraKeys).Any(key => key.StartsWith("Gamepad_", StringComparison.Ordinal))
                 || id == "axis" && axis.SelectedItem is KeyChoice && ((KeyChoice)axis.SelectedItem).Key.StartsWith("Gamepad_", StringComparison.Ordinal)) ? "binding.scope.gamepad" : "binding.scope.global");
         }
         void Captured(string key)
@@ -1020,7 +1077,7 @@ namespace PBZKeyForge
                 Trigger = id, Seconds = (double)seconds.Value, Interval = (double)interval.Value, Count = (int)count.Value, Threshold = (double)threshold.Value,
                 Axis = id == "axis" && axis.SelectedItem is KeyChoice ? ((KeyChoice)axis.SelectedItem).Key : null };
             if (id == "axis") entry.Rule = new KeyEnhancementRule { AxisDirection = new[] { "both", "positive", "negative" }[Math.Max(0, axisDirection.SelectedIndex)] };
-            if (nativeMode.Visible) entry.KeepNativeTrigger = nativeMode.SelectedIndex == 0;
+            entry.KeepNativeTrigger = NativeTriggerChoice;
             if (current != null) { entry.Rule = current.Rule == null ? entry.Rule : CloneRule(current.Rule); entry.Enabled = current.Enabled; entry.Priority = current.Priority; }
             if (id == "axis") entry.Rule.AxisDirection = new[] { "both", "positive", "negative" }[Math.Max(0, axisDirection.SelectedIndex)];
             if (id == "sequence")
@@ -1032,6 +1089,8 @@ namespace PBZKeyForge
                 entry.Keys = rule.Steps.SelectMany(step => step).Distinct().ToArray();
             }
             entry.Priority = (int)priority.Value; entry.Enabled = bindingEnabled.Checked;
+            entry.BypassResources = bypassResources.Checked;
+            entry.DamageMultiplier = (double)damageMultiplier.Value; entry.StartupSpeed = (double)startupSpeed.Value; entry.RecoverySpeed = (double)recoverySpeed.Value;
             entry.OutputValue = outputMode.SelectedIndex == 0 ? null : new Dictionary<string, object> { { "x", (double)outputX.Value }, { "y", (double)outputY.Value }, { "z", (double)outputZ.Value } };
             if (consumptionChanged)
             {

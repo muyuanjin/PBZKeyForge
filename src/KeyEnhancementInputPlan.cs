@@ -17,9 +17,12 @@ namespace PBZKeyForge
         {
             public ActionPlan[] actions { get; set; }
             public string[] retainedNative { get; set; }
+            public string[] mappedActions { get; set; }
         }
         static readonly Plan Data = Load();
         public static ActionPlan[] Actions { get { return Data.actions; } }
+        public static bool HasPipeline(string path)
+        { return Data.mappedActions.Contains(PackagePath(path)); }
         public static string[] Uncovered { get { return new[] { "mouse", "scroll", "touchpad", "chord", "trigger", "gamepad", "edges" }.Select(key => I18n.Str("ownership.coverage." + key)).ToArray(); } }
         public static bool Retained(string mapping)
         { return KeyEnhancementCatalog.ForMapping(mapping).All(target => Data.retainedNative.Contains(target.Path)); }

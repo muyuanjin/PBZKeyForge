@@ -1,0 +1,3419 @@
+{
+  "build": "CL-302256",
+  "runtimeVerified": false,
+  "evidenceType": "Native PBZExecutionAnimEntry property schema and complete serialized typed arrays",
+  "schema": {
+    "entryFields": [
+      "channel",
+      "executionType",
+      "executionAbility",
+      "executedAbility",
+      "executorRequiredTags",
+      "executorIgnoredTags",
+      "targetRequiredTags",
+      "targetIgnoredTags",
+      "requiresNavigation",
+      "requiresEquippedWeapon",
+      "continuousExecutionTargetingType"
+    ],
+    "nativePropertyArray": "0x14c7248e0",
+    "nativeStructConstructor": "0x147d6b7b0",
+    "nativeStructParameters": "0x14dc2f618",
+    "weaponNativeProperties": "0x14c73ce80; SoftCollisionConfig then ExecutionAnims"
+  },
+  "counts": {
+    "equipment": 86,
+    "entries": 123
+  },
+  "equipment": [
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BaiShanFengLeiJian/Weapon_Hun_BaiShanFengLeiJian",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1505,
+        "endOffset": 1609,
+        "entries": [
+          {
+            "exportOffset": 1509,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/ExE/GA_Hun_BEx_FengLeiJian_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/ExE/GA_Hun_BEd_FengLeiJian_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1559,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1559,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/ExE/GA_Hun_BEx_FengLeiJian_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/ExE/GA_Hun_BEd_FengLeiJian_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1609,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BaiYing/Weapon_Hun_BaiYing",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1318,
+        "endOffset": 1484,
+        "entries": [
+          {
+            "exportOffset": 1322,
+            "channel": "SpecialAttack",
+            "executionType": "Execution.Type.CombatFar.Assault.BaiYing",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/GA_Hun_BaiYing_SpeicalAssault",
+            "executedAbility": null,
+            "executorRequiredTags": [
+              "CharacterState.WeaponUpgrade.BaiYing.CanAssault"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [
+              "CharacterState.StatusInfliction.Frost.Effect"
+            ],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1384,
+            "role": "special-attack"
+          },
+          {
+            "exportOffset": 1384,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/EXE/GA_Hun_BEx_BaiYing_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/EXE/GA_Hun_BEd_BaiYing_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1434,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1434,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/EXE/GA_Hun_BEx_BaiYing_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/EXE/GA_Hun_BEd_BaiYing_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1484,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BronzeSword/Weapon_Hun_TianXuanQingTongJian",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1070,
+        "endOffset": 1174,
+        "entries": [
+          {
+            "exportOffset": 1074,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/Exe/GA_Hun_BEx_BronzeSword_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/Exe/GA_Hun_BEd_BronzeSword_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1124,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1124,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/Exe/GA_Hun_BEx_BronzeSword_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/Exe/GA_Hun_BEd_BronzeSword_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1174,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChaosBlade/Weapon_Hun_CiGuHunDunJian",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 2053,
+        "endOffset": 2157,
+        "entries": [
+          {
+            "exportOffset": 2057,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/Exe/GA_Hun_BEx_Chaos_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/Exe/GA_Hun_BEd_Chaos_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2107,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 2107,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/Exe/GA_Hun_BEx_Chaos_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/Exe/GA_Hun_BEd_Chaos_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2157,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/Weapon_Hun_ChiZheCanJian",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 2067,
+        "endOffset": 2171,
+        "entries": [
+          {
+            "exportOffset": 2071,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/EXE/GA_Hun_BEx_ChiZheCanJian_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/EXE/GA_Hun_BEd_ChiZheCanJian_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2121,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 2121,
+            "channel": "Execution",
+            "executionType": "Execution.Type.CombatFar",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/EXE/GA_Hun_BEx_ChiZheCanJian_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/EXE/GA_Hun_BEd_ChiZheCanJian_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2171,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/Weapon_Hun_ChiZheZuiJian",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 2067,
+        "endOffset": 2171,
+        "entries": [
+          {
+            "exportOffset": 2071,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/EXE/GA_Hun_BEx_ChiZheCanJian_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/EXE/GA_Hun_BEd_ChiZheCanJian_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2121,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 2121,
+            "channel": "Execution",
+            "executionType": "Execution.Type.CombatFar",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/EXE/GA_Hun_BEx_ChiZheCanJian_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/EXE/GA_Hun_BEd_ChiZheCanJian_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2171,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Double/Weapon_Hun_Double",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1490,
+        "endOffset": 1594,
+        "entries": [
+          {
+            "exportOffset": 1494,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/GA_Hun_BEx_Double_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/GA_Hun_BEd_Double_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1544,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1544,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/GA_Hun_BEx_Double_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/GA_Hun_BEd_Double_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1594,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Double/Weapon_Hun_JueYing",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1552,
+        "endOffset": 1772,
+        "entries": [
+          {
+            "exportOffset": 1556,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/GA_Hun_BEx_Double_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/GA_Hun_BEd_Double_M_01",
+            "executorRequiredTags": [
+              "AI"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1614,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1614,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/GA_Hun_BEx_Double_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/GA_Hun_BEd_Double_M_02",
+            "executorRequiredTags": [
+              "AI"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1672,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1672,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/JueYing/GA_Hun_BEx_JueYing_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/JueYing/GA_Hun_BEd_JueYing_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1722,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1722,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/JueYing/GA_Hun_BEx_JueYing_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/JueYing/GA_Hun_BEd_JueYing_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1772,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/DualHook/Weapon_Hun_DualHook",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1572,
+        "endOffset": 1676,
+        "entries": [
+          {
+            "exportOffset": 1576,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/ExE/GA_Hun_BEx_DualHook_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/ExE/GA_Hun_BEd_DualHook_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1626,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1626,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/ExE/GA_Hun_BEx_DualHook_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/ExE/GA_Hun_BEd_DualHook_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1676,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/Weapon_Hun_GuiTouBlade",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 915,
+        "endOffset": 1019,
+        "entries": [
+          {
+            "exportOffset": 919,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/ExE/GA_Hun_BEx_GuiTouBlade_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/ExE/GA_Hun_BEd_GuiTouBlade_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 969,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 969,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/ExE/GA_Hun_BEx_GuiTouBlade_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/ExE/GA_Hun_BEd_GuiTouBlade_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1019,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/Weapon_Hun_HeiMoShang",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1358,
+        "endOffset": 1512,
+        "entries": [
+          {
+            "exportOffset": 1362,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEx_HeiMoShang_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEd_HeiMoShang_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1412,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1412,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEx_HeiMoShang_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEd_HeiMoShang_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1462,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1462,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEx_HeiMoShang_M_04",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEd_HeiMoShang_M_04",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1512,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/Weapon_Hun_HeiMoShang_Prologue",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1358,
+        "endOffset": 1512,
+        "entries": [
+          {
+            "exportOffset": 1362,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEx_HeiMoShang_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEd_HeiMoShang_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1412,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1412,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEx_HeiMoShang_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEd_HeiMoShang_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1462,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1462,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEx_HeiMoShang_M_04",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/ExE/GA_Hun_BEd_HeiMoShang_M_04",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1512,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Horizontal/Weapon_Hun_Horizontal",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 973,
+        "endOffset": 1077,
+        "entries": [
+          {
+            "exportOffset": 977,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/ExE/GA_Hun_BEx_HorizontalBlade_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/ExE/GA_Hun_BEd_HorizontalBlade_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1027,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1027,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/ExE/GA_Hun_BEx_HorizontalBlade_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/ExE/GA_Hun_BEd_HorizontalBlade_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1077,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Iron/Weapon_Hun_Iron",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 937,
+        "endOffset": 1095,
+        "entries": [
+          {
+            "exportOffset": 941,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/ExE/GA_Hun_BEx_Iron_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/ExE/GA_Hun_BEd_Iron_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 991,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 991,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/ExE/GA_Hun_BEx_Iron_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/ExE/GA_Hun_BEd_Iron_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1041,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1041,
+            "channel": "SpecialAttack",
+            "executionType": "Execution.Type.Combat.BreakAct.Iron",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BreakAct_02",
+            "executedAbility": null,
+            "executorRequiredTags": [
+              "CharacterState.WeaponUpgrade.Iron.CanBreakAct"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1095,
+            "role": "special-attack"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/JadeDualChakram/Weapon_Hun_JadeDual",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1369,
+        "endOffset": 1572,
+        "entries": [
+          {
+            "exportOffset": 1373,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEx_Jade_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEd_Jade_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1423,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1423,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEx_Jade_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEd_Jade_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1473,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1473,
+            "channel": "Execution",
+            "executionType": "Execution.Type.CombatFar",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEx_Jade_M_03",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEd_Jade_M_03",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": true,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1522,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1522,
+            "channel": "Execution",
+            "executionType": "Execution.Type.CombatFar",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEx_Jade_M_04",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEd_Jade_M_04",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1572,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/JadeDualChakram/Weapon_Hun_JadeDual_Evaluation",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1352,
+        "endOffset": 1555,
+        "entries": [
+          {
+            "exportOffset": 1356,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEx_Jade_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEd_Jade_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1406,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1406,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEx_Jade_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEd_Jade_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1456,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1456,
+            "channel": "Execution",
+            "executionType": "Execution.Type.CombatFar",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEx_Jade_M_03",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEd_Jade_M_03",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": true,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1505,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1505,
+            "channel": "Execution",
+            "executionType": "Execution.Type.CombatFar",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEx_Jade_M_04",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/ExE/GA_Hun_BEd_Jade_M_04",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1555,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Jigsaw/Weapon_Hun_Jigsaw",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 961,
+        "endOffset": 1111,
+        "entries": [
+          {
+            "exportOffset": 965,
+            "channel": "SpecialAttack",
+            "executionType": "Execution.Type.Combat.BreakAct.Jigsaw",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_BreakAct",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1011,
+            "role": "special-attack"
+          },
+          {
+            "exportOffset": 1011,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/EXE/GA_Hun_BEx_JigSaw_F_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/EXE/GA_Hun_BEd_JigSaw_F_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1061,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1061,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/EXE/GA_Hun_BEx_JigSaw_F_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/EXE/GA_Hun_BEd_JigSaw_F_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1111,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Long/Weapon_Hun_ChiRen",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1057,
+        "endOffset": 1277,
+        "entries": [
+          {
+            "exportOffset": 1061,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEx_Long_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEd_Long_M_02",
+            "executorRequiredTags": [
+              "AI"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1119,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1119,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEx_Long_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEd_Long_M_01",
+            "executorRequiredTags": [
+              "AI"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1177,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1177,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEx_ChiRen_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEd_ChiRen_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1227,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1227,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEx_ChiRen_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEd_ChiRen_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1277,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Long/Weapon_Hun_Long",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 983,
+        "endOffset": 1087,
+        "entries": [
+          {
+            "exportOffset": 987,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEx_Long_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEd_Long_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1037,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1037,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEx_Long_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEd_Long_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1087,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/LuanYing/Weapon_Hun_LuanYing_Evolution",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1077,
+        "endOffset": 1305,
+        "entries": [
+          {
+            "exportOffset": 1081,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/EXE/GA_Hun_BEx_LuanYing_M_P1_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/EXE/GA_Hun_BEd_LuanYing_M_P1_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [
+              "CharacterState.AbilityState.LuanYing.SnapSoul"
+            ],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1139,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1139,
+            "channel": "Execution",
+            "executionType": "Execution.Type.CombatFar",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/EXE/GA_Hun_BEx_LuanYing_M_P1_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/EXE/GA_Hun_BEd_LuanYing_M_P1_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1189,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1189,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/EXE/GA_Hun_BEx_LuanYing_M_P2",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/EXE/GA_Hun_BEd_LuanYing_M_P2",
+            "executorRequiredTags": [
+              "CharacterState.AbilityState.LuanYing.SnapSoul"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1247,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1247,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/EXE/GA_Hun_BEx_LuanYing_M_P1_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/EXE/GA_Hun_BEd_LuanYing_M_P1_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [
+              "CharacterState.AbilityState.LuanYing.SnapSoul"
+            ],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1305,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Placeholder/Weapon_Hun_MoQie",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 868,
+        "endOffset": 972,
+        "entries": [
+          {
+            "exportOffset": 872,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEx_Long_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEd_Long_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 922,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 922,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEx_Long_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEd_Long_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 972,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Placeholder/Weapon_Hun_XieHuo",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 868,
+        "endOffset": 972,
+        "entries": [
+          {
+            "exportOffset": 872,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEx_Long_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEd_Long_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 922,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 922,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEx_Long_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ExE/GA_Hun_BEd_Long_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 972,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Placeholder/Weapon_Hun_ZhuGuangBaoQi",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 928,
+        "endOffset": 1032,
+        "entries": [
+          {
+            "exportOffset": 932,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 982,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 982,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1032,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/PoJun/Weapon_Hun_PoJun",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 955,
+        "endOffset": 1059,
+        "entries": [
+          {
+            "exportOffset": 959,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/ExE/GA_Hun_BEx_PoJun_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/ExE/GA_Hun_BEd_PoJun_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1009,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1009,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/ExE/GA_Hun_BEx_PoJun_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/ExE/GA_Hun_BEd_PoJun_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1059,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ShuangYue/Weapon_Hun_ShuangYue",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1351,
+        "endOffset": 1455,
+        "entries": [
+          {
+            "exportOffset": 1355,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/ExE/GA_Hun_BEx_ShuangYue_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/ExE/GA_Hun_BEd_ShuangYue_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1405,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1405,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/ExE/GA_Hun_BEx_ShuangYue_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/ExE/GA_Hun_BEd_ShuangYue_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1455,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SlitheringSword/Weapon_Hun_SlitheringSword",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1137,
+        "endOffset": 1341,
+        "entries": [
+          {
+            "exportOffset": 1141,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/ExE/GA_Hun_BEx_SlitheringSword_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/ExE/GA_Hun_BEd_SlitheringSword_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1191,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1191,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/ExE/GA_Hun_BEx_SlitheringSword_M_04",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/ExE/GA_Hun_BEd_SlitheringSword_M_04",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1241,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1241,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/ExE/GA_Hun_BEx_SlitheringSword_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/ExE/GA_Hun_BEd_SlitheringSword_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1291,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1291,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/ExE/GA_Hun_BEx_SlitheringSword_M_03",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/ExE/GA_Hun_BEd_SlitheringSword_M_03",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1341,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SnakeDual/Weapon_Hun_SnakeDual",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1978,
+        "endOffset": 2345,
+        "entries": [
+          {
+            "exportOffset": 1982,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/ExE/GA_Hun_BEx_SnakeDual_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/ExE/GA_Hun_BEd_SnakeDual_M_01",
+            "executorRequiredTags": [
+              "CharacterState.AbilityState.SnakeDual.Normal"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2040,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 2040,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/ExE/GA_Hun_BEx_SnakeDual_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/ExE/GA_Hun_BEd_SnakeDual_M_02",
+            "executorRequiredTags": [
+              "CharacterState.AbilityState.SnakeDual.Normal"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2098,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 2098,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_01",
+            "executorRequiredTags": [
+              "CharacterState.AbilityState.SnakeDual.Thrown"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2156,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 2156,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_02",
+            "executorRequiredTags": [
+              "CharacterState.AbilityState.SnakeDual.Thrown"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2214,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 2214,
+            "channel": "Execution",
+            "executionType": "Execution.Type.CombatFar",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/ExE/GA_Hun_BEx_SnakeDual_M_04",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/ExE/GA_Hun_BEd_SnakeDual_M_04",
+            "executorRequiredTags": [
+              "CharacterState.AbilityState.SnakeDual.Normal",
+              "Weapon.Type.SnakeDual.CurrentHanded"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": true,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2279,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 2279,
+            "channel": "Execution",
+            "executionType": "Execution.Type.CombatFar",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/ExE/GA_Hun_BEx_SnakeDual_M_03",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/ExE/GA_Hun_BEd_SnakeDual_M_03",
+            "executorRequiredTags": [
+              "CharacterState.AbilityState.SnakeDual.Normal",
+              "Weapon.Type.SnakeDual.CurrentHanded"
+            ],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 2345,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Tang/Weapon_Hun_Tang",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1085,
+        "endOffset": 1189,
+        "entries": [
+          {
+            "exportOffset": 1089,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1139,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1139,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1189,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Tang/Weapon_Hun_Tang_HorseCartCombat",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 878,
+        "endOffset": 982,
+        "entries": [
+          {
+            "exportOffset": 882,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 932,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 932,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 982,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Temp_HouHouHouHead/Weapon_Hun_Temp_HouHouHouHead",
+      "registryClass": "PBZ_TempWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 25,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Temp_MaleDoll_Arm/Weapon_Hun_Temp_MaleDoll_Arm",
+      "registryClass": "PBZ_TempWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 25,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Temp_MaleThug_Club/Weapon_Hun_Temp_MaleThug_Club",
+      "registryClass": "PBZ_TempWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 25,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Temp_MaleThugTwinAxe/Weapon_Hun_Temp_MaleThugTwinAxe",
+      "registryClass": "PBZ_TempWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 25,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/WoodenSword/Weapon_Hun_WoodenSword",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1719,
+        "endOffset": 1823,
+        "entries": [
+          {
+            "exportOffset": 1723,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1773,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1773,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1823,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/WoodenSword/Weapon_Hun_Young_WoodenSword",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1289,
+        "endOffset": 1393,
+        "entries": [
+          {
+            "exportOffset": 1293,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1343,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1343,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEx_Tang_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/ExE/GA_Hun_BEd_Tang_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1393,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/XieShan/Weapon_Hun_XieShan",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1371,
+        "endOffset": 1525,
+        "entries": [
+          {
+            "exportOffset": 1375,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/XieShan/ExE/GA_Hun_BEx_XieShan_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/XieShan/ExE/GA_Hun_BEd_XieShan_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1425,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1425,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/XieShan/ExE/GA_Hun_BEx_XieShan_M_03",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/XieShan/ExE/GA_Hun_BEd_XieShan_M_03",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1475,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1475,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/XieShan/ExE/GA_Hun_BEx_XieShan_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/XieShan/ExE/GA_Hun_BEd_XieShan_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1525,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/YanYueDao/Weapon_Hun_YanYueDao",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 879,
+        "endOffset": 983,
+        "entries": [
+          {
+            "exportOffset": 883,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/EXE/GA_Hun_BEx_YanYueDao_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/EXE/GA_Hun_BEd_YanYueDao_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 933,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 933,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/EXE/GA_Hun_BEx_YanYueDao_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/EXE/GA_Hun_BEd_YanYueDao_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 983,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/YuuBlade/Weapon_Hun_YuuBlade",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 1353,
+        "endOffset": 1457,
+        "entries": [
+          {
+            "exportOffset": 1357,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/YuuBlade/GA_Hun_BEx_YuuBlade_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/YuuBlade/GA_Hun_BEd_YuuBlade_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1407,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1407,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/YuuBlade/GA_Hun_BEx_YuuBlade_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/ExE/YuuBlade/GA_Hun_BEd_YuuBlade_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1457,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ZhanMaBlade/Weapon_Hun_ZhanMaBlade",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 921,
+        "endOffset": 1025,
+        "entries": [
+          {
+            "exportOffset": 925,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/ExE/GA_Hun_BEx_ZhanMa_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/ExE/GA_Hun_BEd_ZhanMa_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 975,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 975,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/ExE/GA_Hun_BEx_ZhanMa_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/ExE/GA_Hun_BEd_ZhanMa_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1025,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ZiMingJian/Weapon_Hun_ZiMingJian",
+      "registryClass": "PBZ_MainWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 26,
+        "arrayOffset": 969,
+        "endOffset": 1073,
+        "entries": [
+          {
+            "exportOffset": 973,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZiMingJian/EXE/GA_Hun_BEx_ZiMingJian_M_01",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZiMingJian/EXE/GA_Hun_BEd_ZiMingJian_M_01",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1023,
+            "role": "ordinary-combat-execution"
+          },
+          {
+            "exportOffset": 1023,
+            "channel": "Execution",
+            "executionType": "Execution.Type.Combat",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZiMingJian/EXE/GA_Hun_BEx_ZiMingJian_M_02",
+            "executedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZiMingJian/EXE/GA_Hun_BEd_ZiMingJian_M_02",
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 1073,
+            "role": "ordinary-combat-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/BrutalAxe/Weapon_BrutalAxe",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 293,
+        "endOffset": 342,
+        "entries": [
+          {
+            "exportOffset": 297,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.BrutalAxe",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 342,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/BrutalAxe/Weapon_BrutalAxe_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/CaoOuSiXian/Weapon_CaoOuSiXian",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/CaoOuSiXian/Weapon_CaoOuSiXian_Evolution",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/DuYanBow/Weapon_DuYan_Bow",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 229,
+        "endOffset": 278,
+        "entries": [
+          {
+            "exportOffset": 233,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.DuYanBow",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 278,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HanBingPiPa/Weapon_HanBingPiPa_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Weapon_HuangJinHuoChong",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 315,
+        "endOffset": 364,
+        "entries": [
+          {
+            "exportOffset": 319,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.HuangJinHuoChong",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 364,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Weapon_HuangJinHuoChong_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuoLiuXing/Weapon_HuoLiuXing",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 290,
+        "endOffset": 339,
+        "entries": [
+          {
+            "exportOffset": 294,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.HuoLiuXing",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 339,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JianKeZhaoJiLing/Weapon_JianKeZhaoJiLing",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JianKeZhaoJiLing/Weapon_JianKeZhaoJiLing_Evolution",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 269,
+        "endOffset": 318,
+        "entries": [
+          {
+            "exportOffset": 273,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.JinGua",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 318,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/KuYeSiZhuChuan/Weapon_KuYeSiZhuChuan",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/KuYeSiZhuChuan/Weapon_KuYeSiZhuChuan_Evolution",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/Weapon_LionHead",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 271,
+        "endOffset": 320,
+        "entries": [
+          {
+            "exportOffset": 275,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.LionHead",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 320,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/Weapon_LionHead_Evolution",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 271,
+        "endOffset": 320,
+        "entries": [
+          {
+            "exportOffset": 275,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.LionHead",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 320,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/Weapon_LionHead_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 304,
+        "endOffset": 353,
+        "entries": [
+          {
+            "exportOffset": 308,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.Lute",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Lute_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 353,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute_Evolution",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 314,
+        "endOffset": 363,
+        "entries": [
+          {
+            "exportOffset": 318,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.Lute",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Lute_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 363,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/Weapon_MiaoShouFeiDao",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 361,
+        "endOffset": 455,
+        "entries": [
+          {
+            "exportOffset": 365,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.MiaoShouFeiDao",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Execution_Remote",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 410,
+            "role": "native-shadow-execution"
+          },
+          {
+            "exportOffset": 410,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.MiaoShouFeiDao",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Execution_Close",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 455,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/Weapon_MiaoShouFeiDao_Evlotion",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 361,
+        "endOffset": 455,
+        "entries": [
+          {
+            "exportOffset": 365,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.MiaoShouFeiDao.Remote",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Execution_Remote",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 410,
+            "role": "native-shadow-execution"
+          },
+          {
+            "exportOffset": 410,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.MiaoShouFeiDao",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Execution_Close",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 455,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/Weapon_MiaoShouFeiDao_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Mojian/Weapon_Mojian",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 344,
+        "endOffset": 393,
+        "entries": [
+          {
+            "exportOffset": 348,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.MoJian",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_MoJian_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 393,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/NiTouChe/Weapon_NiTouChe",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 280,
+        "endOffset": 329,
+        "entries": [
+          {
+            "exportOffset": 284,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.ShachiHook",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 329,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Evolution",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 316,
+        "endOffset": 365,
+        "entries": [
+          {
+            "exportOffset": 320,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.ShachiHook",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 365,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TanLang/Weapon_TanLang",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 627,
+        "endOffset": 676,
+        "entries": [
+          {
+            "exportOffset": 631,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.TanLang",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 676,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ThunderSpear/Weapon_ThunderSpear",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 399,
+        "endOffset": 448,
+        "entries": [
+          {
+            "exportOffset": 403,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.ThunderSpear",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 448,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TieKuangQuanTao/Weapon_TieKuangQuanTao",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 348,
+        "endOffset": 397,
+        "entries": [
+          {
+            "exportOffset": 352,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.TieKuangQuanTao",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Execution_02",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 397,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/Weapon_TigerCannon",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 255,
+        "endOffset": 350,
+        "entries": [
+          {
+            "exportOffset": 259,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.TigerCannon.Execution",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 304,
+            "role": "native-shadow-execution"
+          },
+          {
+            "exportOffset": 304,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.TigerCannon.Counter",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Counter",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 350,
+            "role": "conditional-counter"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/Weapon_TigerCannon_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/UnnamedBow/Weapon_UnnamedBow",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 233,
+        "endOffset": 282,
+        "entries": [
+          {
+            "exportOffset": 237,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.UnnamedBow",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 282,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/UnnamedBow/Weapon_UnnamedBow_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/Weapon_XueDiZi",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 389,
+        "endOffset": 483,
+        "entries": [
+          {
+            "exportOffset": 393,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.XueDiZi..Normal",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 438,
+            "role": "native-shadow-execution"
+          },
+          {
+            "exportOffset": 438,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.XueDiZi..ShaChi",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_ShaChi_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 483,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/Weapon_XueDiZi_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueSeLingDang/Weapon_XueSeLingDang",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueSeLingDang/Weapon_XueSeLingDang_Evolution",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XuKongHuaShan/Weapon_XuKongHuaShan",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongCha/Weapon_YouLongCha",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 257,
+        "endOffset": 352,
+        "entries": [
+          {
+            "exportOffset": 261,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.YouLongCha.UnderWater",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Underwater_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 306,
+            "role": "native-shadow-execution"
+          },
+          {
+            "exportOffset": 306,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.YouLongCha.ShaChi",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": true,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 352,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongCha/Weapon_YouLongCha_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 145,
+        "endOffset": 194,
+        "entries": [
+          {
+            "exportOffset": 149,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.CombatFar.ShachiWeapon.YouLongCha",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Underwater_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 194,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongHead/Weapon_YouLongHead",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 257,
+        "endOffset": 306,
+        "entries": [
+          {
+            "exportOffset": 261,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.YouLongTou",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 306,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongHead/Weapon_YouLongHead_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/Weapon_ZhuoBiDun",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "arrayOffset": 233,
+        "endOffset": 282,
+        "entries": [
+          {
+            "exportOffset": 237,
+            "channel": "ShachiWeapon",
+            "executionType": "Execution.Type.Combat.ShachiWeapon.ZhuoBiDun",
+            "executionAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun_Execution",
+            "executedAbility": null,
+            "executorRequiredTags": [],
+            "executorIgnoredTags": [],
+            "targetRequiredTags": [],
+            "targetIgnoredTags": [],
+            "requiresNavigation": false,
+            "requiresEquippedWeapon": false,
+            "continuousExecutionTargetingType": null,
+            "endOffset": 282,
+            "role": "native-shadow-execution"
+          }
+        ],
+        "serialized": true
+      }
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/Weapon_ZhuoBiDun_Interact",
+      "registryClass": "PBZ_SubWeaponConfig_C",
+      "executionAnims": {
+        "fieldIndex": 20,
+        "entries": [],
+        "serialized": false
+      }
+    }
+  ],
+  "blueprintSchemas": {
+    "Main": [
+      {
+        "name": "Weapon Equip Tags",
+        "type": "StructProperty",
+        "schemaOffset": 1675
+      },
+      {
+        "name": "Weapon Owning Tags",
+        "type": "StructProperty",
+        "schemaOffset": 1726
+      },
+      {
+        "name": "Equip Effects",
+        "type": "ArrayProperty",
+        "schemaOffset": 1777
+      },
+      {
+        "name": "Owning Effects",
+        "type": "ArrayProperty",
+        "schemaOffset": 1879
+      },
+      {
+        "name": "Change Weapon Cooldown",
+        "type": "DoubleProperty",
+        "schemaOffset": 1981
+      },
+      {
+        "name": "Equip Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 2028
+      },
+      {
+        "name": "Owning Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 2130
+      },
+      {
+        "name": "Equip Passive Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 2232
+      },
+      {
+        "name": "Owning Passive Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 2334
+      },
+      {
+        "name": "Change Weapon Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 2436
+      },
+      {
+        "name": "Change Armed Ability",
+        "type": "ClassProperty",
+        "schemaOffset": 2538
+      },
+      {
+        "name": "Ability Break Endure Levels",
+        "type": "ArrayProperty",
+        "schemaOffset": 2593
+      },
+      {
+        "name": "Linked Anim Layers",
+        "type": "ArrayProperty",
+        "schemaOffset": 2691
+      },
+      {
+        "name": "Display Data",
+        "type": "ArrayProperty",
+        "schemaOffset": 2793
+      },
+      {
+        "name": "Deflect Attach Sockets",
+        "type": "ArrayProperty",
+        "schemaOffset": 2891
+      },
+      {
+        "name": "Trails",
+        "type": "MapProperty",
+        "schemaOffset": 2985
+      },
+      {
+        "name": "Sounds",
+        "type": "MapProperty",
+        "schemaOffset": 3134
+      },
+      {
+        "name": "Weapon Attack Multipliers",
+        "type": "MapProperty",
+        "schemaOffset": 3283
+      },
+      {
+        "name": "Weapon Attack Multipliers Normalized",
+        "type": "MapProperty",
+        "schemaOffset": 3428
+      },
+      {
+        "name": "Attack Type Mapping",
+        "type": "MapProperty",
+        "schemaOffset": 3573
+      },
+      {
+        "name": "Deflect Attack Types",
+        "type": "MapProperty",
+        "schemaOffset": 3722
+      },
+      {
+        "name": "Deflect Materials",
+        "type": "MapProperty",
+        "schemaOffset": 3867
+      },
+      {
+        "name": "Unarm Shown",
+        "type": "BoolProperty",
+        "schemaOffset": 4012
+      },
+      {
+        "name": "Unequip Shown",
+        "type": "BoolProperty",
+        "schemaOffset": 4065
+      },
+      {
+        "name": "Weapon Combos",
+        "type": "MapProperty",
+        "schemaOffset": 4118
+      }
+    ],
+    "Temp": [
+      {
+        "name": "Weapon Equip Tags",
+        "type": "StructProperty",
+        "schemaOffset": 1626
+      },
+      {
+        "name": "Weapon Owning Tags",
+        "type": "StructProperty",
+        "schemaOffset": 1677
+      },
+      {
+        "name": "Equip Effects",
+        "type": "ArrayProperty",
+        "schemaOffset": 1728
+      },
+      {
+        "name": "Owning Effects",
+        "type": "ArrayProperty",
+        "schemaOffset": 1830
+      },
+      {
+        "name": "Change Weapon Cooldown",
+        "type": "DoubleProperty",
+        "schemaOffset": 1932
+      },
+      {
+        "name": "Equip Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 1979
+      },
+      {
+        "name": "Owning Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 2081
+      },
+      {
+        "name": "Equip Passive Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 2183
+      },
+      {
+        "name": "Owning Passive Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 2285
+      },
+      {
+        "name": "Change Weapon Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 2387
+      },
+      {
+        "name": "Change Armed Ability",
+        "type": "ClassProperty",
+        "schemaOffset": 2489
+      },
+      {
+        "name": "Ability Break Endure Levels",
+        "type": "ArrayProperty",
+        "schemaOffset": 2544
+      },
+      {
+        "name": "Linked Anim Layers",
+        "type": "ArrayProperty",
+        "schemaOffset": 2642
+      },
+      {
+        "name": "Display Data",
+        "type": "ArrayProperty",
+        "schemaOffset": 2744
+      },
+      {
+        "name": "Deflect Attach Sockets",
+        "type": "ArrayProperty",
+        "schemaOffset": 2842
+      },
+      {
+        "name": "Trails",
+        "type": "MapProperty",
+        "schemaOffset": 2936
+      },
+      {
+        "name": "Sounds",
+        "type": "MapProperty",
+        "schemaOffset": 3085
+      },
+      {
+        "name": "Weapon Attack Multipliers",
+        "type": "MapProperty",
+        "schemaOffset": 3234
+      },
+      {
+        "name": "Attack Type Mapping",
+        "type": "MapProperty",
+        "schemaOffset": 3379
+      },
+      {
+        "name": "Deflect Attack Types",
+        "type": "MapProperty",
+        "schemaOffset": 3528
+      },
+      {
+        "name": "Deflect Materials",
+        "type": "MapProperty",
+        "schemaOffset": 3673
+      },
+      {
+        "name": "Unarm Shown",
+        "type": "BoolProperty",
+        "schemaOffset": 3818
+      },
+      {
+        "name": "Unequip Shown",
+        "type": "BoolProperty",
+        "schemaOffset": 3871
+      },
+      {
+        "name": "Weapon Combos",
+        "type": "MapProperty",
+        "schemaOffset": 3924
+      }
+    ],
+    "Sub": [
+      {
+        "name": "Weapon Equip Tags",
+        "type": "StructProperty",
+        "schemaOffset": 1494
+      },
+      {
+        "name": "Weapon Owning Tags",
+        "type": "StructProperty",
+        "schemaOffset": 1545
+      },
+      {
+        "name": "Equip Effects",
+        "type": "ArrayProperty",
+        "schemaOffset": 1596
+      },
+      {
+        "name": "Owning Effects",
+        "type": "ArrayProperty",
+        "schemaOffset": 1698
+      },
+      {
+        "name": "Change Weapon Cooldown",
+        "type": "DoubleProperty",
+        "schemaOffset": 1800
+      },
+      {
+        "name": "Equip Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 1847
+      },
+      {
+        "name": "Owning Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 1949
+      },
+      {
+        "name": "Equip Passive Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 2051
+      },
+      {
+        "name": "Owning Passive Abilities",
+        "type": "ArrayProperty",
+        "schemaOffset": 2153
+      },
+      {
+        "name": "Ability Break Endure Levels",
+        "type": "ArrayProperty",
+        "schemaOffset": 2255
+      },
+      {
+        "name": "Display Data",
+        "type": "ArrayProperty",
+        "schemaOffset": 2353
+      },
+      {
+        "name": "Weapon Attack Multipliers",
+        "type": "MapProperty",
+        "schemaOffset": 2451
+      },
+      {
+        "name": "Weapon Attack Multipliers Normalized",
+        "type": "MapProperty",
+        "schemaOffset": 2596
+      },
+      {
+        "name": "Attack Type Mapping",
+        "type": "MapProperty",
+        "schemaOffset": 2741
+      },
+      {
+        "name": "Deflect Attach Socket",
+        "type": "NameProperty",
+        "schemaOffset": 2890
+      },
+      {
+        "name": "Deflect Attack Types",
+        "type": "MapProperty",
+        "schemaOffset": 2937
+      },
+      {
+        "name": "Weapon Combos",
+        "type": "MapProperty",
+        "schemaOffset": 3082
+      },
+      {
+        "name": "Trails",
+        "type": "MapProperty",
+        "schemaOffset": 3231
+      },
+      {
+        "name": "Sounds",
+        "type": "MapProperty",
+        "schemaOffset": 3380
+      }
+    ]
+  },
+  "breakAttackRecipes": [
+    {
+      "id": "move:Ability.Action.Hun.Iron.BreakAct",
+      "sourceId": "ability:Ability.Action.Execution.Channel.SpecialAttack",
+      "tag": "Ability.Action.Execution.Channel.SpecialAttack",
+      "executionChannel": "SpecialAttack",
+      "executionType": "Execution.Type.Combat.BreakAct.Iron",
+      "inputAction": "/PBZInput/InputActions/IA_AttackH_Press.IA_AttackH_Press",
+      "requiredTags": [
+        "Weapon.Type.Iron",
+        "CharacterState.WeaponUpgrade.Iron.CanBreakAct"
+      ],
+      "priority": -5,
+      "code": "Iron · BreakAct",
+      "labelParts": [
+        "catalog.specialattack"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "残钢刃",
+        "en": "JAGGED STEEL",
+        "ja": "残鋼刃",
+        "ko": "잔강인",
+        "ru": "Щербатая Сталь",
+        "zh-Hant": "殘鋼刃",
+        "fr": "LAME ÉBRÉCHÉE",
+        "de": "GEZACKTER STAHL",
+        "es-ES": "ACERO SERRADO",
+        "pt-BR": "LÂMINA DESGASTADA",
+        "it": "LAMA DENTELLATA",
+        "th": "คมดาบฉานกัง",
+        "vi": "TÀN CƯƠNG ĐAO",
+        "pt-PT": "AÇO CORROÍDO",
+        "es-419": "ACERO SERRADO"
+      },
+      "category": "weapons/special",
+      "usageKey": "moves.specialexecution.usage",
+      "searchAliases": [
+        "Iron",
+        "BreakAct",
+        "Execution.Type.Combat.BreakAct.Iron",
+        "GA_Hun_Iron_BreakAct_02"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.Jigsaw.BreakAct",
+      "sourceId": "ability:Ability.Action.Execution.Channel.SpecialAttack",
+      "tag": "Ability.Action.Execution.Channel.SpecialAttack",
+      "executionChannel": "SpecialAttack",
+      "executionType": "Execution.Type.Combat.BreakAct.Jigsaw",
+      "inputAction": "/PBZInput/InputActions/IA_AttackH_Press.IA_AttackH_Press",
+      "requiredTags": [
+        "Weapon.Type.Jigsaw"
+      ],
+      "priority": -5,
+      "code": "Jigsaw · BreakAct",
+      "labelParts": [
+        "catalog.specialattack"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "断肢锯",
+        "en": "BONESAW",
+        "ja": "断肢鋸",
+        "ko": "절단톱",
+        "ru": "Костогрыз",
+        "zh-Hant": "斷肢鋸",
+        "fr": "SCIE CRANTÉE",
+        "de": "KNOCHENSÄGE",
+        "es-ES": "SIERRA ÓSEA",
+        "pt-BR": "SERRA DE OSSOS",
+        "it": "SEGAOSSA",
+        "th": "เลื่อยตัดแขนขา",
+        "vi": "ĐOẠN CHI CƯA",
+        "pt-PT": "SERRA DE OSSOS",
+        "es-419": "SIERRA DENTADA"
+      },
+      "category": "weapons/special",
+      "usageKey": "moves.specialexecution.usage",
+      "searchAliases": [
+        "Jigsaw",
+        "BreakAct",
+        "Execution.Type.Combat.BreakAct.Jigsaw",
+        "GA_Hun_Jigsaw_BreakAct"
+      ]
+    }
+  ]
+}

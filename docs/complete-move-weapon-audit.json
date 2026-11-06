@@ -6916,7 +6916,7 @@
       ],
       "missingCatalogTagsAtAudit": [],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "supported-static-original-success-wrapper",
+      "directEntryStatus": "supported-native-complete-move",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 2,
       "timelines": [
@@ -6951,7 +6951,7 @@
         "entryPoint": "EventReceived_7594CBDE4CE41BEBFC9ABFBA4E2D1DF1",
         "entryEvidence": "EventReceived wrapper copies unused FGameplayEventData at 0x4d5 and invokes 0x3f5; EndTask; 0x415 Current Reinforced branch; 0x436/0x48f original ForceActivateExternalActionAbilityByClass.",
         "resources": "Preserve both original source and release-class heavy activation costs. Read original Current Reinforced; choose reinforced B_Hold or B_Hold_Unreinforced through the existing class branch. Waiting graph has no tick charge or resource mutation.",
-        "remaining": "Game dispatch and visual result remain unverified. Early-release BB_UnCharge branches are separate moves.",
+        "remaining": "Game dispatch and visual result remain unverified.",
         "recipe": {
           "sourceTag": "Ability.Action.Hun.Heavy.GuiTouDao.BHold.Start",
           "sourceClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start.GA_Hun_GuiTouBlade_B_Hold_Start_C",
@@ -6992,15 +6992,19 @@
             "Blueprint evidence does not establish runtime function dispatch or visual result.",
             "Call once per fresh normally activated source instance; do not invoke on CDO, stale, inactive or unrelated instance."
           ]
-        }
+        },
+        "earlyReleaseEvidence": "complete-move-weapon-special-entries.json"
       },
       "unknowns": [
-        "Native unlock/target conditions and actual game execution not individually verified; normal GAS activation remains required."
+        "Game runtime animation, damage and timing remain unverified."
       ],
       "verifiedEquipmentTag": "Weapon.Type.GuiTouBlade",
       "verifiedEquipGrantSources": [
         "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/Weapon_Hun_GuiTouBlade"
-      ]
+      ],
+      "completeMoveId": "move:Ability.Action.Hun.Heavy.GuiTouDao.BHold.EarlyRelease",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json",
+      "verifiedGrantField": 5
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Snap": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Snap.GA_Hun_GuiTouBlade_B_Snap_C",
@@ -7120,7 +7124,7 @@
         "Ability.Action.Hun.Heavy.GuiTouDao.BHold.EarlyRelease"
       ],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "unknown-not-individually-proven",
+      "directEntryStatus": "native-paid-early-release-target",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 2,
       "timelines": [
@@ -7146,12 +7150,13 @@
       ],
       "phaseFinding": null,
       "unknowns": [
-        "Native GAS tag fields, unlock/equipment/target conditions and actual game execution not individually verified.",
-        "Multiple timelines are not automatically multiple attacks; individual endpoint and cost semantics remain unaudited."
+        "Game runtime animation, damage and timing remain unverified."
       ],
       "verifiedEquipGrantSources": [
         "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/Weapon_Hun_GuiTouBlade"
-      ]
+      ],
+      "completeMoveId": "move:Ability.Action.Hun.Heavy.GuiTouDao.BHold.EarlyRelease",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json"
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_BB_UnCharge_Reinforced": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_BB_UnCharge_Reinforced.GA_Hun_GuiTouBlade_BB_UnCharge_Reinforced_C",
@@ -7169,7 +7174,7 @@
         "Ability.Action.Hun.Heavy.GuiTouDao.BHold.EarlyRelease"
       ],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "unknown-not-individually-proven",
+      "directEntryStatus": "native-paid-early-release-target",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 2,
       "timelines": [
@@ -7195,12 +7200,13 @@
       ],
       "phaseFinding": null,
       "unknowns": [
-        "Native GAS tag fields, unlock/equipment/target conditions and actual game execution not individually verified.",
-        "Multiple timelines are not automatically multiple attacks; individual endpoint and cost semantics remain unaudited."
+        "Game runtime animation, damage and timing remain unverified."
       ],
       "verifiedEquipGrantSources": [
         "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/Weapon_Hun_GuiTouBlade"
-      ]
+      ],
+      "completeMoveId": "move:Ability.Action.Hun.Heavy.GuiTouDao.BHold.EarlyRelease",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json"
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_BBB": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_BBB.GA_Hun_GuiTouBlade_BBB_C",
@@ -13227,7 +13233,7 @@
         "Ability.Action.Hun.Heavy.ChaosBlade.SWT"
       ],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "unknown-not-individually-proven",
+      "directEntryStatus": "supported-native-complete-move",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 2,
       "timelines": [
@@ -13255,9 +13261,11 @@
       ],
       "phaseFinding": null,
       "unknowns": [
-        "Native GAS tag fields, unlock/equipment/target conditions and actual game execution not individually verified.",
-        "Multiple timelines are not automatically multiple attacks; individual endpoint and cost semantics remain unaudited."
-      ]
+        "Game runtime animation, damage and timing remain unverified."
+      ],
+      "completeMoveId": "move:WeaponSpecial.GA_Hun_Chaos_SwitchFormFire_SWT",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json",
+      "verifiedGrantField": 5
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/GA_Hun_Chaos_SwitchFormIce": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/GA_Hun_Chaos_SwitchFormIce.GA_Hun_Chaos_SwitchFormIce_C",
@@ -13319,7 +13327,7 @@
         "Ability.Action.Hun.Heavy.ChaosBlade.SWT"
       ],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "unknown-not-individually-proven",
+      "directEntryStatus": "supported-native-complete-move",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 2,
       "timelines": [
@@ -13347,9 +13355,11 @@
       ],
       "phaseFinding": null,
       "unknowns": [
-        "Native GAS tag fields, unlock/equipment/target conditions and actual game execution not individually verified.",
-        "Multiple timelines are not automatically multiple attacks; individual endpoint and cost semantics remain unaudited."
-      ]
+        "Game runtime animation, damage and timing remain unverified."
+      ],
+      "completeMoveId": "move:WeaponSpecial.GA_Hun_Chaos_SwitchFormIce_SWT",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json",
+      "verifiedGrantField": 5
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/GA_Hun_Chaos_SwitchFormPhysic": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/GA_Hun_Chaos_SwitchFormPhysic.GA_Hun_Chaos_SwitchFormPhysic_C",
@@ -13411,7 +13421,7 @@
         "Ability.Action.Hun.Heavy.ChaosBlade.SWT"
       ],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "unknown-not-individually-proven",
+      "directEntryStatus": "supported-native-complete-move",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 2,
       "timelines": [
@@ -13439,9 +13449,11 @@
       ],
       "phaseFinding": null,
       "unknowns": [
-        "Native GAS tag fields, unlock/equipment/target conditions and actual game execution not individually verified.",
-        "Multiple timelines are not automatically multiple attacks; individual endpoint and cost semantics remain unaudited."
-      ]
+        "Game runtime animation, damage and timing remain unverified."
+      ],
+      "completeMoveId": "move:WeaponSpecial.GA_Hun_Chaos_SwitchFormPhysic_SWT",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json",
+      "verifiedGrantField": 5
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/GA_Hun_Chaos_SwitchPassive": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/GA_Hun_Chaos_SwitchPassive.GA_Hun_Chaos_SwitchPassive_C",
@@ -13484,7 +13496,7 @@
         "Ability.Action.Hun.Heavy.ChaosBlade.SWT"
       ],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "unknown-not-individually-proven",
+      "directEntryStatus": "supported-native-complete-move",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 1,
       "timelines": [
@@ -13503,8 +13515,14 @@
       ],
       "phaseFinding": null,
       "unknowns": [
-        "Native GAS tag fields, unlock/equipment/target conditions and actual game execution not individually verified."
-      ]
+        "Game runtime animation, damage and timing remain unverified."
+      ],
+      "completeMoveId": "move:WeaponSwitch.ChaosBlade",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json",
+      "verifiedGrantField": 9,
+      "nativeRouteTag": "Ability.Action.Hun.Heavy.ChaosBlade.SWT",
+      "nativeActivationTag": "Ability.Action.Hun.Weapon.Switch.Normal",
+      "tagRoles": "Ability Tag selects the attack after the real weapon switch; it is distinct from the wrapper AbilityTags."
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/Ice/GA_Hun_Chaos_AAAB_Ice": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/Ice/GA_Hun_Chaos_AAAB_Ice.GA_Hun_Chaos_AAAB_Ice_C",
@@ -22817,7 +22835,7 @@
         "Ability.Action.Hun.Heavy.DualHook.SWTDB"
       ],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "unknown-not-individually-proven",
+      "directEntryStatus": "supported-native-complete-move",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 4,
       "timelines": [
@@ -22861,9 +22879,11 @@
       ],
       "phaseFinding": null,
       "unknowns": [
-        "Native GAS tag fields, unlock/equipment/target conditions and actual game execution not individually verified.",
-        "Multiple timelines are not automatically multiple attacks; individual endpoint and cost semantics remain unaudited."
-      ]
+        "Game runtime animation, damage and timing remain unverified."
+      ],
+      "completeMoveId": "move:WeaponSpecial.GA_Hun_DualHook_DB_SWT",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json",
+      "verifiedGrantField": 5
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_GEx": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_GEx.GA_Hun_DualHook_GEx_C",
@@ -23063,7 +23083,7 @@
         "Ability.Action.Hun.Heavy.DualHook.SWTDB"
       ],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "unknown-not-individually-proven",
+      "directEntryStatus": "supported-native-complete-move",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 1,
       "timelines": [
@@ -23082,8 +23102,14 @@
       ],
       "phaseFinding": null,
       "unknowns": [
-        "Native GAS tag fields, unlock/equipment/target conditions and actual game execution not individually verified."
-      ]
+        "Game runtime animation, damage and timing remain unverified."
+      ],
+      "completeMoveId": "move:WeaponSwitch.DualHook",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json",
+      "verifiedGrantField": 9,
+      "nativeRouteTag": "Ability.Action.Hun.Heavy.DualHook.SWTDB",
+      "nativeActivationTag": "Ability.Action.Hun.Weapon.Switch.Normal",
+      "tagRoles": "Ability Tag selects the attack after the real weapon switch; it is distinct from the wrapper AbilityTags."
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/ExE/GA_Hun_BEd_DualHook_M_01": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/ExE/GA_Hun_BEd_DualHook_M_01.GA_Hun_BEd_DualHook_M_01_C",
@@ -25370,7 +25396,7 @@
         "Ability.Action.Hun.Heavy.Horizontal.NoCostB"
       ],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "unknown-not-individually-proven",
+      "directEntryStatus": "supported-native-complete-move",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 2,
       "timelines": [
@@ -25396,9 +25422,11 @@
       ],
       "phaseFinding": null,
       "unknowns": [
-        "Native GAS tag fields, unlock/equipment/target conditions and actual game execution not individually verified.",
-        "Multiple timelines are not automatically multiple attacks; individual endpoint and cost semantics remain unaudited."
-      ]
+        "Game runtime animation, damage and timing remain unverified."
+      ],
+      "completeMoveId": "move:Ability.Action.Hun.Heavy.Horizontal.NoCostB",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json",
+      "verifiedGrantField": 5
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_B_Snap": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_B_Snap.GA_Hun_Horizontal_B_Snap_C",
@@ -39207,7 +39235,7 @@
         "Ability.Action.Hun.Heavy.ShuangYue.SWTDB"
       ],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "unknown-not-individually-proven",
+      "directEntryStatus": "supported-native-complete-move",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 2,
       "timelines": [
@@ -39237,9 +39265,11 @@
       ],
       "phaseFinding": null,
       "unknowns": [
-        "Native GAS tag fields, unlock/equipment/target conditions and actual game execution not individually verified.",
-        "Multiple timelines are not automatically multiple attacks; individual endpoint and cost semantics remain unaudited."
-      ]
+        "Game runtime animation, damage and timing remain unverified."
+      ],
+      "completeMoveId": "move:WeaponSpecial.GA_Hun_ShuangYue_DB_SWT",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json",
+      "verifiedGrantField": 5
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_PB": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_PB.GA_Hun_ShuangYue_PB_C",
@@ -39429,7 +39459,7 @@
         "Ability.Action.Hun.Heavy.ShuangYue.SWTDB"
       ],
       "normalEntry": "normal GameplayAbility activation / inherited K2_ActivateAbility",
-      "directEntryStatus": "unknown-not-individually-proven",
+      "directEntryStatus": "supported-native-complete-move",
       "localTimelineCount": 0,
       "effectiveTimelineCount": 1,
       "timelines": [
@@ -39448,8 +39478,14 @@
       ],
       "phaseFinding": null,
       "unknowns": [
-        "Native GAS tag fields, unlock/equipment/target conditions and actual game execution not individually verified."
-      ]
+        "Game runtime animation, damage and timing remain unverified."
+      ],
+      "completeMoveId": "move:WeaponSwitch.ShuangYue",
+      "specialEntryEvidence": "complete-move-weapon-special-entries.json",
+      "verifiedGrantField": 9,
+      "nativeRouteTag": "Ability.Action.Hun.Heavy.ShuangYue.SWTDB",
+      "nativeActivationTag": "Ability.Action.Hun.Weapon.Switch.Normal",
+      "tagRoles": "Ability Tag selects the attack after the real weapon switch; it is distinct from the wrapper AbilityTags."
     },
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_TianShaShuangYue_ChargePassive": {
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_TianShaShuangYue_ChargePassive.GA_TianShaShuangYue_ChargePassive_C",
@@ -62514,7 +62550,7 @@
       "entryPoint": "EventReceived_7594CBDE4CE41BEBFC9ABFBA4E2D1DF1",
       "entryEvidence": "EventReceived wrapper copies unused FGameplayEventData at 0x4d5 and invokes 0x3f5; EndTask; 0x415 Current Reinforced branch; 0x436/0x48f original ForceActivateExternalActionAbilityByClass.",
       "resources": "Preserve both original source and release-class heavy activation costs. Read original Current Reinforced; choose reinforced B_Hold or B_Hold_Unreinforced through the existing class branch. Waiting graph has no tick charge or resource mutation.",
-      "remaining": "Game dispatch and visual result remain unverified. Early-release BB_UnCharge branches are separate moves.",
+      "remaining": "Game dispatch and visual result remain unverified.",
       "recipe": {
         "sourceTag": "Ability.Action.Hun.Heavy.GuiTouDao.BHold.Start",
         "sourceClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start.GA_Hun_GuiTouBlade_B_Hold_Start_C",
@@ -62555,7 +62591,8 @@
           "Blueprint evidence does not establish runtime function dispatch or visual result.",
           "Call once per fresh normally activated source instance; do not invoke on CDO, stale, inactive or unrelated instance."
         ]
-      }
+      },
+      "earlyReleaseEvidence": "complete-move-weapon-special-entries.json"
     },
     {
       "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Hold/GA_Hun_FengLeiJian_B_Hold.GA_Hun_FengLeiJian_B_Hold_C",

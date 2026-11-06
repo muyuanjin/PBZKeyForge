@@ -7,8 +7,8 @@ end
 local function rig(bindings, targets)
     local backend={ events={} }
     function backend:allowed(when, context) return context and context[when] == true end
-    function backend:dispatch(target, phase, value, id)
-        self.events[#self.events+1]={target=target.path or target.tag,phase=phase,value=value,id=id}
+    function backend:dispatch(target, phase, value, id, bypassResources, settings)
+        self.events[#self.events+1]={target=target.path or target.tag,phase=phase,value=value,id=id,bypass_resources=bypassResources,settings=settings}
     end
     targets=targets or { a={kind="action",path="a",value_type="bool"} }
     local router=Router.new({targets=targets,bindings=bindings},backend)
@@ -380,4 +380,82 @@ do
     check(step(.1,{X=1})[1].phase=="started","positive axis rejected positive direction")
 end
 
+do
+    local _,_,step=rig({
+        {id="keyboard",keys={"G"},trigger="down",outputs={"first","second"}},
+        {id="controller",keys={"Gamepad_X"},trigger="down",outputs={"second"}}
+    },{first={kind="move",move_id="move:release",tag="release"},
+        second={kind="move",move_id="move:release",tag="release"}})
+    check(#step(0,{G=1,Gamepad_X=1})==1,
+        "Multiple outputs and bindings for one complete move must share one request per frame")
+    check(#step(.1,{G=1,Gamepad_X=1})==1,
+        "A held complete move must keep requesting activation after the initial pulse")
+    check(#step(.2,{Gamepad_X=1})==1,
+        "Releasing one source must preserve another source's complete-move requests")
+    check(#step(.3,{})==0 and #step(.4,{})==0,
+        "Releasing the final source must stop complete-move requests immediately")
+end
+
+do
+    for _,kind in ipairs({"press","tap","release"}) do
+        local _,backend,step=rig({{id="once",keys={"G"},trigger=kind,outputs={"move"}}},
+            {move={kind="move",move_id="move:once",tag="once"}})
+        local requests=0
+        for _,frame in ipairs({{0,{G=1}},{.1,{G=1}},{.2,{}},{.3,{}}}) do
+            requests=requests+#step(frame[1],frame[2])
+        end
+        check(requests==1,"A complete-move " .. kind .. " binding must preserve its one-shot trigger")
+    end
+end
+
+do
+    local _,_,step=rig({{id="held",keys={"G"},trigger="hold",seconds=.3,outputs={"move"}}},
+        {move={kind="move",move_id="move:held",tag="held"}})
+    check(#step(0,{G=1})==0 and #step(.29,{G=1})==0,
+        "A complete move on hold must wait for the configured threshold")
+    check(#step(.3,{G=1})==1 and #step(.4,{G=1})==1,
+        "A qualified hold must continue sending complete-move requests")
+    check(#step(.5,{})==0,"Releasing a hold must stop complete-move requests")
+end
+
+do
+    for _, reversed in ipairs({false,true}) do
+        local paid={id="paid",keys={"G"},trigger="down",outputs={"paid"}}
+        local free={id="free",keys={"H"},trigger="down",bypass_resources=true,when="allowed",outputs={"free"}}
+        local _,_,step=rig(reversed and {free,paid} or {paid,free}, {
+            paid={kind="move",move_id="move:release",tag="release"},
+            free={kind="move",move_id="move:release",tag="release"}})
+        local e=step(0,{G=1},{allowed=true})
+        check(#e==1 and not e[1].bypass_resources,"An ordinary move must retain its resource cost")
+        e=step(.1,{G=1,H=1},{allowed=true})
+        check(#e==1 and e[1].bypass_resources,"Merged move requests must keep the active bypass regardless of rule order")
+        e=step(.2,{H=1},{allowed=true})
+        check(#e==1 and e[1].bypass_resources,"A bypass move must work independently")
+        e=step(.3,{G=1,H=1},{allowed=false})
+        check(#e==1 and not e[1].bypass_resources,"An ineligible binding must not bypass another move's resource cost")
+        e=step(.4,{G=1},{allowed=true})
+        check(#e==1 and not e[1].bypass_resources,"Releasing the bypass key must restore ordinary resource costs")
+        check(#step(.5,{},{allowed=true})==0,"Merged move requests must stop when both keys release")
+    end
+end
+
+do
+    for _,kind in ipairs({"action","move"}) do
+        for _,reversed in ipairs({false,true}) do
+            local ordinary={id="ordinary",keys={"G"},outputs={"shared"}}
+            local tuned={id="tuned",keys={"H"},damage_multiplier=3,startup_speed=2,recovery_speed=4,outputs={"shared"}}
+            local target={kind=kind,path="shared",move_id="shared",tag="shared",value_type="bool"}
+            local _,_,step=rig(reversed and {tuned,ordinary} or {ordinary,tuned},{shared=target})
+            local e=step(0,{G=1,H=1})
+            check(#e==1 and e[1].settings==tuned,"An ordinary binding cannot mask simultaneous tuning for "..kind)
+            e=step(.1,{G=1})
+            check(#e==1 and e[1].settings==ordinary,"Releasing the tuned source restores ordinary parameters for "..kind)
+        end
+        local low={id="low",keys={"G"},priority=1,damage_multiplier=2,outputs={"shared"}}
+        local high={id="high",keys={"H"},priority=2,damage_multiplier=.5,startup_speed=3,recovery_speed=.25,outputs={"shared"}}
+        local _,_,step=rig({low,high},{shared={kind=kind,path="shared",move_id="shared",tag="shared",value_type="bool"}})
+        local e=step(0,{G=1,H=1})
+        check(#e==1 and e[1].settings==high,"Conflicting tuning follows binding priority without stacking or maximizing values")
+    end
+end
 print("RouterTests: " .. count .. " assertions passed")

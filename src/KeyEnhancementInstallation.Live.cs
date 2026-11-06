@@ -14,6 +14,7 @@ namespace PBZKeyForge
         public bool NeverConnected;
         public DateTime UpdatedUtc;
         public string Detail;
+        public string ErrorDetail;
         public string ActiveSchemeId;
     }
 
@@ -29,13 +30,12 @@ namespace PBZKeyForge
             {
                 var updated = File.GetLastWriteTimeUtc(path);
                 string[] lines = File.Exists(path) ? File.ReadAllText(path).Replace("\r", "").Split(new[] { '\n' }, 4) : new string[0];
-                string state = lines.Length > 2 ? lines[2] : "ready";
-                if (lines.Length >= 2 && lines[0] == "PBZ-LIVE-1"
-                    && (state == "ready" || state == "suspended" || state == "disabled")
-                    && (lines.Length == 2 || lines.Length == 4))
+                string state = lines.Length > 2 ? lines[2] : null;
+                if (lines.Length == 4 && lines[0] == "PBZ-LIVE-1"
+                    && (state == "ready" || state == "suspended" || state == "disabled"))
                 {
                     lastLiveState = state;
-                    lastLiveDetail = lines.Length > 3 ? lines[3] : "";
+                    lastLiveDetail = lines[3];
                     lastLiveUpdate = updated;
                 }
             }
@@ -57,6 +57,7 @@ namespace PBZKeyForge
             return new KeyEnhancementLiveStatus { Available = connected, Waiting = !connected && seen, NeverConnected = !seen, ActiveSchemeId = scheme,
                 Suspended = connected && lastLiveState == "suspended",
                 RoutingEnabled = connected && lastLiveState == "ready", UpdatedUtc = lastLiveUpdate,
+                ErrorDetail = seen && lastLiveState == "suspended" ? I18n.Str("live.suspended", lastLiveDetail) : null,
                 Detail = !connected ? I18n.Str(seen ? "live.waitingdetail" : "flow.notconnected.detail") : lastLiveState == "suspended"
                     ? I18n.Str("live.suspended", lastLiveDetail)
                     : I18n.Str(lastLiveState == "disabled" ? "live.disabled" : "live.ready") };

@@ -180,6 +180,8 @@ namespace PBZKeyForge
         {
             var state = BindingApplication();
             string content = state.Connection == null ? I18n.Str("live.unavailable") : state.Connection.Detail;
+            if (state.Connection != null && state.Connection.ErrorDetail != null && content != state.Connection.ErrorDetail)
+                content += "\n\n" + state.Connection.ErrorDetail;
             content += "\n\n" + I18n.Str("flow.connection.help");
             if (keyEnhancementInstallation != null)
                 content += "\n\n" + keyEnhancementInstallation.InstallDirectory + "\n" + I18n.Str("flow.connection.files")

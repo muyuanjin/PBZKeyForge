@@ -43,33 +43,35 @@ public static class KeyEnhancementInstallationTests
                 using (var input = entry.Open()) using (var output = File.Create(path)) input.CopyTo(output);
             }
     }
-    static void InspectPrototype(string output)
+    static void InspectPayload(string output)
     {
-        string root = Game(output, "prototype inspection");
+        string root = Game(output, "payload inspection");
         var installation = new KeyEnhancementInstallation(root);
-        using (var stream = typeof(KeyEnhancementInstallation).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.legacy.zip"))
+        using (var stream = typeof(KeyEnhancementInstallation).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.runtime.zip"))
         using (var archive = new ZipArchive(stream, ZipArchiveMode.Read))
             foreach (var entry in archive.Entries)
             {
-                string path = Path.Combine(installation.InstallDirectory, entry.FullName.Replace('/', Path.DirectorySeparatorChar));
+                const string prefix = "runtime/platform/steam/ue4ss/Mods/PBZInputRouter/";
+                if (!entry.FullName.StartsWith(prefix, StringComparison.Ordinal) || entry.FullName.EndsWith("/")) continue;
+                string path = Path.Combine(installation.InstallDirectory, entry.FullName.Substring(prefix.Length).Replace('/', Path.DirectorySeparatorChar));
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
                 using (var input = entry.Open()) using (var file = File.Create(path)) input.CopyTo(file);
             }
-        Check(installation.ReadState() == KeyEnhancementInstallState.Incomplete, "The original prototype was not recognized.");
+        Check(installation.ReadState() == KeyEnhancementInstallState.Incomplete, "Current payload without configuration must be incomplete.");
+        Check(!installation.LoadConfiguration().Enabled, "An unconfigured payload automatically enabled enhancement.");
         string configPath = Path.Combine(installation.InstallDirectory, @"Scripts\router-config.lua");
-        string original = File.ReadAllText(configPath);
-        string disabled = original.Replace("enabled = true,", "enabled = false,");
-        File.WriteAllText(configPath, disabled, new System.Text.UTF8Encoding(false));
-        Check(installation.ReadState() == KeyEnhancementInstallState.Incomplete, "A disabled original prototype was rejected as a foreign modification.");
-        Check(!installation.LoadConfiguration().Enabled, "An unconfigured prototype automatically enabled enhancement.");
-        File.WriteAllText(configPath, disabled.Replace("jump-f9", "custom-jump"), new System.Text.UTF8Encoding(false));
-        Check(installation.ReadState() == KeyEnhancementInstallState.Conflict, "A user-modified prototype was accepted for overwrite.");
-        File.WriteAllText(configPath, disabled, new System.Text.UTF8Encoding(false));
+        File.WriteAllText(configPath, "return {enabled=false}");
+        Check(installation.ReadState() == KeyEnhancementInstallState.Conflict, "Lua without its source configuration was accepted for overwrite.");
+        Check(File.ReadAllText(configPath) == "return {enabled=false}", "Unowned Lua was not preserved.");
         using (var stream = typeof(KeyEnhancementInstallation).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.runtime.zip"))
         using (var archive = new ZipArchive(stream, ZipArchiveMode.Read))
-            foreach (string name in new[] { "native-input.lua", "native-abilities.lua", "physical-input.lua", "complete-moves.lua", "object-pool.lua" })
+            foreach (string name in new[] { "native-input.lua", "native-abilities.lua", "physical-input.lua", "complete-moves.lua", "object-pool.lua", "resource-costs.lua", "script-context.lua" })
                 Check(archive.Entries.Any(entry => entry.FullName.EndsWith("/Scripts/" + name, StringComparison.Ordinal)),
                     "Runtime package is missing " + name);
+        using (var stream = typeof(KeyEnhancementInstallation).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.runtime.zip"))
+        using (var archive = new ZipArchive(stream, ZipArchiveMode.Read))
+            Check(archive.Entries.Any(entry => entry.FullName.EndsWith("/lib/pbzability-context.dll", StringComparison.Ordinal)),
+                "Runtime package is missing the ability context bridge");
     }
     public static int Main(string[] args)
     {
@@ -78,7 +80,7 @@ public static class KeyEnhancementInstallationTests
             I18n.Current = "zh-Hans";
             string output = Path.GetFullPath(args[0]);
             if (Directory.Exists(output)) throw new Exception("Use a new test directory.");
-            InspectPrototype(output);
+            InspectPayload(output);
             if (args.Contains("--inspect-only"))
             {
                 Console.WriteLine("KeyEnhancementInstallationTests inspection: " + checks + " assertions passed");
@@ -138,17 +140,13 @@ public static class KeyEnhancementInstallationTests
             Reject(() => installation.Apply(configuration), "Apply deleted a foreign file.");
             Check(File.ReadAllText(foreign) == "preserve", "Foreign file was modified.");
             File.Delete(foreign);
-            using (var stream = typeof(KeyEnhancementInstallation).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.legacy.zip"))
-            using (var archive = new ZipArchive(stream, ZipArchiveMode.Read))
-                foreach (var entry in archive.Entries)
-                    using (var input = entry.Open())
-                    using (var file = File.Create(Path.Combine(installation.InstallDirectory, entry.FullName.Replace('/', Path.DirectorySeparatorChar)))) input.CopyTo(file);
             File.Delete(installation.ConfigurationPath);
             installation = new KeyEnhancementInstallation(root);
-            Check(installation.ReadState() == KeyEnhancementInstallState.Incomplete, "The known prototype was not recognized for upgrade.");
+            Check(installation.ReadState() == KeyEnhancementInstallState.Conflict, "Generated Lua with missing source JSON must require recovery of the source.");
+            File.WriteAllText(installation.ConfigurationPath, originalJson);
             installation.LoadConfiguration();
             installation.Apply(configuration);
-            Check(installation.ReadState() == KeyEnhancementInstallState.Enabled, "Known prototype upgrade did not complete.");
+            Check(installation.ReadState() == KeyEnhancementInstallState.Enabled, "Restoring source JSON did not allow configuration repair.");
 
             string existing = Game(output, "existing loader");
             string existingRuntime = Path.Combine(existing, @"platform\steam");

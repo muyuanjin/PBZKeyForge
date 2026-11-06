@@ -61,6 +61,8 @@ namespace PBZKeyForge
 
         public static string[] Category(string id)
         {
+            string category = CompleteMoveCatalog.Category(id);
+            if (!string.IsNullOrEmpty(category)) return category.Split('/');
             Detail detail;
             return id != null && Details.TryGetValue(CompleteMoveCatalog.SourceId(id), out detail) && !string.IsNullOrEmpty(detail.category)
                 ? detail.category.Split('/') : new string[0];

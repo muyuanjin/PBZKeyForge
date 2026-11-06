@@ -11,7 +11,7 @@ class ActionCatalogTests
         "IA_LockTarget", "IA_Interact", "IA_Execute", "IA_ShadowArm", "IA_ShadowArm_LongPress", "IA_SwitchWeapon",
         "IA_SwitchShadowArm", "IA_UltimateSkill", "IA_Sense_Default", "IA_OpenCharacterMenu", "IA_OpenMapMenu", "IA_UseTopItem", "IA_UseBottomItem"
     };
-    static readonly string[] Roots = { "native", "locomotion", "targeting", "offense", "defense", "weapons", "shadow", "interaction", "scene", "interface", "custom", "debug" };
+    static readonly string[] Roots = { "native", "locomotion", "targeting", "offense", "defense", "weapons", "shadow", "accessories", "interaction", "scene", "interface", "custom", "debug" };
     static void Check(bool value, string message) { checks++; if (!value) throw new Exception(message); }
     static string Action(string path) { return "action:" + path; }
     static string Input(string name) { return Action("/PBZInput/InputActions/" + name); }

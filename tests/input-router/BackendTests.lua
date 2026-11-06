@@ -270,6 +270,8 @@ do
     local trigger=object(702,"trigger",{State=27})
     context.mapping_values[1].Modifiers=array({modifier})
     context.mapping_values[1].Triggers=array({trigger})
+    context.mapping_values[1].SettingBehavior=1
+    context.mapping_values[1].PlayerMappableKeySettings=object(703,"settings",{Name=FName("IA_Guard")})
     backend.config.targets.guard={kind="mapping",mapping="IA_Guard",actions={"/Test/A.A.Action"},device="keyboard"}
     backend.config.bindings={{id="new-key",keys={"J"},trigger="down",outputs={"guard"}}}
     backend.config.suppressions={{action="/Test/A.A.Action",key="F24"}}
@@ -426,6 +428,17 @@ do
         "one vector input was sampled repeatedly or lost signed components")
     backend:snapshot({"Stick@2","Stick@1","Stick"})
     check(queries==2, "vector sample cache escaped its physical frame")
+end
+
+do
+    local backend = fixture()
+    local function failing_move() error("native move invocation failed") end
+    local ok = backend:dispatch({kind="lua",run=failing_move}, "triggered", nil, "move-binding")
+    check(not ok and backend.dispatch_error:find("move-binding",1,true)
+        and backend.dispatch_error:find("native move invocation failed",1,true)
+        and backend.dispatch_error:find("stack traceback:",1,true)
+        and backend.dispatch_error:find("BackendTests.lua",1,true),
+        "Synchronous dispatch failures must retain the original call stack for copying: " .. tostring(backend.dispatch_error))
 end
 
 print("BackendTests: " .. passed .. " assertions passed")

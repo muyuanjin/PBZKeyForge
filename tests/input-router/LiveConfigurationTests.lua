@@ -68,9 +68,13 @@ check(apply(candidate),"valid live candidate rejected")
 events={};frame();check(#events==0,"live apply replayed an already-held press")
 physical.J=0;frame();physical.J=1;frame();check(events[1]=="next" and backend.config==candidate,"accepted candidate did not route after release")
 local refresh_count=0
+local normal_shutdown = backend.shutdown
+function backend:shutdown() error("complete-move input release failed") end
 function backend:refresh() refresh_count=refresh_count+1;error("input refresh failed") end
 frame()
 check(reported_state=="suspended" and reported_error:find("input refresh failed",1,true),"runtime failure did not immediately publish its reason")
+check(reported_error:find("complete-move input release failed",1,true), "Runtime details dropped a failure restoring the original input")
+backend.shutdown = normal_shutdown
 frame();check(refresh_count==1 and reported_state=="suspended","suspended runtime kept routing or advertised ready")
 check(apply(candidate),"recovery configuration rejected while suspended")
 frame();check(reported_state=="suspended" and refresh_count==2,"same error after retry did not suspend routing again")
@@ -78,4 +82,10 @@ function backend:refresh() return true end
 check(apply(candidate),"recovery after fixing backend rejected")
 frame();check(reported_state=="ready" and reported_error==nil,"successful recovery retained suspended state")
 lifecycle.stop()
+EngineTickAvailable = false
+configuration.unified_native = true
+local unscheduled = dofile(scripts .. "main.lua")
+check(reported_state == "suspended" and reported_error:find("frame scheduler unavailable",1,true),
+    "Missing frame scheduling must publish an actionable error without waiting for a tick")
+unscheduled.stop()
 print("LiveConfigurationTests: " .. count .. " assertions passed")

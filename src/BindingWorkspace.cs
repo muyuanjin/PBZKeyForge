@@ -29,6 +29,8 @@ namespace PBZKeyForge
         public string DisplayName;
         public bool OriginalInputBlocked;
         public bool? KeepNativeTrigger;
+        public bool BypassResources;
+        public double DamageMultiplier = 1, StartupSpeed = 1, RecoverySpeed = 1;
         public string[] Keys = new string[0];
         public double Seconds = .25, Interval = .3, Threshold = .5;
         public int Count = 2, Priority, OutputIndex = -1;
@@ -228,7 +230,8 @@ namespace PBZKeyForge
             {
                 string sourceId = CompleteMoveCatalog.SourceId(id);
                 string source = ActionCatalogLabels.Prefix(sourceId, BaseFunctionLabel(sourceId));
-                return source + " · " + CompleteMoveCatalog.LabelSuffix(id);
+                string prefix = CompleteMoveCatalog.LabelPrefix(id, source);
+                return string.Join(" · ", new[] { prefix, CompleteMoveCatalog.LabelSuffix(id) }.Where(part => !string.IsNullOrWhiteSpace(part)));
             }
             if (id.StartsWith("movement:", StringComparison.Ordinal)) return I18n.Str("unified.movement." + id.Substring(9));
             if (id == "action:" + KeyboardMovement) return I18n.Str("unified.movement.keyboard");
@@ -301,6 +304,12 @@ namespace PBZKeyForge
         { return new Dictionary<string, object> { { "x", index == 0 ? 1d : index == 1 ? -1d : 0d }, { "y", index == 2 ? -1d : index == 3 ? 1d : 0d }, { "z", 0d } }; }
 
         public BindingEntry[] Entries(string functionId) { return Entries(functionId, config, false); }
+        public string[] ResourceKinds(string functionId)
+        {
+            var function = Functions.First(item => item.Id == functionId);
+            return ResourceCostCatalog.ForOutput(function.NativeAction == null ? CreateOutput(function)
+                : new KeyEnhancementOutput { Kind = "mapping", MappingActions = function.Targets.Select(target => target.Path).ToArray() });
+        }
         public BindingEntry[] GetSnapshot() { return CollectEntries(config, false, null); }
 
         BindingEntry[] Entries(string functionId, KeyEnhancementConfiguration source, bool before)
@@ -355,8 +364,9 @@ namespace PBZKeyForge
                         result.Add(new BindingEntry { Id = rule.Id + ":" + i, FunctionId = OutputFunction(rule.Outputs[i]), Keys = rule.Keys.ToArray(), Axis = rule.Axis,
                             DisplayName = rule.Outputs[i].Kind == "scheme" ? SchemeBindingLabel(source, rule.Outputs[i].Tag) : null,
                             ExecutionOwner = !source.Enabled || !rule.Enabled ? "inactive" : KeyEnhancementInputPlan.SupportsMapping(rule.Outputs[i]) ? "scheduler" : "uncovered",
-                            Trigger = rule.Outputs[i].Kind == "mapping" && rule.Trigger == "down" ? "default" : rule.Trigger,
-                            Seconds = rule.Seconds, Interval = rule.Interval, Threshold = rule.Threshold, Count = rule.Count, Priority = rule.Priority,
+                            Trigger = rule.DefaultTrigger ? "default" : rule.Trigger,
+                            Seconds = rule.Seconds, Interval = rule.Interval, Threshold = rule.Threshold, Count = rule.Count, Priority = rule.Priority, BypassResources = rule.BypassResources,
+                            DamageMultiplier = rule.DamageMultiplier, StartupSpeed = rule.StartupSpeed, RecoverySpeed = rule.RecoverySpeed,
                             RuleId = rule.Id, OutputIndex = i, Rule = new JavaScriptSerializer().Deserialize<KeyEnhancementRule>(serialized), OutputValue = rule.Outputs[i].Kind == "action" || rule.Outputs[i].Kind == "mapping" ? rule.Outputs[i].Value : null,
                             Enabled = rule.Enabled, Active = source.Enabled && rule.Enabled && KeyEnhancementInputPlan.SupportsMapping(rule.Outputs[i]), Shared = rule.Outputs.Count > 1,
                             Pending = pending });
@@ -430,7 +440,8 @@ namespace PBZKeyForge
         public static bool IsPlainBinding(BindingEntry entry)
         {
             var rule = entry.Rule;
-            return entry.Trigger == "default" && entry.Keys.Length == 1 && entry.OutputValue == null
+            return !entry.BypassResources && entry.DamageMultiplier == 1 && entry.StartupSpeed == 1 && entry.RecoverySpeed == 1
+                && entry.Trigger == "default" && entry.Keys.Length == 1 && entry.OutputValue == null
                 && entry.Priority == 0 && entry.Enabled && (rule == null || !rule.Consume && rule.ConsumeKeys.Count == 0
                     && string.IsNullOrWhiteSpace(rule.WhenLua) && string.IsNullOrWhiteSpace(rule.EvaluateLua)
                     && rule.Watch.Count == 0 && rule.Steps.Count == 0);
@@ -479,13 +490,13 @@ namespace PBZKeyForge
             if (output == null) throw new ArgumentNullException("output");
             KeyEnhancementInputPlan.ValidateMapping(output);
             var target = new JavaScriptSerializer().Deserialize<KeyEnhancementOutput>(Serialize(output));
+            if (!target.NativePipeline.HasValue) target.NativePipeline = false;
             if (string.IsNullOrWhiteSpace(target.Id)) target.Id = Guid.NewGuid().ToString("N");
             if (!string.IsNullOrWhiteSpace(label)) target.Name = label.Trim();
             string id = OutputFunction(target);
             var function = new BindingFunction { Id = id, RequiresKeyEnhancement = true };
             var rule = specification.Rule == null ? new KeyEnhancementRule() : Copy(specification.Rule);
-            rule.Id = Guid.NewGuid().ToString("N"); ApplySpecification(rule, specification, function);
-            if (specification.Trigger == "default" && target.Kind != "action" && target.Kind != "mapping") rule.Trigger = "press";
+            rule.Id = Guid.NewGuid().ToString("N"); ApplySpecification(rule, specification, function, target);
             rule.Outputs = new List<KeyEnhancementOutput> { target }; rule.Suppressions.Clear();
             config.Rules.Add(rule); config.CustomFunctions.Add(target); functions = null;
             return CollectEntries(config, false, id, true).First(entry => entry.RuleId == rule.Id);
@@ -578,9 +589,18 @@ namespace PBZKeyForge
             }
             var selectedTarget = function.Targets.First();
             return new KeyEnhancementOutput { Kind = selectedTarget.Kind, Path = selectedTarget.Path, Tag = selectedTarget.Tag, ValueType = selectedTarget.ValueType,
+                NativePipeline = selectedTarget.Kind == "action" && KeyEnhancementInputPlan.HasPipeline(selectedTarget.Path),
+                Device = pad ? "gamepad" : "keyboard",
                 FunctionId = function.FixedKeys == null ? null : function.Id };
         }
-        static void ApplySpecification(KeyEnhancementRule rule, BindingEntry specification, BindingFunction function)
+        string DefaultTriggerFor(BindingFunction function, KeyEnhancementOutput output = null)
+        {
+            var target = output ?? CreateOutput(function);
+            return target.Kind == "mapping" || target.Kind == "move"
+                || target.Kind == "action" && (target.NativePipeline == true || function.Id.StartsWith("custom:", StringComparison.Ordinal)
+                    && PackagePath(target.Path) != ChangeArmed.Substring(7)) ? "down" : "press";
+        }
+        void ApplySpecification(KeyEnhancementRule rule, BindingEntry specification, BindingFunction function, KeyEnhancementOutput output = null)
         {
             if (specification.Rule != null)
             {
@@ -591,10 +611,13 @@ namespace PBZKeyForge
                 if (detail.Trigger == "custom" && specification.Trigger != "custom") rule.EvaluateLua = null;
             }
             rule.Keys = specification.Keys.ToList(); rule.Axis = specification.Axis;
-            rule.Trigger = specification.Trigger == "default" ? (function.Id.StartsWith("ability:", StringComparison.Ordinal) || function.Id.StartsWith("move:", StringComparison.Ordinal) || function.Id == ChangeArmed ? "press" : "down") : specification.Trigger;
+            rule.DefaultTrigger = specification.Trigger == "default";
+            rule.Trigger = rule.DefaultTrigger ? DefaultTriggerFor(function, output) : specification.Trigger;
             rule.NormalizeInput();
             rule.Seconds = specification.Seconds; rule.Interval = specification.Interval; rule.Threshold = specification.Threshold;
             rule.Count = specification.Count; rule.Priority = specification.Priority; rule.Enabled = specification.Enabled;
+            rule.BypassResources = specification.BypassResources;
+            rule.DamageMultiplier = specification.DamageMultiplier; rule.StartupSpeed = specification.StartupSpeed; rule.RecoverySpeed = specification.RecoverySpeed;
         }
 
         public BindingEntry Replace(BindingEntry current, BindingEntry specification)

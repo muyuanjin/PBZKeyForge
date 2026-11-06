@@ -24,7 +24,8 @@ class LiveEditingTests
         {
             I18n.Current = "zh-Hans"; Application.EnableVisualStyles();
             output = Path.GetFullPath(args[0]); Directory.CreateDirectory(output);
-            Model(); HistoryAndFeedback(); LiveProtocol();
+            if (args.Contains("--runtime-feedback-only")) RuntimeFeedback();
+            else { Model(); HistoryAndFeedback(); LiveProtocol(); RuntimeFeedback(); }
             if (args.Contains("--all-languages")) Localization();
             Console.WriteLine("LiveEditingTests PASS " + checks); return 0;
         }
@@ -194,6 +195,116 @@ class LiveEditingTests
             Check(File.ReadAllBytes(save).SequenceEqual(saveBytes) && File.ReadAllBytes(shared).SequenceEqual(sharedBytes), "Live editing changed input save or scheme selection");
         }
         finally { Volatile.Write(ref stop, true); responder.Wait(); if (rollbackLock != null) rollbackLock.Dispose(); }
+    }
+    static void RuntimeFeedback()
+    {
+        string root = Path.Combine(output, "game");
+        Directory.CreateDirectory(Path.Combine(root, @"platform\steam"));
+        Directory.CreateDirectory(Path.Combine(root, @"ProjectPBZ\Saved"));
+        File.WriteAllText(Path.Combine(root, @"platform\steam\PBZ.exe"), "fixture, never launched");
+        File.Copy("samples/vanilla-base.sav", Path.Combine(root, @"ProjectPBZ\Saved\EnhancedInputUserSettings.sav"), true);
+        File.WriteAllText(Path.Combine(root, @"ProjectPBZ\Saved\PBZSharedSetting.sav"), "fixture, never edited");
+        var install = new KeyEnhancementInstallation(root);
+        Directory.CreateDirectory(install.InstallDirectory);
+        string statusPath = Path.Combine(install.InstallDirectory, "live-status.txt");
+        string error = "native phase requires four parameters\n" + string.Join("\n", Enumerable.Range(0, 25).Select(index => "stack frame " + index));
+        using (var form = new MainForm(new EditorPreferences(Path.Combine(output, "runtime-preferences.txt"))))
+        {
+            form.UiSmoke(Path.Combine(root, @"ProjectPBZ\Saved\EnhancedInputUserSettings.sav"));
+            form.Show(); Application.DoEvents();
+            Field<System.Windows.Forms.Timer>(form, "gameTimer").Stop();
+            form.GetType().GetField("keyEnhancementInstallation", Hidden).SetValue(form, install);
+            Field<KeyEnhancementConfiguration>(form, "keyEnhancement").Enabled = true;
+            Field<KeyEnhancementConfiguration>(form, "keyEnhancementBaseline").Enabled = true;
+            form.GetType().GetField("lastRunning", Hidden).SetValue(form, true);
+            Action<string> update = delegate(string state) {
+                form.GetType().GetField("lastRunning", Hidden).SetValue(form, true);
+                File.WriteAllText(statusPath, "PBZ-LIVE-1\nfixture\n" + state + "\n" + error);
+                Call(form, "RenderGameStatus");
+            };
+            update("suspended");
+            var panel = Field<Panel>(form, "feedbackPanel");
+            string detail = Field<string>(form, "fullFeedback");
+            Check(panel.Visible && detail.Contains("stack frame 24") && !Field<Label>(form, "lblStatus").Visible,
+                "Runtime errors must use the single feedback card and retain the full traceback.");
+            var bar = Field<Control>(form, "keyEnhancementBar");
+            Check((string)bar.GetType().GetField("Status").GetValue(bar) == ""
+                && !Field<ToolTip>(form, "tip").GetToolTip(bar).Contains("stack frame"),
+                "Runtime errors must not repeat below enhancement or overflow hover text.");
+            bool copied = false;
+            bool copyRequested = false;
+            int clipboardTicks = 0;
+            using (var timer = new System.Windows.Forms.Timer { Interval = 50 })
+            {
+                timer.Tick += delegate {
+                    var dialog = Application.OpenForms.Cast<Form>().FirstOrDefault(window => window != form);
+                    if (dialog == null) return;
+                    var text = All(dialog).OfType<TextBox>().Single();
+                    if (!copyRequested)
+                    {
+                        Check(text.ReadOnly && text.Multiline && !text.WordWrap && text.Lines.Length >= 26
+                            && text.Text.Replace("\r\n", "\n") == detail.Replace("\r\n", "\n"), "Runtime details must preserve every stack frame as a selectable line.");
+                        var copy = (Button)All(dialog).Single(control => control.Name == "copyFeedback");
+                        Check(copy.Visible && copy.Enabled, "The full-error copy button must be available.");
+                        typeof(Control).GetMethod("OnClick", Hidden).Invoke(copy, new object[] { EventArgs.Empty });
+                        copyRequested = true;
+                        return;
+                    }
+                    string clipboard = Clipboard.GetText();
+                    copied = clipboard.Replace("\r\n", "\n") == detail.Replace("\r\n", "\n");
+                    if (!copied && ++clipboardTicks < 40) return;
+                    timer.Stop();
+                    using (var bitmap = new Bitmap(dialog.Width, dialog.Height))
+                    { dialog.DrawToBitmap(bitmap, new Rectangle(Point.Empty, bitmap.Size)); bitmap.Save(Path.Combine(output, "runtime-details.png")); }
+                    dialog.Close();
+                };
+                timer.Start();
+                var details = (Button)All(form).Single(control => control.Name == "feedbackDetails");
+                Check(details.Visible && details.Enabled && details.CanSelect, "Runtime details must be clickable: " + details.Visible + "/" + details.Enabled + "/" + details.CanSelect);
+                typeof(Control).GetMethod("OnClick", Hidden).Invoke(details, new object[] { EventArgs.Empty });
+            }
+            Check(copied, "Copy must include the complete runtime error.");
+            foreach (var size in new[] { new Size(1280, 900), form.MinimumSize })
+            {
+                form.Size = size; Application.DoEvents(); update("suspended");
+                Check(panel.Bottom <= form.ClientSize.Height && panel.Height <= form.Font.Height * 7,
+                    "Runtime feedback must fit the existing footer at minimum and normal size.");
+                using (var bitmap = new Bitmap(form.Width, form.Height))
+                { form.DrawToBitmap(bitmap, new Rectangle(Point.Empty, bitmap.Size)); bitmap.Save(Path.Combine(output, "runtime-feedback-" + size.Width + ".png")); }
+            }
+            var dismiss = (Button)All(form).Single(control => control.Name == "dismissFeedback");
+            Check(dismiss.Visible && dismiss.Enabled && dismiss.CanSelect, "Dismiss must be clickable: " + dismiss.Visible + "/" + dismiss.Enabled + "/" + dismiss.CanSelect);
+            typeof(Control).GetMethod("OnClick", Hidden).Invoke(dismiss, new object[] { EventArgs.Empty });
+            Call(form, "SetMessage", "live.hotkeybusy", false, new object[0]);
+            update("suspended");
+            Check(!panel.Visible, "An unchanged heartbeat or shortcut notice must not reopen dismissed runtime feedback.");
+            File.WriteAllText(statusPath, "PBZ-LIVE-1\nfixture");
+            Call(form, "RenderGameStatus");
+            Check(Field<string>(form, "runtimeFeedback") == detail, "A two-line partial heartbeat must not erase the error or claim recovery.");
+            update("suspended");
+            File.SetLastWriteTimeUtc(statusPath, DateTime.UtcNow.AddSeconds(-10));
+            Call(form, "RenderGameStatus");
+            Check(install.LiveStatus().Waiting && Field<string>(form, "runtimeFeedback") == detail,
+                "A lost heartbeat must retain the last error for copying until explicit recovery.");
+            form.GetType().GetField("lastRunning", Hidden).SetValue(form, false);
+            Call(form, "RenderGameStatus");
+            Check(Field<string>(form, "runtimeFeedback") == detail, "Closing the game must not erase its last error before it can be copied.");
+            update("suspended");
+            Call(form, "SetMessage", "editor.failed", true, new object[] { "apply failure" });
+            Check(Field<string>(form, "fullFeedback").Contains("apply failure") && Field<string>(form, "fullFeedback").Contains("stack frame 24"),
+                "Application failures must not hide a still-active runtime error.");
+            form.GetType().GetField("messageError", Hidden).SetValue(form, false);
+            form.GetType().GetField("messageKey", Hidden).SetValue(form, null);
+            update("ready");
+            Check(!panel.Visible && Field<string>(form, "runtimeFeedback") == null && !(Field<string>(form, "fullFeedback") ?? "").Contains("stack frame"),
+                "Recovery must clear the runtime error.");
+            update("suspended");
+            Check(panel.Visible, "A new suspension after recovery must reopen feedback.");
+            Call(form, "SetMessage", "editor.failed", true, new object[] { "apply failure" });
+            update("ready");
+            Check(panel.Visible && Field<string>(form, "fullFeedback").Contains("apply failure"),
+                "Runtime recovery must not erase an application failure.");
+        }
     }
     static void Localization()
     {

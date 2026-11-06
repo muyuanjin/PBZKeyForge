@@ -32,19 +32,23 @@ namespace PBZKeyForge
             if (ids.Length == 1) return new[] { Add(ids[0], specification) };
             CheckInput(specification); Changing();
             var selected = ids.Select(id => Functions.First(function => function.Id == id)).ToArray();
-            var rule = NewRule(selected[0], specification); rule.Outputs.Clear();
-            foreach (var function in selected)
+            var rules = new List<KeyEnhancementRule>();
+            foreach (var group in selected.GroupBy(function => specification.Trigger == "default" ? DefaultTriggerFor(function) : specification.Trigger))
             {
-                var output = CreateOutput(function); SetOutputValue(output, specification.OutputValue ?? function.DefaultOutputValue);
-                rule.Outputs.Add(output);
+                var rule = NewRule(group.First(), specification); rule.Outputs.Clear();
+                foreach (var function in group)
+                {
+                    var output = CreateOutput(function); SetOutputValue(output, specification.OutputValue ?? function.DefaultOutputValue);
+                    rule.Outputs.Add(output);
+                }
+                rules.Add(rule);
             }
-            if (specification.Trigger == "default")
-                rule.Trigger = selected.Any(function => function.NativeAction != null || function.Targets.Any(target => target.Kind == "action") && function.Id != ChangeArmed) ? "down" : "press";
-            var check = config.Clone(); check.Rules.Add(rule); check.CompileLua();
-            config.Rules.Add(rule); LinkInputVariants(rule);
+            var check = config.Clone(); check.Rules.AddRange(rules); check.CompileLua();
+            config.Rules.AddRange(rules);
+            foreach (var rule in rules) LinkInputVariants(rule);
             if (specification.KeepNativeTrigger.HasValue)
                 foreach (var function in selected) SetNativeTrigger(function.Id, specification.KeepNativeTrigger.Value);
-            return CollectEntries(config, false, null, true).Where(entry => entry.RuleId == rule.Id).ToArray();
+            return CollectEntries(config, false, null, true).Where(entry => rules.Any(rule => rule.Id == entry.RuleId)).ToArray();
         }
 
         public BindingEntry CopyBinding(BindingEntry entry, string targetFunction)

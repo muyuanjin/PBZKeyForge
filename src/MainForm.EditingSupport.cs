@@ -24,6 +24,7 @@ namespace PBZKeyForge
         Label feedbackText;
         Button feedbackDetails;
         string fullFeedback;
+        string runtimeFeedback;
         bool restoringEdit;
         bool companionVisible;
         bool hotkeyRegistered;
@@ -96,7 +97,7 @@ namespace PBZKeyForge
                 float scale = CurrentAutoScaleDimensions.Width / 96f;
                 agent.SetBounds(viewBar.Width - (int)(290 * scale), (int)(5 * scale), (int)(100 * scale), (int)(34 * scale));
             };
-            lblStatus.Cursor = Cursors.Hand; lblStatus.Click += delegate { if (messageError) ShowFullFeedback(); else ShowFeedbackDialog(lblStatus.Text, I18n.Str("feedback.title")); };
+            lblStatus.Cursor = Cursors.Hand; lblStatus.Click += delegate { if (messageError || runtimeFeedback != null) ShowFullFeedback(); else ShowFeedbackDialog(lblStatus.Text, I18n.Str("feedback.title")); };
             lblGame.Cursor = Cursors.Hand; lblGame.Click += delegate { ShowLiveConnectionHelp(); };
             HandleCreated += delegate {
                 RefreshCompanionHotkey();
@@ -105,7 +106,22 @@ namespace PBZKeyForge
         }
 
         void ShowFullFeedback()
-        { ShowFeedbackDialog(fullFeedback ?? lblStatus.Text, I18n.Str("feedback.title")); }
+        { RefreshFeedback(); ShowFeedbackDialog(fullFeedback ?? lblStatus.Text, I18n.Str("feedback.title")); }
+
+        void RefreshFeedback()
+        {
+            string content = messageError && messageKey != null ? I18n.Str(messageKey, messageArgs)
+                : runtimeFeedback ?? (messageKey == null ? null : I18n.Str(messageKey, messageArgs));
+            if (messageError && runtimeFeedback != null && content != runtimeFeedback)
+                content += Environment.NewLine + Environment.NewLine + runtimeFeedback;
+            if (fullFeedback != content) feedbackDismissed = false;
+            fullFeedback = content;
+            bool error = messageError || runtimeFeedback != null;
+            feedbackPanel.Visible = error && !feedbackDismissed;
+            feedbackText.Text = content == null ? "" : string.Join("  ", content.Replace("\r", "").Split('\n').Where(line => !string.IsNullOrWhiteSpace(line)).Take(2));
+            SetTip(feedbackText, error ? I18n.Str("feedback.details") : "");
+            feedbackDetails.Text = I18n.Str("feedback.details");
+        }
 
         void ShowFeedbackDialog(string content, string title)
         {
@@ -116,11 +132,13 @@ namespace PBZKeyForge
                 {
                     UnifiedBindingUi.Form(dialog, title, new Size(760, 480), new Size(480, 300));
                     var text = new TextBox { Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Both,
-                        Text = content, BackColor = EditorTheme.Surface, ForeColor = EditorTheme.Ink, BorderStyle = BorderStyle.None };
+                        WordWrap = false, Text = (content ?? "").Replace("\r\n", "\n").Replace("\n", "\r\n"),
+                        BackColor = EditorTheme.Surface, ForeColor = EditorTheme.Ink, BorderStyle = BorderStyle.None };
                     var buttons = new FlowLayoutPanel { Dock = DockStyle.Bottom, AutoSize = true, FlowDirection = FlowDirection.RightToLeft };
                     var copy = UnifiedBindingUi.Button(I18n.Str("feedback.copy"), "copyFeedback"); copy.Click += delegate { Clipboard.SetText(text.Text); };
                     var close = UnifiedBindingUi.Button(I18n.Str("editor.close"), "close"); close.Click += delegate { dialog.Close(); };
                     buttons.Controls.Add(close); buttons.Controls.Add(copy); dialog.Controls.Add(text); dialog.Controls.Add(buttons);
+                    dialog.Shown += delegate { text.Select(0, 0); };
                     Form owner = this;
                     while (owner.OwnedForms.Any(window => window.Visible)) owner = owner.OwnedForms.Last(window => window.Visible);
                     dialog.ShowDialog(owner);

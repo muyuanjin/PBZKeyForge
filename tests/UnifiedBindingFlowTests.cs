@@ -149,10 +149,10 @@ public static class UnifiedBindingFlowTests
             string save = Path.Combine(root, @"ProjectPBZ\Saved\EnhancedInputUserSettings.sav");
             Directory.CreateDirectory(Path.GetDirectoryName(save)); File.Copy(args[0], save);
             string old = Path.Combine(runtime, @"ue4ss\Mods\PBZInputRouter\Scripts"); Directory.CreateDirectory(old);
-            using (var stream = typeof(MainForm).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.legacy.zip"))
+            using (var stream = typeof(MainForm).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.runtime.zip"))
             using (var zip = new ZipArchive(stream, ZipArchiveMode.Read))
             {
-                var entry = zip.GetEntry("Scripts/main.lua");
+                var entry = zip.GetEntry("runtime/platform/steam/ue4ss/Mods/PBZInputRouter/Scripts/main.lua");
                 using (var input = entry.Open()) using (var file = File.Create(Path.Combine(old, "main.lua"))) input.CopyTo(file);
             }
             Exception failure = null;

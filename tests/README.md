@@ -1,4 +1,4 @@
-﻿# Local verification
+# Local verification
 
 Build with Windows PowerShell 5.1 and use a new isolated directory for each integration run. Resource tests never launch the game or modify its installation.
 
@@ -34,19 +34,46 @@ $compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
 
 The checks cover diagram position and scale, fixed binding commands, extra-input wrapping, footer feedback, action filtering, status indicators, trigger selection, binding-detail scroll and focus, and the expanded differences review. Screenshots accompany geometry assertions; all editing uses offline fixtures.
 
-For complete-move bindings, verify catalog labels, keyboard/controller binding, configuration persistence, native qualification and immediate release dispatch:
+For complete-move bindings, verify catalog labels, keyboard/controller binding, configuration persistence, native qualification, preparation and release dispatch:
 
 ```powershell
 $compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
 & $compiler /nologo /out:dist\CompleteMoveCatalogTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll /r:System.Web.Extensions.dll /r:System.IO.Compression.dll tests\CompleteMoveCatalogTests.cs
 .\dist\CompleteMoveCatalogTests.exe dist\complete-move-catalog-check
+& $compiler /nologo /out:dist\BindingTriggerContractTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll tests\BindingTriggerContractTests.cs
+.\dist\BindingTriggerContractTests.exe dist\trigger-contract-check
 python tests\input-router\run_lua.py tests\input-router\CompleteMoveTests.lua
+python tests\input-router\run_lua.py tests\input-router\ExactClassMoveTests.lua
+python tests\input-router\run_lua.py tests\input-router\ActiveShieldMoveTests.lua
 $env:PBZ_COMPLETE_MOVE_CONFIG = 'dist/complete-move-catalog-check/complete-move.lua'
 python tests\input-router\run_lua.py tests\input-router\CompiledCompleteMoveTests.lua
+python tests\input-router\run_lua.py tests\input-router\CompiledWeaponSpecialMoveTests.lua
 Remove-Item Env:\PBZ_COMPLETE_MOVE_CONFIG
 ```
 
-The Lua checks reject airborne use of ground moves, missing live instances, active abilities and resource-failure branches; verify cancellation after release failure; and check that holding a press binding does not repeat an attack. These fixtures cover editor/runtime dispatch, not in-game animation or damage. Equipment and phase evidence is recorded in [complete moves](../docs/complete-moves.md).
+The checks reject airborne use of ground moves, missing live instances, active phase-entry abilities and resource-failure branches, and verify cancellation after release failure. Default bindings keep requesting normal activation while held, repeat after the current move ends and native qualification allows it, and stop on release without canceling an attack in progress. Multiple sources for one move merge per frame. Saved default bindings retain this behavior; explicit press bindings remain one-shot through cloning and preset sharing, as do tap and release triggers.
+
+`CompleteMoveCatalogTests` also writes `phase-moves.lua` and captures the new weapon/accessory catalog labels. `BindingTriggerContractTests` writes mixed ability/move fixtures, checks all 119 defaults, named custom output types, selection order, sharing and copying. `CompiledCompleteMoveTests` loads those fixtures through `CompiledPhaseMoveTests` and exercises the actual backend and move executor for native FName/time entry, prepared projectiles, missed charge windows, input release and mixed continuous/one-shot bindings on both devices. Pending tests cover shared virtual Hold ownership, qualification loss, context reset and natural attack progress without replay. Accessory callbacks reuse active granted instances and never activate or cancel their persistent effects. These fixtures cover editor/runtime dispatch, not in-game animation or damage. Equipment and phase evidence is recorded in [complete moves](../docs/complete-moves.md).
+
+Run `python tests\CompleteMoveSignatureResourceTests.py --game-exe $gameExe --paks $paks --oodle $oodle` to check 33 native UHT signatures, 12 post-hook return contracts and all 59 complete-move entry signatures against the installed game's metadata. It verifies resource getter and ability handoff parameters/returns, both timeline playback signatures, projectile initialization, damage-source interface versus tag parameters, and the actual declaring class of every Blueprint callback, including inherited functions. `ShadowMovePhaseResourceTests.py` verifies their grants, costs and preparation separately.
+
+For static checks against the installed game, set `$gameExe`, `$paks` and `$oodle` to the native executable, Content/Paks directory and an available Oodle library. Set `$registry` to a full AssetRegistry export for the same build when running the source test, then run:
+
+```powershell
+python tests\CombatArtPhaseResourceTests.py --game-exe $gameExe --paks $paks --oodle $oodle
+python tests\WeaponReleaseResourceTests.py --game-exe $gameExe --paks $paks --oodle $oodle
+python tests\WeaponSpecialEntryResourceTests.py --game-exe $gameExe --paks $paks --oodle $oodle
+python tests\ShadowMovePhaseResourceTests.py --game-exe $gameExe --paks $paks --oodle $oodle
+python tests\AccessoryMoveResourceTests.py --game-exe $gameExe --paks $paks --oodle $oodle
+python tests\CounterContextResourceTests.py --game-exe $gameExe --paks $paks --oodle $oodle
+python tests\WeaponExecutionResourceTests.py --game-exe $gameExe --paks $paks --oodle $oodle --registry $registry
+python tests\ShadowTrainingMoveResourceTests.py --game-exe $gameExe --paks $paks --oodle $oodle
+python tests\AbilitySourceResourceTests.py --game-exe $gameExe --paks $paks --oodle $oodle --registry $registry
+```
+
+The combat-art test reads all 40 actual equipment grant arrays and all inherited timelines of their 35 combat-art classes, and compares each registered combat-art recipe with setup, damage boundaries and native reflection. The main-weapon release test checks early release, original continuous storm charge costs and sword-blossom preparation/cleanup. The shadow test independently reads equipment grants, callbacks, state/fee events, release windows and projectile identities. The training test checks 8 official follow-ups and 10 original conditional routes, including predecessor/upgrade tags and native attack resources. The accessory test reads all three natural GhostFire grant components, inherited targeting wrappers and qualified event sources. The source test checks the full registry ability universe, soft/hard source paths and actual effect grants across weapons, accessories, training and character configurations. These checks never launch or modify the game. `build/extract-combat-art-phases.py` accepts the same three paths plus `--output <json>`; pass `--registry <AssetRegistry-export.json>` to re-enumerate config classes for another build, together with its `--build`.
+
+The weapon-execution test decodes 123 typed entries from all 86 main, temporary and shadow equipment arrays, including all three SpecialAttack entries. It checks Iron/Jigsaw recipes against their native channel, executor conditions, attack initialization and original heavy-input route. `CompiledPhaseMoveTests` exercises Tiger Counter, White Shadow assault and both break attacks through the real router and executor: each requires its own resolved execution type, equipment and upgrade tags, and retains native activation refusal.
 
 To check the desktop's native scaling, compile this harness with `/win32manifest:build\app.manifest` and run it in a separate output directory. Add `--desktop-shots` to capture the trigger editor from the desktop as well as `DrawToBitmap`; use this flag only with the DPI-aware build.
 
@@ -342,6 +369,16 @@ python tests\input-router\run_lua.py tests\input-router\RecoveryTests.lua
 python tests\input-router\run_lua.py tests\input-router\HotkeyTests.lua
 ```
 
+```powershell
+& $compiler /nologo /out:dist\CatalogInputPipelineTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll tests\CatalogInputPipelineTests.cs
+.\dist\CatalogInputPipelineTests.exe dist\catalog-input-pipelines
+$env:PBZ_SCHEME_FIXTURES = (Resolve-Path dist\catalog-input-pipelines).Path
+python tests\input-router\run_lua.py tests\input-router\NativeInputTests.lua
+Remove-Item Env:\PBZ_SCHEME_FIXTURES
+```
+
+`CatalogInputPipelineTests` checks all 98 catalog action defaults against the 79 mapped actions and exports real compiler fixtures for both devices, sharing, legacy catalog rules and explicit raw continuous output. The expanded native harness exercises all three compiled schemes against 20 serialized CL-302256 contexts and 173 mapping sources, including inherited, overridden and ignored player-mappable settings. It checks Esc, touchpad and scene fixed sources, editable slot capacity, restoration and real backend Pressed/Released dispatch. A 640-case sweep covers every registered gameplay action on both devices during startup and live validation with chord, blocker, cooldown and repeated-tap dependencies.
+
 The model checks cover JSON isolation, mapping identities and generated Lua. With `unified_native`, runtime mocks check each active mapping row's execution owner: supported registered gameplay inputs enter the unified scheduler and their native execution is masked, while menu/text inputs and unsupported sources remain native. `NativeInputTests.lua` checks action/key suppression, consume locks through physical release, obsolete wrapper rejection after mapping-array rebuilds, independent clones of native trigger/modifier configuration, and coverage records with reasons. Unbound devices retain their own default output pipelines for enhanced bindings without restoring native input; current runtime pipelines take precedence on each device. Binding coexistence and native duplicate prevention are separate from partial or full key consumption. Consumed keys remain sampled across configuration generations even when removed from the router's ordinary sampling list. Script watch inputs obey consumption, skip callbacks while occupied, and rearm after physical release.
 
 `UnifiedBackendTests.lua` exercises PBZ CommonUI Game/Menu/All input modes, unavailable or restored local-player routers, UI-only state, and keyboard/user focus in all four editable-text widget classes. Routing must yield to UI/text and restore native mappings, then resume only when gameplay owns input. `PhysicalInputTests.lua` checks independent keyboard/mouse-button sampling. `InputResumeTests.lua`, `MainInputRecoveryTests.lua` and the main-loop lifecycle checks distinguish held movement/sprint recovery from discrete attacks, jumps, taps, pulses and toggles: qualifying continuous movement resumes, while a held one-shot input waits for release rather than generating a fresh press. These mocks do not establish actual game behavior. `run_lua.py` accepts `--lua-dll` for an installed Lua 5.4 runtime.
@@ -355,7 +392,7 @@ Performance regressions require exactly one runtime-row inspection per unchanged
 .\dist\KeyEnhancementInstallationTests.exe dist\key-enhancement-installation-check
 ```
 
-Use a new output directory. The harness creates fake game installations and never launches a game. It checks enabling, disabling while retaining configuration and shared loaders, unchanged reapplication, missing-file repair, generated Lua rebuilding, external JSON changes and recovery, unknown-file preservation, known prototype upgrades, existing UE4SS settings and mod lists, explicit loader-level disable entries, and cleanup after failed installation. Complete uninstall removes owned files and enable entries, removes an unchanged loader created by this tool when no other Mod needs it, and preserves shared or modified files. The UI path is the … button beside Key enhancement → Uninstall key enhancement → Apply changes. These assertions verify installation and persistence; they do not establish that the game loaded or executed the Mod.
+Use a new output directory. The harness creates fake game installations and never launches a game. It checks enabling, disabling while retaining configuration and shared loaders, unchanged reapplication, missing-file repair, generated Lua rebuilding, external JSON changes and recovery, unknown-file preservation, missing source JSON conflicts and recovery, existing UE4SS settings and mod lists, explicit loader-level disable entries, and cleanup after failed installation. Complete uninstall removes owned files and enable entries, removes an unchanged loader created by this tool when no other Mod needs it, and preserves shared or modified files. The UI path is the … button beside Key enhancement → Uninstall key enhancement → Apply changes. These assertions verify installation and persistence; they do not establish that the game loaded or executed the Mod.
 
 The component menu is now beside the key enhancement switch. The installer uses `mods.txt` and removes the Router's `enabled.txt`; an owned standalone loader is parked while enhancement is disabled. Existing loaders remain untouched. Check complete third-party packages and preservation of activation lists with:
 
@@ -392,7 +429,7 @@ The prerequisite harness checks missing CRT imports, missing exports, damaged ap
 
 The performance harness records three fresh-process checks, 30 checks of in-memory update candidates, 30 checks of mapped installed DLLs and 20 unchanged Apply operations. A full-file-read control provides an allocation and I/O comparison. It rejects checks allocating more than 1 MiB per call and unchanged Apply operations explicitly reading at least half the native DLL size; timings describe the local machine and have no fixed pass threshold. The JSON report includes median, p95, CPU time, managed allocations, explicit read bytes and GC counts. File mappings page in only accessed data; mapped page faults are not included in the explicit read counter. These runs use isolated fixtures with the game's global closed-process guard.
 
-While a real game is running, append `--inspect-only` to run prototype identification and runtime packaging checks without installing. It accepts the original prototype with only `enabled` changed to false, rejects user-edited rules, and checks that both native input modules are embedded. Full Apply and uninstall checks require the game to be closed; the global running-game guard remains active for fixtures.
+While a real game is running, append `--inspect-only` to inspect the current runtime payload without installing. It rejects generated Lua without its source JSON and checks that all required input modules are embedded. Full Apply and uninstall checks require the game to be closed; the global running-game guard remains active for fixtures.
 
 ```powershell
 & $compiler /nologo /win32manifest:build\app.manifest /out:dist\MainKeyEnhancementTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.IO.Compression.dll tests\MainKeyEnhancementTests.cs
@@ -406,7 +443,7 @@ The main-window harness creates its own fake installation. It checks staged togg
 .\dist\UnifiedBindingFlowTests.exe samples\vanilla-base.sav dist\unified-binding-flow-check
 ```
 
-The unified-flow harness starts with a partial known prototype in a fake installation. It uses the ordinary key's Add Function entry to add beyond native capacity, edits a hold binding through ordinary action details, verifies disabled extra bindings remain gray and editable, and edits additional functions while enhancement remains disabled without losing the selection. Apply and disable retain the unified binding data. Screenshots cover these interactions; no game is launched.
+The unified-flow harness starts with a partial current runtime payload in a fake installation. It uses the ordinary key's Add Function entry to add beyond native capacity, edits a hold binding through ordinary action details, verifies disabled extra bindings remain gray and editable, and edits additional functions while enhancement remains disabled without losing the selection. Apply and disable retain the unified binding data. Screenshots cover these interactions; no game is launched.
 
 Append `--edit-only` to run the ordinary editing and screenshot paths while a real game is running. This skips Apply and disable installation checks.
 
@@ -420,6 +457,32 @@ Append `--edit-only` to run the ordinary editing and screenshot paths while a re
 Workspace assertions cover shared-output edits, replacement ownership, unlimited extra bindings, output vectors, hook-path conflicts and restoring native ability triggers. Physical trigger restoration covers both button and axis names, suppression cleanup, atomic capacity failure and retry. Dialog checks cover every trigger, per-step combinations, partial key consumption, priority, axis directions, clearing hidden chord conditions when switching to an axis, typed recursive values and the native ability trigger checkbox. Layout captures use 150% DPI and do not write game data.
 
 `ExpandedBindingUxTests` covers device-scoped restoration, cross-device editing, persistent unbound custom definitions and explicit deletion, trigger normalization, consumption remapping, watched-input consumption, disabling native replacements, duplicate addition with full slots, enhanced whole-key restoration, preset overflow and preview cancellation. Compile with the same references and DPI manifest as `UnifiedBindingDialogTests`, then run with the default output directory. `python tests\input-router\run_lua.py tests\input-router\EditedBindingTests.lua` reads its generated axis and watch configurations to verify that edited axes do not consume old sequence keys and watched-input consumption reaches the router. `BundleImportTests` also preserves unbound custom definitions.
+
+```powershell
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\ResourceBindingTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll tests\ResourceBindingTests.cs
+.\dist\ResourceBindingTests.exe dist\resource-binding-check
+python tests\input-router\run_lua.py tests\input-router\ResourceCostTests.lua
+python tests\input-router\run_lua.py tests\input-router\ActiveMoveTuningTests.lua
+python tests\input-router\run_lua.py tests\input-router\AbilityTuningChainTests.lua
+python tests\input-router\run_lua.py tests\input-router\BindingTuningLifecycleTests.lua
+```
+
+`ResourceBindingTests` queries all ordinary mappings and edits both menu mappings on keyboard and controller with enhancement enabled and disabled. It checks resource lookup and the visible option for the tag-only N3H3 move, then uses Ctrl+Z in the binding editor and saves another change to verify both directions of the resource checkbox. Damage, startup and recovery settings are edited through the dialog and retained through copying, JSON, share codes and ZIP export. The targeted translation checks cover the three new tuning labels in all languages. It generates the configuration consumed by `ResourceCostTests`; set `PBZ_RESOURCE_BINDING_FIXTURES` to the C# output directory when using a different path. The Lua test runs simultaneous ordinary and bypass bindings through the router and resource hooks with an empty resource bank, in both rule orders. It verifies continuous charges, preservation of nominal fees, gains and other actors, cleanup on failure, projectile damage snapshots and reuse, independent startup/recovery rates and restoration, and exclusion of non-timeline abilities. These checks use offline sessions and simulated abilities.
+
+`ActiveMoveTuningTests` consumes `ResourceBindingTests`' compiled active-move targets and uses the real executor and resource hooks. It verifies shield release damage and timeline speeds, prepared ghost-fire launch snapshots, callback cleanup and failure, independent later bindings, and preservation of naturally active effects. The C# checks also capture the ghost-fire editor and reject phase speeds on its callback-only entry. Damage tests pass a GameplayTag to the calculator and obtain source objects from the enclosing damage entries, including nested hits and native bullet calls that bypass the reflected TakeDamage thunk.
+
+`AbilityTuningChainTests` covers seven native class/tag handoff APIs, multiple handoffs, first-fee bypass, independent child timeline speeds and cleanup, and rejection of failed, inactive, unrelated or callback-only transfers. `BindingTuningLifecycleTests` also covers the plural tag activation API, synchronous and delayed releases, instances created inside native activation, projectile snapshots after handoff, and shared ability settings across ordinary and tuned bindings. It checks distinct InputActions and modifier pipelines in both binding orders, reduced damage multipliers, priority between conflicting parameter groups, and vector cancellation. Resource getter mocks include the original return value in the native post-hook position, with ordinary reads, other actors and non-resource attributes retaining their original results.
+
+`BindingTuningLifecycleTests` additionally consumes the compiled red ghost-blade release and three weapon-switch entries from `ResourceBindingTests`. It checks the original executor callbacks and delayed release, and verifies shared settings between ordinary abilities, complete moves and InputActions in both binding orders. Multi-tag activation retains all-tag matching, and a rejected continuation restores an independently prepared input.
+
+The context bridge has a standalone native harness. In the configured Visual C++ environment, run:
+
+```powershell
+cl.exe /nologo /O2 /MD /EHsc /std:c++17 /Fo:dist\ScriptContextNativeTests.obj /Fe:dist\ScriptContextNativeTests.exe tests\input-router\ScriptContextNativeTests.cpp
+.\dist\ScriptContextNativeTests.exe
+```
+
+It checks nested Blueprint object/function identity, stack unwinding and capture reset. The build links the bridge against the pinned UE4SS public exports; it does not load the game. Game combat behavior still requires in-game validation.
 
 ```powershell
 & $compiler /nologo /win32manifest:build\app.manifest /out:dist\BindingIdentityUiTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\BindingIdentityUiTests.cs
@@ -503,6 +566,13 @@ For offline editing measurements and real-installation Apply measurements:
 Binding editing checks cover atomic rejection and retry of key restoration with full native slots, UE keypad identities, left/right modifier chords, ordinary chord recording, direct unbinding, separate rules on one physical key, disabled-rule visibility and reactivation, ability trigger replacement, duration-only differences, enhanced preset save/share roundtrips, preset preview cancellation and switching, and the complete factory reset. The key picker opens the same binding editor as the action view. Screenshots cover individual key bindings, disabled bindings, binding/sequence editors and the reset result. The dialog harness additionally checks that all five sequence commands fit at 150% scale. These harnesses use offline fixtures.
 
 ```powershell
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\KeyViewBindingSettingsTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll tests\KeyViewBindingSettingsTests.cs
+.\dist\KeyViewBindingSettingsTests.exe dist\key-view-binding-settings-check
+```
+
+`KeyViewBindingSettingsTests` exercises original-trigger settings through quick addition, configured addition, cancellation and reopening on keyboard and controller, with enhancement enabled and disabled. Batch additions preserve mixed policies until explicitly changed. Main-window checks click each binding's settings command and its card, edit separate and shared outputs, retain disabled bindings, open native/fixed bindings, and check minimum-window layout. Screenshots cover the picker, existing-binding editor and key view. These checks use offline drafts and never modify a game installation.
+
+```powershell
 & $compiler /nologo /win32manifest:build\app.manifest /out:dist\BindingRestoreUiTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll tests\BindingRestoreUiTests.cs
 .\dist\BindingRestoreUiTests.exe dist\binding-restore-ui
 ```
@@ -519,7 +589,7 @@ python tests\CliLifecycleTests.py dist\PBZKeyForge-cli.exe dist\cli-lifecycle-ch
 python tests\input-router\run_lua.py tests\input-router\LiveConfigurationTests.lua
 ```
 
-`LiveEditingTests` covers disabled enhancement drafts, paired tap/hold reservations, multiple outputs, binding copy, whole-key movement including fixed WASD sources, native runtime overrides beyond save capacity, device-filtered sharing, append conflicts, native disabling, full-reset undo, compact warning cards and complete error dialogs. Its fake Mod acknowledges or rejects file requests and tests recovery from suspension, timeout cancellation, persistence failure with runtime rollback even when disk restoration fails, external-change rejection, and byte preservation of both game saves. Screenshots cover error-panel layout. Run the GUI harness separately from other GUI tests and use a fresh output directory. Append `--all-languages` for the targeted dictionary check.
+`LiveEditingTests` covers disabled enhancement drafts, paired tap/hold reservations, multiple outputs, binding copy, whole-key movement including fixed WASD sources, native runtime overrides beyond save capacity, device-filtered sharing, append conflicts, native disabling, full-reset undo, compact warning cards and complete error dialogs. Its fake Mod acknowledges or rejects file requests and tests recovery from suspension, timeout cancellation, persistence failure with runtime rollback even when disk restoration fails, external-change rejection, and byte preservation of both game saves. Runtime heartbeat errors use one feedback card; checks cover full multiline stack traces, clipboard copying, dismissal, recovery and retained application errors. Screenshots cover error-panel layout and runtime details. Run the GUI harness separately from other GUI tests and use a fresh output directory. Append `--all-languages` for the targeted dictionary check.
 
 `CliAgentTests` invokes the public executable and parses JSON. It covers the full catalog/schema, key identities, ordinary plus enhanced batch editing, dry runs, ZIP roundtrip, share import/export, device scope filtering, copy, key movement, full reset, explicit scheme selection and invalid batches producing no output. It uses copies and never applies to a game installation. `LiveConfigurationTests` covers stale requests, confirmation, rejection, cancellation, invalid Lua, failed native pipeline preparation, retaining the previous router and suppressing a held press after hot reload. Create `dist/live-edit` before running this Lua harness. Native input checks additionally cover controller device reconstruction after unbinding, retained native remapping/restoration and explicit rejection of insufficient native runtime rows.
 

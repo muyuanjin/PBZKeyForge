@@ -34,5 +34,6 @@ try {
         }
     }
     Add-RuntimeEntry "$taskRoot\assets\key-enhancement\pbzinput-focus.dll" 'runtime/platform/steam/ue4ss/Mods/PBZInputRouter/lib/pbzinput-focus.dll'
+    Add-RuntimeEntry "$taskRoot\assets\key-enhancement\pbzability-context.dll" 'runtime/platform/steam/ue4ss/Mods/PBZInputRouter/lib/pbzability-context.dll'
 }
 finally { $taskDownload.Dispose(); $taskZip.Dispose(); $taskStream.Dispose() }

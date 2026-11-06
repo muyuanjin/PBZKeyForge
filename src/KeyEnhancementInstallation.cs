@@ -38,7 +38,6 @@ namespace PBZKeyForge
         }
         static readonly Encoding Utf8 = new UTF8Encoding(false, true);
         static readonly Dictionary<string, byte[]> Payload = ReadPayload();
-        static readonly Dictionary<string, byte[]> Legacy = ReadLegacy();
         readonly string runtimeDirectory;
         bool configurationLoaded;
 
@@ -91,37 +90,14 @@ namespace PBZKeyForge
             foreach (string required in new[] { "dwmapi.dll", "ue4ss/UE4SS.dll", ModPrefix + "Scripts/main.lua",
                 ModPrefix + "Scripts/backend.lua", ModPrefix + "Scripts/router.lua", ModPrefix + "Scripts/native-input.lua",
                 ModPrefix + "Scripts/native-abilities.lua", ModPrefix + "Scripts/physical-input.lua", ModPrefix + "Scripts/object-pool.lua",
-                ModPrefix + "Scripts/complete-moves.lua", ModPrefix + "lib/pbzinput-focus.dll" })
+                ModPrefix + "Scripts/complete-moves.lua", ModPrefix + "Scripts/resource-costs.lua", ModPrefix + "Scripts/script-context.lua",
+                ModPrefix + "lib/pbzinput-focus.dll", ModPrefix + "lib/pbzability-context.dll" })
                 if (!files.ContainsKey(required)) throw new InvalidDataException("Key enhancement runtime is incomplete: " + required);
             return files;
         }
 
         string ReadConfigurationText()
         { return File.Exists(ConfigurationPath) ? File.ReadAllText(ConfigurationPath, Utf8) : null; }
-
-        static Dictionary<string, byte[]> ReadLegacy()
-        {
-            var files = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
-            using (var stream = typeof(KeyEnhancementInstallation).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.legacy.zip"))
-            {
-                if (stream == null) throw new InvalidDataException("Known key enhancement prototype is missing.");
-                using (var archive = new ZipArchive(stream, ZipArchiveMode.Read))
-                    foreach (var entry in archive.Entries)
-                        using (var input = entry.Open())
-                        using (var output = new MemoryStream())
-                        { input.CopyTo(output); files.Add(entry.FullName.Replace('\\', '/'), output.ToArray()); }
-            }
-            return files;
-        }
-
-        static bool MatchesLegacy(string relative, byte[] actual)
-        {
-            byte[] expected;
-            if (!Legacy.TryGetValue(relative, out expected)) return false;
-            if (actual.SequenceEqual(expected)) return true;
-            return relative.Equals(LuaConfigurationFile, StringComparison.OrdinalIgnoreCase)
-                && actual.SequenceEqual(Utf8.GetBytes(Utf8.GetString(expected).Replace("enabled = true,", "enabled = false,")));
-        }
 
         public KeyEnhancementConfiguration LoadConfiguration()
         {
@@ -196,9 +172,8 @@ namespace PBZKeyForge
             string jsonPath = Path.Combine(directory, ConfigurationFile);
             if (!File.Exists(jsonPath))
             {
-                string legacyConfig = LocalPath(directory, LuaConfigurationFile);
-                if (File.Exists(legacyConfig) && !MatchesLegacy(LuaConfigurationFile, File.ReadAllBytes(legacyConfig)))
-                    return FileConflict(legacyConfig);
+                string luaConfig = LocalPath(directory, LuaConfigurationFile);
+                if (File.Exists(luaConfig)) return FileConflict(luaConfig);
                 return Directory.EnumerateFileSystemEntries(directory).Any() ? KeyEnhancementInstallState.Incomplete : KeyEnhancementInstallState.Disabled;
             }
             KeyEnhancementConfiguration configuration;

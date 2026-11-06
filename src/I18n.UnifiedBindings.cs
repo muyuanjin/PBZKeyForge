@@ -4,6 +4,14 @@
     {
         static void UnifiedBindingStrings()
         {
+            Editor("binding.tuning.damage", "伤害倍率", "Damage multiplier", "ダメージ倍率", "피해 배율", "Множитель урона", "傷害倍率", "Multiplicateur de dégâts", "Schadensmultiplikator", "Multiplicador de daño", "Multiplicador de dano", "Moltiplicatore danni", "ตัวคูณความเสียหาย", "Hệ số sát thương", "Multiplicador de dano", "Multiplicador de daño");
+            Editor("binding.tuning.startup", "前摇速度倍率", "Startup speed", "出始め速度倍率", "선딜 속도 배율", "Скорость подготовки", "前搖速度倍率", "Vitesse de préparation", "Geschwindigkeit der Vorbereitung", "Velocidad de preparación", "Velocidade de preparação", "Velocità di preparazione", "ความเร็วเริ่มท่า", "Tốc độ chuẩn bị", "Velocidade de preparação", "Velocidad de preparación");
+            Editor("binding.tuning.recovery", "后摇速度倍率", "Recovery speed", "後隙速度倍率", "후딜 속도 배율", "Скорость завершения", "後搖速度倍率", "Vitesse de récupération", "Geschwindigkeit der Erholung", "Velocidad de recuperación", "Velocidade de recuperação", "Velocità di recupero", "ความเร็วจบท่า", "Tốc độ hồi chiêu thức", "Velocidade de recuperação", "Velocidad de recuperación");
+            Editor("binding.resources.bypass", "绕过资源消耗（{0}）", "Bypass resource costs ({0})", "リソース消費を無視（{0}）", "자원 소모 무시 ({0})", "Без расхода ресурсов ({0})", "繞過資源消耗（{0}）", "Ignorer les coûts ({0})", "Ressourcenkosten umgehen ({0})", "Omitir costes ({0})", "Ignorar custos ({0})", "Ignora i costi ({0})", "ข้ามการใช้ทรัพยากร ({0})", "Bỏ qua tiêu hao ({0})", "Ignorar custos ({0})", "Omitir costos ({0})");
+            Editor("binding.resources.ultimate", "精纯杀气", "Pure Sha Chi", "精純殺気", "정순 살기", "Чистая шаци", "精純殺氣", "Sha Chi pur", "Reines Sha Chi", "Sha Chi puro", "Sha Chi puro", "Sha Chi puro", "ปราณสังหารบริสุทธิ์", "Sát khí tinh thuần", "Sha Chi puro", "Sha Chi puro");
+            Editor("binding.resources.shachi", "杀气", "Sha Chi", "殺気", "살기", "Шаци", "殺氣", "Sha Chi", "Sha Chi", "Sha Chi", "Sha Chi", "Sha Chi", "ปราณสังหาร", "Sát khí", "Sha Chi", "Sha Chi");
+            Editor("binding.resources.spirit", "影之武装弹量", "Phantom Edge charges", "影の武装の弾数", "그림자 무장 탄약", "Заряды призрачного оружия", "影之武裝彈量", "Charges d’arme fantôme", "Phantomwaffenladungen", "Cargas de arma espectral", "Cargas de arma fantasma", "Cariche dell’arma fantasma", "กระสุนอาวุธเงา", "Đạn Ảnh Chi Vũ Trang", "Cargas de arma fantasma", "Cargas de arma espectral");
+            Editor("binding.resources.enabled", "免资源消耗", "Resource costs bypassed", "消費なし", "자원 소모 없음", "Без расхода ресурсов", "免資源消耗", "Sans coût", "Ohne Ressourcenkosten", "Sin coste de recursos", "Sem custo de recursos", "Senza costi", "ไม่ใช้ทรัพยากร", "Không tiêu hao", "Sem custo de recursos", "Sin costo de recursos");
             UnifiedAdvancedStrings();
             UnifiedGroupStrings();
             InputOwnershipStrings();

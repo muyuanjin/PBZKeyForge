@@ -1,0 +1,2472 @@
+{
+  "build": "CL-302256",
+  "evidenceType": "installed-cooked-assets-and-native-PE-static",
+  "runtimeVerified": false,
+  "scope": {
+    "registry": "AssetRegistry.bin",
+    "selection": "Blueprint assets whose Package contains Accessor",
+    "blueprints": 307,
+    "decodedFunctions": 111,
+    "decodeFailures": 0,
+    "nativeParentCounts": {
+      "/Script/SGameCombatSystem.BulletEventBase": 3,
+      "/Script/GameplayAbilities.GameplayEffect": 229,
+      "/Script/PBZCombatAsset.GA_AccessoryBleedPassiveBase": 2,
+      "/Script/PBZCombatAsset.GA_AccessoryElectrifiedPassive": 1,
+      "/Script/GameplayAbilities.GameplayAbility": 3,
+      "/Script/PBZCombatAsset.GA_AccessoryIgnitePassive": 1,
+      "/Script/PBZCombatAsset.GA_AccessoryRangedWeaponPassive": 4,
+      "/Script/PBZCombatAsset.PBZ_ProjectileBullet": 2,
+      "/Script/PBZCombatAsset.GA_AccessoryComboPassive": 3,
+      "/Script/SGameCombatSystem.SGameGameplayAbility": 49,
+      "/Script/PBZCombatAsset.GA_ElementalRegenBase": 3,
+      "/Script/PBZCombatAsset.GE_TempEffectBase": 3,
+      "/Script/GameplayAbilities.GameplayModMagnitudeCalculation": 3,
+      "/Script/PBZCombatAsset.GE_TemporaryEndureBase": 1
+    },
+    "boundary": "Naming subset; accessory source closure is audited separately from DT_Accessory and character/equipment grants."
+  },
+  "ghostFire": {
+    "id": "move:Accessory.RandomDrink.GhostFire.Launch",
+    "accessoryRows": [
+      "Item_Accessory_035",
+      "Item_Accessory_035_1",
+      "Item_Accessory_035_2"
+    ],
+    "officialLabel": {
+      "namespace": "Default",
+      "key": "Item_Accessory_035",
+      "labels": {
+        "de": "Gesegneter Jadeanhänger",
+        "en": "Blessed Jade Pendant",
+        "es-419": "Dije de jade bendecido",
+        "es-ES": "Colgante de jade bendecido",
+        "fr": "Pendentif de jade béni",
+        "it": "Ciondolo di giada benedetta",
+        "ja": "加護を受けた玉佩",
+        "ko": "개광 옥패",
+        "pt-BR": "Pingente de Jade Abençoado",
+        "pt-PT": "Pendente de Jade Reluzente",
+        "ru": "Благословенный Нефритовый Кулон",
+        "th": "จี้หยกปลุกเสก",
+        "vi": "Ngọc Bội Khai Quang",
+        "zh-Hans": "开光玉佩",
+        "zh-Hant": "開光玉佩"
+      }
+    },
+    "activeAbilityClasses": [
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv1.GA_Accessory_RandomDrink_GhostFire_Lv1_C",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv2.GA_Accessory_RandomDrink_GhostFire_Lv2_C",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv3.GA_Accessory_RandomDrink_GhostFire_Lv3_C"
+    ],
+    "entryPoint": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv1.GA_Accessory_RandomDrink_GhostFire_Lv1_C:Targeting Tick",
+    "qualification": "Naturally granted live active GhostFire instance; its original callback requires a valid prepared Pending Ghost Fires interface and a legal hostile target within 800 units.",
+    "normalGrant": "DT_Accessory RandomDrink -> GE_Accessory_RandomDrink_LvN -> GA_Accessory_RandomDrink_LvN. GameplayEvent.Medicine.PostActive selects a weighted effect; GhostFire GE grants and activates its matching ability.",
+    "wrappers": {
+      "K2_ActivateAbility": "0xebf",
+      "Targeting Tick": "0x10c3",
+      "Timer Tick": "0x10a2"
+    },
+    "targetingFlow": [
+      {
+        "offset": "0xe9f",
+        "operation": "Reset per-scan loop state; iterate existing Pending Ghost Fires."
+      },
+      {
+        "offset": "0x6ca",
+        "operation": "Require a valid prepared bullet interface."
+      },
+      {
+        "offset": "0x7b6",
+        "operation": "GetTargetsByTagInRange(Targeting.Target.Combat, radius 800)."
+      },
+      {
+        "offset": "0x80b",
+        "operation": "FilterTargetsByFactionRelation(..., 2)."
+      },
+      {
+        "offset": "0xab7",
+        "operation": "Validate using Targeting.Validator.Combat.Default."
+      },
+      {
+        "offset": "0xd24",
+        "operation": "InitializePreSelectedTarget on the existing prepared bullet."
+      },
+      {
+        "offset": "0xd8d",
+        "operation": "Start existing bullet."
+      },
+      {
+        "offset": "0xdb2",
+        "operation": "Clear consumed Pending Ghost Fires slot."
+      }
+    ],
+    "resourceLifecycle": {
+      "spawn": "Original Timer Tick creates one missing-slot bullet, increments Current, and clears spawn timer at Current >= Max.",
+      "spawnOffsets": [
+        "0x429",
+        "0x567",
+        "0x5e8",
+        "0x637"
+      ],
+      "originalTargetingInterval": 1.0,
+      "originalTimers": "Retained; binding does not restart the ability, create a bullet, alter Current/Max/Interval or stop a timer.",
+      "end": "Original K2_OnEndAbility clears both timers and deactivates remaining prepared bullets.",
+      "input": "Held bindings request the targeting callback each frame; consumed slots prevent reuse until the original spawn timer prepares another ball.",
+      "instanceSelection": "All naturally active granted live instances, deduplicated by address across replicated/nonreplicated arrays; independent of InstancedPerActor vs InstancedPerExecution."
+    }
+  },
+  "conditionalEffects": [
+    {
+      "family": "EvadePhantom",
+      "ability": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_EvadePhantom_Passive_Lv1",
+      "events": [
+        "GameplayEvent.Ability.Action.Deflect.Consume.Dodge.Defender",
+        "GameplayEvent.Ability.Action.Deflect.Defender.Perfect"
+      ],
+      "evidence": "Consume-Dodge event casts OptionalObject to DeflectFrameConsumePayload, deduplicates Handle in HandledDodgeHandles, then emits three Spawn Bullet calls. Perfect-deflect branch requires a real BulletInterface with Bullet.Tag.Feature.Deflect.CanDodgeAfterDeflect.",
+      "classification": "Attack from a qualified live combat event; Spawn Bullet alone has no event qualification."
+    },
+    {
+      "family": "Electrified",
+      "ability": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_Electrified_Passive",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryElectrifiedPassive",
+      "event": "GameplayEvent.Damage.Taken",
+      "native": {
+        "constructor": "0x147df19f0",
+        "activate": "0x147df5a10",
+        "handler": "0x147e0b4e0",
+        "end": "0x147dfc0e0",
+        "tagInitializer": "0x141049fc0",
+        "thunderTagInitializer": "0x1411f4fa0"
+      },
+      "qualification": "Real DamageTakenPayload; active owner/avatar; damage source owner is the avatar; damage cause Damage.Cause.StatusInfliction.Thunder; native cooldown and chain state.",
+      "classification": "Conditional chain damage/thunder; OnLightningChain is a parameterized chain callback."
+    },
+    {
+      "family": "Ignite",
+      "ability": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_Ignite_Passive",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryIgnitePassive",
+      "event": "GameplayEvent.Ability.Accessory.IgniteApplied",
+      "native": {
+        "constructor": "0x147df1b90",
+        "activate": "0x147df5b80",
+        "handler": "0x147e0c880",
+        "end": "0x147dfc1a0",
+        "tagInitializer": "0x1411e6fd0"
+      },
+      "qualification": "Real event payload with matching owner avatar, positive finite native value, native accessory level tags, hostile live target, accumulated per-target data and native delay.",
+      "classification": "Conditional damage cascade; event data and queued values are part of the effect."
+    },
+    {
+      "family": "RandomDrink.FireBreathe",
+      "effects": [
+        "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_FireBreathe_Lv1",
+        "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_FireBreathe_Lv2",
+        "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_FireBreathe_Lv3"
+      ],
+      "components": [
+        "/Script/SGameCombatSystem.BulletGameplayEffectComponent",
+        "/Script/SGameCombatSystem.HitGameplayEfectComponent"
+      ],
+      "classification": "Immediate weighted drink effect; no granted ability phase or prepared projectile release callback."
+    },
+    {
+      "family": "RandomDrink.PoisonFog",
+      "variants": [
+        "Lv1_Ally",
+        "Lv1_Enemy",
+        "Lv2_Ally",
+        "Lv2_Enemy",
+        "Lv3_Ally",
+        "Lv3_Enemy"
+      ],
+      "component": "/Script/SGameCombatSystem.BulletGameplayEffectComponent",
+      "classification": "Weighted drink GE with separate ally/enemy bullet effects; not a retained prepared projectile."
+    },
+    {
+      "family": "RandomDrink.Shockwave",
+      "variants": [
+        "Lv2",
+        "Lv3"
+      ],
+      "component": "/Script/SGameCombatSystem.BulletGameplayEffectComponent",
+      "classification": "Immediate weighted drink GE effect; no retained phase callback."
+    },
+    {
+      "family": "BreakAttack",
+      "ability": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakAttack_Lv1",
+      "event": "GameplayEvent.Damage.Pretake",
+      "qualification": "DamagePreTakePayload CurrentPriority=2, damage source owner is player, target has CharacterState.Stand.Break.",
+      "operation": "ApplyModifyToChildren(Damage.Damage.Target.GeneralDamage, 2, Additive Multiplier)",
+      "classification": "Existing hit damage modifier."
+    }
+  ],
+  "inventory": [
+    {
+      "package": "/PBZCombatAsset/Prototypes/Bullet/Events/PBZ_BulletEvent_Accessory_Control",
+      "nativeParent": "/Script/SGameCombatSystem.BulletEventBase",
+      "parent": "Class'/Script/SGameCombatSystem.BulletEventBase'",
+      "functions": [
+        "Trigger"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/Bullet/Events/PBZ_BulletEvent_Accessory_PowerWeapon",
+      "nativeParent": "/Script/SGameCombatSystem.BulletEventBase",
+      "parent": "Class'/Script/SGameCombatSystem.BulletEventBase'",
+      "functions": [
+        "Trigger"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/Bullet/Events/PBZ_BulletEvent_Accessory_WeaponDamageEnahnce",
+      "nativeParent": "/Script/SGameCombatSystem.BulletEventBase",
+      "parent": "Class'/Script/SGameCombatSystem.BulletEventBase'",
+      "functions": [
+        "Trigger"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Attack_1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Attack_2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Attack_3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Attack_4",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Attack_5",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Attack_6",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Support_1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Support_2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Support_3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Support_4",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Support_5",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Support_6",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Survival_1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Survival_2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Survival_3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Survival_4",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Survival_5",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/HighCycle/GE_Accessory_HighCycle_Survival_6",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_Bleed_Lv1",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryBleedPassiveBase",
+      "parent": "Class'/Script/PBZCombatAsset.GA_AccessoryBleedPassiveBase'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_Bleed_Lv2",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryBleedPassiveBase",
+      "parent": "Class'/Script/PBZCombatAsset.GA_AccessoryBleedPassiveBase'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_Electrified_Passive",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryElectrifiedPassive",
+      "parent": "Class'/Script/PBZCombatAsset.GA_AccessoryElectrifiedPassive'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_EvadePhantom_Passive_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayAbility",
+      "parent": "Class'/Script/GameplayAbilities.GameplayAbility'",
+      "functions": [
+        "EventReceived_A1F8E46B4A1FD551B4D86382E35DC170",
+        "EventReceived_D0E618594B1087182D27C8974A138B73",
+        "ExecuteUbergraph_BP_GA_Accessory_EvadePhantom_Passive_Lv1",
+        "K2_ActivateAbility",
+        "K2_OnEndAbility",
+        "Spawn Bullet"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_EvadePhantom_Passive_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_EvadePhantom_Passive_Lv1.BP_GA_Accessory_EvadePhantom_Passive_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_Ignite_Passive",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryIgnitePassive",
+      "parent": "Class'/Script/PBZCombatAsset.GA_AccessoryIgnitePassive'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_MartialWeapon_FreeShachi_Passive_Lv1",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryRangedWeaponPassive",
+      "parent": "Class'/Script/PBZCombatAsset.GA_AccessoryRangedWeaponPassive'",
+      "functions": [
+        "EventReceived_12B7369A4CB6901718BDE2B371F22B52",
+        "ExecuteUbergraph_BP_GA_Accessory_MartialWeapon_FreeShachi_Passive_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_MartialWeapon_FreeShachi_Passive_Lv2",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryRangedWeaponPassive",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_MartialWeapon_FreeShachi_Passive_Lv1.BP_GA_Accessory_MartialWeapon_FreeShachi_Passive_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_MartialWeapon_FreeShachi_Passive_Lv3",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryRangedWeaponPassive",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_MartialWeapon_FreeShachi_Passive_Lv2.BP_GA_Accessory_MartialWeapon_FreeShachi_Passive_Lv2_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_RangedWeapon_Passive",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryRangedWeaponPassive",
+      "parent": "Class'/Script/PBZCombatAsset.GA_AccessoryRangedWeaponPassive'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/BP_Accessory_EvadePhantomBullet",
+      "nativeParent": "/Script/PBZCombatAsset.PBZ_ProjectileBullet",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/Bullet/Bullets/BP_PBZ_ProjectileBullet.BP_PBZ_ProjectileBullet_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/BP_Accessory_RandomDrink_GhostFireBullet",
+      "nativeParent": "/Script/PBZCombatAsset.PBZ_ProjectileBullet",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/Bullet/Bullets/BP_PBZ_ProjectileBullet.BP_PBZ_ProjectileBullet_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Combo/BP_GA_Accessory_Combo_Passive_Lv1",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryComboPassive",
+      "parent": "Class'/Script/PBZCombatAsset.GA_AccessoryComboPassive'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Combo/BP_GA_Accessory_Combo_Passive_Lv2",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryComboPassive",
+      "parent": "Class'/Script/PBZCombatAsset.GA_AccessoryComboPassive'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Combo/BP_GA_Accessory_Combo_Passive_Lv3",
+      "nativeParent": "/Script/PBZCombatAsset.GA_AccessoryComboPassive",
+      "parent": "Class'/Script/PBZCombatAsset.GA_AccessoryComboPassive'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Combo/GE_Accessory_Combo_Cooldown",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Combo/GE_Accessory_Combo_DamageBuff_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Combo/GE_Accessory_Combo_DamageBuff_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Combo/GE_Accessory_Combo_DamageBuff_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ActHit_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_849DE0E647B4837B8AF79192B757B64D",
+        "ExecuteUbergraph_GA_Accessory_ActHit_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ActHit_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ActHit_Lv1.GA_Accessory_ActHit_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ActHitShachi_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_E29630B943DE46A45AC38EB5F109BD62",
+        "ExecuteUbergraph_GA_Accessory_ActHitShachi_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ActHitShachi_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ActHitShachi_Lv1.GA_Accessory_ActHitShachi_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_AnimMovement_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "Added_40829C5E40C1546186BE388008910492",
+        "EventReceived_628419BD450BC25B0263ED847D35240B",
+        "ExecuteUbergraph_GA_Accessory_AnimMovement_Lv1",
+        "K2_ActivateAbility",
+        "OnTick_BACDB4A14B77398FB01D748A17AA49AC",
+        "Removed_8DE3E2A04D36C1F028D36AAC4E85D157"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_AnimMovement_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_AnimMovement_Lv1.GA_Accessory_AnimMovement_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BigHit_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_5702B659496BF359F86A619127DC278E",
+        "EventReceived_970E4FE3419C9BBE3F716386EB8EADAC",
+        "ExecuteUbergraph_GA_Accessory_BigHit_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BigHit_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BigHit_Lv1.GA_Accessory_BigHit_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakAttack_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_E0EAC07046945447D51252A253473602",
+        "ExecuteUbergraph_GA_Accessory_BreakAttack_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakAttack_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakAttack_Lv1.GA_Accessory_BreakAttack_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakDrink_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_2E01C1F64C684DFC457C5B9107EFCD8F",
+        "ExecuteUbergraph_GA_Accessory_BreakDrink_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakDrink_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_5A4153C543705EA37F6349A555FDAB88",
+        "ExecuteUbergraph_GA_Accessory_BreakDrink_Lv2",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakRegen_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "Added_976607A4444F17FAF6AD8E84EE49EA6B",
+        "ExecuteUbergraph_GA_Accessory_BreakRegen_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakRegen_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakRegen_Lv1.GA_Accessory_BreakRegen_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Chaos_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_EF5E7C19438AECC1B87375B304CCD90F",
+        "ExecuteUbergraph_GA_Accessory_Chaos_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Chaos_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Chaos_Lv1.GA_Accessory_Chaos_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Chaos_Lv3",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Chaos_Lv1.GA_Accessory_Chaos_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Counter_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_51DBA3124470AAA51E4661BC155CCE05",
+        "ExecuteUbergraph_GA_Accessory_Counter_Lv1",
+        "K2_ActivateAbility",
+        "On Ability End"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Counter_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Counter_Lv1.GA_Accessory_Counter_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Drink_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "Added_6C2CF4834F0DBF91A05CEC82CBBFD213",
+        "Added_A9D79490400F587116B787AF6D705F64",
+        "ExecuteUbergraph_GA_Accessory_Drink_Lv1",
+        "K2_ActivateAbility",
+        "K2_OnEndAbility",
+        "OnPreExecute_97047303448E48B4248950A0200106F6",
+        "Removed_A29C052F498C27727A99BFA92C1B58A6"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Drink_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Drink_Lv1.GA_Accessory_Drink_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_DrinkCost_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_88C0BF5A4D514CFD6008809F3E02C72D",
+        "ExecuteUbergraph_GA_Accessory_DrinkCost_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_DrinkCost_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_DrinkCost_Lv1.GA_Accessory_DrinkCost_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ElementRegen_Lv1",
+      "nativeParent": "/Script/PBZCombatAsset.GA_ElementalRegenBase",
+      "parent": "Class'/Script/PBZCombatAsset.GA_ElementalRegenBase'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ElementRegen_Lv2",
+      "nativeParent": "/Script/PBZCombatAsset.GA_ElementalRegenBase",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ElementRegen_Lv1.GA_Accessory_ElementRegen_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ElementRegen_Lv3",
+      "nativeParent": "/Script/PBZCombatAsset.GA_ElementalRegenBase",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ElementRegen_Lv1.GA_Accessory_ElementRegen_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Execution",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "Added_7768B50A4BEE57414E6418932DE01E11",
+        "Added_796AF5BA4BC36BE2747A60BF5F8A876B",
+        "ExecuteUbergraph_GA_Accessory_Execution",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Execution_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Execution.GA_Accessory_Execution_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ExecutionSwitchCool_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "Added_980B53DF4A58DFCBAE4150A4F110331A",
+        "Added_AB60013849FF5F4101A545AF24ED8136",
+        "ExecuteUbergraph_GA_Accessory_ExecutionSwitchCool_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ExecutionSwitchCool_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ExecutionSwitchCool_Lv1.GA_Accessory_ExecutionSwitchCool_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Poison_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_9522D9E24ADF8EE329D019B4C581F799",
+        "ExecuteUbergraph_GA_Accessory_Poison_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Poison_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Poison_Lv1.GA_Accessory_Poison_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "ExecuteUbergraph_GA_Accessory_RandomDrink_GhostFire_Lv1",
+        "K2_ActivateAbility",
+        "K2_OnEndAbility",
+        "OnTick_D8294C8E4AC7D24199A7DE9D9D4A9A32",
+        "Targeting Tick",
+        "Timer Tick"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv1.GA_Accessory_RandomDrink_GhostFire_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv3",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv1.GA_Accessory_RandomDrink_GhostFire_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_F52686334F7F766B7DDE28987601DBAC",
+        "ExecuteUbergraph_GA_Accessory_RandomDrink_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_Lv1.GA_Accessory_RandomDrink_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_Lv3",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_Lv1.GA_Accessory_RandomDrink_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Ranged_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_BA28817244B612679596639B43CE9D3F",
+        "ExecuteUbergraph_GA_Accessory_Ranged_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Ranged_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Ranged_Lv1.GA_Accessory_Ranged_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ResistRanged_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_B64BED6E4E4C782BCBB0F59C5345DB7C",
+        "ExecuteUbergraph_GA_Accessory_ResistRanged_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ResistRanged_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ResistRanged_Lv1.GA_Accessory_ResistRanged_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Rider_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_45E427E4449262BCC37BC2A91CDDA265",
+        "ExecuteUbergraph_GA_Accessory_Rider_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Rider_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Rider_Lv1.GA_Accessory_Rider_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ShachiWeapon_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_84B562174AB8D42154924E9186A801AC",
+        "ExecuteUbergraph_GA_Accessory_ShachiWeapon_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ShachiWeapon_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ShachiWeapon_Lv1.GA_Accessory_ShachiWeapon_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ShachiWeapon_Lv3",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ShachiWeapon_Lv1.GA_Accessory_ShachiWeapon_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_SwitchEndure_Passive",
+      "nativeParent": "/Script/GameplayAbilities.GameplayAbility",
+      "parent": "Class'/Script/GameplayAbilities.GameplayAbility'",
+      "functions": [
+        "EventReceived_665FDE69444CD6286EC6A5B439DE9024",
+        "ExecuteUbergraph_GA_Accessory_SwitchEndure_Passive",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_TimerEndure_Endure",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_69B722CC4E919E13953DDAA20A20741E",
+        "ExecuteUbergraph_GA_Accessory_TimerEndure_Endure",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_TimerEndure_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_3BFFB38F427438D3F3F447B25D05F5EC",
+        "EventReceived_B21C14344A56A579E8FB2188F981DAD6",
+        "EventReceived_C08545574B3D9588B3556EBDC31381DC",
+        "EventReceived_F46C4D354B2750A97CEAE9802F5A6A56",
+        "ExecuteUbergraph_GA_Accessory_TimerEndure_Lv1",
+        "K2_ActivateAbility",
+        "K2_OnEndAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_TimerEndure_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_TimerEndure_Lv1.GA_Accessory_TimerEndure_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_UltimateBreak_Lv1",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_45AEE0D448BDDDC397AAF0BA336E4A41",
+        "ExecuteUbergraph_GA_Accessory_UltimateBreak_Lv1",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_UltimateBreak_Lv2",
+      "nativeParent": "/Script/SGameCombatSystem.SGameGameplayAbility",
+      "parent": "Class'/Script/SGameCombatSystem.SGameGameplayAbility'",
+      "functions": [
+        "EventReceived_8434F0E445A9B20EC0CB3F9914455688",
+        "ExecuteUbergraph_GA_Accessory_UltimateBreak_Lv2",
+        "K2_ActivateAbility"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ActHit_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ActHit_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ActHitShachi_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ActHitShachi_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_AnimMovement_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_AnimMovement_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Attack_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Attack_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BigHit_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BigHit_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Bleed_EnemyAmp_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Bleed_EnemyAmp_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Bleed_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Bleed_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Bleed_PlayerBuff_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Bleed_PlayerBuff_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakAttack_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakAttack_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakDrink_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakDrink_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakDrink_MaxShachi",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakDrink_MaxShachi_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakRecover_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakRecover_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakRegen_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakRegen_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakShield_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakShield_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Chaos_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Chaos_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Chaos_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Combo_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Combo_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Combo_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Control_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Control_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Counter_Effect",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Counter_Effect_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Counter_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Counter_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Deflect_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Deflect_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Double_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Double_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Drink_EndureTagForBuff",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Drink_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Drink_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_DrinkCost_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_DrinkCost_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_EasyExecution_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_EasyExecution_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Electrified_CascadeDamage",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Electrified_Cooldown",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Electrified_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Electrified_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Electrified_Thunder",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Electrified_ThunderHit",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Elemental_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Elemental_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ElementalRegen_Regen",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ElementalResistance_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ElementalResistance_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ElementRegen_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ElementRegen_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ElementRegen_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_EvadePhantom_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_EvadePhantom_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Execution_Effect",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Execution_Effect_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Execution_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Execution_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ExecutionSwitchCool_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ExecutionSwitchCool_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Frost_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Frost_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Health_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Health_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HealthResistance_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HealthResistance_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HealthResistance_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackCost_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackCost_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackDamage_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackDamage_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackShachi_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackShachi_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Ignite_CascadeDamage",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Ignite_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Ignite_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Long_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Long_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Loot_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Loot_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_LowHealth_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_LowHealth_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_LowShachi_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_LowShachi_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MagicWeapon_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MagicWeapon_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MagicWeapon_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MagicWeapon_SummonBerserk_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MagicWeapon_SummonBerserk_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MagicWeapon_SummonBerserk_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MartialWeapon_FreeShachiReady",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MartialWeapon_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MartialWeapon_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MartialWeapon_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PerfectFrame_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PerfectFrame_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PerfectFrame_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PhysicalResistance_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PhysicalResistance_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Poison_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Poison_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PoisonRegen_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PoisonRegen_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PowerWeapon_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PowerWeapon_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PowerWeapon_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_FireBreathe_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_FireBreathe_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_FireBreathe_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_FullRegen_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_FullRegen_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_GhostFire_Lv1",
+      "nativeParent": "/Script/PBZCombatAsset.GE_TempEffectBase",
+      "parent": "Class'/Script/PBZCombatAsset.GE_TempEffectBase'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_GhostFire_Lv2",
+      "nativeParent": "/Script/PBZCombatAsset.GE_TempEffectBase",
+      "parent": "Class'/Script/PBZCombatAsset.GE_TempEffectBase'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_GhostFire_Lv3",
+      "nativeParent": "/Script/PBZCombatAsset.GE_TempEffectBase",
+      "parent": "Class'/Script/PBZCombatAsset.GE_TempEffectBase'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_MaxShachi_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_MaxShachi_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "BlueprintGeneratedClass'/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_MaxShachi_Lv1.GE_Accessory_RandomDrink_MaxShachi_Lv1_C'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_PoisonFog_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_PoisonFog_Lv1_Ally",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_PoisonFog_Lv1_Enemy",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_PoisonFog_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_PoisonFog_Lv2_Ally",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_PoisonFog_Lv2_Enemy",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_PoisonFog_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_PoisonFog_Lv3_Ally",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_PoisonFog_Lv3_Enemy",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_Shockwave_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_Shockwave_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Ranged_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Ranged_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RangedWeapon_FreeShachiReady",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RangedWeapon_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RangedWeapon_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RangedWeapon_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Regen_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Regen_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Resistance_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Resistance_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistBleed_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistBleed_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistFire_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistFire_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistIce_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistIce_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistNonBreak_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistNonBreak_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistPoison_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistPoison_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistRanged_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistRanged_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistThunder_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistThunder_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Rider_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Rider_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Shachi_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Shachi_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiAttack_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiAttack_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiCool_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiCool_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiRegen_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiRegen_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiWeapon_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiWeapon_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiWeapon_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SpiritShadow_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SpiritShadow_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SpiritShadow_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Stance_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Stance_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Stance_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Stealth_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Stealth_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Summon_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Summon_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Summon_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SummonDuration_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SummonDuration_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SwitchEndure_Endure_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SwitchEndure_Endure_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SwitchEndure_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SwitchEndure_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Tang_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Tang_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_TimerEndure_Cooldown_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_TimerEndure_Cooldown_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_TimerEndure_Effect",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_TimerEndure_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_TimerEndure_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_UltimateBreak_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_UltimateBreak_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_UltimateCharge_Lv1",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_UltimateCharge_Lv2",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_UltimateCharge_Lv3",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GEC_Accessory_HealthResistance",
+      "nativeParent": "/Script/GameplayAbilities.GameplayModMagnitudeCalculation",
+      "parent": "Class'/Script/GameplayAbilities.GameplayModMagnitudeCalculation'",
+      "functions": [
+        "CalculateBaseMagnitude"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GEC_Accessory_LowHealth",
+      "nativeParent": "/Script/GameplayAbilities.GameplayModMagnitudeCalculation",
+      "parent": "Class'/Script/GameplayAbilities.GameplayModMagnitudeCalculation'",
+      "functions": [
+        "CalculateBaseMagnitude"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GEC_Accessory_LowShachi",
+      "nativeParent": "/Script/GameplayAbilities.GameplayModMagnitudeCalculation",
+      "parent": "Class'/Script/GameplayAbilities.GameplayModMagnitudeCalculation'",
+      "functions": [
+        "CalculateBaseMagnitude"
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/Old/GE_Accessory_DuelMaster_Lv4_Active_Legacy",
+      "nativeParent": "/Script/GameplayAbilities.GameplayEffect",
+      "parent": "Class'/Script/GameplayAbilities.GameplayEffect'",
+      "functions": []
+    },
+    {
+      "package": "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/Old/GE_Accessory_ShachiAttackReinforcement_Lv1_Endure_Legacy",
+      "nativeParent": "/Script/PBZCombatAsset.GE_TemporaryEndureBase",
+      "parent": "Class'/Script/PBZCombatAsset.GE_TemporaryEndureBase'",
+      "functions": []
+    }
+  ],
+  "limitations": [
+    "Static package and native code evidence establishes paths and qualification, not an observed game execution.",
+    "The 307-package name selection does not prove that every accessory reachable from data tables or characters is inside that subset."
+  ],
+  "sourceClosure": {
+    "table": "/Game/PBZContent/DataTable/UI/DT_Accessory",
+    "rowStructure": "/Script/ProjectPBZ.AccessoryData",
+    "sourceEffectReferenceCount": 161,
+    "sourceEffectReferences": [
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ActHit_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ActHit_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ActHitShachi_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ActHitShachi_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_AnimMovement_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_AnimMovement_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Attack_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Attack_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BigHit_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BigHit_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Bleed_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Bleed_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakAttack_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakAttack_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakDrink_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakDrink_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakRecover_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakRecover_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakRegen_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakRegen_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakShield_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_BreakShield_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Chaos_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Chaos_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Chaos_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Combo_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Combo_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Combo_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Control_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Control_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Counter_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Counter_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Deflect_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Deflect_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Double_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Double_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Drink_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Drink_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_DrinkCost_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_DrinkCost_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_EasyExecution_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_EasyExecution_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Electrified_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Electrified_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Elemental_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Elemental_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ElementalResistance_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ElementalResistance_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ElementRegen_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ElementRegen_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ElementRegen_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_EvadePhantom_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_EvadePhantom_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Execution_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Execution_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ExecutionSwitchCool_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ExecutionSwitchCool_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Frost_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Frost_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Health_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Health_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HealthResistance_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HealthResistance_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HealthResistance_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackCost_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackCost_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackDamage_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackDamage_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackShachi_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_HeavyAttackShachi_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Ignite_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Ignite_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Long_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Long_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Loot_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Loot_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_LowHealth_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_LowHealth_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_LowShachi_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_LowShachi_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MagicWeapon_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MagicWeapon_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MagicWeapon_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MartialWeapon_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MartialWeapon_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_MartialWeapon_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PerfectFrame_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PerfectFrame_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PerfectFrame_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PhysicalResistance_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PhysicalResistance_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Poison_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Poison_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PoisonRegen_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PoisonRegen_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PowerWeapon_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PowerWeapon_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_PowerWeapon_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RandomDrink_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Ranged_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Ranged_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RangedWeapon_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RangedWeapon_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_RangedWeapon_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Regen_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Regen_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Resistance_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Resistance_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistBleed_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistBleed_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistFire_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistFire_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistIce_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistIce_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistNonBreak_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistNonBreak_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistPoison_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistPoison_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistRanged_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistRanged_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistThunder_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ResistThunder_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Rider_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Rider_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Shachi_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Shachi_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiAttack_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiAttack_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiCool_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiCool_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiRegen_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiRegen_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiWeapon_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiWeapon_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_ShachiWeapon_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SpiritShadow_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SpiritShadow_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SpiritShadow_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Stance_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Stance_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Stance_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Stealth_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Stealth_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Summon_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Summon_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Summon_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SummonDuration_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SummonDuration_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SwitchEndure_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_SwitchEndure_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Tang_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_Tang_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_TimerEndure_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_TimerEndure_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_UltimateBreak_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_UltimateBreak_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_UltimateCharge_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_UltimateCharge_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GE_Accessory_UltimateCharge_Lv3"
+    ],
+    "referenceClosurePackages": 301,
+    "kindCounts": {
+      "effect": 215,
+      "ability": 73,
+      "attack-resource": 13
+    },
+    "abilityPackages": [
+      "/MagCombatAbilities/Abilities/BP_AbilityBase",
+      "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+      "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+      "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple_Air",
+      "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Air_Base",
+      "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+      "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_Bleed_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_Bleed_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_Electrified_Passive",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_EvadePhantom_Passive_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_EvadePhantom_Passive_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_Ignite_Passive",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_MartialWeapon_FreeShachi_Passive_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_MartialWeapon_FreeShachi_Passive_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_MartialWeapon_FreeShachi_Passive_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/BP_GA_Accessory_RangedWeapon_Passive",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Combo/BP_GA_Accessory_Combo_Passive_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Combo/BP_GA_Accessory_Combo_Passive_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Combo/BP_GA_Accessory_Combo_Passive_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ActHit_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ActHit_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ActHitShachi_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ActHitShachi_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_AnimMovement_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_AnimMovement_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BigHit_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BigHit_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakAttack_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakAttack_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakDrink_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakDrink_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakRegen_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_BreakRegen_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Chaos_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Chaos_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Chaos_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Counter_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Counter_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Drink_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Drink_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_DrinkCost_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_DrinkCost_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ElementRegen_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ElementRegen_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ElementRegen_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Execution",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Execution_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ExecutionSwitchCool_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ExecutionSwitchCool_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Poison_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Poison_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_GhostFire_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_RandomDrink_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Ranged_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Ranged_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ResistRanged_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ResistRanged_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Rider_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_Rider_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ShachiWeapon_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ShachiWeapon_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_ShachiWeapon_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_SwitchEndure_Passive",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_TimerEndure_Endure",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_TimerEndure_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_TimerEndure_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_UltimateBreak_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/GA_Accessory_UltimateBreak_Lv2"
+    ],
+    "sharedBaseAbilitiesOutsideNameSelection": [
+      "/MagCombatAbilities/Abilities/BP_AbilityBase",
+      "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+      "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+      "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple_Air",
+      "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Air_Base",
+      "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+      "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base"
+    ],
+    "attackResources": [
+      "/PBZCombatAsset/Config/Bullet/Bullet_SceneInteract",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_EvadePhantomMask_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_EvadePhantomMask_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_FireBreathe_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_FireBreathe_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_FireBreathe_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_RandomDrink_GhostFireBullet",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_RandomDrink_GhostFireBullet_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_RandomDrink_PoisonFog_Lv1",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_RandomDrink_PoisonFog_Lv1_Ally",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_RandomDrink_PoisonFog_Lv2",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_RandomDrink_PoisonFog_Lv3",
+      "/PBZCombatAsset/Prototypes/GameplayEffects/Accessories/New/Bullets/B_Accessory_RandomDrink_Shockwave_Lv2"
+    ],
+    "meaning": "A reference closure includes inherited common bases and resources; a reference alone does not assert a grant or an independent action. All 66 accessory ability packages reached from DT_Accessory are included in the named Blueprint audit; seven additional ability packages are common inherited bases."
+  }
+}

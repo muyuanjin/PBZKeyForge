@@ -1,0 +1,4658 @@
+{
+  "build": "CL-302256",
+  "evidenceType": "installed-cooked-assets-static",
+  "runtimeVerified": false,
+  "inputState": {
+    "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+    "receiver": "/Script/SGameInputSystem.SGameInputUtils:GetSGameInputComponent",
+    "query": "/Script/SGameInputSystem.SGameInputComponent:IsHolding",
+    "activation": "Normal activation after real native holding is observed",
+    "release": "Stop virtual input; retain the original ability lifecycle and physical input"
+  },
+  "weaponLabels": {
+    "UnnamedBow": {
+      "namespace": "Default",
+      "key": "PhantomEdges_009",
+      "labels": {
+        "zh-Hans": "羽弓",
+        "en": "FEATHER BOW",
+        "ja": "羽弓",
+        "ko": "우궁",
+        "ru": "Перьевой Лук",
+        "zh-Hant": "羽弓",
+        "fr": "ARC DE PLUMES",
+        "de": "FEDERBOGEN",
+        "es-ES": "ARCO DE PLUMAS",
+        "pt-BR": "ARCO PLUMADO",
+        "it": "ARCO PIUMATO",
+        "th": "คันศรขนนก",
+        "vi": "CUNG LÔNG VŨ",
+        "pt-PT": "ARCO EMPLUMADO",
+        "es-419": "ARCO DE PLUMAS"
+      }
+    },
+    "YouLongCha": {
+      "namespace": "Default",
+      "key": "PhantomEdges_016",
+      "labels": {
+        "zh-Hans": "游龙叉",
+        "en": "LOONG TRIDENT",
+        "ja": "遊龍の銛",
+        "ko": "유룡차",
+        "ru": "Трезубец Луна",
+        "zh-Hant": "游龍叉",
+        "fr": "TRIDENT DE LOONG",
+        "de": "LOONG-DREIZACK",
+        "es-ES": "TRIDENTE DE LOONG",
+        "pt-BR": "TRIDENTE DO DRAGÃO",
+        "it": "TRIDENTE LOONG",
+        "th": "ฉมวกมังกรวารี",
+        "vi": "DU LONG XOA",
+        "pt-PT": "LANÇA LOONG",
+        "es-419": "TRIDENTE DE LOONG"
+      }
+    },
+    "DuYanBow": {
+      "namespace": "Default",
+      "key": "PhantomEdges_109",
+      "labels": {
+        "zh-Hans": "独眼弓",
+        "en": "ONE-EYED BOW",
+        "ja": "隻眼弓",
+        "ko": "독안궁",
+        "ru": "Лук Ока",
+        "zh-Hant": "獨眼弓",
+        "fr": "ARC BORGNE",
+        "de": "BOGEN DES EINÄUGIGEN",
+        "es-ES": "ARCO DEL TUERTO",
+        "pt-BR": "ARCO DE UM OLHO SÓ",
+        "it": "ARCO DELL'OCCHIO",
+        "th": "คันศรตาเดียว",
+        "vi": "ĐỘC NHÃN CUNG",
+        "pt-PT": "ARCO ZAROLHO",
+        "es-419": "ARCO DEL TUERTO"
+      }
+    },
+    "TieKuangQuanTao": {
+      "namespace": "Default",
+      "key": "PhantomEdges_017",
+      "labels": {
+        "zh-Hans": "铁拳套",
+        "en": "IRON GAUNTLETS",
+        "ja": "鉄の籠手",
+        "ko": "철권갑",
+        "ru": "Железные Рукавицы",
+        "zh-Hant": "鐵拳套",
+        "fr": "GANTELETS DE FER",
+        "de": "EISENHANDSCHUHE",
+        "es-ES": "GUANTELETES DE HIERRO",
+        "pt-BR": "MANOPLAS DE FERRO",
+        "it": "GUANTI DI FERRO",
+        "th": "สนับมือเหล็ก",
+        "vi": "GĂNG THIẾT QUYỀN",
+        "pt-PT": "MANOPLAS DE FERRO",
+        "es-419": "GUANTELETES DE HIERRO"
+      }
+    },
+    "BrutalAxe": {
+      "namespace": "Default",
+      "key": "PhantomEdges_001",
+      "labels": {
+        "zh-Hans": "巨凶斧",
+        "en": "DREAD AXE",
+        "ja": "巨凶の斧",
+        "ko": "거흉 도끼",
+        "ru": "Топор Ужаса",
+        "zh-Hant": "巨凶斧",
+        "fr": "HACHE REDOUTABLE",
+        "de": "SCHRECKENSAXT",
+        "es-ES": "HACHA TEMIBLE",
+        "pt-BR": "MACHADO DO TERROR",
+        "it": "ASCIA DEL TERRORE",
+        "th": "ขวานทมิฬยักษ์",
+        "vi": "CỰ HUNG PHỦ",
+        "pt-PT": "MACHADO DO PAVOR",
+        "es-419": "HACHA TEMIBLE"
+      }
+    },
+    "JinGua": {
+      "namespace": "Default",
+      "key": "PhantomEdges_002",
+      "labels": {
+        "zh-Hans": "长柄金瓜",
+        "en": "BASHPOLE",
+        "ja": "長柄金瓜",
+        "ko": "장병 금과",
+        "ru": "Золотая Тыква",
+        "zh-Hant": "長柄金瓜",
+        "fr": "CITROUILLE DORÉE",
+        "de": "GOLDKÜRBIS",
+        "es-ES": "CALABAZA DORADA",
+        "pt-BR": "PORRETE ESMAGADOR",
+        "it": "RANDELLO",
+        "th": "ค้อนแตงทอง",
+        "vi": "TRƯỜNG BÍNH KIM QUA",
+        "pt-PT": "CACHAPORRA",
+        "es-419": "CALABAZA DORADA"
+      }
+    },
+    "TigerCannon": {
+      "namespace": "Default",
+      "key": "PhantomEdges_006",
+      "labels": {
+        "zh-Hans": "虎炮",
+        "en": "TIGER CANNON",
+        "ja": "虎砲",
+        "ko": "맹호포",
+        "ru": "Тигровая Пушка",
+        "zh-Hant": "虎炮",
+        "fr": "CANON TIGRE",
+        "de": "TIGERKANONE",
+        "es-ES": "CAÑÓN TIGRE",
+        "pt-BR": "CANHÃO DO TIGRE",
+        "it": "CANNONE DELLA TIGRE",
+        "th": "ปืนใหญ่พยัคฆ์",
+        "vi": "HỔ PHÁO",
+        "pt-PT": "CANHÃO TIGRE",
+        "es-419": "CAÑÓN DE TIGRE"
+      }
+    },
+    "LionHead": {
+      "namespace": "Default",
+      "key": "PhantomEdges_012",
+      "labels": {
+        "zh-Hans": "烈焰狮头",
+        "en": "FLAMING MANE",
+        "ja": "烈焔獅子頭",
+        "ko": "열염 사자탈",
+        "ru": "Пламенная Грива",
+        "zh-Hant": "烈焰獅頭",
+        "fr": "CRINIÈRE FLAMBOYANTE",
+        "de": "FLAMMENMÄHNE",
+        "es-ES": "CRIN LLAMEANTE",
+        "pt-BR": "JUBA FLAMEJANTE",
+        "it": "CRINIERA FIAMMEGGIANTE",
+        "th": "เศียรสิงโตเพลิง",
+        "vi": "LIỆT DIỄM SƯ ĐẦU",
+        "pt-PT": "CRINA ARDENTE",
+        "es-419": "CRIN LLAMEANTE"
+      }
+    },
+    "Lute": {
+      "namespace": "Default",
+      "key": "PhantomEdges_024",
+      "labels": {
+        "zh-Hans": "催心琵琶",
+        "en": "HEARTREND PIPA",
+        "ja": "催心の琵琶",
+        "ko": "최심비파",
+        "ru": "Душераздирающая Пипа",
+        "zh-Hant": "催心琵琶",
+        "fr": "PIPA DÉCHIRE-CŒUR",
+        "de": "HERZREISSER-PIPA",
+        "es-ES": "PIPA DESGARRACORAZONES",
+        "pt-BR": "PIPA DILACERADOR DE CORAÇÕES",
+        "it": "PIPA SPACCACUORI",
+        "th": "พิณผีผาสลายใจ",
+        "vi": "TỲ BÀ THÔI TÂM",
+        "pt-PT": "PIPÁ AMARGURADO",
+        "es-419": "PIPA DESGARRACORAZONES"
+      }
+    },
+    "MiaoShouFeiDao": {
+      "namespace": "Default",
+      "key": "PhantomEdges_010",
+      "labels": {
+        "zh-Hans": "妙手飞刀",
+        "en": "FLYING DAGGER",
+        "ja": "妙手の飛刀",
+        "ko": "묘수비도",
+        "ru": "Метательные Ножи",
+        "zh-Hant": "妙手飛刀",
+        "fr": "DAGUE DE LANCER",
+        "de": "FLIEGENDER DOLCH",
+        "es-ES": "DAGA VOLADORA",
+        "pt-BR": "ADAGAS VOADORAS",
+        "it": "PUGNALE VOLANTE",
+        "th": "มีดบินมือไว",
+        "vi": "DIỆU THỦ PHI ĐAO",
+        "pt-PT": "ADAGA VOADORA",
+        "es-419": "DAGA VOLADORA"
+      }
+    },
+    "TanLang": {
+      "namespace": "Default",
+      "key": "PhantomEdges_005",
+      "labels": {
+        "zh-Hans": "贪狼",
+        "en": "WOLFJAW",
+        "ja": "貪狼",
+        "ko": "탐랑",
+        "ru": "Волчья Пасть",
+        "zh-Hant": "貪狼",
+        "fr": "GUEULE-DE-LOUP",
+        "de": "WOLFSKIEFER",
+        "es-ES": "QUIJADA LUPINA",
+        "pt-BR": "MANDÍBULA DE LOBO",
+        "it": "MASCELLA DI LUPO",
+        "th": "เขี้ยวหมาป่าละโมบ",
+        "vi": "THAM LANG",
+        "pt-PT": "BOCA DO LOBO",
+        "es-419": "FAUCES DE LOBO"
+      }
+    },
+    "ZhuoBiDun": {
+      "namespace": "Default",
+      "key": "PhantomEdges_004",
+      "labels": {
+        "de": "BASTION",
+        "en": "BASTION",
+        "es-419": "BASTIÓN",
+        "es-ES": "BASTIÓN",
+        "fr": "BASTION",
+        "he": "拙壁盾",
+        "it": "BASTIONE",
+        "ja": "拙壁の盾",
+        "ko": "졸벽 방패",
+        "pt-BR": "BASTIÃO",
+        "pt-PT": "BASTIÃO",
+        "ru": "Бастион",
+        "th": "โล่ปราการ",
+        "vi": "CHUYẾT BÍCH THUẪN",
+        "zh-Hans": "拙壁盾",
+        "zh-Hant": "拙壁盾"
+      }
+    }
+  },
+  "abilityEvidence": {
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Main",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0,
+          "duration": 0,
+          "triggerOffset": 9.999999747378752e-05
+        },
+        {
+          "timeline": "SprintCharge",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0,
+          "duration": 0,
+          "triggerOffset": 9.999999747378752e-05
+        }
+      ],
+      "nativeStateEvents": [
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.4319367408752441,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.BrutalAxe.MinDuration",
+            "GameplayEvent.Ability.Action.BrutalAxe.MinDuration"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_3",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.7010082006454468,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.BrutalAxe.GainCharge",
+            "GameplayEvent.Ability.Action.BrutalAxe.GainCharge"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_5",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 2.1788978576660156,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.BrutalAxe.GainCharge"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 2.493807554244995,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.BrutalAxe.ToRelease",
+            "GameplayEvent.Ability.Action.BrutalAxe.ToRelease"
+          ]
+        },
+        {
+          "timeline": "Release2",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0.4343434274196625,
+          "duration": 1.0412017107009888,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AIState.CanNotDeflect"
+          ]
+        },
+        {
+          "timeline": "Release3",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0.29846906661987305,
+          "duration": 2.1514458656311035,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AIState.CanNotDeflect"
+          ]
+        },
+        {
+          "timeline": "SprintCharge",
+          "action": "GAA_GameplayEvent_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.0053331851959229,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.BrutalAxe.MinDuration",
+            "GameplayEvent.Ability.Action.BrutalAxe.MinDuration"
+          ]
+        },
+        {
+          "timeline": "SprintCharge",
+          "action": "GAA_GameplayEvent_C_2",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.4795417785644531,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.BrutalAxe.ToRelease",
+            "CharacterState.WeaponUpgrade.BrutalAxe.RunChargeCombo"
+          ]
+        },
+        {
+          "timeline": "SprintCharge",
+          "action": "GAA_GameplayEvent_C_3",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.4840846061706543,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.BrutalAxe.GainCharge",
+            "GameplayEvent.Ability.Action.BrutalAxe.GainCharge"
+          ]
+        },
+        {
+          "timeline": "SprintCharge",
+          "action": "GAA_GameplayEvent_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.7996230125427246,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.BrutalAxe.ToRelease",
+            "GameplayEvent.Ability.Action.BrutalAxe.ToRelease"
+          ]
+        },
+        {
+          "timeline": "SprintRelease2",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0.29846900701522827,
+          "duration": 2.1514461040496826,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AIState.CanNotDeflect"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.772071897983551,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release1",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.2936513125896454,
+          "duration": 0.12295332551002502,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release2",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.30716726183891296,
+          "duration": 0.1487767994403839,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release2",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.5148130655288696,
+          "duration": 0.08625638484954834,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release2",
+          "action": "LGAAction_DurationBulletWithDeflect_2",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.5939358472824097,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release3",
+          "action": "LGAAction_DurationBulletWithDeflect_2",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.3051178753376007,
+          "duration": 0.14022725820541382,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release3",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.4522426128387451,
+          "duration": 0.10650396347045898,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release3",
+          "action": "LGAAction_DurationBulletWithDeflect_3",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.55996572971344,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release3",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 2.476687431335449,
+          "duration": 0.08834958076477051,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release3",
+          "action": "LGAAction_DurationBulletWithDeflect_4",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 2.56455135345459,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "SprintRelease1",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.0293391942977905,
+          "duration": 0.03333333507180214,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "SprintRelease2",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 2.476687431335449,
+          "duration": 0.08834958076477051,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "SprintRelease2",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 2.56455135345459,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        }
+      ]
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Main",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0,
+          "duration": 0,
+          "triggerOffset": 9.999999747378752e-05
+        }
+      ],
+      "nativeStateEvents": [
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_3",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0,
+          "duration": 5.1364545822143555,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.Stance.Forbid"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_2",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.6209408044815063,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.JinGua.Charge"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.6301054954528809,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.BrutalAxe.MinDuration"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 1.631269097328186,
+          "duration": 0.296810507774353,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.JinGua.CanRelease"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_1",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 2.8033108711242676,
+          "duration": 0.2990913391113281,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.JinGua.CanRelease"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_3",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 2.804837465286255,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.JinGua.Charge"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_4",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 3.804827928543091,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.JinGua.Charge"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_2",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 3.8082690238952637,
+          "duration": 0.4568462371826172,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.JinGua.CanRelease"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 4.264434814453125,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.BrutalAxe.ToRelease"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_2",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.0644288063049316,
+          "duration": 0.20608198642730713,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 2.191181182861328,
+          "duration": 0.3969409465789795,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 3.3435933589935303,
+          "duration": 0.31005859375,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release3",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.0310959815979004,
+          "duration": 0.0710059404373169,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release3",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.0310959815979004,
+          "duration": 0.0710059404373169,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release3",
+          "action": "LGAAction_DurationBulletWithDeflect_2",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.03109610080719,
+          "duration": 0.0710059404373169,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Release3",
+          "action": "GAA_DelayDeflectProjectileBullet_C_8",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 1.0901377201080322,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        }
+      ]
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Launch",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.1090942770242691,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "LaunchPerfect",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.09172254800796509,
+          "duration": 0,
+          "triggerOffset": 0
+        }
+      ],
+      "nativeStateEvents": [
+        {
+          "timeline": "Launch",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0.17843225598335266,
+          "duration": 0.42943117022514343,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TigerCannon.CanQuickCharge"
+          ]
+        },
+        {
+          "timeline": "LaunchPerfect",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0.17843200266361237,
+          "duration": 0.5121750235557556,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TigerCannon.CanQuickCharge"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.4929509162902832,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.TigerCannon.Ready"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DurationTags_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_DurationTags",
+          "startTime": 1.774863839149475,
+          "duration": 0.43000900745391846,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TigerCannon.Great"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DurationTags_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_DurationTags",
+          "startTime": 2.20424485206604,
+          "duration": 0.46280956268310547,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TigerCannon.Perfect"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "Launch",
+          "action": "GAAction_Bullet_Simple_C_0",
+          "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_Bullet_Simple",
+          "startTime": 0.12176463007926941,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Launch",
+          "action": "GAAction_Bullet_Simple_C_1",
+          "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_Bullet_Simple",
+          "startTime": 0.12324400991201401,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "LaunchPerfect",
+          "action": "GAAction_Bullet_Simple_C_1",
+          "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_Bullet_Simple",
+          "startTime": 0.09512922167778015,
+          "duration": 0,
+          "triggerOffset": 0
+        }
+      ]
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_A": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Main",
+          "action": "GAA_ShachiBulletInstant_C_1",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0,
+          "duration": 0,
+          "triggerOffset": 9.999999747378752e-05
+        }
+      ],
+      "nativeStateEvents": [
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0,
+          "duration": 0.37629568576812744,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TieKuangQuanTao.Charge.Window"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_1",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0.20574742555618286,
+          "duration": 0.17393022775650024,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TieKuangQuanTao.Charge.PerfectTime"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_3",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.664556086063385,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DelayDeflectProjectileBullet_C_4",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.7410445809364319,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.7545498013496399,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_2",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.779815673828125,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.781274676322937,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        }
+      ]
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AA": {
+      "resourceFeeEvents": [],
+      "nativeStateEvents": [
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0,
+          "duration": 0.62971031665802,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TieKuangQuanTao.Charge.Window"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_1",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0.3321632146835327,
+          "duration": 0.2827463746070862,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TieKuangQuanTao.Charge.PerfectTime"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_3",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.9813926219940186,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DelayDeflectProjectileBullet_C_4",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 1.061617374420166,
+          "duration": 0.03333333507180214,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_2",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.0749127864837646,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.0756076574325562,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.0768487453460693,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        }
+      ]
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AAA": {
+      "resourceFeeEvents": [],
+      "nativeStateEvents": [
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0,
+          "duration": 0.7553552389144897,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TieKuangQuanTao.Charge.Window"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_1",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0.5836486220359802,
+          "duration": 0.1724032759666443,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TieKuangQuanTao.Charge.PerfectTime"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.3048344850540161,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.ShachiWeapon.ShachiWeaponCombo.Martial.Finish"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_3",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.168445110321045,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.2183698415756226,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_2",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.2467881441116333,
+          "duration": 0.03333333507180214,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DelayDeflectProjectileBullet_C_4",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 1.2478939294815063,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.2479405403137207,
+          "duration": 0.03333330154418945,
+          "triggerOffset": 0
+        }
+      ]
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Shoot",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.031186513602733612,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "ShootMax",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.04076477885246277,
+          "duration": 0,
+          "triggerOffset": 0
+        }
+      ],
+      "nativeStateEvents": [
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.454123854637146,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.ShachiBow.CanRelease"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 2.242344856262207,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.ShachiBow.CantMove"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DurationTags_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_DurationTags",
+          "startTime": 2.3434009552001953,
+          "duration": 1.508626937866211,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.Forbid.Ability.ChangeFocusTarget"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DurationTags_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_DurationTags",
+          "startTime": 2.5961828231811523,
+          "duration": 1.5923242568969727,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.ShachiBow.Great",
+            "CharacterState.AbilityState.ShachiBow.Perfect"
+          ]
+        }
+      ],
+      "preparedProjectiles": [
+        {
+          "timeline": "Main",
+          "action": "GAAction_ReadyBulletWithAim_C_2",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReadyBulletWithAim",
+          "startTime": 0.25730860233306885,
+          "duration": 2.3449621200561523,
+          "triggerOffset": 0,
+          "variable": "UnnamedBow",
+          "bulletData": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiWeapon/B_UnnamedBow_Normal"
+        },
+        {
+          "timeline": "Main",
+          "action": "GAAction_ReadyBulletWithAim_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReadyBulletWithAim",
+          "startTime": 2.5989577770233154,
+          "duration": 0.10491466522216797,
+          "triggerOffset": 0,
+          "variable": "UnnamedBow",
+          "bulletData": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiWeapon/B_UnnamedBow_Perfect"
+        },
+        {
+          "timeline": "Main",
+          "action": "GAAction_ReadyBulletWithAim_C_3",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReadyBulletWithAim",
+          "startTime": 2.7004857063293457,
+          "duration": 1.6656155586242676,
+          "triggerOffset": 0,
+          "variable": "UnnamedBow",
+          "bulletData": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiWeapon/B_UnnamedBow_Max"
+        }
+      ],
+      "directAttackEvents": []
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Shoot",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.031186513602733612,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "ShootMax",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.04076477885246277,
+          "duration": 0,
+          "triggerOffset": 0
+        }
+      ],
+      "nativeStateEvents": [
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 0.2941925525665283,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.ShachiBow.CantMove"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.245917797088623,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.ShachiBow.CanRelease"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DurationTags_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_DurationTags",
+          "startTime": 1.555823802947998,
+          "duration": 1.5923242568969727,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.ShachiBow.Great",
+            "CharacterState.AbilityState.ShachiBow.Perfect"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DurationTags_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_DurationTags",
+          "startTime": 1.5589616298675537,
+          "duration": 1.508626937866211,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.Forbid.Ability.ChangeFocusTarget"
+          ]
+        }
+      ],
+      "preparedProjectiles": [
+        {
+          "timeline": "Main",
+          "action": "GAAction_ReadyBulletWithAim_C_2",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReadyBulletWithAim",
+          "startTime": 1.0255992412567139,
+          "duration": 0.5361759662628174,
+          "triggerOffset": 0,
+          "variable": "UnnamedBow",
+          "bulletData": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YouLongCha/B_YouLongCha_Normal"
+        },
+        {
+          "timeline": "Main",
+          "action": "GAAction_ReadyBulletWithAim_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReadyBulletWithAim",
+          "startTime": 1.5335290431976318,
+          "duration": 0.06724214553833008,
+          "triggerOffset": 0,
+          "variable": "UnnamedBow",
+          "bulletData": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YouLongCha/B_YouLongCha_Perfect"
+        },
+        {
+          "timeline": "Main",
+          "action": "GAAction_ReadyBulletWithAim_C_3",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReadyBulletWithAim",
+          "startTime": 1.595957636833191,
+          "duration": 0.12658226490020752,
+          "triggerOffset": 0,
+          "variable": "UnnamedBow",
+          "bulletData": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YouLongCha/B_YouLongCha_Max"
+        }
+      ],
+      "directAttackEvents": []
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Shoot",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.031186513602733612,
+          "duration": 0,
+          "triggerOffset": 0
+        }
+      ],
+      "nativeStateEvents": [
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.1690930128097534,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.ShachiBow.CanRelease"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 2.242344856262207,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.ShachiBow.CantMove"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DurationTags_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_DurationTags",
+          "startTime": 2.3434009552001953,
+          "duration": 1.508626937866211,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.Forbid.Ability.ChangeFocusTarget"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DurationTags_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_DurationTags",
+          "startTime": 2.5961828231811523,
+          "duration": 1.5923242568969727,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.ShachiBow.Great",
+            "CharacterState.AbilityState.ShachiBow.Perfect"
+          ]
+        }
+      ],
+      "preparedProjectiles": [
+        {
+          "timeline": "Main",
+          "action": "GAAction_ReadyBulletWithAim_C_2",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReadyBulletWithAim",
+          "startTime": 0.7858940958976746,
+          "duration": 1.292815923690796,
+          "triggerOffset": 0,
+          "variable": "DuYanBow_1",
+          "bulletData": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_GA_DuYan_Bow_Normal_P1_01"
+        },
+        {
+          "timeline": "Main",
+          "action": "GAAction_ReadyBulletWithAim_C_3",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReadyBulletWithAim",
+          "startTime": 1.9735736846923828,
+          "duration": 2.4157371520996094,
+          "triggerOffset": 0,
+          "variable": "DuYanBow_2",
+          "bulletData": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_GA_DuYan_Bow_Normal_P2_02"
+        },
+        {
+          "timeline": "Main",
+          "action": "GAAction_ReadyBulletWithAim_C_4",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReadyBulletWithAim",
+          "startTime": 1.9781394004821777,
+          "duration": 2.4111714363098145,
+          "triggerOffset": 0,
+          "variable": "DuYanBow_1",
+          "bulletData": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_GA_DuYan_Bow_Normal_P2_01"
+        },
+        {
+          "timeline": "Main",
+          "action": "GAAction_ReadyBulletWithAim_C_1",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReadyBulletWithAim",
+          "startTime": 2.9287827014923096,
+          "duration": 1.1270782947540283,
+          "triggerOffset": 0,
+          "variable": "DuYanBow_3",
+          "bulletData": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_GA_DuYan_Bow_Normal_P3_01"
+        }
+      ],
+      "directAttackEvents": []
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge": {
+      "resourceFeeEvents": [],
+      "nativeStateEvents": [
+        {
+          "timeline": "Main",
+          "action": "LGAAction_AbstractEndure_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 2.946519374847412,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponAttack"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DurationTags_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_DurationTags",
+          "startTime": 0.9678114652633667,
+          "duration": 0.4012185335159302,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TigerCannon.Great"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 0.9955787062644958,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.TigerCannon.Ready"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_DurationTags_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_DurationTags",
+          "startTime": 1.361679196357727,
+          "duration": 1.334126353263855,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.TigerCannon.Perfect"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "inheritsEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon"
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint": {
+      "resourceFeeEvents": [],
+      "nativeStateEvents": [],
+      "preparedProjectiles": [],
+      "inheritsEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal"
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Main",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.9051806926727295,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_ComsumeShachiBullet_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletCost",
+          "startTime": 3.491849899291992,
+          "duration": 5.311692237854004,
+          "triggerOffset": 0
+        }
+      ],
+      "nativeStateEvents": [
+        {
+          "timeline": "End",
+          "action": "GAAction_ActionPhase_C_0",
+          "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+          "startTime": 0,
+          "duration": 4.251208305358887,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.ShachiAbility.NotEnoughShachi"
+          ]
+        },
+        {
+          "timeline": "End",
+          "action": "LGAAction_AbstractEndure_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 1.5480438470840454,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponAttack"
+          ]
+        },
+        {
+          "timeline": "End",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.6290678381919861,
+          "duration": 0.9321600198745728,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.LionHead.Evolution"
+          ]
+        },
+        {
+          "timeline": "End",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.6293141841888428,
+          "duration": 0.9321600198745728,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.LionHead.Evolution"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_RotationMode_0",
+          "class": "/Script/MagCombatAbilities.LGAAction_RotationMode",
+          "startTime": 0,
+          "duration": 10.529922485351562,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "GameplayEvent.Ability.LionHead.CanRelease"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_AbstractEndure_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 1.3004070520401,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponAttack"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0,
+          "duration": 10.529925346374512,
+          "triggerOffset": -9.999999747378752e-05,
+          "tags": [
+            "CharacterState.AbilityState.LionHead.Main"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.9660628437995911,
+          "duration": 0.13165099918842316,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.LionHead.Evolution"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.9695287346839905,
+          "duration": 0.13165099918842316,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.LionHead.Evolution"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAAction_WeaponParticle_C_0",
+          "class": "/SGameCombatSystem/Weapon/Action/GAAction_WeaponParticle",
+          "startTime": 0.9748682975769043,
+          "duration": 1.3510098457336426,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.LionHead.Evolution"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAAction_WeaponParticle_C_1",
+          "class": "/SGameCombatSystem/Weapon/Action/GAAction_WeaponParticle",
+          "startTime": 0.9767705202102661,
+          "duration": 1.3510099649429321,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.LionHead.Evolution"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_AbstractEndure_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 1.3226889371871948,
+          "duration": 8.216382026672363,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponLightAttack"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_2",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.6393709182739258,
+          "duration": 7.712248802185059,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.LionHead.Evolution"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_3",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.6441831588745117,
+          "duration": 7.712248802185059,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.LionHead.Evolution"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 3.491281270980835,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.LionHead.CanRelease"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "End",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.6290678381919861,
+          "duration": 0.9321600198745728,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "End",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.6293141841888428,
+          "duration": 0.9321600198745728,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.9660628437995911,
+          "duration": 0.13165099918842316,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.9695287346839905,
+          "duration": 0.13165099918842316,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_2",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.6393709182739258,
+          "duration": 7.712248802185059,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_DurationBulletWithDeflect_3",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.6441831588745117,
+          "duration": 7.712248802185059,
+          "triggerOffset": 0
+        }
+      ]
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill": {
+      "resourceFeeEvents": [],
+      "nativeStateEvents": [
+        {
+          "timeline": "End",
+          "action": "LGAAction_AbstractEndure_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 1.6834332942962646,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.MiddleWeaponAttack"
+          ]
+        },
+        {
+          "timeline": "Loop",
+          "action": "LGAAction_AbstractEndure_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 3.75,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.MiddleWeaponLightAttack"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_AbstractEndure_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 1.340000033378601,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.MiddleWeaponAttack"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.05947744846344,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.Lute.CanRelease"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "nativeFunctionFees": [
+        {
+          "callback": "CostBulletInstance",
+          "owner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+          "flowOwner": "ExecuteUbergraph_GA_Hun_Lute_SKill",
+          "flow": [
+            "0x3e creates Loop timeline task",
+            "0x130 ReadyForActivation",
+            "0x150 CostBulletInstance",
+            "0x175 starts periodic CostBullet timer",
+            "0x819 End task starts on ToRelease",
+            "0x92b clears periodic timer"
+          ]
+        }
+      ],
+      "directAttackEvents": [
+        {
+          "timeline": "End",
+          "action": "GAA_DelayDeflectProjectileBullet_C_0",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.46610191464424133,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "End",
+          "action": "GAA_DelayDeflectProjectileBullet_C_1",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.4661020040512085,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "End",
+          "action": "GAA_DelayDeflectProjectileBullet_C_2",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.46648499369621277,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "End",
+          "action": "GAA_DelayDeflectProjectileBullet_C_5",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.4664852023124695,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_1",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.3581666052341461,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_6",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.35816699266433716,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_7",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.9145560264587402,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_0",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.9145563244819641,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_2",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 1.525039553642273,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_8",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 1.5250399112701416,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_3",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 2.130370616912842,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_9",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 2.13037109375,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_4",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 2.7563095092773438,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_10",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 2.756309986114502,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_11",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 3.3793630599975586,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_5",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 3.3793632984161377,
+          "duration": 0.03333299979567528,
+          "triggerOffset": 0
+        }
+      ]
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Main",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0,
+          "duration": 0,
+          "triggerOffset": 9.999999747378752e-05
+        }
+      ],
+      "nativeStateEvents": [
+        {
+          "timeline": "End",
+          "action": "LGAAction_AbstractEndure_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 1.7800090312957764,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.MiddleWeaponAttack"
+          ]
+        },
+        {
+          "timeline": "End",
+          "action": "LGAAction_GameplayTags_1",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0,
+          "duration": 0.6077049374580383,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.AbilityState.MiaoShouFeiDao.DBFade",
+            "CharacterState.Stealth.ForceEffectActive",
+            "CharacterState.Stealth.WeakEffect"
+          ]
+        },
+        {
+          "timeline": "End",
+          "action": "GAA_GameplayEvent_C_0",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 0.3607563376426697,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.MiaoShouFeiDao.DB.Shoot"
+          ]
+        },
+        {
+          "timeline": "End",
+          "action": "GAA_DelayDeflectProjectileBullet_C_1",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.6114465594291687,
+          "duration": 0.21583500504493713,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.MiaoShouFeiDao.DeflectCounter"
+          ]
+        },
+        {
+          "timeline": "End",
+          "action": "GAA_DelayDeflectProjectileBullet_C_0",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.6149005889892578,
+          "duration": 0.21430400013923645,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.MiaoShouFeiDao.DeflectCounter"
+          ]
+        },
+        {
+          "timeline": "Escape",
+          "action": "LGAAction_GameplayTags_1",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0,
+          "duration": 3.0999999046325684,
+          "triggerOffset": -9.999999747378752e-05,
+          "tags": [
+            "CharacterState.AbilityState.MiaoShouFeiDao.DBFade",
+            "CharacterState.Stealth.ForceEffectActive",
+            "CharacterState.Stealth.WeakEffect"
+          ]
+        },
+        {
+          "timeline": "Escape",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 1.3581829071044922,
+          "duration": 1.7418169975280762,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.MiaoShouFeiDao.DBCanmove"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_AbstractEndure_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 1.9282419681549072,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.MiddleWeaponAttack"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_1",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0,
+          "duration": 2.824551582336426,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.AbilityState.MiaoShouFeiDao.DBFade"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0.35740429162979126,
+          "duration": 2.223940372467041,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.AbilityState.MiaoShouFeiDao.DBCanmove"
+          ]
+        },
+        {
+          "timeline": "Walk",
+          "action": "LGAAction_GameplayTags_1",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0,
+          "duration": 3.5,
+          "triggerOffset": -9.999999747378752e-05,
+          "tags": [
+            "CharacterState.AbilityState.MiaoShouFeiDao.DBFade"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "End",
+          "action": "GAA_DelayDeflectProjectileBullet_C_3",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.45357099175453186,
+          "duration": 0.21583500504493713,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "End",
+          "action": "GAA_DelayDeflectProjectileBullet_C_2",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.4570249915122986,
+          "duration": 0.21430400013923645,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "End",
+          "action": "GAA_DelayDeflectProjectileBullet_C_1",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.6114465594291687,
+          "duration": 0.21583500504493713,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "End",
+          "action": "GAA_DelayDeflectProjectileBullet_C_0",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.6149005889892578,
+          "duration": 0.21430400013923645,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Main",
+          "action": "GAAction_DurationBullet_Simple_C_0",
+          "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+          "startTime": 0,
+          "duration": 0.18309800326824188,
+          "triggerOffset": 9.999999747378752e-05
+        }
+      ]
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Main",
+          "action": "GAA_ShachiBulletInstant_C_1",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0,
+          "duration": 0,
+          "triggerOffset": -9.999999747378752e-05
+        }
+      ],
+      "nativeStateEvents": [
+        {
+          "timeline": "FastEnd",
+          "action": "LGAAction_AbstractEndure_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 1.0833330154418945,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponAttack"
+          ]
+        },
+        {
+          "timeline": "FastEnd",
+          "action": "GAAction_WeaponParticle_GroundTrace_C_0",
+          "class": "/SGameCombatSystem/Weapon/Action/GAAction_WeaponParticle_GroundTrace",
+          "startTime": 0.5306444764137268,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.TanLang.Evolution",
+            "CharacterState.WeaponUpgrade.TanLang.Evolution"
+          ]
+        },
+        {
+          "timeline": "FastEnd",
+          "action": "GAAction_WeaponParticle_GroundTrace_C_1",
+          "class": "/SGameCombatSystem/Weapon/Action/GAAction_WeaponParticle_GroundTrace",
+          "startTime": 0.5308310985565186,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.TanLang.Evolution",
+            "CharacterState.WeaponUpgrade.TanLang.Evolution"
+          ]
+        },
+        {
+          "timeline": "FastEnd",
+          "action": "GAA_DelayDeflectProjectileBullet_C_5",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.5356346964836121,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponLightAttack",
+            "CharacterState.WeaponUpgrade.TanLang.Evolution"
+          ]
+        },
+        {
+          "timeline": "FastEnd",
+          "action": "GAA_DelayDeflectProjectileBullet_C_2",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.5356705188751221,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponLightAttack",
+            "CharacterState.WeaponUpgrade.TanLang.Evolution"
+          ]
+        },
+        {
+          "timeline": "FastEnd",
+          "action": "GAA_DelayDeflectProjectileBullet_C_3",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.5356884002685547,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponLightAttack",
+            "CharacterState.WeaponUpgrade.TanLang.Evolution"
+          ]
+        },
+        {
+          "timeline": "Loop",
+          "action": "LGAAction_GameplayTags_0",
+          "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+          "startTime": 0,
+          "duration": 1.0833333730697632,
+          "triggerOffset": -9.999999747378752e-05,
+          "tags": [
+            "CharacterState.AbilityState.Stance.Forbid"
+          ]
+        },
+        {
+          "timeline": "Loop",
+          "action": "LGAAction_AbstractEndure_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 1.0833333730697632,
+          "triggerOffset": -9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponLightAttack"
+          ]
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_0",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.22298341989517212,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.TanLang.Evolution"
+          ]
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_4",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.342070609331131,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponLightAttack",
+            "CharacterState.WeaponUpgrade.TanLang.Evolution"
+          ]
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_1",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.41997772455215454,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.TanLang.Evolution",
+            "CharacterState.WeaponUpgrade.TanLang.Evolution"
+          ]
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_3",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.6671614646911621,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.TanLang.Evolution"
+          ]
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_5",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.8219715356826782,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponLightAttack",
+            "CharacterState.WeaponUpgrade.TanLang.Evolution"
+          ]
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_GameplayEvent_C_2",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 0.9903294444084167,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.TanLang.NormalAttack"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_AbstractEndure_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 1.3666666746139526,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.HeavyWeaponAttack"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_1",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.2724707126617432,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.Action.TanLang.NormalAttack"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "FastEnd",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.502270519733429,
+          "duration": 0.09587997198104858,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "FastEnd",
+          "action": "GAA_DelayDeflectProjectileBullet_C_5",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.5356346964836121,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "FastEnd",
+          "action": "GAA_DelayDeflectProjectileBullet_C_2",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.5356705188751221,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "FastEnd",
+          "action": "GAA_DelayDeflectProjectileBullet_C_3",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.5356884002685547,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.1112862378358841,
+          "duration": 0.37484657764434814,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_0",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.22298341989517212,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_4",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.342070609331131,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_1",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.41997772455215454,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.6183030605316162,
+          "duration": 0.37484657764434814,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_3",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.6671614646911621,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_DelayDeflectProjectileBullet_C_5",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0.8219715356826782,
+          "duration": 0,
+          "triggerOffset": 0
+        }
+      ]
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Shoot",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.031186513602733612,
+          "duration": 0,
+          "triggerOffset": 0
+        }
+      ],
+      "nativeStateEvents": [
+        {
+          "timeline": "Loop",
+          "action": "LGAAction_AbstractEndure_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 1.8488833904266357,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.LightAttack"
+          ]
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_BulletBurst_C_3",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_BulletBurstWithDeflect",
+          "startTime": 0.05339889973402023,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.DuYanBow.LaserEyes"
+          ]
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_BulletBurstWithDeflect_C_3",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_BulletBurstWithDeflect",
+          "startTime": 0.055938899517059326,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "CharacterState.WeaponUpgrade.DuYanBow.LaserEyes"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "LGAAction_AbstractEndure_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 3.654472589492798,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.MiddleWeaponAttack"
+          ]
+        },
+        {
+          "timeline": "Main",
+          "action": "GAA_GameplayEvent_C_2",
+          "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+          "startTime": 1.2283653020858765,
+          "duration": 0,
+          "triggerOffset": 0,
+          "tags": [
+            "GameplayEvent.Ability.ShachiBow.CanRelease"
+          ]
+        },
+        {
+          "timeline": "Shoot",
+          "action": "LGAAction_AbstractEndure_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+          "startTime": 0,
+          "duration": 0.44258975982666016,
+          "triggerOffset": 9.999999747378752e-05,
+          "tags": [
+            "CharacterState.Hitreact.Endure.Stand.Abstract.Hun.MiddleWeaponAttack"
+          ]
+        }
+      ],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "Loop",
+          "action": "GAA_BulletBurst_C_3",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_BulletBurstWithDeflect",
+          "startTime": 0.05339889973402023,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Loop",
+          "action": "GAA_BulletBurstWithDeflect_C_3",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_BulletBurstWithDeflect",
+          "startTime": 0.055938899517059326,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Shoot",
+          "action": "GAA_DelayDeflectProjectileBullet_C_0",
+          "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+          "startTime": 0,
+          "duration": 0.03333333507180214,
+          "triggerOffset": -9.999999747378752e-05
+        }
+      ]
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "Main",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.023989807814359665,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Rush_F",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.017152000218629837,
+          "duration": 0,
+          "triggerOffset": 0
+        }
+      ],
+      "nativeStateEvents": [],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "CounterAttack",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 2.0997226238250732,
+          "duration": 0.1457381248474121,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "CounterAttack",
+          "action": "GAAction_Bullet_Simple_C_0",
+          "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_Bullet_Simple",
+          "startTime": 2.1883294582366943,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "CounterAttack_02",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 2.0997231006622314,
+          "duration": 0.1457381248474121,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "CounterAttack_02",
+          "action": "GAAction_Bullet_Simple_C_0",
+          "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_Bullet_Simple",
+          "startTime": 2.188328981399536,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Dodge_B",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.23430000245571136,
+          "duration": 0.598267674446106,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Dodge_F",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.23430001735687256,
+          "duration": 0.598267674446106,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Push_F",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.1388903260231018,
+          "duration": 0.11729580163955688,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Push_F",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.36510515213012695,
+          "duration": 0.1495811939239502,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Rush_F",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.783428966999054,
+          "duration": 1.7073612213134766,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "Rush_F",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 2.4907901287078857,
+          "duration": 0.3105943202972412,
+          "triggerOffset": 0
+        }
+      ],
+      "nativeFunctionFees": [
+        {
+          "owner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+          "callback": "HandlePushCost"
+        },
+        {
+          "owner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+          "callback": "HandleRushCost"
+        }
+      ],
+      "nativeInputBranch": "OnDeflectTrigger requires original Loop, starts Push_F and calls HandlePushCost. Original completion tests RTInputState and calls ToLoop or ToRelease.",
+      "nativeChargeBranch": "ToRelease requires active ability outside Main/Broken/Release/CounterAttack/CounterAttack_02. Only real ElementalChargeData PhysicalTotal+ShachiTotal > Thredhold selects CounterAttack; Counterx2 upgrade can add CounterAttack_02. Activation resets charge; no charge is synthesized.",
+      "nativeRushBranch": "Play Normal Timeline selects Rush_F only for real Sprinting or Dash plus ZhuoBiDun.Rush upgrade; HandleRushCost and original bullet fee stay native.",
+      "nativeDodgeBranch": "OnDodgeTrigger in Loop chooses Dodge_F/B/L/R from original GetTimelineToUse and calls HandleDodgeCost."
+    },
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DeflectCounter": {
+      "resourceFeeEvents": [
+        {
+          "timeline": "DeflectCounter_Normal",
+          "action": "GAA_ShachiBulletInstant_C_1",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.21916699409484863,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "DeflectCounter_Perfect",
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "startTime": 0.21916699409484863,
+          "duration": 0,
+          "triggerOffset": 0
+        }
+      ],
+      "nativeStateEvents": [],
+      "preparedProjectiles": [],
+      "directAttackEvents": [
+        {
+          "timeline": "DeflectCounter_Normal",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.6453909873962402,
+          "duration": 0.35183048248291016,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "DeflectCounter_Normal",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.571977972984314,
+          "duration": 0.3087120056152344,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "DeflectCounter_Normal",
+          "action": "GAA_BulletBurst_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_BulletBurstWithDeflect",
+          "startTime": 1.8380224704742432,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "DeflectCounter_Normal",
+          "action": "GAA_BulletBurst_C_3",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_BulletBurstWithDeflect",
+          "startTime": 1.9108083248138428,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "DeflectCounter_Normal",
+          "action": "GAA_BulletBurst_C_1",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_BulletBurstWithDeflect",
+          "startTime": 1.9333969354629517,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "DeflectCounter_Perfect",
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.6453909873962402,
+          "duration": 0.35183048248291016,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "DeflectCounter_Perfect",
+          "action": "LGAAction_DurationBulletWithDeflect_2",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 0.6453909873962402,
+          "duration": 0.35183048248291016,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "DeflectCounter_Perfect",
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.571977972984314,
+          "duration": 0.3087120056152344,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "DeflectCounter_Perfect",
+          "action": "LGAAction_DurationBulletWithDeflect_3",
+          "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+          "startTime": 1.571977972984314,
+          "duration": 0.3087120056152344,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "DeflectCounter_Perfect",
+          "action": "GAA_BulletBurst_C_0",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_BulletBurstWithDeflect",
+          "startTime": 1.838021993637085,
+          "duration": 0,
+          "triggerOffset": 0
+        },
+        {
+          "timeline": "DeflectCounter_Perfect",
+          "action": "GAA_BulletBurst_C_3",
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_BulletBurstWithDeflect",
+          "startTime": 1.9108079671859741,
+          "duration": 0,
+          "triggerOffset": 0
+        }
+      ]
+    }
+  },
+  "recipes": [
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release1",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+        "tag": "Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal.GA_BrutalAxe_Normal_C",
+        "entryPoint": "To Release",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Release1",
+        "labelParts": [
+          "catalog.charge",
+          "Release1"
+        ],
+        "searchAliases": [
+          "Release1",
+          "BrutalAxe"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.431936741,
+          "property_minimum": {
+            "Current Charge": 0
+          },
+          "before_time": 1.701008201,
+          "cancel_on_expire": true
+        }
+      },
+      "weapon": "BrutalAxe",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "nativeSelection": {
+        "properties": [
+          "Is Sprint",
+          "Current Charge"
+        ],
+        "normalTimelines": [
+          "Release1",
+          "Release2",
+          "Release3"
+        ],
+        "sprintTimelines": [
+          "SprintRelease1",
+          "SprintRelease2"
+        ],
+        "sprintRelease2Offset": 1.600000023841858,
+        "resourceRule": "Retain the charge timeline fee; Gain Charge(True) separately consumes resources and is not used."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release2",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+        "tag": "Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal.GA_BrutalAxe_Normal_C",
+        "entryPoint": "To Release",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Release2",
+        "labelParts": [
+          "catalog.charge",
+          "Release2"
+        ],
+        "searchAliases": [
+          "Release2",
+          "BrutalAxe"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.701008201,
+          "property_minimum": {
+            "Current Charge": 1
+          },
+          "before_time": 2.178897858,
+          "cancel_on_expire": true
+        }
+      },
+      "weapon": "BrutalAxe",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "nativeSelection": {
+        "properties": [
+          "Is Sprint",
+          "Current Charge"
+        ],
+        "normalTimelines": [
+          "Release1",
+          "Release2",
+          "Release3"
+        ],
+        "sprintTimelines": [
+          "SprintRelease1",
+          "SprintRelease2"
+        ],
+        "sprintRelease2Offset": 1.600000023841858,
+        "resourceRule": "Retain the charge timeline fee; Gain Charge(True) separately consumes resources and is not used."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release3",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+        "tag": "Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal.GA_BrutalAxe_Normal_C",
+        "entryPoint": "To Release",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Release3",
+        "labelParts": [
+          "catalog.charge",
+          "Release3"
+        ],
+        "searchAliases": [
+          "Release3",
+          "BrutalAxe"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 2.178897858,
+          "property_minimum": {
+            "Current Charge": 2
+          }
+        }
+      },
+      "weapon": "BrutalAxe",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "nativeSelection": {
+        "properties": [
+          "Is Sprint",
+          "Current Charge"
+        ],
+        "normalTimelines": [
+          "Release1",
+          "Release2",
+          "Release3"
+        ],
+        "sprintTimelines": [
+          "SprintRelease1",
+          "SprintRelease2"
+        ],
+        "sprintRelease2Offset": 1.600000023841858,
+        "resourceRule": "Retain the charge timeline fee; Gain Charge(True) separately consumes resources and is not used."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease1",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
+        "tag": "Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint.GA_BrutalAxe_Sprint_C",
+        "entryPoint": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal.GA_BrutalAxe_Normal_C:To Release",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength",
+          "CharacterState.WeaponUpgrade.BrutalAxe.RunCharge"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced",
+          "Is Sprint"
+        ],
+        "priority": -5,
+        "code": "SprintRelease1",
+        "labelParts": [
+          "catalog.charge",
+          "SprintRelease1"
+        ],
+        "searchAliases": [
+          "SprintRelease1",
+          "BrutalAxe"
+        ],
+        "entryWhen": {
+          "timeline": "SprintCharge",
+          "minimum_time": 1.005333185,
+          "property_minimum": {
+            "Current Charge": 0
+          },
+          "before_time": 1.484084606,
+          "cancel_on_expire": true
+        }
+      },
+      "weapon": "BrutalAxe",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "nativeSelection": {
+        "properties": [
+          "Is Sprint",
+          "Current Charge"
+        ],
+        "normalTimelines": [
+          "Release1",
+          "Release2",
+          "Release3"
+        ],
+        "sprintTimelines": [
+          "SprintRelease1",
+          "SprintRelease2"
+        ],
+        "sprintRelease2Offset": 1.600000023841858,
+        "resourceRule": "Retain the charge timeline fee; Gain Charge(True) separately consumes resources and is not used."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease2",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
+        "tag": "Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint.GA_BrutalAxe_Sprint_C",
+        "entryPoint": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal.GA_BrutalAxe_Normal_C:To Release",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength",
+          "CharacterState.WeaponUpgrade.BrutalAxe.RunCharge"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced",
+          "Is Sprint"
+        ],
+        "priority": -5,
+        "code": "SprintRelease2",
+        "labelParts": [
+          "catalog.charge",
+          "SprintRelease2"
+        ],
+        "searchAliases": [
+          "SprintRelease2",
+          "BrutalAxe"
+        ],
+        "entryWhen": {
+          "timeline": "SprintCharge",
+          "minimum_time": 1.484084606,
+          "property_minimum": {
+            "Current Charge": 1
+          }
+        }
+      },
+      "weapon": "BrutalAxe",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "nativeSelection": {
+        "properties": [
+          "Is Sprint",
+          "Current Charge"
+        ],
+        "normalTimelines": [
+          "Release1",
+          "Release2",
+          "Release3"
+        ],
+        "sprintTimelines": [
+          "SprintRelease1",
+          "SprintRelease2"
+        ],
+        "sprintRelease2Offset": 1.600000023841858,
+        "resourceRule": "Retain the charge timeline fee; Gain Charge(True) separately consumes resources and is not used."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.JinGua.Main.Release.Charge1",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main",
+        "tag": "Ability.Action.Hun.ShachiAbility.JinGua.Main",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal.GA_JinGua_Normal_C",
+        "entryPoint": "To Release",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Release · Charge1",
+        "labelParts": [
+          "catalog.charge",
+          "Release.Charge1"
+        ],
+        "searchAliases": [
+          "Release.Charge1",
+          "JinGua"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "required_tags": [
+            "CharacterState.AbilityState.JinGua.Charge1"
+          ]
+        }
+      },
+      "weapon": "JinGua",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "nativeSelection": {
+        "timeline": "Release3",
+        "offset": 0.20000000298023224,
+        "resourceRule": "Retain native Charge1/2/3 effects and Main fee."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.JinGua.Main.Release.Charge2",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main",
+        "tag": "Ability.Action.Hun.ShachiAbility.JinGua.Main",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal.GA_JinGua_Normal_C",
+        "entryPoint": "To Release",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Release · Charge2",
+        "labelParts": [
+          "catalog.charge",
+          "Release.Charge2"
+        ],
+        "searchAliases": [
+          "Release.Charge2",
+          "JinGua"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "required_tags": [
+            "CharacterState.AbilityState.JinGua.Charge2"
+          ]
+        }
+      },
+      "weapon": "JinGua",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "nativeSelection": {
+        "timeline": "Release3",
+        "offset": 0.20000000298023224,
+        "resourceRule": "Retain native Charge1/2/3 effects and Main fee."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.JinGua.Main.Release.Charge3",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main",
+        "tag": "Ability.Action.Hun.ShachiAbility.JinGua.Main",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal.GA_JinGua_Normal_C",
+        "entryPoint": "To Release",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Release · Charge3",
+        "labelParts": [
+          "catalog.charge",
+          "Release.Charge3"
+        ],
+        "searchAliases": [
+          "Release.Charge3",
+          "JinGua"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "required_tags": [
+            "CharacterState.AbilityState.JinGua.Charge3"
+          ]
+        }
+      },
+      "weapon": "JinGua",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "nativeSelection": {
+        "timeline": "Release3",
+        "offset": 0.20000000298023224,
+        "resourceRule": "Retain native Charge1/2/3 effects and Main fee."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal.Launch",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+        "tag": "Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon.GA_TigerCannon_C",
+        "entryPoint": "OnRelease_860334054751DF415069E4AEE4367276",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Launch",
+        "labelParts": [
+          "catalog.charge",
+          "Launch"
+        ],
+        "searchAliases": [
+          "Launch",
+          "TigerCannon"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "TigerCannon",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal.Launch.Great",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+        "tag": "Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon.GA_TigerCannon_C",
+        "entryPoint": "OnRelease_860334054751DF415069E4AEE4367276",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Launch · Great",
+        "labelParts": [
+          "catalog.charge",
+          "Launch.Great"
+        ],
+        "searchAliases": [
+          "Launch.Great",
+          "TigerCannon"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.774863839,
+          "required_tags": [
+            "CharacterState.AbilityState.TigerCannon.Great"
+          ],
+          "before_time": 2.204244852,
+          "cancel_on_expire": true
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "TigerCannon",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal.Launch.Perfect",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+        "tag": "Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon.GA_TigerCannon_C",
+        "entryPoint": "OnRelease_860334054751DF415069E4AEE4367276",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Launch · Perfect",
+        "labelParts": [
+          "catalog.charge",
+          "Launch.Perfect"
+        ],
+        "searchAliases": [
+          "Launch.Perfect",
+          "TigerCannon"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 2.204244852,
+          "required_tags": [
+            "CharacterState.AbilityState.TigerCannon.Perfect"
+          ],
+          "before_time": 2.667054415,
+          "cancel_on_expire": true
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "TigerCannon",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.UnnamedBow.Shoot.Normal",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow.GA_UnnamedBow_C",
+        "entryPoint": "OnRelease_248DF536488D39C7A1E0B6984801C51E",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Ranged"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "UnnamedBow · Shoot · Normal",
+        "labelParts": [
+          "catalog.charge",
+          "UnnamedBow.Shoot.Normal"
+        ],
+        "searchAliases": [
+          "UnnamedBow.Shoot.Normal",
+          "UnnamedBow"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.454123855,
+          "object_variable": {
+            "property": "Variables",
+            "key": "UnnamedBow",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiWeapon/B_UnnamedBow_Normal.B_UnnamedBow_Normal",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "before_time": 2.596182823,
+          "cancel_on_expire": true
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "UnnamedBow",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.UnnamedBow.Shoot.Perfect",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow.GA_UnnamedBow_C",
+        "entryPoint": "OnRelease_248DF536488D39C7A1E0B6984801C51E",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Ranged"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "UnnamedBow · Shoot · Perfect",
+        "labelParts": [
+          "catalog.charge",
+          "UnnamedBow.Shoot.Perfect"
+        ],
+        "searchAliases": [
+          "UnnamedBow.Shoot.Perfect",
+          "UnnamedBow"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 2.598957777,
+          "object_variable": {
+            "property": "Variables",
+            "key": "UnnamedBow",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiWeapon/B_UnnamedBow_Perfect.B_UnnamedBow_Perfect",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "required_tags": [
+            "CharacterState.AbilityState.ShachiBow.Perfect"
+          ],
+          "before_time": 2.700485706,
+          "cancel_on_expire": true
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "UnnamedBow",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.UnnamedBow.Shoot.Max",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow.GA_UnnamedBow_C",
+        "entryPoint": "OnRelease_248DF536488D39C7A1E0B6984801C51E",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Ranged"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "UnnamedBow · Shoot · Max",
+        "labelParts": [
+          "catalog.charge",
+          "UnnamedBow.Shoot.Max"
+        ],
+        "searchAliases": [
+          "UnnamedBow.Shoot.Max",
+          "UnnamedBow"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 2.700485706,
+          "object_variable": {
+            "property": "Variables",
+            "key": "UnnamedBow",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiWeapon/B_UnnamedBow_Max.B_UnnamedBow_Max",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "required_tags": [
+            "CharacterState.AbilityState.ShachiBow.Perfect"
+          ]
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "UnnamedBow",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.YouLongCha.Shoot.Normal",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal.GA_YouLongCha_Normal_C",
+        "entryPoint": "OnRelease_477B35FD43F429386880739A65262F2A",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Ranged"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "YouLongCha · Shoot · Normal",
+        "labelParts": [
+          "catalog.charge",
+          "YouLongCha.Shoot.Normal"
+        ],
+        "searchAliases": [
+          "YouLongCha.Shoot.Normal",
+          "YouLongCha"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.245917797,
+          "object_variable": {
+            "property": "Variables",
+            "key": "UnnamedBow",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YouLongCha/B_YouLongCha_Normal.B_YouLongCha_Normal",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "before_time": 1.533529043,
+          "cancel_on_expire": true
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "YouLongCha",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.YouLongCha.Shoot.Perfect",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal.GA_YouLongCha_Normal_C",
+        "entryPoint": "OnRelease_477B35FD43F429386880739A65262F2A",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Ranged"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "YouLongCha · Shoot · Perfect",
+        "labelParts": [
+          "catalog.charge",
+          "YouLongCha.Shoot.Perfect"
+        ],
+        "searchAliases": [
+          "YouLongCha.Shoot.Perfect",
+          "YouLongCha"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.555823803,
+          "object_variable": {
+            "property": "Variables",
+            "key": "UnnamedBow",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YouLongCha/B_YouLongCha_Perfect.B_YouLongCha_Perfect",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "required_tags": [
+            "CharacterState.AbilityState.ShachiBow.Perfect"
+          ],
+          "before_time": 1.595957637,
+          "cancel_on_expire": true
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "YouLongCha",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.YouLongCha.Shoot.Max",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal.GA_YouLongCha_Normal_C",
+        "entryPoint": "OnRelease_477B35FD43F429386880739A65262F2A",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Ranged"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "YouLongCha · Shoot · Max",
+        "labelParts": [
+          "catalog.charge",
+          "YouLongCha.Shoot.Max"
+        ],
+        "searchAliases": [
+          "YouLongCha.Shoot.Max",
+          "YouLongCha"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.595957637,
+          "object_variable": {
+            "property": "Variables",
+            "key": "UnnamedBow",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YouLongCha/B_YouLongCha_Max.B_YouLongCha_Max",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "required_tags": [
+            "CharacterState.AbilityState.ShachiBow.Perfect"
+          ]
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "YouLongCha",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage1",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal.GA_DuYan_Bow_Normal_C",
+        "entryPoint": "OnRelease_613C82514C82F322FA98A9B9A7C5EC90",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Ranged"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "DuYanBow · Shoot · Stage1",
+        "labelParts": [
+          "catalog.charge",
+          "DuYanBow.Shoot.Stage1"
+        ],
+        "searchAliases": [
+          "DuYanBow.Shoot.Stage1",
+          "DuYanBow"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.169093013,
+          "object_variable": {
+            "property": "Variables",
+            "key": "DuYanBow_1",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_GA_DuYan_Bow_Normal_P1_01.BD_GA_DuYan_Bow_Normal_P1_01",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "before_time": 1.973573685,
+          "cancel_on_expire": true
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "DuYanBow",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage2",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal.GA_DuYan_Bow_Normal_C",
+        "entryPoint": "OnRelease_613C82514C82F322FA98A9B9A7C5EC90",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Ranged"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "DuYanBow · Shoot · Stage2",
+        "labelParts": [
+          "catalog.charge",
+          "DuYanBow.Shoot.Stage2"
+        ],
+        "searchAliases": [
+          "DuYanBow.Shoot.Stage2",
+          "DuYanBow"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.9781394,
+          "object_variable": {
+            "property": "Variables",
+            "key": "DuYanBow_1",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_GA_DuYan_Bow_Normal_P2_01.BD_GA_DuYan_Bow_Normal_P2_01",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "before_time": 2.928782701,
+          "cancel_on_expire": true
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "DuYanBow",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage3",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal.GA_DuYan_Bow_Normal_C",
+        "entryPoint": "OnRelease_613C82514C82F322FA98A9B9A7C5EC90",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Ranged"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "DuYanBow · Shoot · Stage3",
+        "labelParts": [
+          "catalog.charge",
+          "DuYanBow.Shoot.Stage3"
+        ],
+        "searchAliases": [
+          "DuYanBow.Shoot.Stage3",
+          "DuYanBow"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 2.9287827,
+          "object_variable": {
+            "property": "Variables",
+            "key": "DuYanBow_3",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_GA_DuYan_Bow_Normal_P3_01.BD_GA_DuYan_Bow_Normal_P3_01",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          }
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "DuYanBow",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C.PerfectRelease",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C",
+        "tag": "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_A.GA_TieKuangQuanTao_Charge_A_C",
+        "entryPoint": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_ChargeBase.GA_TieKuangQuanTao_ChargeBase_C:OnTick_3144DF4743C1B1DB0E46BC9DAC7F59DB",
+        "entryArguments": [
+          0.0
+        ],
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "releaseInputBeforeEntry": true,
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Martial",
+          "CharacterState.WeaponUpgrade.TieKuangQuanTao.CanCharge"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -4,
+        "code": "A · Perfect Release",
+        "labelParts": [
+          "catalog.charge",
+          "A",
+          "moves.release"
+        ],
+        "searchAliases": [
+          "A",
+          "PerfectRelease",
+          "TieKuangQuanTao"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "required_tags": [
+            "CharacterState.AbilityState.TieKuangQuanTao.Charge.PerfectTime"
+          ],
+          "completed_after_property": "AttackStartTime"
+        }
+      },
+      "weapon": "TieKuangQuanTao",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_A",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_ChargeBase",
+      "nativeSelection": {
+        "releaseInputBeforeEntry": true,
+        "completionProperty": "AttackStartTime",
+        "sequence": [
+          "Observe real PerfectTime",
+          "Stop virtual holding",
+          "Wait for real IsHolding=false",
+          "Main CurrentTime >= AttackStartTime means native entry completed",
+          "Otherwise OnTick ends TickEvent, applies PerfectLogic and plays Main at AttackStartTime"
+        ],
+        "resourceRule": "Retain native upgrade eligibility, cost/free-use effects, initial fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC.PerfectRelease",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC",
+        "tag": "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AA.GA_TieKuangQuanTao_Charge_AA_C",
+        "entryPoint": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_ChargeBase.GA_TieKuangQuanTao_ChargeBase_C:OnTick_3144DF4743C1B1DB0E46BC9DAC7F59DB",
+        "entryArguments": [
+          0.0
+        ],
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "releaseInputBeforeEntry": true,
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Martial",
+          "CharacterState.WeaponUpgrade.TieKuangQuanTao.CanCharge"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -4,
+        "code": "AA · Perfect Release",
+        "labelParts": [
+          "catalog.charge",
+          "AA",
+          "moves.release"
+        ],
+        "searchAliases": [
+          "AA",
+          "PerfectRelease",
+          "TieKuangQuanTao"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "required_tags": [
+            "CharacterState.AbilityState.TieKuangQuanTao.Charge.PerfectTime"
+          ],
+          "completed_after_property": "AttackStartTime"
+        }
+      },
+      "weapon": "TieKuangQuanTao",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AA",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_ChargeBase",
+      "nativeSelection": {
+        "releaseInputBeforeEntry": true,
+        "completionProperty": "AttackStartTime",
+        "sequence": [
+          "Observe real PerfectTime",
+          "Stop virtual holding",
+          "Wait for real IsHolding=false",
+          "Main CurrentTime >= AttackStartTime means native entry completed",
+          "Otherwise OnTick ends TickEvent, applies PerfectLogic and plays Main at AttackStartTime"
+        ],
+        "resourceRule": "Retain native upgrade eligibility, cost/free-use effects, initial fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC.PerfectRelease",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC",
+        "tag": "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AAA.GA_TieKuangQuanTao_Charge_AAA_C",
+        "entryPoint": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_ChargeBase.GA_TieKuangQuanTao_ChargeBase_C:OnTick_3144DF4743C1B1DB0E46BC9DAC7F59DB",
+        "entryArguments": [
+          0.0
+        ],
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "releaseInputBeforeEntry": true,
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Martial",
+          "CharacterState.WeaponUpgrade.TieKuangQuanTao.CanCharge"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -4,
+        "code": "AAA · Perfect Release",
+        "labelParts": [
+          "catalog.charge",
+          "AAA",
+          "moves.release"
+        ],
+        "searchAliases": [
+          "AAA",
+          "PerfectRelease",
+          "TieKuangQuanTao"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "required_tags": [
+            "CharacterState.AbilityState.TieKuangQuanTao.Charge.PerfectTime"
+          ],
+          "completed_after_property": "AttackStartTime"
+        }
+      },
+      "weapon": "TieKuangQuanTao",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AAA",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_ChargeBase",
+      "nativeSelection": {
+        "releaseInputBeforeEntry": true,
+        "completionProperty": "AttackStartTime",
+        "sequence": [
+          "Observe real PerfectTime",
+          "Stop virtual holding",
+          "Wait for real IsHolding=false",
+          "Main CurrentTime >= AttackStartTime means native entry completed",
+          "Otherwise OnTick ends TickEvent, applies PerfectLogic and plays Main at AttackStartTime"
+        ],
+        "resourceRule": "Retain native upgrade eligibility, cost/free-use effects, initial fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge",
+        "tag": "Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge.GA_TigerCannon_QuickCharge_C",
+        "entryPoint": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon.GA_TigerCannon_C:OnRelease_860334054751DF415069E4AEE4367276",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength",
+          "CharacterState.WeaponUpgrade.TigerCannon.QuickCharge"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "QuickCharge · Launch",
+        "labelParts": [
+          "QuickCharge",
+          "catalog.charge",
+          "Launch"
+        ],
+        "searchAliases": [
+          "Launch",
+          "TigerCannon"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "TigerCannon",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch.Great",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge",
+        "tag": "Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge.GA_TigerCannon_QuickCharge_C",
+        "entryPoint": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon.GA_TigerCannon_C:OnRelease_860334054751DF415069E4AEE4367276",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength",
+          "CharacterState.WeaponUpgrade.TigerCannon.QuickCharge"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "QuickCharge · Launch · Great",
+        "labelParts": [
+          "QuickCharge",
+          "catalog.charge",
+          "Launch.Great"
+        ],
+        "searchAliases": [
+          "Launch.Great",
+          "TigerCannon"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.995578706,
+          "required_tags": [
+            "CharacterState.AbilityState.TigerCannon.Great"
+          ],
+          "before_time": 1.361679196,
+          "cancel_on_expire": true
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "TigerCannon",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch.Perfect",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge",
+        "tag": "Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge.GA_TigerCannon_QuickCharge_C",
+        "entryPoint": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon.GA_TigerCannon_C:OnRelease_860334054751DF415069E4AEE4367276",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength",
+          "CharacterState.WeaponUpgrade.TigerCannon.QuickCharge"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "QuickCharge · Launch · Perfect",
+        "labelParts": [
+          "QuickCharge",
+          "catalog.charge",
+          "Launch.Perfect"
+        ],
+        "searchAliases": [
+          "Launch.Perfect",
+          "TigerCannon"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.361679196,
+          "required_tags": [
+            "CharacterState.AbilityState.TigerCannon.Perfect"
+          ],
+          "before_time": 2.69580555,
+          "cancel_on_expire": true
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "TigerCannon",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "nativeSelection": {
+        "resourceRule": "Retain initialized native projectiles/state, release timeline fee and end cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.LionHead.End",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead.GA_LionHead_C",
+        "entryPoint": "OnRelease_D2352F4240D482F7C66DD0BD76183C2A",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Magic"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "LionHead · LionHead.End",
+        "labelParts": [
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "LionHead",
+          "LionHead.End"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.9051806926727295
+        },
+        "entryArguments": [
+          0.0
+        ]
+      },
+      "weapon": "LionHead",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+      "nativeSelection": {
+        "resourceRule": "Retain normal activation, original preparation fee and native release cleanup.",
+        "completionTimeline": "End"
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.PiPa.Skill.End",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.PiPa.Skill",
+        "tag": "Ability.Action.Hun.ShachiAbility.PiPa.Skill",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill.GA_Hun_Lute_SKill_C",
+        "entryPoint": "ToRelease",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Magic",
+          "Weapon.Type.ShaqiWeapon.Lute",
+          "CharacterState.WeaponUpgrade.Lute.SitDown_Combo"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Lute · End",
+        "labelParts": [
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "Lute",
+          "End"
+        ],
+        "entryWhen": {
+          "timeline": "Loop"
+        }
+      },
+      "weapon": "Lute",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+      "nativeSelection": {
+        "resourceRule": "Retain normal activation, original preparation fee and native release cleanup.",
+        "completionTimeline": "End"
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB.End",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB",
+        "tag": "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB.GA_MiaoShouFeiDao_DB_C",
+        "entryPoint": "PlayEnd",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Ranged",
+          "Weapon.Type.ShaqiWeapon.MiaoShouFeiDao",
+          "CharacterState.WeaponUpgrade.MiaoShouFeiDao.Dash_B"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -3,
+        "code": "MiaoShouFeiDao · End",
+        "labelParts": [
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "MiaoShouFeiDao",
+          "End"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 9.999999747378752e-05
+        }
+      },
+      "weapon": "MiaoShouFeiDao",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB",
+      "nativeSelection": {
+        "resourceRule": "Retain normal activation, original preparation fee and native release cleanup.",
+        "completionTimeline": "End"
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.TanLang.Normal.FastEnd",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.TanLang.Normal",
+        "tag": "Ability.Action.Hun.ShachiAbility.TanLang.Normal",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal.GA_TanLang_Normal_C",
+        "entryPoint": "EventReceived_6824E32F40D0A5FDE6475CB68017CF0D",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Strength"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "TanLang · FastEnd",
+        "labelParts": [
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "TanLang",
+          "FastEnd"
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 9.999999747378752e-05
+        },
+        "entryArguments": [
+          {}
+        ],
+        "releaseInputBeforeEntry": true
+      },
+      "weapon": "TanLang",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+      "nativeSelection": {
+        "resourceRule": "Retain normal activation, original preparation fee and native release cleanup.",
+        "completionTimeline": "FastEnd"
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser.Shoot",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser",
+        "tag": "Ability.Action.Hun.ShachiAbility.DuYanBow.Laser",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser.GA_DuYan_Bow_Laser_C",
+        "entryPoint": "Force Release",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Category.Ranged",
+          "CharacterState.WeaponUpgrade.DuYanBow.BulletPassThrough",
+          "CharacterState.WeaponUpgrade.DuYanBow.LaserV2"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "DuYanBow · Shoot",
+        "labelParts": [
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "DuYanBow",
+          "Shoot"
+        ],
+        "entryWhen": {
+          "timeline": "Loop"
+        }
+      },
+      "weapon": "DuYanBow",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+      "nativeSelection": {
+        "resourceRule": "Retain normal activation, original preparation fee and native release cleanup.",
+        "completionTimeline": "Shoot"
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C",
+        "entryPoint": "OnDeflectTrigger",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "prepareInput": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "ZhuoBiDun · Push_F",
+        "labelParts": [
+          "moves.push"
+        ],
+        "searchAliases": [
+          "ZhuoBiDun",
+          "Push_F",
+          "OnDeflectTrigger",
+          "盾推击"
+        ],
+        "entryWhen": {
+          "timeline": "Loop"
+        },
+        "weaponLabels": {
+          "de": "BASTION",
+          "en": "BASTION",
+          "es-419": "BASTIÓN",
+          "es-ES": "BASTIÓN",
+          "fr": "BASTION",
+          "he": "拙壁盾",
+          "it": "BASTIONE",
+          "ja": "拙壁の盾",
+          "ko": "졸벽 방패",
+          "pt-BR": "BASTIÃO",
+          "pt-PT": "BASTIÃO",
+          "ru": "Бастион",
+          "th": "โล่ปราการ",
+          "vi": "CHUYẾT BÍCH THUẪN",
+          "zh-Hans": "拙壁盾",
+          "zh-Hant": "拙壁盾"
+        }
+      },
+      "weapon": "ZhuoBiDun",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "nativeSelection": {
+        "resourceRule": "Wait for original Loop and use native OnDeflectTrigger -> Push_F -> HandlePushCost; original RT state controls finite release and charge-dependent return.",
+        "completionTimeline": "Push_F"
+      }
+    }
+  ],
+  "nativeConditionalAttacks": [
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Rush",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "CharacterState.WeaponUpgrade.ZhuoBiDun.Rush"
+        ],
+        "activationAnyTags": [
+          "Ability.Action.Hun.Dash",
+          "CharacterState.Native.Attitude.Sprinting"
+        ],
+        "priority": -5,
+        "code": "ZhuoBiDun · Rush_F",
+        "labelParts": [
+          "catalog.dash",
+          "catalog.attack"
+        ],
+        "searchAliases": [
+          "ZhuoBiDun",
+          "Rush_F",
+          "冲盾推敌"
+        ],
+        "weaponLabels": {
+          "de": "BASTION · Schildansturm",
+          "en": "BASTION · Shield Rush",
+          "es-419": "BASTIÓN · Carga con escudo",
+          "es-ES": "BASTIÓN · Carga con escudo",
+          "fr": "BASTION · Ruée au bouclier",
+          "he": "拙壁盾 · 冲盾推敌",
+          "it": "BASTIONE · Impeto di Scudo",
+          "ja": "拙壁の盾 · 衝盾推敵",
+          "ko": "졸벽 방패 · 방패돌진",
+          "pt-BR": "BASTIÃO · Avanço de Escudo",
+          "pt-PT": "BASTIÃO · Investida de Escudo",
+          "ru": "Бастион · Рывок со щитом",
+          "th": "โล่ปราการ · โล่ทะลวงสยบอริ",
+          "vi": "CHUYẾT BÍCH THUẪN · Húc Khiên",
+          "zh-Hans": "拙壁盾 · 冲盾推敌",
+          "zh-Hant": "拙壁盾 · 衝盾推敵"
+        }
+      },
+      "weapon": "ZhuoBiDun",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "officialName": "冲盾推敌",
+      "localization": {
+        "namespace": "Default",
+        "key": "PhantomEdges_FunctionName_004_5",
+        "labels": {
+          "de": "Schildansturm",
+          "en": "Shield Rush",
+          "es-419": "Carga con escudo",
+          "es-ES": "Carga con escudo",
+          "fr": "Ruée au bouclier",
+          "he": "冲盾推敌",
+          "it": "Impeto di Scudo",
+          "ja": "衝盾推敵",
+          "ko": "방패돌진",
+          "pt-BR": "Avanço de Escudo",
+          "pt-PT": "Investida de Escudo",
+          "ru": "Рывок со щитом",
+          "th": "โล่ทะลวงสยบอริ",
+          "vi": "Húc Khiên",
+          "zh-Hans": "冲盾推敌",
+          "zh-Hant": "衝盾推敵"
+        }
+      },
+      "nativeSelection": {
+        "completionTimeline": "Rush_F",
+        "maximumTimelineTime": 3.6666667461395264,
+        "completedCallback": "OnCompleted_637C767C4F7D2419126AC5A1A9C17335",
+        "resourceRule": "Normal activation selects Rush_F for real Dash or Sprinting plus Rush upgrade, invokes HandleRushCost and keeps its GAA_ShachiBulletInstant. Native completion reads real RT state and calls ToRelease when Hold is not held. No synthetic state, callback jump or extra fee."
+      }
+    }
+  ],
+  "nativeContextualAttacks": [
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.ThunderSpear.DeflectCounter.Native",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.ThunderSpear.DeflectCounter",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DeflectCounter.GA_ThunderSpear_DeflectCounter_C",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "requiredTags": [
+          "CharacterState.Space.Ground"
+        ],
+        "priority": -5,
+        "code": "ThunderSpear · DeflectCounter",
+        "labelParts": [
+          "catalog.counter"
+        ],
+        "searchAliases": [
+          "ThunderSpear.DeflectCounter",
+          "DeflectCounter_Normal",
+          "闪避反击"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "雷霆枪",
+          "en": "THUNDER SPEAR",
+          "ja": "雷霆槍",
+          "ko": "뇌정창",
+          "ru": "Громовое Копьё",
+          "zh-Hant": "雷霆槍",
+          "fr": "LANCE TONNERRE",
+          "de": "DONNERSPEER",
+          "es-ES": "LANZA TONANTE",
+          "pt-BR": "LANÇA DO TROVÃO",
+          "it": "LANCIA DEL TUONO",
+          "th": "ทวนอัสนี",
+          "vi": "LÔI ĐÌNH THƯƠNG",
+          "pt-PT": "LANÇA DO TROVÃO",
+          "es-419": "LANZA DEL TRUENO"
+        },
+        "category": "shadow/PhantomEdges_019"
+      },
+      "weapon": "ThunderSpear",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DeflectCounter",
+      "source": "Weapon_ThunderSpear equipped ability grant; no InputActionBinding route for this tag.",
+      "nativeCdoTagNames": [
+        "Ability.Action.Hun.ShachiAbility.ThunderSpear.DeflectCounter"
+      ],
+      "nativeSelection": {
+        "completionTimeline": "DeflectCounter_Normal",
+        "perfectTimeline": "DeflectCounter_Perfect",
+        "perfectEvent": "GameplayEvent.Actor.HitDodge.Target.Perfect",
+        "perfectCallback": "EventReceived_4C6E0A2649F6A2CD1FEB41990A38CFDC",
+        "maximumTimelineTime": 5.066667079925537,
+        "resourceRule": "Normal activation retains Martial/Base initialization, native eligibility and own timeline bullet fee. Play Normal Timeline registers the real perfect-dodge listener and plays DeflectCounter_Normal. Only the real perfect-dodge event selects DeflectCounter_Perfect. No callback injection, hold preparation or added upgrade condition."
+      }
+    }
+  ],
+  "activeContextualAttacks": [
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Counter",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C",
+        "activeAbilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C"
+        ],
+        "entryPoint": "ToRelease",
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "requiredTags": [],
+        "priority": -5,
+        "code": "ZhuoBiDun · CounterAttack",
+        "category": "shadow/PhantomEdges_004",
+        "labelParts": [
+          "moves.release"
+        ],
+        "searchAliases": [
+          "ZhuoBiDun",
+          "CounterAttack",
+          "CounterAttack_02",
+          "反伤冲击"
+        ],
+        "weaponLabels": {
+          "de": "BASTION · Vergeltungsschockwelle",
+          "en": "BASTION · Reprisal Shockwave",
+          "es-419": "BASTIÓN · Ola de choque de represalia",
+          "es-ES": "BASTIÓN · Onda de represalia",
+          "fr": "BASTION · Onde de choc de représailles",
+          "he": "拙壁盾 · 反伤冲击",
+          "it": "BASTIONE · Onda d'Urto della Ritorsione",
+          "ja": "拙壁の盾 · 反撃の衝撃",
+          "ko": "졸벽 방패 · 반사충격",
+          "pt-BR": "BASTIÃO · Onda de Represália",
+          "pt-PT": "BASTIÃO · Onda de Choque de Retaliação",
+          "ru": "Бастион · Ударная волна возмездия",
+          "th": "โล่ปราการ · คลื่นกระแทกสะท้อนกลับ",
+          "vi": "CHUYẾT BÍCH THUẪN · Chấn Động Phản Kích",
+          "zh-Hans": "拙壁盾 · 反伤冲击",
+          "zh-Hant": "拙壁盾 · 反傷衝擊"
+        },
+        "usageKey": "moves.shieldcounter.usage",
+        "entryWhen": {
+          "timeline": "Loop",
+          "property_sum_above": {
+            "properties": [
+              [
+                "ElementalChargeData",
+                "PhysicalTotal_5_DCBBD9C24A42FAEF773E3380E04B6FEB"
+              ],
+              [
+                "ElementalChargeData",
+                "ShachiTotal_7_91654B4148BC8D0C41424AA11B894507"
+              ]
+            ],
+            "threshold_property": "Thredhold"
+          }
+        }
+      },
+      "weapon": "ZhuoBiDun",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "localization": {
+        "namespace": "Default",
+        "key": "PhantomEdges_FunctionName_004_Advance",
+        "labels": {
+          "de": "Vergeltungsschockwelle",
+          "en": "Reprisal Shockwave",
+          "es-419": "Ola de choque de represalia",
+          "es-ES": "Onda de represalia",
+          "fr": "Onde de choc de représailles",
+          "he": "反伤冲击",
+          "it": "Onda d'Urto della Ritorsione",
+          "ja": "反撃の衝撃",
+          "ko": "반사충격",
+          "pt-BR": "Onda de Represália",
+          "pt-PT": "Onda de Choque de Retaliação",
+          "ru": "Ударная волна возмездия",
+          "th": "คลื่นกระแทกสะท้อนกลับ",
+          "vi": "Chấn Động Phản Kích",
+          "zh-Hans": "反伤冲击",
+          "zh-Hant": "反傷衝擊"
+        }
+      },
+      "nativeSelection": {
+        "completionTimeline": "CounterAttack",
+        "upgradedCompletionTimeline": "CounterAttack_02",
+        "upgradeTag": "CharacterState.WeaponUpgrade.ZhuoBiDun.Counterx2",
+        "completedCallback": "OnCompleted_0540018143D571C207EA7C897D335A28",
+        "resourceRule": "Use only the existing active shield in Loop with real absorbed PhysicalTotal+ShachiTotal > Thredhold; native ToRelease retains charge-based damage and cleanup. Do not activate the ability, reset charge or add costs. CounterAttack completion selects CounterAttack_02 only for the real Counterx2 upgrade; otherwise FastRelease."
+      }
+    }
+  ],
+  "nativeAutomaticPhases": [
+    {
+      "weapon": "XueDiZi",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_A",
+      "originTimeline": "Main",
+      "timeline": "Saw",
+      "nativeAction": "/PBZCombatAsset/Prototypes/Actions/GAA_JumpTimelineByHitResult",
+      "selectionEvent": {
+        "index": 25,
+        "exportByteOffset": 949,
+        "startTime": 1.0537673234939575,
+        "duration": 0.26096534729003906,
+        "triggerTimeOffset": 0,
+        "endTriggerTimeOffset": 0,
+        "actionPointer": 8,
+        "action": "GAA_JumpTimelineByHitResult_C_1",
+        "guid": "d9a18c973a3e5349a1e337551fa900cf",
+        "trackIndex": 5,
+        "sections": []
+      },
+      "jumpOnEnd": false,
+      "startTimeSeconds": 1.190000057220459,
+      "hitResultTags": [
+        "Bullet.HitResult.DirectHit"
+      ],
+      "attackEvents": [
+        {
+          "index": 17,
+          "exportByteOffset": 661,
+          "startTime": 1.1890761852264404,
+          "duration": 0.04068458080291748,
+          "triggerTimeOffset": 0,
+          "endTriggerTimeOffset": 0,
+          "actionPointer": 59,
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "guid": "b5e8873c945aa74c9fc1108c445a6147",
+          "trackIndex": 6,
+          "sections": [
+            {
+              "0": 0.02034229040145874,
+              "1": "0100dcff"
+            },
+            {
+              "0": 0.02034229040145874,
+              "1": "3a3aceff"
+            }
+          ]
+        },
+        {
+          "index": 20,
+          "exportByteOffset": 794,
+          "startTime": 1.2406058311462402,
+          "duration": 0.08772099763154984,
+          "triggerTimeOffset": 0,
+          "endTriggerTimeOffset": -9.999999747378752e-05,
+          "actionPointer": 60,
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "guid": "6e35b37be33fe7409d0e092c75b02635",
+          "trackIndex": 5,
+          "sections": [
+            {
+              "0": 0.04386049881577492,
+              "1": "184bf5ff"
+            },
+            {
+              "0": 0.04386049881577492,
+              "1": "3a3aceff"
+            }
+          ]
+        }
+      ],
+      "selectionRule": "The original DirectHit event immediately selects Saw at its configured start time. Per-action Jump On End=false overrides the class default. No saved post-hit request window or separate release callback exists."
+    },
+    {
+      "weapon": "XueDiZi",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AA",
+      "originTimeline": "Main",
+      "timeline": "Saw",
+      "nativeAction": "/PBZCombatAsset/Prototypes/Actions/GAA_JumpTimelineByHitResult",
+      "selectionEvent": {
+        "index": 15,
+        "exportByteOffset": 597,
+        "startTime": 0.22853776812553406,
+        "duration": 0.17013326287269592,
+        "triggerTimeOffset": 0,
+        "endTriggerTimeOffset": 0,
+        "actionPointer": 8,
+        "action": "GAA_JumpTimelineByHitResult_C_0",
+        "guid": "f0a8825bfb6a6f4abc5876f7d87d1f35",
+        "trackIndex": 10,
+        "sections": []
+      },
+      "jumpOnEnd": false,
+      "startTimeSeconds": 0.28999999165534973,
+      "hitResultTags": [
+        "Bullet.HitResult.DirectHit"
+      ],
+      "attackEvents": [
+        {
+          "index": 9,
+          "exportByteOffset": 379,
+          "startTime": 0.2907642722129822,
+          "duration": 0.03333333134651184,
+          "triggerTimeOffset": 0,
+          "endTriggerTimeOffset": 9.999999747378752e-05,
+          "actionPointer": 46,
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "guid": "65520a1ecca2f24ab90b1237eb05a85a",
+          "trackIndex": 16,
+          "sections": [
+            {
+              "0": 0.01666666567325592,
+              "1": "184bf5ff"
+            },
+            {
+              "0": 0.01666666567325592,
+              "1": "3a3aceff"
+            }
+          ]
+        },
+        {
+          "index": 11,
+          "exportByteOffset": 477,
+          "startTime": 0.332459956407547,
+          "duration": 0.03447189927101135,
+          "triggerTimeOffset": 0,
+          "endTriggerTimeOffset": 0,
+          "actionPointer": 47,
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "guid": "d238d04f0918fb4ea861df1f4f67d409",
+          "trackIndex": 14,
+          "sections": [
+            {
+              "0": 0.017235949635505676,
+              "1": "184bf5ff"
+            },
+            {
+              "0": 0.017235949635505676,
+              "1": "3a3aceff"
+            }
+          ]
+        }
+      ],
+      "selectionRule": "The original DirectHit event immediately selects Saw at its configured start time. Per-action Jump On End=false overrides the class default. No saved post-hit request window or separate release callback exists."
+    },
+    {
+      "weapon": "XueDiZi",
+      "abilityEvidence": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AAA",
+      "originTimeline": "Main",
+      "timeline": "Saw",
+      "nativeAction": "/PBZCombatAsset/Prototypes/Actions/GAA_JumpTimelineByHitResult",
+      "selectionEvent": {
+        "index": 16,
+        "exportByteOffset": 634,
+        "startTime": 0.2740449607372284,
+        "duration": 0.13122010231018066,
+        "triggerTimeOffset": 0,
+        "endTriggerTimeOffset": 0,
+        "actionPointer": 8,
+        "action": "GAA_JumpTimelineByHitResult_C_0",
+        "guid": "031879974be9dd43bd280d0c2070dae3",
+        "trackIndex": 10,
+        "sections": []
+      },
+      "jumpOnEnd": false,
+      "startTimeSeconds": 0.3400000035762787,
+      "hitResultTags": [
+        "Bullet.HitResult.DirectHit"
+      ],
+      "attackEvents": [
+        {
+          "index": 10,
+          "exportByteOffset": 414,
+          "startTime": 0.348431259393692,
+          "duration": 0.03333333134651184,
+          "triggerTimeOffset": 0,
+          "endTriggerTimeOffset": 9.999999747378752e-05,
+          "actionPointer": 50,
+          "action": "LGAAction_DurationBulletWithDeflect_0",
+          "guid": "f2beebe38bb3204ab6f7e435ac87b026",
+          "trackIndex": 14,
+          "sections": [
+            {
+              "0": 0.01666666567325592,
+              "1": "184bf5ff"
+            },
+            {
+              "0": 0.01666666567325592,
+              "1": "3a3aceff"
+            }
+          ]
+        },
+        {
+          "index": 13,
+          "exportByteOffset": 551,
+          "startTime": 0.398997962474823,
+          "duration": 0.06249085068702698,
+          "triggerTimeOffset": 0,
+          "endTriggerTimeOffset": 0,
+          "actionPointer": 51,
+          "action": "LGAAction_DurationBulletWithDeflect_1",
+          "guid": "cf8f238a3204f143ad066c03f6499fe7",
+          "trackIndex": 12,
+          "sections": [
+            {
+              "0": 0.03124542534351349,
+              "1": "184bf5ff"
+            },
+            {
+              "0": 0.03124542534351349,
+              "1": "3a3aceff"
+            }
+          ]
+        }
+      ],
+      "selectionRule": "The original DirectHit event immediately selects Saw at its configured start time. Per-action Jump On End=false overrides the class default. No saved post-hit request window or separate release callback exists."
+    }
+  ]
+}

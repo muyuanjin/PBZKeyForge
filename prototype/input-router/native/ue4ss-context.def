@@ -1,0 +1,10 @@
+LIBRARY UE4SS.dll
+EXPORTS
+    ?Node@FFrame@Unreal@RC@@QEAAAEAPEAVUFunction@23@XZ
+    ?GetFullName@UObject@Unreal@RC@@QEBA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@PEAV123@@Z
+    ?RegisterProcessLocalScriptFunctionPreCallback@Hook@Unreal@RC@@YAXV?$function@$$A6AXPEAVUObject@Unreal@RC@@AEAUFFrame@23@PEAX@Z@std@@@Z
+    ?RegisterProcessLocalScriptFunctionPostCallback@Hook@Unreal@RC@@YAXV?$function@$$A6AXPEAVUObject@Unreal@RC@@AEAUFFrame@23@PEAX@Z@std@@@Z
+    ?get_integer@Lua@LuaMadeSimple@RC@@QEBA_JH@Z
+    ?get_bool@Lua@LuaMadeSimple@RC@@QEBA_NH@Z
+    ?set_integer@Lua@LuaMadeSimple@RC@@QEBAX_J@Z
+    ?set_string@Lua@LuaMadeSimple@RC@@QEBAXPEBD_K@Z

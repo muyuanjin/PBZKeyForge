@@ -67,6 +67,15 @@ local function pipeline_identity(backend, target)
     return ""
 end
 
+local function tuned(settings)
+    return settings and ((settings.damage_multiplier or 1) ~= 1 or (settings.startup_speed or 1) ~= 1 or (settings.recovery_speed or 1) ~= 1)
+end
+
+local function merge_settings(current,incoming)
+    if not current or not tuned(current) and tuned(incoming) then return incoming end
+    return current
+end
+
 function Router.new(config, backend)
     assert(type(config.targets) == "table", "targets must be a table")
     assert(type(config.bindings) == "table", "bindings must be an array")
@@ -249,12 +258,12 @@ function Router:step(now, snapshot, context)
     assert(type(now) == "number", "clock must be numeric")
     if self.lastTime and now < self.lastTime then self:reset() end
     self.lastTime = now
-    local levels, reserved, canceled, owners = {}, {}, {}, {}
+    local levels, reserved, canceled, owners, moves, moveOrder = {}, {}, {}, {}, {}, {}
     for key, owner in pairs(self.consumed or {}) do
         reserved[key], owners[key] = true, owner
     end
     local function occupied(key, binding) return reserved[key] and owners[key] ~= (binding.input_group or binding.id) end
-    for _, rule in ipairs(self.rules) do
+    for rank, rule in ipairs(self.rules) do
         local b, st = rule.binding, rule.state
         local blocked = false
         for _, key in ipairs(b.keys or {}) do if occupied(key, b) then blocked=true end end
@@ -321,9 +330,13 @@ function Router:step(now, snapshot, context)
                         local pipeline = pipeline_identity(self.backend, target)
                         local contribution = level.pipelines[pipeline]
                         if not contribution then
-                            contribution={target=target, value={x=0,y=0,z=0}, inputs={}}
+                            contribution={target=target, value={x=0,y=0,z=0}, inputs={},rank=rank}
                             level.pipelines[pipeline]=contribution
                         end
+                        contribution.bypass_resources = contribution.bypass_resources or b.bypass_resources
+                        local settings = merge_settings(contribution.settings,b)
+                        if settings ~= contribution.settings then contribution.rank = rank end
+                        contribution.settings = settings
                         local signature
                         if target.source_relation and (b.trigger == "down" or b.trigger == "axis" or not b.trigger) then
                             local keys = {}; for _, key in ipairs(b.keys or {}) do keys[#keys+1] = key end
@@ -337,8 +350,21 @@ function Router:step(now, snapshot, context)
                             contribution.value.z = contribution.value.z + v.z
                             if signature then contribution.inputs[signature] = true end
                         end
+                    elseif target.kind == "move" or target.kind == "ability" and result.pulse then
+                        local identity = target.kind == "move" and (target.move_id or target)
+                            or table.concat({"ability",target.tag,tostring(target.force),tostring(target.priority or -5),target.input_action or ""},"|")
+                        local request = moves[identity]
+                        if not request then
+                            request = {target=target, value=v, binding=b.id, settings=b,rank=rank}
+                            moves[identity] = request
+                            moveOrder[#moveOrder+1] = request
+                        end
+                        request.bypass_resources = request.bypass_resources or b.bypass_resources
+                        local settings = merge_settings(request.settings,b)
+                        if settings ~= request.settings then request.rank=rank end
+                        request.settings = settings
                     elseif target.kind ~= "action" and result.pulse then
-                        self.backend:dispatch(target, "triggered", v, b.id)
+                        self.backend:dispatch(target, "triggered", v, b.id, b.bypass_resources, b)
                     end
                 end
             end
@@ -351,8 +377,8 @@ function Router:step(now, snapshot, context)
     self.previous = {}
     for native, previous in pairs(previousLevels) do self.previous[native]=previous end
     for native, level in pairs(levels) do self.previous[native]=level end
+    local actionRequests = {}
     for native, level in pairs(levels) do
-        local nonzero = false
         for pipeline, contribution in pairs(level.pipelines) do
             local target, v = contribution.target, contribution.value
             if target.value_type == "bool" then
@@ -363,14 +389,29 @@ function Router:step(now, snapshot, context)
                 end
             end
             if magnitude(v) > 0 then
-                nonzero = true
-                local ok = self.backend:dispatch(target, previousLevels[native] and "triggered" or "started", v, level.binding)
-                if ok == false then error(self.backend.dispatch_error or "Action dispatch failed", 0) end
+                actionRequests[#actionRequests+1] = {target=target,value=v,binding=level.binding,
+                    phase=previousLevels[native] and "triggered" or "started",bypass_resources=contribution.bypass_resources,
+                    settings=contribution.settings,rank=contribution.rank}
             else
                 level.pipelines[pipeline] = nil
             end
         end
-        if not nonzero then levels[native]=nil end
+        if not next(level.pipelines) then levels[native]=nil end
+    end
+    table.sort(actionRequests,function(a,b) return a.rank < b.rank end)
+    if self.backend.prepare_input_settings then
+        local requests={}
+        for _,request in ipairs(moveOrder) do requests[#requests+1]=request end
+        for _,request in ipairs(actionRequests) do requests[#requests+1]=request end
+        table.sort(requests,function(a,b) return a.rank < b.rank end)
+        self.backend:prepare_input_settings(requests)
+    end
+    for _, request in ipairs(moveOrder) do
+        self.backend:dispatch(request.target, "triggered", request.value, request.binding, request.bypass_resources, request.settings)
+    end
+    for _,request in ipairs(actionRequests) do
+        local ok = self.backend:dispatch(request.target,request.phase,request.value,request.binding,request.bypass_resources,request.settings)
+        if ok == false then error(self.backend.dispatch_error or "Action dispatch failed", 0) end
     end
     for native, previous in pairs(previousLevels) do
         for pipeline, contribution in pairs(previous.pipelines) do

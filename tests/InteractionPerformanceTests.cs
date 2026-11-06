@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using PBZKeyForge;
@@ -26,9 +27,24 @@ public static class InteractionPerformanceTests
         Application.EnableVisualStyles(); I18n.Current = "zh-Hans";
         string output = Path.GetFullPath(args[0]); Directory.CreateDirectory(output);
         var session = EditorSession.CreateOffline();
-        var config = new KeyEnhancementConfiguration { Enabled = true };
+        var config = args.Length > 1 ? KeyEnhancementConfiguration.FromJson(File.ReadAllText(args[1])) : new KeyEnhancementConfiguration { Enabled = true };
         var baseline = config.Clone();
         var workspace = new BindingWorkspace(session, config, baseline, false, -1);
+        if (args.Length > 2)
+        {
+            string functionId = args[2];
+            var binding = workspace.Entries(functionId).FirstOrDefault();
+            var timer = Stopwatch.StartNew();
+            using (var dialog = new UnifiedBindingEditDialog(workspace, functionId, binding, "G", () => true))
+            {
+                Console.WriteLine("observed editor constructor: {0:F2} ms", timer.Elapsed.TotalMilliseconds);
+                timer.Restart(); dialog.Show(); Application.DoEvents();
+                Console.WriteLine("observed editor first frame: {0:F2} ms", timer.Elapsed.TotalMilliseconds);
+                using (var image = new Bitmap(dialog.Width, dialog.Height))
+                { dialog.DrawToBitmap(image, new Rectangle(Point.Empty, image.Size)); image.Save(Path.Combine(output, "observed-editor.png")); }
+            }
+            return 0;
+        }
         workspace.Add("IA_Jump", new BindingEntry { Keys = new[] { "J" }, Trigger = "hold" });
         Measure("workspace catalog", 5, delegate { var value = new BindingWorkspace(session, config, baseline, false, -1).Functions; });
         Measure("workspace snapshot", 5, delegate { Call(workspace, "Snapshot"); });

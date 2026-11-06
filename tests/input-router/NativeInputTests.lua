@@ -71,6 +71,24 @@ local function fixture(config)
     config.targets, config.bindings = config.targets or {}, config.bindings or {}
     local state = {rows = {}, contexts = {}, physical = {}, calls = {}, now = 0, clones = 0}
     local backend = Backend.new(config, function() end)
+    local function metadata(value)
+        if value.SettingBehavior ~= nil then return value end
+        local actionPath = value.Action:GetFullName():gsub("^%S+ ", ""):gsub("%.[^./]+$", "")
+        local name = actionPath:match("/([^/]+)$")
+        for _, override in ipairs(config.native_bindings or {}) do
+            for _, action in ipairs(override.actions or {}) do
+                if action:gsub("%.[^./]+$", "") == actionPath then name = override["function"] or name end
+            end
+        end
+        for _, target in pairs(config.targets) do
+            for _, action in ipairs(target.actions or {}) do
+                if not target.catalog_pipeline and action:gsub("%.[^./]+$", "") == actionPath then name = target.mapping or name end
+            end
+        end
+        value.SettingBehavior = 1
+        value.PlayerMappableKeySettings = object("/Settings.Settings", {Name=FName(name)})
+        return value
+    end
     backend.physical_input = {sample = function() return nil end}
     backend.controller = object("/Controller.Controller")
     backend.subsystem = object("/Subsystem.Subsystem")
@@ -80,7 +98,7 @@ local function fixture(config)
     function input:GetPropertyValue(name)
         if name == "EnhancedActionMappings" then return array(state.rows, function(value)
             state.mapping_reads = (state.mapping_reads or 0) + 1
-            return wrapper(value)
+            return wrapper(metadata(value))
         end) end
         assert(name == "AppliedInputContextData", "unexpected input property")
         return {ForEach = function(_, callback)
@@ -96,7 +114,9 @@ local function fixture(config)
         local properties = {}
         for key, value in pairs(template) do if type(value) ~= "function" then properties[key] = value end end
         state.clones = state.clones + 1
-        return object("/Clone.Clone" .. state.clones, properties)
+        local clone=object("/Clone.Clone" .. state.clones, properties)
+        function clone:GetClass() return class end
+        return clone
     end
     function backend:hold_objects(triggers, modifiers)
         state.heldTriggers, state.heldModifiers = triggers, modifiers
@@ -125,7 +145,7 @@ local function fixture(config)
         local context = object("/Context.Context" .. (#self.contexts + 1))
         context.DefaultKeyMappings = setmetatable({}, {__index = function(_, name)
             assert(name == "Mappings")
-            return array(rows, wrapper)
+            return array(rows, function(value) return wrapper(metadata(value)) end)
         end})
         self.contexts[#self.contexts + 1] = context
         return context
@@ -1021,6 +1041,49 @@ test("native overrides retain dependent pipelines during startup and live apply"
     end
 end)
 
+test("shadow weapon switching keeps runtime chord blockers authoritative over templates", function()
+    for _, live in ipairs({false,true}) do
+        for _, inputKey in ipairs({"Two","J"}) do
+            local actionPath="/SGameCombatSystem/Weapon/Input/IA_ChangeShachiWeapon"
+            local action=object(actionPath .. ".IA_ChangeShachiWeapon")
+            local target={kind="mapping",mapping="IA_SwitchShadowArm",device="keyboard",actions={actionPath},native_override=true}
+            local backend,native,state=fixture({unified_native=true,native_actions={actionPath},
+                targets={keyboard=target,pad={kind="mapping",device="gamepad",actions={actionPath},native_override=true}},
+                bindings={{id="keyboard",keys={inputKey},trigger="down",outputs={"keyboard"}},
+                    {id="pad",keys={"Gamepad_DPad_Right"},trigger="down",outputs={"pad"}}},
+                native_bindings={{["function"]="IA_SwitchShadowArm",device="keyboard",keys={inputKey},actions={actionPath}},
+                    {["function"]="IA_SwitchShadowArm",device="gamepad",keys={"Gamepad_DPad_Right"},actions={actionPath}}}})
+            backend.live_validation=live
+            local pressed=object("/Trigger.Pressed")
+            state.rows={mapping(action,"Two",{pressed,object("/Trigger.ChordBlocker")}),
+                mapping(action,"Gamepad_DPad_Right",{pressed})}
+            state:add_context({mapping(action,"Two",{pressed}),mapping(action,"Gamepad_DPad_Right",{pressed})})
+            native:prepare()
+            check(key(state.rows[1])==inputKey and key(state.rows[2])=="None",
+                "runtime keyboard blocker or scheduled controller ownership changed")
+            local router=Router.new(backend.dynamic_config,backend)
+            router:step(0,{},backend:context())
+            router:step(.1,{[inputKey]=1},backend:context())
+            router:step(.2,{[inputKey]=1},backend:context())
+            router:step(.3,{},backend:context())
+            check(#state.calls==0, "keyboard shadow switch was injected alongside its retained native pipeline")
+            router:step(.4,{Gamepad_DPad_Right=1},backend:context())
+            check(#state.calls==1 and #state.calls[1].target.trigger_objects==1,
+                "retained keyboard pipeline prevented controller scheduling")
+            router:reset(true)
+            native:prepare()
+            native:restore()
+            check(key(state.rows[1])=="Two" and key(state.rows[2])=="Gamepad_DPad_Right",
+                "restoring shadow switching lost the original keys")
+            target.native_override=nil
+            backend.live_validation=true
+            local ok,err=pcall(function() native:prepare() end)
+            check(not ok and tostring(err):find("No runtime input pipeline",1,true),
+                "custom output bypassed a runtime chord blocker through the default template")
+        end
+    end
+end)
+
 test("scheduled outputs do not hide retained capacity failures", function()
     for _, live in ipairs({false,true}) do
         for _, sameAction in ipairs({false,true}) do
@@ -1351,6 +1414,213 @@ if generated then
             check(#state.calls > 0, "moved hold failed to execute")
         end)
     end
+end
+
+test("editable identities preserve fixed menu, touchpad and scene sources", function()
+    local menuPath="/Game/PBZContent/Input/InputActions/IA_PushGameSystemMenu"
+    local sensePath="/Game/PBZContent/Input/InputActions/IA_Sense_Default"
+    local sprintPath="/SGameLocomotionDriver/Input/IA_Sprint"
+    local menu=object(menuPath .. ".IA_PushGameSystemMenu")
+    local sense=object(sensePath .. ".IA_Sense_Default")
+    local sprint=object(sprintPath .. ".IA_Sprint")
+    local function named(action,key,name,behavior,triggers)
+        local result=mapping(action,key,triggers)
+        result.SettingBehavior=behavior
+        if behavior==1 then result.PlayerMappableKeySettings=object("/Settings.Mapping",{Name=FName(name)}) end
+        return result
+    end
+    for _,live in ipairs({false,true}) do
+        local config={unified_native=true,native_actions={sensePath,sprintPath},native_bindings={
+            {["function"]="IA_OpenCharacterMenu",device="keyboard",keys={"J"},actions={menuPath}},
+            {["function"]="IA_Sense_Default",device="gamepad",keys={"Gamepad_DPad_Up"},actions={sensePath}},
+            {["function"]="IA_MoveFast",device="keyboard",keys={"K"},actions={sprintPath}}}}
+        local backend,native,state=fixture(config);backend.live_validation=live
+        sense.PlayerMappableKeySettings=object("/Settings.Action",{Name=FName("IA_Sense_Default")})
+        state.rows={named(menu,"Escape",nil,0),named(menu,"I","IA_OpenCharacterMenu",1),
+            named(sense,"PBZ_Touchpad_SwipeUp",nil,2,{object("/Trigger.Touchpad")}),
+            named(sense,"Gamepad_Special_Left",nil,0,{object("/Trigger.TouchpadHold")}),
+            named(sprint,"LeftShift",nil,2),named(sprint,"LeftShift","IA_MoveFast",1)}
+        native:prepare();native:prepare()
+        check(key(state.rows[1])=="Escape" and key(state.rows[2])=="J", "menu fixed input was remapped or ordinary edit was lost")
+        check(key(state.rows[3])=="PBZ_Touchpad_SwipeUp" and key(state.rows[4])=="Gamepad_DPad_Up", "IgnoreSettings or inherited action settings lost ownership")
+        local fixed,editable
+        for _,binding in ipairs(backend.dynamic_config.bindings) do
+            if binding.relation_key=="LeftShift" then
+                if binding.when() then fixed=true else editable=true end
+            end
+        end
+        check(fixed and editable,"fixed sprint was suppressed together with the editable sprint")
+        native:restore();native:apply_masks()
+        check(key(state.rows[1])=="Escape" and key(state.rows[3])=="PBZ_Touchpad_SwipeUp", "UI reapplication overwrote fixed inputs")
+        check(key(state.rows[2])=="J" and key(state.rows[6])=="K" and key(state.rows[5])=="LeftShift", "UI ownership ignored mapping identity")
+        config.native_bindings[1].keys={"J","K"}
+        local ok,err=pcall(function() native:prepare() end)
+        check(not ok and tostring(err):find("1 active runtime slots",1,true),"fixed Escape incorrectly increased editable slot capacity")
+        native:restore();config.enabled=false;native:apply_masks()
+        check(key(state.rows[1])=="Escape" and key(state.rows[2])=="I" and key(state.rows[3])=="PBZ_Touchpad_SwipeUp", "disable failed to restore original sources")
+    end
+end)
+
+test("catalog outputs share runtime pipelines and never bypass dependent triggers", function()
+    local actionPath="/SGameCombatSystem/Weapon/Input/IA_ChangeShachiWeapon"
+    local action=object(actionPath .. ".IA_ChangeShachiWeapon")
+    for _,device in ipairs({"keyboard","gamepad"}) do
+        local keyName=device=="keyboard" and "Two" or "Gamepad_DPad_Right"
+        local other=device=="keyboard" and "Gamepad_DPad_Right" or "Two"
+        for _,blocked in ipairs({false,true}) do
+            local target={kind="mapping",catalog_pipeline=true,device=device,actions={actionPath}}
+            local backend,native,state=fixture({unified_native=true,native_actions={actionPath},
+                targets={catalog=target},bindings={{id="catalog",keys={keyName},trigger="down",outputs={"catalog"}}}})
+            state.rows={mapping(action,keyName,{object(blocked and "/Trigger.ChordBlocker" or "/Trigger.Pressed")}),
+                mapping(action,other,{object("/Trigger.Released")})}
+            state:add_context({mapping(action,keyName,{object("/Trigger.Pressed")})})
+            native:prepare()
+            local router=Router.new(backend.dynamic_config,backend)
+            router:step(0,{},backend:context());router:step(.1,{[keyName]=1},backend:context())
+            if blocked then
+                check(key(state.rows[1])==keyName and #state.calls==0,"catalog bypassed a native dependency through a default template")
+            else
+                check(key(state.rows[1])=="None" and #state.calls==1,"catalog and original same-key mapping emitted duplicate injections")
+                local source=state.calls[1].target
+                check(#source.trigger_objects==1 and source.trigger_objects[1]:GetClass()=="InputTriggerPressed", "catalog selected the other device's pipeline")
+            end
+            native:restore()
+        end
+    end
+end)
+
+if schemeFixtures then
+    test("every gameplay action retains runtime dependencies over default templates", function()
+        stress_gc=false
+        local actions=dofile(schemeFixtures .. "/native-actions.lua")
+        for _,actionPath in ipairs(actions) do
+            for _,device in ipairs({"keyboard","gamepad"}) do
+                for _,live in ipairs({false,true}) do
+                    for _,kind in ipairs({"ChordAction","ChordBlocker","Cooldown","RepeatedTap"}) do
+                        local keyName=device=="keyboard" and "Two" or "Gamepad_DPad_Right"
+                        local replacement=device=="keyboard" and "J" or "Gamepad_DPad_Left"
+                        local action=object(actionPath .. "." .. actionPath:match("/([^/]+)$"))
+                        local backend,native,state=fixture({unified_native=true,native_actions={actionPath},
+                            targets={target={kind="mapping",mapping="audit",device=device,actions={actionPath},native_override=true}},
+                            bindings={{id="override",keys={replacement},trigger="down",outputs={"target"}}},
+                            native_bindings={{["function"]="audit",device=device,keys={replacement},actions={actionPath}}}})
+                        backend.live_validation=live
+                        state.rows={mapping(action,keyName,{object("/Trigger." .. kind)})}
+                        state:add_context({mapping(action,keyName,{object("/Trigger.Pressed")})})
+                        native:prepare()
+                        check(key(state.rows[1])==replacement,"dependent native pipeline lost its edited key")
+                        local router=Router.new(backend.dynamic_config,backend)
+                        router:step(0,{},backend:context());router:step(.1,{[replacement]=1},backend:context())
+                        router:step(.2,{[replacement]=1},backend:context());router:step(.3,{},backend:context())
+                        check(#state.calls==0,"default template bypassed runtime dependency: " .. actionPath .. " " .. kind)
+                        native:restore()
+                        check(key(state.rows[1])==keyName,"restore lost an original dependent source")
+                    end
+                end
+            end
+        end
+    end)
+
+    test("all serialized input contexts preserve fixed sources across compiled schemes", function()
+        stress_gc=false
+        local contexts=dofile("tests/input-router/fixtures/native-mappings-302256.lua")
+        local library=dofile(schemeFixtures .. "/factory-schemes.lua")
+        local mappings,actions=0,{}
+        for _,context in ipairs(contexts) do
+            for _,data in ipairs(context.rows) do mappings=mappings+1;actions[data[1]]=true end
+        end
+        check(#contexts==20 and mappings==173,"full context fixture lost a source")
+        local actionCount=0;for _ in pairs(actions) do actionCount=actionCount+1 end
+        check(actionCount==79,"full context fixture lost an InputAction")
+        for _,live in ipairs({false,true}) do
+            for _,id in ipairs(library.scheme_order) do
+                local config=library.schemes[id]
+                local backend,native,state=fixture(config);backend.live_validation=live
+                local objects,originals={},{}
+                for _,context in ipairs(contexts) do
+                    local templates={}
+                    for _,data in ipairs(context.rows) do
+                        local action=objects[data[1]]
+                        if not action then action=object(data[1] .. "." .. data[1]:match("/([^/]+)$"));objects[data[1]]=action end
+                        if data[3]==0 and data[4] then action.PlayerMappableKeySettings=object("/Settings.Inherited",{Name=FName(data[4])}) end
+                        local triggers={}
+                        for _,triggerName in ipairs(data[5]) do
+                            local class=triggerName:gsub("_%d+$", "")
+                            local trigger=object("/Trigger.Fixture",{HoldTimeThreshold=.5})
+                            function trigger:GetClass() return class end
+                            triggers[#triggers+1]=trigger
+                        end
+                        local current=mapping(action,data[2],triggers);current.SettingBehavior=data[3]
+                        if data[3]==1 and data[4] then current.PlayerMappableKeySettings=object("/Settings.Mapping",{Name=FName(data[4])}) end
+                        state.rows[#state.rows+1]=current;templates[#templates+1]=current
+                        originals[#originals+1]={key=data[2],fixed=not data[4],action=action,path=data[1]}
+                    end
+                    state:add_context(templates)
+                end
+                native:prepare();native:prepare()
+                for index,original in ipairs(originals) do
+                    if original.fixed and not original.path:match("/IA_ShachiAbility_LongPress$") then
+                        if key(state.rows[index])=="None" then
+                            local kept=false
+                            for _,binding in ipairs(backend.dynamic_config.bindings) do
+                                if binding.relation_key==original.key and binding.when() then
+                                    local spec=target_for(backend.dynamic_config,binding.outputs[1])
+                                    if spec.object==original.action then kept=true end
+                                end
+                            end
+                            check(kept,"fixed source was masked without an active scheduler relation: " .. original.path .. " " .. original.key)
+                        else check(key(state.rows[index])==original.key,"ordinary override changed fixed source: " .. original.path .. " " .. original.key) end
+                    end
+                end
+                native:restore()
+                for index,original in ipairs(originals) do check(key(state.rows[index])==original.key,"restore changed a serialized source") end
+            end
+        end
+    end)
+
+    test("compiled catalog defaults preserve pressed and released events through the real backend", function()
+        for _,device in ipairs({"keyboard","pad"}) do
+            for _,name in ipairs({"IA_ChangeShachiWeapon","IA_Execution","IA_AttackL_Press","IA_ShachiAbility"}) do
+                local config=dofile(schemeFixtures .. "/" .. device .. "-" .. name .. ".lua")
+                local spec=config.targets.output_0
+                check(spec.kind=="mapping" and spec.catalog_pipeline,"compiler left a catalog default as raw action injection")
+                local action=object(spec.path .. "." .. name)
+                local nativeKey=device=="keyboard" and "Two" or "Gamepad_DPad_Right"
+                local boundKey=device=="keyboard" and "F9" or "Gamepad_DPad_Down"
+                local released=device=="pad" and name=="IA_ChangeShachiWeapon"
+                local backend,native,state=fixture(config)
+                state.rows={mapping(action,nativeKey,{object(released and "/Trigger.Released" or "/Trigger.Pressed",{LastValue=0})})}
+                native:prepare()
+                local invoke=backend.invoke
+                local emitted=0
+                function backend:invoke(receiver,method,...)
+                    local args={...}
+                    if method:find(":InjectInputVectorForAction",1,true) then
+                        local value,triggers=args[2],args[4]
+                        check(#triggers==1,"mapping trigger was lost before injection")
+                        for _,trigger in ipairs(triggers) do
+                            local was,active=trigger.LastValue>.5,value.X>.5
+                            if released and was and not active or not released and active and not was then emitted=emitted+1 end
+                            trigger.LastValue=value.X
+                        end
+                        return true
+                    end
+                    return invoke(self,receiver,method,...)
+                end
+                backend.dispatch=Backend.dispatch
+                local router=Router.new(backend.dynamic_config,backend)
+                router:step(0,{},backend:context())
+                for frame=1,3 do router:step(frame*.1,{[boundKey]=1},backend:context()) end
+                check(emitted==(released and 0 or 1),"holding a catalog default repeated its edge event or fired before release")
+                router:step(.4,{},backend:context())
+                check(emitted==1,"catalog binding did not retain the device's release semantics")
+                for frame=5,7 do router:step(frame*.1,{[boundKey]=1},backend:context()) end
+                router:step(.8,{},backend:context())
+                check(emitted==2,"catalog trigger failed to rearm on the next physical input")
+                native:restore()
+            end
+        end
+    end)
 end
 
 for _, message in ipairs(failures) do print("FAIL " .. message) end

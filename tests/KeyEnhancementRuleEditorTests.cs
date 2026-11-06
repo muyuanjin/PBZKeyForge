@@ -25,6 +25,7 @@ class KeyEnhancementRuleEditorTests
             ReadOnly(configuration);
             Contexts(configuration);
             CandidatePicker();
+            DefaultTriggers();
             Localization(args.Contains("--all-languages"));
             Check(KeyEnhancementCatalog.Targets.Count(entry => entry.Kind == "action") == 98, "Action catalog count");
             Check(KeyEnhancementCatalog.Targets.Count(entry => entry.Kind == "ability") == 236, "Ability catalog count");
@@ -35,6 +36,23 @@ class KeyEnhancementRuleEditorTests
         {
             Console.Error.WriteLine(ex);
             return 1;
+        }
+    }
+
+    static void DefaultTriggers()
+    {
+        var configuration = new KeyEnhancementConfiguration { Enabled = true };
+        var workspace = new BindingWorkspace(EditorSession.CreateOffline(), configuration, configuration.Clone(), false, -1);
+        workspace.Add("move:Ability.Action.Hun.Light.Air.AA", new BindingEntry { Keys = new[] { "G" } });
+        using (var editor = new KeyEnhancementRuleEditor(configuration, true, null))
+        {
+            editor.Show(); Application.DoEvents();
+            Field<TextBox>(editor, "keys").Text = "H";
+            Check(Save(editor) && editor.Configuration.Rules.Single().DefaultTrigger && editor.Configuration.Rules.Single().Trigger == "down",
+                "Advanced editing must retain the complete move default when changing only its key.");
+            Field<ComboBox>(editor, "trigger").SelectedIndex = 0;
+            Check(Save(editor) && !editor.Configuration.Rules.Single().DefaultTrigger && editor.Configuration.Rules.Single().Trigger == "press",
+                "Choosing an explicit press in the advanced editor must clear default semantics.");
         }
     }
 

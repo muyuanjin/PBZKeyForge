@@ -40,6 +40,7 @@ backend.on_release = function() router:reset(true) end
 local function restore()
     local outputs, outputError = pcall(function() router:reset(true) end)
     local contexts, contextError = pcall(function() backend:shutdown() end)
+    if not outputs and not contexts then error(tostring(outputError) .. "\n" .. tostring(contextError), 0) end
     if not outputs then error(outputError, 0) end
     if not contexts then error(contextError, 0) end
 end
@@ -273,8 +274,9 @@ local function tick()
         runtime.suspended = true
         runtime.active = false
         runtime.last_error = tostring(err)
+        if not restored then runtime.last_error = runtime.last_error .. "\nInput restoration incomplete: " .. tostring(restoreError) end
         if live then pcall(function() live:publish() end) end
-        log("Routing suspended: " .. runtime.last_error .. (restored and "; original input restored" or "; restoration incomplete: " .. tostring(restoreError)) ..
+        log("Routing suspended: " .. runtime.last_error .. (restored and "; original input restored" or "") ..
             (Config.runtime_hotkeys ~= false and "; F8 retries" or "; restart the game to retry"))
     elseif ok then runtime.last_error = nil end
 end
@@ -293,7 +295,9 @@ elseif type(ExecuteInGameThreadAfterFrames) == "function" and EngineTickAvailabl
 else
     if Config.unified_native then
         runtime.suspended = true
-        log("Frame scheduler unavailable; gameplay input remains native")
+        runtime.last_error = "Game-thread frame scheduler unavailable; gameplay input remains native"
+        if live then pcall(function() live:publish() end) end
+        log(runtime.last_error)
     else
     LoopAsync(8, function()
         if not runtime.running then return true end

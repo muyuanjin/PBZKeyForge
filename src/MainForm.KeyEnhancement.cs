@@ -206,8 +206,6 @@ namespace PBZKeyForge
                 : offline ? I18n.Str("enhancement.description")
                 : KeyEnhancementPending ? I18n.Str("enhancement.willon") : I18n.Str("enhancement.ready");
             keyEnhancementBar.Status = status;
-            if (!offline && keyEnhancement.Enabled && keyEnhancementBaseline.Enabled && !keyEnhancementUninstall && lastRunning && keyEnhancementInstallation != null)
-                keyEnhancementBar.Status = status = keyEnhancementInstallation.LiveStatus().Detail;
             if (!keyEnhancement.Enabled && !KeyEnhancementPending) keyEnhancementBar.Status = I18n.Str("ownership.coverage.off");
             keyEnhancementBar.Toggle.AccessibleName = I18n.Str("enhancement.title");
             btnKeyEnhancementMore.AccessibleName = I18n.Str("enhancement.title") + " · " + I18n.Str("component.options");
@@ -216,6 +214,17 @@ namespace PBZKeyForge
                 : UnifiedBindingUi.CoverageSummary(new BindingWorkspace(Session, keyEnhancement, keyEnhancementBaseline, gamepad, SelectedFamilyIndex));
             SetTip(keyEnhancementBar, status + Environment.NewLine + coverage);
             SetTip(keyEnhancementBar.Toggle, status + Environment.NewLine + coverage);
+            if (!offline && keyEnhancement.Enabled && keyEnhancementBaseline.Enabled && !keyEnhancementUninstall && lastRunning && keyEnhancementInstallation != null)
+                RenderLiveEnhancementStatus(keyEnhancementInstallation.LiveStatus());
+            keyEnhancementBar.Invalidate();
+        }
+
+        void RenderLiveEnhancementStatus(KeyEnhancementLiveStatus status)
+        {
+            keyEnhancementBar.Status = status.ErrorDetail != null ? "" : status.Detail;
+            string hint = status.ErrorDetail != null ? I18n.Str("flow.connection.open") : status.Detail;
+            SetTip(keyEnhancementBar, hint);
+            SetTip(keyEnhancementBar.Toggle, hint);
             keyEnhancementBar.Invalidate();
         }
 

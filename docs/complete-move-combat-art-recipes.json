@@ -1,0 +1,4832 @@
+{
+  "build": "CL-302256",
+  "runtimeVerified": false,
+  "evidenceType": "Static cooked timeline resources, decoded Blueprint control flow, and native nonzero timeline-start action initialization",
+  "recipes": [
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.CombatArt.BronzeSword.Final",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.BronzeSword.Nsp",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_C.GA_Hun_BronzeSword_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          2.43
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.01253,
+          "before_time": 2.43
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.BronzeSword"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_BronzeSword_C",
+          "CombatArt.Final",
+          "GAA_DelayDeflectProjectileBullet_C_1",
+          "LGAAction_DurationBulletWithDeflect_0",
+          "B_Hun_BronzeSword_C_06_Wave",
+          "B_Hun_BronzeSword_C_08",
+          "天玄青铜剑",
+          "TIANXUAN BRONZE SWORD",
+          "天玄青銅剣",
+          "천현 청동검",
+          "Бронзовый Меч Тяньсюань",
+          "天玄青銅劍",
+          "ÉPÉE DE BRONZE DE TIANXUAN",
+          "TIANXUAN-BRONZESCHWERT",
+          "MANDOBLE DE BRONCE DE TIANXUAN",
+          "ESPADA DE BRONZE DE TIANXUAN",
+          "LAMA DEL TIANXUAN",
+          "กระบี่สำริดเทียนเสวียน",
+          "THIÊN HUYỀN THANH ĐỒNG KIẾM",
+          "ESPADA DE BRONZE DE TIANXUAN",
+          "ESPADA DE BRONCE TIANXUAN"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "天玄青铜剑",
+          "en": "TIANXUAN BRONZE SWORD",
+          "ja": "天玄青銅剣",
+          "ko": "천현 청동검",
+          "ru": "Бронзовый Меч Тяньсюань",
+          "zh-Hant": "天玄青銅劍",
+          "fr": "ÉPÉE DE BRONZE DE TIANXUAN",
+          "de": "TIANXUAN-BRONZESCHWERT",
+          "es-ES": "MANDOBLE DE BRONCE DE TIANXUAN",
+          "pt-BR": "ESPADA DE BRONZE DE TIANXUAN",
+          "it": "LAMA DEL TIANXUAN",
+          "th": "กระบี่สำริดเทียนเสวียน",
+          "vi": "THIÊN HUYỀN THANH ĐỒNG KIẾM",
+          "pt-PT": "ESPADA DE BRONZE DE TIANXUAN",
+          "es-419": "ESPADA DE BRONCE TIANXUAN"
+        },
+        "category": "weapons/Weapon_007/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BronzeSword/Weapon_Hun_TianXuanQingTongJian"
+        ],
+        "nativeSourceLabel": "天玄青铜剑 · 重攻击",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 6,
+            "exportByteOffset": 274,
+            "startTime": 0.012524645775556564,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 51,
+            "action": "GAAction_ChangeArmed_C_1",
+            "guid": "2bdc1f4eaea30d43b9cc3068af282ef9",
+            "trackIndex": 6,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 2.411090135574341,
+        "entryTime": 2.43,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 12,
+            "startTime": 0,
+            "duration": 5.683333396911621,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 71,
+            "action": "LGAAction_PlayMontage_1",
+            "guid": "34c8d08124e8e3419a7c4b5a5da13c6b",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/BronzeSword/Default/Hun_QingTongJian_Skill_01_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 47,
+            "startTime": 0,
+            "duration": 5.683333396911621,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 49,
+            "action": "GAAction_ActionPhase_C_0",
+            "guid": "ba60af35eb4fb946890fe8fddba3dcd0",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.31427982449531555,
+                "1": "80cdffff"
+              },
+              {
+                "0": 3.574662446975708,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.5497727394104004,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 1.2446184158325195,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 2,
+            "exportByteOffset": 126,
+            "startTime": 0,
+            "duration": 5.683333396911621,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 65,
+            "action": "LGAAction_GameplayTags_0",
+            "guid": "bf54fbee519b834e8aea6fdd84f2f172",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 3,
+            "exportByteOffset": 161,
+            "startTime": 0,
+            "duration": 3.894514322280884,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 60,
+            "action": "LGAAction_AbstractEndure_0",
+            "guid": "c2d9571d6b245f478fa4ac220a6a0e43",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 45,
+            "exportByteOffset": 1735,
+            "startTime": 2.403291940689087,
+            "duration": 1.115868091583252,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 52,
+            "action": "GAAction_ModifyCameraZoom_C_0",
+            "guid": "98f11936de2a174fa6b9a23d4c872901",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/SGameExecution/Actions/GAAction_ModifyCameraZoom",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 46,
+            "exportByteOffset": 1774,
+            "startTime": 2.410278558731079,
+            "duration": 0.8611927032470703,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 72,
+            "action": "LGAAction_RotationMode_0",
+            "guid": "68d26abad72b7342bf2b7db0c23a3577",
+            "trackIndex": 12,
+            "sections": [],
+            "class": "/Script/MagCombatAbilities.LGAAction_RotationMode",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 47,
+            "exportByteOffset": 1813,
+            "startTime": 2.4153811931610107,
+            "duration": 1.1012294292449951,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 75,
+            "action": "LGAAction_RotationMode_4",
+            "guid": "fb6d86e388f280458722f0ece241e1a9",
+            "trackIndex": 6,
+            "sections": [],
+            "class": "/Script/MagCombatAbilities.LGAAction_RotationMode",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 50,
+            "exportByteOffset": 1926,
+            "startTime": 2.7894864082336426,
+            "duration": 0.7765429019927979,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 7,
+            "action": "GAA_DelayDeflectProjectileBullet_C_1",
+            "guid": "2c40da0a7bcf60409d24836b93a2577c",
+            "trackIndex": 11,
+            "sections": [],
+            "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 5,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/BronzeSword/B_Hun_BronzeSword_C_06_Wave"
+              }
+            ]
+          },
+          {
+            "index": 57,
+            "exportByteOffset": 2183,
+            "startTime": 3.6278021335601807,
+            "duration": 0.2767317295074463,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 61,
+            "action": "LGAAction_DurationBulletWithDeflect_0",
+            "guid": "60e1a9a52eee3249bb300a9c48aa46e3",
+            "trackIndex": 11,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 15,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/BronzeSword/B_Hun_BronzeSword_C_08"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": []
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_FengLeiJian_C.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.FengLeiJian.AABA",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_C.GA_Hun_FengLeiJian_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          2.3
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.001,
+          "before_time": 2.3
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.BaiShanFengLeiJian"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_FengLeiJian_C",
+          "CombatArt.Final",
+          "GAAction_DurationBullet_Simple_C_12",
+          "LGAAction_DurationBulletWithDeflect_1",
+          "BulletData_Hun_FengLeiJian_C_05",
+          "BulletData_Hun_FengLeiJian_C_06",
+          "白山风雷剑",
+          "BAISHAN STORMSWORDS",
+          "白山風雷剣",
+          "백산풍뢰검",
+          "Буревестные Мечи Байшаня",
+          "白山風雷劍",
+          "ÉPÉES-TEMPÊTE DE BAISHAN",
+          "BAISHAN-STURMSCHWERTER",
+          "ESPADAS TORMENTOSAS DE BAISHAN",
+          "ESPADAS DA TEMPESTADE DE BAISHAN",
+          "LAMA TEMPESTOSE DI BAISHAN",
+          "กระบี่วายุไป๋ซาน",
+          "PHONG LÔI SONG KIẾM",
+          "ESPADA DA TEMPESTADE BAISHAN",
+          "ESPADAS TORMENTA DE BAISHAN"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "白山风雷剑",
+          "en": "BAISHAN STORMSWORDS",
+          "ja": "白山風雷剣",
+          "ko": "백산풍뢰검",
+          "ru": "Буревестные Мечи Байшаня",
+          "zh-Hant": "白山風雷劍",
+          "fr": "ÉPÉES-TEMPÊTE DE BAISHAN",
+          "de": "BAISHAN-STURMSCHWERTER",
+          "es-ES": "ESPADAS TORMENTOSAS DE BAISHAN",
+          "pt-BR": "ESPADAS DA TEMPESTADE DE BAISHAN",
+          "it": "LAMA TEMPESTOSE DI BAISHAN",
+          "th": "กระบี่วายุไป๋ซาน",
+          "vi": "PHONG LÔI SONG KIẾM",
+          "pt-PT": "ESPADA DA TEMPESTADE BAISHAN",
+          "es-419": "ESPADAS TORMENTA DE BAISHAN"
+        },
+        "category": "weapons/Weapon_010/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BaiShanFengLeiJian/Weapon_Hun_BaiShanFengLeiJian"
+        ],
+        "nativeSourceLabel": "白山风雷剑",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 2,
+            "exportByteOffset": 128,
+            "startTime": 0,
+            "duration": 0,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 51,
+            "action": "GAAction_ChangeArmed_C_0",
+            "guid": "8880ae2e8151cc46958ff078018dc626",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 2.273890256881714,
+        "entryTime": 2.3,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": -1.4901161193847656e-08,
+            "duration": 4.699999809265137,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 71,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "6fe8280ccb872d47ba6873206a9ada16",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/BaiShanFengLeiJian/Default/Hun_BaiShanDual_Skill_02_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 49,
+            "startTime": 0,
+            "duration": 4.699999809265137,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 49,
+            "action": "LGAAction_ActionPhase_C_0",
+            "guid": "e35e7ec2a01fd94a952ca8e31aeb61e3",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.138563871383667,
+                "1": "80cdffff"
+              },
+              {
+                "0": 3.7207653522491455,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.17677640914916992,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 0.6638941764831543,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 4,
+            "exportByteOffset": 202,
+            "startTime": 0,
+            "duration": 2.339005708694458,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 6,
+            "action": "GAA_DodgeInvulnerable_C_0",
+            "guid": "5f3742d1222fb14581088f4c6ef343be",
+            "trackIndex": 19,
+            "sections": [],
+            "class": "/PBZCombatAsset/Prototypes/Actions/GAA_DodgeInvulnerable",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 33,
+            "exportByteOffset": 1329,
+            "startTime": 1.7805370092391968,
+            "duration": 0.5789639949798584,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 47,
+            "action": "GAA_PlaySound_Opt_C_9",
+            "guid": "db8d963a063f994d89e7160508aac560",
+            "trackIndex": 12,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/Wave_Stab_BaDao/FengLeiJian/SFX_Combat_Hun_FengLeiJian_Stab"
+              }
+            ]
+          },
+          {
+            "index": 34,
+            "exportByteOffset": 1368,
+            "startTime": 1.804840326309204,
+            "duration": 0.5789639949798584,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 30,
+            "action": "GAA_PlaySound_Opt_C_20",
+            "guid": "77b1b1c7736cf84ca2446c55546c805c",
+            "trackIndex": 14,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/Wave_Stab_BaDao/FengLeiJian/FengLeiJian/SFX_Combat_Hun_FengLeiJian_Electric_Quan_A"
+              }
+            ]
+          },
+          {
+            "index": 35,
+            "exportByteOffset": 1407,
+            "startTime": 1.8474793434143066,
+            "duration": 0.5789639949798584,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 41,
+            "action": "GAA_PlaySound_Opt_C_31",
+            "guid": "b2d747e5438577488489dbd50b606b22",
+            "trackIndex": 16,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/Wave_Stab_BaDao/FengLeiJian/FengLeiJian/SFX_Combat_Hun_FengLeiJian_Wave_Wind_New"
+              }
+            ]
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 52,
+            "exportByteOffset": 2078,
+            "startTime": 3.171233654022217,
+            "duration": 0.10852241516113281,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 53,
+            "action": "GAAction_DurationBullet_Simple_C_12",
+            "guid": "bf961c740e1f3e4b93a4dfed4873618e",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/BaiShanFengLeiJian/Default/BulletData_Hun_FengLeiJian_C_05"
+              }
+            ]
+          },
+          {
+            "index": 64,
+            "exportByteOffset": 2518,
+            "startTime": 3.5006141662597656,
+            "duration": 0.08828091621398926,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 66,
+            "action": "LGAAction_DurationBulletWithDeflect_1",
+            "guid": "61130493c04e7b4ea70422a3558cf705",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 19,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/BaiShanFengLeiJian/Default/BulletData_Hun_FengLeiJian_C_06"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": []
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_BaiYing_C.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.BaiYing.BuffAtk.01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/Default/GA_Hun_BaiYing_C.GA_Hun_BaiYing_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          3.6
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.22406,
+          "before_time": 3.6
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.BaiYing"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_BaiYing_C",
+          "CombatArt.Final",
+          "LGAAction_DurationBulletWithDeflect_2",
+          "BulletData_Hun_BaiYing_C_08",
+          "白影",
+          "WHITESHADOW",
+          "白影",
+          "백영",
+          "Белая Тень",
+          "白影",
+          "OMBRE BLANCHE",
+          "WEISSSCHATTEN",
+          "SOMBRA BLANCA",
+          "SOMBRA BRANCA",
+          "OMBRA BIANCA",
+          "ดาบเงาขาว",
+          "BẠCH ẢNH",
+          "SOMBRA BRANCA",
+          "SOMBRA BLANCA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "白影",
+          "en": "WHITESHADOW",
+          "ja": "白影",
+          "ko": "백영",
+          "ru": "Белая Тень",
+          "zh-Hant": "白影",
+          "fr": "OMBRE BLANCHE",
+          "de": "WEISSSCHATTEN",
+          "es-ES": "SOMBRA BLANCA",
+          "pt-BR": "SOMBRA BRANCA",
+          "it": "OMBRA BIANCA",
+          "th": "ดาบเงาขาว",
+          "vi": "BẠCH ẢNH",
+          "pt-PT": "SOMBRA BRANCA",
+          "es-419": "SOMBRA BLANCA"
+        },
+        "category": "weapons/Weapon_016/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/Default/GA_Hun_BaiYing_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BaiYing/Weapon_Hun_BaiYing"
+        ],
+        "nativeSourceLabel": "白影 · 寒冰击",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 9,
+            "exportByteOffset": 377,
+            "startTime": 0.22405576705932617,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 4,
+            "action": "GAA_GameplayEffectFrame_C_0",
+            "guid": "30bc3caf7327734599d03c87912ccd73",
+            "trackIndex": 6,
+            "sections": [],
+            "class": "/MagCombatAbilities/Actions/GAA_GameplayEffectFrame",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 2,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BaiYing/GE_BaiYing_Buff"
+              }
+            ]
+          }
+        ],
+        "priorDamageEnd": 3.511786937713623,
+        "entryTime": 3.6,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": 0,
+            "duration": 6.083333492279053,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 60,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "42a633be21b518449e82428dc613d569",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/BaiYing/Hun_BaiYing_C_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 45,
+            "startTime": 0,
+            "duration": 6.083333492279053,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 47,
+            "action": "GAAction_ActionPhase_C_1",
+            "guid": "de1822b4836f694383bec6bb159978a4",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.07220995426177979,
+                "1": "80cdffff"
+              },
+              {
+                "0": 4.946873664855957,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.12600231170654297,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 0.9382476806640625,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 2,
+            "exportByteOffset": 124,
+            "startTime": 0,
+            "duration": 5.123267650604248,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 51,
+            "action": "LGAAction_AbstractEndure_0",
+            "guid": "bb212f27a60b814eb52c7a7f8d182208",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_AbstractEndure",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 4,
+            "exportByteOffset": 198,
+            "startTime": 0,
+            "duration": 4.2059478759765625,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 61,
+            "action": "LGAAction_RotationMode_0",
+            "guid": "b5d6bc14a93d234e8b7ae9bc180ad864",
+            "trackIndex": 4,
+            "sections": [],
+            "class": "/Script/MagCombatAbilities.LGAAction_RotationMode",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 38,
+            "exportByteOffset": 1480,
+            "startTime": 2.7151901721954346,
+            "duration": 0.9148423671722412,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 9,
+            "action": "GAA_PBZWeaponTrail_C_4",
+            "guid": "5d02f02e59963b4aaf5ab175f7c3c8c3",
+            "trackIndex": 8,
+            "sections": [],
+            "class": "/PBZCombatAsset/Prototypes/Actions/GAA_PBZWeaponTrail",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 55,
+            "exportByteOffset": 2163,
+            "startTime": 4.288000106811523,
+            "duration": 0.06422233581542969,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 55,
+            "action": "LGAAction_DurationBulletWithDeflect_2",
+            "guid": "06209f766de8d24488bb67269ccdaeff",
+            "trackIndex": 5,
+            "sections": [
+              {
+                "0": 0.032111167907714844,
+                "1": "0100dcff"
+              },
+              {
+                "0": 0.032111167907714844,
+                "1": "3a3aceff"
+              }
+            ],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 13,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/BaiYing/Default/BulletData_Hun_BaiYing_C_08"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": [
+          {
+            "index": 48,
+            "exportByteOffset": 1914,
+            "startTime": 3.470764398574829,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 2,
+            "action": "GAA_DelayDeflectProjectileBullet_C_1",
+            "guid": "0a4fc9e0395e7d4798eba263304a9389",
+            "trackIndex": 7,
+            "sections": [],
+            "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 9,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/BaiYing/Default/BulletData_Hun_BaiYing_C_07"
+              }
+            ]
+          }
+        ],
+        "setupSemantics": "GE_BaiYing_Buff single-frame application at0.22405596 executes before entry; later final C08 is retained."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_Double_C.CombatArt.Followup",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Double.ATB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/GA_Hun_Double_C.GA_Hun_Double_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          2.7
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.001,
+          "before_time": 2.7
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.DoubleBlade.Default"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Followup",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.followup"
+        ],
+        "searchAliases": [
+          "GA_Hun_Double_C",
+          "CombatArt.Followup",
+          "GAAction_DurationBullet_Simple_C_10",
+          "GAAction_DurationBullet_Simple_C_11",
+          "GAAction_DurationBullet_Simple_C_12",
+          "GAAction_DurationBullet_Simple_C_13",
+          "GAAction_DurationBullet_Simple_C_14",
+          "GAAction_DurationBullet_Simple_C_15",
+          "GAAction_DurationBullet_Simple_C_16",
+          "GAAction_DurationBullet_Simple_C_17",
+          "GAAction_DurationBullet_Simple_C_18",
+          "B_Hun_Double_C",
+          "黑伤双刃",
+          "SANGUINE TWIN",
+          "黒傷・双刀",
+          "흑상 쌍검",
+          "Парные Багрянцы",
+          "黑傷雙刃",
+          "DOUBLE SANGUINE",
+          "BLUTROT-ZWILLINGSKLINGEN",
+          "SANGUINAS GEMELAS",
+          "LÂMINAS GÊMEAS DA SANGUÍNEA",
+          "SANGUINARIE GEMELLE",
+          "ดาบคู่แผลนิลกาฬ",
+          "SONG ĐAO HẮC THƯƠNG",
+          "GÉMEAS SANGUINE",
+          "SANGUINAS GEMELAS"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "黑伤双刃",
+          "en": "SANGUINE TWIN",
+          "ja": "黒傷・双刀",
+          "ko": "흑상 쌍검",
+          "ru": "Парные Багрянцы",
+          "zh-Hant": "黑傷雙刃",
+          "fr": "DOUBLE SANGUINE",
+          "de": "BLUTROT-ZWILLINGSKLINGEN",
+          "es-ES": "SANGUINAS GEMELAS",
+          "pt-BR": "LÂMINAS GÊMEAS DA SANGUÍNEA",
+          "it": "SANGUINARIE GEMELLE",
+          "th": "ดาบคู่แผลนิลกาฬ",
+          "vi": "SONG ĐAO HẮC THƯƠNG",
+          "pt-PT": "GÉMEAS SANGUINE",
+          "es-419": "SANGUINAS GEMELAS"
+        },
+        "category": "weapons/Weapon_022/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/GA_Hun_Double_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Double/Weapon_Hun_Double"
+        ],
+        "nativeSourceLabel": "重攻击",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 2,
+            "exportByteOffset": 132,
+            "startTime": 0,
+            "duration": 0,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 54,
+            "action": "GAAction_ChangeArmed_C_0",
+            "guid": "8880ae2e8151cc46958ff078018dc626",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 2.5356285572052,
+        "entryTime": 2.7,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": -1.1920928955078125e-07,
+            "duration": 6.377783298492432,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": -9.999999747378752e-05,
+            "actionPointer": 76,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "6fe8280ccb872d47ba6873206a9ada16",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/DoubleBlade/Default/AM_Hun_Double_C"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 53,
+            "startTime": 0,
+            "duration": 6.377783298492432,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 52,
+            "action": "LGAAction_ActionPhase_C_0",
+            "guid": "e35e7ec2a01fd94a952ca8e31aeb61e3",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.8020338416099548,
+                "1": "80cdffff"
+              },
+              {
+                "0": 4.050021648406982,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.607074499130249,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 0.9186530113220215,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 32,
+            "exportByteOffset": 1302,
+            "startTime": 2.5970983505249023,
+            "duration": 0.1333329975605011,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 48,
+            "action": "GAA_PlaySound_C_7",
+            "guid": "6f7a835b58561d459e6dd16a0fda59ef",
+            "trackIndex": 12,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/Game/Wwise/Events/VO/Int/Hun/Battle/SFX_Combat_VO_Hun_BiQi_02_Long"
+              }
+            ]
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 35,
+            "exportByteOffset": 1419,
+            "startTime": 2.837909698486328,
+            "duration": 0.1845329999923706,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": -9.999999747378752e-05,
+            "actionPointer": 57,
+            "action": "GAAction_DurationBullet_Simple_C_10",
+            "guid": "10476a2956fb4841b64e352336f6708a",
+            "trackIndex": 4,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/CCC/B_Hun_Double_C"
+              }
+            ]
+          },
+          {
+            "index": 39,
+            "exportByteOffset": 1583,
+            "startTime": 3.010946750640869,
+            "duration": 0.1468806266784668,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 58,
+            "action": "GAAction_DurationBullet_Simple_C_11",
+            "guid": "06bb00d1e96f0040868a80b9b6dcbe68",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/CCC/B_Hun_Double_C"
+              }
+            ]
+          },
+          {
+            "index": 41,
+            "exportByteOffset": 1661,
+            "startTime": 3.176839828491211,
+            "duration": 0.13085079193115234,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 59,
+            "action": "GAAction_DurationBullet_Simple_C_12",
+            "guid": "bf961c740e1f3e4b93a4dfed4873618e",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/CCC/B_Hun_Double_C"
+              }
+            ]
+          },
+          {
+            "index": 43,
+            "exportByteOffset": 1739,
+            "startTime": 3.443760633468628,
+            "duration": 0.11183810234069824,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 60,
+            "action": "GAAction_DurationBullet_Simple_C_13",
+            "guid": "3030c09921de0d48817fa2d3f0057c0e",
+            "trackIndex": 4,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/CCC/B_Hun_Double_C"
+              }
+            ]
+          },
+          {
+            "index": 48,
+            "exportByteOffset": 1934,
+            "startTime": 3.557462692260742,
+            "duration": 0.08536982536315918,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 61,
+            "action": "GAAction_DurationBullet_Simple_C_14",
+            "guid": "b90c32935d7e9542be250b5bad6562de",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/CCC/B_Hun_Double_C"
+              }
+            ]
+          },
+          {
+            "index": 51,
+            "exportByteOffset": 2051,
+            "startTime": 3.6901772022247314,
+            "duration": 0.07828688621520996,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 62,
+            "action": "GAAction_DurationBullet_Simple_C_15",
+            "guid": "a8ef29998a53d9469608e51c76da8ee0",
+            "trackIndex": 4,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/CCC/B_Hun_Double_C"
+              }
+            ]
+          },
+          {
+            "index": 53,
+            "exportByteOffset": 2129,
+            "startTime": 3.7718191146850586,
+            "duration": 0.1192941665649414,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 63,
+            "action": "GAAction_DurationBullet_Simple_C_16",
+            "guid": "d8841eaa5c721141a1220d9e0f70ab58",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/CCC/B_Hun_Double_C"
+              }
+            ]
+          },
+          {
+            "index": 57,
+            "exportByteOffset": 2285,
+            "startTime": 3.9071435928344727,
+            "duration": 0.06598448753356934,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 64,
+            "action": "GAAction_DurationBullet_Simple_C_17",
+            "guid": "54aa6058b7e79841bb91fe9f05b3cdb1",
+            "trackIndex": 4,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/CCC/B_Hun_Double_C"
+              }
+            ]
+          },
+          {
+            "index": 67,
+            "exportByteOffset": 2675,
+            "startTime": 4.424222946166992,
+            "duration": 0.05544567108154297,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": -9.999999747378752e-05,
+            "actionPointer": 65,
+            "action": "GAAction_DurationBullet_Simple_C_18",
+            "guid": "bbadcad8b2d6cc44bd5f9e8b226435f8",
+            "trackIndex": 4,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/CCC/B_Hun_Double_C"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": []
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_DualHook_C.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.DualHook.DB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_C.GA_Hun_DualHook_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          2.8
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.00194,
+          "before_time": 2.8
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.DualHook"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_DualHook_C",
+          "CombatArt.Final",
+          "LGAAction_DurationBulletWithDeflect_5",
+          "LGAAction_DurationBulletWithDeflect_6",
+          "BD_Hun_DualHook_C_07",
+          "BD_Hun_DualHook_C_08",
+          "别离残钩",
+          "PARTING HOOKS",
+          "別離残鉤",
+          "이별 잔구",
+          "Крюки Разлуки",
+          "別離殘鉤",
+          "CROCHETS D'ADIEU",
+          "TRENNENDE HAKEN",
+          "GANCHOS DE DESPEDIDA",
+          "GANCHOS DA DESPEDIDA",
+          "UNCINI DEL COMMIATO",
+          "ตะขอพรากวิญญาณ",
+          "BIỆT LY TÀN CÂU",
+          "GANCHOS DO ADEUS",
+          "GANCHOS DEL ADIÓS"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "别离残钩",
+          "en": "PARTING HOOKS",
+          "ja": "別離残鉤",
+          "ko": "이별 잔구",
+          "ru": "Крюки Разлуки",
+          "zh-Hant": "別離殘鉤",
+          "fr": "CROCHETS D'ADIEU",
+          "de": "TRENNENDE HAKEN",
+          "es-ES": "GANCHOS DE DESPEDIDA",
+          "pt-BR": "GANCHOS DA DESPEDIDA",
+          "it": "UNCINI DEL COMMIATO",
+          "th": "ตะขอพรากวิญญาณ",
+          "vi": "BIỆT LY TÀN CÂU",
+          "pt-PT": "GANCHOS DO ADEUS",
+          "es-419": "GANCHOS DEL ADIÓS"
+        },
+        "category": "weapons/Weapon_028/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/DualHook/Weapon_Hun_DualHook"
+        ],
+        "nativeSourceLabel": "别离残钩 · 反制",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 6,
+            "exportByteOffset": 284,
+            "startTime": 0.0019331835210323334,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 51,
+            "action": "GAAction_ChangeArmed_C_0",
+            "guid": "b834800b1bb4b34385eea6751c9a5fd1",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 2.659365177154541,
+        "entryTime": 2.8,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": 0,
+            "duration": 7.0333333015441895,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 84,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "c2931dca447e004695f6d77917faa45f",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 2,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/DualHook/Hun_BieLiCanGou_Unique_Skill_01_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 45,
+            "startTime": 0,
+            "duration": 7.0333333015441895,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 49,
+            "action": "LGAAction_ActionPhase_C_0",
+            "guid": "90804ef3d1cdf84daebfc3d01128096c",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.1783556193113327,
+                "1": "80cdffff"
+              },
+              {
+                "0": 4.505743980407715,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.7324528694152832,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 1.6167807579040527,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 46,
+            "exportByteOffset": 1852,
+            "startTime": 2.666083574295044,
+            "duration": 0.5926651954650879,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 88,
+            "action": "LGAAction_RotationMode_5",
+            "guid": "6aaac36f6a80eb4a9a1be439ef857ddd",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/MagCombatAbilities.LGAAction_RotationMode",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 61,
+            "exportByteOffset": 2433,
+            "startTime": 3.462238073348999,
+            "duration": 0.13669538497924805,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 75,
+            "action": "LGAAction_DurationBulletWithDeflect_5",
+            "guid": "b902c044eb5b8c4ea5afee75f9520c5c",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 11,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DualHook/BD_Hun_DualHook_C_07"
+              }
+            ]
+          },
+          {
+            "index": 71,
+            "exportByteOffset": 2815,
+            "startTime": 3.8867759704589844,
+            "duration": 0.19669151306152344,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 76,
+            "action": "LGAAction_DurationBulletWithDeflect_6",
+            "guid": "3d70e4680e8755429804a5cc817ab49d",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 13,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DualHook/BD_Hun_DualHook_C_08"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": []
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_Horizontal_C.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Horizontal.BladeWave",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_C.GA_Hun_Horizontal_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          3.2
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.001,
+          "before_time": 3.2
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.Horizontal"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_Horizontal_C",
+          "CombatArt.Final",
+          "LGAAction_DurationBulletWithDeflect_3",
+          "B_Hun_Horizontal_C_06",
+          "荡寇凶刃",
+          "JUGGERNAUT",
+          "蕩寇凶刃",
+          "탕구의 흉도",
+          "Гроза Разбойников",
+          "蕩寇凶刃",
+          "SABRE TITAN",
+          "BANDITENTÖTER",
+          "COLOSO",
+          "FORÇA IRREFREÁVEL",
+          "LAMA STERMINATRICE",
+          "คมพิฆาตโจร",
+          "ĐÃNG KHẤU HUNG NHẬN",
+          "MASTODONTE",
+          "DEVASTADOR"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "荡寇凶刃",
+          "en": "JUGGERNAUT",
+          "ja": "蕩寇凶刃",
+          "ko": "탕구의 흉도",
+          "ru": "Гроза Разбойников",
+          "zh-Hant": "蕩寇凶刃",
+          "fr": "SABRE TITAN",
+          "de": "BANDITENTÖTER",
+          "es-ES": "COLOSO",
+          "pt-BR": "FORÇA IRREFREÁVEL",
+          "it": "LAMA STERMINATRICE",
+          "th": "คมพิฆาตโจร",
+          "vi": "ĐÃNG KHẤU HUNG NHẬN",
+          "pt-PT": "MASTODONTE",
+          "es-419": "DEVASTADOR"
+        },
+        "category": "weapons/Weapon_019/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Horizontal/Weapon_Hun_Horizontal"
+        ],
+        "nativeSourceLabel": "荡寇凶刃 · 重攻击",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 3,
+            "exportByteOffset": 159,
+            "startTime": 0,
+            "duration": 0,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 75,
+            "action": "GAAction_ChangeArmed_C_0",
+            "guid": "1589a52bd185264da051d7702adf313e",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 2.5130743980407715,
+        "entryTime": 3.2,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": 0,
+            "duration": 7.066666603088379,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 96,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "ed01bf8829e11e4fbee3f8e427640008",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/LongBlade/Horizontal/AM_Hun_Horizontal_C"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 45,
+            "startTime": 0,
+            "duration": 6.9666666984558105,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 74,
+            "action": "GAAction_ActionPhase_C_0",
+            "guid": "bfcbac85fa63fa46b3165f03dcb1cc21",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.5254793167114258,
+                "1": "80cdffff"
+              },
+              {
+                "0": 3.9702696800231934,
+                "1": "8881ffff"
+              },
+              {
+                "0": 1.0844535827636719,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 1.3864641189575195,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 67,
+            "exportByteOffset": 2683,
+            "startTime": 2.9707515239715576,
+            "duration": 0.2629390060901642,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 25,
+            "action": "GAA_PlaySound_C_16",
+            "guid": "4c4d23497e32ab449b32884df4fd24c6",
+            "trackIndex": 10,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Hit/Hero_Hit/Sword/SFX_Combat_Hit_Sword_Ground_L_05"
+              }
+            ]
+          },
+          {
+            "index": 70,
+            "exportByteOffset": 2800,
+            "startTime": 3.0731282234191895,
+            "duration": 0.2629390060901642,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 17,
+            "action": "GAA_PlaySound_C_0",
+            "guid": "09c923d26f58cc4383c0d9e877ca0ae9",
+            "trackIndex": 6,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/Game/Wwise/Events/VO/Int/Hun/Battle/SFX_Combat_VO_Hun_BiQi_02_Long"
+              }
+            ]
+          },
+          {
+            "index": 71,
+            "exportByteOffset": 2839,
+            "startTime": 3.0919644832611084,
+            "duration": 0.16666699945926666,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 62,
+            "action": "GAA_PlaySound_C_54",
+            "guid": "13fec8312f0c284bbcecc8ac475660f5",
+            "trackIndex": 15,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/SFX_Combat_Hun_Common_Roll_Heavy"
+              }
+            ]
+          },
+          {
+            "index": 73,
+            "exportByteOffset": 2913,
+            "startTime": 3.164273262023926,
+            "duration": 0.1354060024023056,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 71,
+            "action": "GAA_PlaySound_Opt_C_5",
+            "guid": "749a7801b9af9445994452fcab9bf9b4",
+            "trackIndex": 16,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/Wave_Stab_BaDao/GuiTouBlade/SFX_Combat_Hun_GuiTouBlade_Hit"
+              }
+            ]
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 88,
+            "exportByteOffset": 3490,
+            "startTime": 4.0520172119140625,
+            "duration": 0.05803489685058594,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": -9.999999747378752e-05,
+            "actionPointer": 91,
+            "action": "LGAAction_DurationBulletWithDeflect_3",
+            "guid": "8095a9c14cb8ae468386e8dee66d9852",
+            "trackIndex": 14,
+            "sections": [
+              {
+                "0": 0.02901744842529297,
+                "1": "0100dcff"
+              },
+              {
+                "0": 0.02901744842529297,
+                "1": "3a3aceff"
+              }
+            ],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 11,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/Horizontal/Default/B_Hun_Horizontal_C_06"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": []
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_Iron_C.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Iron.BCharge",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_C.GA_Hun_Iron_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          4.58
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.001,
+          "before_time": 4.58
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.Iron"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_Iron_C",
+          "CombatArt.Final",
+          "GAAction_DurationBullet_Simple_C_6",
+          "B_Hun_Iron_C",
+          "残钢刃",
+          "JAGGED STEEL",
+          "残鋼刃",
+          "잔강인",
+          "Щербатая Сталь",
+          "殘鋼刃",
+          "LAME ÉBRÉCHÉE",
+          "GEZACKTER STAHL",
+          "ACERO SERRADO",
+          "LÂMINA DESGASTADA",
+          "LAMA DENTELLATA",
+          "คมดาบฉานกัง",
+          "TÀN CƯƠNG ĐAO",
+          "AÇO CORROÍDO",
+          "ACERO SERRADO"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "残钢刃",
+          "en": "JAGGED STEEL",
+          "ja": "残鋼刃",
+          "ko": "잔강인",
+          "ru": "Щербатая Сталь",
+          "zh-Hant": "殘鋼刃",
+          "fr": "LAME ÉBRÉCHÉE",
+          "de": "GEZACKTER STAHL",
+          "es-ES": "ACERO SERRADO",
+          "pt-BR": "LÂMINA DESGASTADA",
+          "it": "LAMA DENTELLATA",
+          "th": "คมดาบฉานกัง",
+          "vi": "TÀN CƯƠNG ĐAO",
+          "pt-PT": "AÇO CORROÍDO",
+          "es-419": "ACERO SERRADO"
+        },
+        "category": "weapons/Weapon_002/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Iron/Weapon_Hun_Iron"
+        ],
+        "nativeSourceLabel": "残钢刃 · 血刃蓄力",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 3,
+            "exportByteOffset": 167,
+            "startTime": 0,
+            "duration": 0,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 48,
+            "action": "GAAction_ChangeArmed_C_1",
+            "guid": "5e7ee1a51b8f3a438c64262b9700d2bf",
+            "trackIndex": 6,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 4.567581653594971,
+        "entryTime": 4.58,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 14,
+            "startTime": 0,
+            "duration": 6.9666666984558105,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 63,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "6cacfec08beb7b46a0b2ea6a92b89bcd",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 2,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/IronBlade/Hun_CanGangRen_Unique_Skill_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 49,
+            "startTime": 0,
+            "duration": 6.9666666984558105,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 46,
+            "action": "GAAction_ActionPhase_C_0",
+            "guid": "0075289d08c06b4a8b02e34b259a4d5b",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.5648808479309082,
+                "1": "80cdffff"
+              },
+              {
+                "0": 4.785632133483887,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.34616613388061523,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 1.2699875831604004,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 41,
+            "exportByteOffset": 1621,
+            "startTime": 4.1369733810424805,
+            "duration": 0.7930574417114258,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 67,
+            "action": "LGAAction_RotationMode_7",
+            "guid": "f5fae2ff8c6cfd4686321f151b699f0c",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/Script/MagCombatAbilities.LGAAction_RotationMode",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 46,
+            "exportByteOffset": 1812,
+            "startTime": 4.388794898986816,
+            "duration": 0.2872915267944336,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 14,
+            "action": "GAA_PBZWeaponTrail_C_4",
+            "guid": "eb29670d1a3ee04ab6db6aac244559cf",
+            "trackIndex": 6,
+            "sections": [],
+            "class": "/PBZCombatAsset/Prototypes/Actions/GAA_PBZWeaponTrail",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 48,
+            "exportByteOffset": 1890,
+            "startTime": 4.428373336791992,
+            "duration": 0.1905909925699234,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 19,
+            "action": "GAA_PlaySound_C_0",
+            "guid": "526f8b552d82ed40abc60ae682ee664b",
+            "trackIndex": 10,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/SFX_Combat_Hun_Common_Roll"
+              }
+            ]
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 56,
+            "exportByteOffset": 2198,
+            "startTime": 4.91051721572876,
+            "duration": 0.21233654022216797,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 55,
+            "action": "GAAction_DurationBullet_Simple_C_6",
+            "guid": "4141bb5ff7342549b246996d329f878f",
+            "trackIndex": 4,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/Iron/Default/C/B_Hun_Iron_C"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": [
+          {
+            "index": 42,
+            "exportByteOffset": 1660,
+            "startTime": 4.221499443054199,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 9,
+            "action": "GAA_InputBuffer_C_0",
+            "guid": "21cdf968c7f79548a95dbb4ec6e2291a",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/SGameCombatSystem/AdvancedUtilities/Actions/GAA_InputBuffer",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ]
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_Jade_C_Range.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.Special.Jade.DB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/New/GA_Hun_Jade_C_Range.GA_Hun_Jade_C_Range_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          3.1
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.001,
+          "before_time": 3.1
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.Jade"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_Jade_C_Range",
+          "CombatArt.Final",
+          "GAAction_DurationBullet_Simple_C_10",
+          "GAAction_DurationBullet_Simple_C_18",
+          "B_Hun_Jade_C_09",
+          "B_Hun_Jade_C",
+          "玉双环",
+          "SEAMLESS DEATH",
+          "玉双環",
+          "옥쌍환",
+          "Безупречная Смерть",
+          "玉雙環",
+          "DOUCE MORT",
+          "NAHTLOSER TOD",
+          "MUERTE FLUIDA",
+          "MORTE CIRCULAR",
+          "MORTE FLUIDA",
+          "จักรหยกคู่",
+          "NGỌC SONG HOÀN",
+          "MORTE SUAVE",
+          "MUERTE PERFECTA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "玉双环",
+          "en": "SEAMLESS DEATH",
+          "ja": "玉双環",
+          "ko": "옥쌍환",
+          "ru": "Безупречная Смерть",
+          "zh-Hant": "玉雙環",
+          "fr": "DOUCE MORT",
+          "de": "NAHTLOSER TOD",
+          "es-ES": "MUERTE FLUIDA",
+          "pt-BR": "MORTE CIRCULAR",
+          "it": "MORTE FLUIDA",
+          "th": "จักรหยกคู่",
+          "vi": "NGỌC SONG HOÀN",
+          "pt-PT": "MORTE SUAVE",
+          "es-419": "MUERTE PERFECTA"
+        },
+        "category": "weapons/Weapon_029/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/New/GA_Hun_Jade_C_Range",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/JadeDualChakram/Weapon_Hun_JadeDual",
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/JadeDualChakram/Weapon_Hun_JadeDual_Evaluation"
+        ],
+        "nativeSourceLabel": "玉双环 · 蓄力飞环",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 2,
+            "exportByteOffset": 132,
+            "startTime": 0,
+            "duration": 0,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 84,
+            "action": "GAAction_ChangeArmed_C_0",
+            "guid": "8880ae2e8151cc46958ff078018dc626",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 3.0335292667150497,
+        "entryTime": 3.1,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": -2.9802322387695312e-08,
+            "duration": 7.166666507720947,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": -9.999999747378752e-05,
+            "actionPointer": 100,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "6fe8280ccb872d47ba6873206a9ada16",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/Jade/AM_Hun_Jade_C_Range"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 53,
+            "startTime": 0,
+            "duration": 7.166666507720947,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 82,
+            "action": "LGAAction_ActionPhase_C_0",
+            "guid": "e35e7ec2a01fd94a952ca8e31aeb61e3",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.6717829704284668,
+                "1": "80cdffff"
+              },
+              {
+                "0": 3.8028063774108887,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.7291078567504883,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 1.9629693031311035,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 23,
+            "exportByteOffset": 931,
+            "startTime": 1.1281898021697998,
+            "duration": 2.1348464488983154,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 98,
+            "action": "LGAAction_MotionWarping_5",
+            "guid": "8b2ee6a84c1e934a882cd61260634725",
+            "trackIndex": 4,
+            "sections": [],
+            "class": "/Script/MagCombatAbilities.LGAAction_MotionWarping",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 49,
+            "exportByteOffset": 1981,
+            "startTime": 2.377211332321167,
+            "duration": 0.9573349952697754,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 9.999999747378752e-05,
+            "actionPointer": 91,
+            "action": "GAAction_WeaponParticle_C_2",
+            "guid": "41941c5ea5d9f34c8426d6f9b4e858a6",
+            "trackIndex": 8,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_WeaponParticle",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 54,
+            "exportByteOffset": 2180,
+            "startTime": 2.5479092597961426,
+            "duration": 0.7934329509735107,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 9.999999747378752e-05,
+            "actionPointer": 90,
+            "action": "GAAction_WeaponParticle_C_1",
+            "guid": "bce17c27319edb4eab63d3243d243463",
+            "trackIndex": 7,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_WeaponParticle",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 61,
+            "exportByteOffset": 2461,
+            "startTime": 2.928788185119629,
+            "duration": 0.21768799424171448,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 36,
+            "action": "GAA_PlaySound_C_19",
+            "guid": "eeff9a39f268eb4595541e5acfd424d5",
+            "trackIndex": 13,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/Game/Wwise/Events/SFX/Move/Hero/InUse/SFX_Footsteps_Hun_Dash_Forward_01"
+              }
+            ]
+          },
+          {
+            "index": 62,
+            "exportByteOffset": 2500,
+            "startTime": 2.9436492919921875,
+            "duration": 0.8860464096069336,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": -9.999999747378752e-05,
+            "actionPointer": 101,
+            "action": "LGAAction_RotationMode_0",
+            "guid": "7301b3f2953f724db2f404a6937b72d2",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/MagCombatAbilities.LGAAction_RotationMode",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 63,
+            "exportByteOffset": 2543,
+            "startTime": 2.947240114212036,
+            "duration": 0.1771239936351776,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 34,
+            "action": "GAA_PlaySound_C_17",
+            "guid": "7ed73040ae6c4848a3b9d86c2d7cf46a",
+            "trackIndex": 12,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/Wave_Stab_BaDao/SFX_Combat_Hun_Chakram_Wave_Right"
+              }
+            ]
+          },
+          {
+            "index": 64,
+            "exportByteOffset": 2582,
+            "startTime": 3.096221446990967,
+            "duration": 0.19989199936389923,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 56,
+            "action": "GAA_PlaySound_C_38",
+            "guid": "2338b5aaf995a643b79ccd7b19efbfd8",
+            "trackIndex": 15,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Move/Hero/InUse/SFX_Footsteps_Hun_Dash_Forward_01"
+              }
+            ]
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 73,
+            "exportByteOffset": 2937,
+            "startTime": 3.448505401611328,
+            "duration": 0.20506906509399414,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 9.999999747378752e-05,
+            "actionPointer": 85,
+            "action": "GAAction_DurationBullet_Simple_C_10",
+            "guid": "10476a2956fb4841b64e352336f6708a",
+            "trackIndex": 6,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_09"
+              }
+            ]
+          },
+          {
+            "index": 82,
+            "exportByteOffset": 3300,
+            "startTime": 4.072051525115967,
+            "duration": 0.15453100204467773,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 86,
+            "action": "GAAction_DurationBullet_Simple_C_18",
+            "guid": "bbadcad8b2d6cc44bd5f9e8b226435f8",
+            "trackIndex": 6,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": []
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_Long_C.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Long.BSup",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Default/GA_Hun_Long_C.GA_Hun_Long_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          3.1
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.001,
+          "before_time": 3.1
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.LongBlade.Default"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_Long_C",
+          "CombatArt.Final",
+          "GAAction_DurationBullet_Simple_C_4",
+          "GAAction_DurationBullet_Simple_C_5",
+          "B_Hun_Long_C_05",
+          "B_Hun_Long_C_06",
+          "长形黑伤",
+          "SANGUINE REACH",
+          "黒傷・長刀",
+          "장형 흑상",
+          "Длинный Багрянец",
+          "長形黑傷",
+          "SANGUINE ALLONGÉE",
+          "BLUTROT-LANGKLINGE",
+          "SANGUINA EXTENSA",
+          "SANGUÍNEA LONGA",
+          "GRAN SANGUINARIA",
+          "ดาบแผลนิลกาฬทรงยาว",
+          "HẮC THƯƠNG TRƯỜNG KIẾM",
+          "SANGUINE DEVASTADORA",
+          "SANGUINA ALARGADA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "长形黑伤",
+          "en": "SANGUINE REACH",
+          "ja": "黒傷・長刀",
+          "ko": "장형 흑상",
+          "ru": "Длинный Багрянец",
+          "zh-Hant": "長形黑傷",
+          "fr": "SANGUINE ALLONGÉE",
+          "de": "BLUTROT-LANGKLINGE",
+          "es-ES": "SANGUINA EXTENSA",
+          "pt-BR": "SANGUÍNEA LONGA",
+          "it": "GRAN SANGUINARIA",
+          "th": "ดาบแผลนิลกาฬทรงยาว",
+          "vi": "HẮC THƯƠNG TRƯỜNG KIẾM",
+          "pt-PT": "SANGUINE DEVASTADORA",
+          "es-419": "SANGUINA ALARGADA"
+        },
+        "category": "weapons/Weapon_012/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Default/GA_Hun_Long_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Long/Weapon_Hun_Long",
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Placeholder/Weapon_Hun_MoQie",
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Placeholder/Weapon_Hun_XieHuo"
+        ],
+        "nativeSourceLabel": "重攻击",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 2,
+            "exportByteOffset": 124,
+            "startTime": 0,
+            "duration": 0,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 44,
+            "action": "GAAction_ChangeArmed_C_0",
+            "guid": "b1e5702e53c5e145a1a100530fd8e1d7",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 1.8332252502441406,
+        "entryTime": 3.1,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": 0,
+            "duration": 8.433333396911621,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 63,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "ed01bf8829e11e4fbee3f8e427640008",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/LongBlade/Default/AM_Hun_Long_C_New"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 45,
+            "startTime": 0,
+            "duration": 8.433333396911621,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 43,
+            "action": "GAAction_ActionPhase_C_0",
+            "guid": "bfcbac85fa63fa46b3165f03dcb1cc21",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.45762571692466736,
+                "1": "80cdffff"
+              },
+              {
+                "0": 4.551909923553467,
+                "1": "8881ffff"
+              },
+              {
+                "0": 1.8316006660461426,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 1.5921969413757324,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 11,
+            "exportByteOffset": 467,
+            "startTime": 0.457905113697052,
+            "duration": 4.547398567199707,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 51,
+            "action": "GAAction_WeaponParticle_C_0",
+            "guid": "c8ed19ce4cd84043bcce0cc9694800ee",
+            "trackIndex": 13,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_WeaponParticle",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 40,
+            "exportByteOffset": 1602,
+            "startTime": 2.904604434967041,
+            "duration": 0.20000000298023224,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 33,
+            "action": "GAA_PlaySound_C_26",
+            "guid": "4b5c9274e482e54cbe3821fc688dd162",
+            "trackIndex": 10,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/Game/Wwise/Events/SFX/Move/Hero/InUse/SFX_Footsteps_Hun_Jump_Cloth_Armour_01"
+              }
+            ]
+          },
+          {
+            "index": 41,
+            "exportByteOffset": 1641,
+            "startTime": 3.097317695617676,
+            "duration": 0.20000000298023224,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 18,
+            "action": "GAA_PlaySound_C_12",
+            "guid": "866fb797ddc18949a1d57b8ab5fbc29e",
+            "trackIndex": 7,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/SFX_Combat_Hun_Common_Roll"
+              }
+            ]
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 48,
+            "exportByteOffset": 1910,
+            "startTime": 3.684345245361328,
+            "duration": 0.20791077613830566,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 49,
+            "action": "GAAction_DurationBullet_Simple_C_4",
+            "guid": "651c1abe87e92d468bdcec82e3a7f684",
+            "trackIndex": 8,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/Default/B_Hun_Long_C_05"
+              }
+            ]
+          },
+          {
+            "index": 54,
+            "exportByteOffset": 2144,
+            "startTime": 4.240688323974609,
+            "duration": 0.26313161849975586,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 50,
+            "action": "GAAction_DurationBullet_Simple_C_5",
+            "guid": "3ce67b1c1aa9444a81d3d0310c6560be",
+            "trackIndex": 8,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 3,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/Default/B_Hun_Long_C_06"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": []
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_PoJun_C.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.PoJun.DB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_C.GA_Hun_PoJun_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          3.3
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.3061,
+          "before_time": 3.3
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.PoJun"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_PoJun_C",
+          "CombatArt.Final",
+          "LGAAction_DurationBulletWithDeflect_5",
+          "BD_Hun_PoJun_C_06",
+          "破军",
+          "ARMYBREAKER",
+          "破軍",
+          "파군",
+          "Сокрушитель Строя",
+          "破軍",
+          "BRISE-ARMÉE",
+          "ARMEEBRECHER",
+          "ROMPEEJÉRCITOS",
+          "QUEBRA-EXÉRCITOS",
+          "SPEZZA-ESERCITI",
+          "ดาบพิฆาตทัพ",
+          "PHÁ QUÂN",
+          "QUEBRA-EXÉRCITOS",
+          "ROMPEEJÉRCITOS"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "破军",
+          "en": "ARMYBREAKER",
+          "ja": "破軍",
+          "ko": "파군",
+          "ru": "Сокрушитель Строя",
+          "zh-Hant": "破軍",
+          "fr": "BRISE-ARMÉE",
+          "de": "ARMEEBRECHER",
+          "es-ES": "ROMPEEJÉRCITOS",
+          "pt-BR": "QUEBRA-EXÉRCITOS",
+          "it": "SPEZZA-ESERCITI",
+          "th": "ดาบพิฆาตทัพ",
+          "vi": "PHÁ QUÂN",
+          "pt-PT": "QUEBRA-EXÉRCITOS",
+          "es-419": "ROMPEEJÉRCITOS"
+        },
+        "category": "weapons/Weapon_018/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/PoJun/Weapon_Hun_PoJun"
+        ],
+        "nativeSourceLabel": "破军 · 强力冲锋",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 5,
+            "exportByteOffset": 243,
+            "startTime": 0.3060951828956604,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 45,
+            "action": "GAAction_ChangeArmed_C_0",
+            "guid": "1589a52bd185264da051d7702adf313e",
+            "trackIndex": 8,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 3.163998603820801,
+        "entryTime": 3.3,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 12,
+            "startTime": 0,
+            "duration": 7.383333206176758,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 76,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "ed01bf8829e11e4fbee3f8e427640008",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/PoJun/Hun_PoJun_Attack_C_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 47,
+            "startTime": 0,
+            "duration": 7.383333206176758,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 44,
+            "action": "GAAction_ActionPhase_C_0",
+            "guid": "bfcbac85fa63fa46b3165f03dcb1cc21",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.3655529320240021,
+                "1": "80cdffff"
+              },
+              {
+                "0": 4.7185869216918945,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.35808372497558594,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 1.9411096572875977,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 25,
+            "exportByteOffset": 1019,
+            "startTime": 1.8607478141784668,
+            "duration": 3.9395766258239746,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 68,
+            "action": "LGAAction_GameplayTags_3",
+            "guid": "1b4ab8c0d2759946b7f30f315554631a",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/ProjectPBZ.LGAAction_GameplayTags",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 54,
+            "exportByteOffset": 2134,
+            "startTime": 3.1951675415039062,
+            "duration": 0.8586201667785645,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 83,
+            "action": "LGAAction_RotationMode_7",
+            "guid": "6908a0e2ee07084baa46a7dd19c728f2",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/Script/MagCombatAbilities.LGAAction_RotationMode",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 55,
+            "exportByteOffset": 2173,
+            "startTime": 3.2156248092651367,
+            "duration": 0.16666699945926666,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 38,
+            "action": "GAA_PlaySound_C_54",
+            "guid": "13fec8312f0c284bbcecc8ac475660f5",
+            "trackIndex": 13,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/SFX_Combat_Hun_Common_Roll_Heavy"
+              }
+            ]
+          },
+          {
+            "index": 56,
+            "exportByteOffset": 2212,
+            "startTime": 3.2234692573547363,
+            "duration": 0.18088799715042114,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 31,
+            "action": "GAA_PlaySound_C_44",
+            "guid": "acdf14fcf4a331449af4e07cd5d34f4b",
+            "trackIndex": 8,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/Wave_Stab_BaDao/ModaoPoJun/SFX_Combat_Hun_MoDao_Wave_Middle"
+              }
+            ]
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 67,
+            "exportByteOffset": 2637,
+            "startTime": 4.689674377441406,
+            "duration": 0.19535017013549805,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 64,
+            "action": "LGAAction_DurationBulletWithDeflect_5",
+            "guid": "c40d0d88784ffc4887461cbdb9394a1d",
+            "trackIndex": 11,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 11,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/PoJun/BD_Hun_PoJun_C_06"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": []
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_Tang_C.CombatArt.Followup",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.BBBB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/Default/GA_Hun_Tang_C.GA_Hun_Tang_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          3.2
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.13322,
+          "before_time": 3.2
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.TangBlade.Default"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Followup",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.followup"
+        ],
+        "searchAliases": [
+          "GA_Hun_Tang_C",
+          "CombatArt.Followup",
+          "LGAAction_DurationBulletWithDeflect_2",
+          "LGAAction_DurationBulletWithDeflect_3",
+          "LGAAction_DurationBulletWithDeflect_4",
+          "LGAAction_DurationBulletWithDeflect_5",
+          "B_Hun_Tang_C_09",
+          "B_Hun_Tang_C",
+          "黑伤",
+          "SANGUINE",
+          "黒傷",
+          "흑상",
+          "Багрянец",
+          "黑傷",
+          "SANGUINE",
+          "BLUTROT",
+          "SANGUINA",
+          "SANGUÍNEA",
+          "SANGUINARIA",
+          "ดาบแผลนิลกาฬ",
+          "HẮC THƯƠNG",
+          "SANGUINE",
+          "SANGUINA"
+        ],
+        "category": "weapons/Weapon_001/IA_UltimateSkill",
+        "weaponLabels": {
+          "zh-Hans": "黑伤",
+          "en": "SANGUINE",
+          "ja": "黒傷",
+          "ko": "흑상",
+          "ru": "Багрянец",
+          "zh-Hant": "黑傷",
+          "fr": "SANGUINE",
+          "de": "BLUTROT",
+          "es-ES": "SANGUINA",
+          "pt-BR": "SANGUÍNEA",
+          "it": "SANGUINARIA",
+          "th": "ดาบแผลนิลกาฬ",
+          "vi": "HẮC THƯƠNG",
+          "pt-PT": "SANGUINE",
+          "es-419": "SANGUINA"
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/Default/GA_Hun_Tang_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Placeholder/Weapon_Hun_ZhuGuangBaoQi",
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Tang/Weapon_Hun_Tang"
+        ],
+        "nativeSourceLabel": "重攻击",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 2,
+            "exportByteOffset": 124,
+            "startTime": 0,
+            "duration": 0,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 44,
+            "action": "GAAction_ChangeArmed_C_1",
+            "guid": "5e7ee1a51b8f3a438c64262b9700d2bf",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 6,
+            "exportByteOffset": 268,
+            "startTime": 0.13321232795715332,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 43,
+            "action": "GAAction_ChangeArmed_C_0",
+            "guid": "75d7b4b2611dc9449b395b1d1cef7bb9",
+            "trackIndex": 9,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 2.8711589574813843,
+        "entryTime": 3.2,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": 0,
+            "duration": 9.783333778381348,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 68,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "6cacfec08beb7b46a0b2ea6a92b89bcd",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 2,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/TangBlade/Default/AM_Hun_Tang_C"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 45,
+            "startTime": 0,
+            "duration": 9.783333778381348,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 41,
+            "action": "GAAction_ActionPhase_C_0",
+            "guid": "0075289d08c06b4a8b02e34b259a4d5b",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 4.022946834564209,
+                "1": "80cdffff"
+              },
+              {
+                "0": 2.8999457359313965,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.501774787902832,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 2.35866641998291,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 11,
+            "exportByteOffset": 479,
+            "startTime": 0.5460860729217529,
+            "duration": 2.7092807292938232,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 48,
+            "action": "GAAction_WeaponTrail_C_11",
+            "guid": "d7d31af8b16a5a499779f174987fa201",
+            "trackIndex": 15,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_WeaponTrail",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 37,
+            "exportByteOffset": 1669,
+            "startTime": 4.090865612030029,
+            "duration": 0.40484654903411865,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 57,
+            "action": "LGAAction_DurationBulletWithDeflect_2",
+            "guid": "a701d31b4077bb4a9420bd30c23975e0",
+            "trackIndex": 4,
+            "sections": [
+              {
+                "0": 0.20242327451705933,
+                "1": "0100dcff"
+              },
+              {
+                "0": 0.20242327451705933,
+                "1": "3a3aceff"
+              }
+            ],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 9,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/TangBlade/Default/B_Hun_Tang_C_09"
+              }
+            ]
+          },
+          {
+            "index": 43,
+            "exportByteOffset": 1923,
+            "startTime": 4.803320407867432,
+            "duration": 0.40484654903411865,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 58,
+            "action": "LGAAction_DurationBulletWithDeflect_3",
+            "guid": "31f801abdd8204419fcf2e380277c66b",
+            "trackIndex": 5,
+            "sections": [
+              {
+                "0": 0.20242327451705933,
+                "1": "0100dcff"
+              },
+              {
+                "0": 0.20242327451705933,
+                "1": "3a3aceff"
+              }
+            ],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 9,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/TangBlade/Default/B_Hun_Tang_C"
+              }
+            ]
+          },
+          {
+            "index": 46,
+            "exportByteOffset": 2060,
+            "startTime": 5.281988620758057,
+            "duration": 0.40484654903411865,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 59,
+            "action": "LGAAction_DurationBulletWithDeflect_4",
+            "guid": "58061af9bed5c84a9d1fda2fe1a4c8f3",
+            "trackIndex": 4,
+            "sections": [
+              {
+                "0": 0.20242327451705933,
+                "1": "0100dcff"
+              },
+              {
+                "0": 0.20242327451705933,
+                "1": "3a3aceff"
+              }
+            ],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 9,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/TangBlade/Default/B_Hun_Tang_C"
+              }
+            ]
+          },
+          {
+            "index": 52,
+            "exportByteOffset": 2314,
+            "startTime": 6.110653877258301,
+            "duration": 0.25005435943603516,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 60,
+            "action": "LGAAction_DurationBulletWithDeflect_5",
+            "guid": "1cbb30c45f07ca408ff88dfdf60aebf3",
+            "trackIndex": 6,
+            "sections": [
+              {
+                "0": 0.12502717971801758,
+                "1": "0100dcff"
+              },
+              {
+                "0": 0.12502717971801758,
+                "1": "3a3aceff"
+              }
+            ],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 15,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/TangBlade/Default/B_Hun_Tang_C"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": []
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_WoodenSword_C.CombatArt.Followup",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.BBBB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/DefaultHun/GA_Hun_WoodenSword_C.GA_Hun_WoodenSword_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          2.0
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.00917,
+          "before_time": 2.0
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.WoodenSword"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Followup",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.followup"
+        ],
+        "searchAliases": [
+          "GA_Hun_WoodenSword_C",
+          "CombatArt.Followup",
+          "LGAAction_DurationBulletWithDeflect_3",
+          "LGAAction_DurationBulletWithDeflect_1",
+          "LGAAction_DurationBulletWithDeflect_2",
+          "B_Hun_Wooden_C_06",
+          "B_Hun_Wooden_C_07",
+          "B_Hun_Wooden_C_08",
+          "木制黑伤",
+          "WOODEN SANGUINE",
+          "黒傷・木刀",
+          "목재 흑상",
+          "Деревянный Багрянец",
+          "木製黑傷",
+          "SANGUINE DE BOIS",
+          "HÖLZERNES BLUTROT",
+          "SANGUINA DE MADERA",
+          "SANGUÍNEA DE MADEIRA",
+          "SANGUINARIA LIGNEA",
+          "ดาบไม้แผลนิลกาฬ",
+          "MỘC HẮC THƯƠNG",
+          "SANGUINE DE MADEIRA",
+          "SANGUINA DE MADERA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "木制黑伤",
+          "en": "WOODEN SANGUINE",
+          "ja": "黒傷・木刀",
+          "ko": "목재 흑상",
+          "ru": "Деревянный Багрянец",
+          "zh-Hant": "木製黑傷",
+          "fr": "SANGUINE DE BOIS",
+          "de": "HÖLZERNES BLUTROT",
+          "es-ES": "SANGUINA DE MADERA",
+          "pt-BR": "SANGUÍNEA DE MADEIRA",
+          "it": "SANGUINARIA LIGNEA",
+          "th": "ดาบไม้แผลนิลกาฬ",
+          "vi": "MỘC HẮC THƯƠNG",
+          "pt-PT": "SANGUINE DE MADEIRA",
+          "es-419": "SANGUINA DE MADERA"
+        },
+        "category": "weapons/Weapon_000/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/DefaultHun/GA_Hun_WoodenSword_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/WoodenSword/Weapon_Hun_WoodenSword"
+        ],
+        "nativeSourceLabel": "重攻击",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 3,
+            "exportByteOffset": 159,
+            "startTime": 0.009165188297629356,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 43,
+            "action": "GAAction_ChangeArmed_C_1",
+            "guid": "5e7ee1a51b8f3a438c64262b9700d2bf",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 1.803834319114685,
+        "entryTime": 2.0,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": 0,
+            "duration": 7.388883113861084,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 60,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "6cacfec08beb7b46a0b2ea6a92b89bcd",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 2,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/TangBlade/Young/Retarget/Hun_MaleThug_UniqueSkill_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 45,
+            "startTime": 0,
+            "duration": 6.5555500984191895,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 42,
+            "action": "GAAction_ActionPhase_C_0",
+            "guid": "0075289d08c06b4a8b02e34b259a4d5b",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.39173775911331177,
+                "1": "80cdffff"
+              },
+              {
+                "0": 3.620429277420044,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.8161807060241699,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 1.7272024154663086,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 46,
+            "exportByteOffset": 1820,
+            "startTime": 2.570992946624756,
+            "duration": 0.10843706130981445,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 50,
+            "action": "LGAAction_DurationBulletWithDeflect_3",
+            "guid": "8f324617def5c149ac9534e4f93ce0e4",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 11,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/TangBlade/WoodenSword_Default/B_Hun_Wooden_C_06"
+              }
+            ]
+          },
+          {
+            "index": 53,
+            "exportByteOffset": 2089,
+            "startTime": 3.036166191101074,
+            "duration": 0.13273096084594727,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 48,
+            "action": "LGAAction_DurationBulletWithDeflect_1",
+            "guid": "58f84e6ac3487f4cabc259a11182fb7b",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 9,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/TangBlade/WoodenSword_Default/B_Hun_Wooden_C_07"
+              }
+            ]
+          },
+          {
+            "index": 62,
+            "exportByteOffset": 2436,
+            "startTime": 3.5548441410064697,
+            "duration": 0.15487885475158691,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 49,
+            "action": "LGAAction_DurationBulletWithDeflect_2",
+            "guid": "d0b0ea31571e114aaa41bd8a4048888e",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 9,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/TangBlade/WoodenSword_Default/B_Hun_Wooden_C_08"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": []
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_Young_C.CombatArt.Followup",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.BBBB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/YoungHun/GA_Hun_Young_C.GA_Hun_Young_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          2.0
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.00917,
+          "before_time": 2.0
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.WoodenSword"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Young · CombatArt · Followup",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.followup"
+        ],
+        "searchAliases": [
+          "GA_Hun_Young_C",
+          "CombatArt.Followup",
+          "LGAAction_DurationBulletWithDeflect_3",
+          "LGAAction_DurationBulletWithDeflect_1",
+          "LGAAction_DurationBulletWithDeflect_2",
+          "B_Hun_Young_C_06",
+          "B_Hun_Young_C_07",
+          "B_Hun_Young_C_08",
+          "木制黑伤",
+          "WOODEN SANGUINE",
+          "黒傷・木刀",
+          "목재 흑상",
+          "Деревянный Багрянец",
+          "木製黑傷",
+          "SANGUINE DE BOIS",
+          "HÖLZERNES BLUTROT",
+          "SANGUINA DE MADERA",
+          "SANGUÍNEA DE MADEIRA",
+          "SANGUINARIA LIGNEA",
+          "ดาบไม้แผลนิลกาฬ",
+          "MỘC HẮC THƯƠNG",
+          "SANGUINE DE MADEIRA",
+          "SANGUINA DE MADERA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "木制黑伤",
+          "en": "WOODEN SANGUINE",
+          "ja": "黒傷・木刀",
+          "ko": "목재 흑상",
+          "ru": "Деревянный Багрянец",
+          "zh-Hant": "木製黑傷",
+          "fr": "SANGUINE DE BOIS",
+          "de": "HÖLZERNES BLUTROT",
+          "es-ES": "SANGUINA DE MADERA",
+          "pt-BR": "SANGUÍNEA DE MADEIRA",
+          "it": "SANGUINARIA LIGNEA",
+          "th": "ดาบไม้แผลนิลกาฬ",
+          "vi": "MỘC HẮC THƯƠNG",
+          "pt-PT": "SANGUINE DE MADEIRA",
+          "es-419": "SANGUINA DE MADERA"
+        },
+        "category": "weapons/Weapon_000/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/YoungHun/GA_Hun_Young_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/WoodenSword/Weapon_Hun_Young_WoodenSword"
+        ],
+        "nativeSourceLabel": "重攻击",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 3,
+            "exportByteOffset": 159,
+            "startTime": 0.009165188297629356,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 47,
+            "action": "GAAction_ChangeArmed_C_1",
+            "guid": "5e7ee1a51b8f3a438c64262b9700d2bf",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 1.803834319114685,
+        "entryTime": 2.0,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": 0,
+            "duration": 6.5555500984191895,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 66,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "6cacfec08beb7b46a0b2ea6a92b89bcd",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 2,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/TangBlade/Young/Retarget/Hun_MaleThug_UniqueSkill_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 45,
+            "startTime": 0,
+            "duration": 6.5555500984191895,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 45,
+            "action": "GAAction_ActionPhase_C_0",
+            "guid": "0075289d08c06b4a8b02e34b259a4d5b",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.39173775911331177,
+                "1": "80cdffff"
+              },
+              {
+                "0": 3.620429277420044,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.8161807060241699,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 1.7272024154663086,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 46,
+            "exportByteOffset": 1820,
+            "startTime": 2.570992946624756,
+            "duration": 0.10843706130981445,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 55,
+            "action": "LGAAction_DurationBulletWithDeflect_3",
+            "guid": "8f324617def5c149ac9534e4f93ce0e4",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 11,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/TangBlade/WoodenSword/B_Hun_Young_C_06"
+              }
+            ]
+          },
+          {
+            "index": 53,
+            "exportByteOffset": 2089,
+            "startTime": 3.036166191101074,
+            "duration": 0.13273096084594727,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 53,
+            "action": "LGAAction_DurationBulletWithDeflect_1",
+            "guid": "58f84e6ac3487f4cabc259a11182fb7b",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 9,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/TangBlade/WoodenSword/B_Hun_Young_C_07"
+              }
+            ]
+          },
+          {
+            "index": 62,
+            "exportByteOffset": 2436,
+            "startTime": 3.5548441410064697,
+            "duration": 0.15487885475158691,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 54,
+            "action": "LGAAction_DurationBulletWithDeflect_2",
+            "guid": "d0b0ea31571e114aaa41bd8a4048888e",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 9,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/TangBlade/WoodenSword/B_Hun_Young_C_08"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": []
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_Jigsaw_C.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Jigsaw.RB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C.GA_Hun_Jigsaw_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          2.7
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.001,
+          "before_time": 2.7
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.Jigsaw"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_Jigsaw_C",
+          "CombatArt.Final",
+          "GAAction_DurationBullet_Simple_C_9",
+          "GAAction_DurationBullet_Simple_C_10",
+          "B_Hun_JigSaw_C_04",
+          "B_Hun_JigSaw_C_09",
+          "断肢锯",
+          "BONESAW",
+          "断肢鋸",
+          "절단톱",
+          "Костогрыз",
+          "斷肢鋸",
+          "SCIE CRANTÉE",
+          "KNOCHENSÄGE",
+          "SIERRA ÓSEA",
+          "SERRA DE OSSOS",
+          "SEGAOSSA",
+          "เลื่อยตัดแขนขา",
+          "ĐOẠN CHI CƯA",
+          "SERRA DE OSSOS",
+          "SIERRA DENTADA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "断肢锯",
+          "en": "BONESAW",
+          "ja": "断肢鋸",
+          "ko": "절단톱",
+          "ru": "Костогрыз",
+          "zh-Hant": "斷肢鋸",
+          "fr": "SCIE CRANTÉE",
+          "de": "KNOCHENSÄGE",
+          "es-ES": "SIERRA ÓSEA",
+          "pt-BR": "SERRA DE OSSOS",
+          "it": "SEGAOSSA",
+          "th": "เลื่อยตัดแขนขา",
+          "vi": "ĐOẠN CHI CƯA",
+          "pt-PT": "SERRA DE OSSOS",
+          "es-419": "SIERRA DENTADA"
+        },
+        "category": "weapons/Weapon_015/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Jigsaw/Weapon_Hun_Jigsaw"
+        ],
+        "nativeSourceLabel": "断肢锯 · 血锯",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 2,
+            "exportByteOffset": 128,
+            "startTime": 0,
+            "duration": 0,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 53,
+            "action": "GAAction_ChangeArmed_C_1",
+            "guid": "aa97c2924023ae478c11ad1164751214",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 1.7633925676345825,
+        "entryTime": 2.7,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": 0,
+            "duration": 5.133333206176758,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": -9.999999747378752e-05,
+            "actionPointer": 84,
+            "action": "LGAAction_PlayMontage_1",
+            "guid": "0c2f114e709a9e46973e8c40ce193061",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 2,
+                "path": "/HuaShira/Animation/Hero/Hun/SH_Sources/SawBlade/Hun_SawBlade_Unique_Skill_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 49,
+            "startTime": 0,
+            "duration": 5.133333206176758,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 51,
+            "action": "LGAAction_ActionPhase_C_1",
+            "guid": "a6bdfacb03f2184d9d8403f0d5758257",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.041068077087402344,
+                "1": "80cdffff"
+              },
+              {
+                "0": 3.3663723468780518,
+                "1": "8881ffff"
+              },
+              {
+                "0": 1.1034862995147705,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 0.6224064826965332,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 43,
+            "exportByteOffset": 1667,
+            "startTime": 2.8662726879119873,
+            "duration": 0.09872651100158691,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 60,
+            "action": "GAAction_DurationBullet_Simple_C_9",
+            "guid": "478f0a75d708ef42ac6c7d7f178b499e",
+            "trackIndex": 8,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 5,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/Jigsaw/B_Hun_JigSaw_C_04"
+              }
+            ]
+          },
+          {
+            "index": 50,
+            "exportByteOffset": 1928,
+            "startTime": 3.2015786170959473,
+            "duration": 0.13543367385864258,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 56,
+            "action": "GAAction_DurationBullet_Simple_C_10",
+            "guid": "5a411510fa727148881aa95feae61b3e",
+            "trackIndex": 8,
+            "sections": [],
+            "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 5,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/Jigsaw/B_Hun_JigSaw_C_09"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": [],
+        "branchSemantics": "GAA_JumpTimelineByHitResult at2.8478658 remains after entry; Main/HasSawHit selection remains native and is not forced."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_Chaos_C.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.ChaosBlade.ToHunDun",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/GA_Hun_Chaos_C.GA_Hun_Chaos_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Main"
+          },
+          1.0,
+          0.0,
+          3.2
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.37592,
+          "before_time": 3.2
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ChaosBlade"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_Chaos_C",
+          "CombatArt.Final",
+          "LGAAction_DurationBulletWithDeflect_1",
+          "GAA_BulletBurstWithDeflect_C_1",
+          "BD_Hun_Chaos_C_07",
+          "B_Hun_Chaos_B_FireBall_BurstLocation",
+          "刺骨混沌",
+          "FREEZING CHAOS",
+          "凍骨混沌",
+          "자골 혼돈",
+          "Леденящий Жар",
+          "刺骨混沌",
+          "CHAOS GLACIAL",
+          "EISKALTES CHAOS",
+          "CAOS GLACIAL",
+          "CAOS CONGELANTE",
+          "CAOS GELIDO",
+          "ห้วงโกลาหลทมิฬ",
+          "HỖN ĐỘN THẤU CỐT",
+          "CAOS PENETRANTE",
+          "CAOS GLACIAL"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "刺骨混沌",
+          "en": "FREEZING CHAOS",
+          "ja": "凍骨混沌",
+          "ko": "자골 혼돈",
+          "ru": "Леденящий Жар",
+          "zh-Hant": "刺骨混沌",
+          "fr": "CHAOS GLACIAL",
+          "de": "EISKALTES CHAOS",
+          "es-ES": "CAOS GLACIAL",
+          "pt-BR": "CAOS CONGELANTE",
+          "it": "CAOS GELIDO",
+          "th": "ห้วงโกลาหลทมิฬ",
+          "vi": "HỖN ĐỘN THẤU CỐT",
+          "pt-PT": "CAOS PENETRANTE",
+          "es-419": "CAOS GLACIAL"
+        },
+        "category": "weapons/Weapon_004/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/GA_Hun_Chaos_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChaosBlade/Weapon_Hun_CiGuHunDunJian"
+        ],
+        "nativeSourceLabel": "刺骨混沌 · 重攻击",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Main",
+        "setupActions": [
+          {
+            "index": 6,
+            "exportByteOffset": 274,
+            "startTime": 0.3320356607437134,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 19,
+            "action": "GAA_GameplayEvent_C_1",
+            "guid": "4a78af58c053624faa65e1a405d05915",
+            "trackIndex": 6,
+            "sections": [],
+            "class": "/MagCombatAbilities/Actions/GAA_GameplayEvent",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 7,
+            "exportByteOffset": 309,
+            "startTime": 0.37590861320495605,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 49,
+            "action": "GAAction_ChangeArmed_C_2",
+            "guid": "a830bf653ce66141be8913b0cdd70b15",
+            "trackIndex": 4,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 3.128792405128479,
+        "entryTime": 3.2,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 12,
+            "startTime": 0,
+            "duration": 6.066666603088379,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 69,
+            "action": "LGAAction_PlayMontage_1",
+            "guid": "a0d4cfb1eae5ee4f800684f6f757293a",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 2,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Montage/ChaosBlade/Hun_YuCongBlade_Unique_Skill_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 47,
+            "startTime": 0,
+            "duration": 6.066666603088379,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 47,
+            "action": "GAAction_ActionPhase_C_1",
+            "guid": "0f40348febd46243b62562e6e99b1911",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.39173775911331177,
+                "1": "80cdffff"
+              },
+              {
+                "0": 3.717782735824585,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.3202223777770996,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 1.6369237899780273,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 26,
+            "exportByteOffset": 1042,
+            "startTime": 2.2563652992248535,
+            "duration": 1.1389975547790527,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 51,
+            "action": "GAAction_WeaponParticle_C_0",
+            "guid": "c2178720b50ffc4cbc2bcc480ab0d832",
+            "trackIndex": 7,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_WeaponParticle",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 29,
+            "exportByteOffset": 1159,
+            "startTime": 2.3552653789520264,
+            "duration": 1.0450422763824463,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 20,
+            "action": "GAA_PBZWeaponTrail_C_0",
+            "guid": "604d74ae11c1ae47bd7e9f9d41b5cbe3",
+            "trackIndex": 15,
+            "sections": [],
+            "class": "/PBZCombatAsset/Prototypes/Actions/GAA_PBZWeaponTrail",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 47,
+            "exportByteOffset": 1869,
+            "startTime": 3.588853359222412,
+            "duration": 0.2405719757080078,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": -9.999999747378752e-05,
+            "actionPointer": 58,
+            "action": "LGAAction_DurationBulletWithDeflect_1",
+            "guid": "a65ac1b5cab1ae4e91af91971de6902f",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 11,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ChaosBlade/BD_Hun_Chaos_C_07"
+              }
+            ]
+          },
+          {
+            "index": 48,
+            "exportByteOffset": 1912,
+            "startTime": 3.625068426132202,
+            "duration": 0.056161001324653625,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 9.999999747378752e-05,
+            "actionPointer": 11,
+            "action": "GAA_BulletBurstWithDeflect_C_1",
+            "guid": "7f3e5de5fd07464293cdcf1030fd54e2",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/PBZCombatAsset/Prototypes/Actions/GAA_BulletBurstWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 93,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ChaosBlade/Fire/B_Hun_Chaos_B_FireBall_BurstLocation"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": [],
+        "setupSemantics": "Initial Switch event0.33203614 toggles native element state/effects; ChangeArmed0.375909 executes before entry. Final RemoveBuff event3.396421 remains after entry; K2_OnEnd removes Switch tag."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_YuuBlade_C.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.YuuBlade.FastAttack",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/YuuBlade/GA_Hun_YuuBlade_C.GA_Hun_YuuBlade_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Exit"
+          },
+          1.0,
+          0.0,
+          2.1
+        ],
+        "entryWhen": {
+          "timeline": "Exit",
+          "minimum_time": 0.001,
+          "before_time": 2.1
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.DoubleBlade.YuuBlade",
+          "CharacterState.AbilityState.YuuBlade.CriticalBuff"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_YuuBlade_C",
+          "CombatArt.Final",
+          "LGAAction_DurationBulletWithDeflect_7",
+          "BulletData_Hun_YuuBlade_C",
+          "妖锯",
+          "FIEND SAWS",
+          "妖鋸",
+          "요거",
+          "Пилы Демона",
+          "妖鋸",
+          "SCIES DÉMONIAQUES",
+          "DÄMONENSÄGEN",
+          "SIERRAS DEMONÍACAS",
+          "SERRAS DEMONÍACAS",
+          "SEGHE DEMONIACHE",
+          "เลื่อยอสูร",
+          "YÊU CỨ",
+          "SERRAS MALIGNAS",
+          "SIERRAS DEMONÍACAS"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "妖锯",
+          "en": "FIEND SAWS",
+          "ja": "妖鋸",
+          "ko": "요거",
+          "ru": "Пилы Демона",
+          "zh-Hant": "妖鋸",
+          "fr": "SCIES DÉMONIAQUES",
+          "de": "DÄMONENSÄGEN",
+          "es-ES": "SIERRAS DEMONÍACAS",
+          "pt-BR": "SERRAS DEMONÍACAS",
+          "it": "SEGHE DEMONIACHE",
+          "th": "เลื่อยอสูร",
+          "vi": "YÊU CỨ",
+          "pt-PT": "SERRAS MALIGNAS",
+          "es-419": "SIERRAS DEMONÍACAS"
+        },
+        "category": "weapons/Weapon_023/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/YuuBlade/GA_Hun_YuuBlade_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/YuuBlade/Weapon_Hun_YuuBlade"
+        ],
+        "nativeSourceLabel": "妖锯 · 蓄势狂斩",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Exit",
+        "setupActions": [
+          {
+            "index": 6,
+            "exportByteOffset": 280,
+            "startTime": 0,
+            "duration": 0,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 81,
+            "action": "GAAction_ChangeArmed_C_0",
+            "guid": "394aa8f100d2e84db49c5fb61143a96b",
+            "trackIndex": 14,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 1.9415265917778015,
+        "entryTime": 2.1,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": 0,
+            "duration": 4.366666793823242,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 114,
+            "action": "LGAAction_PlayMontage_0",
+            "guid": "c9872a7121000d47b26edd255d4c5084",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/HuaShira/Animation/Hero/Hun/SH_Sources/YuuBlade/Hun_YuuBlade_Unique_Skill_01_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 45,
+            "startTime": 0,
+            "duration": 4.366666793823242,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 78,
+            "action": "LGAAction_ActionPhase_C_0",
+            "guid": "f49ad4a2c8d87e4fa4aa1209c26b7fd7",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.8020338416099548,
+                "1": "80cdffff"
+              },
+              {
+                "0": 2.3882012367248535,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.32611560821533203,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 0.850316047668457,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 3,
+            "exportByteOffset": 163,
+            "startTime": 0,
+            "duration": 4.366666793823242,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 113,
+            "action": "LGAAction_MotionWarping_2",
+            "guid": "894015d740f00541ac39b5dc174e212e",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/Script/MagCombatAbilities.LGAAction_MotionWarping",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 53,
+            "exportByteOffset": 2109,
+            "startTime": 1.7392159700393677,
+            "duration": 0.38798201084136963,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 42,
+            "action": "GAA_PlaySound_C_8",
+            "guid": "4c028cf5643e884dbd98fca92984a130",
+            "trackIndex": 15,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/Wave_Stab_BaDao/YuuBlade/SFX_Combat_Hun_YuuBlade_Stab_Light"
+              }
+            ]
+          },
+          {
+            "index": 56,
+            "exportByteOffset": 2226,
+            "startTime": 1.864437222480774,
+            "duration": 0.38798201084136963,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 47,
+            "action": "GAA_PlaySound_Opt_C_11",
+            "guid": "8931620290eb9c4aa3ad59917ee43272",
+            "trackIndex": 13,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Hero_Special/Hun/Common/Wave_Stab_BaDao/YuuBlade/SFX_Combat_Hun_YuuBlade_VFX_Tremolo"
+              }
+            ]
+          },
+          {
+            "index": 58,
+            "exportByteOffset": 2300,
+            "startTime": 1.9983209371566772,
+            "duration": 0.38798201084136963,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 36,
+            "action": "GAA_PlaySound_C_20",
+            "guid": "2750e0c4c8befb4780ddeaf1e6714269",
+            "trackIndex": 17,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/Game/Wwise/Events/SFX/Move/Hero/InUse/SFX_Footsteps_Hun_Dash_Forward"
+              }
+            ]
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 70,
+            "exportByteOffset": 2776,
+            "startTime": 2.770838737487793,
+            "duration": 0.13412564992904663,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 9.999999747378752e-05,
+            "actionPointer": 108,
+            "action": "LGAAction_DurationBulletWithDeflect_7",
+            "guid": "7e9848cdbac9c548a4b5c2af8d97b3a0",
+            "trackIndex": 7,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 9,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/YuuBlade/BulletData_Hun_YuuBlade_C"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": [],
+        "branchSemantics": "Require existing CriticalBuff. Native GetUltimateChargeCost selects0 and Play Combat Art Timeline selects Exit. Retain GAA_RemoveGameplayEffect at2.9494305."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_HeiMoShang_C1.CombatArt.Final",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.AAAAABB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_C1.GA_Hun_HeiMoShang_C1_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+        "entryArguments": [
+          {
+            "fname": "Exit"
+          },
+          1.0,
+          0.0,
+          3.1
+        ],
+        "entryWhen": {
+          "timeline": "Exit",
+          "minimum_time": 0.60001,
+          "before_time": 3.1
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.HeiMoShang",
+          "CharacterState.AbilityState.HeiMoShang.Buff"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Final",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_HeiMoShang_C1",
+          "CombatArt.Final",
+          "LGAAction_DurationBulletWithDeflect_0",
+          "BD_Hun_HeiMoShang_C_01_New",
+          "黑魔伤",
+          "INFERNAL ROUGE",
+          "黒魔傷",
+          "흑마상",
+          "Багрянец Мо",
+          "黑魔傷",
+          "ROUGE INFERNAL",
+          "HÖLLISCHES BLUTROT",
+          "ROJO INFERNAL",
+          "SANGUÍNEA INFERNAL",
+          "SANGUINARIA MO",
+          "คมมารทมิฬ",
+          "MA HẮC THƯƠNG",
+          "SANGUINE DE MÓ",
+          "ROJO INFERNAL"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "黑魔伤",
+          "en": "INFERNAL ROUGE",
+          "ja": "黒魔傷",
+          "ko": "흑마상",
+          "ru": "Багрянец Мо",
+          "zh-Hant": "黑魔傷",
+          "fr": "ROUGE INFERNAL",
+          "de": "HÖLLISCHES BLUTROT",
+          "es-ES": "ROJO INFERNAL",
+          "pt-BR": "SANGUÍNEA INFERNAL",
+          "it": "SANGUINARIA MO",
+          "th": "คมมารทมิฬ",
+          "vi": "MA HẮC THƯƠNG",
+          "pt-PT": "SANGUINE DE MÓ",
+          "es-419": "ROJO INFERNAL"
+        },
+        "category": "weapons/Weapon_005/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_C1",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/Weapon_Hun_HeiMoShang",
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/Weapon_Hun_HeiMoShang_Prologue"
+        ],
+        "nativeSourceLabel": "黑魔伤 · 重攻击",
+        "normalActivation": "BP_CombatArt_Base normal charge qualification, cost and active-instance lifecycle; no direct task-time writes",
+        "costCleanup": "Normal K2_OnEndAbility removes Shachi Same Timeline Tag and Endure Handle; inherited/native action end cleans montage, phase, warp, tags and camera tasks",
+        "timeline": "Exit",
+        "setupActions": [
+          {
+            "index": 5,
+            "exportByteOffset": 237,
+            "startTime": 0.6000000238418579,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 51,
+            "action": "GAAction_ChangeArmed_C_2",
+            "guid": "2d1da3e80a489342ae2c39a420142347",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "priorDamageEnd": 3.049049988389015,
+        "entryTime": 3.1,
+        "spanningActions": [
+          {
+            "index": 0,
+            "exportByteOffset": 10,
+            "startTime": 0,
+            "duration": 6.733333110809326,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 78,
+            "action": "LGAAction_PlayMontage_1",
+            "guid": "96219bf14f116e4cabfd482a10d050b7",
+            "trackIndex": 0,
+            "sections": [],
+            "class": "/Script/LegoAbility.LGAAction_PlayMontage",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 2,
+                "path": "/HuaShira/Animation/Hero/Hun/SH_Sources/HeiMoShang/Hun_HeiMoShang_Unique_Skill_01_Montage"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "exportByteOffset": 45,
+            "startTime": 0,
+            "duration": 6.733333110809326,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": -9.999999747378752e-05,
+            "actionPointer": 48,
+            "action": "LGAAction_ActionPhase_C_0",
+            "guid": "9763189f021241489505c64abbdb6c0c",
+            "trackIndex": 1,
+            "sections": [
+              {
+                "0": 0.15772421658039093,
+                "1": "80cdffff"
+              },
+              {
+                "0": 4.767828941345215,
+                "1": "8881ffff"
+              },
+              {
+                "0": 0.6116585731506348,
+                "1": "ffcca7ff"
+              },
+              {
+                "0": 1.1961212158203125,
+                "1": "bcffa7ff"
+              }
+            ],
+            "class": "/MagCombatAbilities/Actions/GAAction_ActionPhase",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 3,
+            "exportByteOffset": 163,
+            "startTime": 0,
+            "duration": 5.901782989501953,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 14,
+            "action": "GAA_DurationTags_C_0",
+            "guid": "58376c412a90bf47a549431f265a5c69",
+            "trackIndex": 23,
+            "sections": [],
+            "class": "/MagCombatAbilities/Actions/GAA_DurationTags",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 13,
+            "exportByteOffset": 545,
+            "startTime": 1.6433501243591309,
+            "duration": 2.70833158493042,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 55,
+            "action": "GAAction_ModifyCameraZoom_C_0",
+            "guid": "8bde7e156e1b054998517bd21bcb0810",
+            "trackIndex": 2,
+            "sections": [],
+            "class": "/SGameExecution/Actions/GAAction_ModifyCameraZoom",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 16,
+            "exportByteOffset": 662,
+            "startTime": 2.187568187713623,
+            "duration": 2.2387518882751465,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 81,
+            "action": "LGAAction_RotationMode_0",
+            "guid": "63004ec9f65b0f4c8e7f21e59474e62b",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/Script/MagCombatAbilities.LGAAction_RotationMode",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 27,
+            "exportByteOffset": 1091,
+            "startTime": 2.9736011028289795,
+            "duration": 0.1708810031414032,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 73,
+            "action": "GAAction_WeaponTrail_C_5",
+            "guid": "573369dd0a2db8488bd3f8e4aae16670",
+            "trackIndex": 17,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_WeaponTrail",
+            "directAttackAction": false,
+            "resourceReferences": []
+          },
+          {
+            "index": 28,
+            "exportByteOffset": 1130,
+            "startTime": 3.012845754623413,
+            "duration": 0.1905909925699234,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 25,
+            "action": "GAA_PlaySound_Opt_C_12",
+            "guid": "bd48f7dc753cd140af3dc473de49a494",
+            "trackIndex": 10,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAA_PlaySound_Opt",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 6,
+                "path": "/Game/Wwise/Events/SFX/Combat/Special/Monster_Special/MoTian/SFX_Combat_Special_MoTian_MoJian_Stab_Heavy"
+              }
+            ]
+          }
+        ],
+        "remainingAttackActions": [
+          {
+            "index": 43,
+            "exportByteOffset": 1703,
+            "startTime": 4.437198162078857,
+            "duration": 0.07614707946777344,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 75,
+            "action": "LGAAction_DurationBulletWithDeflect_0",
+            "guid": "d3d373abf5aa2b458ae51d2f2fc75977",
+            "trackIndex": 7,
+            "sections": [],
+            "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 13,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/HeiMoShang/BD_Hun_HeiMoShang_C_01_New"
+              }
+            ]
+          }
+        ],
+        "skippedNonCosmeticOneShotActions": [],
+        "branchSemantics": "Require existing HeiMoShang.Buff. Native Play Combat Art Timeline selects Exit@0.6; wait for ChangeArmed there. Retain GAA_RemoveGameplayEffect at4.4647837. Climax-without-Buff is a separate native eligibility alternative."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:GA_Hun_YanYueDao_C.CombatArt.NormalEnd",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.YanYueDao.Special01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_C.GA_Hun_YanYueDao_C_C",
+        "entryPoint": "ToEnd",
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.001,
+          "before_time": 0.145
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.YanYueDao"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · NormalEnd",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "NormalEnd",
+          "ToEnd",
+          "BulletData_Hun_YanYueDao_Pull",
+          "BulletData_Hun_YanYueDao_C_01",
+          "偃月刀",
+          "CRESCENT BLADE",
+          "偃月刀",
+          "언월도",
+          "Серповидный Клинок",
+          "偃月刀",
+          "GUANDAO",
+          "MONDSICHELGLEFE",
+          "GUANDAO",
+          "LÂMINA CRESCENTE",
+          "LAMA MEZZALUNA",
+          "ง้าวจันทร์เสี้ยว",
+          "YỂN NGUYỆT ĐAO",
+          "LÂMINA CRESCENTE",
+          "GUANDAO"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "偃月刀",
+          "en": "CRESCENT BLADE",
+          "ja": "偃月刀",
+          "ko": "언월도",
+          "ru": "Серповидный Клинок",
+          "zh-Hant": "偃月刀",
+          "fr": "GUANDAO",
+          "de": "MONDSICHELGLEFE",
+          "es-ES": "GUANDAO",
+          "pt-BR": "LÂMINA CRESCENTE",
+          "it": "LAMA MEZZALUNA",
+          "th": "ง้าวจันทร์เสี้ยว",
+          "vi": "YỂN NGUYỆT ĐAO",
+          "pt-PT": "LÂMINA CRESCENTE",
+          "es-419": "GUANDAO"
+        },
+        "category": "weapons/Weapon_020/IA_UltimateSkill"
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/YanYueDao/Weapon_Hun_YanYueDao"
+        ],
+        "normalActivation": "BP_CombatArt_Base normal cost; subclass initializes FirstRelease, ReactionCounter, Async Task and Async Task_0 before entry",
+        "endpointSemantics": "ToEnd ends both async tasks, returns if the active task already uses NormalEnd, otherwise starts NormalEnd through native PlayTimeline",
+        "setupActions": "Main ChangeArmed at0; wait actual Main.CurrentTime>=.001 before initial projectile0.145025",
+        "remainingAttackActions": [
+          {
+            "index": 14,
+            "exportByteOffset": 582,
+            "startTime": 0.8969139456748962,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 12,
+            "action": "GAA_DelayDeflectProjectileBullet_C_0",
+            "guid": "6ec22118e4690d4c80f8e13a62fcaa90",
+            "trackIndex": 10,
+            "sections": [],
+            "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 7,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YanYueDao/Common/BulletData_Hun_YanYueDao_Pull"
+              }
+            ]
+          },
+          {
+            "index": 29,
+            "exportByteOffset": 1175,
+            "startTime": 2.050844192504883,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 13,
+            "action": "GAA_DelayDeflectProjectileBullet_C_1",
+            "guid": "42b6ff96d7800f45ae16d4296a676edc",
+            "trackIndex": 8,
+            "sections": [],
+            "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+            "directAttackAction": true,
+            "resourceReferences": [
+              {
+                "offset": 7,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YanYueDao/BulletData_Hun_YanYueDao_C_01"
+              }
+            ]
+          }
+        ],
+        "costCleanup": "Normal base cleanup; ToEnd explicitly stops input/reaction tasks; NormalEnd preserves final buff application at2.1995769"
+      }
+    }
+  ],
+  "coveredAbilityClasses": 18,
+  "timelineStartEvidence": {
+    "build": "CL-302256",
+    "runtimeVerified": false,
+    "evidenceType": "Local PBZ.exe native disassembly and cooked Blueprint/timeline resources",
+    "timelineEntry": {
+      "function": "/Script/LegoAbility.LegoAbility:PlayTimelineByName",
+      "wrapper": "0x1572f2bf0",
+      "resolveTimelineByName": "0x145b875a0",
+      "playTimeline": "0x145b87460",
+      "createTask": "0x145b87030",
+      "stopOldTask": "0x145b81eb0",
+      "initialTimeWrites": [
+        "0x145b872fb",
+        "0x145b87304"
+      ],
+      "taskCurrentTimeOffset": "0x138",
+      "taskInitialTimeOffset": "0x13c",
+      "activateTask": "0x145b87610",
+      "initialEvaluation": "0x145b881b0",
+      "spanningActionBranch": "0x145b88289",
+      "actionBegin": "0x145b831a0",
+      "elapsedTimeCalculation": "0x145b8335e",
+      "nativeActionBeginCall": "0x145b83380",
+      "contract": "A fresh task starts at the supplied timeline time. Its first evaluation begins non-single-frame actions spanning that time and supplies currentTime minus actionStart as elapsed time. Earlier single-frame actions are skipped. The old task ends through its normal lifecycle."
+    },
+    "timelineProgress": {
+      "abilityGetter": "GetPlayTimelineTask",
+      "taskProperty": "CurrentTime",
+      "taskTimelineProperty": "Timeline",
+      "nativeBlueprintUses": [
+        "SlitheringSword_C reads CurrentTime and starts Perfect at the same time",
+        "ChiZheCanJian_DrinkBase reads Timeline and starts that timeline at JumpEndTime",
+        "TieKuangQuanTao starts Main at AttackStartTime",
+        "ShuangYue starts Enhanced at nonzero 0.2 or 0.35"
+      ]
+    },
+    "bronzeFinalWave": {
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_C.GA_Hun_BronzeSword_C_C",
+      "abilityTag": "Ability.Action.Hun.CombatArt.Atk01",
+      "normalActivationRequired": true,
+      "activeBooleanProperty": "Current Shachi Reinforced",
+      "activeBooleanMeaning": "UltimateChargeCount >= max(Ultimate Charge Cost, 1); normal activation consumes the charge and installs the normal endure effect and same-timeline tag; false selects Failed",
+      "timeline": "Main",
+      "weaponParticleSetupTime": 0.012225000187754631,
+      "armedSetupTime": 0.012524645775556564,
+      "entryAfterTime": 0.01253,
+      "entryBeforeTime": 2.43,
+      "entryTime": 2.43,
+      "priorDamageEnd": 2.411090135574341,
+      "priorTrailEnd": 2.42262864112854,
+      "finalMotionWarpBegin": 2.46059513092041,
+      "finalWaveCreate": 2.7894864082336426,
+      "finalWaveLaunch": 3.5660293102264404,
+      "finalWaveBullet": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/BronzeSword/B_Hun_BronzeSword_C_06_Wave",
+      "finalImpactBegin": 3.6278021335601807,
+      "finalImpactBullet": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/BronzeSword/B_Hun_BronzeSword_C_08",
+      "spanningActionsAtEntry": [
+        "LGAAction_PlayMontage_1",
+        "GAAction_ActionPhase_C_0",
+        "LGAAction_GameplayTags_0",
+        "LGAAction_AbstractEndure_0",
+        "GAAction_ModifyCameraZoom_C_0",
+        "LGAAction_RotationMode_0",
+        "LGAAction_RotationMode_4"
+      ],
+      "qualification": "Wait on the actual active Main task's timeline clock after native activation; do not use wall-clock delay or change task time fields. Do not rewind a task already beyond the desired entry time."
+    }
+  }
+}

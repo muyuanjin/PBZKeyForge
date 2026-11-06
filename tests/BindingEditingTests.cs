@@ -136,7 +136,7 @@ class BindingEditingTests
         const string dash = "ability:Ability.Action.Hun.SpecialDash";
         using (var dialog = new UnifiedBindingEditDialog(ws, dash, null, "J", null))
         {
-            dialog.Show(); Application.DoEvents(); Field<ComboBox>(dialog, "nativeMode").SelectedIndex = 1;
+            dialog.Show(); Application.DoEvents(); Field<CheckBox>(dialog, "nativeAbilityTrigger").Checked = false;
             Button(dialog, "saveBinding").PerformClick(); ws.Add(dash, dialog.Result);
             Check(!ws.UsesNativeTrigger(dash), "Replacing original controls left the ability's native combination active");
             Check(ws.Entries(dash).Length == 1 && ws.Session.Relations("IA_Dodge", false, -1).Keys.Length > 0, "Replacing dash removed standalone dodge");

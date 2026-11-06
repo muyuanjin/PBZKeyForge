@@ -16,8 +16,8 @@ namespace PBZKeyForge
         static readonly Dictionary<Type, string[]> Fields = new Dictionary<Type, string[]> {
             { typeof(KeyEnhancementConfiguration), new[] { "Enabled", "RuntimeHotkeys", "NativeBindings", "Rules", "CustomFunctions", "Suppressions", "Hooks", "NativeAbilitySuppressions", "CustomLua" } },
             { typeof(NativeBindingOverride), new[] { "FunctionId", "Device", "Keys" } },
-            { typeof(KeyEnhancementRule), new[] { "Id", "Keys", "Outputs", "Trigger", "Enabled", "Seconds", "InputGroup", "Consume", "ConsumeKeys", "Suppressions", "WhenLua", "Axis", "AxisDirection", "Threshold", "Interval", "Count", "Steps", "Watch", "EvaluateLua", "Priority", "BlockOriginalWhenDisabled" } },
-            { typeof(KeyEnhancementOutput), new[] { "Kind", "Path", "Tag", "MappingName", "MappingActions", "Device", "Value", "Id", "Name", "FunctionId", "Receiver", "ValueType", "Property", "Code", "InputAction", "Clamp", "Modifiers", "Triggers", "Payload", "Args", "Force", "Priority" } },
+            { typeof(KeyEnhancementRule), new[] { "Id", "Keys", "Outputs", "Trigger", "Enabled", "Seconds", "InputGroup", "Consume", "ConsumeKeys", "Suppressions", "WhenLua", "Axis", "AxisDirection", "Threshold", "Interval", "Count", "Steps", "Watch", "EvaluateLua", "Priority", "BlockOriginalWhenDisabled", "DefaultTrigger", "BypassResources", "DamageMultiplier", "StartupSpeed", "RecoverySpeed" } },
+            { typeof(KeyEnhancementOutput), new[] { "Kind", "Path", "Tag", "MappingName", "MappingActions", "Device", "Value", "Id", "Name", "FunctionId", "Receiver", "ValueType", "Property", "Code", "InputAction", "Clamp", "Modifiers", "Triggers", "Payload", "Args", "Force", "Priority", "NativePipeline" } },
             { typeof(KeyEnhancementSuppression), new[] { "ActionPath", "Key", "FunctionId" } }
         };
         static readonly Dictionary<Type, FieldInfo[]> Schema = Fields.ToDictionary(pair => pair.Key, pair => {

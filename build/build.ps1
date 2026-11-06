@@ -56,8 +56,8 @@ $artworkArgs += "/resource:$root\prototype\input-router\actions.json,PBZKeyForge
 $artworkArgs += "/resource:$root\assets\key-enhancement\action-localization.json,PBZKeyForge.KeyEnhancement.action-localization.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\action-details.json,PBZKeyForge.KeyEnhancement.action-details.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\complete-moves.json,PBZKeyForge.KeyEnhancement.complete-moves.json"
+$artworkArgs += "/resource:$root\assets\key-enhancement\resource-costs.json,PBZKeyForge.KeyEnhancement.resource-costs.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\native-input-plan.json,PBZKeyForge.KeyEnhancement.native-input-plan.json"
-$artworkArgs += "/resource:$root\assets\key-enhancement\legacy-runtime.zip,PBZKeyForge.KeyEnhancement.legacy.zip"
 
 $sourceRevision = $null
 $sourceRef = $null

@@ -18,6 +18,7 @@ namespace PBZKeyForge
     public sealed class KeyEnhancementOutput
     {
         public string Kind = "action", Path, Tag, Receiver = "pawn", ValueType, Property, Code, InputAction, MappingName, Device;
+        public bool? NativePipeline;
         public string Id, Name, FunctionId;
         public string[] MappingActions;
         public double? Clamp;
@@ -33,6 +34,8 @@ namespace PBZKeyForge
         public string InputGroup, AxisDirection = "both";
         public string Id = Guid.NewGuid().ToString("N"), Axis, Trigger = "press", WhenLua, EvaluateLua;
         public bool Enabled = true, Consume, BlockOriginalWhenDisabled;
+        public bool DefaultTrigger, BypassResources;
+        public double DamageMultiplier = 1, StartupSpeed = 1, RecoverySpeed = 1;
         public List<string> Keys = new List<string>(), ConsumeKeys = new List<string>(), Watch = new List<string>();
         public List<string[]> Steps = new List<string[]>();
         public double Seconds = 0.25, Interval = 0.3, Threshold = 0.5;
@@ -121,10 +124,12 @@ namespace PBZKeyForge
                 if (!Finite(rule.Seconds) || rule.Seconds < 0 || !Finite(rule.Interval) || rule.Interval <= 0 || !Finite(rule.Threshold) || rule.Threshold < 0 || rule.Count < 1)
                     throw Invalid(rule.Id + ": Seconds >= 0, Interval > 0, Threshold >= 0, Count >= 1");
                 var outputs = new List<object>();
+                var devices = rule.Keys.Concat(string.IsNullOrEmpty(rule.Axis) ? new string[0] : new[] { rule.Axis })
+                    .Select(key => key.StartsWith("Gamepad_", StringComparison.Ordinal) || key.StartsWith("PBZ_Touchpad_", StringComparison.Ordinal) ? "gamepad" : "keyboard").Distinct().ToArray();
                 foreach (var output in rule.Outputs)
                 {
                     string name = "output_" + targets.Count.ToString(CultureInfo.InvariantCulture);
-                    targets.Add(name, Target(output, Enabled));
+                    targets.Add(name, Target(output, Enabled, devices.Length == 1 ? devices[0] : null));
                     var reference = new Dictionary<string, object> { { "target", name } };
                     if ((output.Kind == "action" || output.Kind == "mapping") && output.Value != null) reference["value"] = output.Value;
                     outputs.Add(reference);
@@ -136,6 +141,17 @@ namespace PBZKeyForge
                     { "consume", rule.ConsumeKeys.Count > 0 ? (object)rule.ConsumeKeys : rule.Consume }
                 };
                 if (!string.IsNullOrEmpty(rule.InputGroup)) binding["input_group"] = rule.InputGroup;
+                if (rule.BypassResources) binding["bypass_resources"] = true;
+                if (!Finite(rule.DamageMultiplier) || rule.DamageMultiplier <= 0 || rule.DamageMultiplier > 100
+                    || !Finite(rule.StartupSpeed) || rule.StartupSpeed < .1 || rule.StartupSpeed > 10
+                    || !Finite(rule.RecoverySpeed) || rule.RecoverySpeed < .1 || rule.RecoverySpeed > 10)
+                    throw Invalid(rule.Id + ": DamageMultiplier > 0 and <= 100; StartupSpeed, RecoverySpeed: 0.1..10");
+                if ((rule.StartupSpeed != 1 || rule.RecoverySpeed != 1)
+                    && rule.Outputs.All(output => output.Kind == "move" && !CompleteMoveCatalog.SupportsPhaseSpeed(output.Tag)))
+                    throw Invalid(rule.Id + ": StartupSpeed, RecoverySpeed: 1 (" + string.Join(", ", rule.Outputs.Select(output => output.Tag)) + ")");
+                if (rule.DamageMultiplier != 1) binding["damage_multiplier"] = rule.DamageMultiplier;
+                if (rule.StartupSpeed != 1) binding["startup_speed"] = rule.StartupSpeed;
+                if (rule.RecoverySpeed != 1) binding["recovery_speed"] = rule.RecoverySpeed;
                 binding["axis_direction"] = rule.AxisDirection;
                 if (!string.IsNullOrWhiteSpace(rule.Axis)) binding["axis"] = rule.Axis;
                 if (rule.Watch.Count > 0) binding["watch"] = rule.Watch;
@@ -170,13 +186,13 @@ namespace PBZKeyForge
             };
             config["native_bindings"] = NativeBindings.Select(item => new Dictionary<string, object> {
                 {"function", item.FunctionId}, {"device", item.Device}, {"keys", item.Keys},
+                {"fixed_keys", InputDefaultSet.Current.FixedForAction(item.FunctionId, item.Device == "gamepad")},
                 {"actions", KeyEnhancementCatalog.ForMapping(item.FunctionId).Select(target => target.Path).ToArray()}
             }).ToArray();
             config["native_actions"] = KeyEnhancementInputPlan.Actions.Select(action => action.path).ToArray();
+            if (Rules.Any(rule => rule.Enabled && (rule.BypassResources || rule.DamageMultiplier != 1 || rule.StartupSpeed != 1 || rule.RecoverySpeed != 1))) config["resource_inputs"] = ResourceCostCatalog.InputTags;
             config["unified_native"] = true;
-            string dependencies = Rules.Any(rule => rule.Enabled && rule.Outputs.Any(output => output.Kind == "move"))
-                ? "require(\"complete-moves\")\n" : "";
-            return dependencies + "local config = " + Lua(config) + "\n" + (CustomLua ?? "") + "\nreturn config\n";
+            return "local config = " + Lua(config) + "\n" + (CustomLua ?? "") + "\nreturn config\n";
         }
 
         void ValidateStructure()
@@ -220,7 +236,7 @@ namespace PBZKeyForge
             if (!string.IsNullOrWhiteSpace(item.Key)) result["key"] = item.Key;
             return result;
         }
-        static object Target(KeyEnhancementOutput output, bool requireScheduledMapping)
+        static object Target(KeyEnhancementOutput output, bool requireScheduledMapping, string device = null)
         {
             if (output.Kind == "move") return CompleteMoveCatalog.Target(output);
             if (!new[] { "action", "mapping", "ability", "event", "function", "property", "lua", "scheme" }.Contains(output.Kind))
@@ -239,18 +255,34 @@ namespace PBZKeyForge
                 result["mapping"] = output.MappingName;
                 result["actions"] = output.MappingActions;
                 result["device"] = output.Device;
+                result["fixed_keys"] = InputDefaultSet.Current.FixedForAction(output.MappingName, output.Device == "gamepad");
             }
             if (output.Path != null) result["path"] = output.Path;
             if (output.Tag != null) result["tag"] = output.Tag;
             if (output.Receiver != null) result["receiver"] = output.Receiver;
             if (output.Kind == "action")
             {
+                if ((output.NativePipeline ?? (string.IsNullOrEmpty(output.Id) && KeyEnhancementInputPlan.HasPipeline(output.Path)))
+                    && (output.Modifiers == null || output.Modifiers.Count == 0)
+                    && (output.Triggers == null || output.Triggers.Count == 0))
+                {
+                    result["kind"] = "mapping";
+                    result["mapping"] = output.Path;
+                    result["actions"] = new[] { output.Path };
+                    result["device"] = output.Device ?? device;
+                    result["catalog_pipeline"] = true;
+                }
                 if (output.ValueType != null) result["value_type"] = output.ValueType;
                 if (output.Clamp.HasValue) result["clamp"] = output.Clamp.Value;
                 if (output.Modifiers != null && output.Modifiers.Count > 0) result["modifiers"] = output.Modifiers;
                 if (output.Triggers != null && output.Triggers.Count > 0) result["triggers"] = output.Triggers;
             }
-            if (output.Kind == "ability") { result["priority"] = output.Priority; result["force"] = output.Force; if (output.InputAction != null) result["input_action"] = output.InputAction; }
+            if (output.Kind == "ability")
+            {
+                result["priority"] = output.Priority; result["force"] = output.Force;
+                string input = output.InputAction ?? ResourceCostCatalog.InputForTag(output.Tag);
+                if (input != null) result["input_action"] = input;
+            }
             if (output.Kind == "function") result["args"] = output.Args ?? new object[0];
             if (output.Kind == "event" && output.Payload != null) result["payload"] = output.Payload;
             if (output.Kind == "property") { result["property"] = output.Property; result["value"] = output.Value; }

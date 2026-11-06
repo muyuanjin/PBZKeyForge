@@ -286,7 +286,7 @@ class BindingWorkspaceTests
                 && config.Rules[0].Suppressions.Single().Key == "Gamepad_FaceButton_Left", "Physical trigger restore omitted enhanced inputs/suppressions or changed another key.");
             string json = config.ToJson(); byte[] save = session.ExportCurrentScheme();
             workspace.RestoreKey(button);
-            Check(json == config.ToJson() && save.SequenceEqual(session.ExportCurrentScheme()), "Repeated physical trigger restoration changed the draft.");
+            Check(KeyEnhancementConfiguration.FromJson(json).ToJson() == config.ToJson() && save.SequenceEqual(session.ExportCurrentScheme()), "Repeated physical trigger restoration changed the draft.");
         }
 
         var full = EditorSession.CreateOffline();
