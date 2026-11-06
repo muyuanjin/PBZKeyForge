@@ -1,7 +1,7 @@
 ﻿#requires -Version 5.1
 <#
     Builds PBZKeyForge with the .NET Framework compiler shipped with Windows.
-    No SDK, no NuGet, no runtime install for the end user.
+    No SDK or NuGet. The editor uses Windows' .NET Framework.
 #>
 param(
     [string]$Configuration = "Release",

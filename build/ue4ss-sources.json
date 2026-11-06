@@ -1,4 +1,14 @@
 {
+  "Bundled": {
+    "Provider": "KintaroModding",
+    "Version": "v3.0.1-1195-g1ceefac8",
+    "Source": "https://github.com/KintaroModding/ue4ss/releases/tag/v3.0.1-1195-g1ceefac8",
+    "Asset": "phantombladezero_ue4ss_v3.0.1-1195-g1ceefac8.zip",
+    "Published": "2026-11-01T05:34:28Z",
+    "Download": "https://github.com/KintaroModding/ue4ss/releases/download/v3.0.1-1195-g1ceefac8/phantombladezero_ue4ss_v3.0.1-1195-g1ceefac8.zip",
+    "AssetId": "697433243",
+    "Updated": "2026-11-01T05:34:26Z"
+  },
   "Api": [
     "https://api.github.com/repos/KintaroModding/ue4ss/releases?per_page=30",
     "https://gh-proxy.com/https://api.github.com/repos/KintaroModding/ue4ss/releases?per_page=30"

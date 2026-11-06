@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
@@ -324,12 +325,14 @@ namespace PBZKeyForge
                 || loaderState == KeyEnhancementLoaderState.Incomplete && ReadOwnership().Files.Count == 0)) throw LoaderConflict();
             if (candidate.Enabled)
             {
-                var runtime = OwnedPayload(ReadOwnership());
                 string library = Path.Combine(loaderDirectory, "UE4SS.dll");
                 string proxy = Path.Combine(runtimeDirectory, LoaderSuspended ? SuspendedProxy : "dwmapi.dll");
-                KeyEnhancementPrerequisites.EnsureAvailable(runtimeDirectory,
-                    File.Exists(library) ? File.ReadAllBytes(library) : runtime["ue4ss/UE4SS.dll"],
-                    File.Exists(proxy) ? File.ReadAllBytes(proxy) : runtime["dwmapi.dll"]);
+                var runtime = File.Exists(library) && File.Exists(proxy) ? null : OwnedPayload(ReadOwnership());
+                using (var libraryFile = File.Exists(library) ? MemoryMappedFile.CreateFromFile(library, FileMode.Open, null, 0, MemoryMappedFileAccess.Read) : null)
+                using (var proxyFile = File.Exists(proxy) ? MemoryMappedFile.CreateFromFile(proxy, FileMode.Open, null, 0, MemoryMappedFileAccess.Read) : null)
+                using (Stream libraryStream = libraryFile != null ? (Stream)libraryFile.CreateViewStream(0, 0, MemoryMappedFileAccess.Read) : new MemoryStream(runtime["ue4ss/UE4SS.dll"], false))
+                using (Stream proxyStream = proxyFile != null ? (Stream)proxyFile.CreateViewStream(0, 0, MemoryMappedFileAccess.Read) : new MemoryStream(runtime["dwmapi.dll"], false))
+                    KeyEnhancementPrerequisites.EnsureAvailable(runtimeDirectory, libraryStream, proxyStream);
             }
             if (ConfigurationText == json && state == (candidate.Enabled ? KeyEnhancementInstallState.Enabled : KeyEnhancementInstallState.Disabled)
                 && !(LoaderSuspended && OtherModsPresent())) return;

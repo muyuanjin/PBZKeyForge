@@ -23,9 +23,16 @@ namespace PBZKeyForge
 
         internal static void EnsureAvailable(string gameBinaryDirectory, params byte[][] runtimeLibraries)
         {
+            var streams = runtimeLibraries.Select(bytes => (Stream)new MemoryStream(bytes, false)).ToArray();
+            try { EnsureAvailable(gameBinaryDirectory, streams); }
+            finally { foreach (var stream in streams) stream.Dispose(); }
+        }
+
+        internal static void EnsureAvailable(string gameBinaryDirectory, params Stream[] runtimeLibraries)
+        {
             if (IntPtr.Size != 8) throw new IOException(I18n.Str("ue4ss.requires64"));
             var imports = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
-            foreach (byte[] library in runtimeLibraries) ReadImports(library, imports);
+            foreach (Stream library in runtimeLibraries) ReadImports(library, imports);
             var failures = new List<string>();
             var modules = new List<IntPtr>();
             uint previousMode;
@@ -69,68 +76,84 @@ namespace PBZKeyForge
         }
 
         // Inspect imports without executing UE4SS or its proxy in the editor process.
-        static void ReadImports(byte[] bytes, Dictionary<string, HashSet<string>> imports)
+        static void ReadImports(Stream stream, Dictionary<string, HashSet<string>> imports)
         {
-            using (var stream = new MemoryStream(bytes))
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new BinaryReader(stream, Encoding.ASCII, true))
             {
-                if (bytes.Length < 64 || reader.ReadUInt16() != 0x5a4d) throw InvalidLibrary();
-                stream.Position = 60;
+                if (stream.Length < 64 || reader.ReadUInt16() != 0x5a4d) throw InvalidLibrary();
+                stream.Seek(60, SeekOrigin.Begin);
                 int pe = reader.ReadInt32();
-                if (pe < 64 || pe > bytes.Length - 24) throw InvalidLibrary();
-                stream.Position = pe;
+                if (pe < 64 || pe > stream.Length - 24) throw InvalidLibrary();
+                stream.Seek(pe, SeekOrigin.Begin);
                 if (reader.ReadUInt32() != 0x4550 || reader.ReadUInt16() != 0x8664) throw InvalidLibrary();
                 int sections = reader.ReadUInt16();
-                stream.Position = pe + 20;
+                stream.Seek(pe + 20, SeekOrigin.Begin);
                 int optionalSize = reader.ReadUInt16(), optional = pe + 24;
-                if (optionalSize < 128 || optional > bytes.Length - optionalSize || BitConverter.ToUInt16(bytes, optional) != 0x20b)
+                if (optionalSize < 128 || optional > stream.Length - optionalSize) throw InvalidLibrary();
+                stream.Seek(optional, SeekOrigin.Begin);
+                byte[] header = reader.ReadBytes(optionalSize);
+                if (BitConverter.ToUInt16(header, 0) != 0x20b)
                     throw InvalidLibrary();
                 int sectionTable = optional + optionalSize;
-                if (sections > (bytes.Length - sectionTable) / 40) throw InvalidLibrary();
-                Func<uint, int> offset = rva => {
+                if (sections > (stream.Length - sectionTable) / 40) throw InvalidLibrary();
+                byte[] sectionHeaders = reader.ReadBytes(sections * 40);
+                Func<uint, long> offset = rva => {
                     for (int i = 0; i < sections; i++)
                     {
-                        int section = sectionTable + i * 40;
-                        uint start = BitConverter.ToUInt32(bytes, section + 12), size = BitConverter.ToUInt32(bytes, section + 16);
+                        int section = i * 40;
+                        uint start = BitConverter.ToUInt32(sectionHeaders, section + 12), size = BitConverter.ToUInt32(sectionHeaders, section + 16);
                         if (rva < start || rva - start >= size) continue;
-                        long position = (long)BitConverter.ToUInt32(bytes, section + 20) + rva - start;
-                        if (position >= bytes.Length) throw InvalidLibrary();
-                        return (int)position;
+                        long position = (long)BitConverter.ToUInt32(sectionHeaders, section + 20) + rva - start;
+                        if (position >= stream.Length) throw InvalidLibrary();
+                        return position;
                     }
                     throw InvalidLibrary();
                 };
-                uint directory = BitConverter.ToUInt32(bytes, optional + 120);
+                uint directory = BitConverter.ToUInt32(header, 120);
                 if (directory == 0) return;
-                for (int descriptor = offset(directory); ; descriptor += 20)
+                for (long descriptor = offset(directory); ; descriptor += 20)
                 {
-                    if (descriptor > bytes.Length - 20) throw InvalidLibrary();
-                    uint nameRva = BitConverter.ToUInt32(bytes, descriptor + 12);
+                    if (descriptor > stream.Length - 20) throw InvalidLibrary();
+                    stream.Seek(descriptor, SeekOrigin.Begin);
+                    byte[] entry = reader.ReadBytes(20);
+                    uint nameRva = BitConverter.ToUInt32(entry, 12);
                     if (nameRva == 0) break;
-                    string name = ReadName(bytes, offset(nameRva));
+                    string name = ReadName(reader, offset(nameRva));
                     if (!name.StartsWith("MSVCP", StringComparison.OrdinalIgnoreCase)
                         && !name.StartsWith("VCRUNTIME", StringComparison.OrdinalIgnoreCase)) continue;
                     HashSet<string> symbols;
                     if (!imports.TryGetValue(name, out symbols)) imports.Add(name, symbols = new HashSet<string>(StringComparer.Ordinal));
-                    uint thunk = BitConverter.ToUInt32(bytes, descriptor);
-                    if (thunk == 0) thunk = BitConverter.ToUInt32(bytes, descriptor + 16);
-                    for (int entry = offset(thunk); ; entry += 8)
+                    uint thunk = BitConverter.ToUInt32(entry, 0);
+                    if (thunk == 0) thunk = BitConverter.ToUInt32(entry, 16);
+                    var values = new List<ulong>();
+                    stream.Seek(offset(thunk), SeekOrigin.Begin);
+                    while (true)
                     {
-                        if (entry > bytes.Length - 8) throw InvalidLibrary();
-                        ulong value = BitConverter.ToUInt64(bytes, entry);
+                        if (stream.Position > stream.Length - 8) throw InvalidLibrary();
+                        ulong value = reader.ReadUInt64();
                         if (value == 0) break;
-                        symbols.Add((value & 0x8000000000000000UL) != 0
-                            ? "#" + (value & 0xffff) : ReadName(bytes, offset(checked((uint)value)) + 2));
+                        values.Add(value);
                     }
+                    foreach (ulong value in values)
+                        symbols.Add((value & 0x8000000000000000UL) != 0
+                            ? "#" + (value & 0xffff) : ReadName(reader, offset(checked((uint)value)) + 2));
                 }
             }
         }
 
-        static string ReadName(byte[] bytes, int offset)
+        static string ReadName(BinaryReader reader, long offset)
         {
-            if (offset < 0 || offset >= bytes.Length) throw InvalidLibrary();
-            int end = Array.IndexOf(bytes, (byte)0, offset);
-            if (end < 0) throw InvalidLibrary();
-            return Encoding.ASCII.GetString(bytes, offset, end - offset);
+            var stream = reader.BaseStream;
+            if (offset < 0 || offset >= stream.Length) throw InvalidLibrary();
+            stream.Seek(offset, SeekOrigin.Begin);
+            var text = new StringBuilder();
+            while (stream.Position < stream.Length)
+            {
+                byte value = reader.ReadByte();
+                if (value == 0) return text.ToString();
+                text.Append((char)value);
+            }
+            throw InvalidLibrary();
         }
 
         static InvalidDataException InvalidLibrary()

@@ -304,3 +304,21 @@ CLI export checks reject runtime configuration targets for new, ZIP and JSON sou
 `CliLifecycleTests` covers unattended startup, version/source discovery, UTF-8 stdin and BOM files, invalid-field diagnostics, gameplay Mod enable/disable/conflicts, enhancement lifecycle, local runtime update, ordinary Apply with backups, running-game refusal and partial uninstall reporting. It requires the real game to be closed. For authenticated scheme activation and live acknowledgement/rejection/timeout checks, pass the real game root as a third argument and use a new test directory on that game's volume, for example `python tests\CliLifecycleTests.py dist\PBZKeyForge-cli.exe G:\PBZKeyForge-cli-check G:\SteamLibrary\steamapps\common\PBZ`. It hard-links the native executable and copies both saves; the originals are checked unchanged. A temporary process named PBZ and simulated heartbeat/acknowledgements exercise the CLI protocol. These checks do not establish actual game input behavior, launch a game or stop an existing game process.
 
 CLI preset checks also cover keyboard-only and controller-only Replace/OnlyPreset operations. The other device's rules, native overrides and keyed suppressions must survive export and reimport.
+
+Cross-device prerequisite and build checks:
+
+
+```powershell
+& $compiler /nologo /out:dist\KeyEnhancementPrerequisitesTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.IO.Compression.dll tests\KeyEnhancementPrerequisitesTests.cs
+.\dist\KeyEnhancementPrerequisitesTests.exe dist\prerequisites-check
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests\Ue4ssBuildTests.ps1 -OutputDirectory dist\ue4ss-build-check
+```
+
+The prerequisite harness checks missing CRT imports, missing exports, damaged app-local runtimes, rejection before installation writes, repair/retry, and disable/uninstall with unavailable prerequisites. It uses copied runtime files and never launches UE4SS or the game. Compile it with `/platform:x86` to verify the architecture diagnostic and that disabling/uninstalling remain available. Append `--all-languages` for a targeted check of the two prerequisite messages. The PowerShell harness requires the pinned ZIP in the build cache; all network calls are intercepted. It verifies offline cache reuse, refusal to substitute another cached release, and explicit pin refresh with success/failure persistence.
+
+```powershell
+& $compiler /nologo /out:dist\KeyEnhancementPrerequisitesPerformanceTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Web.Extensions.dll tests\KeyEnhancementPrerequisitesPerformanceTests.cs
+.\dist\KeyEnhancementPrerequisitesPerformanceTests.exe dist\prerequisite-performance
+```
+
+The performance harness records three fresh-process checks, 30 checks of in-memory update candidates, 30 checks of mapped installed DLLs and 20 unchanged Apply operations. A full-file-read control provides an allocation and I/O comparison. It rejects checks allocating more than 1 MiB per call and unchanged Apply operations explicitly reading at least half the native DLL size; timings describe the local machine and have no fixed pass threshold. The JSON report includes median, p95, CPU time, managed allocations, explicit read bytes and GC counts. File mappings page in only accessed data; mapped page faults are not included in the explicit read counter. These runs use isolated fixtures with the game's global closed-process guard.

@@ -54,12 +54,16 @@ jobs:
         shell: pwsh
         run: |
           $compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
-          foreach ($test in @('KeyEnhancementInstallationTests', 'KeyEnhancementCoexistenceTests', 'Ue4ssUpdateTests')) {
-            & $compiler /nologo "/out:dist\$test.exe" /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.IO.Compression.dll "tests\$test.cs"
+          foreach ($test in @('KeyEnhancementPrerequisitesTests', 'KeyEnhancementPrerequisitesPerformanceTests', 'KeyEnhancementInstallationTests', 'KeyEnhancementCoexistenceTests', 'Ue4ssUpdateTests')) {
+            & $compiler /nologo "/out:dist\$test.exe" /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.IO.Compression.dll /r:System.Web.Extensions.dll "tests\$test.cs"
             if ($LASTEXITCODE -ne 0) { throw "$test compilation failed" }
             & ".\dist\$test.exe" ".\dist\$test-fixture"
             if ($LASTEXITCODE -ne 0) { throw "$test failed" }
           }
+
+      - name: Verify pinned and offline UE4SS builds
+        shell: powershell
+        run: ./tests/Ue4ssBuildTests.ps1 -OutputDirectory ./dist/ue4ss-build-check
 
       - name: Verify preset share format and device scopes
         shell: pwsh

@@ -1,11 +1,14 @@
 #requires -Version 5.1
 param([Parameter(Mandatory = $true)][string]$OutputDirectory,
-    [string]$CacheDirectory = "$env:LOCALAPPDATA\PBZKeyForge\cache\ue4ss-build")
+    [string]$CacheDirectory = "$env:LOCALAPPDATA\PBZKeyForge\cache\ue4ss-build",
+    [switch]$UpdatePinnedRelease)
 $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $taskHeaders = @{ 'User-Agent' = 'PBZKeyForge-build' }
 if ($env:GITHUB_TOKEN) { $taskHeaders.Authorization = 'Bearer ' + $env:GITHUB_TOKEN }
 $taskSources = Get-Content "$PSScriptRoot\ue4ss-sources.json" -Raw | ConvertFrom-Json
+$taskMetadata = $taskSources.Bundled
+if ($UpdatePinnedRelease) {
 $taskReleases = $null
 foreach ($taskApi in $taskSources.Api) {
     try {
@@ -23,10 +26,21 @@ foreach ($taskRelease in @($taskReleases | Where-Object { -not $_.draft -and -no
     if ($taskAsset) { break }
 }
 if (-not $taskAsset) { throw 'No current Kintaro Phantom Blade Zero runtime release was found.' }
+$taskMetadata = [pscustomobject][ordered]@{
+    Provider = 'KintaroModding'; Version = [string]$taskRelease.tag_name
+    Source = [string]$taskRelease.html_url; Asset = [string]$taskAsset.name
+    Published = ([DateTimeOffset]$taskRelease.published_at).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ', [Globalization.CultureInfo]::InvariantCulture)
+    Download = [string]$taskAsset.browser_download_url; AssetId = [string]$taskAsset.id
+    Updated = ([DateTimeOffset]$taskAsset.updated_at).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ', [Globalization.CultureInfo]::InvariantCulture)
+}
+}
+if (-not $taskMetadata.Version -or -not $taskMetadata.AssetId -or -not $taskMetadata.Download -or -not $taskMetadata.Updated) {
+    throw 'No pinned UE4SS release is configured in build/ue4ss-sources.json.'
+}
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
 New-Item -ItemType Directory -Path $CacheDirectory -Force | Out-Null
 $taskArchive = Join-Path $OutputDirectory 'ue4ss-download.zip'
-$taskCache = Join-Path $CacheDirectory ("$($taskAsset.id)-$(([DateTime]$taskAsset.updated_at).ToUniversalTime().Ticks).zip")
+$taskCache = Join-Path $CacheDirectory ("$($taskMetadata.AssetId)-$(([DateTimeOffset]$taskMetadata.Updated).UtcTicks).zip")
 $taskTemporary = "$taskArchive.$([Guid]::NewGuid().ToString('N')).download"
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 function Assert-Ue4ssArchive([string]$Path) {
@@ -41,18 +55,22 @@ function Assert-Ue4ssArchive([string]$Path) {
 try {
     $taskDownloaded = $false
     if (Test-Path -LiteralPath $taskCache) {
+        $taskCacheValid = $false
         try {
             Assert-Ue4ssArchive $taskCache
+            $taskCacheValid = $true
+        } catch [IO.InvalidDataException] { Remove-Item -LiteralPath $taskCache -Force }
+        if ($taskCacheValid) {
             Copy-Item -LiteralPath $taskCache -Destination $taskTemporary
             $taskDownloaded = $true
-            Write-Host "Using cached Kintaro PBZ UE4SS $($taskRelease.tag_name)."
-        } catch { Remove-Item -LiteralPath $taskCache -Force }
+            Write-Host "Using cached Kintaro PBZ UE4SS $($taskMetadata.Version)."
+        }
     }
     foreach ($taskPrefixUrl in $taskSources.DownloadPrefixes) {
         if ($taskDownloaded) { break }
         for ($taskAttempt = 0; $taskAttempt -lt 2 -and -not $taskDownloaded; $taskAttempt++) {
             try {
-                Invoke-WebRequest -UseBasicParsing -Uri ($taskPrefixUrl + $taskAsset.browser_download_url) -OutFile $taskTemporary -TimeoutSec 60 | Out-Null
+                Invoke-WebRequest -UseBasicParsing -Uri ($taskPrefixUrl + $taskMetadata.Download) -OutFile $taskTemporary -TimeoutSec 60 | Out-Null
                 Assert-Ue4ssArchive $taskTemporary
                 $taskDownloaded = $true
             }
@@ -62,19 +80,16 @@ try {
         }
         if ($taskDownloaded) { break }
     }
-    if (-not $taskDownloaded) { throw 'Unable to download the latest Kintaro PBZ runtime from GitHub. No cached or older runtime was substituted.' }
+    if (-not $taskDownloaded) { throw "Unable to download pinned Kintaro PBZ UE4SS $($taskMetadata.Version). Restore its ZIP to $taskCache or retry with network access." }
     Copy-Item -LiteralPath $taskTemporary -Destination $taskCache -Force
     Move-Item -LiteralPath $taskTemporary -Destination $taskArchive -Force
-    $taskMetadata = [ordered]@{
-        Provider = 'KintaroModding'; Version = [string]$taskRelease.tag_name
-        Source = [string]$taskRelease.html_url; Asset = [string]$taskAsset.name
-        Published = ([DateTimeOffset]$taskRelease.published_at).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ', [Globalization.CultureInfo]::InvariantCulture)
-        Download = [string]$taskAsset.browser_download_url; AssetId = [string]$taskAsset.id
-        Updated = ([DateTimeOffset]$taskAsset.updated_at).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ', [Globalization.CultureInfo]::InvariantCulture)
-    }
     $taskUtf8 = New-Object Text.UTF8Encoding($false)
     [IO.File]::WriteAllText((Join-Path $OutputDirectory 'ue4ss-release.json'), ($taskMetadata | ConvertTo-Json), $taskUtf8)
-    Write-Host "Prepared latest Kintaro PBZ UE4SS $($taskRelease.tag_name)."
+    if ($UpdatePinnedRelease) {
+        $taskSources.Bundled = $taskMetadata
+        [IO.File]::WriteAllText("$PSScriptRoot\ue4ss-sources.json", ($taskSources | ConvertTo-Json -Depth 5) + [Environment]::NewLine, $taskUtf8)
+    }
+    Write-Host "Prepared pinned Kintaro PBZ UE4SS $($taskMetadata.Version)."
 }
 finally {
     if (Test-Path -LiteralPath $taskTemporary) { Remove-Item -LiteralPath $taskTemporary }

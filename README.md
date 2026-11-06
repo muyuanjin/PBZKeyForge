@@ -153,6 +153,8 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 `PBZKeyForge.exe` · 单文件 · 免安装 · 不需要额外下载 .NET 运行时 · Windows 10/11
 
+键位增强使用 x64 UE4SS，需要最新版 [Microsoft Visual C++ v14 x64 运行库](https://aka.ms/vc14/vc_redist.x64.exe)。启用和更新前会检查实际依赖，缺失或过旧时提供修复提示；普通改键、预设和离线编辑不需要它。
+
 ![PBZKeyForge 1.2.3 中文主界面，预设下拉框已展开](assets/screenshots/1.2.3/main-zh-Hans.png)
 
 ![PBZKeyForge 1.2.3 中文 Xbox 视图，预设下拉框已展开](assets/screenshots/1.2.3/main-gamepad-zh-Hans.png)
@@ -232,6 +234,16 @@ powershell -ExecutionPolicy Bypass -File build\build.ps1
 ```
 
 产物：`dist\PBZKeyForge.exe`（界面）与 `dist\PBZKeyForge-cli.exe`（命令行，仅供构建流程使用）。
+
+构建使用 `build/ue4ss-sources.json` 中固定的 Kintaro PBZ UE4SS 包，缓存命中时可离线构建。显式更新固定包：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\download-ue4ss.ps1 -OutputDirectory dist -UpdatePinnedRelease
+```
+
+命令在取得有效 ZIP 后更新固定版本；确认安装测试与游戏兼容性后提交版本配置。程序内的 UE4SS 更新检查独立查询最新版。
+
+启用键位增强和安装玩法 Mod 需要游戏目录写权限。发布程序未做 Authenticode 签名，Windows 可能显示 SmartScreen 提示。
 
 ### 截取版本截图
 
