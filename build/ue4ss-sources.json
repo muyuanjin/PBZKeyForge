@@ -1,0 +1,7 @@
+{
+  "Api": [
+    "https://api.github.com/repos/KintaroModding/ue4ss/releases?per_page=30",
+    "https://gh-proxy.com/https://api.github.com/repos/KintaroModding/ue4ss/releases?per_page=30"
+  ],
+  "DownloadPrefixes": ["", "https://ghfast.top/", "https://gh-proxy.com/"]
+}

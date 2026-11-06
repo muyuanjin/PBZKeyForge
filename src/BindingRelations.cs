@@ -22,6 +22,9 @@ namespace PBZKeyForge
     {
         public string Action;
         public string[] Keys, DefaultKeys;
+        public string[] BindingDetails;
+        public string BindingSignature;
+        public bool CustomBindings;
         public bool Complete, Changed;
         public bool CanCompare { get { return Complete && DefaultKeys != null; } }
         public bool KnowsKey(string key)
@@ -56,6 +59,8 @@ namespace PBZKeyForge
         public int FamilyIndex;
         public bool Gamepad, BeforeComplete, AfterComplete;
         public string[] BeforeKeys, AfterKeys, DefaultKeys;
+        public string[] BeforeBindings, AfterBindings;
+        public bool DetailsChanged;
         public string[] AddedKeys { get { return AfterKeys.Except(BeforeKeys).Where(k => BeforeComplete || DefaultKeys != null && !DefaultKeys.Contains(k)).ToArray(); } }
         public string[] RemovedKeys { get { return BeforeKeys.Except(AfterKeys).Where(k => AfterComplete || DefaultKeys != null && !DefaultKeys.Contains(k)).ToArray(); } }
     }
@@ -67,6 +72,9 @@ namespace PBZKeyForge
         public readonly string Family;
         public readonly ActionRelations[] Current;
         public readonly Dictionary<string, ActionRelations> Before;
+
+        public BindingSnapshot(bool gamepad, int familyIndex, string family, ActionRelations[] current, Dictionary<string, ActionRelations> before)
+        { Gamepad = gamepad; FamilyIndex = familyIndex; Family = family; Current = current; Before = before; }
 
         public BindingSnapshot(EditorSession session, bool gamepad, int familyIndex, string family)
         {
@@ -85,9 +93,11 @@ namespace PBZKeyForge
                 bool complete = factory ? keys != null : before.Complete;
                 if (keys == null) continue;
                 bool same = !keys.Except(current.Keys).Any() && !current.Keys.Except(keys).Any();
-                if (complete && current.Complete ? same : factory ? !current.Keys.Except(keys).Any() : !current.Changed) continue;
+                bool detailsChanged = current.BindingSignature != null && (factory ? current.CustomBindings : current.BindingSignature != before.BindingSignature);
+                if (!detailsChanged && (complete && current.Complete ? same : factory ? !current.Keys.Except(keys).Any() : !current.Changed)) continue;
                 differences.Add(new BindingDifference { Action = current.Action, Gamepad = Gamepad, FamilyIndex = FamilyIndex,
                     Family = Family, BeforeKeys = keys, AfterKeys = current.Keys, DefaultKeys = current.DefaultKeys,
+                    BeforeBindings = factory ? keys.Select(BindingButton.FriendlyKey).ToArray() : before.BindingDetails, AfterBindings = current.BindingDetails, DetailsChanged = detailsChanged,
                     BeforeComplete = complete, AfterComplete = current.Complete });
             }
             return differences.ToArray();
@@ -236,16 +246,26 @@ namespace PBZKeyForge
 
         public void RestoreKey(string key, bool gamepad, int familyIndex)
         {
+            RestoreKeys(new[] { key }, gamepad, familyIndex);
+        }
+
+        public void RestoreKeys(IEnumerable<string> keys, bool gamepad, int familyIndex, Action<string, string> addOverflow = null)
+        {
             EnsureEditable();
-            var relation = RelationsForKey(key, gamepad, familyIndex);
-            if (!relation.CurrentComplete || !relation.FactoryComplete) throw new InvalidOperationException(I18n.Str("views.incomplete"));
+            var relations = keys.Distinct().Select(key => RelationsForKey(key, gamepad, familyIndex)).ToArray();
+            if (relations.Any(relation => !relation.CurrentComplete || !relation.FactoryComplete)) throw new InvalidOperationException(I18n.Str("views.incomplete"));
             Draft previous = draft, previousPreview = previewCheckpoint;
             string previousProfile = previewProfile, previousPreset = PresetId;
             draft = draft.Copy();
             try
             {
-                foreach (var action in relation.Added) ChangeRelationship(action.Action, key, false, gamepad, familyIndex);
-                foreach (var action in relation.Removed) ChangeRelationship(action.Action, key, true, gamepad, familyIndex);
+                foreach (var relation in relations)
+                    foreach (var action in relation.Added) ChangeRelationship(action.Action, relation.Key, false, gamepad, familyIndex);
+                foreach (var relation in relations)
+                    foreach (var action in relation.Removed)
+                        if (addOverflow != null && !RelationshipCapacity(action.Action, gamepad, familyIndex).CanAdd)
+                            addOverflow(action.Action, relation.Key);
+                        else ChangeRelationship(action.Action, relation.Key, true, gamepad, familyIndex);
             }
             catch
             {

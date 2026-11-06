@@ -1,4 +1,22 @@
-# Third-party notices
+﻿# Third-party notices
+
+Project: https://github.com/muyuanjin/PBZKeyForge
+Nexus Mods: https://www.nexusmods.com/phantombladezero/mods/402
+
+Thanks to KintaroModding for the Phantom Blade Zero UE4SS adaptation, the UE4SS
+community, library and artwork contributors, and players providing feedback.
+
+## UE4SS
+
+The build downloads the latest Phantom Blade Zero package from
+https://github.com/KintaroModding/ue4ss/releases.
+Upstream: https://github.com/UE4SS-RE/RE-UE4SS. The release identity is recorded
+in the embedded runtime archive (`release.json`) and the installation record.
+Copyright (c) 2022 Narknon. MIT License; complete text in the downloaded package
+and the embedded runtime's `ue4ss/LICENSE`.
+The application includes the runtime, proxy loader, member layout and signatures;
+existing UE4SS installations retain their own components and configuration unless
+the player explicitly chooses a runtime update. Updates preserve other Mods and settings.
 
 ## protobuf-net 2.4.9
 

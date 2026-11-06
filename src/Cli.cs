@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,10 +6,38 @@ using System.Text;
 
 namespace PBZKeyForge
 {
-    /// <summary>Command line surface. The GUI is the default when no arguments are given.</summary>
-    public static class Cli
+    /// <summary>Command line operations for bindings and installed components.</summary>
+    public static partial class Cli
     {
         public static int Run(string[] args)
+        {
+            if (args.Length == 0 || !new[] { "--selftest", "--list", "--schemes", "--apply-preset", "--activate", "--make-vanilla", "--gen-presets" }.Contains(args[0])) return RunAgent(args);
+            Console.OutputEncoding = new UTF8Encoding(false);
+            try
+            {
+                ValidateLegacyArguments(args);
+                return RunLegacy(args);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(AgentJson.Serialize(new { ok = false, error = ex.Message,
+                    code = ex is ArgumentException ? "invalid_request" : "operation_failed", next = "Run --agent-help. Legacy commands require explicit paths; use --edit for safe installation changes." }));
+                return ex is ArgumentException ? 2 : 1;
+            }
+        }
+
+        static void ValidateLegacyArguments(string[] args)
+        {
+            int positional = args[0] == "--apply-preset" ? 3
+                : args[0] == "--activate" || args[0] == "--make-vanilla" || args[0] == "--gen-presets" ? 2 : 1;
+            if (args.Length < positional + 1 || args.Take(positional + 1).Skip(1).Any(value => value.StartsWith("--")))
+                throw new ArgumentException("Missing positional arguments for " + args[0] + ". See --agent-help.");
+            if (args.Length == positional + 1) return;
+            if (args[0] == "--apply-preset" && args.Length == positional + 3 && args[positional + 1] == "--scheme" && !args[positional + 2].StartsWith("--")) return;
+            throw new ArgumentException("Unexpected arguments for " + args[0] + ". See --agent-help.");
+        }
+
+        static int RunLegacy(string[] args)
         {
             string cmd = args[0];
             var opts = Parse(args);
@@ -133,11 +161,13 @@ namespace PBZKeyForge
 
             string scheme;
             opts.TryGetValue("--scheme", out scheme);
-            if (string.IsNullOrEmpty(scheme)) scheme = GameProfile(input) ?? sav.ActiveProfile;
+            if (string.IsNullOrEmpty(scheme)) scheme = GameProfile(input);
+            if (string.IsNullOrEmpty(scheme)) { Console.WriteLine("The active game scheme is unknown. Specify --scheme <profileId>."); return 2; }
             var rec = sav.RecordFor(scheme);
             if (rec == null) { Console.WriteLine("unknown scheme: " + scheme); return 2; }
 
             Presets.Apply(sav, preset, rec);
+            EnsureConversionOutput(input, output);
             sav.Save(output);
             Console.WriteLine("preset=" + preset.Id + " scheme=" + scheme + " -> " + output);
             return 0;
@@ -163,6 +193,7 @@ namespace PBZKeyForge
             var sav = SaveFile.Load(input);
             foreach (var r in sav.Records) r.Entries = new List<BlobEntry>();
             sav.ResetGamepadToDefaults();
+            EnsureConversionOutput(input, output);
             sav.Save(output);
             Console.WriteLine("vanilla written: " + output);
             return 0;
@@ -209,6 +240,19 @@ namespace PBZKeyForge
             index.AppendLine("Target profile / 目标方案：`" + profile + "`. Restore all defaults resets every scheme; any scheme can then be selected. 恢复全部默认会重置全部方案，之后可选择任一方案。");
             File.WriteAllText(Path.Combine(outDir, "PRESETS.md"), index.ToString(), new UTF8Encoding(true));
             return 0;
+        }
+
+        static void EnsureConversionOutput(string input, string output)
+        {
+            string target = Path.GetFullPath(output);
+            try
+            {
+                KeyEnhancementInstallation.FindGameDirectory(target);
+                throw new InvalidOperationException("Use --edit with --apply or --live for installed saves.");
+            }
+            catch (FileNotFoundException) { }
+            if (target.Equals(Path.GetFullPath(input), StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Conversion commands require a separate output copy.");
         }
 
         static string MarkdownCell(string text) { return text.Replace("|", "&#124;").Replace("\r", "").Replace("\n", "<br>"); }

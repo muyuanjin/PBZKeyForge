@@ -106,6 +106,7 @@ namespace PBZKeyForge
         public string ActionId;
         protected bool Hovered, Pressed;
         public bool Primary;
+        public Color AccentColor = Color.Empty;
         public EditorButton()
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
@@ -125,6 +126,7 @@ namespace PBZKeyForge
             float scale = e.Graphics.DpiX / 96f;
             Color fill = !Enabled ? EditorTheme.Disabled : Primary ? (Pressed ? Color.FromArgb(143, 40, 45) : Hovered ? EditorTheme.AccentHover : EditorTheme.Accent)
                 : Pressed ? EditorTheme.Surface : Hovered ? EditorTheme.Hover : EditorTheme.Floating;
+            if (Enabled && Primary && !AccentColor.IsEmpty) fill = Pressed ? ControlPaint.Dark(AccentColor) : Hovered ? ControlPaint.Light(AccentColor) : AccentColor;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             using (var shape = EditorArtwork.Rounded(new RectangleF(0.5f, 0.5f, Width - 1.5f, Height - 1.5f), 5 * scale))
             using (var brush = new SolidBrush(fill))

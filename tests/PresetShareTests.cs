@@ -146,6 +146,12 @@ public static class PresetShareTests
             var missing = Open(input); int before = missing.ScopeChangeCount;
             bool rejected = false; try { missing.StagePreset(literals, PresetApplyMode.OnlyPreset); } catch (InvalidOperationException) { rejected = true; }
             Assert(rejected && missing.ScopeChangeCount == before, "Missing included family rejects even Only preset atomically");
+            var scoped = Open(input); scoped.SetKeyboard("IA_Jump", 0, "J");
+            scoped.SwitchProfile("PBZ.KeyProfile.Custom2"); scoped.SetKeyboard("IA_Jump", 0, "K");
+            var exported = EditorSession.ImportOffline(scoped.ExportCurrentScheme(), scoped.Defaults, Profile);
+            Assert(!exported.Relations("IA_Jump", false, -1).Keys.Contains("J"), "Ordinary export excludes another scheme's pending edit");
+            exported.SwitchProfile("PBZ.KeyProfile.Custom2");
+            Assert(exported.Relations("IA_Jump", false, -1).Keys.Contains("K"), "Ordinary export retains the selected scheme's pending edit");
             Assert(original.SequenceEqual(File.ReadAllBytes(args[0])) && fixture.SequenceEqual(File.ReadAllBytes(input)), "All checks preserve source saves");
             Console.WriteLine("PresetShareTests PASS: " + checks + " checks; " + output); return 0;
         }

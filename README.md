@@ -247,5 +247,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshot
 
 MIT。与 S-Game 无关，使用风险自负，记得留备份。
 
+### CLI 与 AI Agent
 
+主界面的 **AI / CLI** 可让 Agent 获取当前文件与命令入口。`PBZKeyForge-cli.exe --agent-help` 提供机器可读的目录、操作与字段说明；`--inspect` 检查，`--edit` 预览，`--out` 导出完整配置，`--apply` 安全写回，`--live` 实时应用。详见 [CLI 文档](docs/cli.md)。
 
+`--component` 管理键位增强及 UE4SS 更新，`--gameplay-mod` 独立开启或关闭玩法 Mod；`--runtime-status` 返回实时编辑是否就绪。`--live --dry-run` 可预览实时请求，`--version` 提供本次构建对应的源码提交与下载入口。CLI 不带参数显示帮助并退出，适合无人值守调用。

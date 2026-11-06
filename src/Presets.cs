@@ -34,6 +34,7 @@ namespace PBZKeyForge
         public List<PresetMapping> UserMappings;
         public uint BaselineId;
         public List<PresetScope> Scopes;
+        public KeyEnhancementConfiguration KeyEnhancement;
         public bool IsUser { get { return UserMappings != null; } }
         public bool Vanilla;
         public bool CurrentProfileVanilla;
@@ -142,7 +143,7 @@ namespace PBZKeyForge
             return result;
         }
 
-        public static void Apply(SaveFile save, Preset preset, BlobRecord record, PresetApplyMode mode)
+        public static void Apply(SaveFile save, Preset preset, BlobRecord record, PresetApplyMode mode, Action<string, string, string> addOverflow = null)
         {
             var defaults = save.Defaults;
             if (preset.Vanilla || preset.CurrentProfileVanilla) { Apply(save, preset, record); return; }
@@ -151,7 +152,7 @@ namespace PBZKeyForge
             {
                 var planned = save.Clone();
                 ControllerProfiles.PreparePreset(planned, preset, record.ProfileId);
-                Apply(planned, preset, planned.RecordFor(record.ProfileId), mode);
+                Apply(planned, preset, planned.RecordFor(record.ProfileId), mode, addOverflow);
                 save.Props = planned.Props;
                 record.Entries = planned.RecordFor(record.ProfileId).Entries;
                 return;
@@ -177,7 +178,7 @@ namespace PBZKeyForge
                         UserMappings = preset.Scopes.SelectMany(scope => PresetBaseline.Actions.Select(action =>
                             preset.UserMappings.FirstOrDefault(mapping => mapping.Action == action && mapping.Family == scope.Family)
                             ?? new PresetMapping { Action = action, Family = scope.Family })).ToList() };
-                    Apply(planned, complete, plannedRecord, PresetApplyMode.Replace);
+                    Apply(planned, complete, plannedRecord, PresetApplyMode.Replace, addOverflow);
                     record.Entries = plannedRecord.Entries;
                     var originalFamilies = save.GamepadKeysFor(record.ProfileId);
                     var resultFamilies = planned.GamepadKeysFor(record.ProfileId);
@@ -209,7 +210,8 @@ namespace PBZKeyForge
                     .Select(entry => new KeyValuePair<int, string>(entry.Slot, entry.Key)));
                 required = required.Except(defaults.FixedForAction(action, false)).ToArray();
                 var changes = PlanSlots(values, required, mode == PresetApplyMode.Append,
-                    I18n.Str("editor.keyboard") + " · " + I18n.Str("act." + action));
+                    I18n.Str("editor.keyboard") + " · " + I18n.Str("act." + action), false,
+                    addOverflow == null ? null : (Action<string>)delegate(string key) { addOverflow(action, key, null); });
                 foreach (var change in changes)
                 {
                     int index = change.Key; string key = change.Value;
@@ -240,7 +242,8 @@ namespace PBZKeyForge
                         && SaveFile.Field(item, "DefaultKey") == defaults.ForRawSlot(action, true, InputDefaults.RawSlot(SaveFile.Field(item, "Slot"))))
                         .Select(item => new KeyValuePair<int, string>(InputDefaults.RawSlot(SaveFile.Field(item, "Slot")), SaveFile.Field(item, "Key"))));
                     var changes = PlanSlots(values, required, mode == PresetApplyMode.Append,
-                        I18n.Str("editor.gamepad") + " #" + (family + 1) + " · " + I18n.Str("act." + action));
+                        I18n.Str("editor.gamepad") + " #" + (family + 1) + " · " + I18n.Str("act." + action), false,
+                        addOverflow == null ? null : (Action<string>)delegate(string key) { addOverflow(action, key, familyName); });
                     var template = ControllerProfiles.KeyTemplate(keys, action);
                     foreach (var change in changes)
                     {
@@ -463,7 +466,7 @@ namespace PBZKeyForge
         static Dictionary<int, string> PlanGuardSlots(List<string>[] source, string[] required, string scope)
         { return PlanSlots(source, required, true, scope, true); }
 
-        static Dictionary<int, string> PlanSlots(List<string>[] source, string[] required, bool append, string scope, bool guard = false)
+        static Dictionary<int, string> PlanSlots(List<string>[] source, string[] required, bool append, string scope, bool guard = false, Action<string> addOverflow = null)
         {
             var slots = source.Select(values => values.Where(key => !IsEmptyKey(key)).Distinct().ToList()).ToArray();
             string[] original = slots.SelectMany(values => values).Distinct().ToArray();
@@ -491,6 +494,19 @@ namespace PBZKeyForge
                 string[] retained = result.SelectMany(values => values).Distinct().ToArray();
                 if (cost < bestCost && (append ? original.All(retained.Contains) : retained.All(required.Contains)) && required.All(retained.Contains))
                 { best = plan; bestCost = cost; }
+            }
+            if (best == null && addOverflow != null)
+            {
+                var accepted = new List<string>();
+                best = PlanSlots(source, new string[0], append, scope, guard);
+                foreach (string key in required)
+                {
+                    Dictionary<int, string> plan = null;
+                    try { plan = PlanSlots(source, accepted.Concat(new[] { key }).ToArray(), append, scope, guard); }
+                    catch (InvalidOperationException) { }
+                    if (plan == null) addOverflow(key);
+                    else { accepted.Add(key); best = plan; }
+                }
             }
             if (best == null) throw new InvalidOperationException(I18n.Str(guard ? "preset.capacity" : "preset.bindingsfull", scope));
             return best;

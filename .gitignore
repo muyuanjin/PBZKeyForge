@@ -6,6 +6,7 @@ dist/
 .vs/
 *.zip
 !docs/*.zip
+!assets/key-enhancement/legacy-runtime.zip
 presets/
 docs/*.tmp
 __pycache__/

@@ -11,6 +11,9 @@ namespace PBZKeyForge
         [STAThread]
         public static int Main(string[] args)
         {
+#if CLI
+            return Cli.Run(args);
+#else
             if (args.Length > 0)
             {
                 string cmd = args[0];
@@ -59,6 +62,7 @@ namespace PBZKeyForge
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(MainForm.OpenDefault());
             return 0;
+#endif
         }
     }
 }

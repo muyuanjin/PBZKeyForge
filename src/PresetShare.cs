@@ -29,6 +29,7 @@ namespace PBZKeyForge
         [ProtoMember(2)] public List<ShareScope> Scopes = new List<ShareScope>();
         [ProtoMember(3)] public List<string> ExtraKeys = new List<string>();
         [ProtoMember(4)] public List<string> ExtraFamilies = new List<string>();
+        [ProtoMember(5)] public byte[] Enhancement;
     }
 
     [ProtoContract]
@@ -102,7 +103,7 @@ namespace PBZKeyForge
 
         internal static string EncodePayload(Preset preset)
         {
-            var document = new ShareDocument { Baseline = preset.BaselineId };
+            var document = new ShareDocument { Baseline = preset.BaselineId, Enhancement = preset.KeyEnhancement == null ? null : EnhancementShare.Encode(preset.KeyEnhancement) };
             foreach (var scope in preset.Scopes.OrderBy(scope => scope.Family, StringComparer.Ordinal))
             {
                 var group = new ShareScope { Device = scope.Family == null ? 0 : Id(scope.Family, Families, document.ExtraFamilies) };
@@ -125,7 +126,7 @@ namespace PBZKeyForge
             }
             bool compress = compressed.Length < raw.Length;
             byte[] payload = compress ? compressed : raw;
-            var envelope = new byte[payload.Length + 1]; envelope[0] = compress ? (byte)1 : (byte)0;
+            var envelope = new byte[payload.Length + 1]; envelope[0] = (byte)((compress ? 1 : 0) + (preset.KeyEnhancement == null ? 0 : 2));
             Buffer.BlockCopy(payload, 0, envelope, 1, payload.Length);
             return Convert.ToBase64String(envelope).TrimEnd('=').Replace('+', '-').Replace('/', '_');
         }
@@ -133,15 +134,17 @@ namespace PBZKeyForge
         public static Preset Decode(string name, byte[] envelope)
         {
             if (envelope.Length == 0) throw new FormatException();
-            if (envelope[0] > 1) throw new InvalidDataException(I18n.Str("preset.shareupgrade"));
+            if (envelope[0] > 3) throw new InvalidDataException(I18n.Str("preset.shareupgrade"));
             ShareDocument document;
             using (var input = new MemoryStream(envelope, 1, envelope.Length - 1))
             {
-                if (envelope[0] == 0) document = Serializer.Deserialize<ShareDocument>(input);
+                if ((envelope[0] & 1) == 0) document = Serializer.Deserialize<ShareDocument>(input);
                 else using (var deflate = new DeflateStream(input, CompressionMode.Decompress)) document = Serializer.Deserialize<ShareDocument>(deflate);
             }
             PresetBaseline.Require(document.Baseline);
+            if ((envelope[0] >= 2) != (document.Enhancement != null)) throw new InvalidDataException(I18n.Str("preset.shareupgrade"));
             var preset = new Preset { UserName = name, BaselineId = document.Baseline, Scopes = new List<PresetScope>(), UserMappings = new List<PresetMapping>() };
+            if (document.Enhancement != null) preset.KeyEnhancement = EnhancementShare.Decode(document.Enhancement);
             foreach (var scope in document.Scopes)
             {
                 string family = scope.Device == 0 ? null : Value(scope.Device, Families, document.ExtraFamilies);

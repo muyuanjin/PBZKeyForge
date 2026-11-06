@@ -270,3 +270,18 @@ dotnet tests\DeflectSchemaAudit\bin\Debug\net10.0\DeflectSchemaAudit.dll --conta
 ```
 
 The harness uses `GAME_UE5_7` and requires an empty companion PAK. Container mode extracts raw chunks without deserializing their Zen headers. It is separate from the dependency-free application runtime and does not establish game loading or combat behavior.
+
+## CLI and agent verification
+
+```powershell
+python tests\CliAgentTests.py dist\PBZKeyForge-cli.exe dist\cli-agent-check
+python tests\CliLifecycleTests.py dist\PBZKeyForge-cli.exe dist\cli-lifecycle-check
+```
+
+`CliAgentTests` invokes the public executable and parses JSON. It covers the full catalog/schema, key identities, ordinary plus enhanced batch editing, dry runs, ZIP roundtrip, share import/export, device scope filtering, copy, key movement, full reset, explicit scheme selection and invalid batches producing no output. It uses copies and never applies to a game installation.
+
+CLI export checks reject runtime configuration targets for new, ZIP and JSON sources, including custom Mod directories, normalized paths and missing configuration files. Rejection preserves the JSON/Lua pair; ordinary JSON export remains available. Global reset exports are reopened as SAV and ZIP to verify all three schemes' keyboard and controller defaults without changing the source save.
+
+`CliLifecycleTests` covers unattended startup, version/source discovery, UTF-8 stdin and BOM files, invalid-field diagnostics, gameplay Mod enable/disable/conflicts, enhancement lifecycle, local runtime update, ordinary Apply with backups, running-game refusal and partial uninstall reporting. It requires the real game to be closed. For authenticated scheme activation and live acknowledgement/rejection/timeout checks, pass the real game root as a third argument and use a new test directory on that game's volume, for example `python tests\CliLifecycleTests.py dist\PBZKeyForge-cli.exe G:\PBZKeyForge-cli-check G:\SteamLibrary\steamapps\common\PBZ`. It hard-links the native executable and copies both saves; the originals are checked unchanged. A temporary process named PBZ and simulated heartbeat/acknowledgements exercise the CLI protocol. These checks do not establish actual game input behavior, launch a game or stop an existing game process.
+
+CLI preset checks also cover keyboard-only and controller-only Replace/OnlyPreset operations. The other device's rules, native overrides and keyed suppressions must survive export and reimport.

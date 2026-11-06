@@ -1,0 +1,396 @@
+local Router = {}
+Router.__index = Router
+
+local kinds = { down=true, press=true, release=true, tap=true, hold=true,
+    pulse=true, multi_tap=true, sequence=true, axis=true, toggle=true }
+
+local function vector(value)
+    if type(value) == "table" then
+        return { x=value.x or value[1] or 0, y=value.y or value[2] or 0,
+            z=value.z or value[3] or 0 }
+    end
+    return { x=value == nil and 1 or value, y=0, z=0 }
+end
+
+local function magnitude(v)
+    return math.max(math.abs(v.x), math.abs(v.y), math.abs(v.z))
+end
+
+local function down(snapshot, key, threshold)
+    local v = snapshot[key]
+    return v == true or (type(v) == "number" and math.abs(v) >= threshold)
+end
+
+local function chord(snapshot, keys, threshold)
+    for _, key in ipairs(keys or {}) do
+        if not down(snapshot, key, threshold) then return false end
+    end
+    return true
+end
+
+local function held_binding(binding, snapshot, threshold)
+    if binding.evaluate and #(binding.keys or {}) == 0 and not binding.axis then
+        for _, key in ipairs(binding.watch or {}) do if down(snapshot, key, threshold) then return true end end
+        return false
+    end
+    local axis = not binding.axis or down(snapshot, binding.axis, threshold)
+    if binding.axis and binding.axis_direction and binding.axis_direction ~= "both" then
+        local value = snapshot[binding.axis] or 0
+        axis = type(value) == "number" and (binding.axis_direction == "positive" and value >= threshold or binding.axis_direction == "negative" and value <= -threshold)
+    end
+    return chord(snapshot, binding.keys, threshold) and axis
+end
+
+local function consumes(binding)
+    if binding.consume == true then
+        local keys = {}
+        for _, key in ipairs(binding.keys or {}) do keys[#keys + 1] = key end
+        for _, key in ipairs(binding.watch or {}) do keys[#keys + 1] = key end
+        if binding.axis then keys[#keys + 1] = binding.axis end
+        for _, step in ipairs(binding.steps or {}) do
+            if type(step) == "string" then keys[#keys + 1] = step
+            else for _, key in ipairs(step) do keys[#keys + 1] = key end end
+        end
+        return keys
+    end
+    return type(binding.consume) == "table" and binding.consume or {}
+end
+
+local function action_identity(backend, target)
+    if backend.action_identity then return backend:action_identity(target) end
+    return target.path or target.object
+end
+
+local function pipeline_identity(backend, target)
+    if backend.pipeline_identity then return backend:pipeline_identity(target) end
+    return ""
+end
+
+function Router.new(config, backend)
+    assert(type(config.targets) == "table", "targets must be a table")
+    assert(type(config.bindings) == "table", "bindings must be an array")
+    local self = setmetatable({ config=config, backend=backend, rules={},
+        samples={}, previous={}, lastTime=nil }, Router)
+    local ids, keys = {}, {}
+    local function add(key)
+        assert(type(key) == "string" and key ~= "", "invalid input key")
+        keys[key] = true
+    end
+    for index, binding in ipairs(config.bindings) do
+        if binding.enabled ~= false then
+        assert(binding.id and not ids[binding.id], "binding id missing or duplicated")
+        ids[binding.id] = true
+        local kind = binding.trigger or "down"
+        assert(kinds[kind] or type(binding.evaluate) == "function", "unknown trigger: " .. kind)
+        assert(binding.axis or #(binding.keys or {}) > 0 or kind == "sequence"
+            or binding.evaluate, "binding needs an input")
+        if kind == "sequence" then assert(#(binding.steps or {}) > 0, "empty sequence") end
+        for _, key in ipairs(binding.keys or {}) do add(key) end
+        local dimension = 1
+        if binding.axis then
+            add(binding.axis)
+            if backend.key_dimension then dimension = backend:key_dimension(binding.axis) end
+            if dimension > 1 then
+                for component = 1, dimension do add(binding.axis .. "@" .. component) end
+            end
+        end
+        for _, step in ipairs(binding.steps or {}) do
+            if type(step) == "string" then add(step)
+            else for _, key in ipairs(step) do add(key) end end
+        end
+        for _, key in ipairs(binding.watch or {}) do add(key) end
+        for _, key in ipairs(consumes(binding)) do add(key) end
+        assert(#(binding.outputs or {}) > 0, "binding needs outputs")
+        for _, output in ipairs(binding.outputs) do
+            local name = type(output) == "string" and output or output.target
+            assert(config.targets[name], "unknown target: " .. tostring(name))
+        end
+        self.rules[#self.rules+1] = { binding=binding, index=index, dimension=dimension, state={} }
+        end
+    end
+    table.sort(self.rules, function(a,b)
+        local ap, bp = a.binding.priority or 0, b.binding.priority or 0
+        if ap ~= bp then return ap > bp end
+        local an, bn = #(a.binding.keys or {}), #(b.binding.keys or {})
+        return an ~= bn and an > bn or (an == bn and a.index < b.index)
+    end)
+    for key in pairs(keys) do self.samples[#self.samples+1] = key end
+    table.sort(self.samples)
+    return self
+end
+
+function Router:keys() return self.samples end
+
+local function evaluate(binding, st, now, snapshot, context, dimension)
+    local kind, threshold = binding.trigger or "down", binding.threshold or 0.5
+    local held = held_binding(binding, snapshot, threshold)
+    if st.resume_wait then
+        if not held then st.resume_wait, st.held, st.active = nil, false, false end
+        return {active=false, pulse=false, reserve=false, value=0}
+    end
+    if not held then st.resume_outputs = nil end
+    if binding.evaluate then return binding.evaluate(now, snapshot, context, st) end
+    local pressed, released = held and not st.held, not held and st.held
+    st.held = held
+    if pressed then st.since = now end
+    local active, pulse, value = false, false, 1
+    if kind == "down" then active, pulse = held, pressed
+    elseif kind == "press" then active, pulse = pressed, pressed
+    elseif kind == "release" then active, pulse = released, released
+    elseif kind == "tap" then
+        pulse = released and now - st.since <= (binding.seconds or 0.25)
+        active = pulse
+    elseif kind == "hold" then
+        active = held and now - st.since >= (binding.seconds or 0.35)
+        pulse = active and not st.active
+    elseif kind == "pulse" then
+        if held and (pressed or now >= (st.nextPulse or now)) then
+            pulse = true
+            st.nextPulse = now + (binding.interval or 0.15)
+        end
+        active = pulse
+    elseif kind == "multi_tap" then
+        if pressed then
+            st.count = st.lastTap and now - st.lastTap <= (binding.interval or 0.3)
+                and (st.count or 0) + 1 or 1
+            st.lastTap = now
+            if st.count >= (binding.count or 2) then pulse=true; st.count=0 end
+        end
+        active = pulse
+    elseif kind == "toggle" then
+        if pressed then st.toggled = not st.toggled end
+        active, pulse = st.toggled or false, pressed and st.toggled or false
+    elseif kind == "axis" then
+        active, pulse = held, pressed
+        if dimension > 1 then
+            value = {x=snapshot[binding.axis .. "@1"] or 0, y=snapshot[binding.axis .. "@2"] or 0,
+                z=dimension > 2 and snapshot[binding.axis .. "@3"] or 0}
+        else value = type(snapshot[binding.axis]) == "number" and snapshot[binding.axis] or 0 end
+    elseif kind == "sequence" then
+        if st.lastStep and now - st.lastStep > (binding.interval or 0.5) then st.step=0 end
+        local progress = st.step or 0
+        local expected = binding.steps[progress+1]
+        local stepKeys = type(expected) == "string" and {expected} or expected
+        local stepDown = chord(snapshot, stepKeys, threshold)
+        local stepWasDown = chord(st.previousSnapshot or {}, stepKeys, threshold)
+        if stepDown and not stepWasDown then
+            st.step, st.lastStep = progress+1, now
+            if st.step == #binding.steps then pulse=true; st.step=0 end
+        end
+        st.previousSnapshot = {}
+        for key,v in pairs(snapshot) do st.previousSnapshot[key]=v end
+        active = pulse
+        held = (st.step or 0) > 0 or pulse
+    end
+    st.active = active
+    return { active=active, pulse=pulse, value=value,
+        reserve=held or released and (kind == "tap" or kind == "release") }
+end
+
+function Router:resume(snapshot, context)
+    for _, rule in ipairs(self.rules) do
+        local b, st = rule.binding, rule.state
+        local threshold, kind = b.threshold or .5, b.trigger or "down"
+        local held = held_binding(b, snapshot, threshold)
+        if kind == "sequence" then
+            st.previousSnapshot = {}
+            for key, value in pairs(snapshot) do st.previousSnapshot[key] = value end
+        elseif held and (kind == "down" or kind == "axis") and not b.evaluate then
+            st.held, st.resume_outputs = true, {}
+            for _, output in ipairs(b.outputs) do
+                local name = type(output) == "string" and output or output.target
+                local target = self.config.targets[name]
+                if target.kind == "action" and target.resume_continuous ~= true then st.resume_outputs[name] = true end
+            end
+        elseif held then st.resume_wait = true end
+    end
+end
+
+function Router:reconfigure(config, snapshot, context)
+    local replacement = Router.new(config, self.backend)
+    replacement:resume(snapshot, context)
+    local old = {}; for _, rule in ipairs(self.rules) do old[rule.binding.id] = rule end
+    for _, rule in ipairs(replacement.rules) do
+        local previous = old[rule.binding.id]
+        local same = previous and previous.binding.trigger == rule.binding.trigger and #previous.binding.outputs == #rule.binding.outputs
+        if same then
+            for index, output in ipairs(rule.binding.outputs) do
+                local name = type(output) == "string" and output or output.target
+                local prior = previous.binding.outputs[index]
+                local priorName = type(prior) == "string" and prior or prior.target
+                if self.config.targets[priorName] ~= config.targets[name] then same = false; break end
+            end
+        end
+        if same then rule.state = previous.state end
+    end
+    replacement.previous, replacement.lastTime = self.previous, self.lastTime
+    replacement.consumed = self.consumed
+    local retained = {}; for _, target in pairs(config.targets) do retained[target] = true end
+    for native, level in pairs(replacement.previous) do
+        for pipeline, contribution in pairs(level.pipelines) do
+            if not retained[contribution.target] then
+                local ok = self.backend:dispatch(contribution.target, "canceled", {x=0,y=0,z=0}, level.binding)
+                if ok == false then error(self.backend.dispatch_error or "Retired pipeline cancellation failed", 0) end
+                level.pipelines[pipeline] = nil
+            end
+        end
+        if not next(level.pipelines) then replacement.previous[native] = nil end
+    end
+    return replacement
+end
+
+function Router:step(now, snapshot, context)
+    assert(type(now) == "number", "clock must be numeric")
+    if self.lastTime and now < self.lastTime then self:reset() end
+    self.lastTime = now
+    local levels, reserved, canceled, owners = {}, {}, {}, {}
+    for key, owner in pairs(self.consumed or {}) do
+        reserved[key], owners[key] = true, owner
+    end
+    local function occupied(key, binding) return reserved[key] and owners[key] ~= (binding.input_group or binding.id) end
+    for _, rule in ipairs(self.rules) do
+        local b, st = rule.binding, rule.state
+        local blocked = false
+        for _, key in ipairs(b.keys or {}) do if occupied(key, b) then blocked=true end end
+        for _, key in ipairs(b.watch or {}) do if occupied(key, b) then blocked=true end end
+        if b.axis and occupied(b.axis, b) then blocked=true end
+        for _, sequenceStep in ipairs(b.steps or {}) do
+            if type(sequenceStep) == "string" then
+                if occupied(sequenceStep, b) then blocked=true end
+            else
+                for _, key in ipairs(sequenceStep) do if occupied(key, b) then blocked=true end end
+            end
+        end
+        local allowed = not b.when or self.backend:allowed(b.when, context)
+        local result
+        if blocked and b.evaluate then
+            st = {resume_wait = held_binding(b, snapshot, b.threshold or .5) or nil}
+            rule.state = st
+            result = {active=false, pulse=false, reserve=false}
+        else
+            result = evaluate(b, st, now, snapshot, context, rule.dimension)
+        end
+        if blocked or not allowed then
+            for _, output in ipairs(b.outputs) do
+                local name = type(output) == "string" and output or output.target
+                local target = self.config.targets[name]
+                if target.kind == "action" then
+                    local native = action_identity(self.backend, target)
+                    canceled[native] = canceled[native] or {}
+                    canceled[native][pipeline_identity(self.backend, target)] = true
+                    if not target.resume_continuous and (b.trigger == "down" or b.trigger == "axis" or not b.trigger)
+                        and held_binding(b, snapshot, b.threshold or .5) then
+                        st.resume_outputs = st.resume_outputs or {}
+                        st.resume_outputs[name] = true
+                    end
+                end
+            end
+        end
+        if blocked and b.trigger == "sequence" then st.step, st.lastStep = 0, nil end
+        if not blocked and allowed then
+            if result.reserve then
+                for _, key in ipairs(consumes(b)) do reserved[key], owners[key]=true, b.input_group or b.id end
+            end
+            if result.active then
+                for _, output in ipairs(b.outputs) do
+                    local name = type(output) == "string" and output or output.target
+                    local target = self.config.targets[name]
+                    local outputValue = type(output) == "table" and output.value or nil
+                    local v = type(result.value) == "table" and not outputValue and vector(result.value) or vector(outputValue)
+                    local scale = type(result.value) == "number" and result.value
+                        or type(result.value) == "table" and outputValue and magnitude(vector(result.value)) or 1
+                    v.x, v.y, v.z = v.x*scale, v.y*scale, v.z*scale
+                    if target.kind == "action" and target.native_continuous and context and context.move_ignored then
+                        local native = action_identity(self.backend, target)
+                        canceled[native] = canceled[native] or {}
+                        canceled[native][pipeline_identity(self.backend, target)] = true
+                    elseif target.kind == "action" and not (st.resume_outputs and st.resume_outputs[name])
+                        and not (target.native_continuous and context and context.move_ignored) then
+                        local native = action_identity(self.backend, target)
+                        local level = levels[native]
+                        if not level then
+                            level={ target=target, binding=b.id, pipelines={} }
+                            levels[native]=level
+                        end
+                        local pipeline = pipeline_identity(self.backend, target)
+                        local contribution = level.pipelines[pipeline]
+                        if not contribution then
+                            contribution={target=target, value={x=0,y=0,z=0}, inputs={}}
+                            level.pipelines[pipeline]=contribution
+                        end
+                        local signature
+                        if target.source_relation and (b.trigger == "down" or b.trigger == "axis" or not b.trigger) then
+                            local keys = {}; for _, key in ipairs(b.keys or {}) do keys[#keys+1] = key end
+                            if b.axis then keys[#keys+1] = b.axis end
+                            table.sort(keys)
+                            signature = table.concat(keys, ",") .. ":" .. tostring(v.x) .. ":" .. tostring(v.y) .. ":" .. tostring(v.z)
+                        end
+                        if not signature or not contribution.inputs[signature] then
+                            contribution.value.x = contribution.value.x + v.x
+                            contribution.value.y = contribution.value.y + v.y
+                            contribution.value.z = contribution.value.z + v.z
+                            if signature then contribution.inputs[signature] = true end
+                        end
+                    elseif target.kind ~= "action" and result.pulse then
+                        self.backend:dispatch(target, "triggered", v, b.id)
+                    end
+                end
+            end
+        end
+    end
+    self.consumed = {}
+    for key, owner in pairs(owners) do if down(snapshot, key, .001) then self.consumed[key] = owner end end
+    if self.backend.reserve_inputs then self.backend:reserve_inputs(reserved, context and context.raw_input or snapshot) end
+    local previousLevels = self.previous
+    self.previous = {}
+    for native, previous in pairs(previousLevels) do self.previous[native]=previous end
+    for native, level in pairs(levels) do self.previous[native]=level end
+    for native, level in pairs(levels) do
+        local nonzero = false
+        for pipeline, contribution in pairs(level.pipelines) do
+            local target, v = contribution.target, contribution.value
+            if target.value_type == "bool" then
+                v.x, v.y, v.z = magnitude(v) > 0 and 1 or 0, 0, 0
+            elseif target.clamp then
+                for _, axis in ipairs({"x","y","z"}) do
+                    v[axis]=math.max(-target.clamp, math.min(target.clamp, v[axis]))
+                end
+            end
+            if magnitude(v) > 0 then
+                nonzero = true
+                local ok = self.backend:dispatch(target, previousLevels[native] and "triggered" or "started", v, level.binding)
+                if ok == false then error(self.backend.dispatch_error or "Action dispatch failed", 0) end
+            else
+                level.pipelines[pipeline] = nil
+            end
+        end
+        if not nonzero then levels[native]=nil end
+    end
+    for native, previous in pairs(previousLevels) do
+        for pipeline, contribution in pairs(previous.pipelines) do
+            if not levels[native] or not levels[native].pipelines[pipeline] then
+                local phase = canceled[native] and canceled[native][pipeline] and "canceled" or "completed"
+                local ok = self.backend:dispatch(contribution.target, phase, {x=0,y=0,z=0}, previous.binding)
+                if ok == false then error(self.backend.dispatch_error or "Action release failed", 0) end
+            end
+        end
+    end
+    self.previous = levels
+end
+
+function Router:reset(cancel)
+    local failed = {}
+    for native, previous in pairs(self.previous) do
+        for _, contribution in pairs(previous.pipelines) do
+            local ok, result = pcall(self.backend.dispatch, self.backend, contribution.target,
+                cancel and "canceled" or "completed", {x=0,y=0,z=0}, previous.binding)
+            if not ok or result == false then failed[native]=previous end
+        end
+    end
+    self.previous, self.lastTime = failed, nil
+    self.consumed = nil
+    for _, rule in ipairs(self.rules) do rule.state={} end
+    if next(failed) then error(self.backend.dispatch_error or "Action release is incomplete", 0) end
+end
+
+return Router

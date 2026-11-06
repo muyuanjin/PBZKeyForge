@@ -13,6 +13,7 @@ namespace PBZKeyForge
         public uint BaselineId;
         public List<PresetScope> Scopes;
         public List<PresetMapping> Mappings;
+        public KeyEnhancementConfiguration KeyEnhancement;
     }
 
     public sealed class UserPresetStore
@@ -34,7 +35,7 @@ namespace PBZKeyForge
             return paths.Select(path => {
                 var document = json.Deserialize<UserPresetDocument>(File.ReadAllText(path, Encoding.UTF8));
                 var preset = new Preset { Id = Path.GetFileNameWithoutExtension(path), UserName = document.Name,
-                    BaselineId = document.BaselineId, Scopes = document.Scopes, UserMappings = document.Mappings };
+                    BaselineId = document.BaselineId, Scopes = document.Scopes, UserMappings = document.Mappings, KeyEnhancement = document.KeyEnhancement };
                 Validate(preset);
                 return preset;
             }).OrderBy(preset => preset.Name, StringComparer.CurrentCultureIgnoreCase).ToList();
@@ -47,11 +48,11 @@ namespace PBZKeyForge
         {
             name = NormalizeName(name);
             var result = new Preset { Id = "user_" + Guid.NewGuid().ToString("N"), UserName = name,
-                BaselineId = preset.BaselineId, Scopes = preset.Scopes, UserMappings = preset.UserMappings };
+                BaselineId = preset.BaselineId, Scopes = preset.Scopes, UserMappings = preset.UserMappings, KeyEnhancement = preset.KeyEnhancement == null ? null : preset.KeyEnhancement.Clone() };
             Validate(result);
             if (library.Any(item => string.Equals(item.Name, name, StringComparison.CurrentCultureIgnoreCase)))
                 throw new InvalidOperationException(I18n.Str("preset.duplicatename"));
-            var document = new UserPresetDocument { Name = name, BaselineId = result.BaselineId, Scopes = result.Scopes, Mappings = result.UserMappings };
+            var document = new UserPresetDocument { Name = name, BaselineId = result.BaselineId, Scopes = result.Scopes, Mappings = result.UserMappings, KeyEnhancement = result.KeyEnhancement };
             Directory.CreateDirectory(directory);
             string temporary = Path.Combine(directory, result.Id + ".tmp");
             try
@@ -81,6 +82,9 @@ namespace PBZKeyForge
         }
 
         public static Preset Capture(EditorSession session, string name)
+        { return Capture(session, name, null); }
+
+        public static Preset Capture(EditorSession session, string name, KeyEnhancementConfiguration enhancement)
         {
             session.Refresh();
             if (session.Conflicts.Length > 0) throw new InvalidOperationException(I18n.Str("editor.conflictinfo"));
@@ -93,6 +97,7 @@ namespace PBZKeyForge
                 Action = change.Action, Family = change.Gamepad ? change.Family : null,
                 Added = change.AddedKeys, Removed = change.RemovedKeys }).ToList();
             var preset = new Preset { UserName = NormalizeName(name), BaselineId = PresetBaseline.CurrentId,
+                KeyEnhancement = enhancement == null ? null : enhancement.Clone(),
                 Scopes = new[] { new PresetScope() }.Concat(session.ControllerFamilies.Select(family => new PresetScope { Family = family.Name })).ToList(),
                 UserMappings = mappings };
             Validate(preset);
@@ -112,6 +117,8 @@ namespace PBZKeyForge
             if (selected.Any(scope => !preset.Scopes.Any(original => original.Family == scope.Family)))
                 throw new InvalidDataException(I18n.Str("preset.invalidshare"));
             var result = new Preset { UserName = preset.Name, BaselineId = preset.BaselineId, Scopes = selected,
+                KeyEnhancement = preset.KeyEnhancement == null ? null : EnhancementEditing.SelectDevices(preset.KeyEnhancement,
+                    selected.Any(scope => scope.Family == null), selected.Any(scope => scope.Family != null)),
                 UserMappings = preset.UserMappings.Where(mapping => selected.Any(scope => scope.Family == mapping.Family)).ToList() };
             Validate(result);
             return result;
@@ -160,6 +167,7 @@ namespace PBZKeyForge
                 || preset.Scopes.GroupBy(scope => scope.Family).Any(group => group.Count() > 1))
                 throw new InvalidDataException(I18n.Str("preset.invalidshare"));
             if (mappings == null) throw new InvalidDataException(I18n.Str("preset.invalidshare"));
+            if (preset.KeyEnhancement != null) preset.KeyEnhancement.CompileLua();
             foreach (var mapping in mappings)
             {
                 if (mapping == null || !PresetBaseline.Actions.Contains(mapping.Action) || mapping.Added == null || mapping.Removed == null

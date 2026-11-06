@@ -146,6 +146,7 @@ namespace PBZKeyForge
                 if (replaced && Directory.Exists(retired)) Directory.Delete(retired, true);
             }
             if (Inspect(InstallDirectory) != expected) throw new IOException(I18n.Str("mod.verifyfailed"));
+            if (!enabled && Directory.Exists(InstallDirectory) && !Directory.EnumerateFileSystemEntries(InstallDirectory).Any()) Directory.Delete(InstallDirectory);
         }
 
         static void EnsureGameClosed()

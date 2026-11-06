@@ -1,0 +1,25 @@
+namespace PBZKeyForge
+{
+    public static partial class I18n
+    {
+        static void CatalogGroupStrings()
+        {
+            string[] keys = { "groups.movement", "groups.special", "groups.discard", "groups.scene", "groups.climb", "groups.ship", "groups.interface", "groups.qte", "groups.debug", "groups.test", "groups.legacy", "groups.unmapped", "groups.camera", "groups.inputs", "groups.abilities" };
+            UnifiedLanguage("zh-Hans", keys, "移动方向与轴|特殊招式|临时武器丢弃|场景移动与行船|攀爬与场景移动|船只操作|界面操作|过场按键|调试与测试|测试输入|旧版输入|当前未映射输入|旋转摄像机|独立输入与触发阶段|独立能力");
+            UnifiedLanguage("en", keys, "Movement directions and axes|Special moves|Discard temporary weapon|Traversal and boats|Climbing and traversal|Boat controls|Interface controls|Sequence prompts|Debug and testing|Test inputs|Legacy inputs|Currently unmapped inputs|Camera rotation|Separate inputs and trigger phases|Individual abilities");
+            UnifiedLanguage("ja", keys, "移動方向と軸|特殊技|一時武器を捨てる|特殊移動と船|登攀と移動|船の操作|画面操作|シーン入力|デバッグとテスト|テスト入力|旧版入力|現在未割当の入力|カメラ回転|個別入力とトリガー段階|個別能力");
+            UnifiedLanguage("ko", keys, "이동 방향과 축|특수 기술|임시 무기 버리기|특수 이동 및 배|등반 및 이동|배 조작|화면 조작|장면 입력|디버그 및 테스트|테스트 입력|이전 입력|현재 매핑되지 않은 입력|카메라 회전|개별 입력 및 트리거 단계|개별 능력");
+            UnifiedLanguage("ru", keys, "Направления и оси движения|Особые приёмы|Бросить временное оружие|Перемещение и лодки|Лазание и перемещение|Управление лодкой|Управление интерфейсом|Нажатия в сценах|Отладка и тестирование|Тестовые вводы|Устаревшие вводы|Сейчас не назначенные вводы|Поворот камеры|Отдельные вводы и этапы срабатывания|Отдельные способности");
+            UnifiedLanguage("zh-Hant", keys, "移動方向與軸|特殊招式|臨時武器丟棄|場景移動與行船|攀爬與場景移動|船隻操作|介面操作|過場按鍵|除錯與測試|測試輸入|舊版輸入|目前未映射輸入|旋轉攝影機|獨立輸入與觸發階段|獨立能力");
+            UnifiedLanguage("fr", keys, "Directions et axes de déplacement|Techniques spéciales|Jeter l’arme temporaire|Déplacements et bateaux|Escalade et déplacement|Commandes du bateau|Commandes de l’interface|Touches de séquence|Débogage et tests|Entrées de test|Anciennes entrées|Entrées actuellement non affectées|Rotation de caméra|Entrées séparées et phases de déclenchement|Capacités individuelles");
+            UnifiedLanguage("de", keys, "Bewegungsrichtungen und Achsen|Spezialtechniken|Temporäre Waffe abwerfen|Fortbewegung und Boote|Klettern und Fortbewegung|Bootssteuerung|Oberflächensteuerung|Sequenzeingaben|Debug und Tests|Testeingaben|Alte Eingaben|Derzeit unbelegte Eingaben|Kameradrehung|Separate Eingaben und Auslösephasen|Einzelne Fähigkeiten");
+            UnifiedLanguage("es-ES", keys, "Direcciones y ejes de movimiento|Técnicas especiales|Soltar arma temporal|Desplazamiento y barcos|Escalada y desplazamiento|Controles del barco|Controles de interfaz|Pulsaciones de secuencia|Depuración y pruebas|Entradas de prueba|Entradas antiguas|Entradas sin asignación actual|Rotación de cámara|Entradas separadas y fases de activación|Habilidades individuales");
+            UnifiedLanguage("pt-BR", keys, "Direções e eixos de movimento|Técnicas especiais|Descartar arma temporária|Travessia e barcos|Escalada e travessia|Controles do barco|Controles da interface|Teclas de sequência|Depuração e testes|Entradas de teste|Entradas antigas|Entradas sem mapeamento atual|Rotação da câmera|Entradas separadas e fases de ativação|Habilidades individuais");
+            UnifiedLanguage("it", keys, "Direzioni e assi di movimento|Mosse speciali|Scarta arma temporanea|Traversata e barche|Arrampicata e movimento|Comandi della barca|Comandi interfaccia|Tasti di sequenza|Debug e test|Input di test|Input precedenti|Input attualmente non assegnati|Rotazione telecamera|Input separati e fasi di attivazione|Abilità individuali");
+            UnifiedLanguage("th", keys, "ทิศทางและแกนการเคลื่อนที่|ท่าพิเศษ|ทิ้งอาวุธชั่วคราว|เคลื่อนที่พิเศษและเรือ|ปีนและเคลื่อนที่|ควบคุมเรือ|ควบคุมหน้าจอ|ปุ่มระหว่างฉาก|ดีบักและทดสอบ|อินพุตทดสอบ|อินพุตรุ่นเก่า|อินพุตที่ยังไม่ผูก|หมุนกล้อง|อินพุตแยกและระยะทริกเกอร์|ความสามารถแยก");
+            UnifiedLanguage("vi", keys, "Hướng và trục di chuyển|Chiêu đặc biệt|Bỏ vũ khí tạm thời|Di chuyển địa hình và thuyền|Leo trèo và di chuyển|Điều khiển thuyền|Điều khiển giao diện|Phím trong cảnh|Gỡ lỗi và kiểm thử|Đầu vào kiểm thử|Đầu vào cũ|Đầu vào hiện chưa liên kết|Xoay máy quay|Đầu vào riêng và giai đoạn kích hoạt|Kỹ năng riêng");
+            UnifiedLanguage("pt-PT", keys, "Direções e eixos de movimento|Técnicas especiais|Largar arma temporária|Travessia e barcos|Escalada e travessia|Controlos do barco|Controlos da interface|Teclas de sequência|Depuração e testes|Entradas de teste|Entradas antigas|Entradas sem mapeamento atual|Rotação da câmara|Entradas separadas e fases de ativação|Habilidades individuais");
+            UnifiedLanguage("es-419", keys, "Direcciones y ejes de movimiento|Técnicas especiales|Soltar arma temporal|Desplazamiento y barcos|Escalada y desplazamiento|Controles del barco|Controles de interfaz|Pulsaciones de secuencia|Depuración y pruebas|Entradas de prueba|Entradas antiguas|Entradas sin asignación actual|Rotación de cámara|Entradas separadas y fases de activación|Habilidades individuales");
+        }
+    }
+}

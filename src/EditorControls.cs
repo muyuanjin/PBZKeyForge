@@ -18,6 +18,8 @@ namespace PBZKeyForge
         public static readonly Color Line = Color.FromArgb(52, 58, 61);
         public static readonly Color Accent = Color.FromArgb(173, 54, 59);
         public static readonly Color AccentHover = Color.FromArgb(196, 74, 78);
+        public static readonly Color KeyEnhancement = Color.FromArgb(193, 152, 255);
+        public static readonly Color KeyEnhancementStrong = Color.FromArgb(120, 65, 190);
         public static readonly Color Amber = Accent;
         public static readonly Color Preview = Color.FromArgb(49, 43, 28);
         public static readonly Color Green = Color.FromArgb(172, 189, 167);

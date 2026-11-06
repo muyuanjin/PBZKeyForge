@@ -1,0 +1,239 @@
+{
+  "build": "CL-302256",
+  "source": "CL-302256 extracted mapping contexts; runtime relations select actual keys and pipelines",
+  "actions": [
+    {
+      "path": "/Game/PBZContent/Input/InputActions/IA_Interaction",
+      "mappingNames": [
+        "IA_Interact"
+      ]
+    },
+    {
+      "path": "/Game/PBZContent/Input/InputActions/IA_Interaction_ShaChiAttactkBroken",
+      "mappingNames": [
+        "IA_ShadowArm"
+      ]
+    },
+    {
+      "path": "/Game/PBZContent/Input/InputActions/IA_Interaction_SpecialMove",
+      "mappingNames": [
+        "IA_Jump"
+      ]
+    },
+    {
+      "path": "/Game/PBZContent/Input/InputActions/IA_Sense_Default",
+      "mappingNames": [
+        "IA_Sense_Default"
+      ]
+    },
+    {
+      "path": "/Game/PBZContent/Input/InputActions/IA_ShipBackword",
+      "mappingNames": []
+    },
+    {
+      "path": "/Game/PBZContent/Input/InputActions/IA_ShipForward",
+      "mappingNames": []
+    },
+    {
+      "path": "/Game/PBZContent/Input/InputActions/IA_ShipRight",
+      "mappingNames": []
+    },
+    {
+      "path": "/Game/PBZContent/Input/InputActions/IA_UseBottomItem",
+      "mappingNames": [
+        "IA_UseBottomItem"
+      ]
+    },
+    {
+      "path": "/Game/PBZContent/Input/InputActions/IA_UseTopItem",
+      "mappingNames": [
+        "IA_UseTopItem"
+      ]
+    },
+    {
+      "path": "/PBZDeflectSystem/Input/IA_Deflect",
+      "mappingNames": [
+        "IA_Guard"
+      ]
+    },
+    {
+      "path": "/PBZDeflectSystem/Input/IA_Dodge",
+      "mappingNames": [
+        "IA_Dodge"
+      ]
+    },
+    {
+      "path": "/PBZDeflectSystem/Input/IA_DodgeHold",
+      "mappingNames": [
+        "IA_Dodge"
+      ]
+    },
+    {
+      "path": "/PBZDeflectSystem/Input/IA_PerfectDodge",
+      "mappingNames": []
+    },
+    {
+      "path": "/PBZDeflectSystem/Input/IA_Stance",
+      "mappingNames": [
+        "IA_Guard"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_AttackH_Hold",
+      "mappingNames": [
+        "IA_HeavyAttack"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_AttackH_Press",
+      "mappingNames": [
+        "IA_HeavyAttack"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_AttackH_PressLong",
+      "mappingNames": [
+        "IA_HeavyAttack"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_AttackL_Hold",
+      "mappingNames": [
+        "IA_LightAttack"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_AttackL_Press",
+      "mappingNames": [
+        "IA_LightAttack"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_AttackL_PressLong",
+      "mappingNames": [
+        "IA_LightAttack"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_CombatArt",
+      "mappingNames": [
+        "IA_UltimateSkill"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_CombatArt_Hold",
+      "mappingNames": [
+        "IA_UltimateSkill"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_Execution",
+      "mappingNames": [
+        "IA_Execute"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_Jump",
+      "mappingNames": [
+        "IA_Jump"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_ShachiAbility",
+      "mappingNames": [
+        "IA_ShadowArm"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_ShachiAbility_Hold",
+      "mappingNames": [
+        "IA_ShadowArm"
+      ]
+    },
+    {
+      "path": "/PBZInput/InputActions/IA_ShachiAbility_LongPress",
+      "mappingNames": [
+        "IA_ShadowArm_LongPress"
+      ]
+    },
+    {
+      "path": "/SGameCombatSystem/Targeting/IA_LockTarget",
+      "mappingNames": [
+        "IA_LockTarget"
+      ]
+    },
+    {
+      "path": "/SGameCombatSystem/Targeting/IA_MouseChangeLockTargetNext",
+      "mappingNames": []
+    },
+    {
+      "path": "/SGameCombatSystem/Targeting/IA_MouseChangeLockTargetPrevious",
+      "mappingNames": []
+    },
+    {
+      "path": "/SGameCombatSystem/Weapon/Input/IA_ChangeArmed",
+      "mappingNames": [
+        "IA_SwitchWeapon"
+      ]
+    },
+    {
+      "path": "/SGameCombatSystem/Weapon/Input/IA_ChangeShachiWeapon",
+      "mappingNames": [
+        "IA_SwitchShadowArm"
+      ]
+    },
+    {
+      "path": "/SGameCombatSystem/Weapon/Input/IA_ChangeWeapon",
+      "mappingNames": [
+        "IA_SwitchWeapon"
+      ]
+    },
+    {
+      "path": "/SGameCombatSystem/Weapon/Input/IA_ChangingWeapon",
+      "mappingNames": []
+    },
+    {
+      "path": "/SGameLocomotionDriver/Input/IA_Crouch",
+      "mappingNames": [
+        "IA_Crouch"
+      ]
+    },
+    {
+      "path": "/SGameLocomotionDriver/Input/IA_JoystickMoveInput",
+      "mappingNames": []
+    },
+    {
+      "path": "/SGameLocomotionDriver/Input/IA_KeyboardMoveInput",
+      "mappingNames": []
+    },
+    {
+      "path": "/SGameLocomotionDriver/Input/IA_Sprint",
+      "mappingNames": [
+        "IA_MoveFast"
+      ]
+    },
+    {
+      "path": "/SGameLocomotionDriver/Input/IA_SprintSwitch",
+      "mappingNames": []
+    },
+    {
+      "path": "/SGameLocomotionDriver/Input/IA_Walk",
+      "mappingNames": [
+        "IA_MoveSlow"
+      ]
+    }
+  ],
+  "retainedNative": [
+    "/Game/PBZContent/Input/InputActions/IA_Map",
+    "/Game/PBZContent/Input/InputActions/IA_NextTab",
+    "/Game/PBZContent/Input/InputActions/IA_PreviousTab",
+    "/Game/PBZContent/Input/InputActions/IA_PushGameSystemMenu",
+    "/Game/PBZContent/Input/InputActions/IA_SkipTutorialUI",
+    "/Game/PBZContent/Input/InputActions/IA_SkipTutorialUI2",
+    "/PBZInput/InputActions/IA_TakePhoto",
+    "/SGameCombatSystem/Targeting/IA_JoystickChangeLockTargetAxis",
+    "/SGameCombatSystem/Targeting/IA_MouseChangeLockTargetAxis",
+    "/SGameLocomotionDriver/Input/IA_JoyStickLookInput",
+    "/SGameLocomotionDriver/Input/IA_MouseLookInput"
+  ]
+}

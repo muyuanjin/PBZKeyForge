@@ -108,6 +108,17 @@ namespace PBZKeyForge
             return session;
         }
 
+        public static EditorSession ImportOffline(byte[] bytes, InputDefaultSet defaults, string profile)
+        {
+            var session = new EditorSession();
+            session.disk = SaveFile.FromBytes(bytes, defaults);
+            session.diskBytes = (byte[])bytes.Clone();
+            session.cells = session.Extract(session.disk); session.Remember(session.cells);
+            session.SelectedProfile = session.Profiles.Contains(profile) ? profile : session.disk.ActiveProfile;
+            if (!session.Profiles.Contains(session.SelectedProfile)) throw new InvalidDataException("The input save has no selected scheme.");
+            return session;
+        }
+
         public static EditorSession Open(string inputPath)
         { return Open(inputPath, true); }
 
@@ -464,7 +475,7 @@ namespace PBZKeyForge
             StagePreset(preset, mode);
         }
 
-        public void StagePreset(Preset preset, PresetApplyMode mode)
+        public void StagePreset(Preset preset, PresetApplyMode mode, Action<string, string, string> addOverflow = null)
         {
             EnsureEditable();
             if (preset.Vanilla) throw new InvalidOperationException("Use ResetAll for the global default reset.");
@@ -474,7 +485,7 @@ namespace PBZKeyForge
             SaveFile planned = SaveFile.FromBytes(diskBytes, Defaults);
             ApplyEdits(planned, checkpoint.Edits.ToArray());
             var before = Extract(planned);
-            Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile), mode);
+            Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile), mode, addOverflow);
             var after = Extract(planned);
             Remember(after);
             if (previewCheckpoint == null || previewProfile != SelectedProfile)
@@ -504,13 +515,13 @@ namespace PBZKeyForge
             PresetMode = mode;
         }
 
-        public void CheckPreset(Preset preset, PresetApplyMode mode)
+        public void CheckPreset(Preset preset, PresetApplyMode mode, Action<string, string, string> addOverflow = null)
         {
             EnsureEditable();
             var checkpoint = previewCheckpoint != null && previewProfile == SelectedProfile ? previewCheckpoint : draft;
             var planned = SaveFile.FromBytes(diskBytes, Defaults);
             ApplyEdits(planned, checkpoint.Edits.ToArray());
-            Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile), mode);
+            Presets.Apply(planned, preset, planned.RecordFor(SelectedProfile), mode, addOverflow);
         }
 
         static bool SameBindingGroup(Cell cell, Cell owner)
@@ -534,7 +545,7 @@ namespace PBZKeyForge
             Refresh();
             if (Conflicts.Length > 0) throw new InvalidOperationException(I18n.Str("editor.conflictinfo"));
             var output = SaveFile.FromBytes(diskBytes, Defaults);
-            ApplyEdits(output, draft.Edits.Where(edit => Address(edit.Key).Profile == SelectedProfile).ToArray());
+            ApplyEdits(output, draft.Edits.Where(edit => InScope(edit.Key)).ToArray());
             return output.ToBytes();
         }
 
@@ -553,8 +564,20 @@ namespace PBZKeyForge
             EnsureEditable();
             Refresh();
             EndPreview();
+            var resetDraft = new Draft();
+            foreach (Cell cell in cells.Values.Where(cell => !IsDependentCell(cell)))
+            {
+                string key = ResetValue(cell);
+                if (key != cell.Key) resetDraft.Edits[cell.Id] = key;
+            }
             if (IsOffline)
             {
+                var output = SaveFile.FromBytes(diskBytes, Defaults);
+                ApplyEdits(output, resetDraft.Edits.ToArray());
+                diskBytes = output.ToBytes();
+                disk = SaveFile.FromBytes(diskBytes, Defaults);
+                cells = Extract(disk);
+                Remember(cells);
                 draft = new Draft();
                 ActivationPending = false;
                 return;
@@ -564,12 +587,7 @@ namespace PBZKeyForge
             resetActivation = ActivationPending;
             resetActivationProfile = SelectedProfile;
             ActivationPending = false;
-            draft = new Draft();
-            foreach (Cell cell in cells.Values.Where(cell => !IsDependentCell(cell)))
-            {
-                string key = ResetValue(cell);
-                if (key != cell.Key) draft.Edits[cell.Id] = key;
-            }
+            draft = resetDraft;
         }
 
         bool IsDependentCell(Cell cell)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -27,6 +27,9 @@ namespace PBZKeyForge
             if (args == null || args.Length == 0) return Lookup(key);
             return string.Format(Lookup(key), args);
         }
+
+        internal static IEnumerable<string> Translations(string key)
+        { return T.Values.Where(language => language.ContainsKey(key)).Select(language => language[key]).Distinct(); }
 
         static string Lookup(string key)
         {
@@ -477,6 +480,20 @@ namespace PBZKeyForge
             ExtendedStrings();
             SchemeDiscoveryStrings();
             ResourceModStrings();
+            KeyEnhancementStrings();
+            KeyEnhancementLifecycleStrings();
+            ComponentMenuStrings();
+            Ue4ssUpdateStrings();
+            KeyEnhancementEditorStrings();
+            UnifiedBindingStrings();
+            ActionCatalogStrings();
+            CatalogGroupStrings();
+            BindingEditingStrings();
+            LiveEditingStrings();
+            BindingUsabilityStrings();
+            LiveConnectionStrings();
+            FeedbackUpdateStrings();
+            BindingWorkflowStrings();
         }
     }
 }
