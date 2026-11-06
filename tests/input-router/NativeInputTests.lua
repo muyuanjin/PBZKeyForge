@@ -78,7 +78,10 @@ local function fixture(config)
     local input = object("/PlayerInput.PlayerInput")
     backend.controller.PlayerInput = input
     function input:GetPropertyValue(name)
-        if name == "EnhancedActionMappings" then return array(state.rows, wrapper) end
+        if name == "EnhancedActionMappings" then return array(state.rows, function(value)
+            state.mapping_reads = (state.mapping_reads or 0) + 1
+            return wrapper(value)
+        end) end
         assert(name == "AppliedInputContextData", "unexpected input property")
         return {ForEach = function(_, callback)
             for _, context in ipairs(state.contexts) do
@@ -87,7 +90,7 @@ local function fixture(config)
         end}
     end
     function StaticConstructObject(class, outer, _, _, _, copyTransients, copyArchetype, template)
-        check((class == "test-class" or class:match("^InputTrigger")) and outer == backend.subsystem, "pipeline clone has wrong owner/class")
+        check((class == "test-class" or class:match("^InputTrigger") or class:match("^InputModifier")) and outer == backend.subsystem, "pipeline clone has wrong owner/class")
         check(copyTransients == false and copyArchetype == false and template ~= nil,
             "pipeline clone must use its native object template")
         local properties = {}
@@ -911,6 +914,87 @@ test("active context templates still reject an unavailable requested device pipe
         "active context with no requested device pipeline was mistaken for an inactive scene")
 end)
 
+test("unchanged unified frames inspect rows once and consumption never rescans native mappings", function()
+    local actionPath="/Game/Jump"
+    local action=object(actionPath .. ".Jump")
+    local backend,native,state=fixture({unified_native=true,native_actions={actionPath},
+        targets={jump={kind="mapping",actions={actionPath},device="keyboard",native_override=true}},
+        bindings={{id="jump",keys={"J"},outputs={"jump"}}},
+        native_bindings={{["function"]="jump",device="keyboard",keys={"J"},actions={actionPath}}}})
+    state.rows={mapping(action,"SpaceBar"),mapping(action,"Gamepad_FaceButton_Bottom")}
+    native:prepare()
+    local generation,clones=backend.config_generation,state.clones
+    for _=1,3 do
+        state.mapping_reads=0;native:prepare()
+        check(state.mapping_reads==#state.rows, "unchanged frame repeatedly traversed native mappings")
+        native:apply_masks({J=true},{J=1})
+        check(state.mapping_reads==#state.rows and native.consumed.J, "consumption rescanned mappings or failed to latch")
+        native:apply_masks({},{J=0})
+        check(not native.consumed.J, "cached ownership lost physical release")
+    end
+    check(backend.config_generation==generation and state.clones==clones, "unchanged frame rebuilt scheduler state")
+    native:restore();native:prepare()
+    check(key(state.rows[1])=="None", "restoring ownership left a stale prepared snapshot")
+    state.rows[1].Key.KeyName=FName("F")
+    native:prepare();native:restore()
+    check(key(state.rows[1])=="F", "an in-place native key edit reused an obsolete original key")
+end)
+
+test("equivalent continuous movement sources share one injection without merging distinct pipelines", function()
+    local movePath="/SGameLocomotionDriver/Input/IA_KeyboardMoveInput"
+    local action=object(movePath .. ".IA_KeyboardMoveInput")
+    local function modifier(class,fields)
+        local result=object("/Modifier." .. class,fields)
+        function result:GetClass() return class end
+        return result
+    end
+    local first=modifier("InputModifierSwizzleAxis",{Order=1})
+    local equivalent=modifier("InputModifierSwizzleAxis",{Order=1})
+    local different=modifier("InputModifierSwizzleAxis",{Order=2})
+    local backend,native,state=fixture({unified_native=true,native_actions={movePath}})
+    state.rows={mapping(action,"W",{},{first}),mapping(action,"W",{},{equivalent}),mapping(action,"S",{},{different})}
+    native:prepare()
+    check(#backend.dynamic_config.bindings==2, "equivalent movement sources were not merged or distinct directions were lost")
+    check(key(state.rows[1])=="None" and key(state.rows[2])=="None", "duplicate movement retained native execution")
+    local router=Router.new(backend.dynamic_config,backend)
+    router:step(0,{},backend:context());router:step(.1,{W=1},backend:context())
+    check(#state.calls==1 and state.calls[1].value.x==1, "one physical W injected movement more than once")
+    state.calls={};router:step(.2,{W=1,S=1},backend:context())
+    check(#state.calls==2, "distinct movement modifier pipelines were merged")
+    native:restore()
+    check(key(state.rows[1])=="W" and key(state.rows[2])=="W" and key(state.rows[3])=="S", "movement deduplication lost original native rows")
+    local hold=object("/Trigger.Hold",{HoldTimeThreshold=.5})
+    state:rebuild({mapping(action,"W",{hold}),mapping(action,"W",{hold})})
+    native:prepare()
+    check(#backend.dynamic_config.bindings==2, "temporal movement pipelines lost their independent trigger state")
+    local unknownA=modifier("InputModifierSmooth",{})
+    local unknownB=modifier("InputModifierSmooth",{})
+    state:rebuild({mapping(action,"W",{},{unknownA}),mapping(action,"W",{},{unknownB})})
+    native:prepare()
+    check(#backend.dynamic_config.bindings==2, "stateful or unknown movement modifiers were merged")
+end)
+
+test("cached ownership detects in-place trigger eligibility changes", function()
+    local actionPath="/Game/Use"
+    local action=object(actionPath .. ".Use")
+    local pressed=object("/Trigger.Pressed",{ActuationThreshold=.5})
+    local backend,native,state=fixture({unified_native=true,native_actions={actionPath}})
+    state.rows={mapping(action,"E",{pressed})}
+    native:prepare();native:prepare()
+    pressed.ActuationThreshold=0
+    native:prepare()
+    check(key(state.rows[1])=="E" and #backend.dynamic_config.bindings==0,
+        "cached ownership ignored a trigger becoming ineligible for scheduling")
+    pressed.ActuationThreshold=.5
+    native:prepare()
+    check(key(state.rows[1])=="None" and #backend.dynamic_config.bindings==1,
+        "restoring a trigger threshold did not restore scheduling")
+    action.Triggers=array({object("/Trigger.Hold",{HoldTimeThreshold=.5})})
+    native:prepare()
+    check(key(state.rows[1])=="E" and #backend.dynamic_config.bindings==0,
+        "cached ownership ignored newly installed action-level temporal triggers")
+end)
+
 test("native overrides retain dependent pipelines during startup and live apply", function()
     for _, live in ipairs({false,true}) do
         for _, triggerName in ipairs({"Cooldown","ChordAction"}) do
@@ -1055,6 +1139,42 @@ end)
 
 local schemeFixtures = os.getenv("PBZ_SCHEME_FIXTURES")
 if schemeFixtures then
+    local baseline = os.getenv("PBZ_INPUT_BENCHMARK_BASELINE")
+    if baseline then
+        test("native input performance comparison", function()
+            stress_gc=false
+            local current=NativeInput
+            for _,implementation in ipairs({{name="before",module=dofile(baseline)},{name="after",module=current}}) do
+                NativeInput=implementation.module
+                local config=dofile(schemeFixtures .. "/factory-schemes.lua")
+                local backend,native,state=fixture(config)
+                local seen={}
+                for _,override in ipairs(config.native_bindings) do
+                    for _,path in ipairs(override.actions) do
+                        local package=path:gsub("%.[^./]+$", "")
+                        local identity=package .. ":" .. override.device
+                        if not seen[identity] then
+                            seen[identity]=true
+                            local action=object(package .. "." .. package:match("/([^/]+)$"))
+                            for _,key in ipairs(override.keys) do state.rows[#state.rows+1]=mapping(action,key) end
+                        end
+                    end
+                end
+                native:prepare()
+                local frames=200
+                state.mapping_reads=0
+                collectgarbage("collect")
+                local started=os.clock()
+                for _=1,frames do native:prepare();native:apply_masks({},{}) end
+                local elapsed=os.clock()-started
+                print(string.format("NativeInputBenchmark %s: frames=%d rows=%d visits/frame=%.0f Lua-ms/frame=%.4f",
+                    implementation.name,frames,#state.rows,state.mapping_reads/frames,elapsed*1000/frames))
+                native:restore()
+            end
+            NativeInput=current
+        end)
+    end
+
     test("every compiled native action tolerates context retirement with mixed pipeline ownership", function()
         -- Wrapper lifetime is stressed by the focused tests; this sweep varies action availability.
         stress_gc=false

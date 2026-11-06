@@ -1,5 +1,6 @@
 local NativeAbilities = {}
 NativeAbilities.__index = NativeAbilities
+local ObjectPool = require("object-pool")
 
 local function each_trigger(asset, callback)
     local function visit(data)
@@ -24,7 +25,7 @@ end
 function NativeAbilities:apply(suppressed)
     if not next(suppressed) and not next(self.masked) then return end
     local seen = {}
-    for _, asset in ipairs(FindAllOf("InputActionBinding") or {}) do
+    for _, asset in ipairs(ObjectPool.get("InputActionBinding")) do
         if asset:IsValid() then
             local assetAddress = asset:GetAddress()
             local saved = self.masked[assetAddress] or {}

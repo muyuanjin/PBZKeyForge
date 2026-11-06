@@ -138,6 +138,7 @@ end
 do
     local backend, state = fixture()
     backend:refresh()
+    state.class.invalid = true
     state.class = nil
     check(backend:refresh() and not backend:context().input_layer and not backend:context().gameplay,
         "a missing PBZ CommonUI class did not fall back to native input")
@@ -154,6 +155,7 @@ end
 do
     local backend, state = fixture()
     backend:refresh()
+    state.router.invalid = true
     state.router = nil
     check(backend:refresh() and not backend:context().gameplay and not state.masks,
         "an unavailable local-player UI router did not restore native input")
@@ -172,6 +174,28 @@ do
         "legacy routing unexpectedly required the unified CommonUI input-layer policy")
     check(state.classQueries == 0 and state.modeQueries == 0 and state.subsystemQueries == 0,
         "disabled unified routing still queried the PBZ CommonUI subsystem")
+end
+
+do
+    local backend,state=fixture()
+    local listeners,searches={},0
+    function NotifyOnNewObject(path,callback) listeners[path]=callback end
+    local search=FindAllOf
+    function FindAllOf(name) searches=searches+1;return search(name) end
+    backend:refresh()
+    for _=1,120 do backend:refresh() end
+    check(searches==4 and state.classQueries==1 and state.subsystemQueries==1,
+        "stable frames repeated global widget, class or subsystem discovery")
+    local widget=object(201,{keyboard=true})
+    listeners["/Script/UMG.EditableText"](widget)
+    check(backend:refresh() and not backend:context().gameplay and not state.masks,
+        "newly created focused text widget was not honored on the next frame")
+    widget.keyboard=false
+    check(backend:refresh() and backend:context().gameplay and state.masks,
+        "cached widget focus did not recover immediately after blur")
+    widget.invalid=true
+    check(backend:refresh() and backend:context().gameplay and searches==4,
+        "destroying a cached widget blocked gameplay or forced rediscovery")
 end
 
 print("UnifiedBackendTests: " .. passed .. " assertions passed")

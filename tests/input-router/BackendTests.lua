@@ -413,4 +413,19 @@ do
     check(backend:object(path) == action, "Resource lookup lost its class/basename fallback")
 end
 
+do
+    local backend,_,_,calls=fixture()
+    local queries=0
+    function backend:key_dimension(key) return key=="Stick" and 2 or 1 end
+    function backend:invoke(_,path)
+        assert(path:find(":GetInputVectorKeyState",1,true))
+        queries=queries+1;return {X=-.6,Y=.8,Z=0}
+    end
+    local sample=backend:snapshot({"Stick","Stick@1","Stick@2"})
+    check(queries==1 and sample.Stick==.8 and sample["Stick@1"]==-.6 and sample["Stick@2"]==.8,
+        "one vector input was sampled repeatedly or lost signed components")
+    backend:snapshot({"Stick@2","Stick@1","Stick"})
+    check(queries==2, "vector sample cache escaped its physical frame")
+end
+
 print("BackendTests: " .. passed .. " assertions passed")

@@ -1,3 +1,4 @@
+package.path = "prototype/input-router/ue4ss/Scripts/?.lua;" .. package.path
 local NativeAbilities = dofile("prototype/input-router/ue4ss/Scripts/native-abilities.lua")
 local passed, failures, nextAddress = 0, {}, 100
 local special = "Ability.Action.Hun.SpecialDash"
@@ -247,6 +248,31 @@ test("temporary native containers survive collection during callbacks", function
     check(row.tag == "None", "collection interrupted ability suppression")
     native:restore()
     check(row.tag == special, "collection interrupted ability restoration")
+end)
+
+test("asset creation notifications replace repeated global discovery", function()
+    local native,_,state=fixture({special})
+    local first=trigger(special)
+    local loaded=asset({binding(data({first}))})
+    function loaded:GetClass() return {GetFullName=function() return "Class /Script/Game.InputActionBinding" end} end
+    state.assets={loaded}
+    local created
+    function NotifyOnNewObject(path,callback)
+        check(path=="/Script/Game.InputActionBinding", "asset observer used a guessed class")
+        created=callback
+    end
+    native:prepare();native:prepare()
+    check(state.scans==1 and first.tag=="None", "unchanged assets repeated global discovery")
+    local second=trigger(special)
+    created(asset({binding(data({second}))}))
+    native:prepare()
+    check(second.tag=="None" and state.scans==1, "new asset was not suppressed on its first frame")
+    first.alive=false
+    local rebuilt=trigger(special)
+    loaded.Bindings=array({binding(data({rebuilt}))})
+    native:prepare();native:restore()
+    check(rebuilt.tag==special and second.tag==special and first.writes==1,
+        "asset caching lost current allocation restoration")
 end)
 
 if #failures > 0 then error(table.concat(failures, "\n"), 0) end

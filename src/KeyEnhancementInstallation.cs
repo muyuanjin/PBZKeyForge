@@ -90,7 +90,7 @@ namespace PBZKeyForge
             }
             foreach (string required in new[] { "dwmapi.dll", "ue4ss/UE4SS.dll", ModPrefix + "Scripts/main.lua",
                 ModPrefix + "Scripts/backend.lua", ModPrefix + "Scripts/router.lua", ModPrefix + "Scripts/native-input.lua",
-                ModPrefix + "Scripts/native-abilities.lua", ModPrefix + "Scripts/physical-input.lua",
+                ModPrefix + "Scripts/native-abilities.lua", ModPrefix + "Scripts/physical-input.lua", ModPrefix + "Scripts/object-pool.lua",
                 ModPrefix + "Scripts/complete-moves.lua", ModPrefix + "lib/pbzinput-focus.dll" })
                 if (!files.ContainsKey(required)) throw new InvalidDataException("Key enhancement runtime is incomplete: " + required);
             return files;

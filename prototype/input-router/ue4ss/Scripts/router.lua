@@ -3,6 +3,7 @@ Router.__index = Router
 
 local kinds = { down=true, press=true, release=true, tap=true, hold=true,
     pulse=true, multi_tap=true, sequence=true, axis=true, toggle=true }
+local inactive = {active=false, pulse=false, reserve=false, value=0}
 
 local function vector(value)
     if type(value) == "table" then
@@ -124,6 +125,11 @@ function Router:keys() return self.samples end
 local function evaluate(binding, st, now, snapshot, context, dimension)
     local kind, threshold = binding.trigger or "down", binding.threshold or 0.5
     local held = held_binding(binding, snapshot, threshold)
+    if not held and not st.held and not st.active and not st.resume_wait and not binding.evaluate
+        and (kind == "down" or kind == "press" or kind == "hold" or kind == "axis") then
+        st.resume_outputs = nil
+        return inactive
+    end
     if st.resume_wait then
         if not held then st.resume_wait, st.held, st.active = nil, false, false end
         return {active=false, pulse=false, reserve=false, value=0}

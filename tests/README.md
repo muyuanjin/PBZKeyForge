@@ -331,6 +331,7 @@ python tests\input-router\run_lua.py tests\input-router\CompiledConfigurationTes
 python tests\input-router\run_lua.py tests\input-router\RouterTests.lua
 python tests\input-router\run_lua.py tests\input-router\BackendTests.lua
 python tests\input-router\run_lua.py tests\input-router\UnifiedBackendTests.lua
+python tests\input-router\run_lua.py tests\input-router\ObjectPoolTests.lua
 python tests\input-router\run_lua.py tests\input-router\NativeInputTests.lua
 python tests\input-router\run_lua.py tests\input-router\PhysicalInputTests.lua
 python tests\input-router\run_lua.py tests\input-router\InputResumeTests.lua
@@ -346,6 +347,8 @@ The model checks cover JSON isolation, mapping identities and generated Lua. Wit
 `UnifiedBackendTests.lua` exercises PBZ CommonUI Game/Menu/All input modes, unavailable or restored local-player routers, UI-only state, and keyboard/user focus in all four editable-text widget classes. Routing must yield to UI/text and restore native mappings, then resume only when gameplay owns input. `PhysicalInputTests.lua` checks independent keyboard/mouse-button sampling. `InputResumeTests.lua`, `MainInputRecoveryTests.lua` and the main-loop lifecycle checks distinguish held movement/sprint recovery from discrete attacks, jumps, taps, pulses and toggles: qualifying continuous movement resumes, while a held one-shot input waits for release rather than generating a fresh press. These mocks do not establish actual game behavior. `run_lua.py` accepts `--lua-dll` for an installed Lua 5.4 runtime.
 
 `NativeInputTests.lua` also runs the real main frame loop, backend refresh, native pipeline preparation and router together with mocked engine objects. It exercises scene appearance/removal, empty mapping arrays, live reload, scheme switching, menu return and pawn replacement while movement is held. Scene interaction waits for a fresh press; shutdown restores the current native rows. Native overrides retain cooldown/chord pipelines during live validation, while custom enhanced outputs still reject unsupported pipelines. Mixed scheduled/native mappings must reject retained-slot overflow without changing any native row, then accept a valid retry.
+
+Performance regressions require exactly one runtime-row inspection per unchanged unified frame and no extra inspection during consumption. In-place key edits, trigger eligibility changes and action-level trigger replacement must invalidate cached ownership. Equivalent continuous movement sources inject once, while different directions, temporal triggers and stateful modifiers remain distinct. `ObjectPoolTests` checks initial discovery, creation notifications, duplicates, invalid objects and late asset classes. Focus changes are checked on the next frame without repeating global discovery; vector components share one physical read per frame. See [runtime performance](../docs/key-enhancement-performance.md) for the optional before/after model benchmark.
 
 ```powershell
 & $compiler /nologo /out:dist\KeyEnhancementInstallationTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.IO.Compression.dll tests\KeyEnhancementInstallationTests.cs

@@ -1,5 +1,6 @@
 local PhysicalInput = require("physical-input")
 local CompleteMoves = require("complete-moves")
+local ObjectPool = require("object-pool")
 local Backend = {}
 Backend.__index = Backend
 
@@ -147,15 +148,23 @@ function Backend:refresh()
 end
 
 function Backend:gameplay_input_layer()
-    local class = StaticFindObject("/Script/ProjectPBZ.PBZUIActionRouterBase")
+    local class = self.input_router_class
+    if not valid(class) then
+        class = StaticFindObject("/Script/ProjectPBZ.PBZUIActionRouterBase")
+        self.input_router_class = class
+    end
     if not valid(class) then self:report("input-layer", "Gameplay input layer unavailable; native input retained"); return false end
-    local router = self:invoke(self:library("Engine.SubsystemBlueprintLibrary"),
-        "/Script/Engine.SubsystemBlueprintLibrary:GetLocalPlayerSubSystemFromPlayerController", self.controller, class)
+    local router = self.input_router
+    if not valid(router) then
+        router = self:invoke(self:library("Engine.SubsystemBlueprintLibrary"),
+            "/Script/Engine.SubsystemBlueprintLibrary:GetLocalPlayerSubSystemFromPlayerController", self.controller, class)
+        self.input_router = router
+    end
     if not valid(router) then return false end
     local mode = self:invoke(router, "/Script/ProjectPBZ.PBZUIActionRouterBase:GetActiveInputMode")
     if mode == 0 or self.ui_only then return false end
     for _, name in ipairs({"EditableText", "EditableTextBox", "MultiLineEditableText", "MultiLineEditableTextBox"}) do
-        for _, widget in ipairs(FindAllOf(name) or {}) do
+        for _, widget in ipairs(ObjectPool.get(name, "/Script/UMG." .. name)) do
             if valid(widget) and (self:invoke(widget, "/Script/UMG.Widget:HasKeyboardFocus")
                 or self:invoke(widget, "/Script/UMG.Widget:HasFocusedDescendants")) then return false end
         end
@@ -192,6 +201,7 @@ function Backend:retire()
     if self.on_retire then self.on_retire() end
     self:release_capture()
     self.controller, self.pawn, self.subsystem = nil, nil, nil
+    self.input_router = nil
 end
 
 function Backend:release_capture()
@@ -293,6 +303,7 @@ function Backend:effective_config()
 end
 
 function Backend:action_identity(spec)
+    if spec.native_action_id then return spec.native_action_id end
     return identity(spec.object or self:object(spec.path, "InputAction"))
 end
 
@@ -393,7 +404,15 @@ end
 function Backend:snapshot(keys)
     local result = {}
     if not valid(self.controller) then return result end
-    local samples, seen = {}, {}
+    local samples, seen, vectors = {}, {}, {}
+    local function vector_value(key)
+        if not vectors[key] then
+            local name = self.names[key]
+            if not name then name = FName(key); self.names[key] = name end
+            vectors[key] = self:invoke(self.controller, "/Script/Engine.PlayerController:GetInputVectorKeyState", {KeyName=name})
+        end
+        return vectors[key]
+    end
     for _, key in ipairs(keys) do samples[#samples + 1] = key; seen[key] = true end
     for key in pairs(self.native_input and self.native_input.consumed or {}) do
         if not seen[key] then samples[#samples + 1] = key end
@@ -401,12 +420,10 @@ function Backend:snapshot(keys)
     for _, key in ipairs(samples) do
         local vectorKey, component = key:match("^(.-)@([123])$")
         if vectorKey then
-            local vector = self:invoke(self.controller, "/Script/Engine.PlayerController:GetInputVectorKeyState",
-                {KeyName = FName(vectorKey)})
+            local vector = vector_value(vectorKey)
             result[key] = vector[({"X", "Y", "Z"})[tonumber(component)]]
         elseif self:key_dimension(key) > 1 then
-            local vector = self:invoke(self.controller, "/Script/Engine.PlayerController:GetInputVectorKeyState",
-                {KeyName = FName(key)})
+            local vector = vector_value(key)
             result[key] = math.max(math.abs(vector.X), math.abs(vector.Y), math.abs(vector.Z))
         else
             local value = self.physical_input:sample(key)
