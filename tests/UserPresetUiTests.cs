@@ -224,6 +224,7 @@ public static class UserPresetUiTests
                 var panel = Field<Panel>(dialog, "preview");
                 Assert(All(panel).OfType<Label>().Any(label => label.Text == I18n.Str("editor.gamepad") + " · PS"), "Diagram identifies changed second family");
                 var image = (Bitmap)All(panel).OfType<PictureBox>().Single().Image; bool blue = false;
+                Assert(image.Height >= image.Width * .64f, "Controller preview capture must include the complete device.");
                 for (int y = 0; y < image.Height && !blue; y += 2)
                     for (int x = 0; x < image.Width && !blue; x += 2) blue = image.GetPixel(x, y).ToArgb() == Color.FromArgb(64, 158, 255).ToArgb();
                 Assert(blue, "Second-family diagram contains its changed blue badge");

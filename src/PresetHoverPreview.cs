@@ -203,17 +203,11 @@ namespace PBZKeyForge
                 var deviceLabel = TextLabel(I18n.Str(pad ? "editor.gamepad" : "editor.keyboard") + (pad && selectedFamily != null ? " · " + selectedFamily.Name : ""), width);
                 deviceLabel.ForeColor = BindingStatus.Factory;
                 int index = selectedFamily == null ? -1 : selectedFamily.Index;
-                var relations = snapshot.BindingActions(pad, index).Select(action => BindingViewText.PhysicalRelations(snapshot.Relations(action, pad, index))).ToArray();
-                var keys = relations.SelectMany(relation => relation.Keys.Concat(relation.DefaultKeys ?? new string[0])).Distinct().ToArray();
-                Func<string, KeyBadgeState> state = key => new KeyBadgeState {
-                    Count = relations.Count(relation => relation.Keys.Contains(key)), Complete = relations.All(relation => relation.KnowsKey(key)),
-                    Differs = relations.Any(relation => relation.DefaultKeys != null && relation.Keys.Contains(key) != relation.DefaultKeys.Contains(key)) };
+                string[] keys;
+                var state = UnifiedBindingUi.PresetKeyStates(snapshot, preset, pad, index, out keys);
                 using (var diagram = new DeviceDiagram(pad, selectedFamily == null ? null : selectedFamily.Name, state, delegate { }, null, keys))
                 {
-                    diagram.Font = font; diagram.Size = new Size((int)(1000 * scale), (int)(330 * scale));
-                    diagram.CreateControl(); diagram.PerformLayout();
-                    var image = new Bitmap(diagram.Width, diagram.Height);
-                    diagram.DrawToBitmap(image, diagram.ClientRectangle); picture.Image = image;
+                    diagram.Font = font; picture.Image = diagram.CapturePreview(Math.Max(300, pad ? width / 2 : width));
                 }
                 picture.Height = (int)(width * .33f);
                 int fixedHeight = Padding.Vertical + title.Height + description.Height + picture.Height + deviceLabel.Height + comparison.Height + factory.Height;

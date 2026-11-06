@@ -98,7 +98,7 @@ namespace PBZKeyForge
         Func<string, KeyBadgeState> stateForKey;
         readonly Action<string> select;
         string selectedKey, controller;
-        bool pad;
+        bool pad, preview;
         readonly ToolTip tip = new ToolTip();
         List<string> extraKeys = new List<string>();
         readonly Dictionary<string, RectangleF> imageBounds = new Dictionary<string, RectangleF>();
@@ -126,7 +126,7 @@ namespace PBZKeyForge
             controller = sony ? "playstation" : "xbox";
             extraKeys = extras;
             if (layout) { hoveredKey = null; tip.SetToolTip(this, ""); PerformLayout(); }
-            else foreach (string key in targets.Keys) states[key] = stateForKey(key);
+            else foreach (string key in targets.Keys) { states[key] = stateForKey(key); AddBadge(key); }
             AccessibleName = I18n.Str("views.clickkey");
             UpdateToolTip();
             Invalidate();
@@ -140,22 +140,47 @@ namespace PBZKeyForge
             float ratio = Math.Min(area.Width / image.Width, area.Height / image.Height);
             return new RectangleF(area.X + (area.Width - image.Width * ratio) / 2, area.Y + (area.Height - image.Height * ratio) / 2, image.Width * ratio, image.Height * ratio);
         }
+        Dictionary<string, RectangleF> ExtraTargets(float width, float inset)
+        {
+            float left = inset, top = 0, rowHeight = 36 * scale;
+            var extras = new Dictionary<string, RectangleF>();
+            foreach (string key in extraKeys)
+            {
+                float keyWidth = Math.Min(width - 2 * inset, Math.Max(48 * scale, TextRenderer.MeasureText(BindingButton.FriendlyKey(key), Font).Width + 20 * scale));
+                if (left > inset && left + keyWidth > width - inset) { left = inset; top += rowHeight; }
+                extras[key] = new RectangleF(left, top, keyWidth, 27 * scale); left += keyWidth + 8 * scale;
+            }
+            return extras;
+        }
+        public Bitmap CapturePreview(int width)
+        {
+            preview = true;
+            using (var graphics = CreateGraphics()) scale = graphics.DpiX / 96f;
+            float inset = 10 * scale;
+            var extras = ExtraTargets(width, inset);
+            float extraHeight = extras.Count == 0 ? 0 : extras.Values.Max(box => box.Top) + 36 * scale;
+            Image artwork = Artwork(pad ? controller : "keyboard");
+            float artworkWidth = pad ? width - 2 * inset : (width - 3 * inset) * .79f;
+            float artworkHeight = artworkWidth * artwork.Height / artwork.Width;
+            Size = new Size(width, (int)Math.Ceiling(artworkHeight + 2 * inset + extraHeight));
+            AutoScrollPosition = Point.Empty; PerformLayout();
+            var bitmap = new Bitmap(Width, Height); DrawToBitmap(bitmap, ClientRectangle); return bitmap;
+        }
         protected override void OnLayout(LayoutEventArgs e)
         {
             if (stateForKey == null) { base.OnLayout(e); return; }
             using (var graphics = CreateGraphics()) scale = graphics.DpiX / 96f;
             targets.Clear(); badges.Clear(); states.Clear(); devices.Clear(); imageBounds.Clear();
-            float inset = 10 * scale, left = inset, top = 0, rowHeight = 36 * scale;
-            var extras = new Dictionary<string, RectangleF>();
-            foreach (string key in extraKeys)
+            float inset = 10 * scale;
+            if (ClientSize.Width <= 3 * inset || ClientSize.Height <= 2 * inset)
             {
-                float width = Math.Min(ClientSize.Width - 2 * inset, Math.Max(48 * scale, TextRenderer.MeasureText(BindingButton.FriendlyKey(key), Font).Width + 20 * scale));
-                if (left > inset && left + width > ClientSize.Width - inset) { left = inset; top += rowHeight; }
-                extras[key] = new RectangleF(left, top, width, 27 * scale); left += width + 8 * scale;
+                hitTargets = new KeyValuePair<string, RectangleF>[0]; AutoScrollMinSize = Size.Empty;
+                base.OnLayout(e); return;
             }
-            float extraHeight = extraKeys.Count == 0 ? 0 : top + rowHeight;
+            var extras = ExtraTargets(ClientSize.Width, inset);
+            float extraHeight = extras.Count == 0 ? 0 : extras.Values.Max(box => box.Top) + 36 * scale;
             float keyboardHeight = (ClientSize.Width - 3 * inset) * .79f * EditorArtwork.Keyboard.Height / EditorArtwork.Keyboard.Width;
-            float minimumHeight = pad ? 250 * scale : Math.Max(1, Math.Min(keyboardHeight, ClientSize.Height - 2 * inset));
+            float minimumHeight = pad ? preview ? 0 : 250 * scale : Math.Max(1, Math.Min(keyboardHeight, ClientSize.Height - 2 * inset));
             float availableHeight = Math.Max(minimumHeight, ClientSize.Height - 2 * inset - extraHeight);
             AutoScrollMinSize = new Size(0, (int)Math.Ceiling(availableHeight + 2 * inset + extraHeight));
             // Update native scroll ranges before placing hotspots at the current offset.
@@ -183,58 +208,55 @@ namespace PBZKeyForge
             foreach (var item in DeviceHotspots.ForDevice(device))
             {
                 string key = item.Key;
-                float width = device == "keyboard" ? KeyboardWidth(key) * image.Width : device == "mouse" ? .28f * image.Width : .085f * image.Width;
-                float height = device == "keyboard" ? .095f * image.Height : device == "mouse" ? .16f * image.Height : .10f * image.Height;
-                if (device == "mouse")
-                {
-                    if (key == "LeftMouseButton" || key == "RightMouseButton") { width = .32f * image.Width; height = .30f * image.Height; }
-                    else if (key == "MiddleMouseButton") { width = .13f * image.Width; height = .23f * image.Height; }
-                    else { width = .13f * image.Width; height = .10f * image.Height; }
-                }
-                var point = new PointF(image.Left + item.Value.X * image.Width, image.Top + item.Value.Y * image.Height);
-                targets[key] = new RectangleF(point.X - width / 2, point.Y - height / 2, width, height);
+                RectangleF box = item.Value;
+                targets[key] = new RectangleF(image.Left + box.X * image.Width, image.Top + box.Y * image.Height,
+                    box.Width * image.Width, box.Height * image.Height);
                 devices[key] = device; states[key] = stateForKey(key); AddBadge(key);
-            }
-        }
-        static float KeyboardWidth(string key)
-        {
-            switch (key)
-            {
-                case "SpaceBar": return .31f; case "LeftShift": return .12f; case "RightShift": return .11f;
-                case "Tab": return .065f; case "CapsLock": return .080f; case "Enter": return .10f; case "BackSpace": return .09f;
-                case "LeftControl": case "RightControl": case "LeftAlt": case "RightAlt": return .05f;
-                default: return .043f;
             }
         }
         void AddBadge(string key)
         {
             RectangleF box = targets[key];
             float size = (devices[key] == "keyboard" ? 13 : 17) * scale;
-            float x = box.Right - size * .65f, y = box.Top - size * .35f;
+            RectangleF image;
+            if (imageBounds.TryGetValue(devices[key], out image))
+                size = Math.Min(size, devices[key] == "keyboard" ? image.Height * .06f : image.Width * (devices[key] == "mouse" ? .13f : .035f));
+            float width;
+            using (var font = BadgeFont(key, size))
+                width = Math.Max(size, TextRenderer.MeasureText(states[key].Number, font, Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Width + size * .25f);
+            float x = box.Right - width * .65f, y = box.Top - size * .35f;
             if (pad && devices[key] != "extra")
             {
                 switch (key)
                 {
                     case "Gamepad_FaceButton_Top": case "Gamepad_DPad_Up":
-                        x = box.Left + (box.Width - size) / 2; y = box.Top - size * .65f; break;
+                        x = box.Left + (box.Width - width) / 2; y = box.Top - size * .65f; break;
                     case "Gamepad_FaceButton_Bottom": case "Gamepad_DPad_Down":
-                        x = box.Left + (box.Width - size) / 2; y = box.Bottom - size * .35f; break;
+                        x = box.Left + (box.Width - width) / 2; y = box.Bottom - size * .35f; break;
                     case "Gamepad_FaceButton_Left": case "Gamepad_DPad_Left":
-                        x = box.Left - size * .65f; y = box.Top + (box.Height - size) / 2; break;
+                        x = box.Left - width * .65f; y = box.Top + (box.Height - size) / 2; break;
                     case "Gamepad_FaceButton_Right": case "Gamepad_DPad_Right":
-                        x = box.Right - size * .35f; y = box.Top + (box.Height - size) / 2; break;
+                        x = box.Right - width * .35f; y = box.Top + (box.Height - size) / 2; break;
                 }
             }
-            badges[key] = new RectangleF(x, y, size, size);
+            badges[key] = new RectangleF(x, y, width, size);
         }
+        Font BadgeFont(string key, float height)
+        { return new Font("Segoe UI", 8f * height / ((devices[key] == "keyboard" ? 13 : 17) * scale), FontStyle.Bold); }
         internal PointF Position(string key)
         { var box = targets[key]; return new PointF(box.Left + box.Width / 2, box.Top + box.Height / 2); }
         string Hit(Point location)
         {
+            foreach (var target in hitTargets)
+                if (target.Value.Contains(location))
+                {
+                    if (!RoundButton(target.Key, devices[target.Key])) return target.Key;
+                    float x = (location.X - target.Value.X) / target.Value.Width * 2 - 1;
+                    float y = (location.Y - target.Value.Y) / target.Value.Height * 2 - 1;
+                    if (x * x + y * y <= 1) return target.Key;
+                }
             foreach (var badge in badges)
                 if (states[badge.Key].Visible && badge.Value.Contains(location)) return badge.Key;
-            foreach (var target in hitTargets)
-                if (target.Value.Contains(location)) return target.Key;
             return null;
         }
         protected override void OnMouseMove(MouseEventArgs e)
@@ -272,7 +294,7 @@ namespace PBZKeyForge
                 case "MiddleMouseButton": return ""; case "ThumbMouseButton": return "4"; case "ThumbMouseButton2": return "5";
                 case "Escape": return "Esc"; case "BackSpace": return "⌫"; case "SpaceBar": return "Space";
                 case "LeftShift": case "RightShift": return "Shift"; case "LeftControl": case "RightControl": return "Ctrl";
-                case "LeftAlt": case "RightAlt": return "Alt"; case "LeftCommand": case "RightCommand": return "Win";
+                case "LeftAlt": case "RightAlt": return "Alt"; case "LeftCommand": case "RightCommand": return "Win"; case "Menu": return "☰";
                 case "CapsLock": return "Caps"; case "Enter": return "↵"; case "Up": return "↑"; case "Down": return "↓"; case "Left": return "←"; case "Right": return "→";
                 case "PageUp": return "Pg↑"; case "PageDown": return "Pg↓"; case "Home": return "Hm"; case "Insert": return "Ins"; case "Delete": return "Del";
                 case "PrintScreen": return "Prt"; case "ScrollLock": return "Scr"; case "Pause": return "Pau"; case "Tilde": return "~";
@@ -289,33 +311,63 @@ namespace PBZKeyForge
                 default: return key;
             }
         }
+        static bool RoundButton(string key, string device)
+        {
+            return (device == "xbox" || device == "playstation")
+                && (key.StartsWith("Gamepad_FaceButton_", StringComparison.Ordinal)
+                    || key.EndsWith("Thumbstick", StringComparison.Ordinal) || device == "xbox" && key.StartsWith("Gamepad_Special_", StringComparison.Ordinal));
+        }
+        GraphicsPath TargetOutline(string key, RectangleF box)
+        {
+            if (!RoundButton(key, devices[key])) return EditorArtwork.Rounded(box, 3 * scale);
+            var path = new GraphicsPath(); path.AddEllipse(box); return path;
+        }
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e); e.Graphics.SmoothingMode = SmoothingMode.AntiAlias; e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
             foreach (var item in imageBounds) e.Graphics.DrawImage(Artwork(item.Key), item.Value);
             using (var keyFont = new Font("Segoe UI", KeyboardFontSize()))
             using (var mouseFont = new Font(Font.FontFamily, 8f))
-            using (var numberFont = new Font("Segoe UI", 8f, FontStyle.Bold))
             foreach (var item in targets)
             {
                 string key = item.Key; RectangleF box = item.Value; KeyBadgeState state = states[key];
                 bool active = key == selectedKey, hover = key == hoveredKey;
                 if (active || hover || devices[key] == "extra")
                 {
-                    using (var path = EditorArtwork.Rounded(box, 3 * scale))
+                    using (var path = TargetOutline(key, box))
                     using (var brush = new SolidBrush(Color.FromArgb(active ? 80 : 45, active ? state.Color : EditorTheme.Muted)))
                     using (var pen = new Pen(active ? EditorTheme.Ink : EditorTheme.Muted, active ? 1.5f * scale : scale))
                     { e.Graphics.FillPath(brush, path); e.Graphics.DrawPath(pen, path); }
                 }
-                TextRenderer.DrawText(e.Graphics, devices[key] == "extra" ? BindingButton.FriendlyKey(key) : KeyCaption(key, devices[key]),
-                    devices[key] == "keyboard" ? keyFont : mouseFont, Rectangle.Round(box), EditorTheme.Ink,
-                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.NoPadding | TextFormatFlags.EndEllipsis);
+                string caption = devices[key] == "extra" ? BindingButton.FriendlyKey(key) : KeyCaption(key, devices[key]);
+                Font captionFont = devices[key] == "keyboard" ? keyFont : mouseFont;
+                RectangleF captionBox = box;
+                if (pad && devices[key] != "extra")
+                {
+                    Size text = TextRenderer.MeasureText(e.Graphics, caption, captionFont, Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
+                    captionBox.Inflate(Math.Max(0, text.Width - box.Width) / 2, Math.Max(0, text.Height - box.Height) / 2);
+                }
+                var captionBounds = Rectangle.Round(captionBox);
+                const TextFormatFlags captionFlags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.NoPadding;
+                Size captionSize = TextRenderer.MeasureText(e.Graphics, caption, captionFont, Size.Empty, captionFlags);
+                float fontRatio = devices[key] == "keyboard" ? Math.Min(1, Math.Min(Math.Max(1, captionBounds.Width - 1f) / captionSize.Width, Math.Max(1, captionBounds.Height) / (float)captionSize.Height)) : 1;
+                if (fontRatio < 1)
+                {
+                    using (var fitted = new Font(captionFont.FontFamily, captionFont.Size * fontRatio * .95f))
+                        TextRenderer.DrawText(e.Graphics, caption, fitted, captionBounds, EditorTheme.Ink, captionFlags);
+                }
+                else TextRenderer.DrawText(e.Graphics, caption, captionFont, captionBounds, EditorTheme.Ink, captionFlags);
                 if (!state.Visible) continue;
                 RectangleF badge = badges[key];
-                using (var brush = new SolidBrush(state.Color)) e.Graphics.FillEllipse(brush, badge);
-                using (var pen = new Pen(EditorTheme.Surface, scale)) e.Graphics.DrawEllipse(pen, badge);
-                TextRenderer.DrawText(e.Graphics, state.Number, numberFont, Rectangle.Round(badge), EditorTheme.Background,
-                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
+                using (var path = EditorArtwork.Rounded(badge, badge.Height / 2))
+                using (var brush = new SolidBrush(state.Color))
+                using (var pen = new Pen(EditorTheme.Surface, scale))
+                using (var numberFont = BadgeFont(key, badge.Height))
+                {
+                    e.Graphics.FillPath(brush, path); e.Graphics.DrawPath(pen, path);
+                    TextRenderer.DrawText(e.Graphics, state.Number, numberFont, Rectangle.Round(badge), EditorTheme.Background,
+                        TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
+                }
             }
         }
         float KeyboardFontSize()

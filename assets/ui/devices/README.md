@@ -9,9 +9,9 @@ The application uses four transparent PNG diagrams with matching graphite bodies
 | `xbox.png` | 1058 × 726 | Asymmetric sticks |
 | `playstation.png` | 1103 × 711 | Symmetric sticks and central touchpad |
 
-`hotspots.json` gives button centers normalized to each complete image's canvas, with the upper-left as `(0, 0)` and lower-right as `(1, 1)`. Preserve the image's aspect ratio before mapping these points into the control rectangle. Controller triggers, shoulders, D-pad directions and stick clicks have separate points. Mouse button 4 is the lower thumb button; button 5 is the upper one.
+`hotspots.json` gives each button face as `[left, top, width, height]` in pixels of its complete cropped image. `canvas` records that image's dimensions. The interface preserves the image's aspect ratio and transforms these bounds together with the artwork for labels, selection outlines and hit testing. Controller triggers, shoulders, D-pad directions and stick clicks have separate bounds. Mouse button 4 is the lower thumb button; button 5 is the upper one.
 
-`sources/device-atlas.png` is the 2304 × 1536 master atlas. `render.py` crops it and writes the PNGs and hotspot coordinates. It requires Pillow:
+`sources/device-atlas.png` is the 2304 × 1536 master atlas. `render.py` owns the measured button bounds, crops the atlas and writes the PNGs and hotspot coordinates. It requires Pillow:
 
 ```powershell
 python assets\ui\devices\render.py assets\ui\devices\sources\device-atlas.png

@@ -197,6 +197,13 @@ The share checks use an independent Protobuf byte vector to verify stable IDs an
 
 Checks navigation without writes, shared relationship editing, duplicate removal, resource inheritance, controller family isolation, and raw record edits. Physical keyboard and all five mouse hotspots are clicked. Badge checks cover gray/yellow/blue transitions when applying, undoing, restoring factory mappings and removing the last action. Controller triggers aggregate axis and digital inputs; face-button and D-pad badges spread outward. Whole-scheme comparisons include both devices and use saved or factory baselines; extra keycaps wrap within the canvas. Screenshots cover both perspectives in Simplified Chinese, minimum windows, and representative saved/pending/factory differences. Add `--all-languages` for the full language sweep.
 
+```powershell
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\DeviceAlignmentTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\DeviceAlignmentTests.cs
+.\dist\DeviceAlignmentTests.exe dist\device-alignment-check
+```
+
+Checks all 124 physical targets across keyboard, mouse, Xbox and PlayStation diagrams at three canvas sizes. Independent artwork measurements cover staggered rows, wide keys, navigation keys, mouse wheel, side buttons, sticks and shoulder bands. Clicks each target's center and edges with all badges visible, checks shoulder/trigger separation and scrolling, and captures every selected key in contact sheets. Preview captures include complete artwork and wrapped extra keys without scrollbars. Multi-digit counts resize their badges on refresh. Enhanced previews combine trigger axis and digital inputs on one physical button and include sequence and watched keys with the same function counts as the main view.
+
 Check the bottom comparison panel's four presentation modes:
 
 ```powershell

@@ -396,16 +396,12 @@ namespace PBZKeyForge
                 preview.Controls.Add(new Label { Text = I18n.Str(pad ? "editor.gamepad" : "editor.keyboard") + (pad && family != null ? " · " + family.Name : ""),
                     AutoSize = true, ForeColor = BindingStatus.Factory });
                 int familyIndex = family == null ? -1 : family.Index;
-                var relations = snapshot.BindingActions(pad, familyIndex).Select(action => BindingViewText.PhysicalRelations(snapshot.Relations(action, pad, familyIndex))).ToArray();
-                var keys = relations.SelectMany(relation => relation.Keys.Concat(relation.DefaultKeys ?? new string[0])).Distinct().ToArray();
-                Func<string, KeyBadgeState> state = key => new KeyBadgeState { Count = relations.Count(relation => relation.Keys.Contains(key)),
-                    Complete = relations.All(relation => relation.KnowsKey(key)),
-                    Differs = relations.Any(relation => relation.DefaultKeys != null && relation.Keys.Contains(key) != relation.DefaultKeys.Contains(key)) };
+                string[] keys;
+                var state = UnifiedBindingUi.PresetKeyStates(snapshot, preset, pad, familyIndex, out keys);
+                int width = Math.Max(120, preview.ClientSize.Width - 28);
                 using (var diagram = new DeviceDiagram(pad, family == null ? null : family.Name, state, delegate { }, null, keys))
                 {
-                    diagram.Font = Font; diagram.Size = new Size(1000, 330); diagram.CreateControl();
-                    var bitmap = new Bitmap(diagram.Width, diagram.Height); diagram.DrawToBitmap(bitmap, diagram.ClientRectangle);
-                    int width = Math.Max(120, preview.ClientSize.Width - 28);
+                    diagram.Font = Font; var bitmap = diagram.CapturePreview(Math.Max(300, pad ? width / 2 : width));
                     var picture = new PictureBox { Left = 10, Top = top + 8, Width = width, Height = (int)(width * .33f), Image = bitmap, SizeMode = PictureBoxSizeMode.Zoom };
                     picture.Disposed += delegate { bitmap.Dispose(); }; preview.Controls.Add(picture);
                 }

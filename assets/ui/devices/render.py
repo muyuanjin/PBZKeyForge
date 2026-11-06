@@ -12,80 +12,153 @@ CROPS = {
     'xbox': (66, 770, 1124, 1496),
     'playstation': (1179, 777, 2282, 1488),
 }
-POINTS = {
-    'mouse': {
-        'LeftMouseButton': (1780, 220), 'RightMouseButton': (2000, 220),
-        'MiddleMouseButton': (1888, 200), 'ThumbMouseButton': (1722, 475),
-        'ThumbMouseButton2': (1705, 350),
-    },
-    'xbox': {
-        'Gamepad_LeftTrigger': (332, 825), 'Gamepad_RightTrigger': (860, 825),
-        'Gamepad_LeftShoulder': (335, 868), 'Gamepad_RightShoulder': (850, 868),
-        'Gamepad_FaceButton_Bottom': (877, 1086), 'Gamepad_FaceButton_Right': (940, 1020),
-        'Gamepad_FaceButton_Left': (809, 1020), 'Gamepad_FaceButton_Top': (877, 956),
-        'Gamepad_LeftThumbstick': (328, 1028), 'Gamepad_RightThumbstick': (730, 1178),
-        'Gamepad_DPad_Up': (463, 1139), 'Gamepad_DPad_Down': (463, 1233),
-        'Gamepad_DPad_Left': (413, 1183), 'Gamepad_DPad_Right': (512, 1183),
-        'Gamepad_Special_Left': (521, 1025), 'Gamepad_Special_Right': (672, 1025),
-    },
-    'playstation': {
-        'Gamepad_LeftTrigger': (1425, 820), 'Gamepad_RightTrigger': (2035, 820),
-        'Gamepad_LeftShoulder': (1425, 861), 'Gamepad_RightShoulder': (2030, 861),
-        'Gamepad_FaceButton_Bottom': (2050, 1095), 'Gamepad_FaceButton_Right': (2123, 1025),
-        'Gamepad_FaceButton_Left': (1980, 1025), 'Gamepad_FaceButton_Top': (2050, 956),
-        'Gamepad_LeftThumbstick': (1575, 1168), 'Gamepad_RightThumbstick': (1890, 1168),
-        'Gamepad_DPad_Up': (1410, 970), 'Gamepad_DPad_Down': (1410, 1078),
-        'Gamepad_DPad_Left': (1353, 1025), 'Gamepad_DPad_Right': (1460, 1025),
-        'Gamepad_Special_Left': (1520, 926), 'Gamepad_Special_Right': (1945, 926),
-    },
-}
+BOUNDS = {'keyboard': {'Escape': [67, 62, 52, 53],
+              'F1': [211, 62, 52, 53],
+              'F2': [287, 62, 53, 53],
+              'F3': [364, 62, 52, 53],
+              'F4': [441, 62, 53, 53],
+              'F5': [545, 62, 52, 53],
+              'F6': [622, 62, 52, 53],
+              'F7': [699, 62, 52, 53],
+              'F8': [775, 62, 53, 53],
+              'F9': [879, 62, 53, 53],
+              'F10': [958, 62, 53, 53],
+              'F11': [1035, 62, 52, 53],
+              'F12': [1112, 62, 54, 53],
+              'PrintScreen': [1217, 62, 54, 53],
+              'ScrollLock': [1295, 62, 54, 53],
+              'Pause': [1373, 62, 53, 53],
+              'Tilde': [67, 159, 52, 54],
+              'One': [144, 159, 50, 54],
+              'Two': [219, 159, 50, 54],
+              'Three': [294, 159, 50, 54],
+              'Four': [369, 159, 50, 54],
+              'Five': [444, 159, 50, 54],
+              'Six': [520, 159, 50, 54],
+              'Seven': [595, 159, 50, 54],
+              'Eight': [670, 159, 50, 54],
+              'Nine': [745, 159, 50, 54],
+              'Zero': [820, 159, 50, 54],
+              'Hyphen': [895, 159, 50, 54],
+              'Equals': [970, 159, 50, 54],
+              'BackSpace': [1046, 159, 121, 54],
+              'Tab': [67, 233, 89, 54],
+              'Q': [181, 233, 50, 54],
+              'W': [256, 233, 50, 54],
+              'E': [332, 233, 50, 54],
+              'R': [407, 233, 50, 54],
+              'T': [482, 233, 51, 54],
+              'Y': [558, 233, 50, 54],
+              'U': [633, 233, 50, 54],
+              'I': [708, 233, 50, 54],
+              'O': [782, 233, 50, 54],
+              'P': [857, 233, 51, 54],
+              'LeftBracket': [933, 233, 50, 54],
+              'RightBracket': [1008, 233, 50, 54],
+              'Backslash': [1084, 233, 83, 54],
+              'CapsLock': [67, 305, 106, 53],
+              'A': [198, 305, 50, 53],
+              'S': [273, 305, 51, 53],
+              'D': [348, 305, 51, 53],
+              'F': [424, 305, 50, 53],
+              'G': [500, 305, 51, 53],
+              'H': [575, 305, 51, 53],
+              'J': [651, 305, 50, 53],
+              'K': [725, 305, 51, 53],
+              'L': [800, 305, 50, 53],
+              'Semicolon': [875, 305, 50, 53],
+              'Quote': [950, 305, 50, 53],
+              'Enter': [1025, 305, 142, 53],
+              'LeftShift': [67, 377, 144, 53],
+              'Z': [236, 377, 50, 53],
+              'X': [311, 377, 51, 53],
+              'C': [387, 377, 50, 53],
+              'V': [462, 377, 50, 53],
+              'B': [537, 377, 51, 53],
+              'N': [613, 377, 50, 53],
+              'M': [688, 377, 50, 53],
+              'Comma': [762, 377, 50, 53],
+              'Period': [837, 377, 51, 53],
+              'Slash': [912, 377, 51, 53],
+              'RightShift': [989, 377, 178, 53],
+              'LeftControl': [67, 449, 71, 53],
+              'LeftCommand': [164, 449, 66, 53],
+              'LeftAlt': [255, 449, 65, 53],
+              'SpaceBar': [346, 449, 448, 53],
+              'RightAlt': [819, 449, 68, 53],
+              'RightCommand': [912, 449, 68, 53],
+              'Menu': [1005, 449, 65, 53],
+              'RightControl': [1097, 449, 70, 53],
+              'Insert': [1217, 159, 54, 54],
+              'Home': [1295, 159, 54, 54],
+              'PageUp': [1373, 159, 53, 54],
+              'Delete': [1217, 233, 54, 54],
+              'End': [1295, 233, 54, 54],
+              'PageDown': [1373, 233, 53, 54],
+              'Up': [1295, 375, 54, 54],
+              'Left': [1217, 449, 54, 53],
+              'Down': [1295, 449, 54, 53],
+              'Right': [1373, 449, 53, 53]},
+ 'mouse': {'LeftMouseButton': [66, 65, 125, 235],
+           'RightMouseButton': [263, 65, 126, 235],
+           'MiddleMouseButton': [204, 108, 43, 129],
+           'ThumbMouseButton': [48, 391, 35, 108],
+           'ThumbMouseButton2': [26, 275, 40, 102]},
+ 'xbox': {'Gamepad_LeftTrigger': [221, 25, 113, 43],
+          'Gamepad_RightTrigger': [727, 25, 113, 43],
+          'Gamepad_LeftShoulder': [205, 83, 152, 35],
+          'Gamepad_RightShoulder': [699, 83, 152, 35],
+          'Gamepad_FaceButton_Bottom': [782, 285, 61, 61],
+          'Gamepad_FaceButton_Right': [845, 218, 61, 61],
+          'Gamepad_FaceButton_Left': [712, 218, 61, 61],
+          'Gamepad_FaceButton_Top': [783, 154, 61, 61],
+          'Gamepad_LeftThumbstick': [203, 194, 119, 119],
+          'Gamepad_RightThumbstick': [604, 342, 119, 119],
+          'Gamepad_DPad_Up': [377, 340, 41, 49],
+          'Gamepad_DPad_Down': [377, 436, 41, 44],
+          'Gamepad_DPad_Left': [325, 391, 51, 42],
+          'Gamepad_DPad_Right': [420, 391, 49, 42],
+          'Gamepad_Special_Left': [434, 234, 43, 43],
+          'Gamepad_Special_Right': [586, 234, 43, 43]},
+ 'playstation': {'Gamepad_LeftTrigger': [190, 26, 119, 35],
+                 'Gamepad_RightTrigger': [797, 26, 119, 35],
+                 'Gamepad_LeftShoulder': [184, 70, 126, 24],
+                 'Gamepad_RightShoulder': [794, 70, 126, 24],
+                 'Gamepad_FaceButton_Bottom': [844, 286, 62, 62],
+                 'Gamepad_FaceButton_Right': [913, 218, 62, 62],
+                 'Gamepad_FaceButton_Left': [770, 218, 62, 62],
+                 'Gamepad_FaceButton_Top': [844, 150, 62, 62],
+                 'Gamepad_LeftThumbstick': [336, 333, 117, 117],
+                 'Gamepad_RightThumbstick': [652, 333, 117, 117],
+                 'Gamepad_DPad_Up': [208, 168, 46, 59],
+                 'Gamepad_DPad_Down': [208, 271, 46, 56],
+                 'Gamepad_DPad_Left': [151, 225, 57, 46],
+                 'Gamepad_DPad_Right': [254, 225, 57, 46],
+                 'Gamepad_Special_Left': [329, 122, 24, 53],
+                 'Gamepad_Special_Right': [755, 122, 24, 53]}}
 
 
-def keyboard_points():
-    points = {}
-
-    def row(names, xs, y):
-        for name, x in zip(names.split(), xs):
-            points[name] = (x, y)
-
-    row('Escape F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12 PrintScreen ScrollLock Pause',
-        [137, 278, 356, 431, 507, 613, 690, 765, 839, 946, 1025, 1099, 1180, 1286.5, 1364.5, 1442.5], 208)
-    row('Tilde One Two Three Four Five Six Seven Eight Nine Zero Hyphen Equals BackSpace',
-        [136, 211, 286, 361, 438, 513, 588, 663, 738, 812, 887, 961, 1037, 1152], 307)
-    row('Tab Q W E R T Y U I O P LeftBracket RightBracket Backslash',
-        [154, 249, 324, 399, 473, 548, 623, 698, 773, 849, 924, 999, 1074, 1165], 382)
-    row('CapsLock A S D F G H J K L Semicolon Quote Enter',
-        [163, 264, 340, 416, 492, 568, 644, 720, 796, 872, 948, 1024, 1138], 454)
-    row('LeftShift Z X C V B N M Comma Period Slash RightShift',
-        [177, 295, 369, 444, 520, 596, 672, 747, 823, 899, 975, 1123], 526)
-    row('LeftControl LeftCommand LeftAlt SpaceBar RightAlt RightCommand Menu RightControl',
-        [146, 239, 330, 611, 896, 987, 1080, 1177], 598)
-    row('Insert Home PageUp', [1286.5, 1364.5, 1442.5], 310)
-    row('Delete End PageDown', [1286.5, 1364.5, 1442.5], 381)
-    row('Left Down Right', [1286.5, 1364.5, 1442.5], 594.5)
-    points['Up'] = (1364.5, 522)
-    return points
+def render(atlas, output):
+    output.mkdir(parents=True, exist_ok=True)
+    hotspots = {}
+    for name, box in CROPS.items():
+        device = atlas.crop(box)
+        device.save(output / (name + '.png'))
+        hotspots[name] = {
+            'canvas': list(device.size),
+            'bounds': BOUNDS[name],
+        }
+    (output / 'hotspots.json').write_text(json.dumps(hotspots, indent=2) + '\n', encoding='utf-8')
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Crop the 2304 x 1536 device atlas and export normalized button centers.')
+    parser = argparse.ArgumentParser(description='Crop the 2304 x 1536 device atlas and export button face bounds in cropped-image pixels.')
     parser.add_argument('atlas', type=Path)
     args = parser.parse_args()
     atlas = Image.open(args.atlas).convert('RGBA')
     if atlas.size != (2304, 1536):
         parser.error('The device atlas must be 2304 x 1536 pixels.')
-    POINTS['keyboard'] = keyboard_points()
-    hotspots = {}
-    for name, box in CROPS.items():
-        device = atlas.crop(box)
-        device.save(ROOT / (name + '.png'))
-        width, height = device.size
-        hotspots[name] = {
-            'canvas': [width, height],
-            'points': {key: [round((x - box[0]) / width, 5), round((y - box[1]) / height, 5)]
-                for key, (x, y) in POINTS[name].items()},
-        }
-    (ROOT / 'hotspots.json').write_text(json.dumps(hotspots, indent=2) + '\n', encoding='utf-8')
+    render(atlas, ROOT)
 
 
 if __name__ == '__main__':

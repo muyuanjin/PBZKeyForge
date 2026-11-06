@@ -263,8 +263,8 @@ public static class BindingViewsTests
                 Assert(targets.ContainsKey("LeftMouseButton") && targets.ContainsKey("LeftControl"), "Keyboard and mouse must be clickable on the same canvas.");
                 var keyboardImage = Field<System.Collections.Generic.Dictionary<string, RectangleF>>(keyboardDiagram, "imageBounds")["keyboard"];
                 foreach (var physical in new[] {
-                    new { Key = "Home", X = 1321.5f, Y = 191f }, new { Key = "End", X = 1321.5f, Y = 262f },
-                    new { Key = "Up", X = 1321.5f, Y = 403f }, new { Key = "Down", X = 1321.5f, Y = 475.5f } })
+                    new { Key = "Home", X = 1322f, Y = 186f }, new { Key = "End", X = 1322f, Y = 260f },
+                    new { Key = "Up", X = 1322f, Y = 402f }, new { Key = "Down", X = 1322f, Y = 475.5f } })
                 {
                     var hit = targets[physical.Key];
                     float x = (hit.Left + hit.Width / 2 - keyboardImage.Left) / keyboardImage.Width * 1497;

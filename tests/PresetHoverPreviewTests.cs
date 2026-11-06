@@ -203,6 +203,8 @@ public static class PresetHoverPreviewTests
                     {
                         popup.CreateControl(); popup.PerformLayout(); Application.DoEvents();
                         Assert(popup.Width < form.Width && Descendants(popup).OfType<PictureBox>().Single().Image != null, "Preview must contain a smaller device diagram.");
+                        var deviceImage = Descendants(popup).OfType<PictureBox>().Single().Image;
+                        if (preset.Id == "souls") Assert(deviceImage.Height >= deviceImage.Width * .64f, "Controller hover preview must capture the complete device.");
                         Assert(Descendants(popup).OfType<Label>().Any(label => label.Text.Contains("→")), "Preview must compare factory keys with the result.");
                         Assert(Descendants(popup).OfType<Label>().Where(label => label.Text.Contains("→")).All(label => label.ForeColor == Color.FromArgb(64, 158, 255)),
                             "All preset changes must use one blue, independent of save status or device.");
