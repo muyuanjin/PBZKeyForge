@@ -1,4 +1,11 @@
 {
+  "Game": {
+    "SteamAppId": "4115450",
+    "ReviewedSteamBuildId": "26367565",
+    "ReviewedUe4ssAssetId": "697433243",
+    "ReviewedUe4ssUpdated": "2026-11-01T05:34:26Z",
+    "Api": "https://api.steamcmd.net/v1/info/4115450"
+  },
   "Bundled": {
     "Provider": "KintaroModding",
     "Version": "v3.0.1-1195-g1ceefac8",

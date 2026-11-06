@@ -1,0 +1,126 @@
+name: Game and UE4SS updates
+
+on:
+  schedule:
+    - cron: '19 */6 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'build/check-runtime-updates.ps1'
+      - 'build/ue4ss-release.ps1'
+      - 'build/download-ue4ss.ps1'
+      - 'build/ue4ss-sources.json'
+      - 'tests/RuntimeUpdateTests.ps1'
+      - '.github/workflows/runtime-updates.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runtime-updates-${{ github.event.pull_request.number || 'poll' }}
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify update detection without network access
+        shell: powershell
+        run: ./tests/RuntimeUpdateTests.ps1 -OutputDirectory ./dist/runtime-update-tests
+
+  observe:
+    if: github.event_name != 'pull_request'
+    needs: tests
+    runs-on: windows-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Observe public game and UE4SS versions
+        id: observe
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          ./build/check-runtime-updates.ps1 -Force -OutputFile ./dist/runtime-update-status.json
+          $report = Get-Content ./dist/runtime-update-status.json -Raw | ConvertFrom-Json
+          if ($report.Errors.Count) { throw ($report.Errors -join "`n") }
+          "review=$($report.NeedsReview.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+
+      - name: Prepare candidate pin
+        if: steps.observe.outputs.review == 'true'
+        shell: pwsh
+        run: |
+          $sources = Get-Content ./build/ue4ss-sources.json -Raw | ConvertFrom-Json
+          $report = Get-Content ./dist/runtime-update-status.json -Raw | ConvertFrom-Json
+          $sources.Bundled = $report.Ue4ss.Latest
+          [IO.File]::WriteAllText((Join-Path $PWD 'build/ue4ss-sources.json'), ($sources | ConvertTo-Json -Depth 8) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+
+      - name: Cache UE4SS downloads
+        if: steps.observe.outputs.review == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/AppData/Local/PBZKeyForge/cache/ue4ss-build
+          key: ue4ss-build-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: ue4ss-build-${{ runner.os }}-
+
+      - name: Build and verify the candidate
+        if: steps.observe.outputs.review == 'true'
+        id: validation
+        continue-on-error: true
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          ./build/build.ps1
+          $compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          foreach ($test in @('KeyEnhancementPrerequisitesTests', 'KeyEnhancementInstallationTests', 'KeyEnhancementCoexistenceTests', 'Ue4ssUpdateTests')) {
+            & $compiler /nologo "/out:dist\$test.exe" /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.IO.Compression.dll "tests\$test.cs"
+            if ($LASTEXITCODE -ne 0) { throw "$test compilation failed" }
+            & ".\dist\$test.exe" ".\dist\candidate-$test"
+            if ($LASTEXITCODE -ne 0) { throw "$test failed" }
+          }
+
+      - name: Record candidate evidence
+        if: steps.observe.outputs.review == 'true'
+        shell: pwsh
+        env:
+          TEST_OUTCOME: ${{ steps.validation.outcome }}
+        run: |
+          $report = Get-Content ./dist/runtime-update-status.json -Raw | ConvertFrom-Json
+          $lines = @('# UE4SS and game compatibility candidate', '',
+            "UE4SS: $($report.Ue4ss.Latest.Version)",
+            "Asset: $($report.Ue4ss.Latest.AssetId), updated $($report.Ue4ss.Latest.Updated)",
+            "Release: $($report.Ue4ss.Latest.Source)",
+            "Public Steam build: $($report.Game.LatestSteamBuildId)",
+            "Reviewed Steam build: $($report.Game.ReviewedSteamBuildId)",
+            "Changes: $($report.Reasons -join ', ')", '',
+            "Candidate build and installation checks: $env:TEST_OUTCOME.",
+            'Game startup, UE4SS loading and physical input: pending verification.', '',
+            'Follow [the adaptation procedure](../skills/phantom-blade-zero-save-modding/references/runtime-updates.md) before publishing compatibility claims.', '',
+            '## Upstream release notes', '', [string]$report.Ue4ss.ReleaseNotes)
+          [IO.File]::WriteAllText((Join-Path $PWD 'docs/ue4ss-update-candidate.md'), ($lines -join "`n") + "`n", [Text.UTF8Encoding]::new($false))
+
+      - name: Create or update the compatibility draft
+        uses: peter-evans/create-pull-request@v7
+        with:
+          base: ${{ github.event.repository.default_branch }}
+          branch: automation/runtime-compatibility
+          delete-branch: true
+          draft: true
+          commit-message: 'ci: prepare game and UE4SS compatibility review'
+          title: 'ci: review game and UE4SS compatibility updates'
+          add-paths: |
+            build/ue4ss-sources.json
+            docs/ue4ss-update-candidate.md
+          body: |
+            A public game build or stable PBZ UE4SS asset differs from the current compatibility baseline.
+
+            The candidate pin and upstream notes are in this change. Candidate build and installation result: ${{ steps.validation.outcome }}. These checks do not establish actual game behavior.
+
+            Continue with `skills/phantom-blade-zero-save-modding/references/runtime-updates.md`: inspect relevant fixes, resolve test failures, verify the affected game behavior, and update the compatibility evidence and reviewed runtime/game identities before release.

@@ -4,35 +4,11 @@ param([Parameter(Mandatory = $true)][string]$OutputDirectory,
     [switch]$UpdatePinnedRelease)
 $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$taskHeaders = @{ 'User-Agent' = 'PBZKeyForge-build' }
-if ($env:GITHUB_TOKEN) { $taskHeaders.Authorization = 'Bearer ' + $env:GITHUB_TOKEN }
 $taskSources = Get-Content "$PSScriptRoot\ue4ss-sources.json" -Raw | ConvertFrom-Json
 $taskMetadata = $taskSources.Bundled
 if ($UpdatePinnedRelease) {
-$taskReleases = $null
-foreach ($taskApi in $taskSources.Api) {
-    try {
-        $taskApiHeaders = @{ 'User-Agent' = 'PBZKeyForge-build' }
-        if ($taskApi.StartsWith('https://api.github.com/') -and $env:GITHUB_TOKEN) { $taskApiHeaders.Authorization = $taskHeaders.Authorization }
-        $taskReleases = Invoke-RestMethod -Uri $taskApi -Headers $taskApiHeaders -TimeoutSec 20
-        if ($taskReleases -isnot [array]) { throw 'Invalid release response.' }
-        break
-    } catch { Write-Warning ("Release query failed via $(([Uri]$taskApi).Host): " + $_.Exception.Message); $taskReleases = $null }
-}
-if (-not $taskReleases) { throw 'Unable to check the latest Kintaro PBZ release. Check network access and retry.' }
-$taskAsset = $null
-foreach ($taskRelease in @($taskReleases | Where-Object { -not $_.draft -and -not $_.prerelease } | Sort-Object published_at -Descending)) {
-    $taskAsset = $taskRelease.assets | Where-Object { $_.name -match '^phantombladezero_ue4ss_.*\.zip$' } | Select-Object -First 1
-    if ($taskAsset) { break }
-}
-if (-not $taskAsset) { throw 'No current Kintaro Phantom Blade Zero runtime release was found.' }
-$taskMetadata = [pscustomobject][ordered]@{
-    Provider = 'KintaroModding'; Version = [string]$taskRelease.tag_name
-    Source = [string]$taskRelease.html_url; Asset = [string]$taskAsset.name
-    Published = ([DateTimeOffset]$taskRelease.published_at).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ', [Globalization.CultureInfo]::InvariantCulture)
-    Download = [string]$taskAsset.browser_download_url; AssetId = [string]$taskAsset.id
-    Updated = ([DateTimeOffset]$taskAsset.updated_at).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ', [Globalization.CultureInfo]::InvariantCulture)
-}
+    . "$PSScriptRoot\ue4ss-release.ps1"
+    $taskMetadata = (Get-PbzUe4ssRelease $taskSources -TimeoutSeconds 20).Metadata
 }
 if (-not $taskMetadata.Version -or -not $taskMetadata.AssetId -or -not $taskMetadata.Download -or -not $taskMetadata.Updated) {
     throw 'No pinned UE4SS release is configured in build/ue4ss-sources.json.'

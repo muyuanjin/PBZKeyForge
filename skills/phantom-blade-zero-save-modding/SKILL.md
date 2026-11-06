@@ -7,6 +7,10 @@ description: 为《影之刃零》开发键位编辑与资源 Mod 功能，提�
 
 本技能记录 PBZKeyForge 的输入映射、存档格式和资源 Mod。普通改键与方案选择写存档，完美防御无连点惩罚使用独立资源容器；静态研究本身不隐含启动、注入或安装 Mod 的授权。
 
+## 游戏与 UE4SS 更新
+
+涉及游戏兼容性、加载器、构建或发布时，先运行 `build/check-runtime-updates.ps1`；用户反馈游戏更新或更新后失效时加 `-Force`，指定安装时传 `-GameDirectory`。脚本同时查询 UE4SS 正式 PBZ 包与 Steam 公共构建，检测同一标签下重新上传的资源。出现 `NeedsReview` 后按[更新与适配](references/runtime-updates.md)继续取得候选、验证并修正适配，不能停在“发现新版”的通知。发布使用 `-Release` 重新查询，不把旧缓存或安装测试当作新游戏的运行证据。
+
 ## 先区分修改对象
 
 | 目标 | 实际落点 | 关键区别 |

@@ -21,6 +21,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Verify update detection decisions
+        shell: powershell
+        run: ./tests/RuntimeUpdateTests.ps1 -OutputDirectory ./dist/runtime-update-tests
+
+      - name: Check current game and UE4SS compatibility before release
+        shell: powershell
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./build/check-runtime-updates.ps1 -Release -OutputFile ./dist/runtime-update-status.json
+
       - name: Cache UE4SS release downloads
         uses: actions/cache@v4
         with:

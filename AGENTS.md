@@ -2,6 +2,18 @@
 
 For game input mappings, default bindings, save formats, or scheme activation, read [the project Mod development skill](skills/phantom-blade-zero-save-modding/SKILL.md) and its relevant references before changing the model or collecting game evidence.
 
+## Game and UE4SS Updates
+
+Before compatibility, loader, build or release work, run:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\check-runtime-updates.ps1
+```
+
+Pass `-GameDirectory <game-root>` when the task names an installation. Successful observations can be reused for 24 hours; a changed local Steam build forces a new query. Add `-Force` when the user reports a game update, a loader failure after an update, or an upstream fix. Release work uses `-Release`, which always queries both UE4SS and the public Steam build and rejects unresolved changes or failed queries.
+
+When `NeedsReview` is true, continue the adaptation work: read the release notes, obtain the candidate, run the relevant checks and document compatibility evidence. Follow [the update procedure](skills/phantom-blade-zero-save-modding/references/runtime-updates.md). An update notification alone does not complete that work. Keep game execution and external publishing within the current task's authorization. A network failure permits local development with the existing pin, but does not establish current compatibility or permit publication.
+
 ## Project Structure & Module Organization
 
 - `src/`: C# application code. `MainForm.cs` owns WinForms UI; `Cli.cs` provides console commands; `Gvas.cs` reads/writes input saves; `GameSchemeSettings.cs` handles the game's actual scheme selector. `Presets.cs` and `I18n.cs` define presets and multilingual text.

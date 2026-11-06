@@ -8,7 +8,7 @@ New-Item -ItemType Directory -Path $OutputDirectory | Out-Null
 $taskOutput = (Resolve-Path -LiteralPath $OutputDirectory).Path
 $taskSandbox = Join-Path $taskOutput 'build'
 New-Item -ItemType Directory -Path $taskSandbox | Out-Null
-Copy-Item "$taskRoot\build\download-ue4ss.ps1", "$taskRoot\build\ue4ss-sources.json" $taskSandbox
+Copy-Item "$taskRoot\build\download-ue4ss.ps1", "$taskRoot\build\ue4ss-release.ps1", "$taskRoot\build\ue4ss-sources.json" $taskSandbox
 $taskConfig = Join-Path $taskSandbox 'ue4ss-sources.json'
 $taskSources = Get-Content -LiteralPath $taskConfig -Raw | ConvertFrom-Json
 $taskPinned = $taskSources.Bundled
@@ -78,6 +78,7 @@ Copy-Item -LiteralPath $taskCached -Destination (Join-Path $taskCache "42-$(([Da
 & "$taskSandbox\download-ue4ss.ps1" -OutputDirectory "$taskOutput\refresh" -CacheDirectory $taskCache -UpdatePinnedRelease
 $taskUpdated = Get-Content -LiteralPath $taskConfig -Raw | ConvertFrom-Json
 Assert ($taskUpdated.Bundled.Version -eq 'test-new' -and $taskUpdated.Bundled.AssetId -eq '42') 'Explicit refresh did not update the pin.'
+Assert ($taskUpdated.Game.ReviewedUe4ssAssetId -eq $taskSources.Game.ReviewedUe4ssAssetId -and $taskUpdated.Game.ReviewedUe4ssUpdated -eq $taskSources.Game.ReviewedUe4ssUpdated) 'Download alone marked the candidate as reviewed.'
 Assert ($taskUpdated.Api.Count -eq $taskSources.Api.Count) 'Refresh lost runtime update sources.'
 $taskCalls = $global:pbzUe4ssBuildTestState.ApiCalls + $global:pbzUe4ssBuildTestState.Downloads
 & "$taskSandbox\download-ue4ss.ps1" -OutputDirectory "$taskOutput\updated-offline" -CacheDirectory $taskCache
