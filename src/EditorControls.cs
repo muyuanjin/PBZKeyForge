@@ -23,6 +23,7 @@ namespace PBZKeyForge
         public static readonly Color Amber = Accent;
         public static readonly Color Preview = Color.FromArgb(49, 43, 28);
         public static readonly Color Green = Color.FromArgb(172, 189, 167);
+        public static readonly Color LiveConnected = Color.FromArgb(116, 224, 165);
         public static readonly Color Disabled = Color.FromArgb(45, 50, 53);
     }
 
@@ -43,7 +44,7 @@ namespace PBZKeyForge
         }
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.Clear(Selected ? EditorTheme.Floating : Hovered ? EditorTheme.RowAlternate : BackColor);
+            EditorArtwork.ClearSurface(this, e.Graphics, Selected ? EditorTheme.Floating : Hovered ? EditorTheme.RowAlternate : BackColor);
             float scale = e.Graphics.DpiX / 96f;
             int inset = (int)Math.Round(12 * scale);
             int underline = Math.Max(1, (int)Math.Round(3 * scale));
@@ -80,7 +81,7 @@ namespace PBZKeyForge
             protected override void OnPaint(PaintEventArgs e)
             {
                 Color fill = Hovered ? EditorTheme.Hover : Selected ? EditorTheme.Floating : EditorTheme.Surface;
-                e.Graphics.Clear(fill);
+                EditorArtwork.ClearSurface(this, e.Graphics, fill);
                 using (var pen = new Pen(EditorTheme.Line))
                     e.Graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
                 if (Selected && Enabled)
@@ -168,7 +169,7 @@ namespace PBZKeyForge
         }
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.Clear(BackColor);
+            EditorArtwork.ClearSurface(this, e.Graphics, BackColor);
             float scale = e.Graphics.DpiX / 96f;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             bool quiet = Unavailable || EmptyBinding && FactoryMatch && !Changed;
@@ -218,6 +219,14 @@ namespace PBZKeyForge
                 case "Gamepad_RightTrigger": case "Gamepad_RightTriggerAxis": return "RT / R2";
                 case "Gamepad_LeftThumbstick": return "LS / L3";
                 case "Gamepad_RightThumbstick": return "RS / R3";
+                case "Gamepad_LeftStick_Up": return "LS ↑";
+                case "Gamepad_LeftStick_Down": return "LS ↓";
+                case "Gamepad_LeftStick_Left": return "LS ←";
+                case "Gamepad_LeftStick_Right": return "LS →";
+                case "Gamepad_RightStick_Up": return "RS ↑";
+                case "Gamepad_RightStick_Down": return "RS ↓";
+                case "Gamepad_RightStick_Left": return "RS ←";
+                case "Gamepad_RightStick_Right": return "RS →";
                 case "Gamepad_Special_Left": return "View / Share";
                 case "Gamepad_Special_Right": return "Menu / Options";
                 case "Gamepad_DPad_Up": return "D-pad ↑";
@@ -241,6 +250,8 @@ namespace PBZKeyForge
     internal sealed class BindingTable : TableLayoutPanel
     {
         public BindingTable() { DoubleBuffered = true; ResizeRedraw = true; }
+        protected override void OnPaintBackground(PaintEventArgs e)
+        { base.OnPaintBackground(e); if (BackColor.A == 255) EditorArtwork.PaintEffect(this, e.Graphics); }
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -257,8 +268,10 @@ namespace PBZKeyForge
 
     internal sealed class KeyCaptureBox : Control
     {
+        public string CapturePrompt;
         public event Action<string> ModifierCaptured;
         public event Action<string> MouseCaptured;
+        public event Action<string> KeyReleased;
         bool armed;
         public KeyCaptureBox()
         {
@@ -273,24 +286,42 @@ namespace PBZKeyForge
             bool wasArmed = armed && Focused;
             Focus(); base.OnMouseDown(e);
             if (!wasArmed || MouseCaptured == null) return;
-            string key = e.Button == MouseButtons.Left ? "LeftMouseButton" : e.Button == MouseButtons.Right ? "RightMouseButton"
-                : e.Button == MouseButtons.Middle ? "MiddleMouseButton" : e.Button == MouseButtons.XButton1 ? "ThumbMouseButton"
-                : e.Button == MouseButtons.XButton2 ? "ThumbMouseButton2" : null;
+            string key = MouseKey(e.Button);
             if (key != null) MouseCaptured(key);
+        }
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            string key = MouseKey(e.Button);
+            if (Focused && armed && key != null && KeyReleased != null) KeyReleased(key);
+        }
+        static string MouseKey(MouseButtons button)
+        {
+            return button == MouseButtons.Left ? "LeftMouseButton" : button == MouseButtons.Right ? "RightMouseButton"
+                : button == MouseButtons.Middle ? "MiddleMouseButton" : button == MouseButtons.XButton1 ? "ThumbMouseButton"
+                : button == MouseButtons.XButton2 ? "ThumbMouseButton2" : null;
         }
         protected override void OnGotFocus(EventArgs e) { armed = true; base.OnGotFocus(e); Invalidate(); }
         protected override void OnLostFocus(EventArgs e) { armed = false; base.OnLostFocus(e); Invalidate(); }
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.Clear(BackColor);
+            EditorArtwork.ClearSurface(this, e.Graphics, BackColor);
             using (var pen = new Pen(Focused ? EditorTheme.Accent : EditorTheme.Line))
                 e.Graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
-            TextRenderer.DrawText(e.Graphics, armed ? I18n.Str("editor.capturing") : Text, Font, Rectangle.Inflate(ClientRectangle, -8, -2), Enabled ? armed ? EditorTheme.Ink : ForeColor : EditorTheme.Muted,
+            TextRenderer.DrawText(e.Graphics, armed ? CapturePrompt ?? I18n.Str("editor.capturing") : Text, Font, Rectangle.Inflate(ClientRectangle, -8, -2), Enabled ? armed ? EditorTheme.Ink : ForeColor : EditorTheme.Muted,
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
             if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(ClientRectangle, -4, -4));
         }
         protected override void WndProc(ref Message message)
         {
+            if (Focused && armed && (message.Msg == 0x101 || message.Msg == 0x105) && KeyReleased != null)
+            {
+                int code = message.WParam.ToInt32(); long data = message.LParam.ToInt64();
+                string released = code == 0x10 ? (((data >> 16) & 0xff) == 0x36 ? "RightShift" : "LeftShift")
+                    : code == 0x11 ? ((data & 0x01000000) != 0 ? "RightControl" : "LeftControl")
+                    : code == 0x12 ? ((data & 0x01000000) != 0 ? "RightAlt" : "LeftAlt") : BindingDialog.KeyFromCode((Keys)code);
+                KeyReleased(released);
+            }
             if (Focused && armed && (message.Msg == 0x100 || message.Msg == 0x104))
             {
                 int virtualKey = message.WParam.ToInt32();
@@ -313,6 +344,7 @@ namespace PBZKeyForge
     internal sealed class BindingDialog : EditorWindow
     {
         readonly ComboBox keys = new EditorComboBox { CenterText = true };
+        readonly GamepadCapture gamepadCapture = new GamepadCapture();
         public string Result;
         sealed class Choice
         {
@@ -350,7 +382,10 @@ namespace PBZKeyForge
                 if (key != null) SelectKey(key);
                 e.SuppressKeyPress = true;
             };
-            capture.Enabled = !gamepad;
+            capture.Text = I18n.Str("flow.record"); capture.CapturePrompt = I18n.Str("flow.record.active");
+            gamepadCapture.Pressed += SelectKey;
+            capture.GotFocus += delegate { if (gamepad) gamepadCapture.Start(Handle); };
+            capture.LostFocus += delegate { gamepadCapture.Stop(); };
             var clear = new EditorButton { Left = 20, Top = 176, Width = 165, Height = 33, Text = I18n.Str("editor.clear") };
             clear.Click += delegate { Result = null; DialogResult = DialogResult.OK; };
             var ok = new EditorButton { Left = 290, Top = 176, Width = 96, Height = 33, Text = I18n.Str("editor.ok"), Primary = true };
@@ -377,7 +412,14 @@ namespace PBZKeyForge
         }
         protected override void OnShown(EventArgs e)
         { base.OnShown(e); keys.Focus(); }
-        static string KeyFromCode(Keys key)
+        protected override void WndProc(ref Message message)
+        {
+            if (message.Msg == 0xff) gamepadCapture.ReadRawInput(message.LParam);
+            base.WndProc(ref message);
+        }
+        protected override void Dispose(bool disposing)
+        { if (disposing) gamepadCapture.Dispose(); base.Dispose(disposing); }
+        internal static string KeyFromCode(Keys key)
         {
             if (key >= Keys.A && key <= Keys.Z || key >= Keys.F1 && key <= Keys.F12) return key.ToString();
             string[] digits = { "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" };

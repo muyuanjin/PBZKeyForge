@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -28,7 +28,7 @@ namespace PBZKeyForge
             DoubleBuffered = true;
             Padding = new Padding(1);
             windowMenu.Font = Font; windowMenu.BackColor = EditorTheme.Floating; windowMenu.ForeColor = EditorTheme.Ink;
-            windowMenu.Renderer = new ToolStripProfessionalRenderer(new EditorMenuColors());
+            windowMenu.Renderer = new EditorMenuRenderer();
             windowMenu.ShowImageMargin = false; windowMenu.Padding = new Padding(5);
             Caption.Dock = DockStyle.Top; Caption.Height = 32; Caption.BackColor = EditorTheme.Background;
             captionTitle.Dock = DockStyle.Fill; captionTitle.TextAlign = ContentAlignment.MiddleLeft; captionTitle.AutoEllipsis = true;
@@ -225,7 +225,7 @@ namespace PBZKeyForge
         [DllImport("user32.dll")] static extern bool GetMonitorInfo(IntPtr monitor, ref MonitorInfo info);
     }
 
-    internal sealed class CaptionLabel : Label
+    internal sealed class CaptionLabel : EditorLabel
     {
         protected override void WndProc(ref Message message)
         { if (!EditorWindow.PassResizeHit(this, ref message)) base.WndProc(ref message); }

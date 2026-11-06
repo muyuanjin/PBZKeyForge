@@ -9,9 +9,10 @@ namespace PBZKeyForge
     {
         public struct HeaderLayout
         {
-            public Rectangle Title, Badge, Help;
+            public Rectangle Title, Badge, Options;
         }
         public string Detail;
+        public bool Compact;
         public Rectangle DetailBounds { get; private set; }
         public ResourceModToggle()
         {
@@ -31,18 +32,18 @@ namespace PBZKeyForge
             using (var badgeFont = new Font(Font.FontFamily, 8f))
                 badgeWidth = TextRenderer.MeasureText(graphics, I18n.Str("mod.badge"), badgeFont).Width + (int)(8 * scale);
             int titleWidth = Math.Min(TextRenderer.MeasureText(graphics, Text, Font).Width,
-                Math.Max(1, Width - textLeft - badgeWidth - badgeGap - helpGap - helpWidth));
+                Math.Max(1, Width - textLeft - badgeWidth - badgeGap - helpGap - helpWidth - (int)(28 * scale)));
             var title = new Rectangle(textLeft, top, titleWidth, (int)(22 * scale));
             var badge = new Rectangle(title.Right + badgeGap, top + (int)(2 * scale), badgeWidth, (int)(18 * scale));
             return new HeaderLayout { Title = title, Badge = badge,
-                Help = new Rectangle(badge.Right + helpGap, (int)(4 * scale), helpWidth, (int)(24 * scale)) };
+                Options = new Rectangle(badge.Right + helpGap, (int)(4 * scale), helpWidth, (int)(24 * scale)) };
         }
         protected override void OnPaint(PaintEventArgs e)
         {
             float scale = e.Graphics.DpiX / 96f;
             int box = (int)(16 * scale), textLeft = (int)(24 * scale), top = (int)(5 * scale);
             Color accent = Color.FromArgb(143, 165, 184);
-            e.Graphics.Clear(BackColor);
+            EditorArtwork.ClearSurface(this, e.Graphics, BackColor);
             var check = new RectangleF(1, top + 3 * scale, box, box);
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             using (var shape = EditorArtwork.Rounded(check, 3 * scale))
@@ -64,7 +65,7 @@ namespace PBZKeyForge
                 TextRenderer.DrawText(e.Graphics, badge, badgeFont, header.Badge, accent,
                     TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter | TextFormatFlags.SingleLine);
             }
-            using (var detailFont = new Font(Font.FontFamily, 9f))
+            if (!Compact) using (var detailFont = new Font(Font.FontFamily, 9f))
             {
                 DetailBounds = new Rectangle(textLeft, (int)(31 * scale), Math.Max(1, Width - textLeft), Math.Max(1, Height - (int)(31 * scale)));
                 TextRenderer.DrawText(e.Graphics, Detail, detailFont, DetailBounds, EditorTheme.Muted,
@@ -77,7 +78,6 @@ namespace PBZKeyForge
     public partial class MainForm
     {
         readonly ResourceModToggle chkPerfectDeflectNoRapidClickPenalty = new ResourceModToggle();
-        readonly EditorButton btnModHelp = new EditorButton();
         PerfectDeflectNoRapidClickPenaltyMod footerMod;
         EditorSession footerModSession;
         string footerModError;
@@ -123,12 +123,11 @@ namespace PBZKeyForge
             finally { renderingResourceMod = false; }
             chkPerfectDeflectNoRapidClickPenalty.Text = I18n.Str("mod.checkbox");
             chkPerfectDeflectNoRapidClickPenalty.Detail = I18n.Str("mod.warning");
-            btnModHelp.Text = "?"; btnModHelp.AccessibleName = I18n.Str("mod.title") + " · " + I18n.Str("mod.help");
+            btnResourceModMore.AccessibleName = I18n.Str("mod.title") + " · " + I18n.Str("component.options");
             chkPerfectDeflectNoRapidClickPenalty.AccessibleName = chkPerfectDeflectNoRapidClickPenalty.Text;
             chkPerfectDeflectNoRapidClickPenalty.AccessibleDescription = I18n.Str(ResourceModEnabled ? "mod.enabled" : "mod.disabled")
                 + (ResourceModPending ? " · " + I18n.Str("views.pending") : "") + "\n" + chkPerfectDeflectNoRapidClickPenalty.Detail;
             SetTip(chkPerfectDeflectNoRapidClickPenalty, "");
-            SetTip(btnModHelp, I18n.Str("mod.help"));
             UpdateResourceModAvailability(); chkPerfectDeflectNoRapidClickPenalty.Invalidate();
         }
 
@@ -157,8 +156,10 @@ namespace PBZKeyForge
         void StageResourceMod()
         {
             if (loading || renderingResourceMod) return;
+            RememberBindingEdit();
             bool enabled = chkPerfectDeflectNoRapidClickPenalty.Checked;
             resourceModDraft = enabled != resourceModBaseline || enabled && footerModState == ResourceModState.Incomplete ? (bool?)enabled : null;
+            DiscardUnchangedBindingEdit();
             RenderSession();
         }
     }

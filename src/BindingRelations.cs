@@ -289,7 +289,7 @@ namespace PBZKeyForge
             if (restored.Complete && before.Complete && SameKeys(restored.Keys, before.Keys))
                 foreach (string id in draft.Edits.Keys.Where(id => Address(id).Profile == SelectedProfile && Address(id).Action == action
                     && Address(id).IsGamepad == gamepad && (!gamepad || Address(id).FamilyIndex == familyIndex)).ToArray())
-                { draft.Edits.Remove(id); draft.Conflicts.Remove(id); }
+                { draft.Edits.Remove(id); draft.Conflicts.Remove(id); draft.PresetOverrideEdits.Remove(id); }
         }
 
         public void ChangeRelationship(string action, string key, bool add, bool gamepad, int familyIndex)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -6,9 +6,9 @@ using System.Windows.Forms;
 
 namespace PBZKeyForge
 {
-    internal sealed class SchemeDiffView : Panel
+    internal sealed class SchemeDiffView : EditorPanel
     {
-        sealed class DifferenceRows : Panel
+        sealed class DifferenceRows : EditorPanel
         {
             public DifferenceRows() { DoubleBuffered = true; ResizeRedraw = true; }
             protected override void OnScroll(ScrollEventArgs e)
@@ -20,17 +20,18 @@ namespace PBZKeyForge
         }
         readonly Panel rows = new DifferenceRows { Dock = DockStyle.Fill, AutoScroll = true };
         readonly TableLayoutPanel header = new EditorLayout { Dock = DockStyle.Top, ColumnCount = 4, RowCount = 1 };
-        readonly Label title = new Label(), total = new Label();
+        readonly Label title = new EditorLabel(), total = new EditorLabel();
         readonly EditorTab saved = new EditorTab(), factory = new EditorTab();
         readonly ToolTip tip = new ToolTip();
         readonly Label empty = BindingViewText.Label("", 30);
         readonly Dictionary<string, int> rowModes = new Dictionary<string, int>();
         EditorSession session;
+        BindingSnapshot[] bindingSnapshots;
         bool compareFactory;
         static string RowId(string profile, BindingDifference difference)
         { return profile + "\u001f" + difference.Gamepad + "\u001f" + difference.FamilyIndex + "\u001f" + difference.Family + "\u001f" + difference.Action; }
         public bool CompareFactory { get { return compareFactory; } }
-        public void SetComparison(bool value) { compareFactory = value; if (session != null) Render(session); }
+        public void SetComparison(bool value) { compareFactory = value; if (session != null) Render(session, bindingSnapshots); }
         public SchemeDiffView()
         {
             DoubleBuffered = true; BackColor = EditorTheme.Surface; Dock = DockStyle.Bottom;
@@ -58,6 +59,7 @@ namespace PBZKeyForge
         internal void Render(EditorSession value, BindingSnapshot[] snapshots)
         {
             session = value;
+            bindingSnapshots = snapshots;
             header.Height = Font.Height + 18;
             title.Text = I18n.Str("views.schemediff"); saved.Text = I18n.Str("views.vssaved"); factory.Text = I18n.Str("views.vsfactory");
             saved.Selected = !compareFactory; factory.Selected = compareFactory;
@@ -65,9 +67,12 @@ namespace PBZKeyForge
             var changes = snapshots.SelectMany(s => s.Differences(compareFactory)).ToArray();
             bool incomplete = compareFactory ? snapshots.Any(s => s.Current.Any(r => !r.CanCompare))
                 : changes.Any(d => !d.BeforeComplete || !d.AfterComplete);
+            Visible = changes.Length > 0 || incomplete;
             int added = changes.Sum(d => d.AddedKeys.Length);
             int removed = changes.Sum(d => d.RemovedKeys.Length);
             total.Text = (incomplete ? "≥ " : "") + "+" + added + " / −" + removed;
+            int modified = changes.Count(change => change.DetailsChanged);
+            if (modified > 0) total.Text += " · " + I18n.Str("binding.modifiedcount", modified);
             tip.SetToolTip(total, I18n.Str("views.relationcounts") + (incomplete ? "\n" + I18n.Str("views.partial") : ""));
             empty.Text = I18n.Str(incomplete ? "views.partialdiff" : compareFactory || session.IsOffline ? "views.nofactorydiff" : "views.nosaveddiff");
             empty.Height = Font.Height + 20; empty.Visible = changes.Length == 0;
@@ -92,7 +97,7 @@ namespace PBZKeyForge
                     var row = existing[i]; var change = reversed[i];
                     string identity = RowId(session.SelectedProfile, change); int mode;
                     rowModes.TryGetValue(identity, out mode);
-                    row.Height = Font.Height + 18;
+                    row.Height = change.DetailsChanged ? Font.Height * 2 + 20 : Font.Height + 18;
                     var snapshot = snapshots.Single(s => s.Gamepad == change.Gamepad && s.FamilyIndex == change.FamilyIndex);
                     var before = snapshot.Before[change.Action];
                     var current = snapshot.Current.First(r => r.Action == change.Action);
@@ -110,8 +115,8 @@ namespace PBZKeyForge
         {
             var change = row.Difference;
             tip.SetToolTip(row, DeviceName(change) + " · " + BindingViewText.ActionName(change.Action) + "\n"
-                + I18n.Str("views.diffbefore") + ": " + KeyText(change.BeforeKeys, change.BeforeComplete) + "\n"
-                + I18n.Str("views.diffresult") + ": " + KeyText(DifferenceRow.ResultKeys(change), change.AfterComplete) + "\n"
+                + I18n.Str("views.diffbefore") + ": " + (change.BeforeBindings == null ? KeyText(change.BeforeKeys, change.BeforeComplete) : string.Join(" / ", change.BeforeBindings)) + "\n"
+                + I18n.Str("views.diffresult") + ": " + (change.AfterBindings == null ? KeyText(DifferenceRow.ResultKeys(change), change.AfterComplete) : string.Join(" / ", change.AfterBindings)) + "\n"
                 + row.ModeName + "\n" + I18n.Str("views.diffcycle"));
         }
         sealed class DifferenceRow : Control
@@ -191,7 +196,7 @@ namespace PBZKeyForge
             }
             protected override void OnPaint(PaintEventArgs e)
             {
-                base.OnPaint(e); float scale = e.Graphics.DpiX / 96f;
+                base.OnPaint(e); EditorArtwork.PaintEffect(this, e.Graphics); float scale = e.Graphics.DpiX / 96f;
                 int inset = (int)(10 * scale), iconSize = (int)(18 * scale);
                 var diff = Difference;
                 var device = new Rectangle(inset, 0, Width * 22 / 100 - inset, Height);
@@ -201,6 +206,15 @@ namespace PBZKeyForge
                 Image icon = EditorArtwork.ActionIcon(diff.Action);
                 if (icon != null) e.Graphics.DrawImage(icon, new Rectangle(Width * 22 / 100, (Height - iconSize) / 2, iconSize, iconSize));
                 TextRenderer.DrawText(e.Graphics, BindingViewText.ActionName(diff.Action), Font, action, EditorTheme.Ink, LabelFlags);
+                if (diff.DetailsChanged)
+                {
+                    string before = string.Join(" / ", diff.BeforeBindings ?? diff.BeforeKeys);
+                    string after = string.Join(" / ", diff.AfterBindings ?? diff.AfterKeys);
+                    string text = Mode == 2 ? after : Mode == 3 ? before : before + " → " + after;
+                    TextRenderer.DrawText(e.Graphics, text, Font, keys, BindingStatus.Pending,
+                        TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis | TextFormatFlags.PreserveGraphicsClipping);
+                    return;
+                }
                 if (keys.Width > 0 && keys.Height > 0)
                 {
                     int left = keys.Left + (int)(8 * scale), gap = (int)(16 * scale);

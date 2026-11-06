@@ -322,6 +322,15 @@ namespace PBZKeyForge
             var loaderState = ReadLoaderState();
             if (candidate.Enabled && (loaderState == KeyEnhancementLoaderState.Conflict
                 || loaderState == KeyEnhancementLoaderState.Incomplete && ReadOwnership().Files.Count == 0)) throw LoaderConflict();
+            if (candidate.Enabled)
+            {
+                var runtime = OwnedPayload(ReadOwnership());
+                string library = Path.Combine(loaderDirectory, "UE4SS.dll");
+                string proxy = Path.Combine(runtimeDirectory, LoaderSuspended ? SuspendedProxy : "dwmapi.dll");
+                KeyEnhancementPrerequisites.EnsureAvailable(runtimeDirectory,
+                    File.Exists(library) ? File.ReadAllBytes(library) : runtime["ue4ss/UE4SS.dll"],
+                    File.Exists(proxy) ? File.ReadAllBytes(proxy) : runtime["dwmapi.dll"]);
+            }
             if (ConfigurationText == json && state == (candidate.Enabled ? KeyEnhancementInstallState.Enabled : KeyEnhancementInstallState.Disabled)
                 && !(LoaderSuspended && OtherModsPresent())) return;
             string staging = Path.Combine(Path.GetDirectoryName(InstallDirectory), ".PBZKeyForge-" + Guid.NewGuid().ToString("N"));

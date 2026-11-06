@@ -73,12 +73,27 @@ namespace PBZKeyForge
         bool refreshing, rendering;
         public PresetApplyMode ChosenMode { get; private set; }
         public Preset AppliedPreset { get; private set; }
+        readonly Func<KeyEnhancementConfiguration> enhancement;
+        readonly Action<string> exportBundle;
+        readonly Action<Preset, PresetApplyMode> applyPreset;
+        readonly Action<Preset, PresetApplyMode> checkPreset;
 
         public UserPresetDialog(EditorSession session, UserPresetStore store, PresetApplyMode mode)
             : this(session, store, mode, EditorPreferences.Default()) { }
 
         public UserPresetDialog(EditorSession session, UserPresetStore store, PresetApplyMode mode, EditorPreferences preferences)
+            : this(session, store, mode, preferences, null, null) { }
+
+        public UserPresetDialog(EditorSession session, UserPresetStore store, PresetApplyMode mode, EditorPreferences preferences, Func<KeyEnhancementConfiguration> enhancement, Action<string> exportBundle)
+            : this(session, store, mode, preferences, enhancement, exportBundle, null) { }
+
+        public UserPresetDialog(EditorSession session, UserPresetStore store, PresetApplyMode mode, EditorPreferences preferences, Func<KeyEnhancementConfiguration> enhancement, Action<string> exportBundle, Action<Preset, PresetApplyMode> applyPreset)
+            : this(session, store, mode, preferences, enhancement, exportBundle, applyPreset, null) { }
+
+        public UserPresetDialog(EditorSession session, UserPresetStore store, PresetApplyMode mode, EditorPreferences preferences, Func<KeyEnhancementConfiguration> enhancement, Action<string> exportBundle, Action<Preset, PresetApplyMode> applyPreset, Action<Preset, PresetApplyMode> checkPreset)
         {
+            this.enhancement = enhancement; this.exportBundle = exportBundle;
+            this.applyPreset = applyPreset; this.checkPreset = checkPreset;
             this.preferences = preferences;
             this.session = session; this.store = store; ChosenMode = mode;
             Text = I18n.Str("preset.manage"); Font = new Font("Microsoft YaHei UI", 10f);
@@ -107,7 +122,7 @@ namespace PBZKeyForge
                 }
                 Run(delegate {
                     var savedPresets = store.Load();
-                    var preset = store.Save(UserPresetStore.Capture(session, nameBox.Text), nameBox.Text, savedPresets);
+                    var preset = store.Save(UserPresetStore.Capture(session, nameBox.Text, enhancement == null ? null : enhancement()), nameBox.Text, savedPresets);
                     Reload(preset.Id, savedPresets); Message("preset.saved");
                 });
             });
@@ -179,12 +194,14 @@ namespace PBZKeyForge
             use.Dock = DockStyle.Fill; use.Margin = Padding.Empty; use.Name = "usePreset"; ((EditorButton)use).Primary = true;
             use.Click += delegate { Run(delegate {
                 var value = displayed;
+                if (checkPreset != null) checkPreset(value, ChosenMode);
+                else BindingPresetPlan.Create(session, enhancement == null ? new KeyEnhancementConfiguration() : enhancement() ?? new KeyEnhancementConfiguration(), value, ChosenMode);
                 if (value.Id == null)
                 {
-                    session.CheckPreset(value, ChosenMode);
                     value = store.Save(value, previewName.Text);
                 }
-                session.StagePreset(value, ChosenMode); AppliedPreset = value; DialogResult = DialogResult.OK; Close();
+                if (applyPreset == null) session.StagePreset(value, ChosenMode); else applyPreset(value, ChosenMode);
+                AppliedPreset = value; DialogResult = DialogResult.OK; Close();
             }); };
             actions.Controls.Add(use, 1, 0); detail.Controls.Add(actions, 0, 6);
             content.Controls.Add(detail, 1, 0); root.Controls.Add(content, 0, 1);
@@ -195,7 +212,9 @@ namespace PBZKeyForge
             importCard.Controls.Add(Heading("preset.importtitle"), 0, 0);
             var import = CreateRow(3); import.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); import.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 84)); import.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
             StyleInput(shareBox); shareBox.Margin = new Padding(0, 5, 8, 4); shareBox.AccessibleName = I18n.Str("preset.paste"); import.Controls.Add(InputHost(shareBox), 0, 0);
-            var inspect = Button("preset.preview", delegate { Run(delegate { Display(UserPresetStore.ParseShare(shareBox.Text)); Message("preset.importhelp"); }); }); inspect.Name = "previewShare";
+            shareBox.MaxLength = 0;
+            shareBox.TextChanged += delegate { if (!rendering) { Display(null); Message("preset.importhelp"); } };
+            var inspect = Button("preset.preview", delegate { Display(null); Run(delegate { Display(UserPresetStore.ParseShare(shareBox.Text)); Message("preset.importhelp"); }); }); inspect.Name = "previewShare";
             import.Controls.Add(inspect, 1, 0);
             saveImport.Text = I18n.Str("preset.saveimport"); saveImport.Dock = DockStyle.Fill; saveImport.Margin = new Padding(8, 2, 0, 2); saveImport.Name = "saveImport";
             saveImport.Click += delegate { Run(delegate {
@@ -373,6 +392,7 @@ namespace PBZKeyForge
                 int top = 8;
                 var scopeLabel = new Label { Text = I18n.Str("preset.devices", UserPresetStore.ScopeText(preset)),
                     AutoSize = true, ForeColor = EditorTheme.Muted };
+                if (preset.KeyEnhancement != null) scopeLabel.Text += Environment.NewLine + I18n.Str("binding.preset");
                 preview.Controls.Add(scopeLabel); top += scopeLabel.Height + 12;
                 var title = new Label { Text = I18n.Str("preset.previewchanges"), Left = 10, Top = top, Width = Math.Max(100, preview.ClientSize.Width - 28), ForeColor = BindingStatus.Custom, AutoSize = true };
                 preview.Controls.Add(title); top += title.Height + 12;
@@ -385,7 +405,16 @@ namespace PBZKeyForge
                         Left = 10, Top = top, ForeColor = BindingStatus.Custom, AutoSize = true, MaximumSize = new Size(Math.Max(120, preview.ClientSize.Width - 32), 0) };
                     preview.Controls.Add(label); top += label.Height + 12;
                 }
-                if (differences.Length == 0)
+                if (preset.KeyEnhancement != null)
+                {
+                    foreach (string description in UnifiedBindingUi.PresetEnhancementDescriptions(snapshot, preset))
+                    {
+                        var label = new Label { Text = description, Left = 10, Top = top, ForeColor = EditorTheme.KeyEnhancement, AutoSize = true,
+                            MaximumSize = new Size(Math.Max(120, preview.ClientSize.Width - 32), 0) };
+                        preview.Controls.Add(label); top += label.Height + 12;
+                    }
+                }
+                if (differences.Length == 0 && preset.KeyEnhancement == null)
                     preview.Controls.Add(new Label { Text = I18n.Str("views.nofactorydiff"), Left = 10, Top = top, AutoSize = true, ForeColor = BindingStatus.Factory });
                 bool pad = !preset.Scopes.Any(scope => scope.Family == null)
                     || preset.UserMappings.Any(mapping => mapping.Family != null) && !preset.UserMappings.Any(mapping => mapping.Family == null);
@@ -449,6 +478,12 @@ namespace PBZKeyForge
         void Export()
         {
             Run(delegate {
+                if (enhancement != null && enhancement() != null)
+                {
+                    using (var picker = new SaveFileDialog { Title = I18n.Str("enhancement.exportbundle"), Filter = "PBZKeyForge (*.zip)|*.zip", FileName = "PBZKeyForge.zip", DefaultExt = "zip", AddExtension = true })
+                        if (picker.ShowDialog(this) == DialogResult.OK) { exportBundle(picker.FileName); Message("preset.exported"); }
+                    return;
+                }
                 using (var picker = new SaveFileDialog { Title = I18n.Str("preset.export"), Filter = I18n.Str("preset.export") + " (*.sav)|*.sav", FileName = "EnhancedInputUserSettings.sav", DefaultExt = "sav", AddExtension = true })
                     if (picker.ShowDialog(this) == DialogResult.OK) { session.ExportCurrentScheme(picker.FileName); Message("preset.exported"); }
             });

@@ -36,6 +36,7 @@ $artworkArgs = @(
     "/resource:$root\assets\ui\wallpaper.jpg,PBZKeyForge.Wallpaper",
     "/resource:$root\assets\ui\game-wordmark.png,PBZKeyForge.GameWordmark",
     "/resource:$root\assets\ui\app-mark.png,PBZKeyForge.AppMark",
+    "/resource:$root\assets\ui\key-enhancement-puppet.png,PBZKeyForge.KeyEnhancementMark",
     "/resource:$root\assets\ui\devices\hotspots.json,PBZKeyForge.Device.hotspots"
 )
 foreach ($deviceAsset in Get-ChildItem "$root\assets\ui\devices" -Filter *.png) {

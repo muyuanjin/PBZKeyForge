@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -27,8 +27,7 @@ namespace PBZKeyForge
         }
         public static string ActionName(string action)
         {
-            string name = I18n.Str("act." + action);
-            return name == "act." + action ? action : name;
+            return BindingWorkspace.FunctionLabel(action);
         }
         public static string Keys(IEnumerable<string> keys)
         {
@@ -36,7 +35,7 @@ namespace PBZKeyForge
             return text.Length == 0 ? I18n.Str("editor.unbound") : text;
         }
         public static Label Label(string text, int height)
-        { return new Label { Text = text, Dock = DockStyle.Top, Height = height, TextAlign = ContentAlignment.MiddleLeft,
+        { return new EditorLabel { Text = text, Dock = DockStyle.Top, Height = height, TextAlign = ContentAlignment.MiddleLeft,
             Padding = new Padding(10, 0, 6, 0), AutoEllipsis = true, ForeColor = EditorTheme.Ink }; }
     }
 
@@ -46,7 +45,7 @@ namespace PBZKeyForge
         public string KeySummary;
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.Clear(BackColor);
+            EditorArtwork.ClearSurface(this, e.Graphics, BackColor);
             float scale = e.Graphics.DpiX / 96f;
             int inset = (int)(12 * scale), size = (int)(22 * scale), left = inset;
             Image icon = EditorArtwork.ActionIcon(ActionId);
@@ -102,6 +101,7 @@ namespace PBZKeyForge
         readonly ToolTip tip = new ToolTip();
         List<string> extraKeys = new List<string>();
         readonly Dictionary<string, RectangleF> imageBounds = new Dictionary<string, RectangleF>();
+        Bitmap deviceArtwork;
         string hoveredKey;
         float scale = 1f;
         public DeviceDiagram(bool pad, string family, Func<string, KeyBadgeState> stateForKey, Action<string> select,
@@ -168,6 +168,7 @@ namespace PBZKeyForge
         }
         protected override void OnLayout(LayoutEventArgs e)
         {
+            if (deviceArtwork != null) { deviceArtwork.Dispose(); deviceArtwork = null; }
             if (stateForKey == null) { base.OnLayout(e); return; }
             using (var graphics = CreateGraphics()) scale = graphics.DpiX / 96f;
             targets.Clear(); badges.Clear(); states.Clear(); devices.Clear(); imageBounds.Clear();
@@ -324,8 +325,17 @@ namespace PBZKeyForge
         }
         protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaint(e); e.Graphics.SmoothingMode = SmoothingMode.AntiAlias; e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            foreach (var item in imageBounds) e.Graphics.DrawImage(Artwork(item.Key), item.Value);
+            base.OnPaint(e); EditorArtwork.PaintEffect(this, e.Graphics); e.Graphics.SmoothingMode = SmoothingMode.AntiAlias; e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            if (deviceArtwork == null && ClientSize.Width > 0 && ClientSize.Height > 0)
+            {
+                deviceArtwork = new Bitmap(ClientSize.Width, ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                using (var graphics = Graphics.FromImage(deviceArtwork))
+                {
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    foreach (var item in imageBounds) graphics.DrawImage(Artwork(item.Key), item.Value);
+                }
+            }
+            if (deviceArtwork != null) e.Graphics.DrawImageUnscaled(deviceArtwork, 0, 0);
             using (var keyFont = new Font("Segoe UI", KeyboardFontSize()))
             using (var mouseFont = new Font(Font.FontFamily, 8f))
             foreach (var item in targets)
@@ -375,15 +385,17 @@ namespace PBZKeyForge
             RectangleF keyboard;
             return imageBounds.TryGetValue("keyboard", out keyboard) ? Math.Max(4.5f, Math.Min(9f, keyboard.Width / scale / 65f)) : 9f;
         }
-        protected override void Dispose(bool disposing) { if (disposing) tip.Dispose(); base.Dispose(disposing); }
+        protected override void Dispose(bool disposing)
+        { if (disposing) { tip.Dispose(); if (deviceArtwork != null) deviceArtwork.Dispose(); } base.Dispose(disposing); }
     }
 
     internal sealed class RelationshipButton : EditorButton
     {
-        public bool Custom, Pending, Removed, Unknown, Fixed, IsOffline;
+        public bool Custom, Pending, Removed, Unknown, Fixed, IsOffline, KeyEnhancementOwned;
+        public string DetailText, IdentityText;
         protected override void OnPaint(PaintEventArgs e)
         {
-            float scale = e.Graphics.DpiX / 96f; e.Graphics.Clear(Hovered ? EditorTheme.Hover : EditorTheme.Floating);
+            float scale = e.Graphics.DpiX / 96f; EditorArtwork.ClearSurface(this, e.Graphics, Hovered ? EditorTheme.Hover : EditorTheme.Floating);
             int inset = (int)(12 * scale), iconSize = (int)(24 * scale), left = inset + iconSize + (int)(12 * scale);
             Image icon = EditorArtwork.ActionIcon(ActionId);
             var iconBounds = new Rectangle(inset, (Height - iconSize) / 2, iconSize, iconSize);
@@ -402,19 +414,23 @@ namespace PBZKeyForge
                 else e.Graphics.DrawImage(icon, iconBounds);
             }
             using (var titleFont = new Font(Font, Removed ? FontStyle.Strikeout : Font.Style))
-                TextRenderer.DrawText(e.Graphics, Text, titleFont, new Rectangle(left, (int)(5 * scale), Width - left - inset, Height / 2), Removed ? EditorTheme.Muted : EditorTheme.Ink,
+                TextRenderer.DrawText(e.Graphics, Text, titleFont, new Rectangle(left, (int)(5 * scale), Width - left - inset, IdentityText == null ? Height / 2 : Font.Height + (int)(4 * scale)), Removed ? EditorTheme.Muted : EditorTheme.Ink,
                     TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
             if (Removed)
                 using (var pen = new Pen(EditorTheme.Muted, 1.5f * scale))
                     e.Graphics.DrawLine(pen, iconBounds.Left, iconBounds.Bottom, iconBounds.Right, iconBounds.Top);
-            string status = I18n.Str(Pending ? IsOffline ? "offline.pending" : "views.pending" : Removed ? "views.removedshort" : Fixed ? "views.fixed" : Unknown ? "editor.defaultunknown" : Custom ? "views.savedcustom" : "views.original");
-            if (Pending && Removed) status = I18n.Str("views.removedshort") + " · " + status;
-            int y = Height * 2 / 3, dot = (int)(6 * scale);
-            BindingStatus.Dot(e.Graphics, Removed ? BindingStatus.Factory : Pending ? BindingStatus.Pending : Custom ? BindingStatus.Custom : BindingStatus.Factory, left, y, dot);
+            string status = DetailText ?? I18n.Str(Pending ? IsOffline ? "offline.pending" : "views.pending" : Removed ? "views.removedshort" : Fixed ? "views.fixed" : Unknown ? "editor.defaultunknown" : Custom ? "views.savedcustom" : "views.original");
+            if (Pending && Removed && DetailText == null) status = I18n.Str("views.removedshort") + " · " + status;
+            int y = IdentityText == null ? Height * 2 / 3 : Height - (int)(18 * scale), dot = (int)(6 * scale);
+            BindingStatus.Dot(e.Graphics, Removed ? BindingStatus.Factory : Pending ? BindingStatus.Pending : KeyEnhancementOwned ? EditorTheme.KeyEnhancement : Custom ? BindingStatus.Custom : BindingStatus.Factory, left, y, dot);
             using (var statusFont = new Font(Font.FontFamily, 8f))
             {
+                if (IdentityText != null)
+                    TextRenderer.DrawText(e.Graphics, IdentityText, statusFont,
+                        new Rectangle(left, Font.Height + (int)(10 * scale), Width - left - inset, statusFont.Height + (int)(4 * scale)),
+                        EditorTheme.Muted, TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
                 var bounds = new Rectangle(left + dot + (int)(5 * scale), y - (int)(5 * scale), Width - left - dot - inset, (int)(18 * scale));
-                TextRenderer.DrawText(e.Graphics, status, statusFont, bounds, Pending && !Removed ? BindingStatus.Pending : EditorTheme.Muted, TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+                TextRenderer.DrawText(e.Graphics, status, statusFont, bounds, Pending && !Removed ? BindingStatus.Pending : KeyEnhancementOwned && !Removed ? EditorTheme.KeyEnhancement : EditorTheme.Muted, TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
             }
             if (Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(ClientRectangle, -3, -3));
         }
@@ -423,9 +439,13 @@ namespace PBZKeyForge
     internal sealed class BindingLegend : Control
     {
         public bool IsOffline;
+        public BindingLegend()
+        {
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+        }
         protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaint(e); float scale = e.Graphics.DpiX / 96f, left = 8 * scale;
+            base.OnPaint(e); EditorArtwork.PaintEffect(this, e.Graphics); float scale = e.Graphics.DpiX / 96f, left = 8 * scale;
             string[] names = { "views.original", "views.savedcustom", IsOffline ? "offline.pending" : "views.pending" };
             Color[] colors = { BindingStatus.Factory, BindingStatus.Custom, BindingStatus.Pending };
             using (var font = new Font(Font.FontFamily, 8f))
@@ -439,7 +459,7 @@ namespace PBZKeyForge
         }
     }
 
-    internal sealed class KeyBindingView : Panel
+    internal sealed class KeyBindingView : EditorPanel
     {
         readonly TableLayoutPanel columns = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
         readonly Panel devices = new EditorPanel(), selected = new EditorPanel();
@@ -447,8 +467,12 @@ namespace PBZKeyForge
         readonly Label hint = BindingViewText.Label("", 24), heading = BindingViewText.Label("", 30), count = BindingViewText.Label("", 24);
         readonly Label notice = BindingViewText.Label("", 40);
         readonly BindingLegend legend = new BindingLegend { Dock = DockStyle.Bottom, Height = 28 };
+        readonly ToolTip ownershipTip = new ToolTip();
         readonly EditorButton add = new EditorButton { Dock = DockStyle.Top }, reset = new EditorButton { Dock = DockStyle.Top },
-            actionView = new EditorButton { Dock = DockStyle.Top };
+            actionView = new EditorButton { Dock = DockStyle.Top }, keyTools = new EditorButton { Dock = DockStyle.Top };
+        public BindingWorkspace Workspace;
+        public event Action<string> AddFunctionRequested;
+        public event Action<BindingEntry> EditBindingRequested, RemoveBindingRequested, RestoreBindingRequested;
         readonly List<RelationshipRow> actionRows = new List<RelationshipRow>();
         DeviceDiagram diagram;
         ActionRelations[] rawRelations, relations;
@@ -461,6 +485,7 @@ namespace PBZKeyForge
         public event Action<string> EditAction;
         public event Action<string, string, bool> EditRelation;
         public event Action<string> RestoreSelectedKey;
+        public event Action<string, bool> MoveSelectedKey;
         public event Action ActionViewRequested;
         public KeyBindingView()
         {
@@ -475,9 +500,10 @@ namespace PBZKeyForge
             UpdateHeadingFont();
             devices.Controls.Add(hint); selected.Controls.Add(detail); selected.Controls.Add(heading);
             detail.HandleCreated += delegate { EditorArtwork.DarkScrollbars(detail); };
-            detail.Controls.AddRange(new Control[] { actionView, notice, reset, add, count });
+            detail.Controls.AddRange(new Control[] { actionView, notice, keyTools, reset, add, count });
             add.Click += delegate {
                 if (currentSession == null) return;
+                if (AddFunctionRequested != null) { AddFunctionRequested(selectedKey); return; }
                 var actions = currentSession.BindingActions(currentPad, currentFamily)
                     .Where(a => !currentSession.Relations(a, currentPad, currentFamily).Keys.Any(k => BindingViewText.PhysicalKey(k) == selectedKey));
                 using (var choice = new ActionChoiceDialog(currentSession, actions, currentPad, currentFamily))
@@ -487,6 +513,13 @@ namespace PBZKeyForge
                         string key = defaults == null ? null : defaults.FirstOrDefault(k => BindingViewText.PhysicalKey(k) == selectedKey);
                         EditRelation(choice.Result, key ?? selectedKey, true);
                     }
+            };
+            keyTools.Click += delegate {
+                var menu = new ContextMenuStrip();
+                menu.Items.Add(I18n.Str("editing.move"), null, delegate { if (MoveSelectedKey != null) MoveSelectedKey(selectedKey, false); });
+                menu.Items.Add(I18n.Str("editing.swap"), null, delegate { if (MoveSelectedKey != null) MoveSelectedKey(selectedKey, true); });
+                menu.Closed += delegate { BeginInvoke((Action)delegate { menu.Dispose(); }); };
+                menu.Show(keyTools, new Point(0, keyTools.Height));
             };
             reset.Click += delegate { if (RestoreSelectedKey != null) RestoreSelectedKey(selectedKey); };
             actionView.Click += delegate { if (ActionViewRequested != null) ActionViewRequested(); };
@@ -501,7 +534,7 @@ namespace PBZKeyForge
         protected override void OnFontChanged(EventArgs e)
         { base.OnFontChanged(e); UpdateHeadingFont(); }
         protected override void Dispose(bool disposing)
-        { base.Dispose(disposing); if (disposing && headingFont != null) { headingFont.Dispose(); headingFont = null; } }
+        { base.Dispose(disposing); if (disposing) { ownershipTip.Dispose(); if (headingFont != null) { headingFont.Dispose(); headingFont = null; } } }
         public void Render(EditorSession session, bool pad, int familyIndex)
         {
             if (session != null) Render(session, new BindingSnapshot(session, pad, familyIndex,
@@ -544,8 +577,10 @@ namespace PBZKeyForge
 
         void RenderSelectedKey()
         {
+            if (Workspace != null) { RenderWorkspaceKey(); return; }
             var session = currentSession;
             bool pad = currentPad;
+            keyTools.Text = I18n.Str("editing.keytools") + "…"; keyTools.Height = Font.Height + 18; keyTools.Enabled = !currentSession.IsResetPending;
             heading.Text = BindingButton.FriendlyKey(selectedKey); heading.Height = Font.Height + 16;
             var summary = new KeyRelations { Key = selectedKey,
                 Current = relations.Where(r => r.Keys.Contains(selectedKey)).ToArray(),
@@ -582,10 +617,36 @@ namespace PBZKeyForge
                     var raw = rawRelations.First(r => r.Action == relation.Action);
                     item.InputKeys = (isRemoved ? (raw.DefaultKeys ?? new string[0]).Concat(rawBefore[raw.Action].Keys) : raw.Keys)
                         .Where(k => BindingViewText.PhysicalKey(k) == selectedKey).ToArray();
-                    bool fixedBinding = session.Defaults.FixedForAction(relation.Action, pad).Any(k => BindingViewText.PhysicalKey(k) == selectedKey);
+                    bool fixedBinding = (Workspace == null || !Workspace.KeyEnhancementEnabled) && session.Defaults.FixedForAction(relation.Action, pad).Any(k => BindingViewText.PhysicalKey(k) == selectedKey);
                     operation.Enabled = !fixedBinding && (relation.Complete || !isRemoved && relation.DefaultKeys != null && !relation.DefaultKeys.Contains(selectedKey)) && !session.IsResetPending;
                     operation.AccessibleName = I18n.Str(isRemoved ? "views.restore" : "views.remove") + " " + BindingViewText.ActionName(relation.Action);
                     edit.ActionId = relation.Action; edit.Text = BindingViewText.ActionName(relation.Action);
+                    edit.DetailText = null; edit.IdentityText = null; edit.KeyEnhancementOwned = false;
+                    if (Workspace != null)
+                    {
+                        var function = Workspace.Functions.First(f => f.Id == relation.Action);
+                        edit.Text = function.Label;
+                        var functionEntries = Workspace.Entries(function.Id);
+                        var entries = functionEntries.Where(entry => entry.Active &&
+                            entry.Keys.Concat(string.IsNullOrEmpty(entry.Axis) ? new string[0] : new[] { entry.Axis })
+                                .Any(key => BindingViewText.PhysicalKey(key) == selectedKey)).ToArray();
+                        string bindings = string.Join(" · ", entries.Where(entry => !entry.IsNative).Select(UnifiedBindingUi.BindingText).Distinct());
+                        if (function.RequiresKeyEnhancement)
+                            edit.DetailText = UnifiedActionChoiceDialog.FunctionCode(function) + (bindings.Length == 0 ? "" : " · " + bindings);
+                        else if (bindings.Length > 0) edit.DetailText = bindings;
+                        var ownership = functionEntries.Where(entry =>
+                            entry.Keys.Concat(string.IsNullOrEmpty(entry.Axis) ? new string[0] : new[] { entry.Axis })
+                                .Any(key => BindingViewText.PhysicalKey(key) == selectedKey)).ToArray();
+                        ownershipTip.SetToolTip(edit, function.TechnicalName + Environment.NewLine + string.Join(Environment.NewLine, ownership.Select(entry =>
+                            UnifiedBindingUi.BindingText(entry) + Environment.NewLine + UnifiedBindingUi.EntryExecution(entry) + Environment.NewLine + UnifiedBindingUi.EntryPolicy(entry))));
+                        string owner = ownership.Select(entry => entry.ExecutionOwner).Distinct().Count() == 1 && ownership.Length > 0 ? ownership[0].ExecutionOwner : null;
+                        edit.KeyEnhancementOwned = owner == "scheduler";
+                        if (owner != null)
+                        {
+                            string execution = I18n.Str("ownership.owner." + (owner == "scheduler" ? "scheduler" : owner == "game" ? "game" : owner == "inactive" ? "off" : "uncovered"));
+                            edit.DetailText = string.IsNullOrEmpty(edit.DetailText) ? execution : edit.DetailText + " · " + execution;
+                        }
+                    }
                     edit.Removed = isRemoved; edit.Custom = custom; edit.Unknown = !custom && relation.DefaultKeys == null; edit.Fixed = fixedBinding; edit.IsOffline = session.IsOffline;
                     edit.Pending = relation.Keys.Contains(selectedKey) != before[relation.Action].Keys.Contains(selectedKey)
                         && relation.KnowsKey(selectedKey) && before[relation.Action].KnowsKey(selectedKey);
@@ -597,14 +658,80 @@ namespace PBZKeyForge
                 notice.Height = Font.Height * 2 + 4; notice.Text = I18n.Str("views.partial");
                 actionView.Height = Font.Height + 16; actionView.Text = I18n.Str("views.actionview");
                 notice.Visible = actionView.Visible = !summary.CurrentComplete || !summary.FactoryComplete;
-                var order = new Control[] { count }.Concat(actionRows.Cast<Control>()).Concat(new Control[] { add, reset, notice, actionView }).Reverse().ToArray();
+                var order = new Control[] { count }.Concat(actionRows.Cast<Control>()).Concat(new Control[] { add, reset, keyTools, notice, actionView }).Reverse().ToArray();
                 for (int i = 0; i < order.Length; i++)
                     if (detail.Controls.GetChildIndex(order[i]) != i) detail.Controls.SetChildIndex(order[i], i);
             }
             finally { detail.ResumeLayout(true); }
         }
-        sealed class RelationshipRow : Panel
+        void RenderWorkspaceKey()
         {
+            keyTools.Text = I18n.Str("editing.keytools") + "…"; keyTools.Height = Font.Height + 18; keyTools.Enabled = !currentSession.IsResetPending;
+            heading.Text = BindingButton.FriendlyKey(selectedKey); heading.Height = Font.Height + 16;
+            var entries = Workspace.GetSnapshot().Where(entry => entry.Keys.Concat(string.IsNullOrEmpty(entry.Axis) ? new string[0] : new[] { entry.Axis })
+                .Concat(entry.Rule == null ? new string[0] : entry.Rule.Steps.SelectMany(step => step).Concat(entry.Rule.Watch))
+                .Any(key => BindingViewText.PhysicalKey(key) == selectedKey)).ToList();
+            foreach (var relation in rawRelations.Where(r => !r.Keys.Any(k => BindingViewText.PhysicalKey(k) == selectedKey)))
+                foreach (string key in (relation.DefaultKeys ?? new string[0]).Concat(rawBefore[relation.Action].Keys).Distinct()
+                    .Where(k => BindingViewText.PhysicalKey(k) == selectedKey))
+                    if (!entries.Any(entry => entry.FunctionId == relation.Action && entry.IsNative && entry.Keys.Contains(key)))
+                    {
+                        var function = Workspace.Functions.First(item => item.Id == relation.Action);
+                        if (function.NativeAction != null || function.FixedKeys != null)
+                            entries.Add(new BindingEntry { FunctionId = relation.Action, Keys = new[] { key }, IsNative = true, Suppressed = true,
+                                Pending = relation.RelationshipPending(rawBefore[relation.Action], key), ExecutionOwner = "inactive",
+                                ReadOnly = function.FixedKeys != null, Enabled = true, IsDefault = relation.DefaultKeys != null && relation.DefaultKeys.Contains(key) });
+                    }
+            count.Text = I18n.Str("binding.count", entries.Count); count.Height = Font.Height + 8;
+            detail.SuspendLayout();
+            try
+            {
+                while (actionRows.Count > entries.Count) { int i = actionRows.Count - 1; actionRows[i].Dispose(); actionRows.RemoveAt(i); }
+                for (int i = 0; i < entries.Count; i++)
+                {
+                    if (i == actionRows.Count)
+                    {
+                        var added = new RelationshipRow();
+                        added.Edit.Click += delegate {
+                            if (added.Entry.IsNative && added.Entry.Id == null) { if (EditAction != null) EditAction(added.Entry.FunctionId); }
+                            else if (EditBindingRequested != null) EditBindingRequested(added.Entry);
+                        };
+                        added.Operation.Click += delegate {
+                            var clicked = added.Entry;
+                            if (clicked.Suppressed || !clicked.Enabled) { if (RestoreBindingRequested != null) RestoreBindingRequested(clicked); }
+                            else if (RemoveBindingRequested != null) RemoveBindingRequested(clicked);
+                        };
+                        actionRows.Add(added); detail.Controls.Add(added);
+                    }
+                    var row = actionRows[i]; var entry = entries[i]; row.Entry = entry; row.InputKeys = entry.Keys;
+                    var function = Workspace.Functions.First(item => item.Id == entry.FunctionId);
+                    row.Height = Font.Height * 3 + 24;
+                    row.Edit.ActionId = entry.FunctionId; row.Edit.Text = function.Label;
+                    row.Edit.IdentityText = UnifiedBindingUi.FunctionIdentity(function);
+                    row.Edit.DetailText = UnifiedBindingUi.EntryDescription(entry) + " · " + UnifiedBindingUi.EntryScope(entry);
+                    row.Edit.Removed = entry.Suppressed || !entry.Active; row.Edit.Pending = entry.Pending; row.Edit.Custom = !entry.IsDefault;
+                    row.Edit.KeyEnhancementOwned = entry.ExecutionOwner == "scheduler"; row.Edit.IsOffline = currentSession.IsOffline;
+                    row.Operation.AutoSize = true; row.Operation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                    row.Operation.Text = entry.Suppressed && entry.IsDefault ? I18n.Str("views.restore") : entry.Suppressed || !entry.Enabled ? I18n.Str("binding.enable") : I18n.Str("binding.unbind");
+                    row.Operation.Enabled = !currentSession.IsResetPending && (!entry.IsNative || !entry.ReadOnly || Workspace.KeyEnhancementEnabled);
+                    row.Operation.AccessibleName = row.Operation.Text + " " + UnifiedBindingUi.BindingText(entry);
+                    ownershipTip.SetToolTip(row.Edit, function.TechnicalName + Environment.NewLine + UnifiedBindingUi.FunctionIdentity(function)
+                        + Environment.NewLine + UnifiedBindingUi.EntryDescription(entry) + Environment.NewLine + UnifiedBindingUi.EntryScope(entry)
+                        + Environment.NewLine + UnifiedBindingUi.EntryExecution(entry) + Environment.NewLine + UnifiedBindingUi.EntryPolicy(entry));
+                    row.Edit.Invalidate();
+                }
+                add.Height = Font.Height + 18; add.Text = "+ " + I18n.Str("views.addaction"); add.Enabled = !currentSession.IsResetPending;
+                reset.Height = Font.Height + 18; reset.Text = I18n.Str("views.restorekey"); reset.Enabled = !currentSession.IsResetPending && entries.Any(entry => !entry.IsDefault || entry.Suppressed || !entry.Enabled || entry.Pending);
+                notice.Visible = actionView.Visible = false;
+                var order = new Control[] { count }.Concat(actionRows.Cast<Control>()).Concat(new Control[] { add, reset, keyTools, notice, actionView }).Reverse().ToArray();
+                for (int i = 0; i < order.Length; i++) detail.Controls.SetChildIndex(order[i], i);
+            }
+            finally { detail.ResumeLayout(true); }
+        }
+
+        sealed class RelationshipRow : EditorPanel
+        {
+            public BindingEntry Entry;
             public string[] InputKeys = new string[0];
             public readonly EditorButton Operation = new EditorButton { Dock = DockStyle.Right };
             public readonly RelationshipButton Edit = new RelationshipButton { Dock = DockStyle.Fill };
@@ -626,9 +753,9 @@ namespace PBZKeyForge
             var combo = new EditorComboBox { Name = "actionChoice", Left = 20, Top = Caption.Height + 18, Width = 500, DropDownStyle = ComboBoxStyle.DropDownList };
             foreach (string action in actions) combo.Items.Add(new ActionInfo(action));
             if (combo.Items.Count > 0) combo.SelectedIndex = 0;
-            var capacity = new Label { Name = "bindingCapacity", Left = 20, Top = Caption.Height + 60, Width = 500, Height = 24, ForeColor = EditorTheme.Muted };
-            var current = new Label { Left = 20, Top = Caption.Height + 87, Width = 500, Height = 24, ForeColor = EditorTheme.Muted, AutoEllipsis = true };
-            var hint = new Label { Name = "capacityHint", Left = 20, Top = Caption.Height + 117, Width = 500, Height = 46, ForeColor = EditorTheme.Muted };
+            var capacity = new EditorLabel { Name = "bindingCapacity", Left = 20, Top = Caption.Height + 60, Width = 500, Height = 24, ForeColor = EditorTheme.Muted };
+            var current = new EditorLabel { Left = 20, Top = Caption.Height + 87, Width = 500, Height = 24, ForeColor = EditorTheme.Muted, AutoEllipsis = true };
+            var hint = new EditorLabel { Name = "capacityHint", Left = 20, Top = Caption.Height + 117, Width = 500, Height = 46, ForeColor = EditorTheme.Muted };
             var ok = new EditorButton { Name = "addSelectedAction", Left = 312, Top = Caption.Height + 177, Width = 100, Height = 34, Text = I18n.Str("views.add"), Enabled = combo.Items.Count > 0 };
             ok.Click += delegate { Result = ((ActionInfo)combo.SelectedItem).Id; DialogResult = DialogResult.OK; };
             Action update = delegate {

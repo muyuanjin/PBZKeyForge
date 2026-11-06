@@ -63,10 +63,25 @@ namespace PBZKeyForge
         internal void AcceptLiveDraft(int familyIndex)
         {
             foreach (string id in draft.Edits.Keys.Where(id => Address(id).Profile == SelectedProfile && (!Address(id).IsGamepad || Address(id).FamilyIndex == familyIndex)).ToArray())
-            { draft.Edits.Remove(id); draft.Conflicts.Remove(id); }
+            { draft.Edits.Remove(id); draft.Conflicts.Remove(id); draft.PresetOverrideEdits.Remove(id); }
             previewCheckpoint = null; previewProfile = null; PresetId = null;
         }
         internal string DraftSignature
-        { get { return string.Join("\n", draft.Edits.OrderBy(pair => pair.Key).Select(pair => pair.Key + "=" + pair.Value)) + "|" + (ActivationPending ? SelectedProfile : "") + "|" + IsResetPending; } }
+        { get { return string.Join("\n", draft.Edits.OrderBy(pair => pair.Key).Select(pair => pair.Key + "=" + pair.Value)) + "|" + (ActivationPending ? SelectedProfile : "") + "|" + IsResetPending
+            + "|" + string.Join("\n", draft.PresetOverrideEdits.OrderBy(id => id)); } }
+
+        internal void PreservePresetOverride(string action, bool gamepad, int family)
+        {
+            foreach (string id in BindingDraftIds(action, gamepad, family)) draft.PresetOverrideEdits.Add(id);
+        }
+
+        internal bool HasIndependentBindingDraft(string action, bool gamepad, int family)
+        { return BindingDraftIds(action, gamepad, family).Any(id => !draft.PresetOverrideEdits.Contains(id)); }
+
+        System.Collections.Generic.IEnumerable<string> BindingDraftIds(string action, bool gamepad, int family)
+        {
+            return draft.Edits.Keys.Where(id => Address(id).Profile == SelectedProfile && Address(id).Action == action
+                && Address(id).IsGamepad == gamepad && (!gamepad || Address(id).FamilyIndex == family));
+        }
     }
 }

@@ -3,6 +3,11 @@ using System.Linq;
 
 namespace PBZKeyForge
 {
+    internal sealed class BindingDraftConflictException : InvalidOperationException
+    {
+        internal BindingDraftConflictException(string action) : base(I18n.Str("live.rawconflict", I18n.Str("act." + action))) { }
+    }
+
     public static class BindingLivePlan
     {
         public static KeyEnhancementConfiguration RestoreBindings(EditorSession session, KeyEnhancementConfiguration configuration, int familyIndex)
@@ -24,6 +29,7 @@ namespace PBZKeyForge
         {
             if (session.ActivationPending || session.SelectedProfile != session.ActiveProfile || session.SchemeError != null)
                 throw new InvalidOperationException(I18n.Str("live.scope"));
+            if (session.Conflicts.Length > 0) throw new InvalidOperationException(I18n.Str("editor.conflictinfo"));
             var result = configuration.Clone();
             foreach (bool pad in new[] { false, true })
             {
@@ -34,7 +40,14 @@ namespace PBZKeyForge
                     var current = session.Relations(action, pad, family); var before = session.RelationsBeforeEdit(action, pad, family);
                     if (current.Keys.OrderBy(key => key).SequenceEqual(before.Keys.OrderBy(key => key))) continue;
                     string device = pad ? "gamepad" : "keyboard";
-                    if (result.NativeBindings.Any(item => item.FunctionId == action && item.Device == device)) continue;
+                    var existing = result.NativeBindings.FirstOrDefault(item => item.FunctionId == action && item.Device == device);
+                    if (existing != null)
+                    {
+                        if (session.HasIndependentBindingDraft(action, pad, family)
+                            && !current.Keys.OrderBy(key => key).SequenceEqual(existing.Keys.OrderBy(key => key)))
+                            throw new BindingDraftConflictException(action);
+                        continue;
+                    }
                     result.NativeBindings.Add(new NativeBindingOverride { FunctionId = action, Device = device, Keys = current.Keys.ToList() });
                 }
             }

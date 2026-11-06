@@ -25,6 +25,8 @@ namespace PBZKeyForge
             "", "None", "Gamepad_FaceButton_Bottom","Gamepad_FaceButton_Right","Gamepad_FaceButton_Left","Gamepad_FaceButton_Top",
             "Gamepad_LeftShoulder","Gamepad_RightShoulder","Gamepad_LeftTrigger","Gamepad_RightTrigger",
             "Gamepad_LeftTriggerAxis","Gamepad_RightTriggerAxis","Gamepad_LeftThumbstick","Gamepad_RightThumbstick",
+            "Gamepad_LeftStick_Up","Gamepad_LeftStick_Down","Gamepad_LeftStick_Left","Gamepad_LeftStick_Right",
+            "Gamepad_RightStick_Up","Gamepad_RightStick_Down","Gamepad_RightStick_Left","Gamepad_RightStick_Right",
             "Gamepad_DPad_Up","Gamepad_DPad_Down","Gamepad_DPad_Left","Gamepad_DPad_Right","Gamepad_Special_Left","Gamepad_Special_Right"
         };
     }
@@ -52,14 +54,14 @@ namespace PBZKeyForge
         readonly Button btnRefresh = new EditorButton(), btnMore = new EditorButton(), btnApply = new ApplyActionButton();
         readonly EditorTab[] schemeTabs = { new EditorTab(), new EditorTab(), new EditorTab() };
         readonly EditorTab tabKb = new EditorTab(), tabPad = new EditorTab();
-        readonly Label lblTitle = new Label(), lblPath = new Label(), lblGame = new Label();
-        readonly Label lblPreset = new Label();
+        readonly Label lblTitle = new EditorLabel(), lblPath = new EditorLabel(), lblGame = new EditorLabel();
+        readonly Label lblPreset = new EditorLabel();
         readonly PresetModeSelector btnPresetMode = new PresetModeSelector();
         readonly EditorPreferences preferences;
         PresetApplyMode presetMode;
-        readonly Label lblStatus = new Label(), lblScope = new Label(), lblBackup = new Label(), lblEmpty = new Label(), lblOffline = new Label();
+        readonly Label lblStatus = new EditorLabel(), lblScope = new EditorLabel(), lblBackup = new EditorLabel(), lblEmpty = new EditorLabel(), lblOffline = new EditorLabel();
         readonly Button btnUndo = new EditorButton();
-        readonly LinkLabel btnConflicts = new LinkLabel(), btnChoose = new LinkLabel();
+        readonly LinkLabel btnConflicts = new EditorLinkLabel(), btnChoose = new EditorLinkLabel();
         readonly CheckBox chkActivate = new EditorCheckBox();
         readonly ToolTip tip = new ToolTip();
         readonly Panel body = new EditorPanel(), empty = new EditorPanel(), footer = new EditorPanel();
@@ -72,6 +74,7 @@ namespace PBZKeyForge
         readonly List<Label> headings = new List<Label>();
         readonly Timer gameTimer = new Timer();
         bool loading, gamepad, modalActive, lastRunning;
+        bool compactLayout;
         ContextMenuStrip moreMenu;
         string messageKey;
         object[] messageArgs;
@@ -115,7 +118,7 @@ namespace PBZKeyForge
                 StartSchemeDiscovery();
                 Activated += delegate { if (Session != null && !Session.IsOffline && !loading && !modalActive) RefreshFromDisk(false); };
             };
-            FormClosing += delegate(object sender, FormClosingEventArgs e) { if (IsApplying || !ConfirmDiscard()) e.Cancel = true; };
+            FormClosing += delegate(object sender, FormClosingEventArgs e) { if (IsApplying || !updatingApplication && !ConfirmDiscard()) e.Cancel = true; };
             gameTimer.Interval = 1500;
             gameTimer.Tick += delegate { UpdateGameState(); };
             gameTimer.Start();
@@ -152,7 +155,7 @@ namespace PBZKeyForge
             var root = new EditorLayout { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 6, Padding = new Padding(16, 6, 16, 6), Margin = Padding.Empty, BackColor = Color.Transparent };
             root.SuspendLayout();
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            int[] heights = { 72, 22, 36, 64, 0, 94 };
+            int[] heights = { 72, 22, 36, 64, 0, 96 };
             for (int rowIndex = 0; rowIndex < heights.Length; rowIndex++)
                 root.RowStyles.Add(rowIndex == 4 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, heights[rowIndex]));
 
@@ -209,6 +212,7 @@ namespace PBZKeyForge
             pathBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); pathBar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
             lblPath.Dock = DockStyle.Fill; lblPath.TextAlign = ContentAlignment.MiddleLeft; lblPath.AutoEllipsis = true; lblPath.ForeColor = EditorTheme.Muted; lblPath.BackColor = Color.Transparent;
             lblGame.Dock = DockStyle.Fill; lblGame.TextAlign = ContentAlignment.MiddleRight; lblGame.AutoEllipsis = true; lblGame.BackColor = Color.Transparent;
+            lblGame.Font = new Font(Font, FontStyle.Bold);
             pathBar.Controls.Add(lblPath, 0, 0); pathBar.Controls.Add(lblGame, 1, 0);
             pathBar.Paint += delegate(object s, PaintEventArgs e) { using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawLine(pen, 0, pathBar.Height - 1, pathBar.Width, pathBar.Height - 1); };
             root.Controls.Add(pathBar, 0, 1);
@@ -244,7 +248,7 @@ namespace PBZKeyForge
                 if (loading || Session == null) return;
                 TryAction(delegate {
                     var preset = cbPreset.SelectedItem as Preset;
-                    if (preset == null) Session.SelectPreset(null, presetMode); else Session.StagePreset(preset, presetMode);
+                    StageBindingPreset(preset, presetMode);
                 });
             };
             btnPresetManager.Dock = DockStyle.Fill; btnPresetManager.Margin = new Padding(0, 3, 8, 3); btnPresetManager.Click += delegate { ManagePresets(); };
@@ -256,12 +260,12 @@ namespace PBZKeyForge
                 var mode = btnPresetMode.Mode;
                 TryAction(delegate {
                     var preset = cbPreset.SelectedItem as Preset;
-                    if (preset != null) Session.StagePreset(preset, mode);
+                    if (preset != null) StageBindingPreset(preset, mode);
                     presetMode = mode;
                     preferences.SavePresetMode(mode);
                 });
             };
-            var modeLabel = new Label { Text = I18n.Str("preset.mode"), Dock = DockStyle.Fill,
+            var modeLabel = new EditorLabel { Text = I18n.Str("preset.mode"), Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleRight, ForeColor = EditorTheme.Muted, Font = new Font(Font.FontFamily, 9f), Margin = new Padding(0, 0, 12, 0), Name = "presetModeLabel" };
             presets.Controls.Add(modeLabel, 0, 1);
             presets.Controls.Add(btnPresetMode, 1, 1);
@@ -278,28 +282,52 @@ namespace PBZKeyForge
             empty.Controls.Add(lblEmpty); empty.Controls.Add(btnChoose); body.Controls.Add(empty); root.Controls.Add(body, 0, 4);
 
             footer.Dock = DockStyle.Fill; footer.Margin = Padding.Empty; footer.BackColor = EditorTheme.Surface;
-            footer.Paint += delegate(object s, PaintEventArgs e) { using (var pen = new Pen(EditorTheme.Line)) e.Graphics.DrawLine(pen, 0, 0, footer.Width, 0); };
+            footer.Paint += delegate(object s, PaintEventArgs e)
+            {
+                float scale = e.Graphics.DpiX / 96f;
+                using (var pen = new Pen(EditorTheme.Line))
+                {
+                    e.Graphics.DrawLine(pen, 0, 0, footer.Width, 0);
+                    int divider = (chkPerfectDeflectNoRapidClickPenalty.Right + chkActivate.Left) / 2;
+                    e.Graphics.DrawLine(pen, divider, (int)(12 * scale), divider, footer.Height - (int)(12 * scale));
+                }
+            };
             chkActivate.SetBounds(8, 12, 700, 30); chkActivate.AutoEllipsis = true;
             chkActivate.CheckedChanged += delegate { if (!loading && Session != null) TryAction(delegate { Session.SetActivation(chkActivate.Checked); }); };
             lblOffline.AutoEllipsis = true; lblOffline.TextAlign = ContentAlignment.MiddleLeft;
             lblScope.SetBounds(8, 46, 700, 24); lblScope.AutoEllipsis = true; lblScope.Font = new Font(Font.FontFamily, 9f);
             btnConflicts.TextAlign = ContentAlignment.MiddleLeft; btnConflicts.AutoEllipsis = true; StyleLink(btnConflicts);
             btnConflicts.Font = lblScope.Font; btnConflicts.Click += delegate { ResolveConflicts(); };
-            lblStatus.SetBounds(8, 72, 900, 23); lblStatus.AutoEllipsis = true; lblStatus.Font = new Font(Font.FontFamily, 9f);
+            lblStatus.SetBounds(8, 72, 900, 23); lblStatus.AutoEllipsis = false; lblStatus.Font = new Font(Font.FontFamily, 9f);
             StyleButton(btnUndo, false); btnUndo.Dock = DockStyle.None;
-            btnUndo.Click += delegate { TryAction(delegate { Session.Undo(); resourceModDraft = null; }); };
+            btnUndo.Click += delegate { UndoFromBindingEditor(); };
             StyleButton(btnApply, true); btnApply.Dock = DockStyle.None; btnApply.SetBounds(890, 15, 196, 46); btnApply.Font = new Font(Font.FontFamily, 12f, FontStyle.Bold); btnApply.Click += delegate { ApplyChanges(); };
             lblBackup.SetBounds(890, 64, 196, 23); lblBackup.TextAlign = ContentAlignment.MiddleCenter; lblBackup.AutoEllipsis = true; lblBackup.ForeColor = EditorTheme.Muted; lblBackup.Font = new Font(Font.FontFamily, 8.5f);
             chkPerfectDeflectNoRapidClickPenalty.CheckedChanged += delegate { StageResourceMod(); };
-            btnModHelp.Font = new Font(Font.FontFamily, 9f); btnModHelp.Click += delegate { ShowResourceModHelp(); };
-            footer.Controls.AddRange(new Control[] { chkActivate, lblOffline, lblScope, btnConflicts, lblStatus, btnUndo, btnApply, lblBackup, chkPerfectDeflectNoRapidClickPenalty, btnModHelp });
-            btnModHelp.BringToFront();
+            footer.Controls.AddRange(new Control[] { chkActivate, lblOffline, lblScope, btnConflicts, lblStatus, btnUndo, btnApply, lblBackup, chkPerfectDeflectNoRapidClickPenalty });
             footer.Resize += delegate { LayoutFooter(); };
+            BuildKeyEnhancement();
+            BuildModMenus();
+            BuildEditingSupport();
             root.Controls.Add(footer, 0, 5);
             root.ResumeLayout(false);
             Controls.Add(root);
             AutoScaleDimensions = new SizeF(96f, 96f);
             PerformAutoScale();
+            Action arrangeMainLayout = delegate {
+                float scale = CurrentAutoScaleDimensions.Width / 96f;
+                compactLayout = ClientSize.Height / scale < 800;
+                root.RowStyles[0].Height = (compactLayout ? 48 : 72) * scale;
+                root.RowStyles[3].Height = (compactLayout ? 56 : 64) * scale;
+                root.RowStyles[5].Height = (compactLayout ? 84 : 96) * scale;
+                appMark.SetBounds(0, (int)(6 * scale), (int)((compactLayout ? 36 : 54) * scale), (int)((compactLayout ? 36 : 54) * scale));
+                wordmark.SetBounds((int)((compactLayout ? 46 : 66) * scale), (int)(3 * scale), (int)((compactLayout ? 106 : 148) * scale), (int)((compactLayout ? 44 : 62) * scale));
+                lblTitle.SetBounds((int)((compactLayout ? 164 : 232) * scale), (int)((compactLayout ? 10 : 22) * scale), Math.Max(40, brand.Width - (int)((compactLayout ? 176 : 244) * scale)), (int)(28 * scale));
+                keyEnhancementBar.Compact = chkPerfectDeflectNoRapidClickPenalty.Compact = compactLayout;
+                LayoutFooter();
+            };
+            root.Resize += delegate { arrangeMainLayout(); };
+            arrangeMainLayout();
             alignHeaderControls();
             LayoutFooter();
         }
@@ -307,26 +335,54 @@ namespace PBZKeyForge
         void LayoutFooter()
         {
             float scale = CurrentAutoScaleDimensions.Width / 96f;
-            int actionWidth = (int)(184 * scale), actionHeight = (int)(44 * scale), gap = (int)(12 * scale);
-            btnApply.SetBounds(footer.ClientSize.Width - actionWidth - gap, (int)(14 * scale), actionWidth, actionHeight);
-            int undoWidth = (int)(88 * scale);
-            btnUndo.SetBounds(btnApply.Left - gap - undoWidth, btnApply.Top, undoWidth, actionHeight);
-            int modWidth = (int)(420 * scale);
-            chkPerfectDeflectNoRapidClickPenalty.SetBounds(btnUndo.Left - gap - modWidth, (int)(8 * scale), modWidth, (int)(82 * scale));
+            int gap = (int)(12 * scale);
+            int usable = Math.Max(1, footer.ClientSize.Width - gap * 2);
+            int actionWidth = (int)(usable * .18f), actionHeight = (int)(44 * scale);
+            int keyEnhancementWidth = Math.Max((int)(280 * scale), (int)(usable * .24f)), modWidth = (int)(usable * .34f);
+            keyEnhancementBar.SetBounds(gap, (int)(6 * scale), keyEnhancementWidth - gap, footer.Height - (int)(12 * scale));
+            chkPerfectDeflectNoRapidClickPenalty.SetBounds(gap + keyEnhancementWidth, (int)(6 * scale), modWidth - gap, footer.Height - (int)(12 * scale));
+            btnApply.SetBounds(footer.ClientSize.Width - actionWidth - gap, (footer.Height - actionHeight) / 2, actionWidth, actionHeight);
+            int undoWidth = (int)(70 * scale), secondaryTop = btnApply.Bottom + (int)(2 * scale);
+            btnUndo.SetBounds(btnApply.Left, secondaryTop, undoWidth, (int)(18 * scale));
             using (var graphics = chkPerfectDeflectNoRapidClickPenalty.CreateGraphics())
             {
                 var header = chkPerfectDeflectNoRapidClickPenalty.MeasureHeader(graphics);
-                Rectangle helpBounds = header.Help;
-                helpBounds.Offset(chkPerfectDeflectNoRapidClickPenalty.Location);
-                btnModHelp.Bounds = helpBounds;
+                Rectangle options = header.Options;
+                options.Offset(chkPerfectDeflectNoRapidClickPenalty.Location);
+                btnResourceModMore.Bounds = options;
             }
-            int left = gap, scopeWidth = Math.Max(100, chkPerfectDeflectNoRapidClickPenalty.Left - gap * 2);
-            chkActivate.SetBounds(left, (int)(12 * scale), scopeWidth, (int)(28 * scale));
+            btnKeyEnhancementMore.SetBounds(keyEnhancementBar.Width - (int)(28 * scale), (int)(4 * scale), (int)(24 * scale), (int)(24 * scale));
+            int activationLeft = chkPerfectDeflectNoRapidClickPenalty.Right + gap * 2;
+            int scopeWidth = Math.Max(1, btnApply.Left - gap - activationLeft);
+            chkActivate.SetBounds(activationLeft, (int)(10 * scale), scopeWidth, (int)(28 * scale));
             lblOffline.Bounds = chkActivate.Bounds;
-            lblScope.SetBounds(left, (int)(44 * scale), scopeWidth, (int)(24 * scale));
+            lblScope.SetBounds(activationLeft, (int)(36 * scale), scopeWidth, (int)(20 * scale));
             btnConflicts.Bounds = lblScope.Bounds;
-            lblBackup.SetBounds(btnApply.Left, (int)(64 * scale), actionWidth, (int)(20 * scale));
-            lblStatus.SetBounds(left, (int)(70 * scale), scopeWidth, (int)(20 * scale));
+            int backupLeft = btnUndo.Visible ? btnUndo.Right + (int)(4 * scale) : btnApply.Left;
+            lblBackup.SetBounds(backupLeft, secondaryTop, Math.Max(1, btnApply.Right - backupLeft), (int)(18 * scale));
+            lblStatus.SetBounds(activationLeft, (int)(57 * scale), scopeWidth, Math.Max(lblStatus.Font.Height + 2, footer.Height - (int)(61 * scale)));
+            if (compactLayout)
+            {
+                int compactComponentWidth = (int)(usable * .30f);
+                keyEnhancementBar.SetBounds(gap, (int)(4 * scale), compactComponentWidth - gap, (int)(32 * scale));
+                chkPerfectDeflectNoRapidClickPenalty.SetBounds(gap + compactComponentWidth, (int)(4 * scale), compactComponentWidth - gap, (int)(32 * scale));
+                activationLeft = chkPerfectDeflectNoRapidClickPenalty.Right + gap;
+                chkActivate.SetBounds(activationLeft, (int)(4 * scale), Math.Max(1, btnApply.Left - activationLeft - gap), (int)(30 * scale));
+                lblOffline.Bounds = chkActivate.Bounds;
+                btnApply.Top = (int)(6 * scale);
+                btnUndo.Top = lblBackup.Top = btnApply.Bottom + (int)(2 * scale);
+                int textWidth = Math.Max(1, btnApply.Left - gap * 2);
+                lblScope.SetBounds(gap, (int)(38 * scale), textWidth, Math.Max(lblScope.Font.Height + 2, (int)(20 * scale)));
+                btnConflicts.Bounds = lblScope.Bounds;
+                lblStatus.SetBounds(gap, (int)(59 * scale), textWidth, Math.Max(lblStatus.Font.Height + 2, (int)(21 * scale)));
+                btnKeyEnhancementMore.Left = keyEnhancementBar.Width - (int)(28 * scale);
+                using (var graphics = chkPerfectDeflectNoRapidClickPenalty.CreateGraphics())
+                {
+                    var options = chkPerfectDeflectNoRapidClickPenalty.MeasureHeader(graphics).Options;
+                    options.Offset(chkPerfectDeflectNoRapidClickPenalty.Location); btnResourceModMore.Bounds = options;
+                }
+            }
+            footer.Invalidate();
         }
 
         static void StyleButton(Button button, bool primary)
@@ -360,7 +416,7 @@ namespace PBZKeyForge
                 grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 42));
                 var label = new ActionNameLabel { ActionId = action.Id, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Margin = Padding.Empty, Padding = new Padding(15, 0, 4, 0), AutoEllipsis = true, Tag = action.Id };
                 actionLabels[pad ? 1 : 0].Add(label); SetTip(label, action.Id); grid.Controls.Add(label, 0, row);
-                var factoryLabel = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, Margin = Padding.Empty, AutoEllipsis = true,
+                var factoryLabel = new EditorLabel { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, Margin = Padding.Empty, AutoEllipsis = true,
                     ForeColor = EditorTheme.Muted, Tag = action.Id };
                 factoryLabels[pad ? 1 : 0].Add(factoryLabel); grid.Controls.Add(factoryLabel, 1, row);
                 var buttons = new BindingButton[3];
@@ -395,7 +451,7 @@ namespace PBZKeyForge
             SetColumns(header);
             for (int i = 0; i < 5; i++)
             {
-                var label = new Label { Dock = DockStyle.Fill, TextAlign = i == 0 ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter,
+                var label = new EditorLabel { Dock = DockStyle.Fill, TextAlign = i == 0 ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter,
                     Font = new Font(Font, FontStyle.Bold), Margin = Padding.Empty, Padding = i == 0 ? new Padding(15, 0, 0, 0) : Padding.Empty, Tag = i };
                 label.Text = HeadingText(i); headings.Add(label); header.Controls.Add(label, i, 0);
                 if (i == 1 || i == 2)
@@ -450,6 +506,8 @@ namespace PBZKeyForge
         public void RenderSession()
         {
             if (IsApplying) return;
+            bool redraw = IsHandleCreated && Visible;
+            if (redraw) SendMessage(Handle, 0xB, IntPtr.Zero, IntPtr.Zero);
             loading = true;
             SuspendLayout(); body.SuspendLayout(); footer.SuspendLayout();
             try
@@ -462,9 +520,10 @@ namespace PBZKeyForge
                 btnRefresh.Text = I18n.Str(offline ? "editor.choose" : "editor.refresh");
                 lblBackup.Text = I18n.Str(offline ? "offline.exporthelp" : "editor.backup");
                 empty.Visible = !loaded; if (!loaded) empty.BringToFront();
+                RefreshKeyEnhancement();
                 RenderBindingViews();
                 tabKb.Text = I18n.Str("editor.keyboard"); tabPad.Text = I18n.Str("editor.gamepad"); tabKb.Selected = !gamepad; tabPad.Selected = gamepad;
-                tabKb.Dirty = loaded && Session.KeyboardChangeCount > 0; tabPad.Dirty = loaded && Session.GamepadChangeCount > 0;
+                tabKb.Dirty = loaded && keyboardBindingChanges > 0; tabPad.Dirty = loaded && gamepadBindingChanges > 0;
                 tabKb.Enabled = loaded; tabPad.Enabled = loaded;
                 string[] labels = { I18n.Str("scheme.default"), I18n.Str("scheme.custom1"), I18n.Str("scheme.custom2") };
                 string[] profiles = loaded ? Session.Profiles : new string[0];
@@ -497,19 +556,21 @@ namespace PBZKeyForge
                 SetTip(chkActivate, loaded && Session.SchemeDiscoveryRequired && SchemeProbePending ? I18n.Str("editor.discovering")
                     : loaded && Session.SchemeError != null ? I18n.Str("status.schemeunknown") + "\n" + Session.SchemeError : I18n.Str("editor.activatehelp"));
                 RefreshFooterResourceMod();
+                btnUndo.Visible = loaded && (HasBindingHistory || Session.HasChanges || ResourceModPending || KeyEnhancementPending);
                 LayoutFooter();
-                btnUndo.Visible = loaded && (Session.HasChanges || ResourceModPending);
-                lblScope.Text = !loaded ? "" : offline ? I18n.Str("offline.scope", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount)
-                    : Session.IsResetPending ? I18n.Str("editor.resetscope", Session.ScopeChangeCount)
-                    : I18n.Str(Session.HasChanges || ResourceModPending ? "editor.scope" : "editor.clean", SchemeLabel(Session.SelectedProfile), Session.KeyboardChangeCount, Session.GamepadChangeCount) + (Session.ActivationPending ? I18n.Str("editor.activationscope") : "");
-                if (ResourceModPending) lblScope.Text += " · " + I18n.Str("mod.badge") + " " + I18n.Str("views.pending");
-                lblScope.ForeColor = loaded && (Session.HasChanges || ResourceModPending) ? BindingStatus.Pending : EditorTheme.Muted;
+                lblScope.Text = !loaded ? "" : PendingBindingSummary();
+                SetTip(lblScope, lblScope.Text);
+                lblScope.ForeColor = loaded && (Session.HasChanges || ResourceModPending || KeyEnhancementPending) ? BindingStatus.Pending : EditorTheme.Muted;
                 int conflictCount = loaded ? Session.Conflicts.Length : 0;
                 btnConflicts.Visible = conflictCount > 0; btnConflicts.Text = I18n.Str("editor.conflicts", conflictCount);
                 lblScope.Visible = conflictCount == 0;
                 RenderGameStatus();
             }
-            finally { footer.ResumeLayout(true); body.ResumeLayout(true); ResumeLayout(true); loading = false; }
+            finally
+            {
+                footer.ResumeLayout(true); body.ResumeLayout(true); ResumeLayout(true); loading = false;
+                if (redraw) { SendMessage(Handle, 0xB, new IntPtr(1), IntPtr.Zero); Invalidate(true); }
+            }
         }
 
         static string HeadingText(int column)
@@ -575,28 +636,59 @@ namespace PBZKeyForge
         {
             if (IsApplying) return;
             bool running = Session != null && !Session.IsOffline && EditorSession.IsGameRunning;
-            if (running == lastRunning) return;
+            if (running == lastRunning) { RenderGameStatus(); return; }
             lastRunning = running;
             RenderGameStatus();
         }
 
         void RenderGameStatus()
         {
+            RefreshCompanionHotkey();
             bool loaded = Session != null, offline = loaded && Session.IsOffline;
             bool gameRunning = loaded && !offline && lastRunning;
-            lblGame.Text = "●  " + I18n.Str(offline ? "offline.mode" : lastRunning ? "editor.running" : "editor.closed");
-            lblGame.ForeColor = offline ? EditorTheme.Muted : lastRunning ? EditorTheme.Amber : EditorTheme.Green;
-            ((ApplyActionButton)btnApply).GameRunning = gameRunning;
-            btnApply.Text = I18n.Str(offline ? "offline.export" : gameRunning ? "editor.applyrunning" : "editor.apply");
-            btnApply.Enabled = loaded && (offline || (Session.HasChanges || ResourceModPending) && !lastRunning && Session.Conflicts.Length == 0);
+            var application = BindingApplication();
+            var liveStatus = application.Connection;
+            bool liveConfigured = gameRunning && liveStatus != null;
+            bool live = application.Live;
+            bool waiting = liveConfigured && liveStatus.Waiting;
+            bool neverConnected = liveConfigured && liveStatus.NeverConnected;
+            if (liveConfigured)
+            {
+                if (keyEnhancementBar.Status != liveStatus.Detail)
+                {
+                    keyEnhancementBar.Status = liveStatus.Detail;
+                    keyEnhancementBar.Invalidate();
+                }
+                SetTip(keyEnhancementBar, liveStatus.Detail);
+            }
+            lblGame.Text = "●  " + I18n.Str(offline ? "offline.mode" : neverConnected ? "flow.notconnected" : waiting ? "live.waiting" : live
+                ? liveStatus.RoutingEnabled ? "live.connected" : "live.paused" : lastRunning ? "editor.running" : "editor.closed");
+            lblGame.ForeColor = offline ? EditorTheme.Muted : live && liveStatus.RoutingEnabled ? EditorTheme.LiveConnected
+                : waiting ? Color.FromArgb(240, 178, 78) : lastRunning ? EditorTheme.Amber : EditorTheme.Green;
+            SetTip(lblGame, (liveConfigured ? liveStatus.Detail : lblGame.Text) + "\n" + I18n.Str("flow.connection.open"));
+            ((ApplyActionButton)btnApply).GameRunning = gameRunning && !live;
+            ((ApplyActionButton)btnApply).LiveConnected = live && liveStatus.RoutingEnabled;
+            btnApply.Text = I18n.Str(offline ? HasKeyEnhancementConfiguration ? "enhancement.exportbundle" : "offline.export" : live ? "live.apply" : neverConnected ? "flow.notconnected" : waiting ? "live.waiting" : gameRunning ? "editor.applyrunning" : "editor.apply");
+            btnApply.Enabled = application.CanApply;
+            SetTip(btnApply, application.Reason ?? btnApply.Text);
+            chkActivate.Enabled = !gameRunning && !IsApplying;
             UpdateResourceModAvailability();
             lblStatus.Text = loaded && Session.Conflicts.Length > 0 ? I18n.Str("editor.conflictinfo")
+                : messageError && messageKey != null ? I18n.Str("flow.failed.details")
+                : live && (messageKey == "live.saved" || messageKey == "flow.saved.deferred") && !application.CanApply
+                    ? I18n.Str(HasDeferredComponents ? "flow.saved.deferred" : "live.saved")
+                : application.Reason != null ? application.Reason
+                : live ? !liveStatus.RoutingEnabled ? liveStatus.Detail : I18n.Str("live.ready")
+                : waiting || neverConnected ? liveStatus.Detail
                 : gameRunning ? I18n.Str("editor.exittoapply") : loaded && Session.IsResetPending ? I18n.Str("editor.resetinfo")
                 : loaded && Session.SchemeDiscoveryRequired && SchemeProbePending ? I18n.Str("editor.discovering")
                 : loaded && Session.SchemeError != null ? I18n.Str("editor.schemeunknown")
                 + (messageKey != null && messageKey != "editor.refreshed" ? " " + I18n.Str(messageKey, messageArgs) : "")
                 : messageKey != null ? I18n.Str(messageKey, messageArgs) : I18n.Str(offline ? "offline.help" : "editor.ready");
-            lblStatus.ForeColor = messageError ? Color.FromArgb(238, 171, 156) : EditorTheme.Muted; SetTip(lblStatus, lblStatus.Text);
+            lblStatus.ForeColor = messageError ? Color.FromArgb(238, 171, 156) : liveConfigured
+                ? live && liveStatus.RoutingEnabled ? EditorTheme.LiveConnected : waiting ? Color.FromArgb(240, 178, 78) : EditorTheme.Amber : EditorTheme.Muted;
+            SetTip(lblStatus, lblStatus.Text);
+            lblStatus.Visible = !messageError || feedbackDismissed;
         }
 
         void SetTip(Control control, string text)
@@ -624,13 +716,24 @@ namespace PBZKeyForge
         }
         void TryAction(Action action)
         {
-            try { action(); messageKey = null; messageError = false; }
+            RememberBindingEdit();
+            try { action(); messageKey = null; messageError = false; feedbackDismissed = false; feedbackPanel.Visible = false; }
             catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
+            DiscardUnchangedBindingEdit();
             RenderSession();
         }
         void SetMessage(string key, bool error, params object[] args)
         {
             messageKey = key; messageArgs = args; messageError = error;
+            feedbackDismissed = false;
+            fullFeedback = I18n.Str(key, args);
+            if (feedbackPanel != null)
+            {
+                feedbackPanel.Visible = error;
+                feedbackText.Text = string.Join("  ", fullFeedback.Replace("\r", "").Split('\n').Where(line => !string.IsNullOrWhiteSpace(line)).Take(2));
+                SetTip(feedbackText, fullFeedback);
+                feedbackDetails.Text = I18n.Str("feedback.details");
+            }
         }
         public void SelectProfile(string profile) { if (Session != null) TryAction(delegate { Session.SwitchProfile(profile); }); }
         public void ShowGamepad(bool show) { gamepad = show; RenderSession(); }
@@ -644,6 +747,7 @@ namespace PBZKeyForge
             try { Session.Refresh(); SetMessage("editor.refreshed", false); }
             catch (Exception ex) { SetMessage("editor.refreshfail", true, ex.Message); }
             RefreshFooterResourceMod(true);
+            RefreshKeyEnhancement(true);
             RenderSession();
             StartSchemeDiscovery(allowDiscoveryRetry);
         }
@@ -667,18 +771,33 @@ namespace PBZKeyForge
         }
         bool ConfirmDiscard()
         {
-            if (Session == null || !Session.HasAnyDrafts && !Session.HasChanges && !ResourceModPending) return true;
+            if (!HasPendingEdits) return true;
             modalActive = true;
-            try { return EditorDialogs.Show(this, I18n.Str(ResourceModPending ? "mod.discard" : Session.IsOffline ? "offline.discard" : "editor.discard"), I18n.Str("editor.drafttitle"), MessageBoxButtons.YesNo) == DialogResult.Yes; }
+            try
+            {
+                using (var dialog = new PendingEditsDialog(PendingBindingSummary, async delegate {
+                    if (!await ApplyChangesAsync()) return false;
+                    return Session.IsOffline ? !Session.Profiles.Any(profile => profile != Session.SelectedProfile && Session.HasProfileDraft(profile)) : !HasPendingEdits;
+                }, delegate { return BindingApplication().CanApply; }, Session.IsOffline))
+                    return dialog.ShowDialog(this) == DialogResult.OK;
+            }
             finally { EndModal(); }
         }
         void Browse()
         {
             if (!ConfirmDiscard()) return;
-            using (var dialog = new OpenFileDialog { Filter = "EnhancedInputUserSettings.sav|EnhancedInputUserSettings.sav|*.sav|*.sav|All files|*.*", Title = I18n.Str("editor.choose") })
+            using (var dialog = new OpenFileDialog { Filter = "EnhancedInputUserSettings.sav / *.zip|EnhancedInputUserSettings.sav;*.zip|*.sav|*.sav|*.zip|*.zip|All files|*.*", Title = I18n.Str("editor.choose") })
             {
                 modalActive = true;
-                try { if (dialog.ShowDialog(this) == DialogResult.OK) OpenPath(dialog.FileName); }
+                try
+                {
+                    if (dialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        if (string.Equals(Path.GetExtension(dialog.FileName), ".zip", StringComparison.OrdinalIgnoreCase))
+                            TryAction(delegate { ImportKeyEnhancementBundle(dialog.FileName); });
+                        else OpenPath(dialog.FileName);
+                    }
+                }
                 finally { EndModal(); }
             }
         }
@@ -715,18 +834,59 @@ namespace PBZKeyForge
             if (moreMenu == null) moreMenu = CreateMoreMenu();
             foreach (ToolStripItem item in moreMenu.Items)
                 if (item is ToolStripMenuItem) item.Text = I18n.Str(item.Name);
+            var comparison = (ToolStripMenuItem)moreMenu.Items["views.schemediff"];
+            foreach (ToolStripMenuItem choice in comparison.DropDownItems)
+            {
+                choice.Text = I18n.Str(choice.Name);
+                choice.Checked = schemeDiff.CompareFactory == (choice.Name == "views.vsfactory");
+            }
             moreMenu.Items["editor.resetall"].Enabled = Session != null && !Session.IsResetPending;
+            moreMenu.Items["flow.restore.live"].Visible = Session != null && !Session.IsOffline && lastRunning && keyEnhancementBaseline.Enabled;
             moreMenu.Show(btnMore, new Point(btnMore.Width - moreMenu.PreferredSize.Width, btnMore.Height));
         }
 
         ContextMenuStrip CreateMoreMenu()
         {
             var menu = new ContextMenuStrip { Font = Font, BackColor = EditorTheme.Floating, ForeColor = EditorTheme.Ink,
-                Renderer = new ToolStripProfessionalRenderer(new EditorMenuColors()), ShowImageMargin = false, Padding = new Padding(5) };
+                Renderer = new EditorMenuRenderer(), ShowImageMargin = false, Padding = new Padding(5) };
             menu.Items.Add(I18n.Str("offline.new"), null, delegate { NewOfflineScheme(); }).Name = "offline.new";
             menu.Items.Add(I18n.Str("editor.changefile"), null, delegate { Browse(); }).Name = "editor.changefile";
             menu.Items.Add(I18n.Str("editor.rediscover"), null, delegate { AutoFind(true); }).Name = "editor.rediscover";
             menu.Items.Add(new ToolStripSeparator());
+            menu.Items.Add(I18n.Str("ai.title"), null, delegate { ShowAgentHelp(); }).Name = "ai.title";
+            menu.Items.Add(I18n.Str("editing.managecustom"), null, delegate { ManageCustomFunctions(); }).Name = "editing.managecustom";
+            menu.Items.Add(I18n.Str("live.overlay"), null, delegate { ToggleCompanion(); }).Name = "live.overlay";
+            var companionShortcut = new ToolStripMenuItem(I18n.Str("live.hotkey")) { Name = "live.hotkey", Checked = companionHotkeyEnabled,
+                ToolTipText = companionHotkeyConflict ? I18n.Str("live.hotkeyconflict") : "Ctrl+Alt+K" };
+            companionShortcut.Click += delegate {
+                TryAction(delegate {
+                    preferences.SaveCompanionHotkey(!companionHotkeyEnabled);
+                    companionHotkeyEnabled = !companionHotkeyEnabled;
+                    RefreshCompanionHotkey();
+                    if (companionHotkeyEnabled && companionHotkeyConflict) SetMessage("live.hotkeyconflict", false);
+                });
+            };
+            menu.Items.Add(companionShortcut);
+            menu.Items.Add(I18n.Str("flow.restore.live"), null, delegate {
+                if (Session == null) return;
+                modalActive = true;
+                try
+                {
+                    if (EditorDialogs.Show(this, I18n.Str("flow.restore.confirm"), I18n.Str("flow.restore.live"), MessageBoxButtons.OKCancel) == DialogResult.OK)
+                        TryAction(RestoreLiveBindings);
+                }
+                finally { EndModal(); }
+            }).Name = "flow.restore.live";
+            var comparison = new ToolStripMenuItem(I18n.Str("views.schemediff")) { Name = "views.schemediff" };
+            foreach (bool factoryComparison in new[] { false, true })
+            {
+                bool factory = factoryComparison;
+                string key = factory ? "views.vsfactory" : "views.vssaved";
+                var choice = new ToolStripMenuItem(I18n.Str(key)) { Name = key, Checked = schemeDiff.CompareFactory == factory };
+                choice.Click += delegate { schemeDiff.SetComparison(factory); bindingWorkspace.PerformLayout(); };
+                comparison.DropDownItems.Add(choice);
+            }
+            menu.Items.Add(comparison);
             var reset = menu.Items.Add(I18n.Str("editor.resetall"), null, delegate
             {
                 if (Session == null) return;
@@ -734,7 +894,7 @@ namespace PBZKeyForge
                 try
                 {
                     if (EditorDialogs.Show(this, I18n.Str("editor.resetconfirm"), I18n.Str("editor.resetall"), MessageBoxButtons.OKCancel) == DialogResult.OK)
-                        TryAction(delegate { Session.ResetAll(); });
+                        TryAction(ResetAllBindings);
                 }
                 finally { EndModal(); }
             });
@@ -745,7 +905,7 @@ namespace PBZKeyForge
                 catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); RenderSession(); }
             }).Name = "editor.openbackup";
             menu.Items.Add(new ToolStripSeparator());
-            menu.Items.Add(I18n.Str("btn.about"), null, delegate { modalActive = true; try { EditorDialogs.Show(this, I18n.Str("about.text"), "PBZKeyForge " + Program.Version, MessageBoxButtons.OK); } finally { EndModal(); } }).Name = "btn.about";
+            menu.Items.Add(I18n.Str("app.about"), null, delegate { ShowApplicationAbout(); }).Name = "app.about";
             foreach (ToolStripItem item in menu.Items) item.Padding = new Padding(10, 6, 10, 6);
             // WinForms still uses the menu after Closed while dispatching an item click.
             // Keep it alive across openings; MainForm.Dispose owns its lifetime.
@@ -766,7 +926,9 @@ namespace PBZKeyForge
             modalActive = true;
             try
             {
-                using (var dialog = new UserPresetDialog(Session, UserPresetStore.Default(), presetMode, preferences))
+                using (var dialog = new UserPresetDialog(Session, UserPresetStore.Default(), presetMode, preferences,
+                    delegate { return HasKeyEnhancementConfiguration ? keyEnhancement : null; }, ExportKeyEnhancementBundle, StageBindingPreset,
+                    delegate(Preset preset, PresetApplyMode mode) { PlanBindingPreset(preset, mode); }))
                 {
                     dialog.ShowDialog(this);
                     presetMode = dialog.ChosenMode;
@@ -792,6 +954,7 @@ namespace PBZKeyForge
                 using (var graphics = Graphics.FromImage(backgroundCache)) EditorArtwork.PaintBackground(graphics, ClientRectangle);
             }
             e.Graphics.DrawImageUnscaled(backgroundCache, 0, 0);
+            PaintFlameBackground(this, e.Graphics);
         }
         public void AutoApply(string inPath, string outPath, string presetId, string scheme, bool activate)
         {
@@ -804,7 +967,7 @@ namespace PBZKeyForge
         }
         protected override void Dispose(bool disposing)
         {
-            if (disposing) { gameTimer.Dispose(); tip.Dispose(); if (presetHoverPreview != null) presetHoverPreview.Dispose(); if (moreMenu != null) moreMenu.Dispose(); if (backgroundCache != null) backgroundCache.Dispose(); }
+            if (disposing) { if (keyEnhancementFlame != null) keyEnhancementFlame.Dispose(); gameTimer.Dispose(); tip.Dispose(); if (presetHoverPreview != null) presetHoverPreview.Dispose(); if (moreMenu != null) moreMenu.Dispose(); if (keyEnhancementMenu != null) keyEnhancementMenu.Dispose(); if (resourceModMenu != null) resourceModMenu.Dispose(); if (backgroundCache != null) backgroundCache.Dispose(); }
             base.Dispose(disposing);
         }
     }

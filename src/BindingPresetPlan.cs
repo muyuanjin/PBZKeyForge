@@ -45,6 +45,8 @@ namespace PBZKeyForge
                         var required = factory.Relations(action, pad, family).Keys;
                         binding.Keys = mode == PresetApplyMode.Append ? binding.Keys.Concat(required).Distinct().ToList() : required.ToList();
                     }
+                    if (binding != null && (incoming != null || covered || mode == PresetApplyMode.OnlyPreset))
+                        copy.PreservePresetOverride(action, pad, family);
                 }
             }
             planned.CompileLua();

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,7 +14,12 @@ namespace PBZKeyForge
         readonly Timer animation = new Timer { Interval = 30 };
         readonly Stopwatch elapsed = new Stopwatch();
         int angle;
-        bool busy, gameRunning;
+        bool busy, gameRunning, liveConnected;
+        public bool LiveConnected
+        {
+            get { return liveConnected; }
+            set { if (liveConnected != value) { liveConnected = value; Invalidate(); } }
+        }
         public bool GameRunning
         {
             get { return gameRunning; }
@@ -44,12 +50,12 @@ namespace PBZKeyForge
         }
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (!busy && !gameRunning) { base.OnPaint(e); return; }
+            if (!busy && !gameRunning && !liveConnected) { base.OnPaint(e); return; }
             float scale = e.Graphics.DpiX / 96f;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            Color warning = Color.FromArgb(240, 178, 78);
+            Color warning = liveConnected ? EditorTheme.LiveConnected : Color.FromArgb(240, 178, 78);
             using (var shape = EditorArtwork.Rounded(new RectangleF(0.5f, 0.5f, Width - 1.5f, Height - 1.5f), 5 * scale))
-            using (var brush = new SolidBrush(busy ? EditorTheme.Accent : EditorTheme.Disabled))
+            using (var brush = new SolidBrush(busy ? EditorTheme.Accent : liveConnected ? Color.FromArgb(31, 63, 48) : EditorTheme.Disabled))
             {
                 e.Graphics.FillPath(brush, shape);
                 if (!busy) using (var pen = new Pen(warning, scale)) e.Graphics.DrawPath(pen, shape);
@@ -78,71 +84,157 @@ namespace PBZKeyForge
     {
         public bool IsApplying { get; private set; }
 
-        public async void ApplyChanges()
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern IntPtr SendMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
+
+        void SetApplyControls(Control[] controls, bool enabled)
         {
-            if (Session == null || IsApplying) return;
+            keyEnhancementFlame.AnimationPaused = !enabled;
+            SendMessage(Handle, 0xB, IntPtr.Zero, IntPtr.Zero);
+            try
+            {
+                foreach (var control in controls) control.Enabled = enabled;
+                captionClose.Enabled = enabled;
+            }
+            finally
+            {
+                SendMessage(Handle, 0xB, new IntPtr(1), IntPtr.Zero);
+                Invalidate(true);
+            }
+        }
+
+        public async void ApplyChanges()
+        { await ApplyChangesAsync(); }
+
+        internal async Task<bool> ApplyChangesAsync()
+        {
+            if (Session == null || IsApplying) return false;
             if (Session.IsOffline)
             {
                 modalActive = true;
                 try
                 {
-                    using (var dialog = new SaveFileDialog { Title = I18n.Str("preset.export"), Filter = I18n.Str("preset.export") + " (*.sav)|*.sav",
-                        FileName = "EnhancedInputUserSettings.sav", DefaultExt = "sav", AddExtension = true })
+                    bool bundle = HasKeyEnhancementConfiguration;
+                    using (var dialog = new SaveFileDialog { Title = I18n.Str(bundle ? "enhancement.exportbundle" : "preset.export"),
+                        Filter = bundle ? "PBZKeyForge (*.zip)|*.zip" : I18n.Str("preset.export") + " (*.sav)|*.sav",
+                        FileName = bundle ? "PBZKeyForge.zip" : "EnhancedInputUserSettings.sav", DefaultExt = bundle ? "zip" : "sav", AddExtension = true })
                         if (dialog.ShowDialog(this) == DialogResult.OK)
                         {
-                            Session.ExportCurrentScheme(dialog.FileName);
+                            if (bundle) ExportKeyEnhancementBundle(dialog.FileName); else Session.ExportCurrentScheme(dialog.FileName);
                             SetMessage("preset.exported", false);
+                            return true;
                         }
                 }
                 catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
                 finally { EndModal(); RenderSession(); }
-                return;
+                return false;
+            }
+            if (EditorSession.IsGameRunning)
+            {
+                var liveControls = Controls.Cast<Control>().Where(control => control != Caption && control.Enabled).ToArray();
+                IsApplying = true; ((ApplyActionButton)btnApply).Busy = true;
+                gameTimer.Stop();
+                SetApplyControls(liveControls, false);
+                try
+                {
+                    if (keyEnhancementInstallation == null || !keyEnhancementBaseline.Enabled)
+                        throw new InvalidOperationException(I18n.Str("live.unavailable"));
+                    if (Session.IsResetPending) throw new InvalidOperationException(I18n.Str("live.lifecycle"));
+                    int family = SelectedFamilyIndex;
+                    bool enabled = keyEnhancement.Enabled;
+                    var draft = keyEnhancement.Clone(); draft.Enabled = true;
+                    await Task.Run(() => Session.Refresh());
+                    var candidate = await Task.Run(async delegate {
+                        var plan = BindingLivePlan.Create(Session, draft, family);
+                        await keyEnhancementInstallation.ApplyLive(plan).ConfigureAwait(false);
+                        return plan;
+                    });
+                    AcceptLiveBindings(candidate, enabled, family);
+                    SetMessage(HasDeferredComponents ? "flow.saved.deferred" : "live.saved", false);
+                    return true;
+                }
+                catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
+                finally
+                {
+                    SetApplyControls(liveControls, true);
+                    IsApplying = false;
+                    RenderSession();
+                    ((ApplyActionButton)btnApply).Busy = false;
+                    gameTimer.Start();
+                }
+                return false;
             }
             var disabled = Controls.Cast<Control>().Where(control => control != Caption && control.Enabled).ToArray();
             IsApplying = true;
             gameTimer.Stop();
             cbPreset.DroppedDown = false;
             ((ApplyActionButton)btnApply).Busy = true;
-            foreach (var control in disabled) control.Enabled = false;
-            captionClose.Enabled = false;
+            SetApplyControls(disabled, false);
             lblStatus.Text = I18n.Str("editor.applying");
             try
             {
+                if (keyEnhancement.Enabled && !keyEnhancementUninstall && keyEnhancementInstallation != null && !keyEnhancementBaseline.Enabled
+                    && await Task.Run(() => keyEnhancementInstallation.ReadLoaderState() == KeyEnhancementLoaderState.Missing))
+                {
+                    if (EditorSession.IsGameRunning) throw new InvalidOperationException(I18n.Str("mod.running"));
+                    if (!await CheckRuntimeUpdate(false)) return false;
+                }
+                var errors = new List<string>();
+                KeyEnhancementUninstallResult uninstallResult = null;
+                bool saved = false;
                 var result = await Task.Run(() => Session.HasChanges ? Session.Apply() : new EditorApplyResult { Success = true });
-                if (result.PartialSuccess) SetMessage("editor.partial", true, result.Error);
-                else if (!result.Success) SetMessage("editor.failed", true, result.Error);
-                else
+                saved = result.BindingsSaved || result.ActivationSaved;
+                if (!result.Success || result.PartialSuccess) errors.Add(result.Error);
+                if (ResourceModPending)
                 {
                     try
                     {
-                        if (ResourceModPending)
-                        {
-                            bool enabled = resourceModDraft.Value;
-                            var target = footerMod;
-                            await Task.Run(delegate { target.Apply(enabled); });
-                            resourceModBaseline = enabled;
-                            resourceModDraft = null;
-                        }
-                        SetMessage("editor.saved", false);
+                        bool enabled = resourceModDraft.Value;
+                        var target = footerMod;
+                        await Task.Run(delegate { target.Apply(enabled); });
+                        resourceModBaseline = enabled; resourceModDraft = null; saved = true;
+                        footerModState = enabled ? ResourceModState.Enabled : ResourceModState.Disabled;
                     }
-                    catch (Exception ex)
-                    {
-                        SetMessage(result.BindingsSaved || result.ActivationSaved ? "mod.partial" : "editor.failed", true, ex.Message);
-                    }
-                    RefreshFooterResourceMod(true);
+                    catch (Exception ex) { errors.Add(I18n.Str("mod.title") + ": " + ex.Message); }
                 }
+                if (KeyEnhancementPending)
+                {
+                    try
+                    {
+                        if (keyEnhancementInstallation == null) throw new InvalidOperationException(keyEnhancementError ?? I18n.Str("mod.unsupported"));
+                        var configuration = keyEnhancement.Clone();
+                        if (keyEnhancementUninstall)
+                        {
+                            uninstallResult = await Task.Run(() => keyEnhancementInstallation.Uninstall());
+                            keyEnhancementUninstall = false;
+                            configuration = new KeyEnhancementConfiguration(); keyEnhancement = configuration;
+                        }
+                        else await Task.Run(delegate { keyEnhancementInstallation.Apply(configuration); });
+                        keyEnhancementBaseline = configuration.Clone(); keyEnhancementRepair = false; keyEnhancementError = null;
+                        keyEnhancementState = configuration.Enabled ? KeyEnhancementInstallState.Enabled : KeyEnhancementInstallState.Disabled;
+                        keyEnhancementExternalChange = false; saved = true;
+                        if (configuration.Enabled) keyEnhancementBar.Celebrate();
+                    }
+                    catch (Exception ex) { errors.Add(I18n.Str("enhancement.title") + ": " + ex.Message); }
+                }
+                if (errors.Count > 0) SetMessage(saved ? "enhancement.partial" : "editor.failed", true, string.Join("\n", errors.ToArray()));
+                else if (uninstallResult != null) SetMessage(uninstallResult.Complete ? "enhancement.lifecycle.removed" : "enhancement.lifecycle.retained", false, uninstallResult.RetainedFiles.Length);
+                else SetMessage("editor.saved", false);
+                if (errors.Count == 0) bindingHistory.Clear();
+                RefreshFooterResourceMod(); RefreshKeyEnhancement();
+                return errors.Count == 0;
             }
             catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
             finally
             {
                 IsApplying = false;
                 ConsumeSchemeDiscovery();
-                foreach (var control in disabled) control.Enabled = true;
-                captionClose.Enabled = true;
+                SetApplyControls(disabled, true);
                 RenderSession();
                 ((ApplyActionButton)btnApply).Busy = false;
                 gameTimer.Start();
             }
+            return false;
         }
     }
 }

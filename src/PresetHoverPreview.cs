@@ -174,7 +174,7 @@ namespace PBZKeyForge
                 Width = Math.Min(Width, work.Width);
                 int width = ClientSize.Width - Padding.Horizontal;
                 var title = TextLabel(preset.Name, width);
-                var description = TextLabel(preset.Desc, width); description.ForeColor = EditorTheme.Muted;
+                var description = TextLabel(preset.Desc + (preset.KeyEnhancement == null ? "" : "\n" + I18n.Str("binding.preset")), width); description.ForeColor = EditorTheme.Muted;
                 var comparison = TextLabel("● " + I18n.Str("preset.previewchanges"), width);
                 comparison.ForeColor = BindingStatus.Custom;
                 var factory = TextLabel("● " + I18n.Str("views.original"), width);
@@ -191,7 +191,12 @@ namespace PBZKeyForge
                     label.ForeColor = BindingStatus.Custom;
                     rows.Controls.Add(label); rowHeight += label.Height;
                 }
-                if (differences.Length == 0)
+                foreach (string text in UnifiedBindingUi.PresetEnhancementDescriptions(snapshot, preset).Reverse())
+                {
+                    var label = TextLabel(text, width - (int)(20 * scale)); label.ForeColor = EditorTheme.KeyEnhancement;
+                    rows.Controls.Add(label); rowHeight += label.Height;
+                }
+                if (differences.Length == 0 && preset.KeyEnhancement == null)
                 {
                     var label = TextLabel(I18n.Str("views.nofactorydiff"), width);
                     rows.Controls.Add(label); rowHeight += label.Height;

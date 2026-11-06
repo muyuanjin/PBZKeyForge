@@ -17,6 +17,7 @@ namespace PBZKeyForge
             if (args.Length > 0)
             {
                 string cmd = args[0];
+                if (cmd == "--finish-update" && args.Length == 2) return ApplicationUpdate.Finish(args[1]);
                 if (cmd == "--gui" && args.Length > 1)
                 {
                     Application.EnableVisualStyles();

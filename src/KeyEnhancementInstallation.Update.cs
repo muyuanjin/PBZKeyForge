@@ -31,6 +31,7 @@ namespace PBZKeyForge
         {
             EnsureGameClosed(); EnsureConfigurationUnchanged();
             var package = Ue4ssRelease.ReadPackage(archive);
+            KeyEnhancementPrerequisites.EnsureAvailable(runtimeDirectory, package["ue4ss/UE4SS.dll"], package["dwmapi.dll"]);
             var source = ReadOwnership();
             var previous = OwnedPayload(source);
             var replacements = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -8,9 +8,11 @@ using System.Windows.Forms;
 
 namespace PBZKeyForge
 {
-    internal sealed class EditorPanel : Panel
+    internal class EditorPanel : Panel
     {
         public EditorPanel() { DoubleBuffered = true; ResizeRedraw = true; }
+        protected override void OnPaintBackground(PaintEventArgs e)
+        { base.OnPaintBackground(e); if (BackColor.A == 255) EditorArtwork.PaintEffect(this, e.Graphics); }
         protected override void WndProc(ref Message message)
         { if (!EditorWindow.PassResizeHit(this, ref message)) base.WndProc(ref message); }
     }
@@ -18,15 +20,41 @@ namespace PBZKeyForge
     internal sealed class EditorLayout : TableLayoutPanel
     {
         public EditorLayout() { DoubleBuffered = true; ResizeRedraw = true; }
+        protected override void OnPaintBackground(PaintEventArgs e)
+        { base.OnPaintBackground(e); if (BackColor.A == 255) EditorArtwork.PaintEffect(this, e.Graphics); }
         protected override void WndProc(ref Message message)
         { if (!EditorWindow.PassResizeHit(this, ref message)) base.WndProc(ref message); }
     }
 
+    internal class EditorLabel : Label
+    {
+        protected override void OnPaintBackground(PaintEventArgs e)
+        { base.OnPaintBackground(e); if (BackColor.A == 255) EditorArtwork.PaintEffect(this, e.Graphics); }
+    }
+
+    internal sealed class EditorLinkLabel : LinkLabel
+    {
+        protected override void OnPaintBackground(PaintEventArgs e)
+        { base.OnPaintBackground(e); if (BackColor.A == 255) EditorArtwork.PaintEffect(this, e.Graphics); }
+    }
+
     internal static class EditorArtwork
     {
+        internal static void PaintEffect(Control surface, Graphics graphics)
+        {
+            var window = surface.FindForm() as MainForm;
+            if (window != null) window.PaintFlameBackground(surface, graphics);
+        }
+
+        internal static void ClearSurface(Control surface, Graphics graphics, Color color)
+        {
+            graphics.Clear(color);
+            PaintEffect(surface, graphics);
+        }
         public static readonly Image Wallpaper = Load("PBZKeyForge.Wallpaper");
         public static readonly Image Wordmark = Load("PBZKeyForge.GameWordmark");
         public static readonly Image AppMark = Load("PBZKeyForge.AppMark");
+        public static readonly Image KeyEnhancementMark = Load("PBZKeyForge.KeyEnhancementMark");
         public static readonly Image Mouse = Load("PBZKeyForge.Device.mouse");
         public static readonly Image Keyboard = Load("PBZKeyForge.Device.keyboard");
         static readonly Lazy<Image> xbox = new Lazy<Image>(() => Load("PBZKeyForge.Device.xbox"));
@@ -93,6 +121,8 @@ namespace PBZKeyForge
         public static void DarkScrollbars(Control control)
         {
             try { SetWindowTheme(control.Handle, "DarkMode_Explorer", null); } catch { }
+            foreach (Control child in control.Controls)
+                if (child is ScrollBar) DarkScrollbars(child);
         }
         [DllImport("dwmapi.dll")]
         static extern int DwmSetWindowAttribute(IntPtr window, int attribute, ref int value, int size);
@@ -296,6 +326,7 @@ namespace PBZKeyForge
     internal sealed class EditorCheckBox : CheckBox
     {
         bool hovered;
+        public Color CheckedColor = EditorTheme.Accent;
         public EditorCheckBox()
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
@@ -305,13 +336,13 @@ namespace PBZKeyForge
         protected override void OnMouseLeave(EventArgs e) { hovered = false; Invalidate(); base.OnMouseLeave(e); }
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.Clear(BackColor);
+            EditorArtwork.ClearSurface(this, e.Graphics, BackColor);
             float scale = e.Graphics.DpiX / 96f;
             int size = (int)(18 * scale), y = (Height - size) / 2;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             using (var shape = EditorArtwork.Rounded(new RectangleF(1, y, size, size), 3 * scale))
-            using (var brush = new SolidBrush(Checked ? Enabled ? EditorTheme.Accent : EditorTheme.Line : EditorTheme.Floating))
-            using (var pen = new Pen(Checked ? EditorTheme.Accent : hovered ? EditorTheme.Muted : EditorTheme.Line))
+            using (var brush = new SolidBrush(Checked ? Enabled ? CheckedColor : EditorTheme.Line : EditorTheme.Floating))
+            using (var pen = new Pen(Checked ? CheckedColor : hovered ? EditorTheme.Muted : EditorTheme.Line))
             { e.Graphics.FillPath(brush, shape); e.Graphics.DrawPath(pen, shape); }
             if (Checked)
                 using (var pen = new Pen(EditorTheme.Ink, 2 * scale))
@@ -321,8 +352,35 @@ namespace PBZKeyForge
         }
     }
 
+    internal sealed class EditorMenuRenderer : ToolStripProfessionalRenderer
+    {
+        public EditorMenuRenderer() : base(new EditorMenuColors()) { }
+        protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+        {
+            e.TextColor = e.Item.Enabled ? EditorTheme.Ink : EditorTheme.Muted;
+            if (e.Item.Enabled) base.OnRenderItemText(e);
+            else TextRenderer.DrawText(e.Graphics, e.Text, e.TextFont, e.TextRectangle, e.TextColor, e.TextFormat);
+        }
+        protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
+        {
+            e.ArrowColor = e.Item.Enabled ? EditorTheme.Ink : EditorTheme.Muted;
+            base.OnRenderArrow(e);
+        }
+        protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e)
+        {
+            Rectangle bounds = e.ImageRectangle;
+            using (var pen = new Pen(e.Item.Enabled ? EditorTheme.Ink : EditorTheme.Muted, Math.Max(1.5f, e.Graphics.DpiX / 64f)))
+                e.Graphics.DrawLines(pen, new[] {
+                    new Point(bounds.Left + bounds.Width / 5, bounds.Top + bounds.Height / 2),
+                    new Point(bounds.Left + bounds.Width * 2 / 5, bounds.Top + bounds.Height * 3 / 4),
+                    new Point(bounds.Left + bounds.Width * 4 / 5, bounds.Top + bounds.Height / 4)
+                });
+        }
+    }
+
     internal sealed class EditorMenuColors : ProfessionalColorTable
     {
+        public EditorMenuColors() { UseSystemColors = false; }
         public override Color ToolStripDropDownBackground { get { return EditorTheme.Floating; } }
         public override Color ImageMarginGradientBegin { get { return EditorTheme.Floating; } }
         public override Color ImageMarginGradientMiddle { get { return EditorTheme.Floating; } }
@@ -332,6 +390,9 @@ namespace PBZKeyForge
         public override Color MenuItemSelected { get { return EditorTheme.Hover; } }
         public override Color MenuItemSelectedGradientBegin { get { return EditorTheme.Hover; } }
         public override Color MenuItemSelectedGradientEnd { get { return EditorTheme.Hover; } }
+        public override Color MenuItemPressedGradientBegin { get { return EditorTheme.Hover; } }
+        public override Color MenuItemPressedGradientMiddle { get { return EditorTheme.Hover; } }
+        public override Color MenuItemPressedGradientEnd { get { return EditorTheme.Hover; } }
         public override Color SeparatorDark { get { return EditorTheme.Line; } }
         public override Color SeparatorLight { get { return EditorTheme.Line; } }
     }

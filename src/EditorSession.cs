@@ -40,11 +40,13 @@ namespace PBZKeyForge
         {
             public Dictionary<string, string> Edits = new Dictionary<string, string>();
             public Dictionary<string, EditorConflict> Conflicts = new Dictionary<string, EditorConflict>();
+            public HashSet<string> PresetOverrideEdits = new HashSet<string>();
             public Draft Copy()
             {
                 var copy = new Draft();
                 foreach (var pair in Edits) copy.Edits.Add(pair.Key, pair.Value);
                 foreach (var pair in Conflicts) copy.Conflicts.Add(pair.Key, CopyConflict(pair.Value));
+                copy.PresetOverrideEdits.UnionWith(PresetOverrideEdits);
                 return copy;
             }
         }
@@ -218,6 +220,7 @@ namespace PBZKeyForge
                 {
                     state.Edits.Remove(id);
                     state.Conflicts.Remove(id);
+                    state.PresetOverrideEdits.Remove(id);
                 }
                 else if (state.Conflicts.ContainsKey(id) || old != next)
                     state.Conflicts[id] = Conflict(Address(id), local, next);
@@ -438,6 +441,7 @@ namespace PBZKeyForge
 
         void Edit(Cell cell, string key)
         {
+            draft.PresetOverrideEdits.Remove(cell.Id);
             if (key == Value(cells, cell.Id)) draft.Edits.Remove(cell.Id);
             else draft.Edits[cell.Id] = key;
             // Editing a conflicted cell explicitly chooses its new local value.
@@ -505,7 +509,7 @@ namespace PBZKeyForge
                     if (SameKeys(EffectiveKeys(cells, owner), result))
                     {
                         foreach (string edit in draft.Edits.Keys.Where(bindingId => SameBindingGroup(Address(bindingId), owner)).ToArray())
-                        { draft.Edits.Remove(edit); draft.Conflicts.Remove(edit); }
+                        { draft.Edits.Remove(edit); draft.Conflicts.Remove(edit); draft.PresetOverrideEdits.Remove(edit); }
                         continue;
                     }
                 }
@@ -609,7 +613,7 @@ namespace PBZKeyForge
             else
             {
                 foreach (string id in draft.Edits.Keys.Where(InScope).ToArray())
-                { draft.Edits.Remove(id); draft.Conflicts.Remove(id); }
+                { draft.Edits.Remove(id); draft.Conflicts.Remove(id); draft.PresetOverrideEdits.Remove(id); }
                 ActivationPending = false;
             }
         }
@@ -620,13 +624,13 @@ namespace PBZKeyForge
             if (!draft.Conflicts.TryGetValue(id, out conflict)) return;
             if (!keepLocal)
             {
-                draft.Edits.Remove(id);
+                draft.Edits.Remove(id); draft.PresetOverrideEdits.Remove(id);
                 if (IsResetPending) resetExcluded.Add(id);
             }
             draft.Conflicts.Remove(id);
             if (previewCheckpoint != null && previewCheckpoint.Conflicts.ContainsKey(id))
             {
-                if (!keepLocal) previewCheckpoint.Edits.Remove(id);
+                if (!keepLocal) { previewCheckpoint.Edits.Remove(id); previewCheckpoint.PresetOverrideEdits.Remove(id); }
                 previewCheckpoint.Conflicts.Remove(id);
             }
         }
@@ -655,7 +659,7 @@ namespace PBZKeyForge
                         throw new InvalidDataException("Input settings verification failed.");
                     result.InputBackup = WriteInput(encoded);
                     result.BindingsSaved = true;
-                    foreach (var edit in edits) { draft.Edits.Remove(edit.Key); draft.Conflicts.Remove(edit.Key); }
+                    foreach (var edit in edits) { draft.Edits.Remove(edit.Key); draft.Conflicts.Remove(edit.Key); draft.PresetOverrideEdits.Remove(edit.Key); }
                     resetCheckpoint = null;
                     resetExcluded.Clear();
                     EndPreview();
