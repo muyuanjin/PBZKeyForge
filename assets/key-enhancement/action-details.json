@@ -1,0 +1,5886 @@
+{
+  "build": "CL-302256",
+  "entries": {
+    "action:/Game/PBZContent/Blueprint/Item/Ability/Medicine/YaoHuLu/IA_YaoHuLu": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.gourd",
+        "@catalog.internal"
+      ],
+      "aliases": [
+        "YaoHuLu"
+      ],
+      "semantic": true,
+      "variant": "YaoHuLu",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "interaction/medicine"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_ClimbDash": {
+      "section": "scene-climb",
+      "prefix": "none",
+      "parts": [
+        "@catalog.climb",
+        "@catalog.dash"
+      ],
+      "aliases": [
+        "ClimbDash"
+      ],
+      "semantic": true,
+      "variant": "ClimbDash",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "scene/climb"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_ClimbDashDown": {
+      "section": "scene-climb",
+      "prefix": "none",
+      "parts": [
+        "@catalog.climb",
+        "@catalog.down",
+        "@catalog.dash"
+      ],
+      "aliases": [
+        "ClimbDashDown"
+      ],
+      "semantic": true,
+      "variant": "ClimbDashDown",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "scene/climb"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_ClimbDashDownGamePad": {
+      "section": "scene-climb",
+      "prefix": "none",
+      "parts": [
+        "@catalog.climb",
+        "@catalog.down",
+        "@catalog.dash",
+        "@catalog.gamepad"
+      ],
+      "aliases": [
+        "ClimbDashDownGamePad"
+      ],
+      "semantic": true,
+      "variant": "ClimbDashDownGamePad",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "scene/climb"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_ClimbMoveGamePad": {
+      "section": "scene-climb",
+      "prefix": "none",
+      "parts": [
+        "@catalog.climb",
+        "@catalog.axis",
+        "@catalog.gamepad"
+      ],
+      "aliases": [
+        "ClimbMoveGamePad"
+      ],
+      "semantic": true,
+      "variant": "ClimbMoveGamePad",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "scene/climb"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_ClimblMove": {
+      "section": "scene-climb",
+      "prefix": "none",
+      "parts": [
+        "@catalog.climb",
+        "@catalog.axis"
+      ],
+      "aliases": [
+        "ClimblMove"
+      ],
+      "semantic": true,
+      "variant": "ClimblMove",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "scene/climb"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_Dash": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.dodgeinput"
+      ],
+      "aliases": [
+        "Dash"
+      ],
+      "semantic": true,
+      "variant": "Dash",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "defense/IA_Dodge"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_Interaction": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Interaction"
+      ],
+      "semantic": false,
+      "variant": "Interaction",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "E"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Right"
+      ],
+      "category": "interaction/IA_Interact"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_Interaction_ShaChiAttactkBroken": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.shadowinteraction"
+      ],
+      "aliases": [
+        "Interaction_ShaChiAttactkBroken"
+      ],
+      "semantic": true,
+      "variant": "Interaction_ShaChiAttactkBroken",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftControl"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightTriggerAxis"
+      ],
+      "category": "interaction/IA_Interact"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_Interaction_SpecialMove": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.specialmoveinteraction"
+      ],
+      "aliases": [
+        "Interaction_SpecialMove"
+      ],
+      "semantic": true,
+      "variant": "Interaction_SpecialMove",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "SpaceBar"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Bottom"
+      ],
+      "category": "interaction/IA_Interact"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_LookInput": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.lookaxis"
+      ],
+      "aliases": [
+        "LookInput"
+      ],
+      "semantic": true,
+      "variant": "LookInput",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "targeting/camera"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_Map": {
+      "section": "ui",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Map"
+      ],
+      "semantic": false,
+      "variant": "Map",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "M",
+        "Tab"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_Special_Left"
+      ],
+      "category": "interface/menus"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_MoveDown_GM": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "@catalog.down"
+      ],
+      "aliases": [
+        "MoveDown_GM"
+      ],
+      "semantic": true,
+      "variant": "MoveDown_GM",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftTrigger"
+      ],
+      "category": "debug/debug"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_MoveInput": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.moveaxis"
+      ],
+      "aliases": [
+        "MoveInput"
+      ],
+      "semantic": true,
+      "variant": "MoveInput",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "locomotion/movement"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_MoveInput_GM": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "MoveInput_GM"
+      ],
+      "aliases": [
+        "MoveInput_GM"
+      ],
+      "semantic": true,
+      "variant": "MoveInput_GM",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "A",
+        "S",
+        "D",
+        "W"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_Left2D"
+      ],
+      "category": "debug/debug"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_MoveUp_GM": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "@catalog.up"
+      ],
+      "aliases": [
+        "MoveUp_GM"
+      ],
+      "semantic": true,
+      "variant": "MoveUp_GM",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_RightTrigger"
+      ],
+      "category": "debug/debug"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_NextTab": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [
+        "@catalog.next",
+        "@catalog.tab"
+      ],
+      "aliases": [
+        "NextTab"
+      ],
+      "semantic": true,
+      "variant": "NextTab",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_RightTrigger"
+      ],
+      "category": "interface/tabs"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_PreviousTab": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [
+        "@catalog.previous",
+        "@catalog.tab"
+      ],
+      "aliases": [
+        "PreviousTab"
+      ],
+      "semantic": true,
+      "variant": "PreviousTab",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftTrigger"
+      ],
+      "category": "interface/tabs"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_PushGameSystemMenu": {
+      "section": "ui",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "PushGameSystemMenu"
+      ],
+      "semantic": false,
+      "variant": "PushGameSystemMenu",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Escape",
+        "I"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_Special_Right"
+      ],
+      "category": "interface/menus"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_Sense_Default": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Sense_Default"
+      ],
+      "semantic": false,
+      "variant": "Sense_Default",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "V"
+      ],
+      "factoryGamepadKeys": [
+        "PBZ_Touchpad_SwipeUp",
+        "Gamepad_Special_Left"
+      ],
+      "category": "interaction/IA_Sense_Default"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_Sense_DualSense": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "DualSense"
+      ],
+      "aliases": [
+        "Sense_DualSense"
+      ],
+      "semantic": true,
+      "variant": "Sense_DualSense",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "interaction/IA_Sense_Default"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_Sense_TouchPad_Touch": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@catalog.touchpad"
+      ],
+      "aliases": [
+        "Sense_TouchPad_Touch"
+      ],
+      "semantic": true,
+      "variant": "Sense_TouchPad_Touch",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "interaction/IA_Sense_Default"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_ShipBackword": {
+      "section": "scene-ship",
+      "prefix": "none",
+      "parts": [
+        "@catalog.ship",
+        "@unified.movement.backward"
+      ],
+      "aliases": [
+        "ShipBackword"
+      ],
+      "semantic": true,
+      "variant": "ShipBackword",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "S"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftTriggerAxis"
+      ],
+      "category": "scene/ship"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_ShipForward": {
+      "section": "scene-ship",
+      "prefix": "none",
+      "parts": [
+        "@catalog.ship",
+        "@unified.movement.forward"
+      ],
+      "aliases": [
+        "ShipForward"
+      ],
+      "semantic": true,
+      "variant": "ShipForward",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "W"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightTriggerAxis"
+      ],
+      "category": "scene/ship"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_ShipLook": {
+      "section": "scene-ship",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ship",
+        "@catalog.axis"
+      ],
+      "aliases": [
+        "ShipLook"
+      ],
+      "semantic": true,
+      "variant": "ShipLook",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "scene/ship"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_ShipRight": {
+      "section": "scene-ship",
+      "prefix": "none",
+      "parts": [
+        "@catalog.ship",
+        "@catalog.lateral",
+        "@catalog.axis"
+      ],
+      "aliases": [
+        "ShipRight"
+      ],
+      "semantic": true,
+      "variant": "ShipRight",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "D",
+        "A"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftX"
+      ],
+      "category": "scene/ship"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_SkipSequence": {
+      "section": "ui",
+      "prefix": "native",
+      "parts": [
+        "@catalog.cutscene"
+      ],
+      "aliases": [
+        "SkipSequence"
+      ],
+      "semantic": true,
+      "variant": "SkipSequence",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "interface/skip"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_SkipTutorialUI": {
+      "section": "ui",
+      "prefix": "native",
+      "parts": [
+        "@catalog.tutorial"
+      ],
+      "aliases": [
+        "SkipTutorialUI"
+      ],
+      "semantic": true,
+      "variant": "SkipTutorialUI",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_RightThumbstick"
+      ],
+      "category": "interface/skip"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_SkipTutorialUI2": {
+      "section": "ui",
+      "prefix": "native",
+      "parts": [
+        "@catalog.tutorial",
+        "@catalog.variant",
+        "2"
+      ],
+      "aliases": [
+        "SkipTutorialUI2"
+      ],
+      "semantic": true,
+      "variant": "SkipTutorialUI2",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "P"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftThumbstick"
+      ],
+      "category": "interface/skip"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_UseBottomItem": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "UseBottomItem"
+      ],
+      "semantic": false,
+      "variant": "UseBottomItem",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "R"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_DPad_Down"
+      ],
+      "category": "interaction/medicine"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_UseTopItem": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "UseTopItem"
+      ],
+      "semantic": false,
+      "variant": "UseTopItem",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "T"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_DPad_Up"
+      ],
+      "category": "interaction/medicine"
+    },
+    "action:/Game/PBZContent/Input/InputActions/IA_Walk": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.walkinput"
+      ],
+      "aliases": [
+        "Walk"
+      ],
+      "semantic": true,
+      "variant": "Walk",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "locomotion/IA_MoveSlow"
+    },
+    "action:/Game/PBZContent/Input/OldInputActions/DebugActions/IA_Slomo": {
+      "section": "legacy",
+      "prefix": "none",
+      "parts": [
+        "@catalog.slomoinput"
+      ],
+      "aliases": [
+        "Slomo"
+      ],
+      "semantic": true,
+      "variant": "Slomo",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "debug/legacy"
+    },
+    "action:/Game/PBZContent/Input/OldInputActions/IA_EnableWalk": {
+      "section": "legacy",
+      "prefix": "none",
+      "parts": [
+        "@catalog.walkinput",
+        "EnableWalk"
+      ],
+      "aliases": [
+        "EnableWalk"
+      ],
+      "semantic": true,
+      "variant": "EnableWalk",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "debug/legacy"
+    },
+    "action:/Game/Test/Han/IA_Debug": {
+      "section": "test",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.test",
+        "Han/Debug"
+      ],
+      "aliases": [
+        "Debug"
+      ],
+      "semantic": true,
+      "variant": "Debug",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "S"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_DPad_Down"
+      ],
+      "category": "debug/test"
+    },
+    "action:/Game/Test/Han/IA_FaceBottom_Hold": {
+      "section": "test",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.test",
+        "Han/FaceBottom_Hold"
+      ],
+      "aliases": [
+        "FaceBottom_Hold"
+      ],
+      "semantic": true,
+      "variant": "FaceBottom_Hold",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Bottom"
+      ],
+      "category": "debug/test"
+    },
+    "action:/Game/Test/Han/IA_FaceLeft_Hold": {
+      "section": "test",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.test",
+        "Han/FaceLeft_Hold"
+      ],
+      "aliases": [
+        "FaceLeft_Hold"
+      ],
+      "semantic": true,
+      "variant": "FaceLeft_Hold",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Left"
+      ],
+      "category": "debug/test"
+    },
+    "action:/Game/Test/Han/IA_FaceRight_Hold": {
+      "section": "test",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.test",
+        "Han/FaceRight_Hold"
+      ],
+      "aliases": [
+        "FaceRight_Hold"
+      ],
+      "semantic": true,
+      "variant": "FaceRight_Hold",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Right"
+      ],
+      "category": "debug/test"
+    },
+    "action:/Game/Test/Han/IA_FaceUp_Hold": {
+      "section": "test",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.test",
+        "Han/FaceUp_Hold"
+      ],
+      "aliases": [
+        "FaceUp_Hold"
+      ],
+      "semantic": true,
+      "variant": "FaceUp_Hold",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "debug/test"
+    },
+    "action:/PBZCombatAsset/Input/IA_StatusInflictionDebug": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "StatusInflictionDebug"
+      ],
+      "aliases": [
+        "StatusInflictionDebug"
+      ],
+      "semantic": true,
+      "variant": "StatusInflictionDebug",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Eight"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "debug/debug"
+    },
+    "action:/PBZDeflectSystem/Input/IA_Deflect": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Deflect",
+        "完美防御",
+        "完美防禦",
+        "perfect defense",
+        "perfect defence",
+        "perfect deflect"
+      ],
+      "semantic": false,
+      "variant": "Deflect",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "RightMouseButton"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftShoulder"
+      ],
+      "category": "defense/IA_Guard"
+    },
+    "action:/PBZDeflectSystem/Input/IA_DeflectDebug": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "DeflectDebug"
+      ],
+      "aliases": [
+        "DeflectDebug"
+      ],
+      "semantic": true,
+      "variant": "DeflectDebug",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Five"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "debug/debug"
+    },
+    "action:/PBZDeflectSystem/Input/IA_Dodge": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.press"
+      ],
+      "aliases": [
+        "Dodge"
+      ],
+      "semantic": true,
+      "variant": "Dodge",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftShift"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightShoulder"
+      ],
+      "category": "defense/IA_Dodge"
+    },
+    "action:/PBZDeflectSystem/Input/IA_DodgeHold": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.down"
+      ],
+      "aliases": [
+        "DodgeHold"
+      ],
+      "semantic": true,
+      "variant": "DodgeHold",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftShift"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightShoulder"
+      ],
+      "category": "defense/IA_Dodge"
+    },
+    "action:/PBZDeflectSystem/Input/IA_PerfectDodge": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.perfectdodge"
+      ],
+      "aliases": [
+        "PerfectDodge"
+      ],
+      "semantic": true,
+      "variant": "PerfectDodge",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftShift"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightShoulder"
+      ],
+      "category": "defense/IA_Dodge"
+    },
+    "action:/PBZDeflectSystem/Input/IA_Stance": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Stance"
+      ],
+      "semantic": false,
+      "variant": "Stance",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "RightMouseButton"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftShoulder"
+      ],
+      "category": "defense/IA_Guard"
+    },
+    "action:/PBZInput/InputActions/IA_AttackH_Hold": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.down"
+      ],
+      "aliases": [
+        "AttackH_Hold"
+      ],
+      "semantic": true,
+      "variant": "AttackH_Hold",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "F"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Top"
+      ],
+      "category": "offense/IA_HeavyAttack"
+    },
+    "action:/PBZInput/InputActions/IA_AttackH_Press": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.press"
+      ],
+      "aliases": [
+        "AttackH_Press"
+      ],
+      "semantic": true,
+      "variant": "AttackH_Press",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "F"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Top"
+      ],
+      "category": "offense/IA_HeavyAttack"
+    },
+    "action:/PBZInput/InputActions/IA_AttackH_PressLong": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.hold"
+      ],
+      "aliases": [
+        "AttackH_PressLong"
+      ],
+      "semantic": true,
+      "variant": "AttackH_PressLong",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "F"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Top"
+      ],
+      "category": "offense/IA_HeavyAttack"
+    },
+    "action:/PBZInput/InputActions/IA_AttackL_Hold": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.down"
+      ],
+      "aliases": [
+        "AttackL_Hold"
+      ],
+      "semantic": true,
+      "variant": "AttackL_Hold",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftMouseButton"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Left"
+      ],
+      "category": "offense/IA_LightAttack"
+    },
+    "action:/PBZInput/InputActions/IA_AttackL_Press": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.press"
+      ],
+      "aliases": [
+        "AttackL_Press"
+      ],
+      "semantic": true,
+      "variant": "AttackL_Press",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftMouseButton"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Left"
+      ],
+      "category": "offense/IA_LightAttack"
+    },
+    "action:/PBZInput/InputActions/IA_AttackL_PressLong": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.hold"
+      ],
+      "aliases": [
+        "AttackL_PressLong"
+      ],
+      "semantic": true,
+      "variant": "AttackL_PressLong",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftMouseButton"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Left"
+      ],
+      "category": "offense/IA_LightAttack"
+    },
+    "action:/PBZInput/InputActions/IA_CombatArt": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.press"
+      ],
+      "aliases": [
+        "CombatArt"
+      ],
+      "semantic": true,
+      "variant": "CombatArt",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Q"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftTriggerAxis"
+      ],
+      "category": "offense/IA_UltimateSkill"
+    },
+    "action:/PBZInput/InputActions/IA_CombatArt_Hold": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.down"
+      ],
+      "aliases": [
+        "CombatArt_Hold"
+      ],
+      "semantic": true,
+      "variant": "CombatArt_Hold",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Q"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftTriggerAxis"
+      ],
+      "category": "offense/IA_UltimateSkill"
+    },
+    "action:/PBZInput/InputActions/IA_DebugSlomo": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "DebugSlomo"
+      ],
+      "aliases": [
+        "DebugSlomo"
+      ],
+      "semantic": true,
+      "variant": "DebugSlomo",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "NumPadThree",
+        "Four"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightTrigger"
+      ],
+      "category": "debug/debug"
+    },
+    "action:/PBZInput/InputActions/IA_DebugUI": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "DebugUI"
+      ],
+      "aliases": [
+        "DebugUI"
+      ],
+      "semantic": true,
+      "variant": "DebugUI",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "O"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_Special_Left"
+      ],
+      "category": "debug/debug"
+    },
+    "action:/PBZInput/InputActions/IA_DebugUI2": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "DebugUI2"
+      ],
+      "aliases": [
+        "DebugUI2"
+      ],
+      "semantic": true,
+      "variant": "DebugUI2",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_RightShoulder"
+      ],
+      "category": "debug/debug"
+    },
+    "action:/PBZInput/InputActions/IA_EagleVision": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@catalog.internal",
+        "EagleVision"
+      ],
+      "aliases": [
+        "EagleVision"
+      ],
+      "semantic": true,
+      "variant": "EagleVision",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "interaction/IA_Sense_Default"
+    },
+    "action:/PBZInput/InputActions/IA_Execution": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Execution"
+      ],
+      "semantic": false,
+      "variant": "Execution",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "E"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Right"
+      ],
+      "category": "offense/IA_Execute"
+    },
+    "action:/PBZInput/InputActions/IA_FaceUp_Hold": {
+      "section": "test",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.test",
+        "PBZInput/FaceUp_Hold"
+      ],
+      "aliases": [
+        "FaceUp_Hold"
+      ],
+      "semantic": true,
+      "variant": "FaceUp_Hold",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "F"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Top"
+      ],
+      "category": "debug/test"
+    },
+    "action:/PBZInput/InputActions/IA_Jump": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.jump"
+      ],
+      "aliases": [
+        "Jump"
+      ],
+      "semantic": true,
+      "variant": "Jump",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "SpaceBar"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Bottom"
+      ],
+      "category": "locomotion/IA_Jump"
+    },
+    "action:/PBZInput/InputActions/IA_NegativeFrameDebug": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "NegativeFrameDebug"
+      ],
+      "aliases": [
+        "NegativeFrameDebug"
+      ],
+      "semantic": true,
+      "variant": "NegativeFrameDebug",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Seven"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "debug/debug"
+    },
+    "action:/PBZInput/InputActions/IA_Sequence_Press": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [],
+      "aliases": [
+        "Sequence_Press"
+      ],
+      "semantic": true,
+      "variant": "Sequence_Press",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "F"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Top"
+      ],
+      "category": "interface/qte"
+    },
+    "action:/PBZInput/InputActions/IA_Sequence_Press_A_Cross": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.sequence",
+        "A_Cross"
+      ],
+      "aliases": [
+        "Sequence_Press_A_Cross"
+      ],
+      "semantic": true,
+      "variant": "Sequence_Press_A_Cross",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftMouseButton"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Bottom"
+      ],
+      "category": "interface/qte"
+    },
+    "action:/PBZInput/InputActions/IA_Sequence_Press_B_Sphere": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.sequence",
+        "B_Sphere"
+      ],
+      "aliases": [
+        "Sequence_Press_B_Sphere"
+      ],
+      "semantic": true,
+      "variant": "Sequence_Press_B_Sphere",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "RightMouseButton"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Right"
+      ],
+      "category": "interface/qte"
+    },
+    "action:/PBZInput/InputActions/IA_Sequence_Press_LB_L1": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.sequence",
+        "LB_L1"
+      ],
+      "aliases": [
+        "Sequence_Press_LB_L1"
+      ],
+      "semantic": true,
+      "variant": "Sequence_Press_LB_L1",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "F"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftShoulder"
+      ],
+      "category": "interface/qte"
+    },
+    "action:/PBZInput/InputActions/IA_Sequence_Press_LT_L2": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.sequence",
+        "LT_L2"
+      ],
+      "aliases": [
+        "Sequence_Press_LT_L2"
+      ],
+      "semantic": true,
+      "variant": "Sequence_Press_LT_L2",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "F"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftTriggerAxis"
+      ],
+      "category": "interface/qte"
+    },
+    "action:/PBZInput/InputActions/IA_Sequence_Press_RB_R1": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.sequence",
+        "RB_R1"
+      ],
+      "aliases": [
+        "Sequence_Press_RB_R1"
+      ],
+      "semantic": true,
+      "variant": "Sequence_Press_RB_R1",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "F"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightShoulder"
+      ],
+      "category": "interface/qte"
+    },
+    "action:/PBZInput/InputActions/IA_Sequence_Press_RT_R2": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.sequence",
+        "RT_R2"
+      ],
+      "aliases": [
+        "Sequence_Press_RT_R2"
+      ],
+      "semantic": true,
+      "variant": "Sequence_Press_RT_R2",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "F"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightTriggerAxis"
+      ],
+      "category": "interface/qte"
+    },
+    "action:/PBZInput/InputActions/IA_Sequence_Press_X_Cube": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.sequence",
+        "X_Cube"
+      ],
+      "aliases": [
+        "Sequence_Press_X_Cube"
+      ],
+      "semantic": true,
+      "variant": "Sequence_Press_X_Cube",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "F"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Left"
+      ],
+      "category": "interface/qte"
+    },
+    "action:/PBZInput/InputActions/IA_Sequence_Press_Y_TriAngle": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.sequence",
+        "Y_TriAngle"
+      ],
+      "aliases": [
+        "Sequence_Press_Y_TriAngle"
+      ],
+      "semantic": true,
+      "variant": "Sequence_Press_Y_TriAngle",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "F"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_FaceButton_Top"
+      ],
+      "category": "interface/qte"
+    },
+    "action:/PBZInput/InputActions/IA_ShachiAbility": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.press"
+      ],
+      "aliases": [
+        "ShachiAbility"
+      ],
+      "semantic": true,
+      "variant": "ShachiAbility",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftControl"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightTriggerAxis"
+      ],
+      "category": "shadow/equipment"
+    },
+    "action:/PBZInput/InputActions/IA_ShachiAbility_Hold": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.down"
+      ],
+      "aliases": [
+        "ShachiAbility_Hold"
+      ],
+      "semantic": true,
+      "variant": "ShachiAbility_Hold",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftControl"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightTriggerAxis"
+      ],
+      "category": "shadow/equipment"
+    },
+    "action:/PBZInput/InputActions/IA_ShachiAbility_LongPress": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.hold"
+      ],
+      "aliases": [
+        "ShachiAbility_LongPress"
+      ],
+      "semantic": true,
+      "variant": "ShachiAbility_LongPress",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftControl"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightTrigger"
+      ],
+      "category": "shadow/equipment"
+    },
+    "action:/PBZInput/InputActions/IA_TakePhoto": {
+      "section": "ui",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.photo"
+      ],
+      "aliases": [
+        "TakePhoto"
+      ],
+      "semantic": true,
+      "variant": "TakePhoto",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "P"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "interface/photo"
+    },
+    "action:/PBZInput/InputActions/IA_TargetingDebug": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "TargetingDebug"
+      ],
+      "aliases": [
+        "TargetingDebug"
+      ],
+      "semantic": true,
+      "variant": "TargetingDebug",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Six"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "debug/debug"
+    },
+    "action:/SGameAttributes/Input/IA_AttributeDebug": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "AttributeDebug"
+      ],
+      "aliases": [
+        "AttributeDebug"
+      ],
+      "semantic": true,
+      "variant": "AttributeDebug",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Two"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "debug/debug"
+    },
+    "action:/SGameCombatSystem/Bullet/Input/IA_BulletDebug": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "BulletDebug"
+      ],
+      "aliases": [
+        "BulletDebug"
+      ],
+      "semantic": true,
+      "variant": "BulletDebug",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "One"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "debug/debug"
+    },
+    "action:/SGameCombatSystem/Targeting/IA_JoystickChangeLockTargetAxis": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@catalog.stick",
+        "@catalog.axis"
+      ],
+      "aliases": [
+        "JoystickChangeLockTargetAxis"
+      ],
+      "semantic": true,
+      "variant": "JoystickChangeLockTargetAxis",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_Right2D"
+      ],
+      "category": "targeting/IA_LockTarget"
+    },
+    "action:/SGameCombatSystem/Targeting/IA_LockTarget": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "LockTarget"
+      ],
+      "semantic": false,
+      "variant": "LockTarget",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "MiddleMouseButton"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightThumbstick"
+      ],
+      "category": "targeting/IA_LockTarget"
+    },
+    "action:/SGameCombatSystem/Targeting/IA_MouseChangeLockTargetAxis": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@catalog.mouse",
+        "@catalog.axis"
+      ],
+      "aliases": [
+        "MouseChangeLockTargetAxis"
+      ],
+      "semantic": true,
+      "variant": "MouseChangeLockTargetAxis",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Mouse2D"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "targeting/IA_LockTarget"
+    },
+    "action:/SGameCombatSystem/Targeting/IA_MouseChangeLockTargetNext": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.next",
+        "@catalog.target"
+      ],
+      "aliases": [
+        "MouseChangeLockTargetNext"
+      ],
+      "semantic": true,
+      "variant": "MouseChangeLockTargetNext",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "MouseScrollDown"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "targeting/IA_LockTarget"
+    },
+    "action:/SGameCombatSystem/Targeting/IA_MouseChangeLockTargetPrevious": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.previous",
+        "@catalog.target"
+      ],
+      "aliases": [
+        "MouseChangeLockTargetPrevious"
+      ],
+      "semantic": true,
+      "variant": "MouseChangeLockTargetPrevious",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "MouseScrollUp"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "targeting/IA_LockTarget"
+    },
+    "action:/SGameCombatSystem/Weapon/Input/IA_ChangeArmed": {
+      "section": "gameplay",
+      "prefix": "none",
+      "parts": [
+        "@catalog.sheatheonly"
+      ],
+      "aliases": [
+        "ChangeArmed"
+      ],
+      "semantic": true,
+      "variant": "ChangeArmed",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "One"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_DPad_Left"
+      ],
+      "category": "weapons/equipment"
+    },
+    "action:/SGameCombatSystem/Weapon/Input/IA_ChangeShachiWeapon": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "ChangeShachiWeapon"
+      ],
+      "semantic": false,
+      "variant": "ChangeShachiWeapon",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Two"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_DPad_Right"
+      ],
+      "category": "shadow/equipment"
+    },
+    "action:/SGameCombatSystem/Weapon/Input/IA_ChangeWeapon": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "ChangeWeapon"
+      ],
+      "semantic": false,
+      "variant": "ChangeWeapon",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "One"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_DPad_Left"
+      ],
+      "category": "weapons/equipment"
+    },
+    "action:/SGameCombatSystem/Weapon/Input/IA_ChangingWeapon": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.down"
+      ],
+      "aliases": [
+        "ChangingWeapon"
+      ],
+      "semantic": true,
+      "variant": "ChangingWeapon",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftTrigger",
+        "Gamepad_LeftTriggerAxis"
+      ],
+      "category": "weapons/equipment"
+    },
+    "action:/SGameExecution/Input/IA_ExecutionDebug": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "ExecutionDebug"
+      ],
+      "aliases": [
+        "ExecutionDebug"
+      ],
+      "semantic": true,
+      "variant": "ExecutionDebug",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Three"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "debug/debug"
+    },
+    "action:/SGameLocomotionDriver/Input/IA_Crouch": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Crouch"
+      ],
+      "semantic": false,
+      "variant": "Crouch",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "C"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftThumbstick"
+      ],
+      "category": "locomotion/IA_Crouch"
+    },
+    "action:/SGameLocomotionDriver/Input/IA_JoyStickLookInput": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@catalog.stick",
+        "@catalog.axis"
+      ],
+      "aliases": [
+        "JoyStickLookInput"
+      ],
+      "semantic": true,
+      "variant": "JoyStickLookInput",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_Right2D"
+      ],
+      "category": "targeting/camera"
+    },
+    "action:/SGameLocomotionDriver/Input/IA_JoystickMoveInput": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "JoystickMoveInput"
+      ],
+      "semantic": true,
+      "variant": "JoystickMoveInput",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_Left2D"
+      ],
+      "category": "locomotion/movement"
+    },
+    "action:/SGameLocomotionDriver/Input/IA_KeyboardCrouch": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@catalog.keyboard",
+        "@catalog.internal"
+      ],
+      "aliases": [
+        "KeyboardCrouch"
+      ],
+      "semantic": true,
+      "variant": "KeyboardCrouch",
+      "nativeMapping": false,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [],
+      "category": "locomotion/IA_Crouch"
+    },
+    "action:/SGameLocomotionDriver/Input/IA_KeyboardMoveInput": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "KeyboardMoveInput"
+      ],
+      "semantic": true,
+      "variant": "KeyboardMoveInput",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "W",
+        "S",
+        "A",
+        "D",
+        "Up",
+        "Down",
+        "Left",
+        "Right"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "locomotion/movement"
+    },
+    "action:/SGameLocomotionDriver/Input/IA_MouseLookInput": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@catalog.mouse",
+        "@catalog.axis"
+      ],
+      "aliases": [
+        "MouseLookInput"
+      ],
+      "semantic": true,
+      "variant": "MouseLookInput",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "Mouse2D"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "targeting/camera"
+    },
+    "action:/SGameLocomotionDriver/Input/IA_Sprint": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@unified.variant.down"
+      ],
+      "aliases": [
+        "Sprint"
+      ],
+      "semantic": true,
+      "variant": "Sprint",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftShift"
+      ],
+      "factoryGamepadKeys": [
+        "Gamepad_RightShoulder"
+      ],
+      "category": "locomotion/IA_MoveFast"
+    },
+    "action:/SGameLocomotionDriver/Input/IA_SprintSwitch": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [
+        "@catalog.toggle"
+      ],
+      "aliases": [
+        "SprintSwitch"
+      ],
+      "semantic": true,
+      "variant": "SprintSwitch",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [],
+      "factoryGamepadKeys": [
+        "Gamepad_LeftThumbstick"
+      ],
+      "category": "locomotion/IA_MoveFast"
+    },
+    "action:/SGameLocomotionDriver/Input/IA_Walk": {
+      "section": "gameplay",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Walk"
+      ],
+      "semantic": false,
+      "variant": "Walk",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftAlt"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "locomotion/IA_MoveSlow"
+    },
+    "action:/SGameUtils/Input/IA_DebugHold": {
+      "section": "debug",
+      "prefix": "none",
+      "parts": [
+        "@enhancement.function.debug",
+        "DebugHold"
+      ],
+      "aliases": [
+        "DebugHold"
+      ],
+      "semantic": true,
+      "variant": "DebugHold",
+      "nativeMapping": true,
+      "factoryKeyboardKeys": [
+        "LeftAlt"
+      ],
+      "factoryGamepadKeys": [],
+      "category": "debug/debug"
+    },
+    "ability:Ability.Action.Execution.Channel.Execution": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "处决",
+        "处决 -> 处决",
+        "Execution"
+      ],
+      "semantic": true,
+      "variant": "Execution",
+      "category": "offense/IA_Execute",
+      "order": 0
+    },
+    "ability:Ability.Action.Execution.Channel.ShachiWeapon": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@unified.groups.shadow"
+      ],
+      "aliases": [
+        "处决",
+        "ShachiWeapon"
+      ],
+      "semantic": true,
+      "variant": "ShachiWeapon",
+      "category": "offense/IA_Execute",
+      "order": 0
+    },
+    "ability:Ability.Action.Execution.Channel.SpecialAttack": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.specialattack"
+      ],
+      "aliases": [
+        "SpecialAttack",
+        "连续Assult"
+      ],
+      "semantic": true,
+      "variant": "SpecialAttack",
+      "category": "offense/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.AirDash": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.air",
+        "@act.IA_Dodge"
+      ],
+      "aliases": [
+        "AirDash",
+        "闪避"
+      ],
+      "semantic": true,
+      "variant": "AirDash",
+      "category": "defense/IA_Dodge",
+      "order": 20
+    },
+    "ability:Ability.Action.Hun.BaiYing.BuffAtk.01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "BUFFATK1",
+        "上Buffattack",
+        "正常buffatk",
+        "01"
+      ],
+      "semantic": false,
+      "variant": "01",
+      "category": "weapons/Weapon_016/special",
+      "order": 70
+    },
+    "ability:Ability.Action.Hun.ChiZheCanJian.CToZui": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "CToZui"
+      ],
+      "aliases": [
+        "状态大招",
+        "CToZui"
+      ],
+      "semantic": true,
+      "variant": "CToZui",
+      "category": "weapons/Weapon_008/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ChiZheCanJian.ZuiChangeArmed": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.weaponaction",
+        "Zui"
+      ],
+      "aliases": [
+        "收拔刀",
+        "ZuiChangeArmed"
+      ],
+      "semantic": true,
+      "variant": "ZuiChangeArmed",
+      "category": "weapons/Weapon_008/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.CombatArt.Atk01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.combo",
+        "1"
+      ],
+      "aliases": [
+        "C",
+        "Atk01"
+      ],
+      "semantic": true,
+      "variant": "Atk01",
+      "category": "offense/IA_UltimateSkill",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.CombatArt.Atk02": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.combo",
+        "2"
+      ],
+      "aliases": [
+        "CC",
+        "Atk02"
+      ],
+      "semantic": true,
+      "variant": "Atk02",
+      "category": "offense/IA_UltimateSkill",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.CombatArt.Atk03": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.combo",
+        "3"
+      ],
+      "aliases": [
+        "CCC",
+        "Atk03"
+      ],
+      "semantic": true,
+      "variant": "Atk03",
+      "category": "offense/IA_UltimateSkill",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.CombatArt.JueYing.Air": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.air"
+      ],
+      "aliases": [
+        "Air C",
+        "Air"
+      ],
+      "semantic": true,
+      "variant": "Air",
+      "category": "offense/IA_UltimateSkill",
+      "order": 20
+    },
+    "ability:Ability.Action.Hun.ContinuousDash.Dash_02": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.continuous",
+        "2"
+      ],
+      "aliases": [
+        "ContinuousDash_02",
+        "Special Dash -> ContinuousDash_02",
+        "闪避",
+        "Dash_02"
+      ],
+      "semantic": true,
+      "variant": "Dash_02",
+      "category": "defense/IA_Dodge",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.ContinuousDash.Dash_03": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.continuous",
+        "3"
+      ],
+      "aliases": [
+        "ContinuousDash_03",
+        "闪避",
+        "Dash_03"
+      ],
+      "semantic": true,
+      "variant": "Dash_03",
+      "category": "defense/IA_Dodge",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.Dash": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.normal"
+      ],
+      "aliases": [
+        "Dash",
+        "Evaded",
+        "DashAtk",
+        "墨剑AA",
+        "墨剑AA Short",
+        "墨剑A",
+        "墨剑A Short",
+        "战技",
+        "杀气武器",
+        "处决",
+        "连续闪避",
+        "闪避",
+        "切墨剑技能",
+        "高优先级Dash",
+        "冲锋闪避取消"
+      ],
+      "semantic": true,
+      "variant": "Dash",
+      "category": "defense/IA_Dodge",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.DeflectDash": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.deflectentry"
+      ],
+      "aliases": [
+        "拼刀",
+        "SpecialDash",
+        "DeflectDash"
+      ],
+      "semantic": true,
+      "variant": "DeflectDash",
+      "category": "defense/IA_Dodge",
+      "order": 40
+    },
+    "ability:Ability.Action.Hun.FengLeiJian.AABA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.attack",
+        "AABA"
+      ],
+      "aliases": [
+        "AAB  ->  A",
+        "普攻",
+        "AABA"
+      ],
+      "semantic": true,
+      "variant": "AABA",
+      "category": "weapons/Weapon_010/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.FengLeiJian.AABAB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.attack",
+        "AABAB"
+      ],
+      "aliases": [
+        "AAAA  ->  B",
+        "重攻击",
+        "AABAB"
+      ],
+      "semantic": true,
+      "variant": "AABAB",
+      "category": "weapons/Weapon_010/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.FengLeiJian.FengLeiState.SpecialAttack01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "按住格挡+B：风雷攻击",
+        "特殊攻击",
+        "SpecialAttack01"
+      ],
+      "semantic": false,
+      "variant": "SpecialAttack01",
+      "category": "weapons/Weapon_010/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.AirAtk01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.air",
+        "1"
+      ],
+      "aliases": [
+        "空中重击",
+        "跳跃 空中重击",
+        "重攻击",
+        "AirAtk01"
+      ],
+      "semantic": true,
+      "variant": "AirAtk01",
+      "category": "offense/IA_HeavyAttack",
+      "order": 20
+    },
+    "ability:Ability.Action.Hun.Heavy.Atk01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "1"
+      ],
+      "aliases": [
+        "地面重击1",
+        "拼刀重击",
+        "长刀空中-派生N1H1",
+        "空中普攻 接 AB",
+        "DB.Grab -> B",
+        "AAB -> B",
+        "AAA -> B",
+        "DB -> B",
+        "3接1",
+        "AB",
+        "AAB",
+        "AAAB",
+        "AAAAB",
+        "AAAAAB",
+        "小处决",
+        "鬼步",
+        "A -> B",
+        "AA -> B",
+        "SPSKILL-B1",
+        "A-B1",
+        "A2-B1",
+        "SWT-B1",
+        "BBBB-B",
+        "重攻击",
+        "连招",
+        "大风车",
+        "空中下劈后",
+        "Atk01"
+      ],
+      "semantic": true,
+      "variant": "Atk01",
+      "category": "offense/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Atk01_Hold": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.charge"
+      ],
+      "aliases": [
+        "蓄力-杀气转换成雷势",
+        "蓄力",
+        "蓄力攻击",
+        "Atk01_Hold"
+      ],
+      "semantic": true,
+      "variant": "Atk01_Hold",
+      "category": "offense/IA_HeavyAttack",
+      "order": 60
+    },
+    "ability:Ability.Action.Hun.Heavy.Atk02": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "2"
+      ],
+      "aliases": [
+        "地面重击2",
+        "地面重击1 拔刀 接 地面重击2 ",
+        "冲刺重击 拔刀 接 地面重击2",
+        "冲刺重击 接 地面重击2",
+        "吸附 重击2",
+        "处决 重击2",
+        "杀气武器 -> BB",
+        "Air -> BB",
+        "A> B2",
+        "A2> B2",
+        "A3> B2",
+        "A4> B2",
+        "AB",
+        "AAB",
+        "AAAB",
+        "小处决 -> AB",
+        "醉剑自动闪避接B2",
+        "DB.H -> BB",
+        "BPursure -> BB",
+        "横刀充能 -> BB",
+        "BladeWave -> BB",
+        "NoCostB -> BB",
+        "BreakAct -> AB",
+        "Buff -> BB",
+        "DB -> BB",
+        "SB -> BB",
+        "AB -> BB",
+        "DB1 -> BB",
+        "DB2 -> BB",
+        "DB3 -> BB",
+        "B_Fast -> BB",
+        "A3-B2",
+        "AirA-B2",
+        "Airb-B2",
+        "AB-BB",
+        "AAB-BB",
+        "AAAB-BB",
+        "AAAAB-BB",
+        "HoldB-BB",
+        "重攻击",
+        "B连段",
+        "空中下劈后",
+        "Atk02"
+      ],
+      "semantic": true,
+      "variant": "Atk02",
+      "category": "offense/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Atk03": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "3"
+      ],
+      "aliases": [
+        "地面重击3",
+        "B2-B3",
+        "BBB",
+        "BB - BBB",
+        "BB -> BBB",
+        "LB+Y P2 -> BBB P2",
+        "LB+Y -> BBB",
+        "重攻击",
+        "B连段",
+        "连招",
+        "Atk03"
+      ],
+      "semantic": true,
+      "variant": "Atk03",
+      "category": "offense/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Atk04": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "4"
+      ],
+      "aliases": [
+        "地面重击4",
+        "重攻击",
+        "连招",
+        "Atk04"
+      ],
+      "semantic": true,
+      "variant": "Atk04",
+      "category": "offense/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.BronzeSword.BHold": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.charge",
+        "BHold"
+      ],
+      "aliases": [
+        "蓄力",
+        "BHold"
+      ],
+      "semantic": true,
+      "variant": "BHold",
+      "category": "weapons/Weapon_007/IA_HeavyAttack",
+      "order": 60
+    },
+    "ability:Ability.Action.Hun.Heavy.BronzeSword.DB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "DB"
+      ],
+      "aliases": [
+        "DB",
+        "重攻击",
+        "Deflect Heavy"
+      ],
+      "semantic": true,
+      "variant": "DB",
+      "category": "weapons/Weapon_007/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.BronzeSword.Deflect.B": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.specialblockcounter",
+        "B"
+      ],
+      "aliases": [
+        "Deflect-DeflectB",
+        "重攻击",
+        "B"
+      ],
+      "semantic": true,
+      "variant": "B",
+      "category": "weapons/Weapon_007/IA_HeavyAttack",
+      "order": 40
+    },
+    "ability:Ability.Action.Hun.Heavy.BronzeSword.Deflect.BB": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.specialblockcounter",
+        "BB"
+      ],
+      "aliases": [
+        "地面重击3",
+        "重攻击",
+        "BB"
+      ],
+      "semantic": true,
+      "variant": "BB",
+      "category": "weapons/Weapon_007/IA_HeavyAttack",
+      "order": 40
+    },
+    "ability:Ability.Action.Hun.Heavy.BronzeSword.Nsp": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.swordwave",
+        "Nsp"
+      ],
+      "aliases": [
+        "升级派生N1H2Nsp",
+        "升级派生N2H2Nsp",
+        "升级派生N3H2Nsp",
+        "升级派生H1NSP",
+        "升级派生H2NSP",
+        "升级派生H3NSP",
+        "普攻",
+        "Nsp"
+      ],
+      "semantic": true,
+      "variant": "Nsp",
+      "category": "weapons/Weapon_007/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.ChaosBlade.ToBing": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.ice"
+      ],
+      "aliases": [
+        "切换冰",
+        "ToBing"
+      ],
+      "semantic": true,
+      "variant": "ToBing",
+      "category": "weapons/Weapon_004/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.ChaosBlade.ToHunDun": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.chaosform"
+      ],
+      "aliases": [
+        "切换火",
+        "ToHunDun"
+      ],
+      "semantic": true,
+      "variant": "ToHunDun",
+      "category": "weapons/Weapon_004/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.ChaosBlade.ToWuLi": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.steelform"
+      ],
+      "aliases": [
+        "切换冰",
+        "切换物理",
+        "ToWuLi"
+      ],
+      "semantic": true,
+      "variant": "ToWuLi",
+      "category": "weapons/Weapon_004/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.ChiZheCanJian.Drink.Normal": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.drink"
+      ],
+      "aliases": [
+        "普通喝酒",
+        "LB+B喝酒",
+        "Normal"
+      ],
+      "semantic": true,
+      "variant": "Normal",
+      "category": "weapons/Weapon_008/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.ComboAtk_N1H1": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.followup",
+        "N1H1"
+      ],
+      "aliases": [
+        "派生N1H1",
+        "冲刺-派生N1H1",
+        "切武器-派生N1H1",
+        "冲刺 拔刀-派生N1H1",
+        "Draw-派生N1H1",
+        "拼刀处决重击",
+        "完美闪避重击Armed",
+        "QTE拼刀 重击",
+        "ASnap -> AB",
+        "小处决 -> AB",
+        "双刀空中-派生N1H1",
+        "唐刀空中-派生N1H1",
+        "DB.L -> AB",
+        "APursure -> AB",
+        "长刀空中-派生N1H1",
+        "空中普攻 接 AB",
+        "SA -> AB",
+        "火焰波->AB",
+        "唐刀空中-AB",
+        "A -> AB",
+        "HoldA - AB",
+        "重攻击",
+        "上Buff",
+        "ComboAtk_N1H1"
+      ],
+      "semantic": true,
+      "variant": "ComboAtk_N1H1",
+      "category": "offense/IA_HeavyAttack",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.Heavy.ComboAtk_N1H2": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.followup",
+        "N1H2"
+      ],
+      "aliases": [
+        "AB -> B",
+        "派生N1H2",
+        "AB - ABB",
+        "ABB",
+        "重攻击",
+        "ComboAtk_N1H2"
+      ],
+      "semantic": true,
+      "variant": "ComboAtk_N1H2",
+      "category": "offense/IA_HeavyAttack",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.Heavy.ComboAtk_N2H1": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.followup",
+        "N2H1"
+      ],
+      "aliases": [
+        "派生N2H1",
+        "AA  ->  B",
+        "AA -> AAB",
+        "重攻击",
+        "ComboAtk_N2H1"
+      ],
+      "semantic": true,
+      "variant": "ComboAtk_N2H1",
+      "category": "offense/IA_HeavyAttack",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.Heavy.ComboAtk_N2H2": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.followup",
+        "N2H2"
+      ],
+      "aliases": [
+        "AAB  ->  B",
+        "派生N2H2",
+        "AAB - AABB",
+        "AABB",
+        "重攻击",
+        "ComboAtk_N2H2"
+      ],
+      "semantic": true,
+      "variant": "ComboAtk_N2H2",
+      "category": "offense/IA_HeavyAttack",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.Heavy.ComboAtk_N3H1": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.followup",
+        "N3H1"
+      ],
+      "aliases": [
+        "派生N3H1",
+        "AAA  ->  B",
+        "蓄力-B",
+        "AAA -> AAAB",
+        "重攻击",
+        "ComboAtk_N3H1"
+      ],
+      "semantic": true,
+      "variant": "ComboAtk_N3H1",
+      "category": "offense/IA_HeavyAttack",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.Heavy.ComboAtk_N3H2": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.followup",
+        "N3H2"
+      ],
+      "aliases": [
+        "AAAB  ->  B",
+        "派生N3H2",
+        "AAAB - AAABB",
+        "AAABB",
+        "重攻击",
+        "ComboAtk_N3H2"
+      ],
+      "semantic": true,
+      "variant": "ComboAtk_N3H2",
+      "category": "offense/IA_HeavyAttack",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.Heavy.ComboAtk_N4H1": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.followup",
+        "N4H1"
+      ],
+      "aliases": [
+        "派生N4H1",
+        "AAAAB",
+        "AAAA -> AAAAB",
+        "AAAA-AAAAB",
+        "重攻击",
+        "ComboAtk_N4H1"
+      ],
+      "semantic": true,
+      "variant": "ComboAtk_N4H1",
+      "category": "offense/IA_HeavyAttack",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.Heavy.ComboAtk_N4H2": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.followup",
+        "N4H2"
+      ],
+      "aliases": [
+        "AAAABB",
+        "ComboAtk_N4H2"
+      ],
+      "semantic": true,
+      "variant": "ComboAtk_N4H2",
+      "category": "offense/IA_HeavyAttack",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.Heavy.DashAtk01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.dash",
+        "1"
+      ],
+      "aliases": [
+        "冲刺重击",
+        "Dash重击",
+        "ContinuousDash -> DashB",
+        "BBB -> BBBB",
+        "布局接",
+        "重攻击",
+        "DashAtk01"
+      ],
+      "semantic": true,
+      "variant": "DashAtk01",
+      "category": "offense/IA_HeavyAttack",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.Heavy.Double.ATB": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.dualweapon",
+        "@act.IA_HeavyAttack",
+        "ATB"
+      ],
+      "aliases": [
+        "AAAA -> ATB",
+        "AAAAA -> ATB",
+        "AAAAAA -> ATB",
+        "重攻击",
+        "ATB"
+      ],
+      "semantic": true,
+      "variant": "ATB",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Double.ATBB": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.dualweapon",
+        "@act.IA_HeavyAttack",
+        "ATBB"
+      ],
+      "aliases": [
+        "ATB -> ATBB",
+        "重攻击",
+        "ATBB"
+      ],
+      "semantic": true,
+      "variant": "ATBB",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Double.ATBBB": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.dualweapon",
+        "@act.IA_HeavyAttack",
+        "ATBBB"
+      ],
+      "aliases": [
+        "ATBB -> ATBBB",
+        "重攻击",
+        "ATBBB"
+      ],
+      "semantic": true,
+      "variant": "ATBBB",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.DrawAirAtk01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.air",
+        "@catalog.draw",
+        "1"
+      ],
+      "aliases": [
+        "空中重击 拔刀",
+        "跳跃 空中重击 拔刀",
+        "重攻击",
+        "DrawAirAtk01"
+      ],
+      "semantic": true,
+      "variant": "DrawAirAtk01",
+      "category": "offense/IA_HeavyAttack",
+      "order": 20
+    },
+    "ability:Ability.Action.Hun.Heavy.DrawAtk01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "@catalog.draw",
+        "1"
+      ],
+      "aliases": [
+        "地面重击1 拔刀",
+        "完美闪避重击Unarmed",
+        "CAA-B",
+        "CBB-B",
+        "CCC-B",
+        "CA-B",
+        "CB-B",
+        "C-B",
+        "CC-B",
+        "重攻击",
+        "DrawAtk01"
+      ],
+      "semantic": true,
+      "variant": "DrawAtk01",
+      "category": "offense/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.DrawDashAtk01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.dash",
+        "@catalog.draw",
+        "1"
+      ],
+      "aliases": [
+        "冲刺重击 拔刀",
+        "Dash 拔刀重击",
+        "ContinuousDash -> DashB",
+        "Mojian AA -> B Dash",
+        "重攻击",
+        "重击",
+        "DrawDashAtk01"
+      ],
+      "semantic": true,
+      "variant": "DrawDashAtk01",
+      "category": "offense/IA_HeavyAttack",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.Heavy.DualHook.DB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "DB",
+        "Deflect Heavy",
+        "重攻击"
+      ],
+      "semantic": false,
+      "variant": "DB",
+      "category": "weapons/Weapon_028/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.DualHook.Pursure": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.followup",
+        "Pursure"
+      ],
+      "aliases": [
+        "追击",
+        "Pursure"
+      ],
+      "semantic": true,
+      "variant": "Pursure",
+      "category": "weapons/Weapon_028/IA_HeavyAttack",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.Heavy.GuiTouDao.BHold.Start": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.charge",
+        "BHold.Start"
+      ],
+      "aliases": [
+        "BHold",
+        "Start"
+      ],
+      "semantic": true,
+      "variant": "Start",
+      "category": "weapons/Weapon_017/IA_HeavyAttack",
+      "order": 60
+    },
+    "ability:Ability.Action.Hun.Heavy.Horizontal.BladeWave": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.bladewave"
+      ],
+      "aliases": [
+        "刀波",
+        "重攻击",
+        "BladeWave"
+      ],
+      "semantic": true,
+      "variant": "BladeWave",
+      "category": "weapons/Weapon_019/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Horizontal.CriticalAttack": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.reinforcedattack",
+        "CriticalAttack"
+      ],
+      "aliases": [
+        "横刀充能",
+        "重攻击",
+        "CriticalAttack"
+      ],
+      "semantic": true,
+      "variant": "CriticalAttack",
+      "category": "weapons/Weapon_019/IA_HeavyAttack",
+      "order": 60
+    },
+    "ability:Ability.Action.Hun.Heavy.Horizontal.Overcharge": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "横刀充能",
+        "重攻击",
+        "Overcharge"
+      ],
+      "semantic": false,
+      "variant": "Overcharge",
+      "category": "weapons/Weapon_019/IA_HeavyAttack",
+      "order": 60
+    },
+    "ability:Ability.Action.Hun.Heavy.Iron.BCharge": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "蓄力",
+        "BCharge"
+      ],
+      "semantic": false,
+      "variant": "BCharge",
+      "category": "weapons/Weapon_002/IA_HeavyAttack",
+      "order": 60
+    },
+    "ability:Ability.Action.Hun.Heavy.Iron.BJump": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "BJump"
+      ],
+      "aliases": [
+        "DashN -> BJump",
+        "DashB -> BJump",
+        "重攻击",
+        "BJump"
+      ],
+      "semantic": true,
+      "variant": "BJump",
+      "category": "weapons/Weapon_002/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Iron.Buff": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Buff",
+        "上Buff"
+      ],
+      "semantic": false,
+      "variant": "Buff",
+      "category": "weapons/Weapon_002/IA_HeavyAttack",
+      "order": 70
+    },
+    "ability:Ability.Action.Hun.Heavy.Jigsaw.RB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "RB"
+      ],
+      "aliases": [
+        "RB",
+        "SA -> RB",
+        "RB -> RBB",
+        "Light -> RB",
+        "Heavy -> RB",
+        "重攻击"
+      ],
+      "semantic": true,
+      "variant": "RB",
+      "category": "weapons/Weapon_015/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Jigsaw.RBB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "RBB"
+      ],
+      "aliases": [
+        "RB -> RBB",
+        "重攻击",
+        "RBB"
+      ],
+      "semantic": true,
+      "variant": "RBB",
+      "category": "weapons/Weapon_015/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Jigsaw.SB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "SB"
+      ],
+      "aliases": [
+        "SB",
+        "重攻击"
+      ],
+      "semantic": true,
+      "variant": "SB",
+      "category": "weapons/Weapon_015/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Long.BD": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.weaponbuff",
+        "Long.BD"
+      ],
+      "aliases": [
+        "上Buff",
+        "BD"
+      ],
+      "semantic": true,
+      "variant": "BD",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Long.BSup": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@act.IA_HeavyAttack",
+        "Long.BSup"
+      ],
+      "aliases": [
+        "登龙",
+        "BSup"
+      ],
+      "semantic": true,
+      "variant": "BSup",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Long.CounterB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.followup",
+        "CounterB"
+      ],
+      "aliases": [
+        "Counter -> CounterB",
+        "重攻击",
+        "CounterB"
+      ],
+      "semantic": true,
+      "variant": "CounterB",
+      "category": "weapons/Weapon_014/IA_HeavyAttack",
+      "order": 40
+    },
+    "ability:Ability.Action.Hun.Heavy.PoJun.DB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "DB",
+        "战技",
+        "重攻击"
+      ],
+      "semantic": false,
+      "variant": "DB",
+      "category": "weapons/Weapon_018/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.PoJun.DB2": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "DB2"
+      ],
+      "aliases": [
+        "DB2",
+        "切武器接DB2",
+        "SWTDash接DB2",
+        "SWTUI接DB2",
+        "重攻击"
+      ],
+      "semantic": true,
+      "variant": "DB2",
+      "category": "weapons/Weapon_018/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.ShuangYue.DB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "DB",
+        "Deflect Heavy"
+      ],
+      "semantic": false,
+      "variant": "DB",
+      "category": "weapons/Weapon_026/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.ShuangYue.PB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "PB"
+      ],
+      "aliases": [
+        "PerfectDodge -> PB",
+        "PB"
+      ],
+      "semantic": true,
+      "variant": "PB",
+      "category": "weapons/Weapon_026/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.ShuangYue.PBB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "PBB"
+      ],
+      "aliases": [
+        "C -> PBB",
+        "PB",
+        "PBB"
+      ],
+      "semantic": true,
+      "variant": "PBB",
+      "category": "weapons/Weapon_026/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB1": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "DB1"
+      ],
+      "aliases": [
+        "DB1",
+        "Deflect Heavy",
+        "重攻击"
+      ],
+      "semantic": true,
+      "variant": "DB1",
+      "category": "weapons/Weapon_009/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB2": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "DB2"
+      ],
+      "aliases": [
+        "DB2",
+        "Deflect Heavy"
+      ],
+      "semantic": true,
+      "variant": "DB2",
+      "category": "weapons/Weapon_009/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB3": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "DB3"
+      ],
+      "aliases": [
+        "DB3",
+        "DB2",
+        "Deflect Heavy",
+        "重攻击"
+      ],
+      "semantic": true,
+      "variant": "DB3",
+      "category": "weapons/Weapon_009/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SnakeDual.AB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "AB"
+      ],
+      "aliases": [
+        "AA -> AB",
+        "A -> AB",
+        "A Snap -> AB",
+        "拼刀 -> AB",
+        "小处决 -> AB",
+        "完美闪避 -> AB",
+        "A_Deflect -> AB",
+        "A_Dash -> AB",
+        "处决 -> AB",
+        "A_Fast -> AB",
+        "SWT -> AB",
+        "重攻击",
+        "AB"
+      ],
+      "semantic": true,
+      "variant": "AB",
+      "category": "weapons/Weapon_027/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SnakeDual.ABAB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "ABAB"
+      ],
+      "aliases": [
+        "ABAA -> ABAB",
+        "ABA -> ABAB",
+        "重攻击",
+        "ABAB"
+      ],
+      "semantic": true,
+      "variant": "ABAB",
+      "category": "weapons/Weapon_027/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SnakeDual.ABABB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "ABABB"
+      ],
+      "aliases": [
+        "ABAB -> ABABB",
+        "重攻击",
+        "ABABB"
+      ],
+      "semantic": true,
+      "variant": "ABABB",
+      "category": "weapons/Weapon_027/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SnakeDual.ABB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "ABB"
+      ],
+      "aliases": [
+        "AB -> ABB",
+        "重攻击",
+        "ABB"
+      ],
+      "semantic": true,
+      "variant": "ABB",
+      "category": "weapons/Weapon_027/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SnakeDual.BAB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "BAB"
+      ],
+      "aliases": [
+        "BAA -> BAB",
+        "BA -> BAB",
+        "重攻击",
+        "BAB"
+      ],
+      "semantic": true,
+      "variant": "BAB",
+      "category": "weapons/Weapon_027/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SnakeDual.BABAB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "BABAB"
+      ],
+      "aliases": [
+        "BABA -> BABAB",
+        "重攻击",
+        "BABAB"
+      ],
+      "semantic": true,
+      "variant": "BABAB",
+      "category": "weapons/Weapon_027/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SnakeDual.BABABB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "BABABB"
+      ],
+      "aliases": [
+        "BABAB -> BABABB",
+        "重攻击",
+        "BABABB"
+      ],
+      "semantic": true,
+      "variant": "BABABB",
+      "category": "weapons/Weapon_027/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SnakeDual.BABB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "BABB"
+      ],
+      "aliases": [
+        "BAB -> BABB",
+        "重攻击",
+        "BABB"
+      ],
+      "semantic": true,
+      "variant": "BABB",
+      "category": "weapons/Weapon_027/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SnakeDual.B_Fast": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "B_Fast"
+      ],
+      "aliases": [
+        "ABABA -> B_Fast",
+        "重攻击",
+        "B_Fast"
+      ],
+      "semantic": true,
+      "variant": "B_Fast",
+      "category": "weapons/Weapon_027/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.SnakeDual.DB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "扔飞镖",
+        "DB"
+      ],
+      "semantic": false,
+      "variant": "DB",
+      "category": "weapons/Weapon_027/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Snap": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.snap"
+      ],
+      "aliases": [
+        "击杀吸附",
+        "吸附",
+        "Snap"
+      ],
+      "semantic": true,
+      "variant": "Snap",
+      "category": "offense/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Tang.AAAAAB": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.singleweapon",
+        "@act.IA_HeavyAttack",
+        "AAAAAB"
+      ],
+      "aliases": [
+        "升级派生N5H1",
+        "重攻击",
+        "AAAAAB"
+      ],
+      "semantic": true,
+      "variant": "AAAAAB",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Tang.AAAAABB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "AAAAABB"
+      ],
+      "aliases": [
+        "升级派生N5H2",
+        "升级派生N4H2",
+        "重攻击",
+        "AAAAABB"
+      ],
+      "semantic": true,
+      "variant": "AAAAABB",
+      "category": "weapons/Weapon_005/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.Tang.BBBB": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.singleweapon",
+        "@act.IA_HeavyAttack",
+        "BBBB"
+      ],
+      "aliases": [
+        "升级派生H4",
+        "重攻击",
+        "BBBB"
+      ],
+      "semantic": true,
+      "variant": "BBBB",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.XieShan.DB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "上Buff",
+        "DB"
+      ],
+      "semantic": false,
+      "variant": "DB",
+      "category": "weapons/Weapon_031/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.YanYueDao.Reinforced.01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "大风车-力劈华山",
+        "力劈华山",
+        "大风车",
+        "01"
+      ],
+      "semantic": false,
+      "variant": "01",
+      "category": "weapons/Weapon_020/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.YanYueDao.Special01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "大风车",
+        "Special01"
+      ],
+      "semantic": false,
+      "variant": "Special01",
+      "category": "weapons/Weapon_020/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.YuuBlade.FastAttack": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "FastAttack"
+      ],
+      "semantic": false,
+      "variant": "FastAttack",
+      "category": "weapons/Weapon_023/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.ZhanMa.DB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "DB",
+        "重攻击"
+      ],
+      "semantic": false,
+      "variant": "DB",
+      "category": "weapons/Weapon_013/IA_HeavyAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Heavy.ZiMingJian.DB.FirstTime": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.formation",
+        "DB.FirstTime"
+      ],
+      "aliases": [
+        "发起装逼",
+        "FirstTime"
+      ],
+      "semantic": true,
+      "variant": "FirstTime",
+      "category": "weapons/Weapon_011/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Jump": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.jump"
+      ],
+      "aliases": [
+        "跳",
+        "Jump"
+      ],
+      "semantic": true,
+      "variant": "Jump",
+      "category": "locomotion/IA_Jump",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.A": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "A"
+      ],
+      "aliases": [
+        "5接1",
+        "小处决",
+        "鬼步",
+        "普攻",
+        "A"
+      ],
+      "semantic": true,
+      "variant": "A",
+      "category": "offense/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.A.Draw": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "@catalog.draw",
+        "1"
+      ],
+      "aliases": [
+        "地面普攻1 拔刀",
+        "CAA-A",
+        "CBB-A",
+        "CCC-A",
+        "CA_A",
+        "CB-A",
+        "C_A",
+        "CC_A",
+        "普攻",
+        "Draw"
+      ],
+      "semantic": true,
+      "variant": "Draw",
+      "category": "offense/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.A.Normal": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "1"
+      ],
+      "aliases": [
+        "地面普攻1",
+        "拼刀普攻",
+        "QTE拼刀 普攻",
+        "空1普攻-接地面普攻1",
+        "BBB P2 -> A",
+        "BBB -> A",
+        "DB -> A",
+        "回到普攻1",
+        "普攻",
+        "Normal"
+      ],
+      "semantic": true,
+      "variant": "Normal",
+      "category": "offense/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.AA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "2"
+      ],
+      "aliases": [
+        "地面普攻2",
+        "冲刺-地面普攻2",
+        "切武器 地面-地面普攻2",
+        "拔刀 接 地面普攻2",
+        "冲刺 拔刀-地面普攻2",
+        "切武器 拔刀 - 地面普攻2",
+        "完美闪避 普攻2",
+        "小处决 普攻2",
+        "吸附 普攻2",
+        "处决 普攻2",
+        "空1 切武器-接地面普攻2",
+        "BTA -> AA",
+        "长刀空1普攻下落-接地面普攻2",
+        "长刀空1 切武器  下落-接地面普攻2",
+        "长刀拔刀空1 - 地面普工2",
+        "空1普攻-接地面普攻2",
+        "醉剑自动闪避接A2",
+        "DB.L -> AA",
+        "DB.H -> AA",
+        "APursure -> AA",
+        "BreakAct -> AA",
+        "Buff -> AA",
+        "SA -> AA",
+        "空1普攻-接地面普攻1",
+        "DB1 -> AA",
+        "DB2 -> AA",
+        "DB3 -> AA",
+        "A_Fast -> AA",
+        "A_Deflect -> AA",
+        "B_Dash -> AA",
+        "AirA-A2",
+        "SWT-A2",
+        "大风车-A2",
+        "HoldA - AA",
+        "普攻",
+        "B连段",
+        "老普攻",
+        "AA"
+      ],
+      "semantic": true,
+      "variant": "AA",
+      "category": "offense/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.AAA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "3"
+      ],
+      "aliases": [
+        "地面普攻3",
+        "Airb-A3",
+        "普攻",
+        "AAA"
+      ],
+      "semantic": true,
+      "variant": "AAA",
+      "category": "offense/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.AAAA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "4"
+      ],
+      "aliases": [
+        "地面普攻4",
+        "普攻",
+        "AAAA"
+      ],
+      "semantic": true,
+      "variant": "AAAA",
+      "category": "offense/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.AAAAA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "5"
+      ],
+      "aliases": [
+        "地面普攻5",
+        "A4 -> A5",
+        "A4-A5",
+        "普攻",
+        "AAAAA"
+      ],
+      "semantic": true,
+      "variant": "AAAAA",
+      "category": "offense/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.AAAAAA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.ground",
+        "6"
+      ],
+      "aliases": [
+        "地面普攻6",
+        "普攻",
+        "AAAAAA"
+      ],
+      "semantic": true,
+      "variant": "AAAAAA",
+      "category": "offense/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.ADash.Draw": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.dash",
+        "@catalog.draw",
+        "1"
+      ],
+      "aliases": [
+        "冲刺普攻1 拔刀",
+        "ContinuousDash -> DashA",
+        "Mojian AA -> A Dash",
+        "B -> BTA",
+        "普攻",
+        "Draw"
+      ],
+      "semantic": true,
+      "variant": "Draw",
+      "category": "offense/IA_LightAttack",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.Light.ADash.Normal": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.dash",
+        "1"
+      ],
+      "aliases": [
+        "冲刺普攻1",
+        "Dash普攻",
+        "ContinuousDash -> DashA",
+        "普攻",
+        "Normal"
+      ],
+      "semantic": true,
+      "variant": "Normal",
+      "category": "offense/IA_LightAttack",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.Light.Air.A.Draw": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.air",
+        "@catalog.draw",
+        "1"
+      ],
+      "aliases": [
+        "空中普攻1 拔刀",
+        "跳跃 接 空中普攻1 拔刀",
+        "普攻",
+        "Draw"
+      ],
+      "semantic": true,
+      "variant": "Draw",
+      "category": "offense/IA_LightAttack",
+      "order": 20
+    },
+    "ability:Ability.Action.Hun.Light.Air.A.Normal": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.air",
+        "1"
+      ],
+      "aliases": [
+        "空中普攻1",
+        "跳跃 接 空中普攻1",
+        "普攻",
+        "Normal"
+      ],
+      "semantic": true,
+      "variant": "Normal",
+      "category": "offense/IA_LightAttack",
+      "order": 20
+    },
+    "ability:Ability.Action.Hun.Light.Double.BTA": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.dualweapon",
+        "@act.IA_LightAttack",
+        "BTA"
+      ],
+      "aliases": [
+        "BBBB -> BTA",
+        "ABB -> BTA",
+        "AABB -> BTA",
+        "AAABB -> BTA",
+        "ATBB -> BTA",
+        "ATBBB -> BTA",
+        "普攻",
+        "BTA"
+      ],
+      "semantic": true,
+      "variant": "BTA",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.DualHook.Pursure": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.followup",
+        "Pursure"
+      ],
+      "aliases": [
+        "追击",
+        "Pursure"
+      ],
+      "semantic": true,
+      "variant": "Pursure",
+      "category": "weapons/Weapon_028/IA_LightAttack",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.Light.GuiTouDao.DA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "DA"
+      ],
+      "aliases": [
+        "DA"
+      ],
+      "semantic": true,
+      "variant": "DA",
+      "category": "weapons/Weapon_017/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.JigSaw.RA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "RA"
+      ],
+      "aliases": [
+        "RA",
+        "SA -> RA",
+        "Heavy -> RA",
+        "RAAA -> RA",
+        "Light -> RA",
+        "普攻"
+      ],
+      "semantic": true,
+      "variant": "RA",
+      "category": "weapons/Weapon_015/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.JigSaw.RAA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "RAA"
+      ],
+      "aliases": [
+        "RA -> RAA",
+        "普攻",
+        "RAA"
+      ],
+      "semantic": true,
+      "variant": "RAA",
+      "category": "weapons/Weapon_015/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.JigSaw.RAAA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "RAAA"
+      ],
+      "aliases": [
+        "RAA -> RAAA",
+        "普攻",
+        "RAAA"
+      ],
+      "semantic": true,
+      "variant": "RAAA",
+      "category": "weapons/Weapon_015/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.JigSaw.SA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "SA"
+      ],
+      "aliases": [
+        "SA",
+        "普攻"
+      ],
+      "semantic": true,
+      "variant": "SA",
+      "category": "weapons/Weapon_015/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.Long.AAAAA": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@act.IA_LightAttack",
+        "Long.AAAAA"
+      ],
+      "aliases": [
+        "BSup -> BBB",
+        "火焰波->AB",
+        "AAAA -> BBB",
+        "上Buff",
+        "普攻",
+        "AAAAA"
+      ],
+      "semantic": true,
+      "variant": "AAAAA",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.Long.AAAAAA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "AAAAAA"
+      ],
+      "aliases": [
+        "BBB -> BBBB",
+        "普攻",
+        "AAAAAA"
+      ],
+      "semantic": true,
+      "variant": "AAAAAA",
+      "category": "weapons/Weapon_012/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.SlitheringSword.DA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "DA",
+        "普攻"
+      ],
+      "semantic": false,
+      "variant": "DA",
+      "category": "weapons/Weapon_009/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.SnakeDual.ABA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "ABA"
+      ],
+      "aliases": [
+        "ABB -> ABA",
+        "AB -> ABA",
+        "普工",
+        "普攻",
+        "ABA"
+      ],
+      "semantic": true,
+      "variant": "ABA",
+      "category": "weapons/Weapon_027/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.SnakeDual.ABAA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "ABAA"
+      ],
+      "aliases": [
+        "ABA -> ABAA",
+        "普攻",
+        "ABAA"
+      ],
+      "semantic": true,
+      "variant": "ABAA",
+      "category": "weapons/Weapon_027/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.SnakeDual.ABABA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "ABABA"
+      ],
+      "aliases": [
+        "ABAB -> ABABA",
+        "普攻",
+        "ABABA"
+      ],
+      "semantic": true,
+      "variant": "ABABA",
+      "category": "weapons/Weapon_027/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.SnakeDual.ABABAA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "ABABAA"
+      ],
+      "aliases": [
+        "ABABA -> ABABAA",
+        "普攻",
+        "ABABAA"
+      ],
+      "semantic": true,
+      "variant": "ABABAA",
+      "category": "weapons/Weapon_027/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.SnakeDual.A_Fast": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "A_Fast"
+      ],
+      "aliases": [
+        "BABAB -> A_Fast",
+        "完美闪避 -> A_Fast",
+        "普攻",
+        "A_Fast"
+      ],
+      "semantic": true,
+      "variant": "A_Fast",
+      "category": "weapons/Weapon_027/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.SnakeDual.BA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "BA"
+      ],
+      "aliases": [
+        "BB -> BA",
+        "B -> BA",
+        "B_Fast -> BA",
+        "B Snap -> BA",
+        "普工",
+        "普攻",
+        "BA"
+      ],
+      "semantic": true,
+      "variant": "BA",
+      "category": "weapons/Weapon_027/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.SnakeDual.BAA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "BAA"
+      ],
+      "aliases": [
+        "BA -> BAA",
+        "普攻",
+        "BAA"
+      ],
+      "semantic": true,
+      "variant": "BAA",
+      "category": "weapons/Weapon_027/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.SnakeDual.BABA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "BABA"
+      ],
+      "aliases": [
+        "BABB -> BABA",
+        "BAB -> BABA",
+        "普工",
+        "普攻",
+        "BABA"
+      ],
+      "semantic": true,
+      "variant": "BABA",
+      "category": "weapons/Weapon_027/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.SnakeDual.BABAA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "BABAA"
+      ],
+      "aliases": [
+        "BABA -> BABAA",
+        "普攻",
+        "BABAA"
+      ],
+      "semantic": true,
+      "variant": "BABAA",
+      "category": "weapons/Weapon_027/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.SnakeDual.DA": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.throw",
+        "DA"
+      ],
+      "aliases": [
+        "扔飞镖",
+        "DA"
+      ],
+      "semantic": true,
+      "variant": "DA",
+      "category": "weapons/Weapon_027/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.Snap": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.snap"
+      ],
+      "aliases": [
+        "击杀吸附",
+        "杀气武器处决吸附",
+        "吸附",
+        "Snap"
+      ],
+      "semantic": true,
+      "variant": "Snap",
+      "category": "offense/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.Tang.AAAAAA": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.singleweapon",
+        "@act.IA_LightAttack",
+        "AAAAAA"
+      ],
+      "aliases": [
+        "升级地面普攻6",
+        "普攻",
+        "AAAAAA"
+      ],
+      "semantic": true,
+      "variant": "AAAAAA",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.YuuBlade.FastAttack": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "FastAttack"
+      ],
+      "semantic": false,
+      "variant": "FastAttack",
+      "category": "weapons/Weapon_023/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Light.ZhanMa.SA": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "SA"
+      ],
+      "aliases": [
+        "SA",
+        "普攻"
+      ],
+      "semantic": true,
+      "variant": "SA",
+      "category": "weapons/Weapon_013/IA_LightAttack",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.LuanYing.Buff": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.resonance"
+      ],
+      "aliases": [
+        "按住格挡+B：鸣剑",
+        "鸣剑状态",
+        "Buff"
+      ],
+      "semantic": true,
+      "variant": "Buff",
+      "category": "weapons/Weapon_003/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.LuanYing.BuffP2": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "@catalog.resonance",
+        "@catalog.soultemper"
+      ],
+      "aliases": [
+        "铸魂 按住格挡+B：鸣剑",
+        "鸣剑状态",
+        "BuffP2"
+      ],
+      "semantic": true,
+      "variant": "BuffP2",
+      "category": "weapons/Weapon_003/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.PerfectDodge": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.perfectdodge"
+      ],
+      "aliases": [
+        "完美闪避",
+        "PerfectDodge"
+      ],
+      "semantic": true,
+      "variant": "PerfectDodge",
+      "category": "defense/IA_Dodge",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.Bow.Dash": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.movingshot"
+      ],
+      "aliases": [
+        "Dash -> Bow",
+        "Sprint -> Bow",
+        "Dash -> Dash",
+        "Dash",
+        "DeflectCounter->Dash",
+        "bow"
+      ],
+      "semantic": true,
+      "variant": "Dash",
+      "category": "shadow/PhantomEdges_009",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.Bow.DeflectCounter": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.counter"
+      ],
+      "aliases": [
+        "Deflect Counter",
+        "bow",
+        "DeflectCounter"
+      ],
+      "semantic": true,
+      "variant": "DeflectCounter",
+      "category": "shadow/PhantomEdges_009",
+      "order": 40
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Combo": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.followup"
+      ],
+      "aliases": [
+        "派生",
+        "斧连招",
+        "Combo"
+      ],
+      "semantic": true,
+      "variant": "Combo",
+      "category": "shadow/PhantomEdges_001",
+      "order": 30
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.normal"
+      ],
+      "aliases": [
+        "Main A",
+        "斧连招",
+        "Main"
+      ],
+      "semantic": true,
+      "variant": "Main",
+      "category": "shadow/PhantomEdges_001",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Dash A",
+        "Sprint A",
+        "斧连招",
+        "Sprinting"
+      ],
+      "semantic": false,
+      "variant": "Sprinting",
+      "category": "shadow/PhantomEdges_001",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.Default": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.common"
+      ],
+      "aliases": [
+        "Default"
+      ],
+      "semantic": true,
+      "variant": "Default",
+      "category": "shadow/equipment",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.laser"
+      ],
+      "aliases": [
+        "Deflect Counter",
+        "Laser",
+        "bow"
+      ],
+      "semantic": true,
+      "variant": "Laser",
+      "category": "shadow/PhantomEdges_109",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Common_02": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "2"
+      ],
+      "aliases": [
+        "普通Combo_02",
+        "火铳",
+        "Common_02"
+      ],
+      "semantic": true,
+      "variant": "Common_02",
+      "category": "shadow/PhantomEdges_008",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Common_03": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "3"
+      ],
+      "aliases": [
+        "普通Combo_03",
+        "火铳",
+        "Common_03"
+      ],
+      "semantic": true,
+      "variant": "Common_03",
+      "category": "shadow/PhantomEdges_008",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Dash": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.movingshot"
+      ],
+      "aliases": [
+        "Dash",
+        "Sprint->Dash",
+        "Dash -> Dash",
+        "DeflectCounter->Dash",
+        "火铳"
+      ],
+      "semantic": true,
+      "variant": "Dash",
+      "category": "shadow/PhantomEdges_008",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.DeflectCounter": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.deflectcounter"
+      ],
+      "aliases": [
+        "DeflectCounter",
+        "Deflect Counter",
+        "火铳"
+      ],
+      "semantic": true,
+      "variant": "DeflectCounter",
+      "category": "shadow/PhantomEdges_008",
+      "order": 40
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.A": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "A"
+      ],
+      "aliases": [
+        "A",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "A",
+      "category": "shadow/PhantomEdges_015",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AA": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "AA"
+      ],
+      "aliases": [
+        "AShort接AA",
+        "AA",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "AA",
+      "category": "shadow/PhantomEdges_015",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAA": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "AAA"
+      ],
+      "aliases": [
+        "AAA",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "AAA",
+      "category": "shadow/PhantomEdges_015",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "AAAA"
+      ],
+      "aliases": [
+        "AAAA",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "AAAA",
+      "category": "shadow/PhantomEdges_015",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AShort": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.variant",
+        "AShort"
+      ],
+      "aliases": [
+        "AShort",
+        "Dash取消",
+        "拼刀取消",
+        "完美闪避取消",
+        "小处决取消",
+        "处决取消",
+        "QTE拼刀取消",
+        "切武器取消",
+        "轻攻击取消",
+        "重攻击取消",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "AShort",
+      "category": "shadow/PhantomEdges_015",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.DB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "DB"
+      ],
+      "semantic": false,
+      "variant": "DB",
+      "category": "shadow/PhantomEdges_015",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.JinGua.Air": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Air",
+        "金瓜"
+      ],
+      "semantic": false,
+      "variant": "Air",
+      "category": "shadow/PhantomEdges_002",
+      "order": 20
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.extra"
+      ],
+      "aliases": [
+        "Extra",
+        "金瓜",
+        "ExtraAttack"
+      ],
+      "semantic": true,
+      "variant": "ExtraAttack",
+      "category": "shadow/PhantomEdges_002",
+      "order": 50
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.normal"
+      ],
+      "aliases": [
+        "Main",
+        "金瓜"
+      ],
+      "semantic": true,
+      "variant": "Main",
+      "category": "shadow/PhantomEdges_002",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.JinGua.RotateAttack": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "RoAttack",
+        "金瓜",
+        "RotateAttack"
+      ],
+      "semantic": false,
+      "variant": "RotateAttack",
+      "category": "shadow/PhantomEdges_002",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.JinGua.SprintAir": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.airattack",
+        "SprintAir"
+      ],
+      "aliases": [
+        "SprintAir",
+        "金瓜"
+      ],
+      "semantic": true,
+      "variant": "SprintAir",
+      "category": "shadow/PhantomEdges_002",
+      "order": 20
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.LionHead.Dash": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Dash"
+      ],
+      "semantic": false,
+      "variant": "Dash",
+      "category": "shadow/PhantomEdges_012",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.LionHead.DoubleFireBall": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Double FireBall",
+        "DoubleFireBall"
+      ],
+      "semantic": false,
+      "variant": "DoubleFireBall",
+      "category": "shadow/PhantomEdges_012",
+      "order": 1
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.LionHead.FireBall": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "FireBall"
+      ],
+      "semantic": false,
+      "variant": "FireBall",
+      "category": "shadow/PhantomEdges_012",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_01": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "1"
+      ],
+      "aliases": [
+        "01",
+        "妙手飞刀",
+        "Common_01"
+      ],
+      "semantic": true,
+      "variant": "Common_01",
+      "category": "shadow/PhantomEdges_010",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_02": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "2"
+      ],
+      "aliases": [
+        "普通Combo_02",
+        "妙手飞刀",
+        "Common_02"
+      ],
+      "semantic": true,
+      "variant": "Common_02",
+      "category": "shadow/PhantomEdges_010",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_03": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "3"
+      ],
+      "aliases": [
+        "普通Combo_03",
+        "Escape01",
+        "妙手飞刀",
+        "Common_03"
+      ],
+      "semantic": true,
+      "variant": "Common_03",
+      "category": "shadow/PhantomEdges_010",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "DB",
+        "妙手飞刀"
+      ],
+      "semantic": false,
+      "variant": "DB",
+      "category": "shadow/PhantomEdges_010",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.01": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "01"
+      ],
+      "aliases": [
+        "01",
+        "妙手飞刀"
+      ],
+      "semantic": true,
+      "variant": "01",
+      "category": "shadow/PhantomEdges_010",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.02": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "02"
+      ],
+      "aliases": [
+        "02",
+        "妙手飞刀"
+      ],
+      "semantic": true,
+      "variant": "02",
+      "category": "shadow/PhantomEdges_010",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.03": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "03"
+      ],
+      "aliases": [
+        "03",
+        "妙手飞刀"
+      ],
+      "semantic": true,
+      "variant": "03",
+      "category": "shadow/PhantomEdges_010",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MoJi.A.Default": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.normal",
+        "A"
+      ],
+      "aliases": [
+        "起手A",
+        "墨剑连招",
+        "Default"
+      ],
+      "semantic": true,
+      "variant": "Default",
+      "category": "shadow/PhantomEdges_018",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MoJi.A.Short": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "A · Short"
+      ],
+      "aliases": [
+        "冲刺A",
+        "冲刺 接 墨剑1",
+        "拼刀普攻",
+        "完美闪避 接 墨剑1",
+        "小处决 接 墨剑1",
+        "处决 接 墨剑1",
+        "QTE拼刀 接 墨剑1",
+        "切武器 接 墨剑1",
+        "轻攻击接墨剑1",
+        "重攻击",
+        "墨剑连招",
+        "Short"
+      ],
+      "semantic": true,
+      "variant": "Short",
+      "category": "shadow/PhantomEdges_018",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MoJi.AA": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "AA"
+      ],
+      "aliases": [
+        "起手AA",
+        "AA",
+        "AShort接AA",
+        "墨剑连招"
+      ],
+      "semantic": true,
+      "variant": "AA",
+      "category": "shadow/PhantomEdges_018",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MoJi.AAA": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "AAA"
+      ],
+      "aliases": [
+        "AAA",
+        "墨剑AAA",
+        "墨剑连招"
+      ],
+      "semantic": true,
+      "variant": "AAA",
+      "category": "shadow/PhantomEdges_018",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.PiPa.AA": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "AA"
+      ],
+      "aliases": [
+        "AA",
+        "琵琶连招"
+      ],
+      "semantic": true,
+      "variant": "AA",
+      "category": "shadow/PhantomEdges_024",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.PiPa.AAA": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "AAA"
+      ],
+      "aliases": [
+        "AAA",
+        "琵琶连招"
+      ],
+      "semantic": true,
+      "variant": "AAA",
+      "category": "shadow/PhantomEdges_024",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.PiPa.Dash": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.movingblade"
+      ],
+      "aliases": [
+        "Dash -> Bow",
+        "Sprint -> Bow",
+        "Dash -> Dash",
+        "Dash",
+        "琵琶连招"
+      ],
+      "semantic": true,
+      "variant": "Dash",
+      "category": "shadow/PhantomEdges_024",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.PiPa.Skill": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "L1+R2",
+        "琵琶连招",
+        "Skill"
+      ],
+      "semantic": false,
+      "variant": "Skill",
+      "category": "shadow/PhantomEdges_024",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.C": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "C"
+      ],
+      "aliases": [
+        "C",
+        "Drag->C",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "C",
+      "category": "shadow/PhantomEdges_014",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CAA": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "CAA"
+      ],
+      "aliases": [
+        "CAA",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "CAA",
+      "category": "shadow/PhantomEdges_014",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CBB": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "CBB"
+      ],
+      "aliases": [
+        "CBB",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "CBB",
+      "category": "shadow/PhantomEdges_014",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CC": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "CC"
+      ],
+      "aliases": [
+        "CC",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "CC",
+      "category": "shadow/PhantomEdges_014",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CCC": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "CCC"
+      ],
+      "aliases": [
+        "CCC",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "CCC",
+      "category": "shadow/PhantomEdges_014",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "CCCC"
+      ],
+      "aliases": [
+        "CCCC",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "CCCC",
+      "category": "shadow/PhantomEdges_014",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CDD": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.followup",
+        "CDD"
+      ],
+      "aliases": [
+        "CDD",
+        "连招"
+      ],
+      "semantic": true,
+      "variant": "CDD",
+      "category": "shadow/PhantomEdges_014",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.drag"
+      ],
+      "aliases": [
+        "CB",
+        "CA",
+        "Drag"
+      ],
+      "semantic": true,
+      "variant": "Drag",
+      "category": "shadow/PhantomEdges_014",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.HookMove": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.hookmove"
+      ],
+      "aliases": [
+        "HookMove"
+      ],
+      "semantic": true,
+      "variant": "HookMove",
+      "category": "shadow/PhantomEdges_014",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Extra",
+        "贪狼",
+        "ExtraAttack"
+      ],
+      "semantic": false,
+      "variant": "ExtraAttack",
+      "category": "shadow/PhantomEdges_005",
+      "order": 50
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TanLang.Normal": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.normal"
+      ],
+      "aliases": [
+        "Main",
+        "贪狼",
+        "Normal"
+      ],
+      "semantic": true,
+      "variant": "Normal",
+      "category": "shadow/PhantomEdges_005",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TanLang.SpecialAttack": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Sp",
+        "SP",
+        "SpecialAttack"
+      ],
+      "semantic": false,
+      "variant": "SpecialAttack",
+      "category": "shadow/PhantomEdges_005",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_01": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "1"
+      ],
+      "aliases": [
+        "普通Combo_01",
+        "Dash -> Dash",
+        "雷霆枪",
+        "Common_01"
+      ],
+      "semantic": true,
+      "variant": "Common_01",
+      "category": "shadow/PhantomEdges_019",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_02": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "2"
+      ],
+      "aliases": [
+        "普通Combo_02",
+        "雷霆枪",
+        "Common_02"
+      ],
+      "semantic": true,
+      "variant": "Common_02",
+      "category": "shadow/PhantomEdges_019",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_03": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "3"
+      ],
+      "aliases": [
+        "普通Combo_03",
+        "雷霆枪",
+        "Common_03"
+      ],
+      "semantic": true,
+      "variant": "Common_03",
+      "category": "shadow/PhantomEdges_019",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "普通Combo_04",
+        "雷霆枪",
+        "Common_04"
+      ],
+      "semantic": false,
+      "variant": "Common_04",
+      "category": "shadow/PhantomEdges_019",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Dash": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Main",
+        "Dash",
+        "雷霆枪"
+      ],
+      "semantic": false,
+      "variant": "Dash",
+      "category": "shadow/PhantomEdges_019",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Dodge": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Deflect Counter",
+        "回马枪",
+        "雷霆枪",
+        "Dodge"
+      ],
+      "semantic": false,
+      "variant": "Dodge",
+      "category": "shadow/PhantomEdges_019",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "C"
+      ],
+      "aliases": [
+        "C1（固定消耗）",
+        "蓄力combo",
+        "C"
+      ],
+      "semantic": true,
+      "variant": "C",
+      "category": "shadow/PhantomEdges_017",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "CC"
+      ],
+      "aliases": [
+        "C2",
+        "蓄力combo",
+        "CC"
+      ],
+      "semantic": true,
+      "variant": "CC",
+      "category": "shadow/PhantomEdges_017",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "CCC"
+      ],
+      "aliases": [
+        "C3",
+        "蓄力combo",
+        "CCC"
+      ],
+      "semantic": true,
+      "variant": "CCC",
+      "category": "shadow/PhantomEdges_017",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.GpAttack.Normal": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "挡",
+        "gp（解锁）",
+        "Normal"
+      ],
+      "semantic": false,
+      "variant": "Normal",
+      "category": "shadow/PhantomEdges_017",
+      "order": 40
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Dash": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Sprint -> TigerCannon Dash",
+        "Dash -> TigerCannon Dash",
+        "TigerCannon",
+        "Dash"
+      ],
+      "semantic": false,
+      "variant": "Dash",
+      "category": "shadow/PhantomEdges_006",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.normal"
+      ],
+      "aliases": [
+        "Normal",
+        "TigerCannon"
+      ],
+      "semantic": true,
+      "variant": "Normal",
+      "category": "shadow/PhantomEdges_006",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.quickcharge"
+      ],
+      "aliases": [
+        "Other -> QuickCharge",
+        "Normal -> QuickCharge",
+        "Dash -> QuickCharge",
+        "Quick Charge",
+        "TigerCannon",
+        "QuickCharge"
+      ],
+      "semantic": true,
+      "variant": "QuickCharge",
+      "category": "shadow/PhantomEdges_006",
+      "order": 60
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Ultimate": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.variant",
+        "Ultimate"
+      ],
+      "aliases": [
+        "Ultimate",
+        "TigerCannon"
+      ],
+      "semantic": true,
+      "variant": "Ultimate",
+      "category": "shadow/PhantomEdges_006",
+      "order": 70
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.A": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "A"
+      ],
+      "aliases": [
+        "A",
+        "血滴子"
+      ],
+      "semantic": true,
+      "variant": "A",
+      "category": "shadow/PhantomEdges_020",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.AA": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "AA"
+      ],
+      "aliases": [
+        "AA",
+        "血滴子"
+      ],
+      "semantic": true,
+      "variant": "AA",
+      "category": "shadow/PhantomEdges_020",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.AAA": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.attack",
+        "AAA"
+      ],
+      "aliases": [
+        "AAA",
+        "血滴子"
+      ],
+      "semantic": true,
+      "variant": "AAA",
+      "category": "shadow/PhantomEdges_020",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.EvolutionAttack": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.variant",
+        "EvolutionAttack"
+      ],
+      "aliases": [
+        "Evolution",
+        "血滴子",
+        "EvolutionAttack"
+      ],
+      "semantic": true,
+      "variant": "EvolutionAttack",
+      "category": "shadow/PhantomEdges_020",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "Sp(FromA3)",
+        "血滴子",
+        "SpAttack"
+      ],
+      "semantic": false,
+      "variant": "SpAttack",
+      "category": "shadow/PhantomEdges_020",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.YouLongCha.Dash": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.followup",
+        "Dash"
+      ],
+      "aliases": [
+        "Dash",
+        "Sprint->Dash",
+        "Dash -> Dash",
+        "游龙叉"
+      ],
+      "semantic": true,
+      "variant": "Dash",
+      "category": "shadow/PhantomEdges_016",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.YouLongTou.WaterCannon": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "水炮",
+        "WaterCannon"
+      ],
+      "semantic": false,
+      "variant": "WaterCannon",
+      "category": "shadow/PhantomEdges_011",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Parry": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.shieldpush"
+      ],
+      "aliases": [
+        "Deflect Counter",
+        "bow",
+        "Parry"
+      ],
+      "semantic": true,
+      "variant": "Parry",
+      "category": "shadow/PhantomEdges_004",
+      "order": 40
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Slide": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.slide"
+      ],
+      "aliases": [
+        "滑板",
+        "Slide"
+      ],
+      "semantic": true,
+      "variant": "Slide",
+      "category": "shadow/PhantomEdges_004",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Special.Double.Buff": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "Double"
+      ],
+      "aliases": [
+        "上Buff",
+        "Buff"
+      ],
+      "semantic": true,
+      "variant": "Buff",
+      "category": "weapons/special",
+      "order": 70
+    },
+    "ability:Ability.Action.Hun.Special.Double.Clone": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "幻影+上buff",
+        "Clone"
+      ],
+      "semantic": false,
+      "variant": "Clone",
+      "category": "weapons/Weapon_024/special",
+      "order": 70
+    },
+    "ability:Ability.Action.Hun.Special.Double.YingSha.C": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.yingsha",
+        "C"
+      ],
+      "aliases": [
+        "双刀-影杀",
+        "C"
+      ],
+      "semantic": true,
+      "variant": "C",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Special.Double.YingSha.CB": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.yingsha",
+        "CB"
+      ],
+      "aliases": [
+        "影杀->B",
+        "CB"
+      ],
+      "semantic": true,
+      "variant": "CB",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Special.Jade.DB": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "上Buff",
+        "DB"
+      ],
+      "semantic": false,
+      "variant": "DB",
+      "category": "weapons/Weapon_029/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Special.Long.LieZhan.C": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.splitstrike",
+        "C"
+      ],
+      "aliases": [
+        "长刀-裂斩",
+        "C"
+      ],
+      "semantic": true,
+      "variant": "C",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Special.Long.LieZhan.CB": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.splitstrike",
+        "CB"
+      ],
+      "aliases": [
+        "瞬杀->B",
+        "裂斩->B",
+        "CB"
+      ],
+      "semantic": true,
+      "variant": "CB",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Special.SlitheringSword.EvalutionCombo": {
+      "section": "ability",
+      "prefix": "weapon",
+      "parts": [
+        "@catalog.variant",
+        "EvalutionCombo"
+      ],
+      "aliases": [
+        "EvalutionCombo"
+      ],
+      "semantic": true,
+      "variant": "EvalutionCombo",
+      "category": "weapons/Weapon_009/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Special.Tang.Buff": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [
+        "Tang"
+      ],
+      "aliases": [
+        "上Buff",
+        "Buff"
+      ],
+      "semantic": true,
+      "variant": "Buff",
+      "category": "weapons/special",
+      "order": 70
+    },
+    "ability:Ability.Action.Hun.Special.Tang.GlobalAbility": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.weaponability",
+        "GlobalAbility"
+      ],
+      "aliases": [
+        "GlobalAbility"
+      ],
+      "semantic": true,
+      "variant": "GlobalAbility",
+      "category": "weapons/special",
+      "order": 70
+    },
+    "ability:Ability.Action.Hun.Special.Tang.ShunSha.C": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.shunsha",
+        "C"
+      ],
+      "aliases": [
+        "单手刀-瞬杀",
+        "C"
+      ],
+      "semantic": true,
+      "variant": "C",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Special.Tang.ShunSha.CB": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.shunsha",
+        "CB"
+      ],
+      "aliases": [
+        "瞬杀->B",
+        "CB"
+      ],
+      "semantic": true,
+      "variant": "CB",
+      "category": "weapons/special",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.SpecialDash": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "SpecialDash",
+        "战技",
+        "杀气武器",
+        "处决",
+        "拼刀",
+        "ContinuousDash_02",
+        "ContinuousDash_03",
+        "B"
+      ],
+      "semantic": false,
+      "variant": "SpecialDash",
+      "category": "defense/IA_Dodge",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.SpecialMove.SideRunning.FromJump": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.walljump"
+      ],
+      "aliases": [
+        "横跑反跳",
+        "FromJump"
+      ],
+      "semantic": true,
+      "variant": "FromJump",
+      "category": "scene/climb",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.SpecialMove.SideRunning.Ground": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.wallrun"
+      ],
+      "aliases": [
+        "横跑",
+        "Ground"
+      ],
+      "semantic": true,
+      "variant": "Ground",
+      "category": "scene/climb",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.TempWeapon.Ultimate": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.discard"
+      ],
+      "aliases": [
+        "丢弃",
+        "Ultimate"
+      ],
+      "semantic": true,
+      "variant": "Ultimate",
+      "category": "weapons/equipment",
+      "order": 70
+    },
+    "ability:Ability.Action.Hun.UseItem": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.usemedicine",
+        "@catalog.normal"
+      ],
+      "aliases": [
+        "常规喝药",
+        "0",
+        "UseItem"
+      ],
+      "semantic": true,
+      "variant": "UseItem",
+      "category": "interaction/medicine",
+      "order": 0
+    },
+    "ability:Ability.Action.Hun.Weapon.Switch.Air": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.switchattack",
+        "@catalog.air"
+      ],
+      "aliases": [
+        "切换攻击 空中",
+        "Air"
+      ],
+      "semantic": true,
+      "variant": "Air",
+      "category": "weapons/equipment",
+      "order": 20
+    },
+    "ability:Ability.Action.Hun.Weapon.Switch.Dash": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.switchattack",
+        "@catalog.followup",
+        "Dash"
+      ],
+      "aliases": [
+        "切换攻击 Dash",
+        "切换武器 疾跑",
+        "Dash"
+      ],
+      "semantic": true,
+      "variant": "Dash",
+      "category": "weapons/equipment",
+      "order": 10
+    },
+    "ability:Ability.Action.Hun.Weapon.Switch.Normal": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.switchattack",
+        "@catalog.normal"
+      ],
+      "aliases": [
+        "切换攻击",
+        "切换武器 墨剑",
+        "Normal"
+      ],
+      "semantic": true,
+      "variant": "Normal",
+      "category": "weapons/equipment",
+      "order": 0
+    },
+    "ability:Ability.Native.Crouch": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "潜行",
+        "Crouch"
+      ],
+      "semantic": true,
+      "variant": "Crouch",
+      "category": "locomotion/IA_Crouch",
+      "order": 0
+    },
+    "ability:Ability.SpecialMove.ClimbLadder": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.ladder"
+      ],
+      "aliases": [
+        "梯子",
+        "ClimbLadder"
+      ],
+      "semantic": true,
+      "variant": "ClimbLadder",
+      "category": "scene/climb",
+      "order": 0
+    },
+    "ability:Ability.SpecialMove.DownSliding": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.descend"
+      ],
+      "aliases": [
+        "下滑",
+        "DownSliding"
+      ],
+      "semantic": true,
+      "variant": "DownSliding",
+      "category": "scene/climb",
+      "order": 0
+    },
+    "ability:Ability.SpecialMove.JumpOut.Left": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.jumpleft"
+      ],
+      "aliases": [
+        "向左跳出",
+        "Left"
+      ],
+      "semantic": true,
+      "variant": "Left",
+      "category": "scene/climb",
+      "order": 0
+    },
+    "ability:Ability.SpecialMove.JumpOut.Right": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.jumpright"
+      ],
+      "aliases": [
+        "向右跳出",
+        "Right"
+      ],
+      "semantic": true,
+      "variant": "Right",
+      "category": "scene/climb",
+      "order": 0
+    },
+    "ability:Ability.SpecialMove.Pole.UseItem": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.usemedicine",
+        "@catalog.pole"
+      ],
+      "aliases": [
+        "OnPole UseItem (always additive)",
+        "OnPole",
+        "UseItem"
+      ],
+      "semantic": true,
+      "variant": "UseItem",
+      "category": "interaction/medicine",
+      "order": 0
+    },
+    "ability:Ability.SpecialMove.RopeSwing": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.rope"
+      ],
+      "aliases": [
+        "荡绳子",
+        "RopeSwing"
+      ],
+      "semantic": true,
+      "variant": "RopeSwing",
+      "category": "scene/climb",
+      "order": 0
+    },
+    "ability:Ability.SpecialMove.UpRunning": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.wallup"
+      ],
+      "aliases": [
+        "上跑 ",
+        "UpRunning"
+      ],
+      "semantic": true,
+      "variant": "UpRunning",
+      "category": "scene/climb",
+      "order": 0
+    },
+    "ability:Ability.UpperBody.Hun.ChangeArmed": {
+      "section": "ability",
+      "prefix": "native",
+      "parts": [],
+      "aliases": [
+        "收拔刀",
+        "ChangeArmed"
+      ],
+      "semantic": false,
+      "variant": "ChangeArmed",
+      "category": "weapons/equipment",
+      "order": 0
+    },
+    "ability:Ability.UpperBody.Hun.UseItem": {
+      "section": "ability",
+      "prefix": "none",
+      "parts": [
+        "@catalog.usemedicine",
+        "@catalog.upperbody"
+      ],
+      "aliases": [
+        "喝药",
+        "轻攻击",
+        "0",
+        "UseItem"
+      ],
+      "semantic": true,
+      "variant": "UseItem",
+      "category": "interaction/medicine",
+      "order": 0
+    }
+  }
+}
