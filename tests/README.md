@@ -207,6 +207,8 @@ The share checks use an independent Protobuf byte vector to verify stable IDs an
 .\dist\BindingViewsTests.exe samples\vanilla-base.sav dist\binding-view-check
 ```
 
+Append `--startup-only` to check the initial binding cards before any refresh and capture the first displayed frame for both offline and saved schemes. The check rejects collapsed cards and verifies that startup leaves the save unchanged.
+
 Checks navigation without writes, shared relationship editing, duplicate removal, resource inheritance, controller family isolation, and raw record edits. Physical keyboard and all five mouse hotspots are clicked. Badge checks cover gray/yellow/blue transitions when applying, undoing, restoring factory mappings and removing the last action. Controller triggers aggregate axis and digital inputs; face-button and D-pad badges spread outward. Whole-scheme comparisons include both devices and use saved or factory baselines; extra keycaps wrap within the canvas. Screenshots cover both perspectives in Simplified Chinese, minimum windows, and representative saved/pending/factory differences. Add `--all-languages` for the full language sweep.
 
 ```powershell

@@ -26,6 +26,20 @@ public static class BindingViewsTests
         var bounds = form.RectangleToClient(control.RectangleToScreen(control.ClientRectangle));
         Assert(control.Visible && form.ClientRectangle.Contains(bounds), control.GetType().Name + " outside client: " + bounds);
     }
+    static void InitialBindings(MainForm form, bool visible)
+    {
+        var view = Field<Control>(form, "keyBindings");
+        var detail = Field<Control>(view, "detail");
+        var rows = Field<IList>(view, "actionRows").Cast<Control>().ToArray();
+        Assert(rows.Length > 0, "The initially selected mouse button must show its bindings.");
+        foreach (var row in rows)
+        {
+            Assert(row.Height >= form.Font.Height * 2 && row.Width > form.Font.Height * 4,
+                "Initial binding card collapsed before a refresh: " + row.Bounds);
+            if (visible)
+                Assert(row.Visible && detail.ClientRectangle.IntersectsWith(row.Bounds), "Initial binding card is not visible.");
+        }
+    }
     static System.Collections.Generic.IEnumerable<Control> Descendants(Control root)
     {
         foreach (Control child in root.Controls)
@@ -86,12 +100,32 @@ public static class BindingViewsTests
             string root = Path.GetFullPath(args[1]); Directory.CreateDirectory(root);
             string path = Path.Combine(root, "EnhancedInputUserSettings.sav");
             byte[] fixture = File.ReadAllBytes(args[0]); File.WriteAllBytes(path, fixture);
+            if (args.Contains("--startup-only"))
+            {
+                foreach (bool offline in new[] { true, false })
+                {
+                    string name = offline ? "offline" : "saved";
+                    var preferences = new EditorPreferences(Path.Combine(root, name + "-preferences.txt"));
+                    using (var form = new MainForm(preferences))
+                    {
+                        if (offline) form.UiOffline(); else form.UiSmoke(path);
+                        InitialBindings(form, false);
+                        form.Show(); InitialBindings(form, true);
+                        Shot(form, Path.Combine(root, name + "-first-frame.png"));
+                        InitialBindings(form, true);
+                        form.Close();
+                    }
+                }
+                Assert(fixture.SequenceEqual(File.ReadAllBytes(path)), "Startup checks changed a save.");
+                Console.WriteLine("BindingViewsTests PASS: " + checks + " startup checks; artifacts " + root); return 0;
+            }
             if (args.Contains("--layout-only"))
             {
                 I18n.Current = "zh-Hans";
                 using (var form = new MainForm(new EditorPreferences(Path.Combine(root, "preferences.txt"))))
                 {
-                    form.UiSmoke(path); form.Show(); form.ShowActionView(false); Application.DoEvents();
+                    form.UiSmoke(path); InitialBindings(form, false);
+                    form.Show(); InitialBindings(form, true); form.ShowActionView(false); Application.DoEvents();
                     Size regular = form.Size;
                     CompleteKeyboard(form, Path.Combine(root, "keys-zh-Hans.png"));
                     form.Size = form.MinimumSize; Application.DoEvents();
@@ -241,7 +275,8 @@ public static class BindingViewsTests
             byte[] beforeUi = File.ReadAllBytes(path);
             using (var form = new MainForm(new EditorPreferences(Path.Combine(root, "preferences.txt"))))
             {
-                form.ShowInTaskbar = false; form.Opacity = 0; form.UiSmoke(path); form.Show(); Application.DoEvents();
+                form.ShowInTaskbar = false; form.Opacity = 0; form.UiSmoke(path); InitialBindings(form, false);
+                form.Show(); InitialBindings(form, true); Application.DoEvents();
                 form.SelectProfile(custom); Field<ComboBox>(form, "cbLang").SelectedIndex = 0;
                 Assert(!form.ActionView, "Key view should be the default.");
                 Field<PresetModeSelector>(form, "btnPresetMode").Controls.OfType<Button>().Single(option => option.Name == "modeReplace").PerformClick();
