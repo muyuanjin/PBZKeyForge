@@ -6,6 +6,31 @@ Nexus Mods: https://www.nexusmods.com/phantombladezero/mods/402
 Thanks to KintaroModding for the Phantom Blade Zero UE4SS adaptation, the UE4SS
 community, library and artwork contributors, and players providing feedback.
 
+## Phantom Blade Zero game-derived material
+
+The MIT license in `LICENSE` covers PBZKeyForge contributors' original code and
+documentation. Third-party material retains its own rights and license terms;
+its inclusion in this repository or an application build does not place it
+under MIT.
+
+Phantom Blade Zero names, logos, artwork, original localized text, game assets
+and game code remain the property of S-Game and their respective rights holders.
+Game-derived material includes the original text in
+`assets/key-enhancement/action-localization.json`, game-derived fields in the
+input defaults and move catalogs, resource inventories and decoded Blueprint
+instruction excerpts in `docs/`, game imagery in screenshots, and modified game
+packages distributed as resource Mods. These are distinct from this project's
+original extraction tools, runtime code and written analysis. A file may contain
+both kinds of material; its extension or location does not determine its license.
+
+Resource references, schemas and instruction excerpts document interoperability
+and the evidence behind editor and Mod behavior. This project grants no rights
+to third-party game content or trademarks and claims no endorsement or separate
+redistribution authorization from the game rights holders. This notice records
+the rights boundary; it does not itself authorize extraction, modification or
+redistribution. Those activities remain subject to applicable law, game license
+terms and any permission required from the relevant rights holders.
+
 ## UE4SS
 
 The build downloads the latest Phantom Blade Zero package from

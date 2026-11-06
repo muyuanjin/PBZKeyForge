@@ -150,7 +150,10 @@ Use `-SavePath <save>` to choose an input, `-ApplicationPath <exe>` for a partic
 
 ## License
 
-MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
+Original project code and documentation: MIT. Game-derived text, artwork, resource
+data and decoded instruction excerpts retain the original rights holders' rights
+and are outside this MIT grant. See [third-party notices](THIRD-PARTY-NOTICES.md#phantom-blade-zero-game-derived-material).
+Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 ---
 
@@ -269,7 +272,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshot
 
 ### 许可
 
-MIT。与 S-Game 无关，使用风险自负，记得留备份。
+项目原创代码和文档采用 MIT 许可。游戏提取文本、美术、资源数据及反编译指令片段的权利归原权利人，不在本项目 MIT 授权范围内；收录不代表已获游戏权利人的再分发授权，详见[第三方内容与许可边界](THIRD-PARTY-NOTICES.md#phantom-blade-zero-game-derived-material)。与 S-Game 无关，使用风险自负，记得留备份。
 
 
 

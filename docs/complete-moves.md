@@ -95,7 +95,7 @@ Steam CL-302256 的 `GA_Hun_BronzeSword_B_Hold` 在正常激活后进入 `Main`�
 
 `Air.AA` 对应装备配置引用的 `GA_Hun_Air_Tang_AA` 和 `GA_Hun_Air_Double_AA`；`Air.AAA` 对应 `GA_Hun_Air_Double_AAA`；`N3H3` 对应 `GA_Hun_Double_AAABBB`。这些具体类没有本地函数覆盖，继承的激活链会初始化当前角色、身法和落地任务，并启动自身时间线，不读取前一段能力实例，也不等待前置物理输入。`N3H3` 仍经过 `BP_HeavyAttack_Base` 的原生资源处理。
 
-逐装备范围、资源引用与尚未接入的阶段见[武器复查](complete-move-weapon-audit.md)和[影之武装复查](complete-move-shadow-audit.md)。
+逐装备范围、资源引用与尚未接入的阶段见[武器复查](complete-move-weapon-audit.md)和[影之武装复查](complete-move-shadow-audit.md)。审计数据中的游戏原文、资源信息和反编译指令片段保留原权利人的权利，不属于本项目 MIT 授权范围，详见[第三方说明](../THIRD-PARTY-NOTICES.md#phantom-blade-zero-game-derived-material)。
 
 ## 战技阶段依据
 

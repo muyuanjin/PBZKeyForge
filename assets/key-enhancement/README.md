@@ -1,5 +1,7 @@
 ﻿# 键位增强运行组件
 
+本目录中的游戏原文及游戏派生字段保留原权利人的权利，不属于本项目 MIT 授权范围。提取工具与运行时代码、游戏派生数据的许可边界见[第三方说明](../../THIRD-PARTY-NOTICES.md#phantom-blade-zero-game-derived-material)。
+
 `pbzinput-focus.dll` 提供前台游戏窗口检查。源代码与重建脚本位于 `prototype/input-router/native/`，使用 Windows SDK 与 MSVC 编译。
 
 `legacy-runtime.zip` 保存已发布原型的 Lua 文件，用于识别并升级本工具的旧版安装。安装器逐字节比较，保留未知修改。
