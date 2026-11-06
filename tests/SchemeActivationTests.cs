@@ -249,6 +249,8 @@ public static class SchemeActivationTests
                 sessionType.GetMethod("SetActivation").Invoke(session, new object[] { true });
                 formType.GetMethod("RenderSession").Invoke(form, null);
                 var apply = (Button)formType.GetField("btnApply", Hidden).GetValue(form);
+                // This harness pumps messages manually rather than running Application.Run.
+                System.Threading.SynchronizationContext.SetSynchronizationContext(new WindowsFormsSynchronizationContext());
                 if (apply.Enabled) apply.PerformClick();
                 Application.DoEvents();
                 var elapsed = System.Diagnostics.Stopwatch.StartNew();

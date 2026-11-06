@@ -1,0 +1,10 @@
+{
+  "build": "CL-302256",
+  "entries": {
+    "action:/PBZDeflectSystem/Input/IA_Deflect": {
+      "labels": { "zh-Hans": "测试防御名称" },
+      "source": "native",
+      "aliases": [ "测试资源别名" ]
+    }
+  }
+}

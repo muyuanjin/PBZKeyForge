@@ -163,6 +163,7 @@ namespace PBZKeyForge
                     if (HasFlag(args, "--live"))
                     {
                         if (document.Installation == null) throw new InvalidOperationException("Live apply requires an installed game save.");
+                        document.Session.Refresh();
                         var candidate = BindingLivePlan.Create(document.Session, document.Configuration, familyIndex < 0 ? document.Session.ControllerFamilies.First().Index : familyIndex);
                         if (!candidate.Enabled || !baseline.Enabled) throw new InvalidOperationException("Live editing requires enabled enhancement. Close the game, use --component --action enable, then start the game.");
                         document.Configuration = candidate;

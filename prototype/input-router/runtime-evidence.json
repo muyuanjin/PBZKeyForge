@@ -1,0 +1,35 @@
+{
+  "gameBuild": "Steam CL-302256",
+  "engine": "5.7.4",
+  "resourceMappings": {"mountedDefaultContextMappings": 47, "additionalFunctionKeys": 12},
+  "router": {
+    "capturedContexts": 9,
+    "effectiveMappings": 134,
+    "rulesIncludingCustom": 137,
+    "jumpHeightDelta": 124.46001456573,
+    "guardHeldState": true,
+    "guardReleasedState": false,
+    "nativeContextsRestored": true,
+    "physicalF9F10Dispatched": true,
+    "reflectedReturnHookRestored": true,
+    "standaloneModAutoStarted": true,
+    "physicalF8DisableEnableRestoredContexts": true,
+    "physicalF7ReloadedConfiguration": true
+  },
+  "specialDash": {
+    "loadedDodgeGroups": 2,
+    "loadedJumpGroups": 2,
+    "migratedRoutesRequiringGuard": 11,
+    "loadedNameIdentityMatchesNative": true,
+    "normalJump": {"height": 122.349, "jumpActive": true},
+    "normalDodge": {"distance": 226.423, "dodgeActive": true, "specialDashActive": false},
+    "guardDodge": {"dodgeActive": true, "specialDashActive": false},
+    "guardJump": {"distance": 145.646, "shachiDecrease": 205.321, "specialDashActive": true, "jumpActive": false},
+    "transientEligibilityTagRemoved": true,
+    "nativeContextsRestored": true,
+    "physicalGamepadTested": false,
+    "allCombatStatesTested": false
+  },
+  "localAssertions": {"router": 43, "backend": 20, "lifecycle": 14},
+  "staticResources": {"bindingRoundtrips": 114, "resourceJumpBindings": 28, "retocVerified": true}
+}

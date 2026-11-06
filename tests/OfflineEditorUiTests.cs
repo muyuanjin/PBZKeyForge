@@ -114,7 +114,7 @@ public static class OfflineEditorUiTests
                     Assert(form.Session.IsOffline && !form.Session.HasChanges, "New offline scheme must start with factory bindings.");
                 }
                 CheckSchemeNavigation(form, root);
-                form.Close();
+                form.Dispose();
             }
             Console.WriteLine("PASS: " + checks + " offline editor UI checks");
             return 0;

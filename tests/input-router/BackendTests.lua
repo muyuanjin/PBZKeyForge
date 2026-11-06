@@ -1,0 +1,416 @@
+local scripts = "prototype/input-router/ue4ss/Scripts/"
+package.path = scripts .. "?.lua;" .. package.path
+local Backend = dofile(scripts .. "backend.lua")
+local passed = 0
+
+local function check(value, message)
+    assert(value, message)
+    passed = passed + 1
+end
+
+local function object(address, path, properties)
+    local value = properties or {}
+    value.IsValid = function() return true end
+    value.GetClass = function() return "test-class" end
+    value.GetAddress = function() return address end
+    value.GetFullName = function() return "InputMappingContext " .. path end
+    return value
+end
+
+function FName(value) return {ToString = function() return value end} end
+
+local function array(values)
+    return {ForEach = function(self, callback)
+        for index, value in ipairs(values) do callback(index, {get = function() return value end}) end
+    end}
+end
+
+local function fixture()
+    local contexts, objects, calls = {}, {}, {add = 0, remove = 0, release = 0, clones = 0, samples = {}}
+    local nextAddress = 1000
+    local backend = Backend.new({targets = {}, bindings = {}, require_foreground = false}, function() end)
+    backend.physical_input = {sample = function() return nil end}
+    backend.subsystem = object(1, "subsystem")
+    backend.controller = object(2, "controller")
+    backend.state = {ready = true}
+    local input = object(3, "input")
+    backend.controller.PlayerInput = input
+    local contextMap = {ForEach = function(self, callback)
+        for path, data in pairs(contexts) do
+            local context, current = objects[path], data
+            callback({get = function() return context end}, {get = function() return current end})
+        end
+    end}
+    function input:GetPropertyValue(name)
+        if name == "AppliedInputContextData" then return contextMap end
+        local mappings = {}
+        for path in pairs(contexts) do
+            if not objects[path].unbound then
+                for _, mapping in ipairs(objects[path].mapping_values) do mappings[#mappings + 1] = mapping end
+            end
+        end
+        return array(mappings)
+    end
+    function backend:object(path)
+        assert(objects[path], "missing object " .. path)
+        return objects[path]
+    end
+    function backend:invoke(receiver, path, context, parameter)
+        if path == "/Script/Engine.Controller:IsMoveInputIgnored" then
+            assert(receiver == self.controller, "Move-input suppression must be queried on the local controller")
+            calls.move_queries = (calls.move_queries or 0) + 1
+            return calls.move_ignored == true
+        elseif path == "/Script/Engine.Controller:K2_GetPawn" then
+            return self.pawn
+        elseif path == "/Script/Engine.GameplayStatics:IsGamePaused" then
+            return calls.paused == true
+        elseif path:find(":GetInputAnalogKeyState", 1, true) then
+            local key = context.KeyName:ToString()
+            calls.samples[key] = (calls.samples[key] or 0) + 1
+            return (calls.physical or {})[key] or 0
+        elseif path:find(":IsInputKeyDown", 1, true) then
+            return (calls.digital or {})[context.KeyName:ToString()] == true
+        end
+        local contextPath = context:GetFullName():gsub("^%S+ ", "")
+        if path:find(":HasMappingContext", 1, true) then
+            local current = contexts[contextPath]
+            parameter.OutFoundPriority = current and current.Priority or -1
+            return current ~= nil
+        elseif path:find(":RemoveMappingContext", 1, true) then
+            calls.remove = calls.remove + 1
+            local current = assert(contexts[contextPath])
+            current.RegistrationCount = current.RegistrationCount - 1
+            if current.RegistrationCount == 0 then contexts[contextPath] = nil end
+        elseif path:find(":AddMappingContext", 1, true) then
+            calls.add = calls.add + 1
+            if calls.fail_add == calls.add then error("AddMappingContext failed") end
+            local current = contexts[contextPath]
+            if current then current.RegistrationCount = current.RegistrationCount + 1
+            else contexts[contextPath] = {Priority = parameter, RegistrationCount = 1} end
+        else error("Unexpected function " .. path) end
+    end
+    function backend:hold_objects() self.retained = true end
+    function backend:hold_contexts() self.contexts_retained = true end
+    function backend:release_holder() self.retained = false; calls.release = calls.release + 1 end
+    function backend:key_dimension() return 1 end
+    function StaticConstructObject(class, outer, _, _, _, copyTransients, copyArchetype, template)
+        assert(class == "test-class" and outer == backend.subsystem, "Independent pipeline clone needs the native class and subsystem")
+        assert(copyTransients == false and copyArchetype == false and template, "Independent pipeline clone needs its source template without copying transient state")
+        local properties = {}
+        for key, value in pairs(template) do if type(value) ~= "function" then properties[key] = value end end
+        nextAddress = nextAddress + 1
+        calls.clones = calls.clones + 1
+        return object(nextAddress, "/Clone/" .. calls.clones, properties)
+    end
+    local function add(path, priority, registrations, key)
+        nextAddress = nextAddress + 3
+        local context = object(nextAddress, path)
+        local action = object(nextAddress + 1, path .. ".Action")
+        local mappingAddress = nextAddress + 2
+        local mapping = {Action = action, Key = {KeyName = FName(key or "F24")},
+            Triggers = array({}), Modifiers = array({}),
+            GetStructAddress = function() return mappingAddress end}
+        context.mapping_values = {mapping}
+        context.DefaultKeyMappings = {Mappings = array(context.mapping_values)}
+        objects[path] = context
+        objects[path .. ".Action"] = action
+        contexts[path] = {Priority = priority, RegistrationCount = registrations or 1}
+        return context, action
+    end
+    return backend, contexts, calls, add
+end
+
+do
+    local backend, contexts, calls, add = fixture()
+    add("/Test/A.A", 42)
+    backend.config.capture_contexts = {{path = "/Test/A.A"}, {path = "/Test/B.B"}}
+    add("/Test/B.B", -3)
+    contexts["/Test/B.B"] = nil
+    backend:take_capture()
+    backend:take_capture()
+    check(calls.remove == 1, "Capture repeated removal of an inactive context")
+    backend:shutdown()
+    check(calls.add == 1 and contexts["/Test/A.A"].Priority == 42, "Original priority was not restored")
+    check(contexts["/Test/B.B"] == nil, "Shutdown enabled a context that was originally inactive")
+end
+
+do
+    local backend, contexts, calls, add = fixture()
+    add("/Test/A.A", 17, 3)
+    backend.config.capture_contexts = {{path = "/Test/A.A", registration_count = 3}}
+    backend:take_capture()
+    check(contexts["/Test/A.A"] == nil and calls.remove == 3, "Registration references were not captured")
+    calls.fail_add = 2
+    local restored = pcall(function() backend:shutdown() end)
+    check(not restored and backend.captured["/Test/A.A"].removals == 2,
+        "Partial restore did not retain the remaining work")
+    check(backend.captured["/Test/A.A"] ~= nil and calls.release == 0,
+        "Partial restore dropped context retention")
+    calls.fail_add = nil
+    backend:shutdown()
+    check(contexts["/Test/A.A"].RegistrationCount == 3, "Restore retry duplicated completed registrations")
+    check(contexts["/Test/A.A"].Priority == 17, "Restore retry lost priority")
+end
+
+do
+    local backend, contexts, calls, add = fixture()
+    local context, action = add("/Test/A.A", 7, 2, "E")
+    backend:prepare_dynamic_capture()
+    local generation = backend.config_generation
+    check(#backend:effective_config().bindings == 0 and next(backend:effective_config().targets) == nil,
+        "An empty configuration must not replay native actions as routed bindings")
+    check(context.mapping_values[1].Key.KeyName:ToString() == "E" and context.mapping_values[1].Action == action,
+        "An empty configuration changed the native E mapping")
+    check(not backend.retained and #backend.dynamic_contexts == 0,
+        "An empty overlay must not retain synthetic action pipelines or capture native contexts")
+    backend:take_capture()
+    backend:prepare_dynamic_capture()
+    check(backend.config_generation == generation and calls.add == 0 and calls.remove == 0,
+        "Unchanged overlay rebuilt mappings or removed native contexts")
+    add("/Test/B.B", 11)
+    backend:prepare_dynamic_capture()
+    check(backend.config_generation == generation and #backend:effective_config().bindings == 0,
+        "A newly applied native context must not become a replay baseline")
+    check(contexts["/Test/A.A"].RegistrationCount == 2 and contexts["/Test/B.B"].RegistrationCount == 1,
+        "Preparing an overlay changed native context registrations")
+    backend:take_capture()
+    backend:shutdown()
+    check(contexts["/Test/A.A"].Priority == 7 and contexts["/Test/B.B"].Priority == 11 and calls.add == 0 and calls.remove == 0,
+        "Overlay shutdown unnecessarily replaced native contexts")
+end
+
+do
+    local backend = Backend.new({require_foreground = false}, function() end)
+    backend.state = {ready = true}
+    backend.pawn = object(73, "pawn")
+    local component = object(74, "component")
+    function backend:object(path) return path end
+    function backend:invoke(receiver, path, class)
+        check(receiver == self.pawn and path == "/Script/Engine.Actor:GetComponentByClass",
+            "Ability receiver must resolve the concrete component")
+        check(class == "/Script/SGameInputSystem.AbilityInputComponent", "Incorrect component class")
+        return component
+    end
+    check(backend:receiver({receiver="ability_input"}) == component, "Ability component was not resolved")
+    check(backend:context().pawn == backend.pawn, "Custom predicates cannot inspect the local pawn")
+    check(backend:receiver({receiver=function(b) return b.pawn end}) == backend.pawn,
+        "Custom receiver was not evaluated")
+    local ok, result = backend:dispatch({kind="lua", run=function(b, event)
+        return event.binding == "callback" and event.value.x == 2 and event.state.pawn == b.pawn
+    end}, "triggered", {x=2}, "callback")
+    check(ok and result, "Lua target did not receive the binding context")
+    check(backend:argument(function(b, event) return event.phase end, {phase="triggered"}) == "triggered",
+        "Dynamic argument was not evaluated")
+    local resolved = backend:argument({component={object="/Test/Component"}, values={{object="/Test/Item"}, false, 3}}, {})
+    check(resolved.component == "/Test/Component" and resolved.values[1] == "/Test/Item" and resolved.values[2] == false and resolved.values[3] == 3,
+        "Nested object return descriptors or primitive fields were not preserved")
+end
+
+do
+    local backend,contexts,calls,add=fixture()
+    local context,action=add("/Test/A.A",9)
+    backend.config.suppressions={{action="/Test/A.A.Action",key="F24"}}
+    backend:prepare_dynamic_capture()
+    check(#backend:effective_config().bindings==0 and context.mapping_values[1].Key.KeyName:ToString()=="None",
+        "Selected key/action must be masked in the native mapping rather than replayed")
+    check(contexts["/Test/A.A"]~=nil and calls.remove==0,"Masking a native relation removed its context")
+    backend:shutdown()
+    check(context.mapping_values[1].Key.KeyName:ToString()=="F24","Shutdown did not restore the masked native key")
+    backend.config.suppressions={{action="/Test/A.A.Action",key="Other"}}
+    backend:prepare_dynamic_capture()
+    check(#backend:effective_config().bindings==0 and context.mapping_values[1].Key.KeyName:ToString()=="F24",
+        "A suppression for another key changed the native mapping")
+    backend:shutdown()
+    backend.config.suppressions={{action="/NotLoaded/IA_Future"}}
+    backend:prepare_dynamic_capture()
+    check(#backend:effective_config().bindings==0 and context.mapping_values[1].Key.KeyName:ToString()=="F24",
+        "A suppression for an unloaded action changed the native mapping")
+    backend:shutdown()
+    backend.config.suppressions={{action="/Test/A.A.Action"}}
+    backend:prepare_dynamic_capture()
+    check(#backend:effective_config().bindings==0 and context.mapping_values[1].Key.KeyName:ToString()=="None",
+        "An action suppression must mask its native keys")
+    backend:shutdown()
+    check(context.mapping_values[1].Key.KeyName:ToString()=="F24","Action-wide mask was not restored")
+end
+
+do
+    local backend,contexts,calls,add=fixture()
+    local selected=add("/Test/A.A",9)
+    local other=add("/Test/B.B",10)
+    backend.config.suppressions={{action="/Test/A.A.Action",key="F24"}}
+    backend:prepare_dynamic_capture()
+    local effective=backend:effective_config()
+    check(#effective.bindings==0,"A suppression must not create a native replay binding")
+    check(selected.mapping_values[1].Key.KeyName:ToString()=="None" and other.mapping_values[1].Key.KeyName:ToString()=="F24",
+        "Replacing one action must preserve another action on the same physical key")
+    backend:shutdown()
+    check(selected.mapping_values[1].Key.KeyName:ToString()=="F24" and calls.add==0 and calls.remove==0,
+        "Native relation restore must not replace contexts")
+end
+
+do
+    local backend,contexts,calls,add=fixture()
+    add("/Test/A.A",12)
+    backend.config.capture_contexts={{path="/Test/A.A"}}
+    backend:take_capture()
+    local subsystem=backend.subsystem
+    backend.subsystem=nil
+    check(not pcall(function() backend:shutdown() end),"Unavailable subsystem must not report restoration success")
+    check(next(backend.captured)~=nil,"Unavailable subsystem must retain restoration work")
+    backend.subsystem=subsystem
+    backend:shutdown()
+    check(contexts["/Test/A.A"]~=nil,"Restoration must remain retryable")
+end
+
+do
+    local backend,contexts,calls,add=fixture()
+    local context,action=add("/Test/A.A",9)
+    local modifier=object(701,"modifier",{State=13})
+    local trigger=object(702,"trigger",{State=27})
+    context.mapping_values[1].Modifiers=array({modifier})
+    context.mapping_values[1].Triggers=array({trigger})
+    backend.config.targets.guard={kind="mapping",mapping="IA_Guard",actions={"/Test/A.A.Action"},device="keyboard"}
+    backend.config.bindings={{id="new-key",keys={"J"},trigger="down",outputs={"guard"}}}
+    backend.config.suppressions={{action="/Test/A.A.Action",key="F24"}}
+    backend:prepare_dynamic_capture()
+    local effective=backend:effective_config()
+    check(#effective.bindings==1,"Replacing a source key must retain the cloned mapping")
+    local cloned=effective.targets[effective.bindings[1].outputs[1].target]
+    check(cloned.kind=="action" and cloned.object==action,"Mapping output did not expand into its captured native action")
+    check(cloned.modifier_objects[1]~=modifier and cloned.trigger_objects[1]~=trigger and calls.clones==2,
+        "Additional mapping must use independent native modifier and trigger instances")
+    check(cloned.modifier_objects[1].State==13 and cloned.trigger_objects[1].State==27,
+        "Mapping expansion lost native pipeline configuration")
+    cloned.trigger_objects[1].State=99
+    check(trigger.State==27,"An additional binding changed its native trigger instance")
+    local generation=backend.config_generation
+    backend:prepare_dynamic_capture()
+    check(backend.config_generation==generation and calls.clones==2,
+        "An unchanged mapping unnecessarily cloned its pipeline again")
+    check(context.mapping_values[1].Key.KeyName:ToString()=="None" and calls.remove==0,
+        "Mapping expansion must retain its source context while masking the selected relation")
+    backend:shutdown()
+    context.unbound=true
+    backend:prepare_dynamic_capture()
+    effective=backend:effective_config()
+    check(#effective.bindings==1,"A fully unbound saved action must still accept a key enhancement binding")
+    cloned=effective.targets[effective.bindings[1].outputs[1].target]
+    check(cloned.trigger_objects[1]~=trigger and cloned.modifier_objects[1]~=modifier and
+        cloned.trigger_objects[1].State==27 and cloned.modifier_objects[1].State==13,
+        "An unbound action must clone the active context's original pipeline")
+    backend:shutdown()
+    check(contexts["/Test/A.A"].Priority==9 and calls.remove==0 and calls.add==0,
+        "Mapping overlay shutdown changed the original context")
+end
+
+do
+    local backend,contexts,calls,add=fixture()
+    local context=add("/Test/A.A",9,1,"E")
+    backend:prepare_dynamic_capture()
+    calls.physical={E=1,J=1}
+    backend:reserve_inputs({E=true},{E=1})
+    check(context.mapping_values[1].Key.KeyName:ToString()=="None","Consumed physical key was not masked")
+    local snapshot=backend:snapshot({"J"})
+    check(snapshot.J==1 and snapshot.E==1 and calls.samples.E==1,
+        "Consumed keys absent from router keys must still be physically sampled")
+    backend:reserve_inputs({},snapshot)
+    check(context.mapping_values[1].Key.KeyName:ToString()=="None","Consumption ended before the physical key was released")
+    calls.physical.E=0
+    snapshot=backend:snapshot({"J"})
+    check(snapshot.E==0 and calls.samples.E==2,"Consumed physical key release was not sampled")
+    backend:reserve_inputs({},snapshot)
+    check(context.mapping_values[1].Key.KeyName:ToString()=="E" and next(backend.native_input.consumed)==nil,
+        "Released consumed key did not restore its native mapping")
+    calls.samples={}
+    backend:snapshot({"J"})
+    check(calls.samples.E==nil,"Released unrequested keys must stop being sampled")
+    backend:shutdown()
+    check(contexts["/Test/A.A"]~=nil and calls.remove==0 and calls.add==0,"Consumption replaced a native context")
+end
+
+do
+    local backend, _, calls, add = fixture()
+    local context = add("/Test/E.E", 9, 1, "E")
+    local trigger = {TriggerTag = {TagName = FName("Ability.Action.Hun.SpecialDash")},
+        GetStructAddress = function() return 902 end}
+    local data = {Actions = array({trigger}), Combos = array({}), InterruptLower = array({})}
+    local native = object(903, "/Test/Binding", {Bindings = array({
+        {NormalData = data, TagConditionData = array({})}})})
+    function FindAllOf(name)
+        assert(name == "InputActionBinding")
+        return {native}
+    end
+    backend.config.ability_suppressions = {"Ability.Action.Hun.SpecialDash"}
+    backend:prepare_dynamic_capture()
+    check(trigger.TriggerTag.TagName:ToString() == "None", "Native ability trigger was not suppressed")
+    backend.config.ability_suppressions = {}
+    backend:prepare_dynamic_capture()
+    check(trigger.TriggerTag.TagName:ToString() == "Ability.Action.Hun.SpecialDash",
+        "Clearing native ability suppressions in place did not restore the native trigger")
+    check(context.mapping_values[1].Key.KeyName:ToString() == "E" and calls.remove == 0 and calls.add == 0,
+        "Disabling a native ability changed an unrelated execution key or context")
+    backend:shutdown()
+end
+
+do
+    local backend, _, calls = fixture()
+    calls.physical = {W = 0, V = 1, Gamepad_LeftX = .6, MouseX = -2}
+    calls.digital = {V = true}
+    local held = {W = 1, V = 0}
+    backend.physical_input = {sample = function(_, key) return held[key] end}
+    local snapshot = backend:snapshot({"W", "V", "Gamepad_LeftX", "MouseX"})
+    check(snapshot.W == 1 and calls.samples.W == nil,
+        "Engine FlushPressedKeys must not clear a physically held keyboard key")
+    check(snapshot.V == 0 and calls.samples.V == nil,
+        "A physically released key must not fall back to a stale engine down state")
+    check(snapshot.Gamepad_LeftX == .6 and snapshot.MouseX == -2,
+        "Unsupported physical probes must preserve native analog input")
+    held.W = 0
+    snapshot = backend:snapshot({"W"})
+    check(snapshot.W == 0, "Independent physical input must observe release without latching movement")
+end
+
+do
+    local backend, _, calls = fixture()
+    backend.pawn = object(1200, "/Test/Pawn")
+    local library = object(1201, "/Test/GameplayStatics")
+    function backend:library() return library end
+    backend.physical_input = {sample = function(_, key) return key == "W" and 1 or 0 end}
+    calls.move_ignored = true
+    check(backend:refresh() and backend:context().move_ignored == true and calls.move_queries == 1,
+        "Backend refresh did not expose the controller's current movement suppression")
+    check(backend:context().gameplay == true,
+        "Movement suppression must not suspend unrelated gameplay inputs")
+    check(backend:snapshot({"W"}).W == 1,
+        "Movement suppression must preserve physically held movement keys")
+    calls.move_ignored = false
+    check(backend:refresh() and backend:context().move_ignored == false and calls.move_queries == 2,
+        "Movement suppression remained latched after the controller allowed movement again")
+    check(backend:context().gameplay == true and backend:snapshot({"W"}).W == 1,
+        "Clearing movement suppression must keep gameplay and the held physical input available")
+end
+
+do
+    local backend = Backend.new({require_foreground = false}, function() end)
+    local path = "/Game/Input/IA_Test"
+    local action = object(1300, path .. ".IA_Test")
+    local package = object(1301, path)
+    function StaticFindObject(query)
+        if query == path then return package end
+        if query == path .. ".IA_Test" then return action end
+    end
+    check(backend:object(path, "InputAction") == action,
+        "A package path resolved to the package instead of its InputAction")
+    check(backend:object(path .. ".IA_Test", "InputAction") == action,
+        "An explicit object path changed during resource resolution")
+    backend.objects = {}
+    function StaticFindObject() return nil end
+    function FindObject(class, short)
+        assert(class == "InputAction" and short == "IA_Test")
+        return action
+    end
+    check(backend:object(path) == action, "Resource lookup lost its class/basename fallback")
+end
+
+print("BackendTests: " .. passed .. " assertions passed")

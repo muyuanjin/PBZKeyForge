@@ -1,6 +1,6 @@
-# PBZKeyForge
+﻿# PBZKeyForge
 
-[Nexus Mods](https://www.nexusmods.com/phantombladezero/mods/402) · [Releases](https://github.com/muyuanjin/PBZKeyForge/releases)
+[Project](https://github.com/muyuanjin/PBZKeyForge) · [Nexus Mods](https://www.nexusmods.com/phantombladezero/mods/402) · [Releases](https://github.com/muyuanjin/PBZKeyForge/releases) · [Kintaro UE4SS](https://github.com/KintaroModding/ue4ss)
 
 **English** · [简体中文](#简体中文)
 
@@ -31,6 +31,7 @@ The in-game screen validates on **save**, not at runtime, and it rejects any bin
 ## Features
 
 - **One key, several actions.** Guard on the attack key, dodge on the guard key, whatever you want.
+- **Key Enhancement.** Add unlimited bindings, chords, sequences, tap/hold and extra functions through the existing key and action views. Additional functions show their names and technical codes. All schemes share the Mod configuration; the mode switch stages it and Apply installs it. [Usage and limits](docs/key-enhancement.md).
 - **Scheme aware.** Pick which scheme you are editing — `Default`, `Custom 1`, `Custom 2` — and switch the game to it from the tool.
 - **Two editing views.** Click keyboard, mouse or controller buttons to edit their actions, or edit bindings by action. Factory, customized and pending bindings have distinct badge colors; the bottom panel compares the whole scheme.
 - **Quick setups** for one-key guard, a Souls-style gamepad layout, and Space-based movement; restore the selected scheme's defaults from the same list.
@@ -40,6 +41,12 @@ The in-game screen validates on **save**, not at runtime, and it rejects any bin
 - **Explicit binding choices.** Default inherits the factory key; Unbound removes it. Unrelated save data is preserved.
 - **Safe writes.** The game must be closed, a timestamped backup is written first, and the file is re-read and verified after saving.
 - **Optional removal of the perfect-guard rapid-click penalty.** The **Perfect guard: no rapid-click penalty** checkbox and **GAMEPLAY MOD** badge on the right side of the footer enable or remove the rapid-guard penalty override through **Apply changes**. Applies to every difficulty and guard key; no exact game-version gate. See [installation and compatibility](docs/perfect-deflect-no-rapid-click-penalty-mod.md).
+
+## Updates and credits
+
+**More → About and updates** checks the latest stable application release and offers **Update and restart**. It downloads the complete package, updates GUI/CLI and documentation, and retains saves, personal presets, preferences and game Mod configuration. Failed replacement restores earlier files; GitHub and Nexus Mods links remain available for manual downloads. Game Mod updates are managed separately.
+
+Key Enhancement loads PBZInputRouter through [KintaroModding’s PBZ UE4SS](https://github.com/KintaroModding/ue4ss). It routes supported gameplay inputs; menu, text and unsupported pipelines remain native. Thanks to KintaroModding, the [UE4SS community](https://github.com/UE4SS-RE/RE-UE4SS), protobuf-net, controller artwork contributors and players. Licenses and attribution: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 ## Install
 
@@ -63,9 +70,9 @@ Keyboard and gamepad drafts both belong to the selected scheme. Applying saves t
 
 **B. A ready-made preset** — use `presets\PRESETS.md` to choose a file, copy it over `EnhancedInputUserSettings.sav`, then select the listed scheme in game. The release files target **Custom 1**; replacing this file does not switch the active game scheme. These are plain settings files, no executable involved.
 
-**By key** shows a clickable keyboard and mouse together. Number badges count actions: gray for factory mappings, blue for applied customization, yellow for pending changes. Controller face-button and D-pad badges spread outward; LT/RT include both axis and digital inputs. Select a key to edit its actions on the right. The full-width bottom panel compares the entire scheme with either its saved state or factory defaults, including controller changes. Each row shows additions first, retained keys next, and gray struck-through removals last. Click its binding content to cycle through combined, changes-only, result-only and before views. **By action** lists factory keys and editable slots. Both perspectives share the same draft.
+**By key** shows a clickable keyboard and mouse together. Number badges count actions: gray for factory mappings, blue for applied customization, yellow for pending changes. Controller face-button and D-pad badges spread outward; LT/RT include both axis and digital inputs. Select a key to edit its actions on the right. The full-width bottom panel compares the entire scheme with either its saved state or factory defaults, including controller changes. Each row shows additions first, retained keys next, and gray struck-through removals last. Click its binding content to cycle through combined, changes-only, result-only and before views. **By action** lists functions and all their bindings; search also finds additional functions by name or code. Both perspectives share the same draft.
 
-Choose **Unbound** to write an explicit empty binding for a slot. **Default**, blank input, and **Clear override** restore that slot’s factory value. The dialog identifies **Default | actual key** or **Default | Unbound**; table cells show concrete keys, with empty slots shown as a quiet dash and binding status available on hover. Both the full action key set and the raw slot defaults come from the supported game’s input resources. The fixed Ctrl hold mapping for Phantom Edges remains active independently of editable slots. See [default binding sources and limits](docs/input-defaults.md).
+Select a key and choose **Add function**, or open an action's binding details to add, edit, remove or restore its bindings. Ordinary single keys use available save slots; key enhancement adds complex inputs and additional bindings in the same dialogs. Both the full action key set and the raw slot defaults come from the supported game's input resources. The fixed Ctrl hold mapping for Phantom Edges remains active independently of editable save slots. See [default binding sources and limits](docs/input-defaults.md).
 
 ## Perfect guard: no rapid-click penalty
 
@@ -149,6 +156,10 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 ## 简体中文
 
+**更多 → 关于与更新** 可检查正式版本并自动下载、重启更新程序，同时更新 GUI、CLI 和说明文件，保留存档、个人预设、偏好及游戏 Mod 配置。替换失败会恢复已替换的旧文件；自动更新失败时，可选择 GitHub 或 Nexus Mods 手动下载。游戏 Mod 更新独立管理。
+
+键位增强通过 [KintaroModding 的影之刃零 UE4SS](https://github.com/KintaroModding/ue4ss) 加载 PBZInputRouter，接管受支持的玩法输入。菜单、文本及未支持的管线仍由游戏执行。感谢 KintaroModding、[UE4SS 社区](https://github.com/UE4SS-RE/RE-UE4SS)、protobuf-net、手柄素材贡献者和玩家反馈。完整许可和致谢见 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)。
+
 直接改写《影之刃零》自己的按键设置文件，让一个键同时触发多个动作——游戏内的改键界面会因为"按键冲突"拒绝保存，而引擎本身并不限制这件事。
 
 `PBZKeyForge.exe` · 单文件 · 免安装 · 不需要额外下载 .NET 运行时 · Windows 10/11
@@ -176,6 +187,7 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 ### 功能
 
 - **一个键多个动作**：防御并到攻击键、闪避并到防御键，随便配。
+- **键位增强**：沿用原来的按键和动作入口，添加不限槽位的绑定、组合、顺序输入、短按／长按和额外功能；额外功能显示名称与代码。底部开关暂存启用，应用后安装，所有方案共用。[使用说明与边界](docs/key-enhancement.md)。
 - **认方案**：可选编辑 `默认 / 自定义方案 1 / 自定义方案 2`，并能在工具里直接把某个方案设为游戏当前生效方案。
 - **两种视图**：按键视图可点击键鼠和手柄图形，动作视图按功能编辑；徽标区分原厂、已修改和待应用，底部显示整个方案的差异。
 - **自己的预设**：命名保存、分享码预览导入、按设备分享、导出游戏键位文件，也可批量删除个人预设。
@@ -210,13 +222,13 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 ### 重要提醒
 
-快速配置旁的“预设管理”可以命名保存当前方案，包含尚未应用的修改。“我的预设”与内置预设分组显示；单选可预览、复制分享码，勾选多个可批量删除，删除不改变当前键位。复制旁可选择全部所含设备、仅键鼠、仅控制器或某个手柄家族，字符数即时更新。分享码带名称，只记录相对原厂的绑定增减。粘贴后先预览，确认“包含设备”再保存或套用；“仅用预设”只恢复和套用所含设备，其他设备保持原样。
+快速配置旁的“预设管理”可以命名保存当前方案，包含尚未应用的修改。“我的预设”与内置预设分组显示；单选可预览、复制分享码，勾选多个可批量删除，删除不改变当前键位。复制旁可选择全部所含设备、仅键鼠、仅控制器或某个手柄家族，字符数即时更新。分享码带名称，普通绑定记录相对原厂的增减，并携带完整增强配置。粘贴后先预览，确认“包含设备”及增强配置范围再保存或套用；“仅用预设”对普通绑定只恢复和套用所含设备，其他设备保持原样。
 
-快速配置区域同时显示“追加按键／替换按键／仅用预设”三个选项，点击即可选择，悬浮可查看各自说明。套用只形成草稿，主界面“应用更改”才写入游戏。“导出游戏键位文件”输出 `.sav` 副本，包含当前方案的未应用修改，其余方案保持已保存内容；导出不切换游戏方案，也不覆盖源存档。预设库保存在 `%LOCALAPPDATA%\PBZKeyForge\Presets`。
+快速配置区域同时显示“追加按键／替换按键／仅用预设”三个选项，点击即可选择，悬浮可查看各自说明。套用只形成草稿，主界面“应用更改”才写入游戏。保存预设和分享码会包含增强配置；套用时，增强配置按所有方案共用的范围整体替换。“导出游戏键位文件”在包含增强配置时输出 ZIP 配置包，普通绑定则输出 `.sav` 副本，包含当前方案的未应用修改，其余方案保持已保存内容；导出不切换游戏方案，也不覆盖源存档。预设库保存在 `%LOCALAPPDATA%\PBZKeyForge\Presets`。
 
-“按键视图”将可点击的键盘和鼠标放在一起，点击按键后在右侧编辑功能。数字徽标表示功能数：灰色为原厂一致、蓝色为已修改、黄色为待应用。手柄面键和十字键的徽标向四周分布，LT／RT 同时包含轴输入和数字输入。底部横跨两栏显示整个方案的变化，包含键鼠和手柄，可切换与修改前或原厂对比。每行默认按“新增 → 保留 → 灰色删除线移除”展示，点击绑定内容可循环切换绑定变化、纯变化、纯结果、原本。“动作视图”按动作列出原厂按键与可编辑槽位。两种视图共享草稿，切换不会保存。
+“按键视图”将可点击的键盘和鼠标放在一起，点击按键后在右侧编辑功能。数字徽标表示功能数：灰色为原厂一致、蓝色为已修改、黄色为待应用。手柄面键和十字键的徽标向四周分布，LT／RT 同时包含轴输入和数字输入。底部横跨两栏显示整个方案的变化，包含键鼠和手柄，可切换与修改前或原厂对比。每行默认按“新增 → 保留 → 灰色删除线移除”展示，点击绑定内容可循环切换绑定变化、纯变化、纯结果、原本。“动作视图”按功能列出全部绑定，也可按名称或代码搜索额外功能。两种视图共享草稿，切换不会保存。
 
-修改绑定时选择“无绑定”可明确解绑该槽；“默认”、输入留空和“清除覆盖”均恢复该槽的原厂值。弹窗明确显示“默认 | 具体按键”或“默认 | 无绑定”；表格直接显示具体按键，空槽以短横线弱化，悬停可查看绑定状态。动作级原厂按键集合和逐槽默认值均来自受支持游戏版本的输入资源。影之武装长按的固定 Ctrl 映射独立于可编辑槽，清空槽位不会取消它。详见[默认键来源与限制](docs/input-defaults.md)。
+点击按键后“添加功能”，或打开动作的绑定详情添加、修改、删除与恢复绑定。普通单键使用可用存档槽；键位增强在同一窗口添加复杂触发与额外绑定。动作级原厂按键集合和逐槽默认值均来自受支持游戏版本的输入资源。影之武装长按的固定 Ctrl 映射独立于可编辑存档槽，清空槽位不会取消它。详见[默认键来源与限制](docs/input-defaults.md)。
 
 - **不要**在用完之后进游戏打开键位界面点"应用"或"恢复默认"，游戏会整份重写、把这些键位冲掉；真冲掉了重新套一次即可。
 - 同类会替换 `EnhancedInputUserSettings.sav` 的 mod 只能同时装一个。
@@ -233,7 +245,7 @@ MIT. Not affiliated with S-Game. Use at your own risk, keep the backup.
 powershell -ExecutionPolicy Bypass -File build\build.ps1
 ```
 
-产物：`dist\PBZKeyForge.exe`（界面）与 `dist\PBZKeyForge-cli.exe`（命令行，仅供构建流程使用）。
+产物：`dist\PBZKeyForge.exe`（界面）与 `dist\PBZKeyForge-cli.exe`（命令行，支持 AI Agent 检查、预览及编辑普通与增强绑定）。
 
 构建使用 `build/ue4ss-sources.json` 中固定的 Kintaro PBZ UE4SS 包，缓存命中时可离线构建。显式更新固定包：
 
@@ -259,7 +271,12 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshot
 
 MIT。与 S-Game 无关，使用风险自负，记得留备份。
 
-### CLI 与 AI Agent
+
+
+
+### 实时改键与 AI Agent
+
+键位增强已随游戏加载时，点击“应用到游戏 · 无需重启”发送当前绑定草稿，等待 Mod 确认并保存配置；不修改游戏存档或生效方案。Ctrl+Alt+K 呼出同一套置顶编辑窗口，适合窗口化或无边框游戏。首次安装、组件变更和方案启用仍需退出游戏。运行时边界与使用方法见[键位增强](docs/key-enhancement.md#实时编辑与游戏伴随窗口)。
 
 主界面的 **AI / CLI** 可让 Agent 获取当前文件与命令入口。`PBZKeyForge-cli.exe --agent-help` 提供机器可读的目录、操作与字段说明；`--inspect` 检查，`--edit` 预览，`--out` 导出完整配置，`--apply` 安全写回，`--live` 实时应用。详见 [CLI 文档](docs/cli.md)。
 

@@ -285,9 +285,10 @@ public static class BindingViewsTests
                 int count = form.Session.ScopeChangeCount;
                 Field<EditorTab>(form, "tabActions").PerformClick();
                 Assert(form.ActionView && form.Session.ScopeChangeCount == count, "View switch changed the draft.");
-                Assert(!Field<Control>(form, "keyBindings").Visible && Field<Panel>(form, "kbHost").Visible, "Action table not visible exclusively.");
-                var button = (BindingButton)((Array)Field<IDictionary>(form, "kbButtons")["IA_OpenMapMenu"]).GetValue(0);
-                Assert(button.DisplayText == "M", "Each inherited slot must show its own extracted default without a repeated prefix.");
+                Assert(!Field<Control>(form, "keyBindings").Visible && Field<Control>(form, "unifiedActions").Visible, "Action table not visible exclusively.");
+                var actionGrid = Field<DataGridView>(Field<Control>(form, "unifiedActions"), "actions");
+                var mapKeys = Convert.ToString(actionGrid.Rows.Cast<DataGridViewRow>().Single(row => Convert.ToString(row.Cells[0].Value).StartsWith(I18n.Str("act.IA_OpenMapMenu"))).Cells[2].Value);
+                Assert(mapKeys.Split('/').Select(key => key.Trim()).Contains("M"), "Action table omits the inherited map binding.");
                 form.Session.ChangeRelationship(Guard, "G", true, false, -1); form.RenderSession();
                 Field<EditorTab>(form, "tabKeys").PerformClick();
                 Assert(form.Session.Relations(Guard, false, -1).Keys.Contains("G"), "Action draft missing after key navigation.");

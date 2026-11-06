@@ -28,7 +28,7 @@ public static class MainResourceModTests
     static void Shot(MainForm form, string output, string name)
     {
         form.BringToFront(); form.Activate(); form.Refresh(); Application.DoEvents();
-        var card = Field<CheckBox>(form, "chkPerfectDeflectNoRapidClickPenalty"); var help = Field<Button>(form, "btnModHelp");
+        var card = Field<CheckBox>(form, "chkPerfectDeflectNoRapidClickPenalty"); var help = Field<Button>(form, "btnResourceModMore");
         using (var graphics = card.CreateGraphics())
         {
             object header = card.GetType().GetMethod("MeasureHeader").Invoke(card, new object[] { graphics });
@@ -41,8 +41,10 @@ public static class MainResourceModTests
             Assert(TextRenderer.MeasureText(graphics, card.Text, card.Font).Width <= title.Width, "Protection title is clipped.");
             var bounds = (Rectangle)card.GetType().GetProperty("DetailBounds").GetValue(card, null);
             using (var font = new Font(card.Font.FontFamily, 9f))
-                Assert(TextRenderer.MeasureText(I18n.Str("mod.warning"), font, new Size(bounds.Width, int.MaxValue), TextFormatFlags.WordBreak).Height <= bounds.Height,
-                    "Rapid-click explanation is clipped.");
+            {
+                var required = TextRenderer.MeasureText(I18n.Str("mod.warning"), font, new Size(bounds.Width, int.MaxValue), TextFormatFlags.WordBreak);
+                Assert(required.Height <= bounds.Height, "Rapid-click explanation is clipped: available=" + bounds + "; required=" + required);
+            }
         }
         using (var bitmap = new Bitmap(form.Width, form.Height))
         {
@@ -68,7 +70,9 @@ public static class MainResourceModTests
                 }
                 dialog.Close();
             };
-            close.Start(); Field<Button>(form, "btnModHelp").PerformClick(); close.Stop();
+            close.Start();
+            Field<Button>(form, "btnResourceModMore").PerformClick(); Application.DoEvents();
+            Field<ContextMenuStrip>(form, "resourceModMenu").Items["mod.help"].PerformClick(); close.Stop();
         }
         Assert(opened && Field<bool?>(form, "resourceModDraft").HasValue == pending, "Help changed the draft.");
     }
@@ -115,7 +119,7 @@ public static class MainResourceModTests
                         Shot(form, output, "main-disabled");
                         Size regular = form.Size; form.Size = form.MinimumSize; Application.DoEvents(); Shot(form, output, "main-disabled-minimum");
                         form.Size = regular; Application.DoEvents(); Help(form, output);
-                        if (layoutOnly) { form.Close(); return; }
+                        if (layoutOnly) { form.Dispose(); return; }
                         Toggle(card);
                         Assert(card.Checked && apply.Enabled && undo.Visible && !form.Session.HasChanges, "Toggle must stage a mod-only draft.");
                         Assert(mod.ReadState() == ResourceModState.Disabled, "Toggle installed resources before Apply.");
@@ -126,7 +130,10 @@ public static class MainResourceModTests
                         Assert(mod.ReadState() == ResourceModState.Enabled && card.Checked && !apply.Enabled, "Apply did not enable protection.");
                         Assert(original.SequenceEqual(File.ReadAllBytes(save)), "Mod-only Apply rewrote the save.");
                         Shot(form, output, "main-enabled");
-                        Toggle(card);
+                        Field<Button>(form, "btnResourceModMore").PerformClick(); Application.DoEvents();
+                        var resourceMenu = Field<ContextMenuStrip>(form, "resourceModMenu");
+                        resourceMenu.Items["component.uninstall"].PerformClick(); resourceMenu.Close();
+                        Assert(!card.Checked && apply.Enabled && mod.ReadState() == ResourceModState.Enabled, "Component uninstall must stage until Apply.");
                         string payload = Directory.GetFiles(mod.InstallDirectory, "*.ucas").Single();
                         using (var held = new FileStream(payload, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                         {
@@ -143,7 +150,7 @@ public static class MainResourceModTests
                         string foreign = Path.Combine(mod.InstallDirectory, "foreign.txt"); File.WriteAllText(foreign, "preserve");
                         apply.PerformClick(); Wait(form);
                         Assert(!form.Session.HasChanges && form.Session.GetKeyboard("IA_Interact", 0) == "F9", "Bindings were not saved before resource failure.");
-                        Assert(Field<string>(form, "messageKey") == "mod.partial" && apply.Enabled, "Partial success lost the mod retry: message=" + Field<string>(form, "messageKey") + "; enabled=" + apply.Enabled + "; draft=" + Field<bool?>(form, "resourceModDraft"));
+                        Assert(Field<string>(form, "messageKey") == "enhancement.partial" && apply.Enabled, "Partial success lost the mod retry: message=" + Field<string>(form, "messageKey") + "; enabled=" + apply.Enabled + "; draft=" + Field<bool?>(form, "resourceModDraft"));
                         byte[] committed = File.ReadAllBytes(save); DateTime committedTime = File.GetLastWriteTimeUtc(save); File.Delete(foreign); form.RefreshFromDisk();
                         apply.PerformClick(); Wait(form);
                         Assert(mod.ReadState() == ResourceModState.Disabled && committed.SequenceEqual(File.ReadAllBytes(save)) && File.GetLastWriteTimeUtc(save) == committedTime, "Resource retry rewrote the committed save.");
@@ -151,12 +158,11 @@ public static class MainResourceModTests
                         var previous = form.Session;
                         typeof(MainForm).GetMethod("OpenPath", Hidden).Invoke(form, new object[] { save, true });
                         Assert(form.Session != previous && !card.Checked && !apply.Enabled, "Reopening the same path retained a discarded draft.");
-                        form.Close();
+                        form.Dispose();
                     }
                     catch (Exception ex)
                     {
-                        failure = ex; typeof(MainForm).GetField("resourceModDraft", Hidden).SetValue(form, null);
-                        form.Session.Undo(); form.Close();
+                        failure = ex; form.Dispose();
                     }
                 })); };
                 Application.Run(form);

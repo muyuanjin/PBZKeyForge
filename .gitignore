@@ -12,3 +12,4 @@ docs/*.tmp
 __pycache__/
 *.pyc
 vendor/
+/assets/ui-design/

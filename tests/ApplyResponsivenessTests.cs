@@ -23,6 +23,22 @@ public static class ApplyResponsivenessTests
     [STAThread]
     public static int Main(string[] args)
     {
+        Application.EnableVisualStyles();
+        Control.CheckForIllegalCrossThreadCalls = true;
+        int result = 1;
+        EventHandler run = null;
+        run = delegate {
+            Application.Idle -= run;
+            result = Run(args);
+            Application.ExitThread();
+        };
+        Application.Idle += run;
+        Application.Run();
+        return result;
+    }
+
+    static int Run(string[] args)
+    {
         try
         {
             Application.EnableVisualStyles();
@@ -82,7 +98,7 @@ public static class ApplyResponsivenessTests
                 apply.PerformClick(); PumpUntil(() => !form.IsApplying);
                 observeTransitions = false;
                 Assert(form.Session.HasChanges && apply.Enabled && form.captionClose.Enabled, "Failed apply restores controls and retains draft for retry.");
-                Assert(Field<Label>(form, "lblStatus").Text.Contains("Write interrupted."), "Failed apply explains the error.");
+                Assert(Field<Control>(form, "feedbackPanel").Visible && Field<string>(form, "fullFeedback").Contains("Write interrupted."), "Failed apply explains the error in its warning card.");
                 Assert(EditorSession.Open(input).GetKeyboard("IA_Jump", 0) == "F9", "Failed replacement preserves the saved key.");
                 typeof(EditorSession).GetField("BeforeInputReplace", Hidden).SetValue(form.Session, null);
                 observeTransitions = true;

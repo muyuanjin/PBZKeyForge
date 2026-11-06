@@ -93,6 +93,6 @@ if ($LASTEXITCODE -ne 0) { throw "CLI build failed" }
 
 Copy-Item "$root\THIRD-PARTY-NOTICES.md" $OutputDir
 New-Item -ItemType Directory -Path "$OutputDir\docs" -Force | Out-Null
-Copy-Item "$root\docs\cli.md" "$OutputDir\docs"
+Copy-Item "$root\docs\cli.md", "$root\docs\key-enhancement.md" "$OutputDir\docs"
 
 Get-ChildItem "$OutputDir\PBZKeyForge*.exe" | Select-Object Name, Length | Format-Table -AutoSize

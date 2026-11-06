@@ -1,0 +1,25 @@
+{
+  "contexts": [
+    {
+      "context": "/PBZInput/IMC_Default",
+      "mode": "append",
+      "bindings": [
+        {
+          "action": "/PBZInput/InputActions/IA_Jump",
+          "keys": ["F13", "F14", "F15", "F16", "F17", "F18", "F19", "F20", "F21", "F22", "F23", "F24"],
+          "trigger": "pressed"
+        },
+        {
+          "action": "/PBZInput/InputActions/IA_Jump",
+          "key": "G",
+          "trigger": {"type": "hold", "seconds": 0.75, "once": true}
+        },
+        {
+          "action": "/PBZInput/InputActions/IA_Jump",
+          "key": "H",
+          "trigger": {"type": "tap", "seconds": 0.2}
+        }
+      ]
+    }
+  ]
+}

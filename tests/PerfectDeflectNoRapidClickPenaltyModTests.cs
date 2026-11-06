@@ -74,7 +74,7 @@ public static class PerfectDeflectNoRapidClickPenaltyModTests
                 Reject(() => mod.Apply(false), "Locked resource must reject replacement.");
             Assert(mod.ReadState() == ResourceModState.Enabled, "Lock failure damaged the installation.");
             mod.Apply(false); mod.Apply(false);
-            Assert(mod.ReadState() == ResourceModState.Disabled && Directory.GetFiles(mod.InstallDirectory).Length == 0, "Uninstall left mounted files.");
+            Assert(mod.ReadState() == ResourceModState.Disabled && !Directory.Exists(mod.InstallDirectory), "Uninstall left mounted files or its empty directory.");
             File.WriteAllBytes(toc, originalToc.Take(originalToc.Length - 12).ToArray());
             Assert(!mod.HasTargetResource(), "An incomplete source resource set must not be supported.");
             Reject(() => mod.Apply(true), "Enabled against a missing difficulty.");
