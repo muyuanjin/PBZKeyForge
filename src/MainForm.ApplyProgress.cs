@@ -54,27 +54,32 @@ namespace PBZKeyForge
             float scale = e.Graphics.DpiX / 96f;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             Color warning = liveConnected ? EditorTheme.LiveConnected : Color.FromArgb(240, 178, 78);
+            bool liveAction = liveConnected && (Enabled || busy);
+            Color fill = liveAction ? !busy && Pressed ? Color.FromArgb(94, 201, 145)
+                : !busy && Hovered ? ControlPaint.Light(EditorTheme.LiveConnected) : EditorTheme.LiveConnected
+                : busy ? EditorTheme.Accent : liveConnected ? Color.FromArgb(31, 63, 48) : EditorTheme.Disabled;
+            Color foreground = liveAction ? EditorTheme.Background : busy ? EditorTheme.Ink : warning;
             using (var shape = EditorArtwork.Rounded(new RectangleF(0.5f, 0.5f, Width - 1.5f, Height - 1.5f), 5 * scale))
-            using (var brush = new SolidBrush(busy ? EditorTheme.Accent : liveConnected ? Color.FromArgb(31, 63, 48) : EditorTheme.Disabled))
+            using (var brush = new SolidBrush(fill))
             {
                 e.Graphics.FillPath(brush, shape);
-                if (!busy) using (var pen = new Pen(warning, scale)) e.Graphics.DrawPath(pen, shape);
+                if (!busy && !liveAction) using (var pen = new Pen(warning, scale)) e.Graphics.DrawPath(pen, shape);
             }
             if (!busy || elapsed.ElapsedMilliseconds < 150)
             {
-                TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, busy ? EditorTheme.Ink : warning,
+                TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, foreground,
                     TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
                 return;
             }
             float diameter = 17 * scale, left = 16 * scale;
-            using (var pen = new Pen(EditorTheme.Ink, 2 * scale))
+            using (var pen = new Pen(foreground, 2 * scale))
             {
                 pen.StartCap = pen.EndCap = LineCap.Round;
                 e.Graphics.DrawArc(pen, left, (Height - diameter) / 2f, diameter, diameter, angle, 265);
             }
             TextRenderer.DrawText(e.Graphics, I18n.Str("editor.applying"), Font,
                 new Rectangle((int)(left + diameter + 10 * scale), 0, Math.Max(0, Width - (int)(left + diameter + 20 * scale)), Height),
-                EditorTheme.Ink, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+                foreground, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
         }
         protected override void Dispose(bool disposing)
         { if (disposing) animation.Dispose(); base.Dispose(disposing); }
