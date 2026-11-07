@@ -2,7 +2,7 @@
 [color=#1e84cc][b]Steam CL-301524 and 1.0302256 / CL-302256 ✅[/b][/color] · Windows 10/11[/center][center]
 If something doesn't work, please post your tool version, device/layout and a screenshot.
 
-[b]Close the game before applying changes. Applying or resetting bindings in the game's own binding screen will overwrite your layout.
+[b]Close the game for ordinary save edits, Mod installation and runtime updates. Connected Key Enhancement bindings support live editing. Applying or resetting bindings in the game's own binding screen will overwrite your layout.
 [/b][/center][center][size=5][color=#e8b96a][b]Changelog[/b][/color][/size][/center]
 [center][color=#1e84cc][b]V1.3.0[/b][/color]
 Added optional Key Enhancement with extra moves, chords, tap/hold, sequences, independent schemes and live editing. Added per-binding resource, damage and timing settings, plus preset sharing and CLI workflows. Improved runtime recovery and editor responsiveness; fixed flickering action-group text.

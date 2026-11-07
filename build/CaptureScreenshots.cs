@@ -169,7 +169,7 @@ internal static class CaptureScreenshots
         var entry = workspace.Add(move, new BindingEntry { Keys = new[] { "G" }, Trigger = "press" });
         workspace.Add("ability:Ability.Action.Hun.SpecialDash", new BindingEntry { Keys = new[] { "V" }, Trigger = "press" });
         form.RenderSession();
-        form.ShowActionView(scene != "enhancement-main");
+        form.ShowActionView(scene == "enhancement-actions" || scene == "enhancement-moves" || scene == "enhancement-tuning");
         Application.DoEvents();
         if (scene == "enhancement-actions")
         {

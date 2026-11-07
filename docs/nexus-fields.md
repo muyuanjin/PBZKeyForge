@@ -4,9 +4,7 @@ The page description source is `nexus-description.bbcode.txt`. Version-specific 
 
 Live page: https://www.nexusmods.com/phantombladezero/mods/402
 
-Versioned media sources: `assets/screenshots/<version>/README.md` indexes ten scenes in English and Simplified Chinese. Generate the 20 images with `build/capture-screenshots.ps1`; see [publishing](publishing.md#versioned-screenshots-and-page-description) for upload and page editing.
-
-[1.2.1 media URLs](nexus-media-1.2.1.md) map the screenshots to Nexus images. The gallery starts with English keyboard/mouse, Xbox and PlayStation, followed by the same three views in Simplified Chinese. Each has the preset list expanded; English keyboard/mouse is the thumbnail. The banner follows the six main screenshots. Older UI screenshots are hidden. The description puts installation and important instructions first, with only three feature illustrations: editing by key, saving a preset and sharing by device scope. Other feature screenshots remain hidden.
+[1.3.0 screenshots](../assets/screenshots/1.3.0/README.md) and [Nexus media URLs](nexus-media-1.3.0.md) map the media. Gallery order: English PC key view, Xbox, PlayStation and action view; the same four in Simplified Chinese; then the banner. All eight UI images show the complete editor. English PC is the thumbnail. The description uses six feature images, with five dedicated illustrations hidden from the gallery. Old-version images are deleted.
 
 | Field | Value |
 | --- | --- |

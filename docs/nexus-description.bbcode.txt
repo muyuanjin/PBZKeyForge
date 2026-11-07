@@ -22,9 +22,18 @@ Copying a preset save replaces your saved layouts. Ordinary shared keys trigger 
 [color=#e8b96a][b]KEY ENHANCEMENT: EXTRA ACTIONS AND YOUR OWN SCHEMES[/b][/color]
 Click any key and [b]Add action[/b], or browse [b]By action[/b]. The grouped catalog includes weapon attacks, Combat Art finishers, charged releases, Phantom Edge attacks, counters, movement and other supported actions. Search by action name, weapon or technical code. Bind several functions to one key, or give one function multiple inputs.
 
+[center][b]Search extra weapon moves and bind complete Combat Arts[/b]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794062226-768847947.png[/img][/center]
+
 Use press, release, tap/hold, chords, repeated presses or sequences. Each combat binding can independently bypass supported resource costs and adjust health damage, startup speed and recovery speed. Defaults preserve normal costs and 1× multipliers. Projectiles and native follow-ups retain the settings of their own activation.
 
+[center][b]Set resource costs, damage and animation speed for each binding[/b]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794062224-915392486.png[/img][/center]
+
 Enhancement uses independent schemes, initially copied from the three game layouts. Use [b]+[/b] to copy a scheme and [b]•••[/b] to rename or remove an added scheme. Scheme-switch bindings work in game even after closing the editor. Applying a scheme deploys its bindings; clicking a tab only selects what you edit. Turning enhancement off returns to the game's ordinary schemes and retains the enhancement library.
+
+[center][b]Build independent enhancement schemes and add actions to any key[/b]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794062227-666933177.png[/img][/center]
 
 [b]Live editing:[/b] after the Mod connects, change a binding and apply without restarting the game. Loading shows a neutral waiting state. Runtime failures retain the full error details for copying; rejected changes preserve the draft. Update the installed runtime with the game closed.
 
@@ -53,23 +62,23 @@ The initial choice is Preset only, and your choice is remembered. Selecting a pr
 
 [b]Default or Unbound:[/b] Default shows the actual factory key and restores it. Unbound explicitly removes the slot's binding. You can choose a key from the list or focus the capture field and press a keyboard or mouse button.
 
-The interface supports all 15 game languages, including Simplified and Traditional Chinese. Switch languages from the toolbar. Keyboard/mouse, Xbox and PlayStation are supported. The gallery shows enhancement schemes, Phantom Edge actions, complete moves and combat settings in English and Simplified Chinese.
+The interface supports all 15 game languages, including Simplified and Traditional Chinese. Switch languages from the toolbar. Keyboard/mouse, Xbox and PlayStation are supported. The gallery shows complete PC, Xbox and PlayStation key views, followed by the extra-action catalog, in English and Simplified Chinese.
 
 [center][b]Select a key, edit its actions, and review the scheme changes[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793743297-1833902486.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794063153-420949216.png[/img][/center]
 
 [color=#e8b96a][b]YOUR PRESETS AND SHARE CODES[/b][/color]
 Click [b]Save as preset[/b] in the scheme bar to name the current draft and choose its devices. [b]Preset manager[/b] beside Quick setup previews, shares, imports and deletes personal presets. Personal presets remain separate from built-ins; deleting a preset does not change your current bindings.
 
 [center][b]Save your current scheme with a name[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793743313-425950747.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794063148-284214187.png[/img][/center]
 
 Copy a named, one-line share code for all included devices, keyboard/mouse, controllers or one controller family. The character count updates with your choice. Select a saved preset to preview its factory differences; check presets in the library to delete them.
 
 Paste a share code, click [b]Preview[/b], and inspect the included devices and changes before saving or using it. [b]Save to my presets[/b] keeps it in your library; [b]Save and use[/b] also stages it in the current scheme. Enhancement presets and share codes include the selected scheme's bindings. [b]Export game bindings[/b] creates a .sav copy for ordinary bindings or a ZIP preserving the enhancement scheme library. Export leaves the source save and active game scheme unchanged.
 
 [center][b]Share your layout for all devices or a selected device family[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793743316-406270396.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794063150-1578753286.png[/img][/center]
 
 [color=#e8b96a][b]BUILT-IN LAYOUTS[/b][/color]
 [list]
