@@ -106,20 +106,20 @@ class CompleteMoveCatalogTests
         var explicitPress = KeyEnhancementConfiguration.FromJson("{\"Enabled\":true,\"Rules\":[{\"Id\":\"explicit-move\",\"Trigger\":\"press\",\"Keys\":[\"G\"],\"Outputs\":[{\"Kind\":\"move\",\"Tag\":\"" + MoveId + "\"}]}]}");
         Check(explicitPress.Rules.Single().Trigger == "press"
             && explicitPress.CompileLua().Contains("[\"trigger\"]=\"press\""),
-            "An explicit press in JSON must request one complete move.");
+            "JSON must preserve the selected on-press move trigger.");
         var once = new KeyEnhancementConfiguration { Enabled = true };
         var onceWorkspace = new BindingWorkspace(session, once, once.Clone(), false, -1);
         var onceEntry = onceWorkspace.Add(MoveId, new BindingEntry { Keys = new[] { "G" }, Trigger = "press" });
         Check(onceEntry.Trigger == "press" && once.Rules.Single().DefaultTrigger == false,
             "An explicitly selected press must remain distinct from the complete move's default.");
         var onceClone = once.Clone();
-        var oncePreset = UserPresetStore.Capture(session, "单次释放", once);
+        var oncePreset = UserPresetStore.Capture(session, "按下释放", once);
         var onceShared = UserPresetStore.ParseShare(UserPresetStore.Share(oncePreset)).KeyEnhancement;
         foreach (var copy in new[] { onceClone, onceShared })
         {
             Check(copy.Rules.Single().DefaultTrigger == false && copy.Rules.Single().Trigger == "press"
                 && copy.CompileLua().Contains("[\"trigger\"]=\"press\""),
-                "Cloning and preset sharing must preserve an explicit one-shot complete-move binding.");
+                "Cloning and preset sharing must preserve an explicit on-press complete-move binding.");
         }
         Directory.CreateDirectory(outputDirectory);
         foreach (bool pad in new[] { false, true })
@@ -132,7 +132,7 @@ class CompleteMoveCatalogTests
             var rule = multi.Rules.Single();
             Check(entries.Length == 2 && entries.All(entry => entry.Trigger == trigger)
                 && rule.DefaultTrigger == (trigger == "default") && rule.Trigger == (trigger == "default" ? "down" : trigger),
-                "Multi-select must preserve continuous defaults and explicit one-shot triggers on both devices.");
+                "Multi-select must preserve default and explicit triggers on both devices.");
             var sharedMulti = UserPresetStore.ParseShare(UserPresetStore.Share(UserPresetStore.Capture(session, "空中连招", multi))).KeyEnhancement;
             Check(sharedMulti.Rules.Single().DefaultTrigger == rule.DefaultTrigger && sharedMulti.Rules.Single().Trigger == rule.Trigger,
                 "Sharing must preserve multi-select trigger semantics.");

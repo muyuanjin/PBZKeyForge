@@ -94,7 +94,7 @@ namespace PBZKeyForge
 
         void SetApplyControls(Control[] controls, bool enabled)
         {
-            keyEnhancementFlame.AnimationPaused = !enabled;
+            keyEnhancementFlame.AnimationPaused = !enabled || modalActive;
             SendMessage(Handle, 0xB, IntPtr.Zero, IntPtr.Zero);
             try
             {
@@ -214,7 +214,7 @@ namespace PBZKeyForge
                         {
                             uninstallResult = await Task.Run(() => keyEnhancementInstallation.Uninstall());
                             keyEnhancementUninstall = false;
-                            configuration = new KeyEnhancementConfiguration(); keyEnhancement = configuration;
+                            configuration = keyEnhancementInstallation.LoadConfiguration(); keyEnhancement = configuration;
                         }
                         else await Task.Run(delegate { keyEnhancementInstallation.Apply(configuration); });
                         keyEnhancement = configuration; keyEnhancementBaseline = configuration.Clone(); keyEnhancementRepair = false; keyEnhancementError = null;

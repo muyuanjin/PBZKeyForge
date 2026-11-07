@@ -131,16 +131,6 @@ namespace PBZKeyForge
             base.OnLoad(e);
         }
 
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                var value = base.CreateParams;
-                value.ExStyle |= 0x02000000; // WS_EX_COMPOSITED paints child windows together.
-                return value;
-            }
-        }
-
         void Build()
         {
             Font = new Font("Microsoft YaHei UI", 10f);
@@ -329,10 +319,13 @@ namespace PBZKeyForge
             int gap = (int)(12 * scale);
             int usable = Math.Max(1, footer.ClientSize.Width - gap * 2);
             int actionWidth = (int)(usable * .18f), actionHeight = (int)(44 * scale);
-            int keyEnhancementWidth = Math.Max((int)(280 * scale), (int)(usable * .24f)), modWidth = (int)(usable * .34f);
-            keyEnhancementBar.SetBounds(gap, (int)(6 * scale), keyEnhancementWidth - gap, footer.Height - (int)(12 * scale));
-            chkPerfectDeflectNoRapidClickPenalty.SetBounds(gap + keyEnhancementWidth, (int)(6 * scale), modWidth - gap, footer.Height - (int)(12 * scale));
-            btnApply.SetBounds(footer.ClientSize.Width - actionWidth - gap, (footer.Height - actionHeight) / 2, actionWidth, actionHeight);
+            int keyEnhancementWidth = compactLayout ? (int)(usable * .30f) : Math.Max((int)(280 * scale), (int)(usable * .24f));
+            int modWidth = compactLayout ? keyEnhancementWidth : (int)(usable * .34f);
+            int componentTop = (int)((compactLayout ? 4 : 6) * scale);
+            int componentHeight = compactLayout ? (int)(32 * scale) : footer.Height - (int)(12 * scale);
+            keyEnhancementBar.SetBounds(gap, componentTop, keyEnhancementWidth - gap, componentHeight);
+            chkPerfectDeflectNoRapidClickPenalty.SetBounds(gap + keyEnhancementWidth, componentTop, modWidth - gap, componentHeight);
+            btnApply.SetBounds(footer.ClientSize.Width - actionWidth - gap, compactLayout ? (int)(6 * scale) : (footer.Height - actionHeight) / 2, actionWidth, actionHeight);
             int undoWidth = (int)(70 * scale), secondaryTop = btnApply.Bottom + (int)(2 * scale);
             btnUndo.SetBounds(btnApply.Left, secondaryTop, undoWidth, (int)(18 * scale));
             using (var graphics = chkPerfectDeflectNoRapidClickPenalty.CreateGraphics())
@@ -343,36 +336,19 @@ namespace PBZKeyForge
                 btnResourceModMore.Bounds = options;
             }
             btnKeyEnhancementMore.SetBounds(keyEnhancementBar.Width - (int)(28 * scale), (int)(4 * scale), (int)(24 * scale), (int)(24 * scale));
-            int activationLeft = chkPerfectDeflectNoRapidClickPenalty.Right + gap * 2;
+            int activationLeft = chkPerfectDeflectNoRapidClickPenalty.Right + gap * (compactLayout ? 1 : 2);
             int scopeWidth = Math.Max(1, btnApply.Left - gap - activationLeft);
-            chkActivate.SetBounds(activationLeft, (int)(10 * scale), scopeWidth, (int)(28 * scale));
+            chkActivate.SetBounds(activationLeft, (int)((compactLayout ? 4 : 10) * scale), scopeWidth, (int)((compactLayout ? 30 : 28) * scale));
             lblOffline.Bounds = chkActivate.Bounds;
-            lblScope.SetBounds(activationLeft, (int)(36 * scale), scopeWidth, (int)(20 * scale));
+            int textLeft = compactLayout ? gap : activationLeft;
+            int textWidth = compactLayout ? Math.Max(1, btnApply.Left - gap * 2) : scopeWidth;
+            lblScope.SetBounds(textLeft, (int)((compactLayout ? 38 : 36) * scale), textWidth,
+                compactLayout ? Math.Max(lblScope.Font.Height + 2, (int)(20 * scale)) : (int)(20 * scale));
             btnConflicts.Bounds = lblScope.Bounds;
             int backupLeft = btnUndo.Right + (int)(4 * scale);
             lblBackup.SetBounds(backupLeft, secondaryTop, Math.Max(1, btnApply.Right - backupLeft), (int)(18 * scale));
-            lblStatus.SetBounds(activationLeft, (int)(57 * scale), scopeWidth, Math.Max(lblStatus.Font.Height + 2, footer.Height - (int)(61 * scale)));
-            if (compactLayout)
-            {
-                int compactComponentWidth = (int)(usable * .30f);
-                keyEnhancementBar.SetBounds(gap, (int)(4 * scale), compactComponentWidth - gap, (int)(32 * scale));
-                chkPerfectDeflectNoRapidClickPenalty.SetBounds(gap + compactComponentWidth, (int)(4 * scale), compactComponentWidth - gap, (int)(32 * scale));
-                activationLeft = chkPerfectDeflectNoRapidClickPenalty.Right + gap;
-                chkActivate.SetBounds(activationLeft, (int)(4 * scale), Math.Max(1, btnApply.Left - activationLeft - gap), (int)(30 * scale));
-                lblOffline.Bounds = chkActivate.Bounds;
-                btnApply.Top = (int)(6 * scale);
-                btnUndo.Top = lblBackup.Top = btnApply.Bottom + (int)(2 * scale);
-                int textWidth = Math.Max(1, btnApply.Left - gap * 2);
-                lblScope.SetBounds(gap, (int)(38 * scale), textWidth, Math.Max(lblScope.Font.Height + 2, (int)(20 * scale)));
-                btnConflicts.Bounds = lblScope.Bounds;
-                lblStatus.SetBounds(gap, (int)(59 * scale), textWidth, Math.Max(lblStatus.Font.Height + 2, (int)(21 * scale)));
-                btnKeyEnhancementMore.Left = keyEnhancementBar.Width - (int)(28 * scale);
-                using (var graphics = chkPerfectDeflectNoRapidClickPenalty.CreateGraphics())
-                {
-                    var options = chkPerfectDeflectNoRapidClickPenalty.MeasureHeader(graphics).Options;
-                    options.Offset(chkPerfectDeflectNoRapidClickPenalty.Location); btnResourceModMore.Bounds = options;
-                }
-            }
+            lblStatus.SetBounds(textLeft, (int)((compactLayout ? 59 : 57) * scale), textWidth,
+                Math.Max(lblStatus.Font.Height + 2, compactLayout ? (int)(21 * scale) : footer.Height - (int)(61 * scale)));
             if (feedbackPanel != null) feedbackPanel.Bounds = lblStatus.Bounds;
             footer.Invalidate();
         }
@@ -498,8 +474,6 @@ namespace PBZKeyForge
         public void RenderSession()
         {
             if (IsApplying) return;
-            bool redraw = IsHandleCreated && Visible;
-            if (redraw) SendMessage(Handle, 0xB, IntPtr.Zero, IntPtr.Zero);
             loading = true;
             SuspendLayout(); body.SuspendLayout(); footer.SuspendLayout();
             try
@@ -561,7 +535,6 @@ namespace PBZKeyForge
             finally
             {
                 footer.ResumeLayout(true); body.ResumeLayout(true); ResumeLayout(true); loading = false;
-                if (redraw) { SendMessage(Handle, 0xB, new IntPtr(1), IntPtr.Zero); Invalidate(true); }
             }
         }
 
@@ -655,9 +628,9 @@ namespace PBZKeyForge
             lblGame.Text = I18n.Str(offline ? "offline.mode" : neverConnected ? "flow.notconnected" : waiting ? "live.waiting" : live
                 ? liveStatus.RoutingEnabled ? "live.connected" : "live.paused" : lastRunning ? "editor.running" : "editor.closed");
             lblGame.ForeColor = offline ? EditorTheme.Muted : live && liveStatus.RoutingEnabled ? EditorTheme.LiveConnected
-                : waiting ? Color.FromArgb(240, 178, 78) : lastRunning ? EditorTheme.Amber : EditorTheme.Green;
+                : neverConnected ? EditorTheme.Muted : waiting ? Color.FromArgb(240, 178, 78) : lastRunning ? EditorTheme.Amber : EditorTheme.Green;
             SetTip(lblGame, (liveConfigured && !liveStatus.Suspended ? liveStatus.Detail : lblGame.Text) + "\n" + I18n.Str("flow.connection.open"));
-            ((ApplyActionButton)btnApply).GameRunning = gameRunning && !live;
+            ((ApplyActionButton)btnApply).GameRunning = gameRunning && !live && !neverConnected;
             ((ApplyActionButton)btnApply).LiveConnected = live && liveStatus.RoutingEnabled;
             btnApply.Text = I18n.Str(offline ? HasKeyEnhancementConfiguration ? "enhancement.exportbundle" : "offline.export" : live ? "live.apply" : neverConnected ? "flow.notconnected" : waiting ? "live.waiting" : gameRunning ? "editor.applyrunning" : "editor.apply");
             btnApply.Enabled = application.CanApply;
@@ -679,7 +652,8 @@ namespace PBZKeyForge
                 + (messageKey != null && messageKey != "editor.refreshed" ? " " + I18n.Str(messageKey, messageArgs) : "")
                 : messageKey != null ? I18n.Str(messageKey, messageArgs) : I18n.Str(offline ? "offline.help" : "editor.ready");
             lblStatus.ForeColor = messageError ? Color.FromArgb(238, 171, 156) : liveConfigured
-                ? live && liveStatus.RoutingEnabled ? EditorTheme.LiveConnected : waiting ? Color.FromArgb(240, 178, 78) : EditorTheme.Amber : EditorTheme.Muted;
+                ? live && liveStatus.RoutingEnabled ? EditorTheme.LiveConnected : neverConnected ? EditorTheme.Muted
+                : waiting ? Color.FromArgb(240, 178, 78) : EditorTheme.Amber : EditorTheme.Muted;
             SetTip(lblStatus, lblStatus.Text);
             lblStatus.Visible = !(messageError || runtimeFeedback != null) || feedbackDismissed;
         }

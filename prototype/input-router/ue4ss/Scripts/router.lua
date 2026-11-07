@@ -67,13 +67,9 @@ local function pipeline_identity(backend, target)
     return ""
 end
 
-local function tuned(settings)
-    return settings and ((settings.damage_multiplier or 1) ~= 1 or (settings.startup_speed or 1) ~= 1 or (settings.recovery_speed or 1) ~= 1)
-end
-
-local function merge_settings(current,incoming)
-    if not current or not tuned(current) and tuned(incoming) then return incoming end
-    return current
+local function settings_identity(settings)
+    return table.concat({tostring(settings.bypass_resources == true),tostring(settings.damage_multiplier or 1),
+        tostring(settings.startup_speed or 1),tostring(settings.recovery_speed or 1)},"|")
 end
 
 function Router.new(config, backend)
@@ -111,11 +107,23 @@ function Router.new(config, backend)
         for _, key in ipairs(binding.watch or {}) do add(key) end
         for _, key in ipairs(consumes(binding)) do add(key) end
         assert(#(binding.outputs or {}) > 0, "binding needs outputs")
+        local moveIds, sourceKeys = {}, {}
+        local settingsId = settings_identity(binding)
+        for _, key in ipairs(binding.keys or {}) do sourceKeys[#sourceKeys+1] = key end
+        if binding.axis then sourceKeys[#sourceKeys+1] = binding.axis end
+        table.sort(sourceKeys)
         for _, output in ipairs(binding.outputs) do
             local name = type(output) == "string" and output or output.target
             assert(config.targets[name], "unknown target: " .. tostring(name))
+            local target = config.targets[name]
+            if target.kind == "move" or target.kind == "ability" then
+                local identity = target.kind == "move" and (target.move_id or target)
+                    or table.concat({"ability",target.tag,tostring(target.force),tostring(target.priority or -5),target.input_action or ""},"|")
+                moveIds[name] = tostring(identity) .. "|" .. settingsId
+            end
         end
-        self.rules[#self.rules+1] = { binding=binding, index=index, dimension=dimension, state={} }
+        self.rules[#self.rules+1] = { binding=binding, index=index, dimension=dimension, state={},
+            consume_keys=consumes(binding), input_signature=table.concat(sourceKeys, ",") .. ":", move_ids=moveIds }
         end
     end
     table.sort(self.rules, function(a,b)
@@ -198,7 +206,7 @@ local function evaluate(binding, st, now, snapshot, context, dimension)
         held = (st.step or 0) > 0 or pulse
     end
     st.active = active
-    return { active=active, pulse=pulse, value=value,
+    return { active=active, move_active=kind == "press" and held, pulse=pulse, value=value,
         reserve=held or released and (kind == "tap" or kind == "release") }
 end
 
@@ -304,9 +312,9 @@ function Router:step(now, snapshot, context)
         if blocked and b.trigger == "sequence" then st.step, st.lastStep = 0, nil end
         if not blocked and allowed then
             if result.reserve then
-                for _, key in ipairs(consumes(b)) do reserved[key], owners[key]=true, b.input_group or b.id end
+                for _, key in ipairs(rule.consume_keys) do reserved[key], owners[key]=true, b.input_group or b.id end
             end
-            if result.active then
+            if result.active or result.move_active then
                 for _, output in ipairs(b.outputs) do
                     local name = type(output) == "string" and output or output.target
                     local target = self.config.targets[name]
@@ -315,11 +323,11 @@ function Router:step(now, snapshot, context)
                     local scale = type(result.value) == "number" and result.value
                         or type(result.value) == "table" and outputValue and magnitude(vector(result.value)) or 1
                     v.x, v.y, v.z = v.x*scale, v.y*scale, v.z*scale
-                    if target.kind == "action" and target.native_continuous and context and context.move_ignored then
+                    if result.active and target.kind == "action" and target.native_continuous and context and context.move_ignored then
                         local native = action_identity(self.backend, target)
                         canceled[native] = canceled[native] or {}
                         canceled[native][pipeline_identity(self.backend, target)] = true
-                    elseif target.kind == "action" and not (st.resume_outputs and st.resume_outputs[name])
+                    elseif result.active and target.kind == "action" and not (st.resume_outputs and st.resume_outputs[name])
                         and not (target.native_continuous and context and context.move_ignored) then
                         local native = action_identity(self.backend, target)
                         local level = levels[native]
@@ -330,19 +338,13 @@ function Router:step(now, snapshot, context)
                         local pipeline = pipeline_identity(self.backend, target)
                         local contribution = level.pipelines[pipeline]
                         if not contribution then
-                            contribution={target=target, value={x=0,y=0,z=0}, inputs={},rank=rank}
+                            contribution={target=target, value={x=0,y=0,z=0}, inputs={},rank=rank,
+                                settings=b,bypass_resources=b.bypass_resources}
                             level.pipelines[pipeline]=contribution
                         end
-                        contribution.bypass_resources = contribution.bypass_resources or b.bypass_resources
-                        local settings = merge_settings(contribution.settings,b)
-                        if settings ~= contribution.settings then contribution.rank = rank end
-                        contribution.settings = settings
                         local signature
                         if target.source_relation and (b.trigger == "down" or b.trigger == "axis" or not b.trigger) then
-                            local keys = {}; for _, key in ipairs(b.keys or {}) do keys[#keys+1] = key end
-                            if b.axis then keys[#keys+1] = b.axis end
-                            table.sort(keys)
-                            signature = table.concat(keys, ",") .. ":" .. tostring(v.x) .. ":" .. tostring(v.y) .. ":" .. tostring(v.z)
+                            signature = rule.input_signature .. tostring(v.x) .. ":" .. tostring(v.y) .. ":" .. tostring(v.z)
                         end
                         if not signature or not contribution.inputs[signature] then
                             contribution.value.x = contribution.value.x + v.x
@@ -351,18 +353,13 @@ function Router:step(now, snapshot, context)
                             if signature then contribution.inputs[signature] = true end
                         end
                     elseif target.kind == "move" or target.kind == "ability" and result.pulse then
-                        local identity = target.kind == "move" and (target.move_id or target)
-                            or table.concat({"ability",target.tag,tostring(target.force),tostring(target.priority or -5),target.input_action or ""},"|")
+                        local identity = rule.move_ids[name]
                         local request = moves[identity]
                         if not request then
-                            request = {target=target, value=v, binding=b.id, settings=b,rank=rank}
+                            request = {target=target, value=v, binding=b.id, settings=b,rank=rank,bypass_resources=b.bypass_resources}
                             moves[identity] = request
                             moveOrder[#moveOrder+1] = request
                         end
-                        request.bypass_resources = request.bypass_resources or b.bypass_resources
-                        local settings = merge_settings(request.settings,b)
-                        if settings ~= request.settings then request.rank=rank end
-                        request.settings = settings
                     elseif target.kind ~= "action" and result.pulse then
                         self.backend:dispatch(target, "triggered", v, b.id, b.bypass_resources, b)
                     end

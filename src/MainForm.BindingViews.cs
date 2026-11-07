@@ -159,8 +159,9 @@ namespace PBZKeyForge
                 var snapshots = scopes.Select(workspace => workspace.Snapshot()).ToArray();
                 keyboardBindingChanges = snapshots.Where(snapshot => !snapshot.Gamepad).SelectMany(snapshot => snapshot.Differences(false)).Select(change => change.Action).Distinct().Count();
                 gamepadBindingChanges = snapshots.Where(snapshot => snapshot.Gamepad).SelectMany(snapshot => snapshot.Differences(false)).Select(change => change.Action).Distinct().Count();
-                if (actionView) { unifiedActions.Render(currentBindings); unifiedActions.BringToFront(); }
-                else { keyBindings.Render(Session, snapshots.First(snapshot => snapshot.Gamepad == gamepad && (!gamepad || snapshot.FamilyIndex == SelectedFamilyIndex))); keyBindings.BringToFront(); }
+                var currentSnapshot = snapshots.First(snapshot => snapshot.Gamepad == gamepad && (!gamepad || snapshot.FamilyIndex == SelectedFamilyIndex));
+                if (actionView) { unifiedActions.RenderEntries(currentBindings, currentSnapshot.Entries); unifiedActions.BringToFront(); }
+                else { keyBindings.Render(Session, currentSnapshot); keyBindings.BringToFront(); }
                 schemeDiff.Render(Session, snapshots);
                 bindingWorkspace.PerformLayout();
             }

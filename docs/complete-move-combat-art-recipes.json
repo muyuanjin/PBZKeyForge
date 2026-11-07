@@ -23,6 +23,12 @@
           "minimum_time": 0.01253,
           "before_time": 2.43
         },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 2.43,
+          "attack_start": 2.7894864082336426,
+          "attack_end": 3.904533863067627
+        },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
           "CharacterState.Space.Ground",
@@ -311,6 +317,12 @@
           "minimum_time": 0.001,
           "before_time": 2.3
         },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 2.3,
+          "attack_start": 3.171233654022217,
+          "attack_end": 3.588895082473755
+        },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
           "CharacterState.Space.Ground",
@@ -598,6 +610,12 @@
           "minimum_time": 0.22406,
           "before_time": 3.6
         },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 3.6,
+          "attack_start": 4.288000106811523,
+          "attack_end": 4.352222442626953
+        },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
           "CharacterState.Space.Ground",
@@ -867,6 +885,12 @@
           "timeline": "Main",
           "minimum_time": 0.001,
           "before_time": 2.7
+        },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 2.7,
+          "attack_start": 2.837909698486328,
+          "attack_end": 4.479668617248535
         },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
@@ -1250,6 +1274,12 @@
           "minimum_time": 0.00194,
           "before_time": 2.8
         },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 2.8,
+          "attack_start": 3.462238073348999,
+          "attack_end": 4.083467483520508
+        },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
           "CharacterState.Space.Ground",
@@ -1473,6 +1503,12 @@
           "timeline": "Main",
           "minimum_time": 0.001,
           "before_time": 3.2
+        },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 3.2,
+          "attack_start": 4.0520172119140625,
+          "attack_end": 4.110052108764648
         },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
@@ -1752,6 +1788,12 @@
           "minimum_time": 0.001,
           "before_time": 4.58
         },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 4.58,
+          "attack_start": 4.91051721572876,
+          "attack_end": 5.122853755950928
+        },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
           "CharacterState.Space.Ground",
@@ -2006,6 +2048,12 @@
           "timeline": "Main",
           "minimum_time": 0.001,
           "before_time": 3.1
+        },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 3.1,
+          "attack_start": 3.448505401611328,
+          "attack_end": 4.2265825271606445
         },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
@@ -2343,6 +2391,12 @@
           "minimum_time": 0.001,
           "before_time": 3.1
         },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 3.1,
+          "attack_start": 3.684345245361328,
+          "attack_end": 4.503819942474365
+        },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
           "CharacterState.Space.Ground",
@@ -2611,6 +2665,12 @@
           "minimum_time": 0.3061,
           "before_time": 3.3
         },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 3.3,
+          "attack_start": 4.689674377441406,
+          "attack_end": 4.885024547576904
+        },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
           "CharacterState.Space.Ground",
@@ -2869,6 +2929,12 @@
           "timeline": "Main",
           "minimum_time": 0.13322,
           "before_time": 3.2
+        },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 3.2,
+          "attack_start": 4.090865612030029,
+          "attack_end": 6.360708236694336
         },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
@@ -3191,6 +3257,12 @@
           "minimum_time": 0.00917,
           "before_time": 2.0
         },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 2.0,
+          "attack_start": 2.570992946624756,
+          "attack_end": 3.7097229957580566
+        },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
           "CharacterState.Space.Ground",
@@ -3421,6 +3493,12 @@
           "timeline": "Main",
           "minimum_time": 0.00917,
           "before_time": 2.0
+        },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 2.0,
+          "attack_start": 2.570992946624756,
+          "attack_end": 3.7097229957580566
         },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
@@ -3653,6 +3731,12 @@
           "minimum_time": 0.001,
           "before_time": 2.7
         },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 2.7,
+          "attack_start": 2.8662726879119873,
+          "attack_end": 3.33701229095459
+        },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
           "CharacterState.Space.Ground",
@@ -3861,6 +3945,12 @@
           "timeline": "Main",
           "minimum_time": 0.37592,
           "before_time": 3.2
+        },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 3.2,
+          "attack_start": 3.588853359222412,
+          "attack_end": 3.82942533493042
         },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
@@ -4118,6 +4208,12 @@
           "timeline": "Exit",
           "minimum_time": 0.001,
           "before_time": 2.1
+        },
+        "phaseWindow": {
+          "timeline": "Exit",
+          "entry_time": 2.1,
+          "attack_start": 2.770838737487793,
+          "attack_end": 2.9049643874168396
         },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [
@@ -4384,6 +4480,12 @@
           "timeline": "Exit",
           "minimum_time": 0.60001,
           "before_time": 3.1
+        },
+        "phaseWindow": {
+          "timeline": "Exit",
+          "entry_time": 3.1,
+          "attack_start": 4.437198162078857,
+          "attack_end": 4.513345241546631
         },
         "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
         "requiredTags": [

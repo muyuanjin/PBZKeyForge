@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using PBZKeyForge;
 
@@ -88,6 +89,86 @@ public static class MainKeyEnhancementTests
         using (var output = new MemoryStream()) { input.CopyTo(output); return output.ToArray(); }
     }
 
+    static bool JsonEqual(string left, string right)
+    {
+        var serializer = new JavaScriptSerializer { MaxJsonLength = 16777216 };
+        return JsonValueEqual(serializer.DeserializeObject(left), serializer.DeserializeObject(right));
+    }
+    static bool JsonValueEqual(object left, object right)
+    {
+        var leftObject = left as Dictionary<string, object>;
+        var rightObject = right as Dictionary<string, object>;
+        if (leftObject != null || rightObject != null)
+            return leftObject != null && rightObject != null && leftObject.Count == rightObject.Count
+                && leftObject.All(pair => rightObject.ContainsKey(pair.Key) && JsonValueEqual(pair.Value, rightObject[pair.Key]));
+        var leftArray = left as object[];
+        var rightArray = right as object[];
+        if (leftArray != null || rightArray != null)
+            return leftArray != null && rightArray != null && leftArray.Length == rightArray.Length
+                && leftArray.Zip(rightArray, JsonValueEqual).All(equal => equal);
+        return object.Equals(left, right);
+    }
+
+    static void Reinstall(string fixture, string output)
+    {
+        Check(JsonEqual("{\"NativeBindings\":[{\"Keys\":[\"G\"],\"FunctionId\":\"IA_Jump\",\"Device\":\"keyboard\"}]}",
+            "{\"NativeBindings\":[{\"FunctionId\":\"IA_Jump\",\"Device\":\"keyboard\",\"Keys\":[\"G\"]}]}"),
+            "Configuration comparison must ignore nested object field order.");
+        Check(!JsonEqual("{\"Keys\":[\"G\",\"H\"]}", "{\"Keys\":[\"H\",\"G\"]}"),
+            "Configuration comparison must preserve array order.");
+        Check(!JsonEqual("{\"Enabled\":true,\"Keys\":[\"G\"]}", "{\"Enabled\":false,\"Keys\":[\"G\"]}")
+            && !JsonEqual("{\"Keys\":[\"G\"]}", "{}"), "Configuration comparison must detect changed or missing settings.");
+        string root = Path.Combine(output, "reinstall game"), runtime = Path.Combine(root, @"platform\steam");
+        Directory.CreateDirectory(runtime); File.WriteAllText(Path.Combine(runtime, "PBZ.exe"), "fixture, never launched");
+        string save = Path.Combine(root, @"ProjectPBZ\Saved\EnhancedInputUserSettings.sav");
+        Directory.CreateDirectory(Path.GetDirectoryName(save)); File.Copy(fixture, save);
+        byte[] original = File.ReadAllBytes(save);
+        var installation = new KeyEnhancementInstallation(root);
+        var configuration = new KeyEnhancementConfiguration { Enabled = true };
+        configuration.EnsureSchemes(EditorSession.CreateOffline());
+        configuration.AddScheme("自定义方案"); configuration.Rules.Add(Rule());
+        configuration.ActiveSchemeId = configuration.SelectedSchemeId;
+        configuration.CustomFunctions.Add(new KeyEnhancementOutput { Id = "retained-property", Name = "personal function", Kind = "property", Property = "bFlag", Value = true });
+        installation.Apply(configuration);
+        string enabled = configuration.ToJson();
+        configuration.SetEnabled(false); string disabled = configuration.ToJson();
+        Exception failure = null;
+        using (var form = new MainForm(new EditorPreferences(Path.Combine(output, "preferences.txt"))))
+        {
+            form.ShowInTaskbar = false; form.UiSmoke(save);
+            typeof(MainForm).GetField("ue4ssReleaseCheck", Fields).SetValue(form, (Func<Ue4ssRelease>)(() => Ue4ssRelease.Bundled));
+            form.Shown += delegate { form.BeginInvoke((Action)delegate {
+                try
+                {
+                    form.RenderSession();
+                    Check(JsonEqual(Configuration(form).ToJson(), enabled) && !Pending(form), "Reopening did not load all installed enhancement settings.");
+                    Field<Button>(form, "btnKeyEnhancementMore").PerformClick(); Application.DoEvents();
+                    var menu = Field<ContextMenuStrip>(form, "keyEnhancementMenu");
+                    menu.Items["enhancement.lifecycle.uninstall"].PerformClick(); menu.Close();
+                    Check(Pending(form) && Directory.Exists(installation.InstallDirectory), "Uninstall did not remain staged until Apply.");
+                    Apply(form);
+                    Check(!Directory.Exists(installation.InstallDirectory) && !File.Exists(Path.Combine(runtime, "dwmapi.dll")), "Uninstall retained owned runtime files.");
+                    Check(JsonEqual(Configuration(form).ToJson(), disabled) && !Pending(form), "Uninstall lost saved schemes, bindings or custom functions.");
+                    form.RefreshFromDisk();
+                    Check(JsonEqual(Configuration(form).ToJson(), disabled) && !Pending(form), "Refresh discarded retained enhancement settings.");
+                    Shot(form, output, "uninstalled-settings-retained");
+                    var toggle = Field<CheckBox>(Field<Control>(form, "keyEnhancementBar"), "Toggle");
+                    Toggle(toggle);
+                    Check(JsonEqual(Configuration(form).ToJson(), enabled) && Pending(form), "Re-enable did not recover the complete enhancement draft.");
+                    Apply(form);
+                    Check(installation.InstalledEnabled && !Pending(form) && JsonEqual(File.ReadAllText(installation.ConfigurationPath), enabled),
+                        "Reinstall did not deploy the original enhancement settings.");
+                    Check(original.SequenceEqual(File.ReadAllBytes(save)), "Uninstall/reinstall changed native input saves.");
+                    Shot(form, output, "reinstalled-settings-restored");
+                }
+                catch (Exception ex) { failure = ex; }
+                finally { form.Dispose(); }
+            }); };
+            Application.Run(form);
+        }
+        if (failure != null) throw new Exception("Enhancement reinstallation UI assertion failed.", failure);
+    }
+
     [STAThread]
     public static int Main(string[] args)
     {
@@ -98,6 +179,13 @@ public static class MainKeyEnhancementTests
             string output = Path.GetFullPath(args[1]);
             if (Directory.Exists(output)) throw new Exception("Use a new output directory.");
             Directory.CreateDirectory(output);
+            if (args.Contains("--reinstall-only"))
+            {
+                I18n.Current = "zh-Hans";
+                Reinstall(args[0], output);
+                Console.WriteLine("MainKeyEnhancementTests reinstall PASS: " + checks + " assertions; screenshots=" + output);
+                return 0;
+            }
             string root = Path.Combine(output, "游戏 fixture"), runtime = Path.Combine(root, @"platform\steam");
             Directory.CreateDirectory(runtime); File.WriteAllText(Path.Combine(runtime, "PBZ.exe"), "fixture, never launched");
             string save = Path.Combine(root, @"ProjectPBZ\Saved\EnhancedInputUserSettings.sav");
@@ -257,7 +345,8 @@ public static class MainKeyEnhancementTests
                         Field<ContextMenuStrip>(form, "keyEnhancementMenu").Close();
                         Check(Pending(form) && Directory.Exists(installation.InstallDirectory), "Uninstall must stage until Apply.");
                         Apply(form);
-                        Check(!Directory.Exists(installation.InstallDirectory) && !File.Exists(Path.Combine(runtime, "dwmapi.dll")) && Configuration(form).Rules.Count == 0, "Component uninstall did not clear the owned runtime and rules.");
+                        Check(!Directory.Exists(installation.InstallDirectory) && !File.Exists(Path.Combine(runtime, "dwmapi.dll"))
+                            && !Configuration(form).Enabled && !Pending(form), "Component uninstall did not remove the owned runtime or remain disabled.");
                         form.NewOfflineScheme(); Application.DoEvents();
                         Check(form.Session.IsOffline && Field<KeyEnhancementInstallation>(form, "keyEnhancementInstallation") == null, "Offline editing retained an installation target.");
                         Toggle(toggle); Configuration(form).Rules.Add(Rule()); form.Session.SetKeyboard("IA_Jump", 0, "F11"); form.RenderSession();

@@ -1,5 +1,6 @@
 LIBRARY UE4SS.dll
 EXPORTS
+    ?push_classproperty@LuaType@RC@@YAXAEBUPusherParams@12@@Z
     ?Node@FFrame@Unreal@RC@@QEAAAEAPEAVUFunction@23@XZ
     ?GetFullName@UObject@Unreal@RC@@QEBA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@PEAV123@@Z
     ?RegisterProcessLocalScriptFunctionPreCallback@Hook@Unreal@RC@@YAXV?$function@$$A6AXPEAVUObject@Unreal@RC@@AEAUFFrame@23@PEAX@Z@std@@@Z
@@ -8,3 +9,16 @@ EXPORTS
     ?get_bool@Lua@LuaMadeSimple@RC@@QEBA_NH@Z
     ?set_integer@Lua@LuaMadeSimple@RC@@QEBAX_J@Z
     ?set_string@Lua@LuaMadeSimple@RC@@QEBAXPEBD_K@Z
+    ?RegisterPreHook@UFunction@Unreal@RC@@QEAAHAEBV?$function@$$A6AXAEAVUnrealScriptFunctionCallableContext@Unreal@RC@@PEAX@Z@std@@PEAX@Z
+    ?RegisterPostHook@UFunction@Unreal@RC@@QEAAHAEBV?$function@$$A6AXAEAVUnrealScriptFunctionCallableContext@Unreal@RC@@PEAX@Z@std@@PEAX@Z
+    ?GetFuncPtr@UFunction@Unreal@RC@@QEAAP6AXPEAVUObject@23@AEAUFFrame@23@PEAX@ZXZ
+    ?GetPropertyByName@UObject@Unreal@RC@@QEAAPEAVFProperty@23@PEB_W@Z
+    ?GetPropertyByNameInChain@UObject@Unreal@RC@@QEAAPEAVFProperty@23@PEB_W@Z
+    ?GetMapLayout@FMapProperty@Unreal@RC@@QEAAAEAUFScriptMapLayout@23@XZ
+    ?GetKeyProp@FMapProperty@Unreal@RC@@QEAAAEAPEAVFProperty@23@XZ
+    ?GetValueProp@FMapProperty@Unreal@RC@@QEAAAEAPEAVFProperty@23@XZ
+    ?GetElementSize@FProperty@Unreal@RC@@QEAAAEAHXZ
+    ?ToString@FName@Unreal@RC@@QEBA?BV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ
+    ?get_number@Lua@LuaMadeSimple@RC@@QEBANH@Z
+    ?GetOffset_Internal@FProperty@Unreal@RC@@QEAAAEAHXZ
+    ?GetInterfaces@UClass@Unreal@RC@@QEAAAEAV?$TArray@UFImplementedInterface@Unreal@RC@@V?$TSizedDefaultAllocator@$0CA@@23@@23@XZ

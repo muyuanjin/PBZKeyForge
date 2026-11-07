@@ -11,7 +11,7 @@ local function object(address,properties)
     function value:IsValid() return self.valid~=false end
     function value:GetAddress() return address end
     function value:GetPropertyValue(key) return self[key] end
-    function value:GetFullName() return "Class "..self.path end
+    function value:GetFullName() return "Class "..(self.path or self.class and self.class.path or tostring(address)) end
     function value:GetClass() return self.class end
     function value:IsA() return true end
     return value
@@ -19,7 +19,13 @@ end
 function RegisterHook(path,pre,post) hooks[path]={pre=pre,post=post};return 1,2 end
 function UnregisterHook(path) hooks[path]=nil end
 package.loaded['script-context']={new=function() return {
-    owner=function(_,states) return current and states[current:GetAddress()],currentFunction end,reset=function() end
+    enable_damage=function() end,
+    interface_hook=function(_,_,path,pre,post)
+        return RegisterHook(path,function(context,...) return pre(context:get(),...) end,post)
+    end,
+    owner=function(_,states) return current and states[current:GetAddress()],currentFunction end,
+    at=function() return nil,nil,currentFunction end,
+    damage_bullet=function() end,ability_damage=function() end,update_damage=function() end,reset=function() end
 } end}
 local Costs=require('resource-costs')
 local prefix="/Script/SGameInputSystem.AbilityInputComponent:"
@@ -41,6 +47,7 @@ local function fixture()
     local timeline,task=object(33),object(34)
     task.Timeline=timeline
     local backend={pawn=pawn}
+    function backend:report() end
     function backend:receiver(target) return target.receiver=="ability_input" and input or asc end
     function backend:object() return object(99) end
     function backend:invoke(value,path,rate)

@@ -160,6 +160,49 @@ internal static class CaptureScreenshots
         finally { if (Directory.Exists(directory)) { store.Delete(store.Load()); Directory.Delete(directory); } }
     }
 
+    static void CaptureEnhancement(MainForm form, string scene, string path)
+    {
+        typeof(MainForm).GetMethod("EnableKeyEnhancementEditing", Hidden).Invoke(form, null);
+        var config = Field<KeyEnhancementConfiguration>(form, "keyEnhancement");
+        var workspace = new BindingWorkspace(form.Session, config, config.Clone(), false, -1);
+        const string move = "move:Ability.Action.Hun.CombatArt.BronzeSword.Final";
+        var entry = workspace.Add(move, new BindingEntry { Keys = new[] { "G" }, Trigger = "press" });
+        workspace.Add("ability:Ability.Action.Hun.SpecialDash", new BindingEntry { Keys = new[] { "V" }, Trigger = "press" });
+        form.RenderSession();
+        form.ShowActionView(scene != "enhancement-main");
+        Application.DoEvents();
+        if (scene == "enhancement-actions")
+        {
+            var actions = Field<object>(form, "unifiedActions");
+            var groups = Field<TreeView>(actions, "groups");
+            groups.SelectedNode = groups.Nodes.Cast<TreeNode>().Single(node => (string)node.Tag == "shadow");
+            groups.SelectedNode.Expand();
+            Application.DoEvents();
+        }
+        if (scene == "enhancement-moves")
+        {
+            using (var dialog = new UnifiedActionChoiceDialog(workspace, "G", null))
+            {
+                dialog.Show(form); Place(dialog, 900, 800);
+                Field<TextBox>(dialog, "search").Text = I18n.Current == "zh-Hans" ? "战技" : "Combat Art";
+                Application.DoEvents();
+                Capture(dialog, path, null, null); dialog.Close();
+            }
+        }
+        else if (scene == "enhancement-tuning")
+        {
+            using (var dialog = new UnifiedBindingEditDialog(workspace, move, entry, null, null))
+            {
+                dialog.Show(form); Place(dialog, 840, 840);
+                Field<NumericUpDown>(dialog, "damageMultiplier").Value = 1.5m;
+                Field<NumericUpDown>(dialog, "startupSpeed").Value = 1.25m;
+                Application.DoEvents();
+                Capture(dialog, path, null, null); dialog.Close();
+            }
+        }
+        else Capture(form, path, null, null);
+    }
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Run(string[] args)
     {
@@ -167,6 +210,8 @@ internal static class CaptureScreenshots
         Point pointer = Cursor.Position;
         Directory.CreateDirectory(args[2]);
         var preferences = new EditorPreferences(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "capture-mode.txt"));
+        preferences.SaveFlameEffects(false);
+        preferences.SaveCompanionHotkey(false);
         string input = args.Length > 6 && !string.IsNullOrEmpty(args[6]) ? args[6] : null;
         using (var form = new MainForm(preferences))
         {
@@ -205,7 +250,8 @@ internal static class CaptureScreenshots
                 Field<Timer>(form, "gameTimer").Stop();
                 Place(form, 1280, 840);
                 string path = Path.Combine(args[2], scene + "-" + args[3] + ".png");
-                if (scene.StartsWith("presets-", StringComparison.Ordinal)) CapturePresets(form, preferences, scene, path);
+                if (scene.StartsWith("enhancement-", StringComparison.Ordinal)) CaptureEnhancement(form, scene, path);
+                else if (scene.StartsWith("presets-", StringComparison.Ordinal)) CapturePresets(form, preferences, scene, path);
                 else if (scene == "binding-edit")
                 {
                     var type = typeof(MainForm).Assembly.GetType("PBZKeyForge.BindingDialog");
@@ -225,7 +271,7 @@ internal static class CaptureScreenshots
             {
                 Cursor.Position = pointer;
                 if (form.Session != null) form.Session.Undo();
-                form.Close();
+                form.Dispose();
             }
         }
         return 0;

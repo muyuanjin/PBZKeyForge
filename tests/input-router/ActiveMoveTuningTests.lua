@@ -1,5 +1,6 @@
 package.path = "prototype/input-router/ue4ss/Scripts/?.lua;" .. package.path
 local checks,hooks,current = 0,{},nil
+local nativeShots, nativeAbilities = {}, {}
 local function check(value,message) assert(value,message); checks=checks+1 end
 local function parameter(value) return {get=function() return value end} end
 local function array(values)
@@ -18,7 +19,17 @@ function FName(name) return {ToString=function() return name end} end
 function RegisterHook(path,pre,post) hooks[path]={pre=pre,post=post};return 1,2 end
 function UnregisterHook(path) hooks[path]=nil end
 package.loaded["script-context"]={new=function() return {
-    owner=function(_,states) return current and states[current:GetAddress()] end,reset=function() end
+    enable_damage=function() end,
+    interface_hook=function(_,_,path,pre,post)
+        return RegisterHook(path,function(context,...) return pre(context:get(),...) end,post)
+    end,
+    owner=function(_,states) return current and states[current:GetAddress()] end,
+    damage_bullet=function(_,bullet,actor,multiplier) nativeShots[(actor or bullet):GetAddress()]=multiplier end,
+    ability_damage=function(_,instance,multiplier)
+        local address=type(instance)=="number" and instance or instance:GetAddress()
+        nativeAbilities[address]=multiplier
+    end,
+    update_damage=function() end,reset=function() end
 } end}
 local Moves=require("complete-moves")
 local Costs=require("resource-costs")
@@ -76,24 +87,12 @@ local function fixture(callbackOnly)
         end
         if self.fail then error("entry failed") end
     end
-    local function hit()
-        local source=object(10,{actor=actor,ability=instance})
-        local entry=hooks["/Script/SGameCombatSystem.BulletAttackModule:DealDamageToAvatar"]
-        local damage=100
-        entry.pre(parameter(source))
-        hooks["/Script/SGameAttributes.DamageCalculatorBase:CalculateDamage"].post(nil,nil,parameter(component),nil,nil,nil,
-            parameter({TagName=FName("Damage.Source.Attack")}),parameter({ForEach=function(_,callback)
-                callback(parameter({TagName=FName("Damage.Damage.Target.GeneralDamage.Physical")}),
-                    {get=function() return damage end,set=function(_,value) damage=value end})
-            end}))
-        entry.post()
-        return damage
-    end
-    return backend,target,instance,bullet,task,timeline,hit
+    local function shot_multiplier() return nativeShots[actor:GetAddress()] or 1 end
+    return backend,target,instance,bullet,task,timeline,shot_multiplier
 end
 do
     local settings=bindingSettings.shield
-    local backend,target,instance,bullet,task,timeline,hit=fixture(false)
+    local backend,target,instance,bullet,task,timeline,shot_multiplier=fixture(false)
     check(Moves.dispatch(backend,target,"triggered",false,settings),"active shield accepts tuning")
     check(backend.scans==1 and backend.resource_costs.instances[1],"duplicate replicated instance executes once and retains release settings")
     instance['Action Phase']={TagName=FName("CharacterState.Action.Phase.Start")}
@@ -102,11 +101,13 @@ do
     instance['Action Phase']={TagName=FName("CharacterState.Action.Phase.Cancel")}
     backend.resource_costs:update()
     check(task.rate==5,"active shield recovery retains the binding's speed")
-    hooks[initialize].post(parameter(bullet),parameter(nil),parameter(backend.pawn),parameter(instance))
-    check(hit()==300,"shield release projectiles inherit its damage setting")
+    if hooks[initialize] then hooks[initialize].pre(parameter(bullet),parameter(nil),parameter(backend.pawn),parameter(instance)) end
+    nativeShots[5]=nativeAbilities[instance:GetAddress()] or 1
+    check(not hooks[initialize] or not hooks[initialize].post,"native snapshots are not overwritten by a Lua post hook")
+    check(shot_multiplier()==3,"shield release projectiles inherit its damage setting")
     instance.bIsActive=false;backend.resource_costs:update()
     check(task.rate==1.25 and next(backend.resource_costs.instances)==nil,"shield ending restores the timeline and releases instance settings")
-    check(hit()==300,"shield projectile retains its launch setting after the shield ends")
+    check(shot_multiplier()==3,"shield projectile retains its launch setting after the shield ends")
     Moves.reset(backend);backend.resource_costs:reset()
 end
 do
@@ -118,27 +119,31 @@ do
 end
 do
     local settings=bindingSettings.ghost
-    local backend,target,instance,bullet,task,timeline,hit=fixture(true)
+    local backend,target,instance,bullet,task,timeline,shot_multiplier=fixture(true)
     backend.resource_costs=Costs.new(backend)
-    hooks[initialize].post(parameter(bullet),parameter(nil),parameter(backend.pawn),parameter(instance))
-    check(hit()==100,"prepared ghost fire starts with ordinary damage")
+    if hooks[initialize] then hooks[initialize].pre(parameter(bullet),parameter(nil),parameter(backend.pawn),parameter(instance)) end
+    nativeShots[5]=nativeAbilities[instance:GetAddress()] or 1
+    check(not hooks[initialize] or not hooks[initialize].post,"native snapshots are not overwritten by a Lua post hook")
+    check(shot_multiplier()==1,"prepared ghost fire starts with ordinary damage")
     check(Moves.dispatch(backend,target,"triggered",false,settings),"ghost scan without a target remains legal")
-    check(hit()==100 and next(backend.resource_costs.instances)==nil,"scan without launch leaves the prepared ball and passive untuned")
+    check(shot_multiplier()==1 and next(backend.resource_costs.instances)==nil,"scan without launch leaves the prepared ball and passive untuned")
     backend.enemy=true;backend.expectedBypass=true
     check(Moves.dispatch(backend,target,"triggered",true,settings),"active ghost callback receives both settings and bypass")
-    check(hit()==300,"already prepared ghost fire records the binding damage when Start launches it")
+    check(shot_multiplier()==3,"already prepared ghost fire records the binding damage when Start launches it")
     check(next(backend.resource_costs.instances)==nil and instance.bIsActive,"launch tuning releases the persistent passive scope without ending the effect")
     hooks[start].pre(parameter(bullet))
-    check(hit()==300,"a launched ball keeps its snapshot outside the callback")
-    hooks[initialize].post(parameter(bullet),parameter(nil),parameter(backend.pawn),parameter(instance))
+    check(shot_multiplier()==3,"a launched ball keeps its snapshot outside the callback")
+    if hooks[initialize] then hooks[initialize].pre(parameter(bullet),parameter(nil),parameter(backend.pawn),parameter(instance)) end
+    nativeShots[5]=nativeAbilities[instance:GetAddress()] or 1
+    check(not hooks[initialize] or not hooks[initialize].post,"native snapshots are not overwritten by a Lua post hook")
     hooks[start].pre(parameter(bullet))
-    check(hit()==100,"later natural preparation and launch retain ordinary damage")
+    check(shot_multiplier()==1,"later natural preparation and launch retain ordinary damage")
     backend.expectedDamage=5;backend.expectedBypass=false
     Moves.dispatch(backend,target,"triggered",false,{damage_multiplier=5})
-    check(hit()==500,"another binding can choose its own ghost damage on the same passive instance")
+    check(shot_multiplier()==5,"another binding can choose its own ghost damage on the same passive instance")
     backend.expectedDamage=1
     Moves.dispatch(backend,target,"triggered",false)
-    check(hit()==100,"ordinary active binding uses default damage after a tuned binding")
+    check(shot_multiplier()==1,"ordinary active binding uses default damage after a tuned binding")
     backend.expectedDamage=3;backend.fail=true
     check(not pcall(Moves.dispatch,backend,target,"triggered",false,settings),"active callback errors propagate")
     check(instance.bIsActive and next(backend.resource_costs.instances)==nil,"callback failure releases tuning without canceling the natural passive")

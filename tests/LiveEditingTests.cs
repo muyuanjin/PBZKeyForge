@@ -168,6 +168,7 @@ class LiveEditingTests
             install.ApplyLive(candidate).GetAwaiter().GetResult();
             Check(accepts == 1 && KeyEnhancementConfiguration.FromJson(File.ReadAllText(install.ConfigurationPath)).NativeBindings.Single().Keys[0] == "J", "Live success did not await acknowledgment and persist");
             string saved = File.ReadAllText(install.ConfigurationPath); mode = "error"; bool rejected = false;
+            Check(File.ReadAllText(install.RetainedConfigurationPath) == saved, "Live apply did not retain the latest bindings outside the Mod directory");
             candidate.NativeBindings[0].Keys[0] = "K";
             try { install.ApplyLive(candidate).GetAwaiter().GetResult(); } catch (IOException) { rejected = true; }
             Check(rejected && File.ReadAllText(install.ConfigurationPath) == saved && File.ReadAllText(lua).Contains("J"), "Rejected live request changed persistent settings");
@@ -178,6 +179,12 @@ class LiveEditingTests
             using (var locked = new FileStream(lua, FileMode.Open, FileAccess.Read, FileShare.Read))
                 try { install.ApplyLive(candidate).GetAwaiter().GetResult(); } catch (IOException) { rejected = true; }
             Check(rejected && accepts == beforeRollback + 2 && File.ReadAllText(install.ConfigurationPath) == saved, "Persistence failure did not restore previous runtime configuration");
+            beforeRollback = accepts; rejected = false;
+            using (var locked = new FileStream(install.RetainedConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                try { install.ApplyLive(candidate).GetAwaiter().GetResult(); } catch (IOException) { rejected = true; }
+            Check(rejected && accepts == beforeRollback + 2 && File.ReadAllText(install.ConfigurationPath) == saved
+                && File.ReadAllText(install.RetainedConfigurationPath) == saved && File.ReadAllText(lua).Contains("J"),
+                "Retained configuration failure did not roll back the live and persistent bindings");
             beforeRollback = accepts; Volatile.Write(ref lockAtAccept, beforeRollback + 2); rejected = false;
             using (var locked = new FileStream(install.ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 try { install.ApplyLive(candidate).GetAwaiter().GetResult(); } catch (IOException) { rejected = true; }
@@ -198,7 +205,7 @@ class LiveEditingTests
     }
     static void RuntimeFeedback()
     {
-        string root = Path.Combine(output, "game");
+        string root = Path.Combine(output, "runtime-feedback-game");
         Directory.CreateDirectory(Path.Combine(root, @"platform\steam"));
         Directory.CreateDirectory(Path.Combine(root, @"ProjectPBZ\Saved"));
         File.WriteAllText(Path.Combine(root, @"platform\steam\PBZ.exe"), "fixture, never launched");
@@ -217,13 +224,35 @@ class LiveEditingTests
             Field<KeyEnhancementConfiguration>(form, "keyEnhancement").Enabled = true;
             Field<KeyEnhancementConfiguration>(form, "keyEnhancementBaseline").Enabled = true;
             form.GetType().GetField("lastRunning", Hidden).SetValue(form, true);
+            Call(form, "RenderGameStatus");
+            var panel = Field<Panel>(form, "feedbackPanel");
+            var gameLabel = Field<Label>(form, "lblGame");
+            var statusLabel = Field<Label>(form, "lblStatus");
+            var apply = Field<Button>(form, "btnApply");
+            Check(install.LiveStatus().NeverConnected && !panel.Visible && Field<string>(form, "runtimeFeedback") == null,
+                "Starting without a heartbeat must remain a normal waiting state.");
+            Check(gameLabel.Text == "实时编辑 · 等待连接" && apply.Text == gameLabel.Text && !apply.Enabled
+                && gameLabel.ForeColor == Color.FromArgb(173, 178, 177) && statusLabel.ForeColor == gameLabel.ForeColor
+                && !(bool)apply.GetType().GetProperty("GameRunning").GetValue(apply, null),
+                "Initial connection waiting must use neutral labels and button styling without enabling apply.");
+            Check(statusLabel.Text.Contains("启动、加载期间请稍候") && !statusLabel.Text.Contains("日志"),
+                "Startup guidance must explain normal loading and leave diagnostics in connection details.");
+            foreach (var size in new[] { new Size(1280, 900), form.MinimumSize })
+            {
+                form.Size = size; Application.DoEvents(); Call(form, "RenderGameStatus");
+                using (var bitmap = new Bitmap(form.Width, form.Height))
+                { form.DrawToBitmap(bitmap, new Rectangle(Point.Empty, bitmap.Size)); bitmap.Save(Path.Combine(output, "startup-waiting-" + size.Width + ".png")); }
+            }
             Action<string> update = delegate(string state) {
                 form.GetType().GetField("lastRunning", Hidden).SetValue(form, true);
                 File.WriteAllText(statusPath, "PBZ-LIVE-1\nfixture\n" + state + "\n" + error);
                 Call(form, "RenderGameStatus");
             };
+            update("ready");
+            Check(install.LiveStatus().Available && gameLabel.Text == I18n.Str("live.connected")
+                && gameLabel.ForeColor == Color.FromArgb(116, 224, 165) && Field<string>(form, "runtimeFeedback") == null,
+                "The first heartbeat must automatically replace startup waiting with the connected state.");
             update("suspended");
-            var panel = Field<Panel>(form, "feedbackPanel");
             string detail = Field<string>(form, "fullFeedback");
             Check(panel.Visible && detail.Contains("stack frame 24") && !Field<Label>(form, "lblStatus").Visible,
                 "Runtime errors must use the single feedback card and retain the full traceback.");

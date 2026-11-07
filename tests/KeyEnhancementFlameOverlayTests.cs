@@ -580,7 +580,7 @@ public static class KeyEnhancementFlameOverlayTests
     {
         try
         {
-            if (args.Length != 1) throw new ArgumentException("Pass a screenshot output directory.");
+            if (args.Length < 1 || args.Length > 2) throw new ArgumentException("Pass a screenshot output directory and optional --field-only.");
             string output = Path.GetFullPath(args[0]); Directory.CreateDirectory(output);
             var preferences = new EditorPreferences(Path.Combine(output, "preferences.txt"));
             Check(preferences.LoadFlameEffects(), "Flame effects should default on.");
@@ -593,6 +593,14 @@ public static class KeyEnhancementFlameOverlayTests
                     .Invoke(form, new object[] { EditorSession.CreateOffline() });
                 I18n.Current = "zh-Hans";
                 form.RenderSession();
+                if (args.Length == 2 && args[1] == "--field-only")
+                {
+                    var field = Field(form, "keyEnhancementFlame");
+                    CheckFrame(field); CheckBorder(field); CheckResponsiveFrames(field, output); CheckHeightVariance(field);
+                    Console.WriteLine("KeyEnhancementFlameOverlayTests field PASS: " + checks);
+                    form.Dispose();
+                    return 0;
+                }
                 form.ShowInTaskbar = false; form.StartPosition = FormStartPosition.Manual; form.Location = new Point(80, 70);
                 Exception failure = null;
                 form.Shown += delegate { form.BeginInvoke((Action)delegate {

@@ -124,6 +124,7 @@ namespace PBZKeyForge
                     EnsureConfigurationUnchanged();
                     WriteAtomicText(luaPath, compiled);
                     WriteAtomicText(ConfigurationPath, json);
+                    WriteAtomicText(RetainedConfigurationPath, json);
                     ConfigurationText = json; configurationLoaded = true;
                 }
                 catch (Exception error)

@@ -41,7 +41,7 @@ class BindingTriggerContractTests
             config.Rules.Clear();
             workspace.AddFunctions(new[] { move, ability }, Key(key, "press"));
             Check(config.Rules.Count == 1 && config.Rules[0].Trigger == "press" && !config.Rules[0].DefaultTrigger,
-                "Explicit mixed triggers must retain one shared rule and one-shot execution.");
+                "Explicit mixed triggers must retain one shared rule.");
             config.Rules.Clear();
             var explicitMapping = workspace.AddFunctions(new[] { "IA_Jump", "IA_Guard" }, Key(key, "down"));
             Check(explicitMapping.All(entry => entry.Trigger == "down" && !entry.Rule.DefaultTrigger),

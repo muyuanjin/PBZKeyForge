@@ -13,7 +13,10 @@ function NotifyOnNewObject(path,callback)
 end
 local initial=Pool.get("EditableText","/Script/UMG.EditableText")
 check(#initial==1, "existing text widget was omitted")
-for _=1,120 do Pool.get("EditableText","/Script/UMG.EditableText") end
+for _=1,120 do
+    check(Pool.get("EditableText","/Script/UMG.EditableText") == initial,
+        "stable frames must reuse the object list")
+end
 check(scans.EditableText==1, "stable frames rediscovered all text widgets")
 local created=object(2)
 listeners["/Script/UMG.EditableText"](created)

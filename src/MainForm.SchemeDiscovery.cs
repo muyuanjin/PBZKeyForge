@@ -68,6 +68,7 @@ namespace PBZKeyForge
         void EndModal()
         {
             modalActive = false;
+            keyEnhancementFlame.AnimationPaused = IsApplying;
             ConsumeSchemeDiscovery();
         }
     }

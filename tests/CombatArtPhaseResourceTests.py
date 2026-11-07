@@ -93,6 +93,14 @@ def check_phase_recipes(result, archive):
         assert len(arguments) == 4
         start = arguments[3]
         assert start == gate["before_time"]
+        retained_attacks = [action for action in attacks if action["startTime"] >= start]
+        window = recipe["phaseWindow"]
+        assert window == {
+            "timeline": timeline["name"], "entry_time": start,
+            "attack_start": min(action["startTime"] for action in retained_attacks),
+            "attack_end": max(action["startTime"] + action["duration"] for action in retained_attacks),
+        }, (recipe["id"], window, retained_attacks)
+        assert window["entry_time"] < window["attack_start"] < window["attack_end"]
         assert any(action["startTime"] >= start for action in attacks)
         assert all(action["startTime"] + action["duration"] < start for action in attacks if action["startTime"] < start)
         assert start < next(action["startTime"] for action in actions if action["action"] == anchors[name])

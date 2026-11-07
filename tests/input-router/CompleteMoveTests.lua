@@ -1,3 +1,4 @@
+package.loaded["script-context"] = {new=function() error("Unexpected tuning in an untuned fixture") end}
 local scripts = "prototype/input-router/ue4ss/Scripts/"
 package.path = scripts .. "?.lua;" .. package.path
 local Moves = require("complete-moves")
@@ -38,7 +39,7 @@ local function fixture()
     local spec = {Ability=cdo, ActiveCount=0, NonReplicatedInstances=array({instance}), ReplicatedInstances=array({})}
     local asc = object(3, {ActivatableAbilities={Items=array({spec})}})
     local input, receiver = object(4), object(5)
-    local backend = setmetatable({state={ready=true}, calls={}}, Backend)
+    local backend = setmetatable({config={}, state={ready=true}, calls={}}, Backend)
     backend.main_timeline = object(7)
     backend.timeline_task = object(8, {Timeline=backend.main_timeline, CurrentTime=0})
     backend.subsystem, backend.pawn = object(9), object(10)
@@ -275,7 +276,7 @@ do
     backend = fixture(); backend.expected_tag, backend.expected_state = combo.tag, "CharacterState.Space.Air"; backend.reject=true
     check(not Moves.dispatch(backend,combo,"triggered"), "Native qualification refusal must also apply to self-contained combo moves")
 end
-do
+for _,trigger in ipairs({"down","press"}) do
     local backend, spec, instance = fixture()
     local requests, releases = 0, 0
     local dispatch = backend.dispatch
@@ -289,7 +290,7 @@ do
     local target = {}; for key,value in pairs(move) do target[key]=value end
     target.move_id = "move:BronzeSword.Release2"
     local router = Router.new({targets={release=target}, bindings={
-        {id="held-release", keys={"G"}, trigger="down", outputs={"release"}}
+        {id="held-release", keys={"G"}, trigger=trigger, outputs={"release"}}
     }}, backend)
     router:step(0, {G=1})
     router:step(.1, {G=1})
@@ -428,12 +429,13 @@ end
 
 do
     local backend = fixture()
-    Moves.dispatch(backend,deferred_move(),"triggered")
+    local target = deferred_move()
+    Moves.dispatch(backend,target,"triggered")
     backend.fail_entry = true
     backend.timeline_task.CurrentTime = .2
     local ok = pcall(Moves.update,backend)
-    check(not ok and backend.canceled and not next(backend.complete_move_pending),
-        "A failed deferred callback must cancel its own activation and clear the pending request")
+    check(ok and backend.canceled and not next(backend.complete_move_pending) and backend:target_failed(target),
+        "A failed deferred callback must cancel its own activation and disable only its target")
 end
 
 local function prepared_move()

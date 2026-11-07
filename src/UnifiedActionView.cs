@@ -38,6 +38,16 @@ namespace PBZKeyForge
 
         sealed class ActionTree : TreeView
         {
+            [System.Runtime.InteropServices.DllImport("user32.dll")]
+            static extern IntPtr SendMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
+
+            protected override void OnHandleCreated(EventArgs e)
+            {
+                base.OnHandleCreated(e);
+                // Native TreeView buffering includes owner-drawn rows and their backgrounds.
+                SendMessage(Handle, 0x112C, new IntPtr(4), new IntPtr(4)); // TVS_EX_DOUBLEBUFFER
+            }
+
             protected override void WndProc(ref Message message)
             {
                 base.WndProc(ref message);
@@ -154,7 +164,12 @@ namespace PBZKeyForge
         {
             float previousScale = dpiScale;
             using (var graphics = CreateGraphics()) dpiScale = graphics.DpiX / 96f;
-            if (codeFont != null) codeFont.Dispose(); codeFont = new Font(Font.FontFamily, Math.Max(7f, Font.SizeInPoints - 1f));
+            if (codeFont == null || codeFont.FontFamily.Name != Font.FontFamily.Name
+                || Math.Abs(codeFont.SizeInPoints - Math.Max(7f, Font.SizeInPoints - 1f)) >= .01f)
+            {
+                if (codeFont != null) codeFont.Dispose();
+                codeFont = new Font(Font.FontFamily, Math.Max(7f, Font.SizeInPoints - 1f));
+            }
             root.RowStyles[0].Height = Scale(38);
             keyEnhancementNotice.Padding = new Padding(Scale(32), 0, Scale(4), 0);
             actions.Font = Font; actions.ColumnHeadersHeight = Scale(32); actions.Columns[3].Width = Scale(40); groups.ItemHeight = Scale(29);
@@ -172,6 +187,9 @@ namespace PBZKeyForge
         }
 
         public void Render(BindingWorkspace value)
+        { RenderEntries(value, value.GetSnapshot()); }
+
+        internal void RenderEntries(BindingWorkspace value, BindingEntry[] entrySnapshot)
         {
             UpdateScale();
             var timer = Stopwatch.StartNew(); workspace = value;
@@ -179,7 +197,7 @@ namespace PBZKeyForge
             string[] headers = { "function", "factory", "bindings", "add" };
             for (int i = 0; i < headers.Length; i++) actions.Columns[i].HeaderText = I18n.Str("unified.grid." + headers[i]);
             actions.Columns[3].HeaderText = "+"; actions.Columns[3].ToolTipText = UnifiedBindingUi.Text("addbinding");
-            var snapshot = value.GetSnapshot().GroupBy(entry => entry.FunctionId).ToDictionary(group => group.Key, group => group.ToArray());
+            var snapshot = entrySnapshot.GroupBy(entry => entry.FunctionId).ToDictionary(group => group.Key, group => group.ToArray());
             allRows = value.Functions.Select(function =>
             {
                 BindingEntry[] entries; if (!snapshot.TryGetValue(function.Id, out entries)) entries = new BindingEntry[0];
@@ -267,6 +285,11 @@ namespace PBZKeyForge
         void FilterRows(string operation)
         {
             if (workspace == null) return; var timer = Stopwatch.StartNew();
+            int first = actions.FirstDisplayedScrollingRowIndex;
+            string anchor = operation == null && first >= 0 && first < rows.Count ? rows[first].Function.Id : null;
+            string selected = operation == null && actions.CurrentCell != null && actions.CurrentCell.RowIndex < rows.Count
+                ? rows[actions.CurrentCell.RowIndex].Function.Id : null;
+            int column = actions.CurrentCell == null ? 0 : actions.CurrentCell.ColumnIndex;
             string query = search.Text.Trim(), group = groups.SelectedNode == null ? "" : groups.SelectedNode.Tag as string;
             rows.Clear();
             if (query.Length > 0)
@@ -279,6 +302,16 @@ namespace PBZKeyForge
             keyEnhancementNotice.Text = workspace.KeyEnhancementEnabled ? I18n.Str("binding.scope.scheme") + " · " + I18n.Str("enhancement.title") + ": " + I18n.Str("binding.scope.global") : UnifiedBindingUi.KeyEnhancementHint;
             LayoutNotice();
             actions.RowCount = rows.Count; MeasureRows(); empty.Visible = rows.Count == 0; if (empty.Visible) empty.BringToFront(); else actions.BringToFront();
+            if (selected != null)
+            {
+                int index = rows.FindIndex(row => row.Function.Id == selected);
+                if (index >= 0 && (actions.CurrentCell == null || actions.CurrentCell.RowIndex != index)) actions.CurrentCell = actions[column, index];
+            }
+            if (anchor != null)
+            {
+                int index = rows.FindIndex(row => row.Function.Id == anchor);
+                if (index >= 0 && actions.FirstDisplayedScrollingRowIndex != index) actions.FirstDisplayedScrollingRowIndex = index;
+            }
             timer.Stop(); if (operation != null) Console.WriteLine("UnifiedActionView {0} {1} ms; rows={2}", operation, timer.ElapsedMilliseconds, rows.Count);
         }
 

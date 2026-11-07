@@ -8,13 +8,13 @@ A key binding editor for **Phantom Blade Zero** that writes the game's own input
 
 `PBZKeyForge.exe` · single file · no installer · no .NET runtime download · Windows 10/11
 
-![PBZKeyForge 1.2.3 in English with the preset list expanded](assets/screenshots/1.2.3/main-en.png)
+![PBZKeyForge 1.3.0 Key Enhancement and independent schemes](assets/screenshots/1.3.0/enhancement-main-en.png)
 
-![PBZKeyForge 1.2.3 Xbox view with the preset list expanded](assets/screenshots/1.2.3/main-gamepad-en.png)
+![PBZKeyForge 1.3.0 additional Phantom Edge actions](assets/screenshots/1.3.0/enhancement-actions-en.png)
 
-![PBZKeyForge 1.2.3 PlayStation view with the preset list expanded](assets/screenshots/1.2.3/main-playstation-en.png)
+![PBZKeyForge 1.3.0 per-binding combat settings](assets/screenshots/1.3.0/enhancement-tuning-en.png)
 
-[Feature screenshots: editing, saving presets, sharing and importing](assets/screenshots/1.2.3/README.md)
+[Feature screenshots in English and Simplified Chinese](assets/screenshots/1.3.0/README.md)
 
 ---
 
@@ -31,7 +31,7 @@ The in-game screen validates on **save**, not at runtime, and it rejects any bin
 ## Features
 
 - **One key, several actions.** Guard on the attack key, dodge on the guard key, whatever you want.
-- **Key Enhancement.** Add unlimited bindings, chords, sequences, tap/hold and extra functions through the existing key and action views. Additional functions show their names and technical codes. All schemes share the Mod configuration; the mode switch stages it and Apply installs it. [Usage and limits](docs/key-enhancement.md).
+- **Key Enhancement.** Add unlimited bindings, chords, sequences, tap/hold and extra functions through the existing key and action views. Bind complete moves and tune each binding's resources, damage and timing. Independent schemes can be switched through bindings in game. The mode switch stages it and Apply installs it; restart the game after installation, then edit bindings live. [Usage and limits](docs/key-enhancement.md).
 - **Scheme aware.** Pick which scheme you are editing — `Default`, `Custom 1`, `Custom 2` — and switch the game to it from the tool.
 - **Two editing views.** Click keyboard, mouse or controller buttons to edit their actions, or edit bindings by action. Factory, customized and pending bindings have distinct badge colors; the bottom panel compares the whole scheme.
 - **Quick setups** for one-key guard, a Souls-style gamepad layout, and Space-based movement; restore the selected scheme's defaults from the same list.
@@ -86,7 +86,7 @@ Use **Preset manager** beside Quick setups to name and save the current scheme, 
 
 Paste a share code and preview it before saving or using it. It includes the name and only the changes from factory defaults. Beside **Copy share code**, choose all included devices, keyboard/mouse, controllers, or a specific controller family; the character count updates immediately. Imported presets show their included devices. **Preset only** restores and applies only those devices, preserving devices outside the preset's scope. Choose directly from **Add keys**, **Replace keys**, and **Preset only** beside Quick setups; all three choices stay visible, with details on hover. The application starts with Preset only and remembers your selected mode across launches. Using a preset creates a draft; **Apply changes** in the main window writes it to the game.
 
-**Export game bindings** writes a `.sav` copy containing the selected scheme's unapplied edits. Other schemes keep their saved settings. Export does not activate a scheme or overwrite the source save. Your preset library is stored in `%LOCALAPPDATA%\PBZKeyForge\Presets`.
+**Save as preset** in the scheme bar saves the current draft with a name and device scope. Presets and share codes include the selected enhancement scheme; preset modes merge or replace bindings for the included devices. **Export game bindings** writes a `.sav` copy for ordinary bindings or a ZIP containing the full enhancement scheme library. Export does not activate a scheme or overwrite the source save. Your preset library is stored in `%LOCALAPPDATA%\PBZKeyForge\Presets`.
 
 ## Presets
 
@@ -169,13 +169,13 @@ Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 键位增强使用 x64 UE4SS，需要最新版 [Microsoft Visual C++ v14 x64 运行库](https://aka.ms/vc14/vc_redist.x64.exe)。启用和更新前会检查实际依赖，缺失或过旧时提供修复提示；普通改键、预设和离线编辑不需要它。
 
-![PBZKeyForge 1.2.3 中文主界面，预设下拉框已展开](assets/screenshots/1.2.3/main-zh-Hans.png)
+![PBZKeyForge 1.3.0 键位增强与独立方案](assets/screenshots/1.3.0/enhancement-main-zh-Hans.png)
 
-![PBZKeyForge 1.2.3 中文 Xbox 视图，预设下拉框已展开](assets/screenshots/1.2.3/main-gamepad-zh-Hans.png)
+![PBZKeyForge 1.3.0 影之武装额外动作](assets/screenshots/1.3.0/enhancement-actions-zh-Hans.png)
 
-![PBZKeyForge 1.2.3 中文 PlayStation 视图，预设下拉框已展开](assets/screenshots/1.2.3/main-playstation-zh-Hans.png)
+![PBZKeyForge 1.3.0 逐绑定战斗设置](assets/screenshots/1.3.0/enhancement-tuning-zh-Hans.png)
 
-[功能截图：编辑绑定、保存预设、分享与导入](assets/screenshots/1.2.3/README.md)
+[中英文功能截图](assets/screenshots/1.3.0/README.md)
 
 ### 为什么需要它
 
@@ -190,7 +190,7 @@ Not affiliated with S-Game. Use at your own risk, keep the backup.
 ### 功能
 
 - **一个键多个动作**：防御并到攻击键、闪避并到防御键，随便配。
-- **键位增强**：沿用原来的按键和动作入口，添加不限槽位的绑定、组合、顺序输入、短按／长按和额外功能；额外功能显示名称与代码。底部开关暂存启用，应用后安装，所有方案共用。[使用说明与边界](docs/key-enhancement.md)。
+- **键位增强**：沿用原来的按键和动作入口，添加不限槽位的绑定、组合、顺序输入、短按／长按及额外招式，可逐绑定设置资源、伤害和前后摇。增强方案独立保存，支持游戏内按键切换。底部开关暂存启用，应用后安装；重启游戏加载后可实时编辑。[使用说明与边界](docs/key-enhancement.md)。
 - **认方案**：可选编辑 `默认 / 自定义方案 1 / 自定义方案 2`，并能在工具里直接把某个方案设为游戏当前生效方案。
 - **两种视图**：按键视图可点击键鼠和手柄图形，动作视图按功能编辑；徽标区分原厂、已修改和待应用，底部显示整个方案的差异。
 - **自己的预设**：命名保存、分享码预览导入、按设备分享、导出游戏键位文件，也可批量删除个人预设。
@@ -227,7 +227,7 @@ Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 快速配置旁的“预设管理”可以命名保存当前方案，包含尚未应用的修改。“我的预设”与内置预设分组显示；单选可预览、复制分享码，勾选多个可批量删除，删除不改变当前键位。复制旁可选择全部所含设备、仅键鼠、仅控制器或某个手柄家族，字符数即时更新。分享码带名称，普通绑定记录相对原厂的增减，并携带完整增强配置。粘贴后先预览，确认“包含设备”及增强配置范围再保存或套用；“仅用预设”对普通绑定只恢复和套用所含设备，其他设备保持原样。
 
-快速配置区域同时显示“追加按键／替换按键／仅用预设”三个选项，点击即可选择，悬浮可查看各自说明。套用只形成草稿，主界面“应用更改”才写入游戏。保存预设和分享码会包含增强配置；套用时，增强配置按所有方案共用的范围整体替换。“导出游戏键位文件”在包含增强配置时输出 ZIP 配置包，普通绑定则输出 `.sav` 副本，包含当前方案的未应用修改，其余方案保持已保存内容；导出不切换游戏方案，也不覆盖源存档。预设库保存在 `%LOCALAPPDATA%\PBZKeyForge\Presets`。
+快速配置区域同时显示“追加按键／替换按键／仅用预设”三个选项，点击即可选择，悬浮可查看各自说明。套用只形成草稿，主界面“应用更改”才写入游戏。方案栏“保存为预设”可命名保存当前草稿并选择设备范围；预设和分享码包含当前增强方案，按所含设备追加或替换绑定。完整方案库通过 ZIP 配置包导出，普通绑定则输出 `.sav` 副本；导出不切换游戏方案，也不覆盖源存档。预设库保存在 `%LOCALAPPDATA%\PBZKeyForge\Presets`。
 
 “按键视图”将可点击的键盘和鼠标放在一起，点击按键后在右侧编辑功能。数字徽标表示功能数：灰色为原厂一致、蓝色为已修改、黄色为待应用。手柄面键和十字键的徽标向四周分布，LT／RT 同时包含轴输入和数字输入。底部横跨两栏显示整个方案的变化，包含键鼠和手柄，可切换与修改前或原厂对比。每行默认按“新增 → 保留 → 灰色删除线移除”展示，点击绑定内容可循环切换绑定变化、纯变化、纯结果、原本。“动作视图”按功能列出全部绑定，也可按名称或代码搜索额外功能。两种视图共享草稿，切换不会保存。
 

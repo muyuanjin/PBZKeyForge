@@ -1,13 +1,14 @@
 [color=#e8b96a][b]ONE KEY, SEVERAL ACTIONS[/b][/color]
 Phantom Blade Zero's binding screen rejects shared keys. PBZKeyForge edits the game's own settings file so a single key can trigger several actions: attack and guard together, dodge on your former guard button, or your own keyboard and controller layout.
 
-Single-file Windows app with an optional perfect-guard gameplay mod. No installer, mod loader, DLL injection or extra runtime download. Open source; release downloads are built and uploaded by GitHub Actions.
+Windows editor with ordinary save editing and optional Key Enhancement. Ordinary bindings need no loader; Key Enhancement includes the pinned Kintaro PBZ UE4SS runtime. Open source; release downloads are built and uploaded by GitHub Actions.
 
 [color=#e8b96a][b]DOWNLOADS AND INSTALLATION[/b][/color]
 [list=1]
 [*]Close the game completely. Back up [b]ProjectPBZ/Saved/EnhancedInputUserSettings.sav[/b].
 [*][b]Main download:[/b] extract the archive and run PBZKeyForge.exe. It finds your save automatically. Choose Default, Custom 1 or Custom 2, then edit bindings or preview a preset.
 [*]Click [b]Apply changes[/b] to save. Check [b]Set game scheme to…[/b] if you also want to make the edited scheme active. Writes are backed up automatically.
+[*][b]Key Enhancement:[/b] enable the footer switch and apply with the game closed, then restart the game. Once the Mod connects, binding edits can be applied live. First installation, enabling/disabling and runtime updates require the game to be closed.
 [*][b]Presets-only download:[/b] choose one file using PRESETS.md, copy it over EnhancedInputUserSettings.sav, then select [b]Custom 1[/b] in game. This replaces your saved layouts; use the editor when you want to keep and combine existing custom settings. The presets-only archive contains no executable or gameplay mod.
 [/list]
 The editor remembers the last opened save and follows Steam's installation records to find the game. Switching schemes reads the latest settings. Refresh preserves drafts and asks you to resolve conflicting changes. Both editing views share the same draft; switching views does not save it.
@@ -16,7 +17,16 @@ The editor remembers the last opened save and follows Steam's installation recor
 
 [color=#cc4125][b]IMPORTANT[/b][/color]
 [quote][b]Do not apply or reset bindings in the game's own key binding screen afterwards.[/b] The game rewrites these settings. If this happens, reapply your layout with PBZKeyForge.[/quote]
-Only one mod replacing EnhancedInputUserSettings.sav can be installed at a time. Shared bindings trigger multiple actions; this tool does not add timed input sequences or guarantee a particular combination skill.
+Copying a preset save replaces your saved layouts. Ordinary shared keys trigger several actions together; Key Enhancement adds timed triggers and independent move bindings. Complete moves retain the game's equipment, upgrade, target and activation requirements.
+
+[color=#e8b96a][b]KEY ENHANCEMENT: EXTRA ACTIONS AND YOUR OWN SCHEMES[/b][/color]
+Click any key and [b]Add action[/b], or browse [b]By action[/b]. The grouped catalog includes weapon attacks, Combat Art finishers, charged releases, Phantom Edge attacks, counters, movement and other supported actions. Search by action name, weapon or technical code. Bind several functions to one key, or give one function multiple inputs.
+
+Use press, release, tap/hold, chords, repeated presses or sequences. Each combat binding can independently bypass supported resource costs and adjust health damage, startup speed and recovery speed. Defaults preserve normal costs and 1× multipliers. Projectiles and native follow-ups retain the settings of their own activation.
+
+Enhancement uses independent schemes, initially copied from the three game layouts. Use [b]+[/b] to copy a scheme and [b]•••[/b] to rename or remove an added scheme. Scheme-switch bindings work in game even after closing the editor. Applying a scheme deploys its bindings; clicking a tab only selects what you edit. Turning enhancement off returns to the game's ordinary schemes and retains the enhancement library.
+
+[b]Live editing:[/b] after the Mod connects, change a binding and apply without restarting the game. Loading shows a neutral waiting state. Runtime failures retain the full error details for copying; rejected changes preserve the draft. Update the installed runtime with the game closed.
 
 [color=#e8b96a][b]OPTIONAL: PERFECT GUARD WITHOUT THE RAPID-CLICK PENALTY[/b][/color]
 Repeated guard inputs shorten or stop refreshing the original perfect-guard window. When attack and guard share a key, repeated attacks can trigger the same penalty.
@@ -32,31 +42,31 @@ Three choices stay visible beside the preset picker. Hover over a choice for det
 [*][b]Replace keys:[/b] replace the bindings of the actions covered by the preset; other actions stay as they are.
 [*][b]Preset only:[/b] start from factory bindings for the devices included in the preset, then use that preset's layout. Devices outside its scope keep their settings.
 [/list]
-The initial choice is Preset only, and your choice is remembered. Selecting a preset creates a draft. [b]Apply changes[/b] writes it to the game. Longer writes show a spinning progress indicator; if a write fails, your draft remains available to retry. While the game is running, Apply asks you to exit; you can keep editing your draft.
+The initial choice is Preset only, and your choice is remembered. Selecting a preset creates a draft. [b]Apply changes[/b] writes it to the game. Longer writes show progress; if a write fails, your draft remains available to retry. Ordinary save writes require the game to be closed; connected enhancement bindings support live edits.
 
 [color=#e8b96a][b]SEE AND EDIT YOUR BINDINGS[/b][/color]
 [b]By key:[/b] click a key on the keyboard, mouse or controller diagram to see and edit its actions on the right. The keyboard and mouse appear together. Number badges count actions: gray matches factory settings, blue marks saved customization, and yellow marks edits waiting to be applied. Removed actions are gray and crossed out.
 
 [b]Whole-scheme comparison:[/b] the bottom panel compares the whole scheme with your saved settings or factory defaults. Additions appear first, retained keys follow, and gray crossed-out removals come last. Click the binding content to cycle through combined bindings, changes only, results and original bindings.
 
-[b]By action:[/b] edit each function's bindings and see its actual factory keys. The interface shows the available slots and explains when an action cannot accept another key. Both views share the same draft.
+[b]By action:[/b] browse the grouped action catalog, edit bindings and see their actual factory keys. Ordinary mode uses the game's native slots; enhancement adds further bindings and trigger types. Both views share the same draft.
 
 [b]Default or Unbound:[/b] Default shows the actual factory key and restores it. Unbound explicitly removes the slot's binding. You can choose a key from the list or focus the capture field and press a keyboard or mouse button.
 
-The interface supports all 15 game languages, including Simplified and Traditional Chinese. Switch languages from the toolbar. The gallery above shows keyboard/mouse, Xbox and PlayStation layouts in English and Simplified Chinese, with the preset list expanded.
+The interface supports all 15 game languages, including Simplified and Traditional Chinese. Switch languages from the toolbar. Keyboard/mouse, Xbox and PlayStation are supported. The gallery shows enhancement schemes, Phantom Edge actions, complete moves and combat settings in English and Simplified Chinese.
 
 [center][b]Select a key, edit its actions, and review the scheme changes[/b]
 [img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793743297-1833902486.png[/img][/center]
 
 [color=#e8b96a][b]YOUR PRESETS AND SHARE CODES[/b][/color]
-Open [b]Preset manager[/b] next to Quick setup. Enter a name in the highlighted field, then choose [b]Save as preset[/b] to save the current scheme, including unapplied edits. Personal presets are separate from built-ins. Select one to preview it; check several to delete them without changing your current bindings.
+Click [b]Save as preset[/b] in the scheme bar to name the current draft and choose its devices. [b]Preset manager[/b] beside Quick setup previews, shares, imports and deletes personal presets. Personal presets remain separate from built-ins; deleting a preset does not change your current bindings.
 
 [center][b]Save your current scheme with a name[/b]
 [img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793743313-425950747.png[/img][/center]
 
 Copy a named, one-line share code for all included devices, keyboard/mouse, controllers or one controller family. The character count updates with your choice. Select a saved preset to preview its factory differences; check presets in the library to delete them.
 
-Paste a share code, click [b]Preview[/b], and inspect the included devices and changes before saving or using it. [b]Save to my presets[/b] keeps it in your library; [b]Save and use[/b] also stages it in the current scheme. [b]Export game bindings[/b] creates a .sav copy containing the current scheme's unapplied edits; other schemes keep their saved settings. Export leaves the source save and active game scheme unchanged.
+Paste a share code, click [b]Preview[/b], and inspect the included devices and changes before saving or using it. [b]Save to my presets[/b] keeps it in your library; [b]Save and use[/b] also stages it in the current scheme. Enhancement presets and share codes include the selected scheme's bindings. [b]Export game bindings[/b] creates a .sav copy for ordinary bindings or a ZIP preserving the enhancement scheme library. Export leaves the source save and active game scheme unchanged.
 
 [center][b]Share your layout for all devices or a selected device family[/b]
 [img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1793743316-406270396.png[/img][/center]
@@ -76,10 +86,11 @@ The included [b]PRESETS.md[/b] lists the factory-based layouts used by the eight
 [color=#e8b96a][b]COMPATIBILITY AND UNINSTALL[/b][/color]
 Windows 10/11, Steam launch build [b]CL-301524[/b] and patch [b]1.0302256 / CL-302256[/b]. Keyboard/mouse and controller bindings use the installed build's slot rules, including Phantom Edge's changed slots in 1.0302256. Existing preset layouts and PBZ2 share codes keep the same baseline. Compatible later-build scheme settings can be discovered and authenticated locally in the background; later input-rule changes may still need an update.
 
-Restore your save backup to remove binding changes, or preview and apply [b]More → Restore all defaults[/b] to return to factory bindings. Remove the optional gameplay mod separately by unchecking it and applying with the game closed.
+Restore your save backup to remove ordinary binding changes, or preview and apply [b]More → Restore all defaults[/b]. Disable Key Enhancement and apply with the game closed to stop its runtime; use its [b]•••[/b] menu for full uninstall. Configuration is retained outside the Mod folder for later use. Shared loaders and other Mods are preserved. Remove the perfect-guard option separately by unchecking it and applying with the game closed.
 
 [color=#e8b96a][b]KNOWN LIMITS[/b][/color]
 The optional gameplay patch uses Steam 1.0302256 difficulty assets and conflicts with mods replacing the same assets. A new game patch may require an updated mod.
+Key Enhancement targets Steam CL-302256 with UE4SS v3.0.1-1195-g1ceefac8 and requires Microsoft Visual C++ v14 x64. The editor checks its dependencies before installation. Combat behavior may conflict with Mods changing the same inputs or abilities. Automated tests cover input routing and recovery; they do not establish in-game FPS or every move's combat behavior.
 
 [color=#e8b96a][b]SOURCE AND BUILDS[/b][/color]
 [url=https://github.com/muyuanjin/PBZKeyForge]Source, documentation and issues[/url] · [url=https://github.com/muyuanjin/PBZKeyForge/releases]Version downloads and update notes[/url]

@@ -22,16 +22,25 @@ function Pool.get(name, classPath)
             pool.pending[#pool.pending+1] = object
         end)
     end
-    local objects, seen = {}, {}
-    for _, list in ipairs({pool.objects, pool.pending}) do
-        for _, object in ipairs(list) do
-            if object:IsValid() then
-                local id = object:GetAddress()
-                if not seen[id] then objects[#objects+1], seen[id] = object, true end
-            end
+    local objects, count = pool.objects, 0
+    local seen = #pool.pending > 0 and {} or nil
+    for index = 1, #objects do
+        local object = objects[index]
+        if object:IsValid() then
+            count = count + 1
+            objects[count] = object
+            if seen then seen[object:GetAddress()] = true end
         end
     end
-    pool.objects, pool.pending = objects, {}
+    for index = #objects, count + 1, -1 do objects[index] = nil end
+    if seen then
+        for _, object in ipairs(pool.pending) do
+            if object:IsValid() and not seen[object:GetAddress()] then
+                objects[#objects+1], seen[object:GetAddress()] = object, true
+            end
+        end
+        pool.pending = {}
+    end
     return objects
 end
 

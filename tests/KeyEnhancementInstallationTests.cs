@@ -73,6 +73,104 @@ public static class KeyEnhancementInstallationTests
             Check(archive.Entries.Any(entry => entry.FullName.EndsWith("/lib/pbzability-context.dll", StringComparison.Ordinal)),
                 "Runtime package is missing the ability context bridge");
     }
+    static void UpdateAndReinstall(string output)
+    {
+        string root = Game(output, "update and reinstall");
+        var installation = new KeyEnhancementInstallation(root);
+        var configuration = installation.LoadConfiguration();
+        configuration.Schemes.Add(new KeyEnhancementScheme { Id = "first", Name = "键鼠方案" });
+        configuration.Schemes.Add(new KeyEnhancementScheme { Id = "second", Name = "手柄方案" });
+        configuration.SelectedSchemeId = configuration.ActiveSchemeId = "first";
+        configuration.SetEnabled(true);
+        var rule = new KeyEnhancementRule { Trigger = "hold", Seconds = 0.7 };
+        rule.Keys.Add("F9");
+        rule.Outputs.Add(new KeyEnhancementOutput { Kind = "action", Path = "/PBZInput/InputActions/IA_Jump.IA_Jump" });
+        configuration.Rules.Add(rule);
+        configuration.Schemes[1].NativeBindings.Add(new NativeBindingOverride { FunctionId = "IA_Jump", Device = "gamepad",
+            Keys = new System.Collections.Generic.List<string> { "Gamepad_FaceButton_Right" } });
+        configuration.CustomLua = "-- personal settings\n";
+        Check(KeyEnhancementInstallation.IsRuntimeConfigurationPath(installation.RetainedConfigurationPath),
+            "The retained configuration must be protected from ordinary export overwrites.");
+        installation.Apply(configuration);
+        string json = configuration.ToJson();
+        Check(File.ReadAllText(installation.RetainedConfigurationPath) == json, "Apply did not preserve the complete configuration outside the Mod directory.");
+
+        string main = Path.Combine(installation.InstallDirectory, @"Scripts\main.lua");
+        string currentMain = File.ReadAllText(main);
+        string context = Path.Combine(installation.InstallDirectory, @"lib\pbzability-context.dll");
+        byte[] currentContext = File.ReadAllBytes(context);
+        byte[] oldContext = (byte[])currentContext.Clone();
+        int peHeader = BitConverter.ToInt32(oldContext, 0x3c);
+        oldContext[peHeader + 8] ^= 1; // A different native build with the same image size.
+        const string oldMain = "-- previous managed version\n";
+        const string obsolete = "Legacy/old-router.lua";
+        Write(installation.InstallDirectory, @"Scripts\main.lua", oldMain);
+        File.WriteAllBytes(context, oldContext);
+        Write(installation.InstallDirectory, obsolete, "-- obsolete managed file\n");
+        var source = (KeyEnhancementInstallation.InstallationSource)typeof(KeyEnhancementInstallation)
+            .GetMethod("ReadOwnership", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(installation, null);
+        using (var stream = File.Open(source.PayloadBackup, FileMode.Open, FileAccess.ReadWrite))
+        using (var zip = new ZipArchive(stream, ZipArchiveMode.Update))
+        {
+            const string contextEntry = "ue4ss/Mods/PBZInputRouter/lib/pbzability-context.dll";
+            zip.GetEntry(contextEntry).Delete();
+            using (var target = zip.CreateEntry(contextEntry).Open()) target.Write(oldContext, 0, oldContext.Length);
+            foreach (var pair in new[] { new[] { "Scripts/main.lua", oldMain }, new[] { obsolete, "-- obsolete managed file\n" } })
+            {
+                string name = "ue4ss/Mods/PBZInputRouter/" + pair[0];
+                var entry = zip.GetEntry(name); if (entry != null) entry.Delete();
+                using (var writer = new StreamWriter(zip.CreateEntry(name).Open())) writer.Write(pair[1]);
+            }
+        }
+        Check(installation.ReadState() == KeyEnhancementInstallState.Incomplete, "Managed old and removed scripts must allow direct upgrade.");
+        installation.Apply(installation.LoadConfiguration());
+        Check(installation.InstalledEnabled && File.ReadAllText(main) == currentMain && !Directory.Exists(Path.Combine(installation.InstallDirectory, "Legacy")),
+            "Direct upgrade did not replace old scripts and remove obsolete managed directories.");
+        Check(File.ReadAllBytes(context).SequenceEqual(currentContext), "Direct upgrade did not replace the previous native context DLL.");
+        Check(File.ReadAllText(installation.ConfigurationPath) == json, "Direct upgrade changed the user's schemes or bindings.");
+
+        using (var locked = new FileStream(installation.RetainedConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            Reject(() => installation.Uninstall(), "Uninstall removed settings without first preserving them.");
+        Check(installation.InstalledEnabled && File.ReadAllText(installation.ConfigurationPath) == json,
+            "Failed configuration preservation removed or disabled the existing installation.");
+        File.Delete(installation.RetainedConfigurationPath);
+        var uninstalled = installation.Uninstall();
+        Check(uninstalled.Complete && !Directory.Exists(installation.InstallDirectory) && File.ReadAllText(installation.RetainedConfigurationPath) == json,
+            "Uninstall did not preserve configuration from an installation without an external copy.");
+        installation = new KeyEnhancementInstallation(root);
+        configuration = installation.LoadConfiguration();
+        Check(!configuration.Enabled && installation.ReadState() == KeyEnhancementInstallState.Disabled && !installation.ConfigurationChanged,
+            "Uninstalled configuration must remain disabled and clean after reopening.");
+        configuration.SetEnabled(true);
+        Check(configuration.ToJson() == json, "Uninstall/reopen lost schemes, selected scheme, rules or global settings.");
+        installation.Apply(configuration);
+        Check(installation.InstalledEnabled && File.ReadAllText(installation.ConfigurationPath) == json, "Reinstall did not restore all settings.");
+
+        string oldLua = File.ReadAllText(Path.Combine(installation.InstallDirectory, @"Scripts\router-config.lua"));
+        configuration.Rules[0].Seconds = 1.2;
+        using (var locked = new FileStream(installation.RetainedConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            Reject(() => installation.Apply(configuration), "Apply succeeded without preserving the configuration copy.");
+        Check(File.ReadAllText(installation.ConfigurationPath) == json && File.ReadAllText(installation.RetainedConfigurationPath) == json
+            && File.ReadAllText(Path.Combine(installation.InstallDirectory, @"Scripts\router-config.lua")) == oldLua && installation.InstalledEnabled,
+            "Failed configuration preservation did not roll back the installed configuration.");
+        installation.Apply(configuration);
+        json = configuration.ToJson();
+        Directory.Delete(installation.InstallDirectory, true);
+        installation = new KeyEnhancementInstallation(root);
+        configuration = installation.LoadConfiguration();
+        configuration.SetEnabled(true);
+        Check(configuration.ToJson() == json, "Manual Mod deletion lost the latest saved configuration.");
+        installation.Apply(configuration);
+        Check(installation.InstalledEnabled, "Manual Mod deletion could not be repaired with the saved configuration.");
+
+        installation.Uninstall();
+        configuration = installation.LoadConfiguration();
+        File.AppendAllText(installation.RetainedConfigurationPath, "\n");
+        Check(installation.ConfigurationChanged, "External changes to retained settings were not detected.");
+        configuration.SetEnabled(true);
+        Reject(() => installation.Apply(configuration), "Reinstall overwrote externally changed retained settings.");
+        Check(!Directory.Exists(installation.InstallDirectory), "A retained configuration conflict partially reinstalled the Mod.");
+    }
     public static int Main(string[] args)
     {
         try
@@ -86,6 +184,7 @@ public static class KeyEnhancementInstallationTests
                 Console.WriteLine("KeyEnhancementInstallationTests inspection: " + checks + " assertions passed");
                 return 0;
             }
+            UpdateAndReinstall(output);
             string root = Game(output, "游戏 with spaces");
             string runtime = Path.Combine(root, @"platform\steam");
             var installation = new KeyEnhancementInstallation(root);

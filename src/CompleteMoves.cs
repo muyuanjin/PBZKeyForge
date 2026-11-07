@@ -9,6 +9,11 @@ namespace PBZKeyForge
 {
     public static class CompleteMoveCatalog
     {
+        sealed class PhaseWindow
+        {
+            public string timeline;
+            public double entry_time, attack_start, attack_end;
+        }
         sealed class Move
         {
             public string id, sourceId, tag, abilityClass, entryPoint, inputAction, prepareInput, code, category, usageKey;
@@ -23,6 +28,7 @@ namespace PBZKeyForge
             public string[] activeAbilityClasses = new string[0];
             public object[] entryArguments = new object[0];
             public Dictionary<string, object> entryWhen;
+            public PhaseWindow phaseWindow;
             public Dictionary<string, string> weaponLabels;
             public bool releaseInputBeforeEntry, activateByClass, activeCallbackOnly;
             public int priority;
@@ -99,6 +105,11 @@ namespace PBZKeyForge
                     ? move.entryPoint : move.abilityClass + ":" + move.entryPoint;
                 if (move.entryArguments.Length > 0) target["entry_arguments"] = move.entryArguments;
                 if (move.entryWhen != null) target["entry_when"] = move.entryWhen;
+                if (move.phaseWindow != null)
+                    target["phase_window"] = new Dictionary<string, object> {
+                        { "timeline", move.phaseWindow.timeline }, { "entry_time", move.phaseWindow.entry_time },
+                        { "attack_start", move.phaseWindow.attack_start }, { "attack_end", move.phaseWindow.attack_end }
+                    };
                 if (move.releaseInputBeforeEntry) target["release_input_before_entry"] = true;
                 if (move.activeBooleanProperties.Length > 0)
                     target["active_boolean_properties"] = move.activeBooleanProperties;

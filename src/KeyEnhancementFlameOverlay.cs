@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -73,7 +73,9 @@ namespace PBZKeyForge
             host.Activated += Synchronize;
             host.EnabledChanged += Synchronize;
             host.Disposed += HostDisposed;
-            animation.Tick += delegate { tick++; if (pulse > 0) pulse--; RenderFrame(); };
+            animation.Tick += delegate {
+                tick++; if (pulse > 0) pulse--; RenderFrame();
+            };
         }
 
         void HostDisposed(object sender, EventArgs e) { Dispose(); }
@@ -270,8 +272,11 @@ namespace PBZKeyForge
             {
                 this.length = length; this.depth = depth; this.seed = seed;
                 this.scaleDepth = scaleDepth;
-                width = Math.Max(2, (length * 4 + 4) / 5);
-                height = Math.Max(2, (depth * 4 + 4) / 5);
+                // Sample the decorative field at a bounded resolution, then interpolate
+                // it to the window so DPI and maximization do not multiply its work.
+                float sampling = Math.Min(.8f, Math.Min(640f / length, 240f / depth));
+                width = Math.Max(2, (int)Math.Ceiling(length * sampling));
+                height = Math.Max(2, (int)Math.Ceiling(depth * sampling));
                 pixel = length / (float)width;
                 composite = new int[width * height];
                 pixels = new int[width * height];

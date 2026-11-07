@@ -72,9 +72,10 @@ namespace PBZKeyForge
         public readonly string Family;
         public readonly ActionRelations[] Current;
         public readonly Dictionary<string, ActionRelations> Before;
+        public readonly BindingEntry[] Entries;
 
-        public BindingSnapshot(bool gamepad, int familyIndex, string family, ActionRelations[] current, Dictionary<string, ActionRelations> before)
-        { Gamepad = gamepad; FamilyIndex = familyIndex; Family = family; Current = current; Before = before; }
+        public BindingSnapshot(bool gamepad, int familyIndex, string family, ActionRelations[] current, Dictionary<string, ActionRelations> before, BindingEntry[] entries = null)
+        { Gamepad = gamepad; FamilyIndex = familyIndex; Family = family; Current = current; Before = before; Entries = entries; }
 
         public BindingSnapshot(EditorSession session, bool gamepad, int familyIndex, string family)
         {

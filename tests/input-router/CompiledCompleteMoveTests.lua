@@ -1,3 +1,4 @@
+package.loaded["script-context"] = {new=function() error("Unexpected tuning in an untuned fixture") end}
 package.path = "prototype/input-router/ue4ss/Scripts/?.lua;" .. package.path
 local Router = require("router")
 local path = os.getenv("PBZ_COMPLETE_MOVE_CONFIG") or "dist/complete-move-catalog-check/complete-move.lua"
@@ -68,7 +69,7 @@ chargeRouter:step(.1, {K=1})
 chargeRouter:step(1, {K=1})
 chargeRouter:step(1.1, {})
 assert(chargeCalls == 2, "The selected charged release must continue normal activation requests while held")
-for _,fixture in ipairs({{name="json-press-move.lua", expected=1}, {name="explicit-press-move.lua", expected=1}}) do
+for _,fixture in ipairs({{name="json-press-move.lua", expected=3}, {name="explicit-press-move.lua", expected=3}}) do
     local fixturePath = path:gsub("complete%-move%.lua$", fixture.name)
     local fixtureConfig = assert(loadfile(fixturePath))()
     local requests = 0
@@ -83,7 +84,7 @@ for _,fixture in ipairs({{name="json-press-move.lua", expected=1}, {name="explic
     fixtureRouter:step(.1, {G=1})
     fixtureRouter:step(.2, {G=1})
     fixtureRouter:step(.3, {})
-    assert(requests == fixture.expected, "Saved complete-move trigger semantics changed: " .. fixture.name)
+    assert(requests == fixture.expected, "On-press complete moves must keep requesting while held: " .. fixture.name)
 end
 local phasePath = path:gsub("complete%-move%.lua$", "phase-moves.lua")
 assert(loadfile("tests/input-router/CompiledPhaseMoveTests.lua"))(phasePath)

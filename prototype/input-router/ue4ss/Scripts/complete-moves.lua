@@ -338,6 +338,40 @@ local function dispatch_active(backend, component, target, bypass, settings)
     return dispatched
 end
 
+local function update_pending(backend, pending)
+    local instance, component = pending_instance(backend, pending)
+    if not instance then finish(backend,pending)
+    elseif pending.preparing then
+        if not eligible(backend,component,pending.spec,true) then finish(backend,pending)
+        else
+            if is_holding(backend,pending.prepared_action) then
+                activate(backend,component,instance,pending)
+            end
+        end
+    elseif not eligible(backend,component,pending.spec) or not resource_qualified(instance,pending.spec) then
+        finish(backend,pending)
+        cancel(backend,instance)
+    elseif pending.spec.completion_timeline then
+        local _, state = timeline_time(backend,instance,pending.spec.completion_timeline)
+        if state == "matching" then finish(backend,pending) end
+    elseif pending.releasing then
+        local state = released_entry_state(backend,instance,pending)
+        if state ~= "waiting" then
+            finish(backend,pending)
+            if state == "ready" then enter(backend,component,instance,pending.spec) end
+        end
+    else
+        local state = entry_state(backend,component,instance,pending.spec.entry_when)
+        if state ~= "waiting" then
+            if state == "ready" then apply_entry(backend,component,instance,pending)
+            else
+                finish(backend,pending)
+                if pending.spec.entry_when.cancel_on_expire then cancel(backend,instance) end
+            end
+        end
+    end
+end
+
 function Moves.update(backend)
     for identity, active in pairs(backend.complete_move_active or {}) do
         if not valid(active.instance) or not active.instance:GetPropertyValue("bIsActive") then
@@ -345,38 +379,29 @@ function Moves.update(backend)
         end
     end
     for _, pending in pairs(backend.complete_move_pending or {}) do
-        local instance, component = pending_instance(backend, pending)
-        if not instance then finish(backend,pending)
-        elseif pending.preparing then
-            if not eligible(backend,component,pending.spec,true) then finish(backend,pending)
-            else
-                if is_holding(backend,pending.prepared_action) then
-                    activate(backend,component,instance,pending)
+        local ok, failure = xpcall(update_pending, debug.traceback, backend, pending)
+        if not ok then backend:fail_target(pending.spec, failure) end
+    end
+end
+
+function Moves.abort(backend, spec)
+    local canceled = {}
+    local function abort(entries)
+        for identity, pending in pairs(entries or {}) do
+            if pending.spec == spec then
+                local instance = pending.instance
+                if not pending.preparing and valid(instance) and not canceled[instance:GetAddress()]
+                    and instance:GetPropertyValue("bIsActive") then
+                    cancel(backend,instance)
+                    canceled[instance:GetAddress()] = true
                 end
-            end
-        elseif not eligible(backend,component,pending.spec) or not resource_qualified(instance,pending.spec) then
-            finish(backend,pending)
-            cancel(backend,instance)
-        elseif pending.spec.completion_timeline then
-            local _, state = timeline_time(backend,instance,pending.spec.completion_timeline)
-            if state == "matching" then finish(backend,pending) end
-        elseif pending.releasing then
-            local state = released_entry_state(backend,instance,pending)
-            if state ~= "waiting" then
                 finish(backend,pending)
-                if state == "ready" then enter(backend,component,instance,pending.spec) end
-            end
-        else
-            local state = entry_state(backend,component,instance,pending.spec.entry_when)
-            if state ~= "waiting" then
-                if state == "ready" then apply_entry(backend,component,instance,pending)
-                else
-                    finish(backend,pending)
-                    if pending.spec.entry_when.cancel_on_expire then cancel(backend,instance) end
-                end
+                entries[identity] = nil
             end
         end
     end
+    abort(backend.complete_move_pending)
+    abort(backend.complete_move_active)
 end
 
 function Moves.reset(backend)

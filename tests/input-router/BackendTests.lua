@@ -1,3 +1,4 @@
+package.loaded["script-context"] = {new=function() error("Unexpected tuning in an untuned fixture") end}
 local scripts = "prototype/input-router/ue4ss/Scripts/"
 package.path = scripts .. "?.lua;" .. package.path
 local Backend = dofile(scripts .. "backend.lua")
@@ -150,6 +151,65 @@ do
     backend:shutdown()
     check(contexts["/Test/A.A"].RegistrationCount == 3, "Restore retry duplicated completed registrations")
     check(contexts["/Test/A.A"].Priority == 17, "Restore retry lost priority")
+end
+
+do
+    local backend,contexts,calls,add=fixture()
+    add("/Test/A.A",23)
+    backend.config.capture_contexts={{path="/Test/A.A"}}
+    backend:take_capture()
+    local complete=require("complete-moves")
+    local original=complete.reset
+    local fail=true
+    complete.reset=function() if fail then error("move cancellation rejected") end end
+    local tuningReset,abilitiesRestored,inputsRestored,releases=0,0,0,0
+    backend.resource_costs={reset=function()
+        tuningReset=tuningReset+1
+        if fail then error("timeline restoration rejected") end
+    end}
+    backend.native_abilities={restore=function()
+        abilitiesRestored=abilitiesRestored+1
+        if fail then error("ability restoration rejected") end
+    end}
+    backend.native_input={restore=function() inputsRestored=inputsRestored+1 end}
+    backend.on_release=function() releases=releases+1 end
+    local ok,message=pcall(backend.shutdown,backend)
+    complete.reset=original
+    check(not ok and message:find("move cancellation rejected",1,true)
+        and message:find("timeline restoration rejected",1,true) and message:find("ability restoration rejected",1,true),
+        "Shutdown must report all independent release failures")
+    check(tuningReset==1 and inputsRestored==1 and abilitiesRestored==1 and releases==1,
+        "A failed cancellation or tuning reset must not skip the remaining cleanup")
+    check(contexts["/Test/A.A"].Priority==23 and calls.add==1 and not next(backend.captured),
+        "Shutdown must restore captured native contexts despite other cleanup failures")
+    check(calls.release==0,"Incomplete cleanup retains the dynamic pipeline holder")
+    fail=false
+    backend:shutdown()
+    check(calls.add==1 and calls.release==1 and not backend.resource_costs,
+        "Retry finishes cleanup without duplicating restored native contexts")
+end
+
+do
+    for _,closed in ipairs({"costs","context","neither"}) do
+        local backend=fixture()
+        local resets,suspends=0,0
+        local costs={closed=closed=="costs",context={closed=closed=="context"},
+            reset=function() resets=resets+1 end,suspend=function() suspends=suspends+1 end}
+        backend.resource_costs=costs
+        backend:shutdown(true)
+        if closed=="neither" then
+            check(suspends==1 and resets==0 and backend.resource_costs==costs,
+                "Configuration reload retains a healthy tuning context and launched snapshots")
+        else
+            check(resets==1 and suspends==0 and not backend.resource_costs,
+                "Configuration reload discards a closed tuning or native context so requests can recreate it")
+        end
+    end
+    local backend=fixture()
+    local costs={closed=true,reset=function() error("pending tuning cleanup") end}
+    backend.resource_costs=costs
+    check(not pcall(backend.shutdown,backend,true) and backend.resource_costs==costs,
+        "Reload cannot discard a closed context when its cleanup still fails")
 end
 
 do

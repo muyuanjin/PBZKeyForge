@@ -3,11 +3,17 @@ local Costs = {}
 Costs.__index = Costs
 
 local resources = {UltimateChargeCount=true, Shachi=true, SpiritShadow=true}
+-- These instant effects contain only a resource deduction. Other effects keep
+-- their original class, including resource gains and resource-based attacks.
+local resource_effects = {
+    ["/PBZCombatAsset/ActorData/Players/Hun/Weapon/SlitheringSword/UpgradeData/GE_SlitheringSword_EvalutionCombo_CostShachi.GE_SlitheringSword_EvalutionCombo_CostShachi_C"]=true,
+    ["/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChaosBlade/GE_Chaos_SwitchShaQiCost.GE_Chaos_SwitchShaQiCost_C"]=true
+}
 local function valid(object) return object and object:IsValid() end
 local function class_path(object) return object:GetClass():GetFullName():gsub("^%S+ ", "") end
-local function is_resource(attribute)
+local function attribute_name(attribute)
     local name = attribute:get().AttributeName
-    return resources[type(name) == "string" and name or name:ToString()]
+    return type(name) == "string" and name or name:ToString()
 end
 
 local function tags_match(tags, wanted)
@@ -35,8 +41,17 @@ end
 
 -- These reads decide whether a fee can be paid. Keeping the original fee
 -- preserves reinforcement, charge accumulation and Actual Shachi Consumed.
+local fee_sites = {
+    ["Function /PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill.GA_Hun_Lute_SKill_C:ExecuteUbergraph_GA_Hun_Lute_SKill"]=true,
+    ["Function /PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal.GA_BrutalAxe_Normal_C:ExecuteUbergraph_GA_BrutalAxe_Normal"]=true,
+    ["Function /PBZCombatAsset/Prototypes/Actions/GAA_ShachiAbilityShachi.GAA_ShachiAbilityShachi_C:Received_ActionTick"]=true,
+    ["Function /PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Air_Base.BP_HeavyAttack_Air_Base_C:Play Heavy Attack Timeline"]=true,
+    ["Function /MagCombatAbilities/Abilities/BP_GlobalActionAbility_Base.BP_GlobalActionAbility_Base_C:K2_CanActivateAbility"]=true,
+    ["Function /PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_EvalutionCombo_New.GA_Hun_SlitheringSword_EvalutionCombo_New_C:K2_CanActivateAbility"]=true,
+    ["Function /PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C.GA_Hun_ZhanMa_C_C:ExecuteUbergraph_GA_Hun_ZhanMa_C"]=true
+}
 local function fee_read(fn)
-    return fn:match(":ExecuteUbergraph_BP_CombatArt_Base$")
+    return fee_sites[fn] or fn:match(":ExecuteUbergraph_BP_CombatArt_Base$")
         or fn:match(":Apply Shachi Cost And Endure$")
         or fn:match(":Bullet Enough$") or fn:match(":Shachi Enough$")
         or fn:match(":Comsume$") or fn:match(":IsShaqiEnough$")
@@ -45,15 +60,49 @@ local function fee_read(fn)
 end
 
 function Costs.new(backend)
-    local self = setmetatable({backend=backend, instances={}, bullets={}, damage_sources={}, transfers={}, hooks={}, frame=0, context=Context.new()},Costs)
-    local function hook(path,pre,post)
-        self.hooks[path] = {RegisterHook(path,pre,post)}
+    local self = setmetatable({backend=backend, instances={}, inputs={}, transfers={}, hooks={}, frame=0},Costs)
+    local ok,failure = pcall(function()
+        self.context = Context.new(function(message) backend:report("damage-scaling",message) end)
+        self:install_transfer_hooks()
+    end)
+    if not ok then
+        local cleaned,cleanup = pcall(self.reset,self)
+        if not cleaned then backend.resource_costs = self end
+        error(tostring(failure)..(cleaned and "" or "\n"..tostring(cleanup)),0)
     end
+    return self
+end
+
+function Costs:hook(path,pre,post)
+    if self.hooks[path] then return end
+    local function guarded(callback)
+        if callback then return function(...)
+            if not self.closed then return callback(...) end
+        end end
+    end
+    self.hooks[path] = {RegisterHook(path,guarded(pre),guarded(post))}
+end
+
+function Costs:install_transfer_hooks()
+    local backend = self.backend
+    local function hook(...) return self:hook(...) end
     local function transfer(path,receiver,selector)
-        hook(path,function(component,argument)
+        hook(path,function(component,argument,input)
             local owned = backend:receiver({receiver=receiver})
-            local source = valid(owned) and component:get():GetAddress() == owned:GetAddress() and self:owner()
+            local is_owned = valid(owned) and component:get():GetAddress() == owned:GetAddress()
+            local source = is_owned and self:owner()
+            local activation = self.activating and self.transfers[#self.transfers]
+            local initial = not source and activation
+            if not source and is_owned and activation then source = activation.source end
+            if not source and is_owned and receiver == "ability_input" and not self.activating and input and valid(input:get()) then
+                source = self.inputs[input:get():GetAddress()]
+            end
             self:begin_transfer(source and not source.callback_only and source,selector(argument:get()))
+            if initial then
+                local nested = self.transfers[#self.transfers]
+                nested.phase_window = activation.phase_window
+                for _,state in pairs(nested.armed) do state.phase_window = nested.phase_window end
+            end
         end,function(_,result) self:end_transfer(result:get()) end)
     end
     local function by_class(value)
@@ -72,62 +121,72 @@ function Costs.new(backend)
         value.GameplayTags:ForEach(function(_,item) tags[#tags+1]=item:get().TagName:ToString() end)
         return {activation_tags=tags}
     end)
+end
+
+function Costs:install_resource_hooks()
+    local function hook(...) return self:hook(...) end
+    hook("/Script/GameplayAbilities.GameplayAbility:BP_ApplyGameplayEffectToOwner",function(ability,effectClass)
+        local effect = effectClass:get()
+        if not valid(effect) or not resource_effects[effect:GetFullName():gsub("^%S+ ","")] then return end
+        local instance = ability:get()
+        if not valid(instance) then return end
+        local address = instance:GetAddress()
+        local state = self.instances[address] or self:owner()
+        if state and state.bypass and state.instance:GetAddress() == address then
+            effectClass:set(self.context:empty_class())
+        end
+    end)
     hook("/Script/SGameAttributes.AttributeUtils:ModifyCharacterAttributeValue",function(_,actor,attribute,operation,value)
-        if not is_resource(attribute) or operation:get() ~= 0 or value:get() >= 0 then return end
-        if not valid(self.backend.pawn) or actor:get():GetAddress() ~= self.backend.pawn:GetAddress() then return end
-        local state = self:owner()
+        local name = attribute_name(attribute)
+        if not resources[name] or operation:get() ~= 0 or value:get() >= 0 then return end
+        local is_owned = valid(self.backend.pawn) and actor:get():GetAddress() == self.backend.pawn:GetAddress()
+        local state,fn
+        if is_owned then state,fn = self:owner()
+        else state,fn = self.context:owner(self.instances,function() return false end) end
+        self:observe_cost("write",actor:get(),nil,state,fn,
+            not is_owned and "actor-mismatch" or not state and "owner-missing" or not state.bypass and "owner-pays" or "applied",
+            nil,name,value:get(),operation:get())
+        if not is_owned then return end
         if state and state.bypass then value:set(0) end
     end)
-    local function query(component,attribute)
-        if not is_resource(attribute) then return end
+    local function query(component,attribute,original)
+        local name = attribute_name(attribute)
+        if not resources[name] then return end
         local owned = self.backend:receiver({receiver="ability_system"})
-        if not valid(owned) or component:get():GetAddress() ~= owned:GetAddress() then return end
-        local state, fn = self:owner()
-        if state and state.bypass and fn and fee_read(fn) then return 1000000000 end
+        local is_owned = valid(owned) and component:get():GetAddress() == owned:GetAddress()
+        local state,fn
+        if is_owned then state,fn = self:owner()
+        else state,fn = self.context:owner(self.instances,function() return false end) end
+        self:observe_cost("read",nil,component:get(),state,fn,
+            not is_owned and "asc-mismatch" or not state and "owner-missing" or not state.bypass and "owner-pays"
+                or (not fn or not fee_read(fn)) and "fee-site-mismatch" or "applied",owned,name,original:get())
+        if not is_owned then return end
+        if state and state.bypass and fn and fee_read(fn) then original:set(1000000000) end
     end
     hook("/Script/GameplayAbilities.AbilitySystemComponent:GetGameplayAttributeValue",function() end,
-        function(component,original,attribute) return query(component,attribute) end)
+        function(component,original,attribute) return query(component,attribute,original) end)
     hook("/Script/GameplayAbilities.AbilitySystemBlueprintLibrary:GetFloatAttributeFromAbilitySystemComponent",function() end,
-        function(_,original,component,attribute) return query(component,attribute) end)
-    hook("/Script/SGameCombatSystem.BulletInterface:Initialize",function() end,
-        function(context,parent,avatar,ability)
-            local bullet, source = context:get(), ability:get()
-            local state = self:inherit(source)
-            local inherited = valid(parent:get()) and self.bullets[parent:get():GetAddress()]
-            self:remember_bullet(bullet,inherited and inherited.damage or state and state.damage or 1)
-        end)
-    hook("/Script/SGameCombatSystem.BulletInterface:Start",function(context)
-        local bullet = context:get()
+        function(_,original,component,attribute) return query(component,attribute,original) end)
+end
+
+function Costs:install_damage_hooks()
+    local backend = self.backend
+    self.context:enable_damage()
+    local initialize = "/Script/SGameCombatSystem.BulletInterface:Initialize"
+    self.hooks[initialize] = {self.context:interface_hook(backend,initialize,function(_,parent,avatar,ability)
+        self:inherit(ability:get())
+    end)}
+    local start = "/Script/SGameCombatSystem.BulletInterface:Start"
+    self.hooks[start] = {self.context:interface_hook(backend,start,function(bullet)
         local ability = backend:invoke(bullet,"/Script/SGameCombatSystem.BulletInterface:GetSourceAbility")
         local state = self:inherit(ability)
         if state and state.callback_only then self:remember_bullet(bullet,state.damage) end
-    end)
-    -- CalculateDamage receives a GameplayTag. The surrounding damage entry
-    -- owns the interface object, including calls that enter TakeDamage directly
-    -- from native BulletAttackModule code without its reflected thunk.
-    local function begin_damage(source)
-        self.damage_sources[#self.damage_sources+1] = self:damage_settings(source) or false
-    end
-    local function end_damage() table.remove(self.damage_sources) end
-    for _, name in ipairs({"DealDamageToAvatar","DealDamageCustom"}) do
-        hook("/Script/SGameCombatSystem.BulletAttackModule:" .. name,
-            function(context) begin_damage(context:get()) end,end_damage)
-    end
-    hook("/Script/SGameAttributes.AttributeComponent:TakeDamage",
-        function(_,source) begin_damage(source:get()) end,end_damage)
-    hook("/Script/SGameAttributes.DamageCalculatorBase:CalculateDamage",function() end,
-        function(_,attributes,attacker,target,tags,attackData,sourceTag,damageData)
-            local owned = backend:receiver({receiver="ability_system"})
-            if not valid(owned) or not valid(attacker:get()) or attacker:get():GetAddress() ~= owned:GetAddress() then return end
-            local settings = self.damage_sources[#self.damage_sources]
-            if not settings or settings.damage == 1 then return end
-            damageData:get():ForEach(function(key,value)
-                local tag = key:get().TagName:ToString()
-                if tag == "Damage.Damage.Target.GeneralDamage" or tag:sub(1,35) == "Damage.Damage.Target.GeneralDamage." then
-                    value:set(value:get()*settings.damage)
-                end
-            end)
-        end)
+    end)}
+end
+
+function Costs:install_speed_hooks()
+    local backend = self.backend
+    local function hook(...) return self:hook(...) end
     local function timeline_rate(ability,timeline,rate)
         local state = self:inherit(ability)
         if not state or not valid(timeline) then return end
@@ -153,41 +212,85 @@ function Costs.new(backend)
             end
         end
     end)
-    return self
+end
+
+function Costs:enable(bypass,settings)
+    assert(not self.closed,"Binding tuning is closed")
+    settings = settings or {}
+    local ok,failure = pcall(function()
+        if bypass and not self.resources_enabled then
+            self:install_resource_hooks()
+            self.resources_enabled = true
+        end
+        if ((settings.startup_speed or 1) ~= 1 or (settings.recovery_speed or 1) ~= 1) and not self.speed_enabled then
+            self:install_speed_hooks()
+            self.speed_enabled = true
+        end
+        if (settings.damage_multiplier or 1) ~= 1 and not self.damage_enabled then
+            self:install_damage_hooks()
+            self.damage_enabled = true
+        end
+    end)
+    if not ok then
+        local cleaned,cleanup = pcall(self.reset,self)
+        if not cleaned then self.backend.resource_costs = self
+        elseif self.backend.resource_costs == self then self.backend.resource_costs = nil end
+        error(tostring(failure)..(cleaned and "" or "\n"..tostring(cleanup)),0)
+    end
+end
+
+function Costs:observe_cost(kind,actor,component,state,fn,cause,owned,attribute,value,operation)
+    local source
+    if self.activating then
+        for _,transfer in ipairs(self.transfers) do
+            if transfer.source and transfer.source.bypass then source = transfer.source end
+        end
+    end
+    if not source and not (state and state.bypass and fn and fee_read(fn)) then return end
+    local contextName,contextAddress,current = self.context.at(1)
+    fn = fn or current
+    local ownerName,ownerAddress
+    if state and valid(state.instance) then
+        ownerName,ownerAddress = state.instance:GetFullName(),state.instance:GetAddress()
+    end
+    local function address(object) return valid(object) and tostring(object:GetAddress()) or "nil" end
+    owned = owned or self.backend:receiver({receiver="ability_system"})
+    fn = fn or "unknown"
+    self.backend:report("resource-cost:"..kind..":"..tostring(cause)..":"..fn,
+        "Resource bypass "..kind.." "..tostring(cause)..": actor="..address(actor).." pawn="..address(self.backend.pawn)
+            .." ASC="..address(component).." ownedASC="..address(owned).." owner="..tostring(state and state.bypass)
+            .." ownerAddress="..tostring(ownerAddress).." ownerName=["..tostring(ownerName).."] attribute="..attribute
+            ..(kind == "write" and " op="..tostring(operation).." value="..tostring(value) or " original="..tostring(value))
+            .." contextAddress="..tostring(contextAddress).." contextName=["..tostring(contextName).."]"
+            .." activating="..tostring(self.activating).." source="..tostring(source and source.bypass).." fn="..fn)
 end
 
 function Costs:remember_bullet(bullet,multiplier)
-    self.bullets[bullet:GetAddress()] = {instance=bullet,damage=multiplier}
     local actor = self.backend:invoke(bullet,"/Script/SGameCombatSystem.BulletInterface:GetActor")
-    if valid(actor) then self.bullets[actor:GetAddress()] = {instance=actor,damage=multiplier} end
-end
-
-function Costs:damage_settings(source)
-    if not valid(source) then return end
-    local actor = self.backend:invoke(source,"/Script/SGameAttributes.DamageSourceInterface:GetDamageSourceActor")
-    local snapshot = valid(actor) and self.bullets[actor:GetAddress()]
-    if snapshot then return snapshot end
-    local ability = self.backend:invoke(source,"/Script/SGameAttributes.DamageSourceInterface:GetDamageSourceAbility")
-    return self:inherit(ability)
+    self.context:damage_bullet(bullet,actor,multiplier)
 end
 
 function Costs:begin_transfer(source,target)
     local transfer = {source=source,target=target,armed={},active={},previous={}}
     self.transfers[#self.transfers+1] = transfer
-    if not source then return end
     self:select(target,function(instance,active)
         if active or instance:GetPropertyValue("bIsActive") then transfer.active[instance:GetAddress()]=true
-        else self:arm_transfer(instance,transfer) end
+        elseif source then self:arm_transfer(instance,transfer)
+        else self:restore(instance:GetAddress()) end
     end)
 end
 
 function Costs:arm_transfer(instance,transfer)
     local address,source = instance:GetAddress(),transfer.source
     local previous = self.instances[address]
-    if transfer.active[address] or previous and (previous.activated or transfer.armed[address] or previous == source) then return previous end
-    if previous then transfer.previous[address]=previous;self:restore(address) end
+    if transfer.active[address] or previous and (transfer.armed[address] or previous == source) then return previous end
+    if previous then
+        if not previous.activated then transfer.previous[address]=previous end
+        self:restore(address)
+    end
     local state = self:arm(instance,source.bypass,{damage_multiplier=source.damage,
         startup_speed=source.startup,recovery_speed=source.recovery})
+    state.phase_window = transfer.phase_window
     transfer.armed[address] = state
     return state
 end
@@ -200,7 +303,8 @@ function Costs:inherit(instance)
     local previous = self.instances[address]
     local transfer = self.transfers[#self.transfers]
     if not transfer or not transfer.source or transfer.active[address]
-        or previous and (previous.activated or transfer.armed[address] or previous == transfer.source) then return previous end
+        or previous and (previous.activated and instance:GetPropertyValue("bIsActive")
+            or transfer.armed[address] or previous == transfer.source) then return previous end
     if not target_matches(instance,transfer.target) then return previous end
     return self:arm_transfer(instance,transfer)
 end
@@ -215,7 +319,9 @@ function Costs:end_transfer(succeeded)
                 if succeeded and state.instance:GetPropertyValue("bIsActive") then state.activated=true
                 else
                     self:restore(address)
-                    self.instances[address] = transfer.previous[address]
+                    local previous = transfer.previous[address]
+                    self.instances[address] = previous
+                    if previous then self.context:ability_damage(address,previous.damage) end
                 end
             end
         end
@@ -224,7 +330,7 @@ function Costs:end_transfer(succeeded)
 end
 
 function Costs:owner()
-    if self.resolving or not next(self.instances) then return end
+    if self.resolving or not next(self.instances) and #self.transfers == 0 then return end
     self.resolving = true
     local ok, state, fn = pcall(function()
         return self.context:owner(self.instances,function(object)
@@ -240,18 +346,18 @@ function Costs:owner()
     return state, fn
 end
 
-local function tuned(settings)
+function Costs.tuned(settings)
     return settings and ((settings.damage_multiplier or 1) ~= 1 or (settings.startup_speed or 1) ~= 1 or (settings.recovery_speed or 1) ~= 1)
 end
 
 function Costs.with(backend,target,bypass,callback,settings)
-    if (bypass or tuned(settings)) and not backend.resource_costs then backend.resource_costs = Costs.new(backend) end
+    if (bypass or Costs.tuned(settings)) and not backend.resource_costs then backend.resource_costs = Costs.new(backend) end
     if backend.resource_costs then return backend.resource_costs:activate(target,bypass,callback,settings) end
     return callback()
 end
 
 function Costs.with_active(backend,instance,bypass,callback,settings,callbackOnly)
-    if (bypass or tuned(settings)) and not backend.resource_costs then backend.resource_costs = Costs.new(backend) end
+    if (bypass or Costs.tuned(settings)) and not backend.resource_costs then backend.resource_costs = Costs.new(backend) end
     local self = backend.resource_costs
     if not self then return callback() end
     local address = instance:GetAddress()
@@ -263,7 +369,10 @@ function Costs.with_active(backend,instance,bypass,callback,settings,callbackOnl
     if callbackOnly or not ok or result == false or not instance:GetPropertyValue("bIsActive") then
         self:restore(address)
         self.instances[address] = previous
-        if previous then previous.applied_rate = nil end
+        if previous then
+            self.context:ability_damage(address,previous.damage)
+            previous.applied_rate = nil
+        end
     end
     if not ok then error(result,0) end
     return result
@@ -273,17 +382,21 @@ function Costs:restore(address)
     local state = self.instances[address]
     if state and valid(state.task) and state.applied_rate then
         self:set_rate(state.task,state.base_rate)
+        state.applied_rate = nil
     end
+    self.context:ability_damage(address,1)
     self.instances[address] = nil
 end
 
 function Costs:arm(instance,bypass,settings)
+    self:enable(bypass,settings)
     local address = instance:GetAddress()
     local state = self.instances[address]
     if state then state.frame = self.frame; return state end
     state = {instance=instance, frame=self.frame, bypass=bypass, damage=settings and settings.damage_multiplier or 1,
         startup=settings and settings.startup_speed or 1,recovery=settings and settings.recovery_speed or 1}
     self.instances[address] = state
+    self.context:ability_damage(instance,state.damage)
     return state
 end
 
@@ -304,59 +417,41 @@ function Costs:select(target, callback)
 end
 
 function Costs:activate(target, bypass, callback,settings)
-    local armed = {}
-    self:select(target,function(instance,active)
-        if not active and not instance:GetPropertyValue("bIsActive") then
-            local address = instance:GetAddress()
-            local state = self.instances[address]
-            if state and state.input_frame == self.frame then armed[address] = true
-            else
-                self:restore(address)
-                if bypass or tuned(settings) then self:arm(instance,bypass,settings); armed[address] = true end
-            end
-        end
-    end)
+    self:enable(bypass,settings)
+    settings = settings or {}
+    self:begin_transfer({bypass=bypass,damage=settings.damage_multiplier or 1,
+        startup=settings.startup_speed or 1,recovery=settings.recovery_speed or 1},target)
+    local transfer = self.transfers[#self.transfers]
+    transfer.phase_window = target.phase_window
+    for _,state in pairs(transfer.armed) do state.phase_window = target.phase_window end
+    self.activating = (self.activating or 0)+1
     local ok, result = pcall(callback)
-    for address in pairs(armed) do
-        local state = self.instances[address]
-        if not ok or result == false or not state.instance:GetPropertyValue("bIsActive") then self:restore(address)
-        else state.activated = true end
-    end
+    self.activating = self.activating-1
+    if self.activating == 0 then self.activating = nil end
+    self:end_transfer(ok and result ~= false)
     if not ok then error(result,0) end
     return result
 end
 
 function Costs:input(target,bypass,settings,rank)
     local action = target.object or self.backend:object(target.path,"InputAction")
-    local path = action:GetFullName():gsub("^%S+ ", ""):gsub("%.[^./]+$", "")
-    local tags = (self.backend.config.resource_inputs or {})[path]
-    if not tags then return end
-    self:prepare({resource_tags=tags},bypass,settings,rank)
-end
-
-function Costs:prepare(target,bypass,settings,rank)
-    self:select(target,function(instance,active)
-        if not active and not instance:GetPropertyValue("bIsActive") then
-            local address = instance:GetAddress()
-            local state = self.instances[address]
-            if not state or state.input_frame ~= self.frame then
-                self:restore(address)
-                state = self:arm(instance,bypass,settings)
-                state.input_frame, state.input_rank = self.frame,rank or math.huge
-                state.input_tuned = tuned(settings)
-            else
-                state.bypass = state.bypass or bypass
-                if tuned(settings) and (not state.input_tuned or (rank or math.huge) < state.input_rank) then
-                    state.damage,state.startup,state.recovery = settings.damage_multiplier or 1,settings.startup_speed or 1,settings.recovery_speed or 1
-                    state.input_tuned,state.input_rank = true,rank or math.huge
-                end
-            end
-        end
-    end)
+    local previous = self.inputs[action:GetAddress()]
+    if previous and previous.rank <= (rank or math.huge) then return end
+    self:enable(bypass,settings)
+    settings = settings or {}
+    self.inputs[action:GetAddress()] = {bypass=bypass,damage=settings.damage_multiplier or 1,
+        startup=settings.startup_speed or 1,recovery=settings.recovery_speed or 1,rank=rank or math.huge}
 end
 
 function Costs:update()
+    if self.context.closed then
+        local failure = self.context.failure or "Binding tuning stopped after its native context was disabled"
+        local cleaned,cleanup = pcall(self.reset,self)
+        error(failure..(cleaned and "" or "\n"..tostring(cleanup)),0)
+    end
     self.frame = self.frame+1
+    self.inputs = {}
+    self.context:update_damage()
     for address, state in pairs(self.instances) do
         if not valid(state.instance) or not state.instance:GetPropertyValue("bIsActive")
             and (state.activated or state.frame < self.frame-1) then self:restore(address)
@@ -365,7 +460,6 @@ function Costs:update()
             if state.startup ~= 1 or state.recovery ~= 1 then self:update_speed(state) end
         end
     end
-    for address,bullet in pairs(self.bullets) do if not valid(bullet.instance) then self.bullets[address]=nil end end
 end
 
 function Costs:update_speed(state)
@@ -375,11 +469,11 @@ function Costs:update_speed(state)
     if not state.speed_supported then return end
     local task = self.backend:invoke(state.instance,"/Script/LegoAbility.LegoAbility:GetPlayTimelineTask")
     if not valid(task) then return end
+    local timeline = task:GetPropertyValue("Timeline")
     if not valid(state.task) or state.task:GetAddress() ~= task:GetAddress() then
         if valid(state.task) and state.applied_rate then
             self:set_rate(state.task,state.base_rate)
         end
-        local timeline = task:GetPropertyValue("Timeline")
         local rate = valid(timeline) and state.timeline_rates and state.timeline_rates[timeline:GetAddress()]
         if not rate then return end
         state.task, state.base_rate, state.applied_rate = task,rate,nil
@@ -388,6 +482,17 @@ function Costs:update_speed(state)
     local name = phase and phase.TagName:ToString()
     local multiplier = name == "CharacterState.Action.Phase.Start" and state.startup
         or name == "CharacterState.Action.Phase.Cancel" and state.recovery or 1
+    local window = state.phase_window
+    if window and valid(timeline) then
+        local expected = self.backend:invoke(state.instance,"/Script/LegoAbility.LegoAbility:GetTimelineByName",FName(window.timeline))
+        if valid(expected) and timeline:GetAddress() == expected:GetAddress() then
+            local time = task:GetPropertyValue("CurrentTime")
+            if time >= window.entry_time then
+                multiplier = time < window.attack_start and state.startup
+                    or time >= window.attack_end and state.recovery or 1
+            end
+        end
+    end
     local rate = state.base_rate*multiplier
     if state.applied_rate ~= rate then
         self:set_rate(task,rate)
@@ -402,14 +507,27 @@ function Costs:set_rate(task,rate)
     if not ok then error(failure,0) end
 end
 
+function Costs:suspend()
+    self.inputs = {}
+end
+
 function Costs:reset()
-    for address in pairs(self.instances) do self:restore(address) end
-    self.bullets = {}
-    self.damage_sources = {}
-    self.transfers = {}
-    for path, ids in pairs(self.hooks) do UnregisterHook(path,ids[1],ids[2]) end
-    self.hooks = {}
-    self.context:reset()
+    self.closed = true
+    local failures = {}
+    local function attempt(callback)
+        local ok,failure = pcall(callback)
+        if not ok then failures[#failures+1] = tostring(failure) end
+    end
+    for address in pairs(self.instances) do attempt(function() self:restore(address) end) end
+    self.inputs, self.transfers = {}, {}
+    if self.context then attempt(function() self.context:reset() end) end
+    for path,ids in pairs(self.hooks) do
+        attempt(function()
+            UnregisterHook(path,ids[1],ids[2])
+            self.hooks[path] = nil
+        end)
+    end
+    if #failures > 0 then error(table.concat(failures,"\n"),0) end
 end
 
 return Costs

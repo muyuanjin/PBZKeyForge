@@ -170,6 +170,7 @@ def main():
         initialize = [("Parent", 0x13), ("OwnerAvatar", 0x12), ("SourceAbility", 0x12),
                       ("Data", 0x12), ("bDebug", 0x4c)]
         assert initialize in native.signatures("Initialize", include_return=True)
+        assert [("ModifiedData", 0x17)] in native.signatures("GetModifiedAttackData", include_return=True)
         assert [("PlayRate", 0xa)] in native.signatures("SetPlayRate")
     archive = combat_art.e.Archive(args.game_exe, args.paks, args.oodle, "CL-302256")
     symbols, cache, checked = combat_art.ScriptObjects(args.paks), {}, 0

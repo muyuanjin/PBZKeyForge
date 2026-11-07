@@ -12,9 +12,9 @@ Versioned media sources: `assets/screenshots/<version>/README.md` indexes ten sc
 | --- | --- |
 | Mod name | PBZKeyForge |
 | Category | Tools |
-| Version | 1.2.3 |
+| Version | 1.3.0 |
 | Author | muyuanjin |
-| Short description | Shared-key bindings, keyboard and controller presets, and optional removal of the perfect-guard rapid-click penalty. Supports Steam 1.0302256. Open source, built by CI, with eight ready-made layouts. |
+| Short description | Shared keys, extra moves and optional Key Enhancement: chords, tap/hold, sequences, independent schemes, live editing and per-binding combat settings. Keyboard, Xbox and PlayStation support, plus eight presets. |
 | File ID | 8297694 |
 | Mod ID | 402 |
 

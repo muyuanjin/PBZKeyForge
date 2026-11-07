@@ -1,3 +1,4 @@
+package.loaded["script-context"] = {new=function() error("Unexpected tuning in an untuned fixture") end}
 local scripts = "prototype/input-router/ue4ss/Scripts/"
 package.path = scripts .. "?.lua;" .. package.path
 local Backend = dofile(scripts .. "backend.lua")
@@ -196,6 +197,29 @@ do
     widget.invalid=true
     check(backend:refresh() and backend:context().gameplay and searches==4,
         "destroying a cached widget blocked gameplay or forced rediscovery")
+end
+
+do
+    local backend,state=fixture()
+    local tuning={inputs={G=true},snapshots={projectile=11},suspends=0,updates=0,resets=0}
+    function tuning:suspend() self.inputs={};self.suspends=self.suspends+1 end
+    function tuning:update() self.updates=self.updates+1 end
+    function tuning:reset() self.snapshots={};self.resets=self.resets+1 end
+    backend.resource_costs=tuning
+    state.paused=true
+    check(backend:refresh() and backend.resource_costs==tuning and tuning.snapshots.projectile==11,
+        "opening a menu preserves launched-projectile tuning")
+    check(not next(tuning.inputs) and tuning.suspends==1 and tuning.updates==1,
+        "suspended routing clears input ownership and continues lifetime cleanup")
+    state.paused=false
+    check(backend:refresh() and backend.resource_costs==tuning and tuning.updates==2,
+        "returning to gameplay keeps the same projectile context")
+    backend:shutdown(true)
+    check(backend.resource_costs==tuning and tuning.snapshots.projectile==11,
+        "configuration reload retains the current projectile snapshots")
+    backend:retire()
+    check(not backend.resource_costs and tuning.resets==1 and not next(tuning.snapshots),
+        "leaving the pawn fully releases projectile tuning")
 end
 
 print("UnifiedBackendTests: " .. passed .. " assertions passed")

@@ -327,6 +327,7 @@ class UnifiedBindingDialogTests
     }
     static void Layout(BindingWorkspace workspace)
     {
+        CombatLayout(workspace);
         using (var dialog = new UnifiedActionChoiceDialog(workspace, "J", null))
         {
             dialog.Show(); Application.DoEvents(); dialog.Scale(new SizeF(1.5f, 1.5f)); dialog.ClientSize = dialog.MinimumSize;
@@ -336,10 +337,11 @@ class UnifiedBindingDialogTests
         }
         using (var dialog = new UnifiedBindingEditDialog(workspace, "IA_Jump", null, "J", null))
         {
-            dialog.Show(); Application.DoEvents(); dialog.Scale(new SizeF(1.5f, 1.5f)); dialog.ClientSize = new Size(750, 660); Field<ComboBox>(dialog, "trigger").SelectedIndex = 8;
+            dialog.Show(); Application.DoEvents(); dialog.Scale(new SizeF(1.5f, 1.5f)); dialog.Size = dialog.MinimumSize; Field<ComboBox>(dialog, "trigger").SelectedIndex = 8;
             Application.DoEvents();
             Capture(dialog, "binding-150.png");
             var sequenceScroll = All(dialog).OfType<ScrollableControl>().First(control => control.AutoScroll);
+            sequenceScroll.ScrollControlIntoView(All(dialog).Single(control => control.Name == "moveSequenceStepDown")); Application.DoEvents();
             foreach (string name in new[] { "addSequenceStep", "editSequenceStep", "removeSequenceStep", "moveSequenceStepUp", "moveSequenceStepDown" })
             {
                 var stepButton = All(dialog).OfType<Button>().Single(button => button.Name == name);
@@ -361,7 +363,7 @@ class UnifiedBindingDialogTests
         }
         using (var dialog = new UnifiedBindingEditDialog(workspace, "IA_Jump", null, "J", null))
         {
-            dialog.Show(); Application.DoEvents(); dialog.Scale(new SizeF(1.5f, 1.5f)); dialog.ClientSize = new Size(750, 660);
+            dialog.Show(); Application.DoEvents(); dialog.Scale(new SizeF(1.5f, 1.5f)); dialog.Size = dialog.MinimumSize;
             Field<ComboBox>(dialog, "trigger").SelectedIndex = 11;
             var scroll = All(dialog).OfType<ScrollableControl>().First(control => control.AutoScroll);
             scroll.ScrollControlIntoView(Field<TextBox>(dialog, "evaluatorCode")); Application.DoEvents();
@@ -373,6 +375,41 @@ class UnifiedBindingDialogTests
             dialog.Show(); Application.DoEvents(); dialog.Scale(new SizeF(1.5f, 1.5f)); dialog.ClientSize = new Size(765, 615);
             Check(dialog.RectangleToScreen(dialog.ClientRectangle).Contains(All(dialog).OfType<Button>().Single(button => button.Name == "saveValue").RectangleToScreen(All(dialog).OfType<Button>().Single(button => button.Name == "saveValue").ClientRectangle)), "Recursive value save clipped at 150%");
             Capture(dialog, "value-150.png");
+        }
+    }
+    static void CombatLayout(BindingWorkspace workspace)
+    {
+        const string finisher = "move:Ability.Action.Hun.CombatArt.BronzeSword.Final";
+        foreach (float scale in new[] { 1f, 1.5f })
+        using (var dialog = new UnifiedBindingEditDialog(workspace, finisher,
+            new BindingEntry { Keys = new[] { "G" }, Trigger = "default" }, null, null))
+        {
+            dialog.Show(); Application.DoEvents();
+            if (scale != 1) dialog.Scale(new SizeF(scale, scale));
+            Application.DoEvents();
+            Capture(dialog, "combat-binding-" + (scale == 1 ? "100" : "150") + ".png");
+            foreach (string name in new[] { "damageMultiplier", "startupSpeed", "recoverySpeed" })
+            {
+                var number = Field<NumericUpDown>(dialog, name);
+                Check(number.Parent.Height <= number.Height + dialog.Font.Height * 2,
+                    "Combat parameter has excessive empty space: " + name + " " + number.Parent.Height);
+            }
+            var scroll = All(dialog).OfType<ScrollableControl>().First(control => control.AutoScroll);
+            Check(!scroll.HorizontalScroll.Visible, "Combat editor scrolls horizontally");
+            var more = All(dialog).Single(control => control.Name == "moreBindingSettings");
+            Check(scroll.RectangleToScreen(scroll.ClientRectangle).Contains(more.RectangleToScreen(more.ClientRectangle)),
+                "Basic combat settings require scrolling at the default size");
+            ButtonsVisible(dialog);
+            Click(dialog, "moreBindingSettings");
+            scroll.ScrollControlIntoView(Field<ComboBox>(dialog, "condition")); Application.DoEvents();
+            Check(Field<NumericUpDown>(dialog, "priority").Parent.Height <= dialog.Font.Height * 4,
+                "Advanced parameter has excessive empty space");
+            Capture(dialog, "combat-binding-more-" + (scale == 1 ? "100" : "150") + ".png");
+            dialog.Size = dialog.MinimumSize; Application.DoEvents();
+            ButtonsVisible(dialog);
+            Check(!scroll.HorizontalScroll.Visible, "Minimum combat editor scrolls horizontally");
+            scroll.ScrollControlIntoView(Field<NumericUpDown>(dialog, "recoverySpeed")); Application.DoEvents();
+            Capture(dialog, "combat-binding-minimum-" + (scale == 1 ? "100" : "150") + ".png");
         }
     }
     static void CustomFunctionPath(BindingWorkspace workspace)
@@ -440,7 +477,7 @@ class UnifiedBindingDialogTests
     {
         Application.DoEvents(); Rectangle client = form.RectangleToScreen(form.ClientRectangle);
         foreach (Button button in All(form).OfType<Button>().Where(button => button.Visible && (button.Name == "saveBinding" || button.Name == "saveCustomFunction" || button.Name == "addSelectedAction" || button.Name == "cancel")))
-            Check(client.Contains(button.RectangleToScreen(button.ClientRectangle)), "Visible command clipped: " + button.Name);
+            Check(client.Contains(button.RectangleToScreen(button.ClientRectangle)), "Visible command clipped: " + button.Name + " " + button.Bounds + " in " + form.ClientSize);
     }
     static void Capture(Form form, string name)
     { using (var bitmap = new Bitmap(form.Width, form.Height)) { form.DrawToBitmap(bitmap, new Rectangle(Point.Empty, bitmap.Size)); bitmap.Save(Path.Combine(output, name)); } }

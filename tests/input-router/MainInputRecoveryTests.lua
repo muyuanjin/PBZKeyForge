@@ -1,3 +1,4 @@
+package.loaded["script-context"] = {new=function() error("Unexpected tuning in an untuned fixture") end}
 package.loaded["live-config"] = {new=function() return {poll=function() end} end}
 local scripts = "prototype/input-router/ue4ss/Scripts/"
 package.path = scripts .. "?.lua;" .. package.path

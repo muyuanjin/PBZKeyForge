@@ -1,3 +1,4 @@
+package.loaded["script-context"] = {new=function() error("Unexpected tuning in an untuned fixture") end}
 package.path = "prototype/input-router/ue4ss/Scripts/?.lua;" .. package.path
 local Moves = require("complete-moves")
 local checks = 0

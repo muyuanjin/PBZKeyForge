@@ -1,3 +1,4 @@
+package.loaded["script-context"] = {new=function() error("Unexpected tuning in an untuned fixture") end}
 package.path = "prototype/input-router/ue4ss/Scripts/?.lua;" .. package.path
 local Router, Backend, Moves = require("router"), require("backend"), require("complete-moves")
 local path = (...) or "dist/complete-move-catalog-check/phase-moves.lua"
@@ -128,7 +129,7 @@ local function fixture(target)
                 {get=function() return projectile end})
         end
     end}
-    local backend = setmetatable({state={ready=true},subsystem=subsystem,pawn=object(13)},Backend)
+    local backend = setmetatable({config=config,state={ready=true},subsystem=subsystem,pawn=object(13)},Backend)
     function backend:receiver(spec) return spec.receiver == "ability_system" and asc or receiver end
     function backend:object(path)
         return path == target.prepare_input and hold or input
@@ -438,8 +439,8 @@ for _, device in ipairs({"keyboard","pad"}) do
         router:step(.2,{})
         assert(#states == 2)
         for _, state in ipairs(states) do
-            assert(state.activations == (trigger == "default" and 3 or 1),
-                "Compiled multi-select must preserve held requests and explicit one-shot behavior: " .. device .. " " .. trigger)
+            assert(state.activations == ((trigger == "default" or trigger == "press") and 3 or 1),
+                "Compiled multi-select must repeat default/on-press moves and preserve tap/release: " .. device .. " " .. trigger)
         end
     end
 end

@@ -4,7 +4,10 @@ If something doesn't work, please post your tool version, device/layout and a sc
 
 [b]Close the game before applying changes. Applying or resetting bindings in the game's own binding screen will overwrite your layout.
 [/b][/center][center][size=5][color=#e8b96a][b]Changelog[/b][/color][/size][/center]
-[center][color=#1e84cc][b]V1.2.3[/b][/color]
+[center][color=#1e84cc][b]V1.3.0[/b][/color]
+Added optional Key Enhancement with extra moves, chords, tap/hold, sequences, independent schemes and live editing. Added per-binding resource, damage and timing settings, plus preset sharing and CLI workflows. Improved runtime recovery and editor responsiveness; fixed flickering action-group text.
+
+[color=#1e84cc][b]V1.2.3[/b][/color]
 Added optional removal of the perfect-guard rapid-click penalty, off by default. Added Steam 1.0302256 support, remembered saves and Steam-based game discovery. Improved editing speed, small-window layouts and Apply feedback.
 
 [color=#1e84cc][b]V1.2.2[/b][/color]

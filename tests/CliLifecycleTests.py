@@ -127,7 +127,11 @@ check(Path(applied["result"]["inputBackup"]).read_bytes() == save_before, "Save 
 check(save.read_bytes() != save_before, "Ordinary Apply did not edit native save")
 run("--component", save, "--action", "enable")
 readiness = run("--runtime-status", save)["readiness"]
-check(not readiness["canApply"] and readiness["enhancementEnabled"], "Unauthenticated scheme advertised as ready to apply")
+check(readiness["canApply"] and readiness["enhancementEnabled"], "Independent enhancement scheme requires native scheme authentication")
+run("--component", save, "--action", "disable")
+readiness = run("--runtime-status", save)["readiness"]
+check(not readiness["canApply"] and not readiness["enhancementEnabled"], "Unauthenticated native scheme advertised as ready to apply")
+run("--component", save, "--action", "enable")
 preview = run("--edit", save, "--scheme", scheme, "--request", "-", "--query", "IA_Jump",
               request={"operations": [{"op": "enhancement", "enabled": False}]})
 check(preview["readiness"]["canApply"] and preview["readiness"]["enhancementEnabled"] and not preview["configuration"]["Enabled"],

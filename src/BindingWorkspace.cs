@@ -826,7 +826,8 @@ namespace PBZKeyForge
         internal BindingSnapshot Snapshot()
         {
             var functions = Functions;
-            var afterEntries = CollectEntries(config, false, null).ToLookup(entry => entry.FunctionId);
+            var entriesAfter = CollectEntries(config, false, null);
+            var afterEntries = entriesAfter.ToLookup(entry => entry.FunctionId);
             var beforeEntries = CollectEntries(baseline, true, null).ToLookup(entry => entry.FunctionId);
             Func<BindingFunction, bool, ActionRelations> relation = (function, before) => {
                 var entries = (before ? beforeEntries : afterEntries)[function.Id].ToArray();
@@ -842,7 +843,7 @@ namespace PBZKeyForge
             };
             var current = functions.Select(function => relation(function, false)).ToArray();
             return new BindingSnapshot(pad, family, session.ControllerFamilies.Where(item => item.Index == family).Select(item => item.Name).FirstOrDefault(), current,
-                functions.ToDictionary(function => function.Id, function => relation(function, true)));
+                functions.ToDictionary(function => function.Id, function => relation(function, true)), entriesAfter);
         }
     }
 }

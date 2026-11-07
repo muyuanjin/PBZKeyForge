@@ -110,6 +110,7 @@ namespace PBZKeyForge
         internal void PresentBindingWindow(EditorWindow dialog, Form owner, Action completed)
         {
             bool previousModal = modalActive; modalActive = true;
+            keyEnhancementFlame.AnimationPaused = true;
             Control[] locked = owner == this ? Controls.Cast<Control>().Where(control => control != Caption && control.Enabled).ToArray() : new Control[] { owner };
             foreach (var control in locked) control.Enabled = false;
             dialog.FormClosed += delegate {
@@ -151,9 +152,9 @@ namespace PBZKeyForge
                 {
                     if (state.CanApply && !await ApplyChangesAsync())
                     { status.Text = I18n.Str("flow.failed.details"); ShowFullFeedback(); return; }
-                    refresh(); ReturnToGame();
+                    dialog.Close(); ReturnToGame();
                 }
-                finally { dialog.Enabled = true; busy = false; update(); }
+                finally { if (!dialog.IsDisposed) dialog.Enabled = true; busy = false; update(); }
             };
             status.Cursor = Cursors.Hand;
             status.Click += delegate { if (messageError) ShowFullFeedback(); else if (BindingApplication().Connection != null) ShowLiveConnectionHelp(); };

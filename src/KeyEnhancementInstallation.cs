@@ -23,6 +23,7 @@ namespace PBZKeyForge
         const string ModName = "PBZInputRouter";
         const string ModPrefix = "ue4ss/Mods/PBZInputRouter/";
         const string ConfigurationFile = "configuration.json";
+        const string RetainedConfigurationFile = "PBZKeyForge_KeyEnhancement.configuration.json";
         const string LuaConfigurationFile = "Scripts/router-config.lua";
         const string OwnershipFile = "PBZKeyForge_KeyEnhancement.install.json";
         public sealed class InstallationSource
@@ -44,8 +45,11 @@ namespace PBZKeyForge
         public string GameDirectory { get; private set; }
         public string InstallDirectory { get; private set; }
         public string ConfigurationPath { get { return Path.Combine(InstallDirectory, ConfigurationFile); } }
+        public string RetainedConfigurationPath { get { return Path.Combine(runtimeDirectory, RetainedConfigurationFile); } }
         public string ConfigurationText { get; private set; }
-        public bool ConfigurationChanged { get { return configurationLoaded && ReadConfigurationText() != ConfigurationText; } }
+        string retainedConfigurationText;
+        public bool ConfigurationChanged { get { return configurationLoaded && (ReadConfigurationText() != ConfigurationText
+            || ConfigurationText == null && ReadRetainedConfigurationText() != retainedConfigurationText); } }
         public bool InstalledEnabled { get { return ReadState() == KeyEnhancementInstallState.Enabled; } }
 
         public KeyEnhancementInstallation(string gameDirectory)
@@ -61,7 +65,8 @@ namespace PBZKeyForge
         public static bool IsRuntimeConfigurationPath(string path)
         {
             string target = Path.GetFullPath(path);
-            return Path.GetFileName(target).Equals(ConfigurationFile, StringComparison.OrdinalIgnoreCase)
+            return Path.GetFileName(target).Equals(RetainedConfigurationFile, StringComparison.OrdinalIgnoreCase)
+                || Path.GetFileName(target).Equals(ConfigurationFile, StringComparison.OrdinalIgnoreCase)
                 && Path.GetFileName(Path.GetDirectoryName(target)).Equals(ModName, StringComparison.OrdinalIgnoreCase);
         }
 
@@ -99,12 +104,20 @@ namespace PBZKeyForge
         string ReadConfigurationText()
         { return File.Exists(ConfigurationPath) ? File.ReadAllText(ConfigurationPath, Utf8) : null; }
 
+        string ReadRetainedConfigurationText()
+        { return File.Exists(RetainedConfigurationPath) ? File.ReadAllText(RetainedConfigurationPath, Utf8) : null; }
+
         public KeyEnhancementConfiguration LoadConfiguration()
         {
             string text = ReadConfigurationText();
             ConfigurationText = text;
+            retainedConfigurationText = text == null ? ReadRetainedConfigurationText() : null;
             configurationLoaded = true;
-            return text == null ? new KeyEnhancementConfiguration() : KeyEnhancementConfiguration.FromJson(text);
+            if (text != null) return KeyEnhancementConfiguration.FromJson(text);
+            if (retainedConfigurationText == null) return new KeyEnhancementConfiguration();
+            var configuration = KeyEnhancementConfiguration.FromJson(retainedConfigurationText);
+            configuration.SetEnabled(false);
+            return configuration;
         }
 
         public KeyEnhancementInstallState ReadState()
@@ -147,6 +160,8 @@ namespace PBZKeyForge
             if (File.Exists(directory)) return FileConflict(directory);
             if (!Directory.Exists(directory)) return KeyEnhancementInstallState.Disabled;
             var expected = ModFiles();
+            Dictionary<string, byte[]> previous = null;
+            Func<Dictionary<string, byte[]>> previousFiles = delegate { return previous ?? (previous = OwnedPayload(ReadOwnership())); };
             bool incomplete = false;
             foreach (string path in Directory.GetFiles(directory, "*", SearchOption.AllDirectories))
             {
@@ -154,17 +169,18 @@ namespace PBZKeyForge
                 byte[] bytes;
                 if (IsGenerated(relative)) continue;
                 byte[] actual = File.ReadAllBytes(path);
-                if (!expected.TryGetValue(relative, out bytes)) return FileConflict(path);
-                if (!actual.SequenceEqual(bytes))
+                if (!expected.TryGetValue(relative, out bytes) || !actual.SequenceEqual(bytes))
                 {
-                    if (!MatchesManaged(relative, actual)) return FileConflict(path);
+                    byte[] managed;
+                    if (!previousFiles().TryGetValue(ModPrefix + relative, out managed) || !actual.SequenceEqual(managed)) return FileConflict(path);
                     incomplete = true;
                 }
             }
             foreach (string child in Directory.GetDirectories(directory, "*", SearchOption.AllDirectories))
             {
                 string relative = child.Substring(directory.Length + 1).Replace('\\', '/') + "/";
-                if (!expected.Keys.Any(path => path.StartsWith(relative, StringComparison.OrdinalIgnoreCase)))
+                if (!expected.Keys.Any(path => path.StartsWith(relative, StringComparison.OrdinalIgnoreCase))
+                    && !previousFiles().Keys.Any(path => path.StartsWith(ModPrefix + relative, StringComparison.OrdinalIgnoreCase)))
                     return FileConflict(child);
             }
             foreach (string relative in expected.Keys.Where(path => !IsGenerated(path)))

@@ -24,7 +24,7 @@ local function log(message)
 end
 
 local runtime = {running = true, pending = false, generation = nil, last_error = nil,
-    suspended = false, hooks = {}, active = false}
+    suspended = false, hooks = {}, failed_hooks = {}, hook_retry = {}, active = false}
 local backend = Backend.new(Config, log)
 local router = Router.new(Config, backend)
 
@@ -37,19 +37,30 @@ end
 backend.on_retire = function() router:reset(true) end
 backend.on_release = function() router:reset(true) end
 
-local function restore()
+local function restore(preserveTuning)
     local outputs, outputError = pcall(function() router:reset(true) end)
-    local contexts, contextError = pcall(function() backend:shutdown() end)
+    local contexts, contextError = pcall(function() backend:shutdown(preserveTuning) end)
     if not outputs and not contexts then error(tostring(outputError) .. "\n" .. tostring(contextError), 0) end
     if not outputs then error(outputError, 0) end
     if not contexts then error(contextError, 0) end
 end
 
 local function uninstall_hooks()
-    for path, ids in pairs(runtime.hooks) do UnregisterHook(path, ids[1], ids[2]) end
-    runtime.hooks = {}
-    for path, ids in pairs(runtime.ui_hooks or {}) do UnregisterHook(path, ids[1], ids[2]) end
-    runtime.ui_hooks = nil
+    local failures = {}
+    local function remove(hooks)
+        for path,ids in pairs(hooks) do
+            local ok,failure = pcall(UnregisterHook,path,ids[1],ids[2])
+            if ok then hooks[path] = nil
+            else failures[#failures+1] = tostring(failure) end
+        end
+    end
+    remove(runtime.hooks)
+    if runtime.ui_hooks then
+        remove(runtime.ui_hooks)
+        if not next(runtime.ui_hooks) then runtime.ui_hooks = nil end
+    end
+    if #failures > 0 then error(table.concat(failures,"\n"),0) end
+    runtime.failed_hooks, runtime.hook_retry = {}, {}
 end
 
 local function stop()
@@ -73,7 +84,7 @@ local function apply_configuration(candidate)
         log("Configuration rejected: " .. tostring(candidateRouter))
         return false, candidateRouter
     end
-    local restored, restoreError = pcall(restore)
+    local restored, restoreError = pcall(restore, candidate.enabled ~= false)
     if not restored then
         runtime.suspended = true
         runtime.last_error = tostring(restoreError)
@@ -84,14 +95,14 @@ local function apply_configuration(candidate)
     backend.config = candidate
     backend.live_validation = true
     local prepared, prepareError = pcall(function()
-        if candidate.dynamic_capture and type(backend.prepare_dynamic_capture) == "function" then
+        if candidate.enabled ~= false and candidate.dynamic_capture and type(backend.prepare_dynamic_capture) == "function" then
             backend:prepare_dynamic_capture()
             Router.new(backend:effective_config(), backend)
         end
     end)
     backend.live_validation = nil
     local cleaned, cleanupError = true, nil
-    if candidate.dynamic_capture and type(backend.prepare_dynamic_capture) == "function" then cleaned, cleanupError = pcall(restore) end
+    if candidate.enabled ~= false and candidate.dynamic_capture and type(backend.prepare_dynamic_capture) == "function" then cleaned, cleanupError = pcall(restore, true) end
     if not prepared or not cleaned then
         backend.config = previous
         runtime.active = false
@@ -169,6 +180,7 @@ if type(io) == "table" and type(io.open) == "function" then
 end
 
 local function install_hooks()
+    if Config.enabled == false then return end
     if Config.unified_native and not runtime.ui_hooks then
         runtime.ui_hooks = {}
         for name, blocked in pairs({SetInputMode_UIOnlyEx=true, SetInputMode_GameAndUIEx=true, SetInputMode_GameOnly=false}) do
@@ -177,6 +189,7 @@ local function install_hooks()
             if object and object:IsValid() then
                 local value = blocked
                 local first, second = RegisterHook(path, function(_, controller)
+                    if not runtime.running or Config.enabled == false or runtime.suspended then return end
                     local player = controller:get()
                     if player and player:IsValid() and backend.controller and player:GetAddress() == backend.controller:GetAddress() then backend.ui_only = value end
                 end)
@@ -185,24 +198,38 @@ local function install_hooks()
         end
     end
     for _, rule in ipairs(Config.hooks or {}) do
-        if not runtime.hooks[rule.path] then
+        if not runtime.hooks[rule.path] and not runtime.failed_hooks[rule.path]
+            and os.clock() >= (runtime.hook_retry[rule.path] or 0) then
+            runtime.hook_retry[rule.path] = os.clock() + .5
             local object = StaticFindObject(rule.path)
             if object and object:IsValid() then
-                local function callback(...)
-                    if not runtime.running or Config.enabled == false or runtime.suspended or not backend:allowed(rule.when, backend:context()) then return end
-                    if rule.evaluate then
-                        local ok, result = pcall(rule.evaluate, ...)
-                        if not ok then backend:report("hook:" .. rule.path, "Hook failed: " .. tostring(result)); return end
-                        return result
-                    end
+                local ruleFailed = false
+                local function evaluate(...)
+                    if not backend:allowed(rule.when, backend:context()) then return end
+                    if rule.evaluate then return rule.evaluate(...) end
                     return backend:argument(rule.value, backend:context())
                 end
-                local first, second
+                local function callback(...)
+                    if not runtime.running or Config.enabled == false or runtime.suspended or ruleFailed then return end
+                    local ok, result = xpcall(evaluate, debug.traceback, ...)
+                    if not ok then
+                        ruleFailed = true
+                        backend:report("hook:" .. rule.path, "Hook disabled: " .. tostring(result))
+                        return
+                    end
+                    return result
+                end
+                local ok, first, second
                 if rule.path:sub(1, 8) == "/Script/" then
-                    first, second = RegisterHook(rule.path, function() end, callback)
-                else first, second = RegisterHook(rule.path, callback) end
-                runtime.hooks[rule.path] = {first, second}
-                log("Return hook installed: " .. rule.path)
+                    ok, first, second = pcall(RegisterHook, rule.path, function() end, callback)
+                else ok, first, second = pcall(RegisterHook, rule.path, callback) end
+                if ok then
+                    runtime.hooks[rule.path] = {first, second}
+                    log("Return hook installed: " .. rule.path)
+                else
+                    runtime.failed_hooks[rule.path] = true
+                    backend:report("hook:" .. rule.path, "Hook disabled: " .. tostring(first))
+                end
             end
         end
     end
@@ -215,6 +242,14 @@ local function tick()
     end
     if not runtime.running or runtime.suspended then return end
     local ok, err = xpcall(function()
+        if Config.enabled == false then
+            if runtime.active or runtime.generation ~= nil or backend.resource_costs or next(runtime.hooks) or runtime.ui_hooks then
+                restore()
+                uninstall_hooks()
+                runtime.active, runtime.generation, runtime.config_generation = false,nil,nil
+            end
+            return
+        end
         if not backend:refresh() then runtime.active = false; return end
         if backend.config_generation ~= runtime.config_generation then
             local nextConfig = backend:effective_config()
@@ -263,7 +298,6 @@ local function tick()
         end
         backend.dispatch_error = nil
         router:step(backend:time(), snapshot, context)
-        if backend.dispatch_error then error(backend.dispatch_error, 0) end
         if runtime.pending_scheme then
             local id = runtime.pending_scheme; runtime.pending_scheme = nil
             switch_scheme(id)
@@ -271,10 +305,12 @@ local function tick()
     end, debug.traceback)
     if not ok then
         local restored, restoreError = pcall(restore)
+        local unhooked, unhookError = pcall(uninstall_hooks)
         runtime.suspended = true
         runtime.active = false
         runtime.last_error = tostring(err)
         if not restored then runtime.last_error = runtime.last_error .. "\nInput restoration incomplete: " .. tostring(restoreError) end
+        if not unhooked then runtime.last_error = runtime.last_error .. "\nHook removal incomplete: " .. tostring(unhookError) end
         if live then pcall(function() live:publish() end) end
         log("Routing suspended: " .. runtime.last_error .. (restored and "; original input restored" or "") ..
             (Config.runtime_hotkeys ~= false and "; F8 retries" or "; restart the game to retry"))

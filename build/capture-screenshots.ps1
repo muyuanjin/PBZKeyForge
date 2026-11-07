@@ -22,6 +22,10 @@ $captions = [ordered]@{
     "presets-save" = "Save the current scheme as a preset"
     "presets-share" = "Saved preset, device scopes and sharing"
     "presets-import" = "Preview and import a share code"
+    "enhancement-main" = "Key Enhancement and independent schemes"
+    "enhancement-actions" = "Additional actions and weapon moves"
+    "enhancement-moves" = "Find and bind complete moves"
+    "enhancement-tuning" = "Per-binding resources, damage and timing"
 }
 $shotsToCapture = @($Shots | ForEach-Object { $_ -split ',' })
 foreach ($shot in $shotsToCapture) {

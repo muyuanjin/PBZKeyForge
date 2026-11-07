@@ -85,7 +85,36 @@ function Backend:invoke(object, path, ...)
         if not fn:IsA(functionClass) then error("Not a UFunction: " .. path, 0) end
         self.functions[path] = fn
     end
+    if self.configured_functions and self.configured_functions[path] then
+        local owner = fn:GetOuter()
+        if not valid(owner) then error("Function owner unavailable: " .. path, 0) end
+        if not object:IsA(owner) and not self:invoke(self:library("Engine.KismetSystemLibrary"),
+            "/Script/Engine.KismetSystemLibrary:DoesImplementInterface", object, owner) then
+            error("Function does not belong to receiver: " .. path, 0)
+        end
+    end
     return object:CallFunction(fn, ...)
+end
+
+function Backend:invoke_configured(object, path, ...)
+    self.configured_functions = self.configured_functions or {}
+    self.configured_functions[path] = true
+    return self:invoke(object, path, ...)
+end
+
+function Backend:target_failed(spec)
+    if not self.failed_targets or self.failed_config ~= self.config or self.failed_generation ~= self.generation then
+        self.failed_targets, self.failed_config, self.failed_generation = {}, self.config, self.generation
+    end
+    return self.failed_targets[spec] ~= nil
+end
+
+function Backend:fail_target(spec, failure, bindingId)
+    self:target_failed(spec)
+    self.failed_targets[spec] = failure
+    self.dispatch_error = "Dispatch failed [" .. tostring(bindingId or spec.move_id or spec.tag or spec.path) .. "]: " .. tostring(failure)
+    self:report("dispatch:" .. tostring(spec), self.dispatch_error)
+    if spec.kind == "move" then CompleteMoves.abort(self, spec) end
 end
 
 function Backend:library(name)
@@ -139,14 +168,14 @@ function Backend:refresh()
         if self.config.dynamic_capture then self:prepare_dynamic_capture() end
         self:take_capture()
     else
-        self:release_capture()
+        self:release_capture(self.state.ready and self.config.enabled ~= false)
         if self.config.enabled ~= false and #(self.config.native_bindings or {}) > 0 then
             if not self.native_input then self.native_input = require("native-input").new(self) end
             self.native_input:apply_masks()
         end
     end
+    if self.state.ready and self.resource_costs then self.resource_costs:update() end
     if self.state.ready and self.state.gameplay and self.config.enabled ~= false then
-        if self.resource_costs then self.resource_costs:update() end
         CompleteMoves.update(self)
     end
     return self.state.ready
@@ -209,11 +238,22 @@ function Backend:retire()
     self.input_router = nil
 end
 
-function Backend:release_capture()
-    CompleteMoves.reset(self)
-    if self.resource_costs then self.resource_costs:reset(); self.resource_costs = nil end
-    if self.native_abilities then self.native_abilities:restore() end
-    if self.native_input then self.native_input:restore() end
+function Backend:release_capture(preserveTuning)
+    local failures = {}
+    local function attempt(label,callback)
+        local ok,failure = pcall(callback)
+        if not ok then failures[#failures+1] = label..": "..tostring(failure) end
+    end
+    attempt("Complete move release",function() CompleteMoves.reset(self) end)
+    if self.resource_costs then
+        attempt("Binding tuning release",function()
+            if preserveTuning and not self.resource_costs.closed
+                and not (self.resource_costs.context and self.resource_costs.context.closed) then self.resource_costs:suspend()
+            else self.resource_costs:reset(); self.resource_costs = nil end
+        end)
+    end
+    if self.native_abilities then attempt("Native ability restore",function() self.native_abilities:restore() end) end
+    if self.native_input then attempt("Native input restore",function() self.native_input:restore() end) end
     local released, releaseError = true, nil
     if (next(self.captured) or self.dynamic_config) and self.on_release then released, releaseError = pcall(self.on_release) end
     local failed = {}
@@ -238,8 +278,9 @@ function Backend:release_capture()
         for path, entry in pairs(self.captured) do failed[path] = entry end
     end
     self.captured = failed
-    if next(failed) then error("Original input context restore is incomplete", 0) end
-    if not released then error("Action release is incomplete: " .. tostring(releaseError), 0) end
+    if next(failed) then failures[#failures+1] = "Original input context restore is incomplete" end
+    if not released then failures[#failures+1] = "Action release is incomplete: " .. tostring(releaseError) end
+    if #failures > 0 then error(table.concat(failures,"\n"),0) end
     self:release_holder()
     if self.dynamic_config then
         self.dynamic_config, self.dynamic_contexts = nil, nil
@@ -498,31 +539,33 @@ function Backend:activate_with_resources(spec, bypass, callback, settings)
 end
 
 function Backend:prepare_input_settings(requests)
-    if not self.resource_costs then
-        for _,request in ipairs(requests) do
-            local s = request.settings or {}
-            if request.bypass_resources or (s.damage_multiplier or 1) ~= 1
-                or (s.startup_speed or 1) ~= 1 or (s.recovery_speed or 1) ~= 1 then
-                self.resource_costs = ResourceCosts.new(self)
-                break
-            end
+    if self.config.enabled == false then return end
+    local native = {}
+    for _,entry in ipairs(self.native_input and self.native_input.coverage or {}) do
+        if (entry.owner == "game" or entry.owner == "uncovered") and entry.key ~= "None" then
+            native[entry.action] = true
         end
     end
-    if self.resource_costs then
-        for _,request in ipairs(requests) do
-            if request.target.kind == "action" then
-                self.resource_costs:input(request.target,request.bypass_resources,request.settings,request.rank)
-            else self.resource_costs:prepare(request.target,request.bypass_resources,request.settings,request.rank) end
+    for _,request in ipairs(requests) do
+        if request.target.kind == "action" and (self.resource_costs or request.bypass_resources or ResourceCosts.tuned(request.settings)) then
+            local action = request.target.object or self:object(request.target.path,"InputAction")
+            local bypass,settings,rank = request.bypass_resources,request.settings,request.rank
+            if native[action_path(action)] then bypass,settings,rank = false,nil,0 end
+            if not self.resource_costs and (bypass or ResourceCosts.tuned(settings)) then
+                self.resource_costs = ResourceCosts.new(self)
+            end
+            if self.resource_costs then self.resource_costs:input(request.target,bypass,settings,rank) end
         end
     end
 end
 
 function Backend:dispatch(spec, phase, value, bindingId, bypass, settings)
     if spec.kind == "action" and phase == "canceled" and (not valid(self.controller) or not valid(self.subsystem)) then return true end
-    if not self.state.ready then return false end
+    if self.config.enabled == false or not self.state.ready then return false end
+    if spec.kind ~= "action" and self:target_failed(spec) then return true, false end
     local ok, result = xpcall(function()
         if spec.kind == "action" then
-            if (self.resource_costs or bypass or settings and (settings.damage_multiplier or settings.startup_speed or settings.recovery_speed)) and phase ~= "completed" and phase ~= "canceled" then
+            if (self.resource_costs or bypass or ResourceCosts.tuned(settings)) and phase ~= "completed" and phase ~= "canceled" then
                 if not self.resource_costs then self.resource_costs = ResourceCosts.new(self) end
                 self.resource_costs:input(spec,bypass,settings)
             end
@@ -544,7 +587,16 @@ function Backend:dispatch(spec, phase, value, bindingId, bypass, settings)
             return true
         end
         if spec.kind == "mapping" then return true end
-        if spec.kind == "move" then return CompleteMoves.dispatch(self, spec, phase, bypass,settings) end
+        if spec.kind == "move" then
+            self.configured_functions = self.configured_functions or {}
+            if spec.entry_point then self.configured_functions[spec.entry_point] = true end
+            local variable = spec.entry_when and spec.entry_when.object_variable
+            if variable then
+                self.configured_functions[variable.getter] = true
+                if variable.status_getter then self.configured_functions[variable.status_getter] = true end
+            end
+            return CompleteMoves.dispatch(self, spec, phase, bypass,settings)
+        end
         if spec.kind == "lua" then
             return spec.run(self, {phase = phase, value = value, binding = bindingId,
                 state = self:context()})
@@ -575,7 +627,7 @@ function Backend:dispatch(spec, phase, value, bindingId, bypass, settings)
             for i, item in ipairs(spec.args or {}) do
                 arguments[i] = self:argument(item, {value = value, phase = phase})
             end
-            return self:invoke(self:receiver(spec), spec.path, table.unpack(arguments, 1, #arguments))
+            return self:invoke_configured(self:receiver(spec), spec.path, table.unpack(arguments, 1, #arguments))
         end
         if spec.kind == "property" then
             local receiver = self:receiver(spec)
@@ -586,9 +638,7 @@ function Backend:dispatch(spec, phase, value, bindingId, bypass, settings)
         error("Unsupported target kind: " .. tostring(spec.kind), 0)
     end, debug.traceback)
     if not ok then
-        self.dispatch_error = "Dispatch failed [" .. tostring(bindingId) .. "]: " .. tostring(result)
-        self:report("dispatch:" .. tostring(bindingId) .. ":" .. tostring(spec.path or spec.tag),
-            self.dispatch_error)
+        self:fail_target(spec, result, bindingId)
     end
     return ok, result
 end
@@ -601,8 +651,8 @@ function Backend:scheme_notice(name)
     if not ok then self:report("scheme-notice", tostring(err)) end
 end
 
-function Backend:shutdown()
-    self:release_capture()
+function Backend:shutdown(preserveTuning)
+    self:release_capture(preserveTuning)
 end
 
 return Backend

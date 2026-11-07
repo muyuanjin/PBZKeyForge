@@ -404,7 +404,8 @@ do
         for _,frame in ipairs({{0,{G=1}},{.1,{G=1}},{.2,{}},{.3,{}}}) do
             requests=requests+#step(frame[1],frame[2])
         end
-        check(requests==1,"A complete-move " .. kind .. " binding must preserve its one-shot trigger")
+        check(requests==(kind == "press" and 2 or 1),
+            "Complete-move press repeats while held; tap and release remain single requests: " .. kind)
     end
 end
 
@@ -428,7 +429,7 @@ do
         local e=step(0,{G=1},{allowed=true})
         check(#e==1 and not e[1].bypass_resources,"An ordinary move must retain its resource cost")
         e=step(.1,{G=1,H=1},{allowed=true})
-        check(#e==1 and e[1].bypass_resources,"Merged move requests must keep the active bypass regardless of rule order")
+        check(#e==2 and e[1].bypass_resources~=e[2].bypass_resources,"Different move resource policies retain independent requests")
         e=step(.2,{H=1},{allowed=true})
         check(#e==1 and e[1].bypass_resources,"A bypass move must work independently")
         e=step(.3,{G=1,H=1},{allowed=false})
@@ -447,7 +448,12 @@ do
             local target={kind=kind,path="shared",move_id="shared",tag="shared",value_type="bool"}
             local _,_,step=rig(reversed and {tuned,ordinary} or {ordinary,tuned},{shared=target})
             local e=step(0,{G=1,H=1})
-            check(#e==1 and e[1].settings==tuned,"An ordinary binding cannot mask simultaneous tuning for "..kind)
+            if kind=="action" then
+                check(#e==1 and e[1].settings==(reversed and tuned or ordinary),"One native action retains its highest-priority binding's complete policy")
+            else
+                check(#e==2 and e[1].settings==(reversed and tuned or ordinary) and e[2].settings==(reversed and ordinary or tuned),
+                    "Different complete-move policies remain separate activation requests")
+            end
             e=step(.1,{G=1})
             check(#e==1 and e[1].settings==ordinary,"Releasing the tuned source restores ordinary parameters for "..kind)
         end
@@ -455,7 +461,7 @@ do
         local high={id="high",keys={"H"},priority=2,damage_multiplier=.5,startup_speed=3,recovery_speed=.25,outputs={"shared"}}
         local _,_,step=rig({low,high},{shared={kind=kind,path="shared",move_id="shared",tag="shared",value_type="bool"}})
         local e=step(0,{G=1,H=1})
-        check(#e==1 and e[1].settings==high,"Conflicting tuning follows binding priority without stacking or maximizing values")
+        check(#e==(kind=="action" and 1 or 2) and e[1].settings==high,"Conflicting tuning follows binding priority without stacking or maximizing values")
     end
 end
 print("RouterTests: " .. count .. " assertions passed")

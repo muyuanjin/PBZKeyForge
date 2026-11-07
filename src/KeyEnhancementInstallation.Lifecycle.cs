@@ -214,12 +214,6 @@ namespace PBZKeyForge
             return result;
         }
 
-        bool MatchesManaged(string relative, byte[] actual)
-        {
-            var source = ReadOwnership(); byte[] previous;
-            return source.PayloadBackup != null && OwnedPayload(source).TryGetValue(ModPrefix + relative, out previous) && actual.SequenceEqual(previous);
-        }
-
         string SavePayloadBackup()
         {
             string path = Path.Combine(GameSchemeSettings.BackupDirectory(), "key-enhancement-" + Guid.NewGuid().ToString("N") + ".zip");
@@ -336,6 +330,7 @@ namespace PBZKeyForge
             if (ConfigurationText == json && state == (candidate.Enabled ? KeyEnhancementInstallState.Enabled : KeyEnhancementInstallState.Disabled)
                 && !(LoaderSuspended && OtherModsPresent()))
             {
+                WriteAtomicText(RetainedConfigurationPath, json);
                 if (candidate.Schemes.Count > 0) WriteAtomicText(Path.Combine(InstallDirectory, "scheme-state.txt"), candidate.ActiveSchemeId);
                 return;
             }
@@ -424,6 +419,7 @@ namespace PBZKeyForge
                 var expected = candidate.Enabled ? KeyEnhancementInstallState.Enabled : KeyEnhancementInstallState.Disabled;
                 if (ReadState() != expected) throw new IOException(I18n.Str("mod.verifyfailed"));
                 if (candidate.Schemes.Count > 0) WriteAtomicText(Path.Combine(InstallDirectory, "scheme-state.txt"), candidate.ActiveSchemeId);
+                WriteAtomicText(RetainedConfigurationPath, json);
                 ConfigurationText = json; configurationLoaded = true; complete = true;
             }
             finally
@@ -449,6 +445,13 @@ namespace PBZKeyForge
         {
             EnsureGameClosed(); EnsureConfigurationUnchanged();
             var source = ReadOwnership(); var expected = OwnedPayload(source);
+            string configuration = ReadConfigurationText();
+            string compiled = null;
+            if (configuration != null)
+            {
+                try { compiled = KeyEnhancementConfiguration.FromJson(configuration).CompileLua(); } catch (ArgumentException) { }
+                if (compiled != null) WriteAtomicText(RetainedConfigurationPath, configuration);
+            }
             var removed = new List<string>(); var retained = new List<string>();
             foreach (string path in ActivationLists().Concat(source.WrittenActivation.Keys).Distinct(StringComparer.OrdinalIgnoreCase).Where(File.Exists))
             {
@@ -472,9 +475,6 @@ namespace PBZKeyForge
                     if (updated != text) File.WriteAllBytes(path, EncodeLikeFile(path, updated));
                 }
             }
-            string compiled = null;
-            if (File.Exists(ConfigurationPath))
-                try { compiled = KeyEnhancementConfiguration.FromJson(File.ReadAllText(ConfigurationPath, Utf8)).CompileLua(); } catch (ArgumentException) { }
             if (Directory.Exists(InstallDirectory))
                 foreach (string path in Directory.GetFiles(InstallDirectory, "*", SearchOption.AllDirectories))
                 {
@@ -510,6 +510,7 @@ namespace PBZKeyForge
             }
             foreach (string path in removed) RemoveEmptyParents(Path.GetDirectoryName(path));
             ConfigurationText = ReadConfigurationText(); configurationLoaded = true;
+            retainedConfigurationText = ConfigurationText == null ? ReadRetainedConfigurationText() : null;
             return new KeyEnhancementUninstallResult { RemovedFiles = removed.ToArray(), RetainedFiles = retained.ToArray(), SharedLoaderRetained = shared && remaining.Count > 0 };
         }
 

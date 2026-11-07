@@ -29,7 +29,10 @@ end
 local physical = {W = 1, V = 1}
 function backend:snapshot() return {W = physical.W, V = physical.V} end
 function backend:time() return 1 end
-function backend:shutdown() self.shutdowns = self.shutdowns + 1 end
+function backend:shutdown(preserveTuning)
+    self.shutdowns = self.shutdowns + 1
+    self.preserve_tuning = preserveTuning == true
+end
 package.preload.backend = function()
     return {new = function(configuration) backend.config = configuration; return backend end}
 end
@@ -101,6 +104,7 @@ configuration = config("second")
 check(handle.reload(), "valid configuration was rejected")
 check(backend.config == configuration and backend.shutdowns == 1,
     "valid reload did not replace configuration after releasing capture")
+check(backend.preserve_tuning,"configuration reload discarded launched-projectile settings")
 check(unhooks == 1, "reload left old function hooks installed")
 check(scheduled == 1 and keybinds == 2, "reload installed another scheduler or hotkey")
 frame()
@@ -114,9 +118,21 @@ frame()
 check(resumed == 3 and stepped == 4 and steppedInput.W == 1 and steppedInput.V == 1,
     "gameplay resume required held keys to be released instead of applying per-rule recovery")
 handle.stop()
+check(not backend.preserve_tuning,"stopping the mod must fully release tuning")
 check(backend.shutdowns == 2 and unhooks == 2 and cancellations == 1,
     "stop did not restore inputs, remove hooks, and cancel the loop")
 frame()
 check(stepped == 4, "a queued callback routed input after stop")
 check(not handle.reload(), "stopped instance accepted reload")
+configuration=config("disabled");configuration.enabled=false;configuration.dynamic_capture=true
+local originalRefresh,originalPrepare,originalFind,originalRegister=backend.refresh,backend.prepare_dynamic_capture,StaticFindObject,RegisterHook
+backend.refresh=function() error("Disabled enhancement must not inspect the player") end
+backend.prepare_dynamic_capture=function() error("Disabled enhancement must not prepare native mappings") end
+StaticFindObject=function() error("Disabled enhancement must not resolve game functions") end
+RegisterHook=function() error("Disabled enhancement must not install game hooks") end
+package.loaded["router-config"]=nil
+local disabled=dofile("prototype/input-router/ue4ss/Scripts/main.lua")
+frame();check(disabled.reload(),"disabled configuration can reload without game access")
+frame();disabled.stop()
+backend.refresh,backend.prepare_dynamic_capture,StaticFindObject,RegisterHook=originalRefresh,originalPrepare,originalFind,originalRegister
 print("MainLifecycleTests: " .. assertions .. " assertions passed")

@@ -17,10 +17,10 @@ git push origin v1.0.0
 
 | Asset | Contents |
 | --- | --- |
-| `PBZKeyForge-<tag>.zip` | `PBZKeyForge.exe`, `presets\*.sav`, `presets\PRESETS.md`, `README.md`, `LICENSE`, `THIRD-PARTY-NOTICES.md` |
+| `PBZKeyForge-<tag>.zip` | GUI and CLI executables, `docs\`, `presets\*.sav`, `presets\PRESETS.md`, `README.md`, `LICENSE`, `THIRD-PARTY-NOTICES.md` |
 | `PBZKeyForge-<tag>-presets-only.zip` | generated `.sav` files, `PRESETS.md` and `README.md`, without an executable |
 
-`PBZKeyForge-cli.exe` is built in the same pipeline but is not shipped to players: the workflow uses it to generate the presets and to run the round-trip self test.
+`PBZKeyForge-cli.exe` ships with the editor and also generates the presets and runs the round-trip self test in the workflow.
 
 The workflow fails if `--selftest` does not report `roundtrip=IDENTICAL` on the shipped base file. It also verifies the PBZ2 Protobuf share format, frozen factory baseline, and device scopes with `PresetShareTests`. protobuf-net is embedded in each executable; no separate dependency DLL is shipped. `THIRD-PARTY-NOTICES.md` includes its Apache-2.0 license.
 
@@ -81,6 +81,10 @@ The script produces 20 images and a linked `README.md` index in `assets/screensh
 | `presets-save` | Name field and Save as preset | Your presets and share codes |
 | `presets-share` | Saved preset and sharing device dropdown | Your presets and share codes |
 | `presets-import` | Share-code preview, device scope and apply choices | Your presets and share codes / Choose how a preset changes your keys |
+| `enhancement-main` | Independent enhancement schemes and key bindings | Gallery |
+| `enhancement-actions` | Phantom Edge action catalog | Gallery |
+| `enhancement-moves` | Complete move selection | Gallery |
+| `enhancement-tuning` | Per-binding resources, damage and timing | Gallery |
 
 It opens an offline scheme by default, previews `mouse_guard` for keyboard/mouse and `souls` for controllers without applying them, and selects the editor's Xbox or PlayStation family directly. No game installation, save or connected controller is required. Saving demonstrations use an isolated temporary preset library, removed afterwards; the user's library and clipboard are untouched. With `-SavePath`, it reads the specified save without writing it and omits personal names and local paths. Run on an unlocked Windows desktop with enough room for the editor.
 
@@ -93,6 +97,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File build\capture-screenshot
 ```
 
 Use `-ControllerPreset <id>` to select a different controller preview. Use `-Shots main,main-gamepad,main-playstation` for only the six main screenshots, or select individual scene names to recapture a feature. `-Languages en` limits a capture to English.
+
+Version 1.3.0 uses `-Shots enhancement-main,enhancement-actions,enhancement-moves,enhancement-tuning`: eight gallery images in English and Simplified Chinese. These scenes enable enhancement only in memory. Capture preferences disable animation and companion hotkeys; game files and personal preferences remain untouched. Use the English enhancement main view as the thumbnail, retain only eight current visible images, and embed three matching English feature images in the description. Hide outdated gallery images; preserve any still referenced in descriptions or posts.
 
 Inspect the PNGs for readable text, correct language and absence of local information. The six main screenshots must show the preset list open; the other scenes show the feature being described. Upload them to the mod's **Manage → Media → Add image(s)** gallery with titles `PBZKeyForge <version> — <language> — <scene>`. Save the media changes and verify the images on the public Images tab. Place the six main screenshots first: English keyboard/mouse, Xbox, PlayStation, then Simplified Chinese keyboard/mouse, Xbox, PlayStation. Set the English keyboard/mouse screenshot as the thumbnail. Keep the banner after these six. Hide outdated UI images from the gallery without deleting them.
 

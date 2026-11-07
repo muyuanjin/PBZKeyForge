@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -579,7 +579,7 @@ namespace PBZKeyForge
         }
         readonly FlowLayoutPanel combination = new FlowLayoutPanel();
         readonly FlowLayoutPanel combinationCommands = new FlowLayoutPanel();
-        readonly Label keyTitle = UnifiedBindingUi.Label(UnifiedBindingUi.Text("key"));
+        readonly Panel keyRow;
         readonly NumericUpDown seconds = Number(.25m), interval = Number(.3m), count = Number(2), threshold = Number(.5m);
         readonly Panel secondsRow, intervalRow, countRow, thresholdRow;
         readonly KeyCaptureBox capture = new KeyCaptureBox();
@@ -613,6 +613,8 @@ namespace PBZKeyForge
         bool updatingConsume, consumptionChanged;
         bool recording, inputChanged;
         readonly Timer modeTimer = new Timer { Interval = 1500 };
+        readonly Panel scroll;
+        readonly TableLayoutPanel fields;
         readonly GamepadCapture gamepadCapture = new GamepadCapture();
         public BindingEntry Result { get; private set; }
         internal BindingEntry CurrentBinding { get { return current; } }
@@ -622,15 +624,15 @@ namespace PBZKeyForge
             SuspendLayout();
             moreSettings.SuspendLayout(); sequenceSettings.SuspendLayout(); evaluatorSettings.SuspendLayout();
             this.workspace = workspace; this.function = workspace.Functions.First(item => item.Id == functionId); this.current = current; this.multipleFunctions = multipleFunctions;
-            UnifiedBindingUi.Form(this, function.Label + " · " + UnifiedBindingUi.FunctionIdentity(function), new Size(680, 540), new Size(500, 440));
+            UnifiedBindingUi.Form(this, function.Label + " · " + UnifiedBindingUi.FunctionIdentity(function), new Size(640, 600), new Size(500, 440));
             var root = UnifiedBindingUi.Grid(1); root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); root.Padding = new Padding(16, 10, 16, 12); root.RowCount = 4;
             root.SuspendLayout();
             root.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            var scroll = new EditorPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = EditorTheme.Surface }; scroll.HandleCreated += delegate { EditorArtwork.DarkScrollbars(scroll); };
-            var fields = new EditorLayout { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, ColumnCount = 1 }; fields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            scroll = new EditorPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = EditorTheme.Surface }; scroll.HandleCreated += delegate { EditorArtwork.DarkScrollbars(scroll); };
+            fields = new EditorLayout { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, ColumnCount = 1 }; fields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             scroll.SizeChanged += delegate { fields.MaximumSize = new Size(Math.Max(1, scroll.Width - SystemInformation.VerticalScrollBarWidth), 0); };
             fields.SuspendLayout(); scroll.SuspendLayout();
-            scopeHint.Name = "bindingScope"; AddField(fields, scopeHint, 30);
+            scopeHint.Name = "bindingScope"; AddField(fields, scopeHint, 24);
             nativeAbilityTrigger.Name = "nativeAbilityTrigger"; nativeAbilityTrigger.Text = UnifiedBindingUi.Text("nativeAbilityTrigger"); nativeAbilityTrigger.ThreeState = multipleFunctions;
             tip.SetToolTip(nativeAbilityTrigger, UnifiedBindingUi.Text("nativeAbilityHelp"));
             nativeAbilityTrigger.Checked = workspace.UsesNativeTrigger(functionId);
@@ -638,7 +640,7 @@ namespace PBZKeyForge
             string[] resourceKinds = workspace.ResourceKinds(functionId);
             bypassResources.Text = I18n.Str("binding.resources.bypass", ResourceCostCatalog.Describe(resourceKinds));
             bypassResources.Checked = current != null && current.BypassResources;
-            AddField(fields, bypassResources, 38); ShowField(bypassResources, resourceKinds.Length > 0 || bypassResources.Checked || multipleFunctions);
+            AddField(fields, bypassResources, 32); ShowField(bypassResources, resourceKinds.Length > 0 || bypassResources.Checked || multipleFunctions);
             damageMultiplier.Name = "damageMultiplier"; startupSpeed.Name = "startupSpeed"; recoverySpeed.Name = "recoverySpeed";
             damageMultiplier.Minimum = .01m; damageMultiplier.Maximum = 100;
             startupSpeed.Minimum = recoverySpeed.Minimum = .1m; startupSpeed.Maximum = recoverySpeed.Maximum = 10;
@@ -649,19 +651,17 @@ namespace PBZKeyForge
             var damageRow = Parameter(I18n.Str("binding.tuning.damage"), damageMultiplier); AddField(fields, damageRow, 0); ShowField(damageRow, combat);
             var startupRow = Parameter(I18n.Str("binding.tuning.startup"), startupSpeed); AddField(fields, startupRow, 0); ShowField(startupRow, combat && phaseSpeed);
             var recoveryRow = Parameter(I18n.Str("binding.tuning.recovery"), recoverySpeed); AddField(fields, recoveryRow, 0); ShowField(recoveryRow, combat && phaseSpeed);
-            var label = UnifiedBindingUi.Label(UnifiedBindingUi.Text("trigger")); AddField(fields, label, 30);
             trigger.DropDownStyle = ComboBoxStyle.DropDownList; trigger.Name = "bindingTrigger";
             foreach (string id in TriggerIds) trigger.Items.Add(UnifiedBindingUi.Text("trigger." + id));
-            AddField(fields, trigger, 38);
-            preview.ForeColor = EditorTheme.Muted; preview.Name = "triggerPreview"; AddField(fields, preview, 40);
-            AddField(fields, keyTitle, 26);
+            AddField(fields, Parameter(UnifiedBindingUi.Text("trigger"), trigger), 0);
+            preview.ForeColor = EditorTheme.Muted; preview.Name = "triggerPreview"; AddField(fields, preview, 32);
             mainKey.DropDownStyle = ComboBoxStyle.DropDownList; mainKey.Dock = DockStyle.Fill; mainKey.Name = "bindingKey";
-            foreach (string key in DeviceKeys()) mainKey.Items.Add(new KeyChoice(key));
+            mainKey.Items.AddRange(DeviceKeys().Select(key => new KeyChoice(key)).ToArray());
             mainKey.SelectedIndexChanged += delegate
             {
                 inputChanged = true; RefreshConsumeKeys();
             };
-            AddField(fields, mainKey, 38);
+            keyRow = Parameter(UnifiedBindingUi.Text("key"), mainKey); AddField(fields, keyRow, 0);
             capture.Text = I18n.Str("flow.record"); capture.BackColor = EditorTheme.Floating; capture.ForeColor = EditorTheme.Muted; capture.Dock = DockStyle.Fill; capture.Name = "recordBinding";
             capture.CapturePrompt = I18n.Str("flow.record.active");
             capture.ModifierCaptured += Captured; capture.MouseCaptured += Captured; capture.KeyDown += delegate(object sender, KeyEventArgs e)
@@ -672,12 +672,12 @@ namespace PBZKeyForge
             gamepadCapture.Axis += CapturedAxis;
             capture.GotFocus += delegate { recording = true; heldKeys.Clear(); gamepadCapture.Start(Handle); foreach (var form in Application.OpenForms.OfType<MainForm>()) form.SetCompanionRecording(true); };
             capture.LostFocus += delegate { recording = false; heldKeys.Clear(); gamepadCapture.Stop(); foreach (var form in Application.OpenForms.OfType<MainForm>()) form.SetCompanionRecording(false); };
-            AddField(fields, capture, 42);
+            AddField(fields, capture, 38);
             combination.FlowDirection = FlowDirection.LeftToRight; combination.WrapContents = true; combination.AutoSize = true; combination.Dock = DockStyle.Fill;
             AddField(fields, combination, 0);
             var addKey = UnifiedBindingUi.Button(UnifiedBindingUi.Text("addcombination"), "addCombination");
             additionalKey.DropDownStyle = ComboBoxStyle.DropDownList; additionalKey.Width = 270; additionalKey.Visible = false; additionalKey.Name = "additionalKey";
-            foreach (KeyChoice choice in mainKey.Items) additionalKey.Items.Add(new KeyChoice(choice.Key));
+            additionalKey.Items.AddRange(mainKey.Items.Cast<KeyChoice>().Select(choice => new KeyChoice(choice.Key)).ToArray());
             additionalKey.SelectionChangeCommitted += delegate {
                 var choice = additionalKey.SelectedItem as KeyChoice;
                 if (choice != null && choice.Key != SelectedKey() && !extraKeys.Contains(choice.Key)) extraKeys.Add(choice.Key);
@@ -771,7 +771,8 @@ namespace PBZKeyForge
             status.ForeColor = EditorTheme.Muted; root.Controls.Add(status, 0, 2);
             var buttons = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, FlowDirection = FlowDirection.RightToLeft, WrapContents = true };
             var accept = UnifiedBindingUi.Button(I18n.Str("editor.ok"), "saveBinding"); accept.Primary = true; accept.Click += delegate { Save(); };
-            var cancel = UnifiedBindingUi.Button(I18n.Str("editor.cancel"), "cancel"); cancel.DialogResult = DialogResult.Cancel; buttons.Controls.Add(accept); buttons.Controls.Add(cancel); root.Controls.Add(buttons, 0, 3);
+            var cancel = UnifiedBindingUi.Button(I18n.Str("editor.cancel"), "cancel"); cancel.DialogResult = DialogResult.Cancel;
+            cancel.Click += delegate { Close(); }; buttons.Controls.Add(accept); buttons.Controls.Add(cancel); root.Controls.Add(buttons, 0, 3);
             if (current != null)
             {
                 var remove = UnifiedBindingUi.Button(I18n.Str("binding.unbind"), "removeBinding");
@@ -869,7 +870,11 @@ namespace PBZKeyForge
             int row = table.RowCount++; table.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             control.Dock = DockStyle.Fill; control.Margin = new Padding(3);
             if (height > 0) control.MinimumSize = new Size(0, height);
-            if (control is Label) control.AutoSize = true;
+            if (control is Label)
+            {
+                control.AutoSize = height == 0;
+                if (height > 0) control.Height = height;
+            }
             var flow = control as FlowLayoutPanel; if (flow != null) flow.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             table.Controls.Add(control, 0, row);
         }
@@ -879,9 +884,13 @@ namespace PBZKeyForge
         }
         static Panel Parameter(string title, Control input)
         {
-            var row = UnifiedBindingUi.Grid(2); row.SuspendLayout(); row.MinimumSize = new Size(0, 38); row.AutoSize = true; row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 55)); row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45));
-            var label = UnifiedBindingUi.Label(title); label.AutoSize = true;
-            row.RowStyles.Add(new RowStyle(SizeType.AutoSize)); row.Controls.Add(label, 0, 0); input.Dock = DockStyle.Fill; input.Margin = new Padding(4); row.Controls.Add(input, 1, 0); row.ResumeLayout(false); return row;
+            var row = UnifiedBindingUi.Grid(2); row.SuspendLayout(); row.MinimumSize = new Size(0, 30); row.Size = new Size(200, 30);
+            float inputWidth = input is ComboBox ? 55 : 35;
+            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 - inputWidth)); row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, inputWidth));
+            var label = UnifiedBindingUi.Label(title);
+            row.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); row.Controls.Add(label, 0, 0);
+            input.Dock = DockStyle.None; input.Anchor = AnchorStyles.Left | AnchorStyles.Right; input.Margin = Padding.Empty;
+            row.Controls.Add(input, 1, 0); row.ResumeLayout(false); return row;
         }
         void LoadOutput(object value)
         {
@@ -922,14 +931,23 @@ namespace PBZKeyForge
             }
             consumeInputs.Clear(); consumeInputs.AddRange(keys); consumeInitialized = true;
             keys.AddRange(retainedConsume);
-            updatingConsume = true;
+            updatingConsume = true; consumeKeys.BeginUpdate();
             try
             {
-                consumeKeys.Items.Clear();
-                foreach (string key in keys.Distinct()) consumeKeys.Items.Add(new KeyChoice(key), selectAll || selected.Contains(key));
+                var inputs = keys.Distinct().ToArray();
+                if (!consumeKeys.Items.Cast<KeyChoice>().Select(choice => choice.Key).SequenceEqual(inputs))
+                {
+                    consumeKeys.Items.Clear();
+                    consumeKeys.Items.AddRange(inputs.Select(key => new KeyChoice(key)).ToArray());
+                }
+                for (int i = 0; i < inputs.Length; i++)
+                {
+                    bool check = selectAll || selected.Contains(inputs[i]);
+                    if (consumeKeys.GetItemChecked(i) != check) consumeKeys.SetItemChecked(i, check);
+                }
                 consumeKeys.Enabled = consume.Checked;
             }
-            finally { updatingConsume = false; }
+            finally { consumeKeys.EndUpdate(); updatingConsume = false; }
         }
         void BuildSequence()
         {
@@ -993,17 +1011,22 @@ namespace PBZKeyForge
         }
         void Parameters()
         {
-            UpdateAxisDirection();
-            string id = TriggerIds[Math.Max(0, trigger.SelectedIndex)];
-            secondsRow.Visible = id == "tap" || id == "hold"; intervalRow.Visible = id == "multi_tap" || id == "pulse" || id == "sequence";
-            countRow.Visible = id == "multi_tap"; thresholdRow.Visible = axisRow.Visible = id == "axis";
-            axisDirectionRow.Visible = id == "axis";
-            var table = (TableLayoutPanel)axisRow.Parent; ShowField((Control)table.Tag, false);
-            sequenceSettings.Visible = id == "sequence";
-            evaluatorSettings.Visible = id == "custom";
-            bool keys = id != "axis" && id != "custom" && id != "sequence";
-            ShowField(keyTitle, keys); ShowField(mainKey, keys); ShowField(capture, keys || id == "sequence" || id == "axis"); ShowField(combination, keys); ShowField(combinationCommands, keys);
-            UpdatePreview();
+            scroll.SuspendLayout(); fields.SuspendLayout();
+            try
+            {
+                UpdateAxisDirection();
+                string id = TriggerIds[Math.Max(0, trigger.SelectedIndex)];
+                secondsRow.Visible = id == "tap" || id == "hold"; intervalRow.Visible = id == "multi_tap" || id == "pulse" || id == "sequence";
+                countRow.Visible = id == "multi_tap"; thresholdRow.Visible = axisRow.Visible = id == "axis";
+                axisDirectionRow.Visible = id == "axis";
+                var table = (TableLayoutPanel)axisRow.Parent; ShowField((Control)table.Tag, false);
+                sequenceSettings.Visible = id == "sequence";
+                evaluatorSettings.Visible = id == "custom";
+                bool keys = id != "axis" && id != "custom" && id != "sequence";
+                ShowField(keyRow, keys); ShowField(capture, keys || id == "sequence" || id == "axis"); ShowField(combination, keys); ShowField(combinationCommands, keys);
+                UpdatePreview();
+            }
+            finally { fields.ResumeLayout(true); scroll.ResumeLayout(true); }
         }
         void UpdatePreview()
         {
@@ -1044,13 +1067,18 @@ namespace PBZKeyForge
         }
         void RenderCombination()
         {
-            foreach (Control control in combination.Controls.Cast<Control>().ToArray()) control.Dispose();
-            foreach (string key in extraKeys.ToArray())
+            scroll.SuspendLayout(); fields.SuspendLayout(); combination.SuspendLayout();
+            try
             {
-                string value = key; var chip = UnifiedBindingUi.Button(BindingButton.FriendlyKey(key) + "  ×", "combinationKey");
-                chip.Click += delegate { extraKeys.Remove(value); inputChanged = true; RenderCombination(); }; combination.Controls.Add(chip);
+                foreach (Control control in combination.Controls.Cast<Control>().ToArray()) control.Dispose();
+                foreach (string key in extraKeys.ToArray())
+                {
+                    string value = key; var chip = UnifiedBindingUi.Button(BindingButton.FriendlyKey(key) + "  ×", "combinationKey");
+                    chip.Click += delegate { extraKeys.Remove(value); inputChanged = true; RenderCombination(); }; combination.Controls.Add(chip);
+                }
+                RefreshConsumeKeys(); UpdatePreview();
             }
-            RefreshConsumeKeys(); UpdatePreview();
+            finally { combination.ResumeLayout(true); fields.ResumeLayout(true); scroll.ResumeLayout(true); }
         }
         string SelectedKey() { var choice = mainKey.SelectedItem as KeyChoice; return choice == null ? null : choice.Key; }
         IEnumerable<string> DeviceKeys()
@@ -1135,16 +1163,12 @@ namespace PBZKeyForge
                     if (!state.CanApply)
                     {
                         status.Text = state.Reason ?? I18n.Str("flow.test.hint");
-                        if (state.Live && (state.Reason == null || state.Deferred)) directHost.ReturnFromBindingEditor();
-                        return;
+                        if (!state.Live || state.Reason != null && !state.Deferred) return;
                     }
-                    if (!await directHost.ApplyChangesAsync()) { status.Text = I18n.Str("flow.failed.details"); return; }
-                    workspace = directHost.BindingDialogWorkspace(workspace.Gamepad, workspace.FamilyIndex);
-                    current = workspace.Entries(function.Id).FirstOrDefault(item => item.Id == current.Id)
-                        ?? workspace.Entries(function.Id).FirstOrDefault(item => item.Keys.SequenceEqual(entry.Keys) && item.Trigger == entry.Trigger);
-                    status.Text = I18n.Str("flow.test.hint"); directHost.ReturnFromBindingEditor();
+                    else if (!await directHost.ApplyChangesAsync()) { status.Text = I18n.Str("flow.failed.details"); return; }
                 }
                 finally { Enabled = true; }
+                DialogResult = DialogResult.OK; Close(); directHost.ReturnFromBindingEditor();
                 return;
             }
             DialogResult = DialogResult.OK; Close();

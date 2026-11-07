@@ -477,6 +477,7 @@ namespace PBZKeyForge
         readonly List<RelationshipRow> actionRows = new List<RelationshipRow>();
         DeviceDiagram diagram;
         ActionRelations[] rawRelations, relations;
+        BindingEntry[] workspaceEntries;
         Dictionary<string, ActionRelations> rawBefore, before;
         EditorSession currentSession;
         bool currentPad;
@@ -568,6 +569,7 @@ namespace PBZKeyForge
             currentSession = session; currentPad = pad; currentFamily = familyIndex;
             if (selectedKey == null || pad != selectedKey.StartsWith("Gamepad_", StringComparison.Ordinal)) selectedKey = pad ? "Gamepad_FaceButton_Left" : "LeftMouseButton";
             rawRelations = snapshot.Current;
+            workspaceEntries = snapshot.Entries;
             relations = rawRelations.Select(BindingViewText.PhysicalRelations).ToArray();
             rawBefore = snapshot.Before;
             before = rawBefore.ToDictionary(r => r.Key, r => BindingViewText.PhysicalRelations(r.Value));
@@ -600,7 +602,7 @@ namespace PBZKeyForge
             if (Workspace != null) { RenderWorkspaceKey(); return; }
             var session = currentSession;
             bool pad = currentPad;
-            keyTools.Text = I18n.Str("editing.keytools") + "…"; keyTools.Height = Font.Height + 18; keyTools.Enabled = !currentSession.IsResetPending;
+            keyTools.Text = I18n.Str("editing.keytools") + "…"; keyTools.Enabled = !currentSession.IsResetPending;
             heading.Text = BindingButton.FriendlyKey(selectedKey); heading.Height = Font.Height + 16;
             var summary = new KeyRelations { Key = selectedKey,
                 Current = relations.Where(r => r.Keys.Contains(selectedKey)).ToArray(),
@@ -673,8 +675,8 @@ namespace PBZKeyForge
                         && relation.KnowsKey(selectedKey) && before[relation.Action].KnowsKey(selectedKey);
                     edit.AccessibleName = edit.Text + " · " + I18n.Str(edit.Pending ? session.IsOffline ? "offline.pending" : "views.pending" : isRemoved ? "views.removedshort" : custom ? "views.savedcustom" : "views.original"); edit.Invalidate();
                 }
-                add.Height = Font.Height + 18; add.Text = "+ " + I18n.Str("views.addaction"); add.Enabled = !session.IsResetPending;
-                reset.Height = Font.Height + 16; reset.Text = I18n.Str("views.restorekey");
+                add.Text = "+ " + I18n.Str("views.addaction"); add.Enabled = !session.IsResetPending;
+                reset.Text = I18n.Str("views.restorekey");
                 reset.Enabled = summary.CurrentComplete && summary.FactoryComplete && summary.Differs && !session.IsResetPending;
                 notice.Height = Font.Height * 2 + 4; notice.Text = I18n.Str("views.partial");
                 actionView.Height = Font.Height + 16; actionView.Text = I18n.Str("views.actionview");
@@ -687,9 +689,9 @@ namespace PBZKeyForge
         }
         void RenderWorkspaceKey()
         {
-            keyTools.Text = I18n.Str("editing.keytools") + "…"; keyTools.Height = Font.Height + 18; keyTools.Enabled = !currentSession.IsResetPending;
+            keyTools.Text = I18n.Str("editing.keytools") + "…"; keyTools.Enabled = !currentSession.IsResetPending;
             heading.Text = BindingButton.FriendlyKey(selectedKey); heading.Height = Font.Height + 16;
-            var entries = Workspace.GetSnapshot().Where(entry => entry.Keys.Concat(string.IsNullOrEmpty(entry.Axis) ? new string[0] : new[] { entry.Axis })
+            var entries = (workspaceEntries ?? Workspace.GetSnapshot()).Where(entry => entry.Keys.Concat(string.IsNullOrEmpty(entry.Axis) ? new string[0] : new[] { entry.Axis })
                 .Concat(entry.Rule == null ? new string[0] : entry.Rule.Steps.SelectMany(step => step).Concat(entry.Rule.Watch))
                 .Any(key => BindingViewText.PhysicalKey(key) == selectedKey)).ToList();
             foreach (var relation in rawRelations.Where(r => !r.Keys.Any(k => BindingViewText.PhysicalKey(k) == selectedKey)))
@@ -745,8 +747,8 @@ namespace PBZKeyForge
                         + Environment.NewLine + UnifiedBindingUi.EntryExecution(entry) + Environment.NewLine + UnifiedBindingUi.EntryPolicy(entry));
                     row.Edit.Invalidate();
                 }
-                add.Height = Font.Height + 18; add.Text = "+ " + I18n.Str("views.addaction"); add.Enabled = !currentSession.IsResetPending;
-                reset.Height = Font.Height + 18; reset.Text = I18n.Str("views.restorekey"); reset.Enabled = !currentSession.IsResetPending && entries.Any(entry => !entry.IsDefault || entry.Suppressed || !entry.Enabled || entry.Pending);
+                add.Text = "+ " + I18n.Str("views.addaction"); add.Enabled = !currentSession.IsResetPending;
+                reset.Text = I18n.Str("views.restorekey"); reset.Enabled = !currentSession.IsResetPending && entries.Any(entry => !entry.IsDefault || entry.Suppressed || !entry.Enabled || entry.Pending);
                 notice.Visible = actionView.Visible = false;
                 var order = actionRows.Cast<Control>().Concat(new Control[] { notice, actionView }).Reverse().ToArray();
                 for (int i = 0; i < order.Length; i++) detail.Controls.SetChildIndex(order[i], i);
