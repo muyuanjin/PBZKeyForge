@@ -2,11 +2,13 @@
 function Get-PbzUe4ssRelease([object]$Sources, [int]$TimeoutSeconds = 10) {
     $taskApiToken = $env:GITHUB_TOKEN
     if (-not $taskApiToken -and (Get-Command gh -ErrorAction SilentlyContinue)) {
+        $taskPreviousExitCode = $global:LASTEXITCODE
         try {
             $taskCliToken = & gh auth token 2>$null
             if ($LASTEXITCODE -eq 0) { $taskApiToken = [string]$taskCliToken }
         }
         catch { $taskApiToken = $null }
+        finally { $global:LASTEXITCODE = $taskPreviousExitCode }
     }
     foreach ($taskApi in $Sources.Api) {
         try {

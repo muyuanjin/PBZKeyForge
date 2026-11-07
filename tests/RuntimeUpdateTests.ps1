@@ -34,6 +34,8 @@ $global:pbzRuntimeUpdateTest = @{
     Calls = 0; Offline = $false; BuildId = $taskSources.Game.ReviewedSteamBuildId
     Releases = @([pscustomobject]@{ draft = $false; prerelease = $true; published_at = '2100-01-01T00:00:00Z'; assets = @($taskAsset) }, $taskStable)
 }
+function gh { $global:LASTEXITCODE = 1 }
+$global:LASTEXITCODE = 0
 function Invoke-RestMethod {
     param([string]$Uri, [object]$Headers, [int]$TimeoutSec)
     $global:pbzRuntimeUpdateTest.Calls++
@@ -57,6 +59,7 @@ $taskReport = Check-Updates
 Assert ($taskReport.CanRelease -and -not $taskReport.NeedsReview -and -not $taskReport.CacheUsed) 'Unchanged releases were not accepted.'
 Assert ($taskReport.Ue4ss.Latest.Version -eq $taskStable.tag_name) 'A prerelease replaced the stable PBZ release.'
 Assert ($global:pbzRuntimeUpdateTest.Calls -eq 2) 'Initial observation did not query both sources.'
+Assert ($global:LASTEXITCODE -eq 0) 'Optional GitHub CLI authentication changed the caller exit status.'
 $taskReport = Check-Updates
 Assert ($taskReport.CacheUsed -and $global:pbzRuntimeUpdateTest.Calls -eq 2) 'A current observation queried the network again.'
 $taskReport = & "$taskSandbox\check-runtime-updates.ps1" -GameDirectory ($taskGame + '\') -CacheFile $taskCache | ConvertFrom-Json
