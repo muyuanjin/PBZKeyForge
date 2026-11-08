@@ -7,6 +7,7 @@ local Backend = dofile(scripts .. "backend.lua")
 local Router = dofile(scripts .. "router.lua")
 local passed, failures, nextAddress = 0, {}, 100
 local stress_gc = true
+local map_callback = false
 
 local function check(value, message)
     assert(value, message)
@@ -38,7 +39,7 @@ end
 function FName(value) return {ToString = function() return value end} end
 
 local function array(items, transform)
-    return {ForEach = function(self, callback)
+    return setmetatable({GetArrayNum = function() return #items end, ForEach = function(self, callback)
         -- UE4SS removes its receiver from the Lua stack before calling back.
         local receiver = setmetatable({self}, {__mode = "v"})
         self = nil
@@ -48,7 +49,13 @@ local function array(items, transform)
             local item = transform and transform(value) or value
             callback(index - 1, {get = function() return item end})
         end
-    end}
+    end}, {__index = function(_, index)
+        assert(not map_callback, "array traversal inside a native map callback")
+        assert(type(index) == "number" and index >= 1 and index <= #items, "native array read out of range")
+        if stress_gc then collectgarbage("collect") end
+        local value = items[index]
+        return transform and transform(value) or value
+    end})
 end
 
 local function mapping(action, key, triggers, modifiers)
@@ -62,6 +69,7 @@ local function wrapper(row)
     return setmetatable({}, {__index = function(_, name)
         assert(row.alive, "stale mapping wrapper accessed after native array rebuild")
         if name == "GetStructAddress" then return function() return row.pointer end end
+        if name == "Modifiers" or name == "Triggers" then row.pipeline_reads = (row.pipeline_reads or 0) + 1 end
         return row[name]
     end})
 end
@@ -104,7 +112,9 @@ local function fixture(config)
         assert(name == "AppliedInputContextData", "unexpected input property")
         return {ForEach = function(_, callback)
             for _, context in ipairs(state.contexts) do
+                map_callback = true
                 callback({get = function() return context end}, {get = function() return {} end})
+                map_callback = false
             end
         end}
     end
@@ -146,7 +156,10 @@ local function fixture(config)
         local context = object("/Context.Context" .. (#self.contexts + 1))
         context.DefaultKeyMappings = setmetatable({}, {__index = function(_, name)
             assert(name == "Mappings")
-            return array(rows, function(value) return wrapper(metadata(value)) end)
+            return array(rows, function(value)
+                state.template_reads = (state.template_reads or 0) + 1
+                return wrapper(metadata(value))
+            end)
         end})
         self.contexts[#self.contexts + 1] = context
         return context
@@ -163,6 +176,64 @@ local function key(row) return row.Key.KeyName:ToString() end
 local function target_for(config, output)
     return config.targets[type(output) == "string" and output or output.target]
 end
+
+test("repeated capture recovery releases retired healthy rules", function()
+    stress_gc=false
+    local config={unified_native=true,require_foreground=false,targets={},bindings={},native_actions={}}
+    local actions,retired={},setmetatable({},{__mode="v"})
+    for index=1,64 do
+        local path="/Game/Recovery_"..index
+        actions[index]=object(path..".Recovery_"..index)
+        config.native_actions[index]=path
+    end
+    local backend,native,state=fixture(config)
+    local router
+    for cycle=1,200 do
+        backend:release_capture(true)
+        local rows={}
+        for index,action in ipairs(actions) do rows[index]=mapping(action,"K"..index) end
+        state:rebuild(rows)
+        native:prepare()
+        router=Router.new(backend.dynamic_config,backend)
+        router:step(cycle,{}, {})
+        if cycle==1 then
+            for index,rule in ipairs(router.rules) do retired[index]=rule.binding end
+        end
+    end
+    collectgarbage("collect")
+    check(#router.rules==64,"capture recovery lost current scheduler rules")
+    check(next(retired)==nil,"failure tracking retained healthy rules from an earlier capture")
+    check(not backend.failed_targets or next(backend.failed_targets)==nil,
+        "healthy rules allocated failure records")
+    backend:release_capture(true)
+end)
+
+test("unbound mappings use indexed reads outside native map callbacks", function()
+    local action=object("/Game/UI.UI")
+    local _,native,state=fixture({unified_native=true,native_bindings={
+        {["function"]="UI",device="keyboard",keys={"J"},actions={"/Game/UI"}}
+    }})
+    state.rows={mapping(action,"None")}
+    state:add_context({mapping(action,"Enter")})
+    native:apply_masks()
+    check(key(state.rows[1])=="J", "unbound mapping lost its registered keyboard identity")
+    native:apply_masks()
+    native:restore()
+    check(key(state.rows[1])=="None", "repeated remapping lost an explicit unbinding")
+end)
+
+test("partial remapping preserves restoration metadata", function()
+    local action=object("/Game/UI.UI")
+    local _,native,state=fixture({unified_native=true,native_bindings={
+        {["function"]="UI",device="keyboard",keys={"J"},actions={"/Game/UI"}}
+    }})
+    state.rows={mapping(action,"Enter"),mapping(action,"Tab")}
+    state.rows[2].alive=false
+    check(not pcall(native.apply_masks,native) and key(state.rows[1])=="J", "partial mapping failure was not exercised")
+    state.rows[2].alive=true
+    native:restore()
+    check(key(state.rows[1])=="Enter" and key(state.rows[2])=="Tab", "partial failure lost the original native key")
+end)
 
 test("native contexts and unrelated keys remain intact", function()
     local backend, native, state = fixture({targets = {extra = {kind = "lua"}},
@@ -254,6 +325,59 @@ test("mapping outputs clone native pipelines without sharing their state", funct
     local preserved = target_for(backend.dynamic_config, backend.dynamic_config.bindings[1].outputs[1])
     check(preserved == clone and preserved.trigger_objects[1].LastValue == 1,
         "another mapping reset an unchanged custom pipeline's held state")
+end)
+
+test("mapping expansion preserves binding-specific restriction preparation on both devices", function()
+    local path = "/PBZInput/InputActions/IA_AttackL_PressLong"
+    local action = object(path .. ".IA_AttackL_PressLong")
+    local config = {unified_native=true, native_actions={path}, targets={}, bindings={}}
+    for index, device in ipairs({"keyboard", "keyboard", "gamepad"}) do
+        local name = "attack_" .. index
+        config.targets[name] = {kind="mapping", actions={path}, device=device,
+            equipment_configs={"/Game/Weapon_" .. index}, equipment_slot="Weapon.Slot.Main",
+            restriction_groups={equipment={required_tags={"Weapon.Type.Test" .. index}}},
+            armed_state={slot="Weapon.Slot.Main", armed=true},
+            native_hold_inputs={path .. ".IA_AttackL_PressLong"},
+            native_release_when={timeline="Main", minimum_time=.1},
+            native_preparation_class="/Game/Ability_" .. index}
+        config.bindings[index] = {id=name, keys={device == "gamepad" and "Gamepad_DPad_Down" or "F" .. index},
+            trigger="press", bypass_restrictions=true, restriction_bypasses={"equipment", "stance"}, outputs={name}}
+    end
+    local backend, native, state = fixture(config)
+    state.rows = {mapping(action,"E"), mapping(action,"Gamepad_FaceButton_Left")}
+    native:prepare()
+    local effective, clones = backend.dynamic_config, {}
+    for index=1,3 do
+        local clone = target_for(effective,effective.bindings[index].outputs[1])
+        local original = config.targets["attack_" .. index]
+        check(clone.kind == "action" and clone.object == action, "prepared mapping lost its native action")
+        for _, field in ipairs({"equipment_configs", "equipment_slot", "restriction_groups", "armed_state",
+            "native_hold_inputs", "native_release_when", "native_preparation_class"}) do
+            check(clone[field] == original[field], "expanded input lost preparation field " .. field)
+        end
+        clones[index] = clone
+    end
+    check(clones[1] ~= clones[2] and clones[1].source_relation == clones[2].source_relation,
+        "bindings sharing one native pipeline must retain separate preparation policies")
+    for index=4,#effective.bindings do
+        local original = target_for(effective,effective.bindings[index].outputs[1])
+        check(not original.equipment_configs and not original.restriction_groups and not original.native_hold_inputs,
+            "enhanced preparation leaked into ordinary native input")
+    end
+    local router = Router.new(effective,backend)
+    for index, clone in ipairs(clones) do
+        router:step(index*2,{[config.bindings[index].keys[1]]=1},{})
+        local dispatched = false
+        for _, call in ipairs(state.calls) do if call.target == clone then dispatched = true end end
+        check(dispatched, "scheduler did not dispatch binding-specific preparation " .. index)
+        router:step(index*2+1,{},{})
+    end
+    state.rows[#state.rows+1] = mapping(action,"J")
+    native:prepare()
+    for index, clone in ipairs(clones) do
+        check(target_for(backend.dynamic_config,backend.dynamic_config.bindings[index].outputs[1]) == clone,
+            "mapping rebuild discarded a retained prepared input")
+    end
 end)
 
 test("fully unbound action retains every template pipeline", function()
@@ -360,6 +484,105 @@ test("native held movement survives flush without replaying unrelated keys", fun
     check(key(state.rows[1]) == "W" and key(state.rows[2]) == "W" and key(state.rows[3]) == "E", "restoration lost native key ownership")
 end)
 
+test("held scene controls and catalog axes recover independently of movement blocking", function()
+    local base="/Game/PBZContent/Input/InputActions/"
+    for _,spec in ipairs({
+        {base .. "IA_ShipForward","W"}, {base .. "IA_ShipBackword","S"},
+        {base .. "IA_ShipRight","A"}, {base .. "IA_ShipRight","D"},
+        {base .. "IA_ShipForward","Gamepad_RightTriggerAxis"},
+        {base .. "IA_ShipBackword","Gamepad_LeftTriggerAxis"},
+        {base .. "IA_ShipRight","Gamepad_LeftX"},
+        {"/PBZDeflectSystem/Input/IA_Stance","RightMouseButton",false,true},
+        {"/PBZDeflectSystem/Input/IA_Stance","Gamepad_LeftShoulder",false,true},
+        {"/SGameCombatSystem/Weapon/Input/IA_ChangingWeapon","Gamepad_LeftTrigger",false,true},
+        {"/SGameCombatSystem/Weapon/Input/IA_ChangingWeapon","Gamepad_LeftTriggerAxis",false,true},
+        {"/SGameLocomotionDriver/Input/IA_JoyStickLookInput","Gamepad_Right2D",true},
+        {"/SGameCombatSystem/Targeting/IA_JoystickChangeLockTargetAxis","Gamepad_Right2D",true}
+    }) do
+        local path,inputKey,catalog,withDown=table.unpack(spec)
+        local config={unified_native=true,native_actions=catalog and {} or {path}}
+        local boundKey=catalog and "Gamepad_LeftX" or inputKey
+        if catalog then
+            config.targets={axis={kind="mapping",catalog_pipeline=true,device="gamepad",actions={path}}}
+            config.bindings={{id="axis",axis=boundKey,trigger="axis",outputs={"axis"}}}
+        end
+        local backend,native,state=fixture(config)
+        local action=object(path .. "." .. path:match("([^/]+)$"))
+        local function rows() return {mapping(action,inputKey,withDown and {object("/Trigger.Down")} or nil)} end
+        state.rows=rows();native:prepare()
+        local gate=true
+        for _,binding in ipairs(backend.dynamic_config.bindings) do
+            local previous=binding.when
+            binding.when=function(...) return gate and (not previous or previous(...)) end
+        end
+        local router=Router.new(backend.dynamic_config,backend)
+        local held={[boundKey]=.8}
+        local function active()
+            local count=0
+            for _,call in ipairs(state.calls) do
+                if call.target.object==action and call.value.x~=0 then count=count+1 end
+            end
+            return count
+        end
+        router:step(0,{},backend:context());router:step(.1,held,backend:context())
+        check(active()==1,"initial scene control failed: " .. path)
+        router:reset(true);state.calls={}
+        router:resume(held,backend:context());router:step(.2,held,backend:context())
+        check(active()==1,"held scene control did not resume: " .. path)
+        gate=false;router:step(.3,held,backend:context());state.calls={}
+        gate=true;router:step(.4,held,backend:context())
+        check(active()==1,"condition recovery required another press: " .. path)
+        backend.state.move_ignored=true;state.calls={};router:step(.5,held,backend:context())
+        check(active()==1,"character movement blocking suppressed an independent scene control: " .. path)
+        backend.state.move_ignored=false
+        state:rebuild({});native:prepare()
+        router=router:reconfigure(backend.dynamic_config,held,backend:context())
+        router:step(.6,held,backend:context())
+        state:rebuild(rows());native:prepare()
+        router=router:reconfigure(backend.dynamic_config,held,backend:context());state.calls={}
+        router:step(.7,held,backend:context())
+        check(active()==1,"returning scene context required another press: " .. path)
+        state.calls={};router:step(.8,{},backend:context())
+        check(#state.calls==1 and state.calls[1].phase=="completed","recovered control failed to release: " .. path)
+        native:restore()
+        check(key(state.rows[1])==inputKey,"recovery changed the original binding: " .. path)
+    end
+end)
+
+test("explicit continuous axis outputs recover without changing their trigger pipeline", function()
+    for _,path in ipairs({
+        "/SGameLocomotionDriver/Input/IA_MouseLookInput",
+        "/SGameLocomotionDriver/Input/IA_JoyStickLookInput",
+        "/SGameCombatSystem/Targeting/IA_MouseChangeLockTargetAxis",
+        "/SGameCombatSystem/Targeting/IA_JoystickChangeLockTargetAxis",
+        "/Game/PBZContent/Input/InputActions/IA_MoveInput",
+        "/Game/PBZContent/Input/InputActions/IA_LookInput",
+        "/Game/PBZContent/Input/InputActions/IA_ClimblMove",
+        "/Game/PBZContent/Input/InputActions/IA_ClimbMoveGamePad",
+        "/Game/PBZContent/Input/InputActions/IA_ShipLook"
+    }) do
+        for _,temporal in ipairs({false,"mapping","action"}) do
+            local action=object(path .. "." .. path:match("([^/]+)$"))
+            local trigger=object(temporal and "/Trigger.Pressed" or "/Trigger.Down")
+            local pipeline=temporal=="action" and {} or {trigger}
+            if temporal=="action" then action.Triggers=array({trigger}) end
+            local backend,native,state=fixture({unified_native=true,
+                targets={axis={kind="action",path=path,object=action,trigger_objects=pipeline}},
+                bindings={{id="axis",axis="K",trigger="axis",outputs={"axis"}}}})
+            native:prepare()
+            local target=backend.dynamic_config.targets.axis
+            check(target.resume_continuous==not temporal and not target.native_continuous,
+                "axis recovery confused temporal triggers or movement blocking: " .. path)
+            check(target.trigger_objects==pipeline,"axis recovery replaced the configured trigger")
+            local router=Router.new(backend.dynamic_config,backend)
+            router:resume({K=-.8},backend:context());router:step(0,{K=-.8},backend:context())
+            check(#state.calls==(temporal and 0 or 1),"explicit axis recovery violated its trigger policy: " .. path)
+            if not temporal then check(state.calls[1].value.x==-.8,"axis recovery lost its sign") end
+            native:restore()
+        end
+    end
+end)
+
 test("automatic movement and a same-key custom mapping do not double input", function()
     local path = "/SGameLocomotionDriver/Input/IA_KeyboardMoveInput"
     local backend, native, state = fixture({targets={move={kind="mapping", actions={path}}},
@@ -371,7 +594,8 @@ test("automatic movement and a same-key custom mapping do not double input", fun
     local config = backend.dynamic_config
     local custom = target_for(config, config.bindings[1].outputs[1])
     local automatic = target_for(config, config.bindings[2].outputs[1])
-    check(custom == automatic, "automatic and custom sources cloned the same native pipeline twice")
+    check(custom.source_relation == automatic.source_relation and custom.trigger_objects == automatic.trigger_objects
+        and custom.modifier_objects == automatic.modifier_objects, "automatic and custom sources cloned the same native pipeline twice")
     local router = Router.new(config, backend)
     router:step(.1, backend:snapshot(router:keys()), backend:context())
     check(#state.calls == 1 and state.calls[1].value.x == 1, "same physical W was counted twice")
@@ -466,6 +690,79 @@ end)
 local function unified(paths, targets, bindings)
     return fixture({unified_native=true, native_actions=paths, targets=targets or {}, bindings=bindings or {}})
 end
+
+test("failed consumers release native masks and held movement without releasing healthy owners", function()
+    for _, unifiedNative in ipairs({false,true}) do
+        local movePath = "/SGameLocomotionDriver/Input/IA_KeyboardMoveInput"
+        local usePath = "/Game/IA_Use"
+        local move, use = object(movePath .. ".IA_KeyboardMoveInput"), object(usePath .. ".IA_Use")
+        local bad = {kind="action",object=object("/Game/IA_Broken.IA_Broken")}
+        local config = {unified_native=unifiedNative,native_actions={movePath},targets={
+            bad=bad,good={kind="lua",run=function() return true end}
+        },bindings={
+            {id="bad",keys={"W"},consume={"W","E"},outputs={"bad"}},
+            {id="good",keys={"R"},consume=true,outputs={"good"}}
+        }}
+        local backend,native,state = fixture(config)
+        state.rows = {mapping(move,"W"),mapping(use,"E"),mapping(use,"R")}
+        backend.dispatch = Backend.dispatch
+        local attempts,cancellations,movement = 0,0,0
+        function backend:invoke(receiver,method,action,value)
+            check(receiver==self.subsystem and method:find(":InjectInputVectorForAction",1,true),
+                "unexpected failure recovery call")
+            if action==bad.object then
+                if value.X~=0 then attempts=attempts+1;error("broken action injection",0) end
+                cancellations=cancellations+1
+            elseif action==move and value.X>0 then movement=movement+1 end
+            return true
+        end
+        native:prepare()
+        local router = Router.new(backend.dynamic_config,backend)
+        router:step(.1,{W=1,E=1,R=1},backend:context())
+        check(attempts==1 and cancellations==1 and backend:target_failed(bad,"bad"),
+            "action failure did not cancel and enter isolation")
+        check(native.consumed.W and native.consumed.E and native.consumed.R and movement==0,
+            "failure scenario did not latch native consumption")
+        native:prepare()
+        router:step(.2,{W=1,E=1,R=1},backend:context())
+        check(not native.consumed.W and not native.consumed.E and movement==1,
+            "failed consumer kept native movement locked until physical release")
+        check(key(state.rows[1])=="None" and key(state.rows[2])=="E",
+            "recovery duplicated scheduler movement or retained the unrelated native mask")
+        check(native.consumed.R and (unifiedNative or key(state.rows[3])=="None"),
+            "failed consumer released a healthy owner's native consumption")
+        router:step(.3,{W=1,E=1,R=1},backend:context())
+        check(attempts==1 and movement==2,"held movement recovery retried the broken action or stopped moving")
+    end
+end)
+
+test("partial failures retain native consumption for healthy outputs and shared owners", function()
+    for _, sharedGroup in ipairs({false,true}) do
+        local bad, good = {kind="lua"}, {kind="lua"}
+        local binding = {id="bad",keys={"W"},consume=true,trigger="pulse",interval=.001,outputs={"bad"}}
+        local config = {targets={bad=bad,good=good},bindings={binding}}
+        if sharedGroup then
+            binding.input_group = "shared"
+            config.bindings[2] = {id="good",input_group="shared",keys={"W"},consume=true,
+                trigger="pulse",interval=.001,outputs={"good"}}
+        else binding.outputs[2] = "good" end
+        local backend,native,state = fixture(config)
+        state.rows = {mapping(object("/Game/IA_Use.IA_Use"),"W")}
+        native:prepare()
+        local router = Router.new(backend.dynamic_config,backend)
+        router:step(.1,{W=1},backend:context())
+        backend:fail_target(bad,"unavailable output","bad")
+        state.calls = {}
+        router:step(.2,{W=1},backend:context())
+        check(native.consumed.W and key(state.rows[1])=="None",
+            "partial failure released native consumption still owned by a healthy output")
+        check(router.consumed.W==(sharedGroup and "shared" or "bad"),
+            "partial failure discarded a healthy routing reservation")
+        local healthy = false
+        for _,call in ipairs(state.calls) do if call.target==good then healthy=true end end
+        check(healthy,"partial failure prevented the healthy output from running")
+    end
+end)
 
 test("unified custom mappings preserve unbound device pipelines without restoring native input", function()
     for _, device in ipairs({"gamepad", "keyboard"}) do
@@ -674,13 +971,15 @@ test("unified consume rearms cloned triggers without firing release actions", fu
     check(emitted[released] == 1, "a real release no longer reaches the native Released trigger")
 end)
 
-test("unified main lifecycle resumes W and sprint but never held execution", function()
+test("unified main lifecycle resumes movement, sailing and stance but never held execution", function()
     local movePath,fastPath,executePath="/SGameLocomotionDriver/Input/IA_KeyboardMoveInput","/SGameLocomotionDriver/Input/IA_Sprint","/Game/IA_Execute"
-    local backend,native,state=unified({movePath,fastPath,executePath})
+    local shipPath,stancePath="/Game/PBZContent/Input/InputActions/IA_ShipForward","/PBZDeflectSystem/Input/IA_Stance"
+    local backend,native,state=unified({movePath,fastPath,executePath,shipPath,stancePath})
     local config=backend.config
     config.enabled,config.runtime_hotkeys=true,false
     local move,fast,execute=object(movePath .. ".IA_KeyboardMoveInput"),object(fastPath .. ".IA_Sprint"),object(executePath .. ".IA_Execute")
-    state.rows={mapping(move,"W"),mapping(fast,"W"),mapping(execute,"E")}
+    local ship,stance=object(shipPath .. ".IA_ShipForward"),object(stancePath .. ".IA_Stance")
+    state.rows={mapping(move,"W"),mapping(fast,"W"),mapping(execute,"E"),mapping(ship,"W"),mapping(stance,"E",{object("/Trigger.Down")})}
     backend.physical_input={sample=function(_,key) return state.physical[key] or 0 end}
     function backend:refresh()
         if self.state.gameplay and config.enabled then native:prepare()
@@ -698,11 +997,11 @@ test("unified main lifecycle resumes W and sprint but never held execution", fun
     function CancelDelayedAction() end
     local lifecycle=dofile(scripts .. "main.lua")
     frame();state.physical.W,state.physical.E=1,1;frame()
-    check(#state.calls == 3, "unified main did not start W, sprint and E together")
+    check(#state.calls == 5, "unified main did not start movement, sailing, stance and execution together")
     state.calls={};backend.state.generation=2;frame()
     local function recovered()
         local found={};for _,call in ipairs(state.calls) do if call.value.x ~= 0 then found[call.target.object]=true end end
-        return found[move] and found[fast] and not found[execute]
+        return found[move] and found[fast] and found[ship] and found[stance] and not found[execute]
     end
     check(recovered(), "pawn generation replayed held E or failed to restore movement")
     backend.state.gameplay=false;state.calls={};frame()
@@ -710,6 +1009,9 @@ test("unified main lifecycle resumes W and sprint but never held execution", fun
     for _,call in ipairs(state.calls) do check(call.phase == "canceled", "UI exit forwarded an ordinary physical release") end
     backend.state.gameplay=true;state.calls={};frame()
     check(recovered(), "return from UI failed to recover W/sprint or replayed E")
+    check(lifecycle.reload(), "reloading continuous controls failed")
+    state.calls={};frame()
+    check(recovered(), "reload interrupted sailing/stance or replayed execution")
     state.physical.E=0;frame();state.calls={};state.physical.E=1;frame()
     local executed=false;for _,call in ipairs(state.calls) do if call.target.object == execute and call.value.x == 1 then executed=true end end
     check(executed, "E could not execute after UI recovery and a fresh press")
@@ -778,7 +1080,7 @@ test("unbound controller override keeps default device identity", function()
     state:add_context({mapping(action,"SpaceBar"),mapping(action,"Gamepad_FaceButton_Bottom")})
     backend.live_validation=true
     native:prepare()
-    check(native.maintained[1] and key(state.rows[2])=="None", "unbound controller mapping became a second native binding")
+    check(native.maintained[2] and key(state.rows[2])=="None", "unbound controller mapping became a second native binding")
     check(#backend.dynamic_config.bindings>0, "unbound controller mapping lost its enhanced output")
     local found=false
     for _,binding in ipairs(backend.dynamic_config.bindings) do
@@ -935,6 +1237,207 @@ test("active context templates still reject an unavailable requested device pipe
         "active context with no requested device pipeline was mistaken for an inactive scene")
 end)
 
+test("unbound mapping rebuilds read each context template once", function()
+    stress_gc=false
+    local config={unified_native=true,native_actions={},native_bindings={},targets={},bindings={}}
+    local backend,native,state=fixture(config)
+    local templates={}
+    for index=1,48 do
+        local path="/Game/Unbound_"..index
+        local action=object(path..".Unbound_"..index)
+        local trigger=object("/Trigger.Pressed")
+        config.native_actions[index]=path
+        config.native_bindings[index]={["function"]="unbound_"..index,device="keyboard",keys={},actions={path}}
+        state.rows[index]=mapping(action,"None",{trigger})
+        templates[index]=mapping(action,"E",{trigger})
+    end
+    state:add_context(templates)
+    native:prepare()
+    check(state.template_reads<=#templates*2,"unbound rebuild repeatedly re-read the native context templates: "..state.template_reads)
+    for _,entry in ipairs(native.coverage) do check(entry.owner=="scheduler","unbound native override lost scheduler ownership") end
+    native:restore()
+    for _,entry in ipairs(state.rows) do check(key(entry)=="None","unbound rebuild restored a default key over a saved unbinding") end
+end)
+
+test("mapping rebuilds read pipeline metadata once and keep restoration independent", function()
+    stress_gc=false
+    local config={unified_native=true,native_actions={},targets={},bindings={}}
+    local backend,native,state=fixture(config)
+    local templates={}
+    for index=1,24 do
+        local path="/Game/Metadata_"..index
+        local action=object(path..".Metadata_"..index)
+        local trigger=object("/Trigger.Pressed")
+        config.native_actions[index]=path
+        config.targets["extra_"..index]={kind="mapping",actions={path}}
+        config.bindings[index]={id="extra_"..index,keys={"J"},outputs={"extra_"..index}}
+        state.rows[#state.rows+1]=mapping(action,"E",{trigger})
+        state.rows[#state.rows+1]=mapping(action,"None",{trigger})
+        templates[#templates+1]=mapping(action,"E",{trigger})
+        templates[#templates+1]=mapping(action,"Gamepad_FaceButton_Left",{trigger})
+    end
+    state:add_context(templates)
+    native:prepare()
+    for _,rows in ipairs({state.rows,templates}) do
+        for _,entry in ipairs(rows) do
+            check(entry.pipeline_reads==2,"rebuild repeatedly read one mapping's native pipeline: "..tostring(entry.pipeline_reads))
+        end
+    end
+    for index=1,24 do
+        local outputs=backend.dynamic_config.bindings[index].outputs
+        check(#outputs==2,"metadata reuse lost a runtime or unbound device pipeline")
+        for _,output in ipairs(outputs) do
+            local target = target_for(backend.dynamic_config,output)
+            check(native.expanded[target.source_relation].key~="None","observing masked keys changed a scheduler source key")
+        end
+    end
+    native:restore()
+    for index,entry in ipairs(state.rows) do
+        check(key(entry)==(index%2==1 and "E" or "None"),"metadata reuse changed restoration or saved unbinding")
+    end
+end)
+
+test("continuous rebuilds index action identities and share trigger reflection within the frame", function()
+    stress_gc=false
+    local actionPath="/SGameLocomotionDriver/Input/IA_KeyboardMoveInput"
+    local config={unified_native=true,native_actions={actionPath},targets={},bindings={}}
+    local backend,native,state=fixture(config)
+    local trigger=object("/Trigger.Down")
+    local reads,classes=0,0
+    function trigger:GetClass() classes=classes+1;return "InputTriggerDown" end
+    for index=1,64 do
+        local action=object(actionPath..".IA_KeyboardMoveInput")
+        local getAddress=action.GetAddress
+        function action:GetAddress() reads=reads+1;return getAddress(self) end
+        state.rows[index]=mapping(action,"W",{trigger})
+    end
+    native:prepare()
+    check(reads<=#state.rows*40,"continuous sources scanned unrelated action identities: "..reads)
+    check(classes<=#state.rows+1,"shared trigger class was repeatedly reflected during one rebuild: "..classes)
+    check(#backend.dynamic_config.bindings==#state.rows,"distinct action objects lost their independent injection")
+    trigger.ActuationThreshold=0
+    native:prepare()
+    check(#backend.dynamic_config.bindings==0,"frame metadata hid a changed trigger threshold")
+    for _,entry in ipairs(state.rows) do check(key(entry)=="W","unsupported sources must return to native ownership") end
+    trigger.ActuationThreshold=.5
+    native:prepare()
+    check(#backend.dynamic_config.bindings==#state.rows,"a later rebuild failed to reacquire supported sources")
+    native:restore()
+end)
+
+test("mapping rebuilds match previous pipelines without scanning unrelated actions", function()
+    stress_gc=false
+    local config={unified_native=true,native_actions={},targets={},bindings={}}
+    local backend,native,state=fixture(config)
+    local actions,triggers,reads={},{},0
+    for index=1,80 do
+        local path="/Game/Rebuild_"..index
+        local action=object(path..".Rebuild_"..index)
+        local getAddress=action.GetAddress
+        function action:GetAddress() reads=reads+1;return getAddress(self) end
+        actions[index],triggers[index]=action,object("/Trigger.Pressed")
+        config.native_actions[index]=path
+        state.rows[index]=mapping(action,"E",{triggers[index]})
+    end
+    native:prepare()
+    local clones=state.clones
+    local rows={}
+    for index,action in ipairs(actions) do rows[index]=mapping(action,"E",{triggers[index]}) end
+    state:rebuild(rows);reads=0
+    native:prepare()
+    check(reads<=#rows*32,"mapping rebuild repeatedly inspected unrelated action addresses: "..reads)
+    check(state.clones==clones,"moving unchanged native rows recreated their independent pipeline clones")
+    native:restore()
+    for _,entry in ipairs(state.rows) do check(key(entry)=="E","pipeline grouping lost the original key") end
+end)
+
+test("rebuilds inspect only related action targets and reuse action metadata", function()
+    stress_gc=false
+    local config={unified_native=true,native_actions={},targets={},bindings={}}
+    local backend,native,state=fixture(config)
+    local templates,deviceReads,pathReads,triggerReads={},0,0,0
+    for index=1,64 do
+        local actionPath="/Game/Indexed_"..index
+        local action=object(actionPath..".Indexed_"..index)
+        local fullName=action.GetFullName
+        function action:GetFullName() pathReads=pathReads+1;return fullName(self) end
+        local triggers=array({})
+        setmetatable(action,{__index=function(_,key)
+            if key=="Triggers" then triggerReads=triggerReads+1;return triggers end
+        end})
+        local name="indexed_"..index
+        config.targets[name]=setmetatable({kind="mapping",catalog_pipeline=true,actions={actionPath}},{__index=function(_,key)
+            if key=="device" then deviceReads=deviceReads+1 end
+        end})
+        config.bindings[index]={id=name,keys={"J"},outputs={name}}
+        local runtime=mapping(action,"E")
+        local template=mapping(action,"Gamepad_FaceButton_Left")
+        runtime.SettingBehavior,template.SettingBehavior=2,2
+        state.rows[index],templates[index]=runtime,template
+    end
+    state:add_context(templates)
+    native:prepare()
+    check(deviceReads<=#state.rows*12,"rebuild inspected unrelated targets: "..deviceReads)
+    check(pathReads==#state.rows,"rebuild repeatedly converted a shared action path: "..pathReads)
+    check(triggerReads==#state.rows,"rebuild repeatedly read shared action trigger arrays: "..triggerReads)
+    for index=1,#state.rows do
+        check(#backend.dynamic_config.bindings[index].outputs==2,"action indexing lost a device's template pipeline")
+    end
+    native:restore()
+end)
+
+test("unbound device discovery skips unrelated template actions", function()
+    stress_gc=false
+    local config={unified_native=true,native_actions={},native_bindings={},targets={},bindings={}}
+    local backend,native,state=fixture(config)
+    local templates,reads={},0
+    for index=1,64 do
+        local actionPath="/Game/IndexedUnbound_"..index
+        local action=object(actionPath..".IndexedUnbound_"..index)
+        local getAddress=action.GetAddress
+        function action:GetAddress() reads=reads+1;return getAddress(self) end
+        local trigger=object("/Trigger.Pressed")
+        config.native_actions[index]=actionPath
+        config.native_bindings[index]={["function"]="unbound_"..index,device="keyboard",keys={},actions={actionPath}}
+        state.rows[index]=mapping(action,"None",{trigger})
+        templates[index]=mapping(action,"E",{trigger})
+    end
+    state:add_context(templates)
+    native:prepare()
+    check(reads<=#state.rows*32,"unbound mappings compared unrelated template actions: "..reads)
+    for _,entry in ipairs(native.coverage) do check(entry.owner=="scheduler","unbound source lost its device ownership") end
+    native:restore()
+end)
+
+test("stable menu overrides reuse native observation and rebuild after key or config changes", function()
+    stress_gc=false
+    local backend,native,state=fixture({unified_native=true,native_bindings={
+        {["function"]="Menu",device="keyboard",keys={"J"},actions={"/Game/Menu"}}
+    }})
+    local action=object("/Game/Menu.Menu")
+    state.rows={mapping(action,"None")}
+    state:add_context({mapping(action,"Enter")})
+    local dirty,observes=true,0
+    native.observe_native=function() observes=observes+1;dirty=false end
+    native.unchanged_native=function() return not dirty end
+    native:prepare_overrides()
+    check(key(state.rows[1])=="J" and observes==1,"menu overrides were not applied and observed")
+    state.mapping_reads,state.template_reads=0,0
+    for _=1,120 do native:prepare_overrides() end
+    check(state.mapping_reads==0 and state.template_reads==0 and observes==1,"stable menu overrides traversed native rows or defaults")
+    backend.config.native_bindings[1].keys[1]="K"
+    native:prepare_overrides()
+    check(key(state.rows[1])=="K" and observes==2,"in-place override edit reused stale menu mappings")
+    state:rebuild({mapping(action,"F")});dirty=true
+    native:prepare_overrides()
+    check(key(state.rows[1])=="K" and observes==3,"menu mapping rebuild was not remapped")
+    native:restore()
+    check(key(state.rows[1])=="F","menu restoration lost the rebuilt native key")
+    native:prepare_overrides()
+    check(key(state.rows[1])=="K" and observes==4,"restored menu reused stale native observation")
+    native:restore()
+end)
+
 test("unchanged unified frames inspect rows once and consumption never rescans native mappings", function()
     local actionPath="/Game/Jump"
     local action=object(actionPath .. ".Jump")
@@ -959,6 +1462,143 @@ test("unchanged unified frames inspect rows once and consumption never rescans n
     state.rows[1].Key.KeyName=FName("F")
     native:prepare();native:restore()
     check(key(state.rows[1])=="F", "an in-place native key edit reused an obsolete original key")
+end)
+
+test("unchanged rows reuse observed addresses and read shared mapping names once per frame", function()
+    local actionPath = "/Game/Jump"
+    local action = object(actionPath .. ".Jump")
+    local name, nameReads = "jump", 0
+    local settings = object("/Settings.Shared", {Name={ToString=function() nameReads=nameReads+1;return name end}})
+    action.PlayerMappableKeySettings = settings
+    local trigger = object("/Trigger.Pressed")
+    local backend, native, state = fixture({unified_native=true,native_actions={actionPath}})
+    state.rows = {mapping(action,"E",{trigger}),mapping(action,"J",{trigger})}
+    local templates = {mapping(action,"E",{trigger}),mapping(action,"J",{trigger})}
+    for _, rows in ipairs({state.rows,templates}) do
+        for _, row in ipairs(rows) do row.SettingBehavior = 0 end
+    end
+    state:add_context(templates)
+    native:prepare()
+    local actionReads, triggerReads = 0, 0
+    local actionAddress, triggerAddress = action.GetAddress, trigger.GetAddress
+    function action:GetAddress() actionReads=actionReads+1;return actionAddress(self) end
+    function trigger:GetAddress() triggerReads=triggerReads+1;return triggerAddress(self) end
+    nameReads = 0
+    native:prepare()
+    check(actionReads==4 and triggerReads==4,
+        "stable rows must read each current address once without dereferencing observed objects again")
+    check(nameReads==1, "shared mapping settings were converted to text repeatedly in one frame")
+    name = "renamed"
+    check(not native:unchanged(), "shared name caching hid an in-place mapping identity change")
+    name = "jump"
+    native:restore()
+    check(key(state.rows[1])=="E" and key(state.rows[2])=="J", "address metadata lost native restoration")
+end)
+
+test("native observation skips stable Lua traversal and rebuilds before accepting new ownership", function()
+    local loader = package.loadlib
+    local observes, probes, changed, rejected = 0,0,false,false
+    package.loadlib = function(_, name)
+        if name=="pbz_input_mappings_observe" then return function(input)
+            check(type(input)=="number", "native observation received a wrapper instead of the current input address")
+            observes=observes+1;changed=false
+            if rejected then return "unsupported input layout" end
+        end end
+        if name=="pbz_input_mappings_unchanged" then return function(input, value)
+            check(type(input)=="number" and value==true, "native comparison lost its Lua result argument")
+            probes=probes+1;return not changed
+        end end
+        return nil
+    end
+    local action=object("/Game/Jump.Jump")
+    local backend,native,state=fixture({unified_native=true,native_actions={"/Game/Jump"}})
+    package.loadlib=loader
+    state.rows={mapping(action,"E")}
+    native:prepare()
+    check(observes==1, "native observation ran before masked mappings were ready or was omitted")
+    state.mapping_reads=0
+    for _=1,120 do native:prepare() end
+    check(probes==120 and state.mapping_reads==0, "stable native observation still traversed rows through Lua")
+    state:rebuild({mapping(action,"F")});changed=true
+    native:prepare()
+    check(observes==2 and key(state.rows[1])=="None" and backend.dynamic_config.bindings[1].relation_key=="F",
+        "native invalidation did not rebuild and mask the new mapping")
+    native:restore();native:prepare()
+    check(observes==3, "restoration reused a native observation for retired ownership")
+    rejected=true;changed=true
+    native:prepare()
+    check(not native.observe_native and not native.unchanged_native, "unsupported native layout did not retain Lua observation")
+    state.mapping_reads=0;native:prepare()
+    check(state.mapping_reads==1, "Lua observation did not resume after native layout rejection")
+    native:restore()
+    check(key(state.rows[1])=="F", "native observation failure changed native restoration")
+end)
+
+test("rebuilding resolves each original key once and discards frame-local results", function()
+    local backend,native,state=fixture()
+    local action=object("/Game/Jump.Jump")
+    local mappingRow=mapping(action,"SpaceBar")
+    local reads=0
+    local original=mappingRow.Key.KeyName.ToString
+    mappingRow.Key.KeyName.ToString=function(self) reads=reads+1;return original(self) end
+    local current={location=mappingRow.pointer,object=action,modifier_objects={},trigger_objects={}}
+    local frame={}
+    for _=1,20 do check(native:original_key(1,mappingRow,current,frame)=="SpaceBar","same rebuild lost its original key") end
+    check(reads==1,"same rebuild repeatedly read the original native key")
+    mappingRow.Key.KeyName=FName("F")
+    check(native:original_key(1,mappingRow,current,{})=="F","a later rebuild reused an earlier key")
+    check(native:original_key(1,mappingRow,current)=="F","restoration must read the current native row")
+end)
+
+test("stable native preparation reuses configuration storage and detects target changes", function()
+    stress_gc = false
+    local config={unified_native=true,native_actions={"/Game/Jump"},targets={}}
+    for index=1,48 do
+        config.targets["mapping_"..index]={kind="mapping",actions={"/Game/Jump"},native_override=true}
+    end
+    local backend,native,state=fixture(config)
+    state.rows={mapping(object("/Game/Jump.Jump"),"E")}
+    native:prepare()
+    native.unchanged_native=function() return true end
+    for _=1,10 do native:prepare() end
+    collectgarbage("collect");collectgarbage("stop")
+    local before=collectgarbage("count")
+    for _=1,1000 do native:prepare() end
+    local allocated=collectgarbage("count")-before
+    collectgarbage("restart")
+    check(allocated<16,"stable native preparation allocated transient configuration tables: "..allocated.." KiB")
+    local generation=backend.config_generation
+    config.targets.mapping_48=nil
+    native:prepare()
+    check(backend.config_generation>generation and not backend.dynamic_config.targets.mapping_48,
+        "reused settings retained a deleted mapping target")
+    generation=backend.config_generation
+    config.targets.mapping_1.kind="event";config.targets.mapping_1.tag="Changed"
+    native:prepare()
+    check(backend.config_generation>generation and backend.dynamic_config.targets.mapping_1==config.targets.mapping_1,
+        "reused settings missed a target changing from a mapping to an event")
+    generation=backend.config_generation
+    config.targets.mapping_48={kind="mapping",actions={"/Game/Jump"},native_override=true}
+    native:prepare()
+    check(backend.config_generation>generation and backend.dynamic_config.targets.mapping_48,
+        "reused settings missed an added mapping target")
+end)
+
+test("suppressed native sources remain masked without permanently inactive scheduler rules", function()
+    local action=object("/Game/Jump.Jump")
+    local config={unified_native=true,native_actions={"/Game/Jump"},suppressions={{action="/Game/Jump",key="E"}}}
+    local backend,native,state=fixture(config)
+    state.rows={mapping(action,"E"),mapping(action,"SpaceBar")}
+    native:prepare()
+    check(#backend.dynamic_config.bindings==1 and backend.dynamic_config.bindings[1].relation_key=="SpaceBar",
+        "a permanently suppressed input must not remain in the frame scheduler")
+    check(key(state.rows[1])=="None" and native.maintained[1],"suppression must keep native duplicate prevention")
+    config.suppressions={};native:prepare()
+    check(#backend.dynamic_config.bindings==2,"removing suppression must restore the scheduler relation")
+    config.suppressions={{action="/Game/Jump",key="E"}};native:prepare()
+    check(#backend.dynamic_config.bindings==1,"changing suppression must retire the obsolete scheduler relation")
+    native:restore()
+    check(key(state.rows[1])=="E" and key(state.rows[2])=="SpaceBar","shutdown must retain original keys for suppressed inputs")
 end)
 
 test("equivalent continuous movement sources share one injection without merging distinct pipelines", function()
@@ -1201,7 +1841,182 @@ test("frame lifecycle keeps routing through context changes, live reload and paw
         "lifecycle shutdown failed to restore the current native rows")
 end)
 
+test("independent deflect pulses preserve trigger thresholds and mixed continuous outputs", function()
+    local deflectPath,stancePath="/PBZDeflectSystem/Input/IA_Deflect","/PBZDeflectSystem/Input/IA_Stance"
+    for _,trigger in ipairs({"down","hold","toggle"}) do
+        local extra=object("/Game/IA_Extra.IA_Extra")
+        local config={unified_native=true,native_actions={deflectPath,stancePath},targets={
+            deflect={kind="mapping",catalog_pipeline=true,actions={deflectPath}},
+            extra={kind="action",object=extra}},
+            bindings={{id="mixed",keys={"G"},trigger=trigger,seconds=.3,outputs={"deflect","extra"}}}}
+        local backend,native,state=fixture(config)
+        local deflect,stance=object(deflectPath .. ".IA_Deflect"),object(stancePath .. ".IA_Stance")
+        state.rows={mapping(deflect,"Two",{object("/Trigger.Pressed",{LastValue=0})}),
+            mapping(stance,"Two",{object("/Trigger.Down",{LastValue=0})})}
+        native:prepare()
+        local router=Router.new(backend.dynamic_config,backend)
+        local function step(now,keys)
+            state.calls={};router:step(now,keys,{gameplay=true})
+            local active={}
+            for _,call in ipairs(state.calls) do
+                if call.phase~="completed" and call.phase~="canceled" then active[call.target.object]=true end
+            end
+            return active
+        end
+        step(0,{})
+        local early=step(.1,{G=1})
+        check(early[deflect]==(trigger~="hold" and true or nil),"independent deflect ignored its hold threshold")
+        local first=trigger=="hold" and step(.41,{G=1}) or early
+        check(first[deflect] and first[stance] and first[extra],"mixed binding lost its deflect pulse or other output")
+        local later=step(.5,{G=1})
+        check(not later[deflect] and not later[stance] and later[extra],
+            "deflect pulse changed another output's continuous trigger")
+        local repeated=step(.6,{G=1})
+        check(repeated[deflect] and repeated[stance] and repeated[extra],
+            "sustained deflect failed to repeat after its native release frame")
+        router:reset(true);native:restore()
+    end
+end)
 local schemeFixtures = os.getenv("PBZ_SCHEME_FIXTURES")
+test("independent deflect pulses and held stance retain native defense windows and release both states", function()
+    local deflectPath,stancePath="/PBZDeflectSystem/Input/IA_Deflect","/PBZDeflectSystem/Input/IA_Stance"
+    for _,device in ipairs({"keyboard","pad"}) do
+        local pad=device=="pad"
+        local rb,lb=pad and "Gamepad_RightShoulder" or "F9",pad and "Gamepad_LeftShoulder" or "F10"
+        local nativeKey=pad and "Gamepad_DPad_Right" or "Two"
+        local config=schemeFixtures and dofile(schemeFixtures .. "/" .. device .. "-guard.lua") or {
+            unified_native=true,native_actions={deflectPath,stancePath},targets={
+                deflect={kind="mapping",catalog_pipeline=true,device=pad and "gamepad" or "keyboard",actions={deflectPath}},
+                stance={kind="mapping",catalog_pipeline=true,device=pad and "gamepad" or "keyboard",actions={stancePath}}},
+            bindings={{id="deflect",keys={rb},trigger="down",outputs={"deflect"}},
+                {id="stance",keys={lb},trigger="down",outputs={"stance"}}}}
+        local overlapKey=pad and "Gamepad_FaceButton_Right" or "F11"
+        config.bindings[#config.bindings+1]={id="deflect-overlap",keys={overlapKey},trigger="down",outputs=config.bindings[1].outputs}
+        local backend,native,state=fixture(config)
+        local deflect,stance=object(deflectPath .. ".IA_Deflect"),object(stancePath .. ".IA_Stance")
+        state.rows={mapping(deflect,nativeKey,{object("/Trigger.Pressed",{LastValue=0})}),
+            mapping(stance,nativeKey,{object("/Trigger.Down",{LastValue=0})})}
+        native:prepare()
+        local inject,invoke={},backend.invoke
+        backend.dispatch=Backend.dispatch
+        function backend:invoke(receiver,method,action,value,modifiers,triggers)
+            if method:find(":InjectInputVectorForAction",1,true) then
+                inject[#inject+1]={action=action,value=value.X,triggers=triggers}
+                return true
+            end
+            return invoke(self,receiver,method,action,value,modifiers,triggers)
+        end
+        local router=Router.new(backend.dynamic_config,backend)
+        local holding,abilityHolding,stanceActive,perfect,now=false,false,false,0,0
+        local normalWindow,perfectWindow,abilityWindow=0,0,0
+        local function step(keys)
+            inject={};now=now+1/120
+            router:step(now,keys,backend:context())
+            local deflectTriggered,stanceTriggered=false,false
+            for _,entry in ipairs(inject) do
+                for _,trigger in ipairs(entry.triggers) do
+                    local active=entry.value>.5
+                    if entry.action==deflect and active and trigger.LastValue<=.5 then deflectTriggered=true end
+                    if entry.action==stance and active then stanceTriggered=true end
+                    trigger.LastValue=entry.value
+                end
+            end
+            -- CL-302256 Passive processes Stance before Deflect. Only Stance.Completed sends KeyUp.
+            if stanceTriggered then holding=true
+            elseif stanceActive then holding,abilityHolding=false,false end
+            if deflectTriggered then
+                perfect=perfect+1;holding=true;abilityHolding=true
+                normalWindow,perfectWindow=now+.2,now+.1
+                abilityWindow=normalWindow
+            end
+            -- Passive Tick activates the stance ability while its shared key state is held.
+            if holding and not abilityHolding then abilityHolding=true end
+            stanceActive=stanceTriggered
+            return tostring(deflectTriggered) .. ":" .. tostring(stanceTriggered) .. ":" .. tostring(holding) .. ":" .. tostring(abilityHolding)
+        end
+        step({});step({[rb]=1});step({})
+        check(perfect==1 and not holding and not abilityHolding,"tapping deflect left the Passive or ability in held stance")
+        check(normalWindow>now and perfectWindow>now and abilityWindow==normalWindow,
+            "native release shortened the passive or active ability defense window")
+        step({[rb]=1})
+        local deadline=normalWindow
+        for frame=1,120 do
+            step({[rb]=1})
+            local pressed=frame%2==0
+            check(holding==pressed and abilityHolding==pressed,"held deflect must alternate a native press and complete release")
+            if pressed then
+                check(normalWindow>deadline and abilityWindow==normalWindow,"repeated deflect failed to refresh the native window")
+                deadline=normalWindow
+            else
+                check(normalWindow==deadline and abilityWindow==deadline,"release frame cleared the native defense window")
+            end
+        end
+        check(perfect==62,"held deflect did not repeat once per complete press/release cycle")
+        step({})
+        for frame=1,120 do step({}) end
+        check(perfect==62 and now>normalWindow and not holding and not abilityHolding,
+            "releasing held deflect must stop additional requests and let its native window expire")
+        local repeats=perfect
+        step({[lb]=1})
+        for frame=1,10 do step({[lb]=1});check(holding and abilityHolding,"held stance became a tap") end
+        check(perfect==repeats,"stance-only input refreshed the perfect-deflect window")
+        step({[rb]=1,[lb]=1});step({[lb]=1})
+        check(holding and abilityHolding and perfect==repeats+1,"deflect release canceled a separately held stance")
+        step({})
+        check(not holding and not abilityHolding,"stance release did not clear both layers")
+        step({[rb]=1,[lb]=1});step({[rb]=1})
+        check(not holding and not abilityHolding and perfect==repeats+2,"a held deflect kept stance alive after its separate stance key was released")
+        step({});step({[rb]=1});step({})
+        check(perfect==repeats+3 and not holding and not abilityHolding,"deflect failed to rearm after overlapping inputs")
+        step({[nativeKey]=1});step({[nativeKey]=1,[rb]=1});step({[nativeKey]=1})
+        check(holding and abilityHolding,"enhanced deflect release canceled a held original guard input")
+        step({})
+        check(not holding and not abilityHolding,"original and enhanced guard sources did not release together")
+        step({[rb]=1});router:reset(true);step({})
+        check(not holding and not abilityHolding,"router reset left the shared guard state held")
+        step({[nativeKey]=1})
+        local originalWindow=normalWindow
+        for frame=1,120 do step({[nativeKey]=1});check(holding and abilityHolding,"ordinary combined guard lost native sustained stance") end
+        check(normalWindow==originalWindow,"ordinary combined guard repeatedly refreshed its perfect window")
+        step({})
+        check(not holding and not abilityHolding,"ordinary combined guard release left either key state held")
+        local beforeRecovery=perfect
+        router:resume({[nativeKey]=1},backend:context())
+        step({[nativeKey]=1})
+        check(holding and abilityHolding and perfect==beforeRecovery,
+            "combined guard recovery must restore stance without refreshing perfect deflect")
+        step({})
+        router:resume({[lb]=1},backend:context())
+        step({[lb]=1})
+        check(holding and abilityHolding and perfect==beforeRecovery,
+            "independent stance failed to recover its two native key states")
+        step({})
+        router:resume({[rb]=1},backend:context())
+        for frame=1,3 do step({[rb]=1}) end
+        check(not holding and not abilityHolding and perfect==beforeRecovery,
+            "recovery replayed independent deflect or its paired stance pulse")
+        step({})
+        local nativeTap={}
+        for frame=1,30 do nativeTap[frame]=step(frame%2==1 and {[nativeKey]=1} or {}) end
+        for frame=1,30 do
+            check(step({[rb]=1})==nativeTap[frame],
+                "independent held deflect differs from repeated original short taps at frame " .. frame)
+        end
+        step({})
+        local overlapStart=perfect
+        step({[rb]=1})
+        for frame=1,120 do
+            step({[rb]=1,[overlapKey]=1})
+            local pressed=frame%2==0
+            check(holding==pressed and abilityHolding==pressed,
+                "staggered deflect sources must share a complete native release frame")
+        end
+        check(perfect==overlapStart+61,"overlapping deflect sources stopped refreshing the native perfect window")
+        step({})
+        native:restore()
+        check(key(state.rows[1])==nativeKey and key(state.rows[2])==nativeKey,"guard cleanup changed native bindings")
+    end
+end)
 if schemeFixtures then
     local baseline = os.getenv("PBZ_INPUT_BENCHMARK_BASELINE")
     if baseline then
@@ -1233,6 +2048,16 @@ if schemeFixtures then
                 local elapsed=os.clock()-started
                 print(string.format("NativeInputBenchmark %s: frames=%d rows=%d visits/frame=%.0f Lua-ms/frame=%.4f",
                     implementation.name,frames,#state.rows,state.mapping_reads/frames,elapsed*1000/frames))
+                local router=Router.new(backend:effective_config(),backend)
+                local snapshot={W=1}
+                started=os.clock()
+                for index=1,frames do
+                    native:prepare()
+                    router:step(index/60,snapshot,backend:context())
+                    state.calls={}
+                end
+                print(string.format("GameplayLuaBenchmark %s: frames=%d rules=%d Lua-ms/frame=%.4f",
+                    implementation.name,frames,#router.rules,(os.clock()-started)*1000/frames))
                 native:restore()
             end
             NativeInput=current
@@ -1444,13 +2269,15 @@ test("editable identities preserve fixed menu, touchpad and scene sources", func
         native:prepare();native:prepare()
         check(key(state.rows[1])=="Escape" and key(state.rows[2])=="J", "menu fixed input was remapped or ordinary edit was lost")
         check(key(state.rows[3])=="PBZ_Touchpad_SwipeUp" and key(state.rows[4])=="Gamepad_DPad_Up", "IgnoreSettings or inherited action settings lost ownership")
-        local fixed,editable
+        local fixed,editable=0,0
         for _,binding in ipairs(backend.dynamic_config.bindings) do
             if binding.relation_key=="LeftShift" then
-                if binding.when() then fixed=true else editable=true end
+                if binding.when() then fixed=fixed+1 else editable=editable+1 end
             end
         end
-        check(fixed and editable,"fixed sprint was suppressed together with the editable sprint")
+        check(fixed==1 and editable==0,"fixed sprint must stay active without a permanently suppressed editable rule")
+        check(native.maintained[5] and native.maintained[6] and key(state.rows[5])=="None" and key(state.rows[6])=="None",
+            "removing a suppressed scheduler rule must retain native duplicate prevention")
         native:restore();native:apply_masks()
         check(key(state.rows[1])=="Escape" and key(state.rows[3])=="PBZ_Touchpad_SwipeUp", "UI reapplication overwrote fixed inputs")
         check(key(state.rows[2])=="J" and key(state.rows[6])=="K" and key(state.rows[5])=="LeftShift", "UI ownership ignored mapping identity")
@@ -1623,6 +2450,65 @@ if schemeFixtures then
         end
     end)
 end
+
+test("shared jump/dodge retains native press and hold pipelines", function()
+    for _, boundKey in ipairs({"SpaceBar", "Gamepad_FaceButton_Bottom"}) do
+        for _, enhanced in ipairs({false, true}) do
+            local jumpPath, dodgePath = "/PBZInput/InputActions/IA_Jump", "/PBZDeflectSystem/Input/IA_Dodge"
+            local holdPath = "/PBZDeflectSystem/Input/IA_DodgeHold"
+            local config = {unified_native=true, native_actions={jumpPath,dodgePath,holdPath}, targets={}, bindings={}}
+            if enhanced then
+                config.targets.jump={kind="mapping", actions={jumpPath}, mapping="IA_Jump"}
+                config.targets.dodge={kind="mapping", actions={dodgePath,holdPath}, mapping="IA_Dodge"}
+                config.bindings={{id="shared",keys={boundKey},outputs={"jump","dodge"}}}
+                config.suppressions={{action=jumpPath},{action=dodgePath},{action=holdPath}}
+            end
+            local backend, native, state = fixture(config)
+            local jump = object(jumpPath .. ".IA_Jump")
+            local dodge = object(dodgePath .. ".IA_Dodge")
+            local dodgeHold = object(holdPath .. ".IA_DodgeHold")
+            state.rows={mapping(jump,boundKey,{object("/Trigger.Pressed")}),
+                mapping(dodge,boundKey,{object("/Trigger.Pressed")}),
+                mapping(dodgeHold,boundKey,{object("/Trigger.Down")})}
+            state:add_context(state.rows)
+            native:prepare()
+            check(key(state.rows[1]) == "None" and key(state.rows[2]) == "None" and key(state.rows[3]) == "None",
+                "all shared native rows must be owned by the scheduler")
+            local emitted = {}
+            local invoke = backend.invoke
+            function backend:invoke(receiver, method, ...)
+                local args={...}
+                if method == "/Script/EnhancedInput.EnhancedInputSubsystemInterface:InjectInputVectorForAction" then
+                    local action, value, triggers = args[1], args[2], args[4]
+                    for _, trigger in ipairs(triggers) do
+                        local was, active = (trigger.LastValue or 0) > .5, value.X > .5
+                        if active and not was then emitted[#emitted+1] = action end
+                        trigger.LastValue = value.X
+                    end
+                    return true
+                end
+                return invoke(self,receiver,method,...)
+            end
+            backend.dispatch=Backend.dispatch
+            local router=Router.new(backend.dynamic_config,backend)
+            router:step(0,{},backend:context())
+            for frame=1,3 do router:step(frame*.1,{[boundKey]=1},backend:context()) end
+            check(#emitted == 3, "shared press must retain jump, dodge and dodge-hold inputs")
+            local seen = {}
+            for _,action in ipairs(emitted) do seen[action] = true end
+            check(seen[jump] and seen[dodge] and seen[dodgeHold], "shared mappings lost a native input action")
+            router:step(.4,{[boundKey]=1},backend:context())
+            check(#emitted == 3, "held input must retain native trigger semantics")
+            router:step(.5,{},backend:context())
+            router:step(.6,{[boundKey]=1},backend:context())
+            check(#emitted == 6, "release must rearm every native jump/dodge pipeline")
+            router:reset(true)
+            native:restore()
+            check(key(state.rows[1]) == boundKey and key(state.rows[2]) == boundKey and key(state.rows[3]) == boundKey,
+                "shared-input routing damaged native mapping restoration")
+        end
+    end
+end)
 
 for _, message in ipairs(failures) do print("FAIL " .. message) end
 assert(#failures == 0, #failures .. " NativeInput test case(s) failed")

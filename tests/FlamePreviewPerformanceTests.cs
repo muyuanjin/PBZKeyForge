@@ -10,6 +10,8 @@ using PBZKeyForge;
 public static class FlamePreviewPerformanceTests
 {
     const BindingFlags Hidden = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    static extern IntPtr SendMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
     static object Field(object owner, string name) { return owner.GetType().GetField(name, Hidden).GetValue(owner); }
 
     sealed class PaintTiming : NativeWindow, IDisposable
@@ -57,6 +59,17 @@ public static class FlamePreviewPerformanceTests
                 if ((int)Field(overlay, "tick") != pausedTick || !(bool)overlay.GetType().GetProperty("IsActive", Hidden).GetValue(overlay, null))
                     throw new Exception("Pausing work must freeze the visible flame background.");
                 pauseProperty.SetValue(overlay, false, null);
+                SendMessage(form.Handle, 0x1C, IntPtr.Zero, IntPtr.Zero);
+                int backgroundTick = (int)Field(overlay, "tick");
+                var background = Stopwatch.StartNew();
+                while (background.ElapsedMilliseconds < 220) { Application.DoEvents(); System.Threading.Thread.Sleep(1); }
+                if ((int)Field(overlay, "tick") != backgroundTick || Field(overlay, "pendingFrame") != null
+                    || !(bool)overlay.GetType().GetProperty("IsActive", Hidden).GetValue(overlay, null))
+                    throw new Exception("An inactive application must retain its flame background without rendering new frames.");
+                using (var screenshot = new Bitmap(form.Width, form.Height))
+                { form.DrawToBitmap(screenshot, new Rectangle(Point.Empty, screenshot.Size)); screenshot.Save(Path.Combine(output, "background-paused.png")); }
+                SendMessage(form.Handle, 0x1C, new IntPtr(1), IntPtr.Zero);
+                Console.WriteLine("Background flame: zero animation ticks and no pending render.");
                 foreach (bool actions in new[] { false, true })
                 {
                     form.ShowActionView(actions);

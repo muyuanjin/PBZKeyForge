@@ -56,6 +56,10 @@ $artworkArgs += "/resource:$root\prototype\input-router\actions.json,PBZKeyForge
 $artworkArgs += "/resource:$root\assets\key-enhancement\action-localization.json,PBZKeyForge.KeyEnhancement.action-localization.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\action-details.json,PBZKeyForge.KeyEnhancement.action-details.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\complete-moves.json,PBZKeyForge.KeyEnhancement.complete-moves.json"
+$artworkArgs += "/resource:$root\assets\key-enhancement\weapon-moves.json,PBZKeyForge.KeyEnhancement.weapon-moves.json"
+$artworkArgs += "/resource:$root\assets\key-enhancement\shadow-moves.json,PBZKeyForge.KeyEnhancement.shadow-moves.json"
+$artworkArgs += "/resource:$root\assets\key-enhancement\game-move-names.json,PBZKeyForge.KeyEnhancement.game-move-names.json"
+$artworkArgs += "/resource:$root\assets\key-enhancement\move-restrictions.json,PBZKeyForge.KeyEnhancement.move-restrictions.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\resource-costs.json,PBZKeyForge.KeyEnhancement.resource-costs.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\native-input-plan.json,PBZKeyForge.KeyEnhancement.native-input-plan.json"
 
@@ -96,5 +100,7 @@ Copy-Item "$root\THIRD-PARTY-NOTICES.md" $OutputDir
 New-Item -ItemType Directory -Path "$OutputDir\docs" -Force | Out-Null
 Copy-Item "$root\docs\cli.md", "$root\docs\key-enhancement.md" "$OutputDir\docs"
 Copy-Item "$root\docs\complete-moves.md", "$root\docs\complete-move-weapon-audit.md", "$root\docs\complete-move-shadow-audit.md", "$root\docs\complete-move-weapon-audit.json", "$root\docs\complete-move-shadow-audit.json" "$OutputDir\docs"
+Copy-Item "$root\docs\weapon-move-entries.json", "$root\docs\shadow-move-entries.json", "$root\docs\complete-move-combat-art-coverage.md", "$root\docs\complete-move-weapon-charge-recipes.json", "$root\docs\complete-move-additional-weapon-phases.json" "$OutputDir\docs"
+Copy-Item "$root\docs\move-restrictions.md", "$root\docs\weapon-equipment-preparation.json", "$root\assets\key-enhancement\move-restrictions.json", "$root\assets\key-enhancement\game-move-names.json" "$OutputDir\docs"
 
 Get-ChildItem "$OutputDir\PBZKeyForge*.exe" | Select-Object Name, Length | Format-Table -AutoSize

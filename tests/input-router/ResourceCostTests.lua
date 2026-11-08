@@ -5,6 +5,9 @@ local function check(value,message) assert(value,message); checks=checks+1 end
 local function parameter(value)
     return {get=function() return value end, set=function(_,nextValue) value=nextValue end}
 end
+local attackClass = {IsValid=function() return true end,GetAddress=function() return 1000 end,
+    GetFullName=function() return "Class /Player.Attack" end}
+function StaticFindObject(path) return path == "/Player.Attack" and attackClass or nil end
 local function object(address, properties)
     local o = properties or {}
     function o:IsValid() return self.valid ~= false end
@@ -12,13 +15,14 @@ local function object(address, properties)
     function o:GetFullName() return "Ability /Player.Attack_"..address end
     function o:GetPropertyValue(name) return self[name] end
     function o:IsA() return not self.nonLego end
-    function o:GetClass() return {GetFullName=function() return "Class /Player.Attack" end} end
+    function o:GetClass() return attackClass end
     return o
 end
 local function array(values)
-    return {ForEach=function(_,callback) for i,value in ipairs(values) do callback(i,parameter(value)) end end}
+    return setmetatable({GetArrayNum=function() return #values end,ForEach=function(_,callback) for i,value in ipairs(values) do callback(i,parameter(value)) end end},{__index=values})
 end
 local current, currentFunction, stopped
+function FName(value) return {ToString=function() return value end} end
 local nativeAbilities = {}
 local emptyClass=object(0,{valid=false})
 local function class_parameter(value)
@@ -52,8 +56,16 @@ local attack, other, cdo = object(1,{bIsActive=false}),object(2),object(3)
 local component = object(4,{ActivatableAbilities={Items=array({{Ability=cdo,ActiveCount=0,NonReplicatedInstances=array({attack}),ReplicatedInstances=array({})}})}})
 local pawn = object(5)
 local backend={pawn=pawn,receiver=function() return component end}
-local reports = {}
-function backend:report(key,message) reports[key]=message end
+local attributeOwner=object(6)
+local maxima={Shachi_Max={CurrentValue=100},SpiritShadow_Max={CurrentValue=8},UltimateChargeCount_Max={CurrentValue=3}}
+local attributes=object(7,maxima)
+function backend:invoke(value,path,owner)
+    check(value==component and path=="/Script/GameplayAbilities.AbilitySystemComponent:GetAttributeSet"
+        and owner==attributeOwner,"resource limits must come from the player's actual attribute set")
+    return attributes
+end
+local reports,reportCalls = {},0
+function backend:report(key,message) reports[key]=message;reportCalls=reportCalls+1 end
 function backend:object() return object(99) end
 local target={ability_class="/Player.Attack"}
 local cost = Costs.new(backend)
@@ -68,7 +80,7 @@ local function consume(resource,amount,actor,operation)
 end
 local function query(resource,initial,queried,library)
     local result=parameter(initial)
-    local attribute=parameter({AttributeName=resource})
+    local attribute=parameter({AttributeName=resource,AttributeOwner=attributeOwner})
     local returned
     if library then returned=hooks[libraryRead].post(nil,result,parameter(queried or component),attribute)
     else returned=hooks[read].post(parameter(queried or component),result,attribute) end
@@ -103,6 +115,29 @@ for index,path in ipairs(costEffects) do
     end)
     check(apply(attack,effect)==effect,"the same ability's ordinary later operation retains the resource effect")
 end
+for _,class in ipairs({
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_Reborn.GA_Hun_HeiMoShang_Reborn_C",
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Reborn.GA_XuKongHuaShan_Reborn_C"
+}) do
+    for _,bypass in ipairs({true,false}) do
+        current=attack
+        cost:activate(target,bypass,function()
+            local original=attackClass.GetFullName
+            attackClass.GetFullName=function() return "BlueprintGeneratedClass "..class end
+            local operation,value=parameter(3),parameter(0.0010000000474974513)
+            hooks[modify].pre(nil,parameter(pawn),parameter({AttributeName="Shachi"}),operation,value)
+            check(operation:get()==(bypass and 0 or 3) and value:get()==(bypass and 0 or 0.0010000000474974513),
+                "recovery's resource reset becomes a neutral additive operation only for the owning bypass binding")
+            local otherOperation,otherValue=parameter(3),parameter(0.0010000000474974513)
+            hooks[modify].pre(nil,parameter(other),parameter({AttributeName="Shachi"}),otherOperation,otherValue)
+            check(otherOperation:get()==3 and otherValue:get()==0.0010000000474974513,
+                "recovery bypass must preserve resource resets on other actors")
+            attackClass.GetFullName=original
+            return false
+        end)
+    end
+end
+current=nil
 local feeCases={
     {fn="Function /PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill.GA_Hun_Lute_SKill_C:ExecuteUbergraph_GA_Hun_Lute_SKill",
         resource="SpiritShadow",enough=function(value) return value>0 end,label="Lute entry and timer continue with zero ammunition"},
@@ -119,6 +154,23 @@ local feeCases={
     {fn="Function /PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C.GA_Hun_ZhanMa_C_C:ExecuteUbergraph_GA_Hun_ZhanMa_C",
         resource="UltimateChargeCount",enough=function(value) return value>=1 end,label="Zhan Ma combat art avoids its failed timeline with zero ultimate charge"}
 }
+for _,path in ipairs({"/Script/SGameAttributes.AttributeUtils:GetCharacterAttributeValue",
+    "/Script/GameplayAbilities.AbilitySystemBlueprintLibrary:GetFloatAttribute"}) do
+    current=attack;currentFunction="Function /Attack:CalculateResourceEffect"
+    cost:activate(target,true,function()
+        for _,resource in ipairs({"Shachi","SpiritShadow","UltimateChargeCount"}) do
+            local attribute=parameter({AttributeName=resource,AttributeOwner=attributeOwner})
+            local value=parameter(0)
+            hooks[path].post(nil,value,parameter(pawn),attribute)
+            check(value:get()==maxima[resource.."_Max"].CurrentValue,
+                "actor-based queries must use the same actual capacity: "..resource)
+            value:set(17)
+            hooks[path].post(nil,value,parameter(other),attribute)
+            check(value:get()==17,"queries for another actor must keep its real resource")
+        end
+        return false
+    end)
+end
 for _,case in ipairs(feeCases) do
     current=attack;currentFunction=case.fn
     cost:activate(target,true,function()
@@ -139,12 +191,29 @@ end
 current=attack
 currentFunction="Function /PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_EvalutionCombo_New.GA_Hun_SlitheringSword_EvalutionCombo_New_C:ExecuteUbergraph_GA_Hun_SlitheringSword_EvalutionCombo_New"
 cost:activate(target,true,function()
-    check(query("Shachi",17)==17,"Slithering Sword's resource-based damage formula retains actual shachi")
+    check(query("Shachi",17)==100,"resource-based damage must use full current capacity when bypassed")
     currentFunction="Function /Other.Ability:K2_CanActivateAbility"
-    check(query("Shachi",0)==0,"unreviewed eligibility functions retain their actual resource reads")
+    check(query("Shachi",0)==100,"all owned eligibility functions must use the same full resource view")
+    maxima.Shachi_Max.CurrentValue=175
+    check(query("Shachi",17)==175 and query("Shachi",0,nil,true)==175,
+        "full resource effects must follow the player's changed limit without arbitrary inflated values")
+    maxima.Shachi_Max.CurrentValue=0
+    check(query("Shachi",17)==0,"a zero resource limit must remain zero")
+    maxima.Shachi_Max.CurrentValue=100
     return false
 end)
 current=attack; currentFunction="Function /Base:ExecuteUbergraph_BP_CombatArt_Base"
+cost:activate(target,true,function()
+    currentFunction="Function /Attack:RepeatedResourceEffect"
+    check(query("Shachi",17)==100,"repeated effects begin with the current full-capacity view")
+    local count=reportCalls
+    for index=1,100 do
+        check(query("Shachi",index)==100,"repeated effects retain full capacity")
+    end
+    check(reportCalls==count,"repeated reads must not rebuild and emit the same resource diagnostic")
+    currentFunction="Function /Base:ExecuteUbergraph_BP_CombatArt_Base"
+    return false
+end)
 local getterCost=2
 check(cost:activate(target,true,function()
     check(consume("UltimateChargeCount",-getterCost)==0,"ultimate fee is suppressed before deduction")
@@ -181,9 +250,9 @@ check(cost:activate(target,true,function()
     check(reports["resource-cost:write:owner-missing:"..currentFunction]:find("contextAddress=2 contextName=[Ability /Player.Attack_2]",1,true),
         "missing ownership retains the actual Blueprint object without identifying it as an owned activation")
     current=attack;currentFunction="Function /Base:CalculateDamage"
-    check(query("Shachi",17)==17,"ordinary resource reads retain actual values")
-    check(query("Shachi",17,nil,true)==17,
-        "ordinary library resource reads retain actual values")
+    check(query("Shachi",17)==100,"later resource-dependent effects use this binding's full resource view")
+    check(query("Shachi",17,nil,true)==100,
+        "library reads retain the same full resource effect")
     attack.bIsActive=true;return true
 end),"normal activation")
 do
@@ -201,6 +270,15 @@ check(cost:activate(target,true,function() return false end)==false,"failed acti
 check(next(cost.instances)==nil,"failed activation leaves no scope")
 check(not pcall(function() cost:activate(target,true,function() error("activation error") end) end),"activation exceptions propagate")
 check(next(cost.instances)==nil,"exception leaves no scope")
+do
+    local receiver=backend.receiver
+    backend.receiver=function() error("Idle resource hooks must not resolve game objects") end
+    for index=1,100 do
+        check(query("Shachi",17)==17 and consume("Shachi",-1)==-1,
+            "idle resource hooks must leave game reads and writes unchanged without resolving the player")
+    end
+    backend.receiver=receiver
+end
 do
     local Router = require("router")
     local config = assert(loadfile((os.getenv("PBZ_RESOURCE_BINDING_FIXTURES") or "dist/resource-binding-check") .. "/merged-resource-move.lua"))()

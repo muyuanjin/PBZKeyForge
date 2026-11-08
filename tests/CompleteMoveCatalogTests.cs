@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Drawing;
@@ -30,6 +31,8 @@ class CompleteMoveCatalogTests
         var outputs = config.Rules.SelectMany(rule => rule.Outputs).ToArray();
         Check(outputs.Length == 2 && outputs.All(output => output.Kind == "move" && output.Tag == MoveId), "Move identities changed during persistence.");
         Check(config.Rules.All(rule => rule.Trigger == "down" && rule.Outputs.Count == 1), "Default complete-move bindings must keep requesting native activation while held.");
+        Check(config.Rules.All(rule => rule.RestrictionBypasses.SequenceEqual(new[] { "equipment", "training", "space", "stance", "predecessor", "cooldown" })),
+            "Complete-move sharing must preserve the default restriction selections.");
         string lua = config.CompileLua();
         Check(lua.Contains("[\"kind\"]=\"move\"") && lua.Contains("[\"move_id\"]=\"" + MoveId + "\""), "Compiler lost complete-move dispatch.");
         Check(lua.Contains("[\"tag\"]=\"Ability.Action.Hun.Heavy.BronzeSword.BHold\"") && lua.Contains("GA_Hun_BronzeSword_B_Hold_C:EndSuccess"), "Compiler lost the native ability or release entry point.");
@@ -37,10 +40,44 @@ class CompleteMoveCatalogTests
         Check(lua.Contains("[\"required_tags\"]={\"CharacterState.Space.Ground\",\"Weapon.Type.BronzeSword\"}") && lua.Contains("[\"priority\"]=3"), "The complete move must preserve its ground and equipment requirements and native input priority.");
     }
 
+    static void CheckMissingSource(EditorSession session)
+    {
+        const string standaloneId = "move:Weapon.Weapon_Hun_TianXuanQingTongJian.GA_Hun_Air_Tang_AA";
+        var moves = (IDictionary)typeof(CompleteMoveCatalog).GetField("Moves", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+        object move = moves[standaloneId];
+        var sourceField = move.GetType().GetField("sourceId");
+        object originalSource = sourceField.GetValue(move);
+        try
+        {
+            foreach (string source in new string[] { null, "" })
+            {
+                sourceField.SetValue(move, source);
+                Check(CompleteMoveCatalog.SourceId(standaloneId) == standaloneId,
+                    "A move without a source must use its own non-null lookup identity.");
+                foreach (bool pad in new[] { false, true })
+                {
+                    var config = new KeyEnhancementConfiguration { Enabled = true };
+                    var workspace = new BindingWorkspace(session, config, config.Clone(), pad, pad ? 0 : -1);
+                    var standalone = workspace.Functions.Single(function => function.Id == standaloneId);
+                    Check(standalone.Label == "天玄青铜剑 · 轻攻击 · AA"
+                        && standalone.GroupPath.SequenceEqual(new[] { "weapons", "Weapon_007", "IA_LightAttack" })
+                        && standalone.LabelSource == "semantic",
+                        "A move without a source must retain its own weapon label and category on both devices.");
+                }
+            }
+        }
+        finally { sourceField.SetValue(move, originalSource); }
+    }
+
     static void Run(string outputDirectory)
     {
         I18n.Current = "zh-Hans";
+        Check(CompleteMoveCatalog.SourceId(MoveId) == AbilityId,
+            "A move with an explicit source must preserve its ability identity.");
+        Check(CompleteMoveCatalog.Targets.All(target => !string.IsNullOrEmpty(CompleteMoveCatalog.SourceId(target.Id))),
+            "Every catalog move must provide a non-empty lookup identity.");
         var session = EditorSession.CreateOffline();
+        CheckMissingSource(session);
         var config = new KeyEnhancementConfiguration { Enabled = true };
         var originalSave = session.ExportCurrentScheme();
         foreach (bool pad in new[] { false, true })
@@ -77,7 +114,7 @@ class CompleteMoveCatalogTests
         var fireConfig = new KeyEnhancementConfiguration { Enabled = true };
         var fireWorkspace = new BindingWorkspace(session, fireConfig, fireConfig.Clone(), false, -1);
         const string fireId = "move:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA.Final";
-        Check(fireWorkspace.Functions.Single(function => function.Id == fireId).Label == "火流星 · 攻击 · AAAA · 释放",
+        Check(fireWorkspace.Functions.Single(function => function.Id == fireId).Label == "火流星 · 铁花飞溅 · 攻击 · 释放",
             "A Phantom Edge release must follow the existing weapon attack naming.");
         fireWorkspace.Add(fireId, new BindingEntry { Keys = new[] { "J" } });
         string fireLua = fireConfig.CompileLua();
@@ -90,7 +127,7 @@ class CompleteMoveCatalogTests
         var chargeConfig = new KeyEnhancementConfiguration { Enabled = true };
         var chargeWorkspace = new BindingWorkspace(session, chargeConfig, chargeConfig.Clone(), false, -1);
         const string chargeId = "move:Ability.Action.Hun.Heavy.GuiTouDao.BHold.Release";
-        Check(chargeWorkspace.Functions.Single(function => function.Id == chargeId).Label == "红妆鬼斩 · 重攻击 · 蓄力 · 释放",
+        Check(chargeWorkspace.Functions.Single(function => function.Id == chargeId).Label == "红妆鬼斩 · 火照黄泉 · 蓄力 · 释放",
             "The charge selection callback must follow its weapon's existing move naming.");
         chargeWorkspace.Add(chargeId, new BindingEntry { Keys = new[] { "K" } });
         string chargeLua = chargeConfig.CompileLua();
@@ -143,11 +180,12 @@ class CompleteMoveCatalogTests
         foreach (var target in CompleteMoveCatalog.Targets)
         {
             var function = phaseWorkspace.Functions.Single(item => item.Id == target.Id);
+            Check(function.GroupLabels.All(label => label != null), "A move's category labels must remain usable when its weapon label is absent: " + target.Id);
             Check(!function.Label.Contains("moves.") && !function.Label.Contains("catalog.") && !function.Label.StartsWith(" · "), "A stage label contains an untranslated key or empty prefix: " + target.Id);
             phaseWorkspace.Add(target.Id, new BindingEntry { Keys = new[] { "F8" } });
         }
         const string finalId = "move:Ability.Action.Hun.CombatArt.BronzeSword.Final";
-        Check(phaseWorkspace.Functions.Single(item => item.Id == finalId).Label == "天玄青铜剑 · 战技 · 终结攻击", "The combat-art finisher must have its own weapon and phase label.");
+        Check(phaseWorkspace.Functions.Single(item => item.Id == finalId).Label == "天玄青铜剑 · 大象无形 · 终结攻击", "The combat-art finisher must have its own weapon and phase label.");
         const string ghostId = "move:Accessory.RandomDrink.GhostFire.Launch";
         var ghost = phaseWorkspace.Functions.Single(item => item.Id == ghostId);
         Check(ghost.Label == "开光玉佩 · 鬼火 · 释放" && ghost.GroupPath[0] == "accessories" && ghost.GroupLabels[1] == "开光玉佩",

@@ -1,0 +1,5 @@
+Smoother Key Enhancement, a broader move selection and more reliable independent activation. Version 1.3.1 reduces repeated runtime work while continuing to check inputs every frame, adds weapon chains and Phantom Edge phases with searchable game names, and fixes One-Eyed Bow preparation and overlapping independent Deflect inputs.
+
+Each binding can separately choose supported equipment, training, ground/air, stance, predecessor and cooldown bypasses. Resource bypass remains independent and includes full-resource release effects. Damage, startup/recovery speed and optional super armor or invincibility belong to the current move and its continuations. Real preparation and equipment restoration are retained.
+
+Extract and run PBZKeyForge.exe. Close the game before updating the enhancement runtime, apply in the editor, then restart. Keyboard/mouse, Xbox and PlayStation bindings, presets and sharing preserve these options. Includes the CLI, documentation and eight ordinary preset saves. Enhanced combat targets Steam CL-302256 with the bundled UE4SS runtime; ordinary editing also supports CL-301524. No matched post-update in-game FPS result is claimed.

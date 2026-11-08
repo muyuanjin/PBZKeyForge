@@ -41,6 +41,7 @@ namespace PBZKeyForge
         static readonly Dictionary<string, byte[]> Payload = ReadPayload();
         readonly string runtimeDirectory;
         bool configurationLoaded;
+        bool modifiedManagedFiles;
 
         public string GameDirectory { get; private set; }
         public string InstallDirectory { get; private set; }
@@ -157,11 +158,13 @@ namespace PBZKeyForge
         KeyEnhancementInstallState Inspect(string directory)
         {
             ConflictDetail = null;
+            modifiedManagedFiles = false;
             if (File.Exists(directory)) return FileConflict(directory);
             if (!Directory.Exists(directory)) return KeyEnhancementInstallState.Disabled;
             var expected = ModFiles();
             Dictionary<string, byte[]> previous = null;
-            Func<Dictionary<string, byte[]>> previousFiles = delegate { return previous ?? (previous = OwnedPayload(ReadOwnership())); };
+            var source = ReadOwnership();
+            Func<Dictionary<string, byte[]>> previousFiles = delegate { return previous ?? (previous = OwnedPayload(source)); };
             bool incomplete = false;
             foreach (string path in Directory.GetFiles(directory, "*", SearchOption.AllDirectories))
             {
@@ -172,7 +175,12 @@ namespace PBZKeyForge
                 if (!expected.TryGetValue(relative, out bytes) || !actual.SequenceEqual(bytes))
                 {
                     byte[] managed;
-                    if (!previousFiles().TryGetValue(ModPrefix + relative, out managed) || !actual.SequenceEqual(managed)) return FileConflict(path);
+                    if (!previousFiles().TryGetValue(ModPrefix + relative, out managed)) return FileConflict(path);
+                    if (!actual.SequenceEqual(managed))
+                    {
+                        if (string.IsNullOrEmpty(source.PayloadBackup)) return FileConflict(path);
+                        modifiedManagedFiles = true;
+                    }
                     incomplete = true;
                 }
             }

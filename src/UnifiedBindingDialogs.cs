@@ -56,7 +56,7 @@ namespace PBZKeyForge
         {
             string kind = function.NativeAction != null ? Text("nativefunction")
                 : function.FixedKeys != null ? I18n.Str("unified.groups.movement")
-                : function.Id.StartsWith("move:", StringComparison.Ordinal) ? I18n.Str("moves.kind")
+                : function.Id.StartsWith("move:", StringComparison.Ordinal) ? CompleteMoveCatalog.KindLabel(function.Id)
                 : function.Id.StartsWith("action:", StringComparison.Ordinal) ? I18n.Str("binding.function.action")
                 : function.Id.StartsWith("ability:", StringComparison.Ordinal) ? I18n.Str("binding.function.ability") : Text("customtarget");
             return kind + " · " + UnifiedActionChoiceDialog.FunctionCode(function);
@@ -119,7 +119,10 @@ namespace PBZKeyForge
             var parts = new List<string>();
             if (entry.OriginalInputBlocked) parts.Add(I18n.Str("ownership.policy.replaced"));
             if (entry.BypassResources) parts.Add(I18n.Str("binding.resources.enabled"));
+            if (entry.BypassRestrictions) parts.Add(I18n.Str("binding.restrictions.enabled", BindingRestrictionKinds.Describe(entry.RestrictionBypasses)));
             if (entry.DamageMultiplier != 1) parts.Add(I18n.Str("binding.tuning.damage") + " ×" + entry.DamageMultiplier.ToString("0.##"));
+            if (entry.SuperArmor) parts.Add(I18n.Str("binding.effects.superArmor"));
+            if (entry.Invincible) parts.Add(I18n.Str("binding.effects.invincible"));
             if (entry.StartupSpeed != 1) parts.Add(I18n.Str("binding.tuning.startup") + " ×" + entry.StartupSpeed.ToString("0.##"));
             if (entry.RecoverySpeed != 1) parts.Add(I18n.Str("binding.tuning.recovery") + " ×" + entry.RecoverySpeed.ToString("0.##"));
             if (entry.Rule != null && entry.Rule.ConsumeKeys.Count > 0)
@@ -265,6 +268,8 @@ namespace PBZKeyForge
             selectionDetails.Text = function == null ? "" : UnifiedBindingUi.FunctionIdentity(function) + Environment.NewLine
                 + string.Join(" / ", function.GroupLabels) + Environment.NewLine + AssignmentText(function, true);
             string usage = function == null ? "" : CompleteMoveCatalog.Usage(function.Id);
+            string nativeDetails = function == null ? "" : GameMoveNames.Details(function.Id, search.Text);
+            if (nativeDetails.Length > 0) selectionDetails.Text = nativeDetails + Environment.NewLine + selectionDetails.Text;
             if (usage.Length > 0) selectionDetails.Text = usage + Environment.NewLine + selectionDetails.Text;
             tip.SetToolTip(selectionDetails, function == null ? "" : function.TechnicalName);
         }
@@ -592,6 +597,10 @@ namespace PBZKeyForge
         readonly Panel axisRow;
         readonly CheckBox bindingEnabled = new EditorCheckBox(), consume = new EditorCheckBox();
         readonly CheckBox bypassResources = new EditorCheckBox { Name = "bypassResources", AutoSize = true };
+        readonly CheckBox bypassRestrictions = new EditorCheckBox { Name = "bypassRestrictions", AutoSize = true };
+        readonly CheckedListBox restrictionBypasses = new CheckedListBox { Name = "restrictionBypasses", CheckOnClick = true, BorderStyle = BorderStyle.None, IntegralHeight = false };
+        readonly CheckBox superArmor = new EditorCheckBox { Name = "superArmor", AutoSize = true };
+        readonly CheckBox invincible = new EditorCheckBox { Name = "invincible", AutoSize = true };
         readonly NumericUpDown damageMultiplier = Number(1), startupSpeed = Number(1), recoverySpeed = Number(1);
         readonly CheckedListBox consumeKeys = new CheckedListBox();
         readonly NumericUpDown priority = Number(0), outputX = Number(0), outputY = Number(0), outputZ = Number(0);
@@ -630,7 +639,11 @@ namespace PBZKeyForge
             root.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             scroll = new EditorPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = EditorTheme.Surface }; scroll.HandleCreated += delegate { EditorArtwork.DarkScrollbars(scroll); };
             fields = new EditorLayout { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, ColumnCount = 1 }; fields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            scroll.SizeChanged += delegate { fields.MaximumSize = new Size(Math.Max(1, scroll.Width - SystemInformation.VerticalScrollBarWidth), 0); };
+            scroll.SizeChanged += delegate {
+                int width = Math.Max(1, scroll.Width - SystemInformation.VerticalScrollBarWidth);
+                fields.MaximumSize = new Size(width, 0);
+                status.MaximumSize = new Size(width, 0);
+            };
             fields.SuspendLayout(); scroll.SuspendLayout();
             scopeHint.Name = "bindingScope"; AddField(fields, scopeHint, 24);
             nativeAbilityTrigger.Name = "nativeAbilityTrigger"; nativeAbilityTrigger.Text = UnifiedBindingUi.Text("nativeAbilityTrigger"); nativeAbilityTrigger.ThreeState = multipleFunctions;
@@ -641,14 +654,32 @@ namespace PBZKeyForge
             bypassResources.Text = I18n.Str("binding.resources.bypass", ResourceCostCatalog.Describe(resourceKinds));
             bypassResources.Checked = current != null && current.BypassResources;
             AddField(fields, bypassResources, 32); ShowField(bypassResources, resourceKinds.Length > 0 || bypassResources.Checked || multipleFunctions);
+            bypassRestrictions.Text = I18n.Str("binding.restrictions.bypass");
+            bypassRestrictions.Checked = current != null && current.BypassRestrictions;
+            restrictionBypasses.BackColor = EditorTheme.Surface; restrictionBypasses.ForeColor = EditorTheme.Ink;
+            foreach (string kind in BindingRestrictionKinds.All)
+                restrictionBypasses.Items.Add(BindingRestrictionKinds.Label(kind), current == null || current.RestrictionBypasses.Contains(kind));
+            AddField(fields, bypassRestrictions, 32);
+            AddField(fields, restrictionBypasses, 0);
+            restrictionBypasses.Font = Font;
+            SizeRestrictionChoices();
+            Shown += delegate { SizeRestrictionChoices(); };
+            ShowField(restrictionBypasses, bypassRestrictions.Checked);
+            tip.SetToolTip(bypassRestrictions, I18n.Str("binding.restrictions.help"));
             damageMultiplier.Name = "damageMultiplier"; startupSpeed.Name = "startupSpeed"; recoverySpeed.Name = "recoverySpeed";
             damageMultiplier.Minimum = .01m; damageMultiplier.Maximum = 100;
             startupSpeed.Minimum = recoverySpeed.Minimum = .1m; startupSpeed.Maximum = recoverySpeed.Maximum = 10;
             SetNumber(damageMultiplier, current == null ? 1 : current.DamageMultiplier);
             SetNumber(startupSpeed, current == null ? 1 : current.StartupSpeed); SetNumber(recoverySpeed, current == null ? 1 : current.RecoverySpeed);
             bool combat = multipleFunctions || function.Targets.Any(target => target.Kind == "ability" || target.Kind == "move" || ResourceCostCatalog.IsCombatInput(target.Path)) || resourceKinds.Length > 0;
+            ShowField(bypassRestrictions, combat || bypassRestrictions.Checked);
             bool phaseSpeed = multipleFunctions || function.Targets.Any(target => target.Kind != "move" || CompleteMoveCatalog.SupportsPhaseSpeed(target.Tag));
             var damageRow = Parameter(I18n.Str("binding.tuning.damage"), damageMultiplier); AddField(fields, damageRow, 0); ShowField(damageRow, combat);
+            superArmor.Text = I18n.Str("binding.effects.superArmor"); invincible.Text = I18n.Str("binding.effects.invincible");
+            superArmor.Checked = current != null && current.SuperArmor; invincible.Checked = current != null && current.Invincible;
+            tip.SetToolTip(superArmor, I18n.Str("binding.effects.help")); tip.SetToolTip(invincible, I18n.Str("binding.effects.help"));
+            AddField(fields, superArmor, 32); ShowField(superArmor, combat || superArmor.Checked);
+            AddField(fields, invincible, 32); ShowField(invincible, combat || invincible.Checked);
             var startupRow = Parameter(I18n.Str("binding.tuning.startup"), startupSpeed); AddField(fields, startupRow, 0); ShowField(startupRow, combat && phaseSpeed);
             var recoveryRow = Parameter(I18n.Str("binding.tuning.recovery"), recoverySpeed); AddField(fields, recoveryRow, 0); ShowField(recoveryRow, combat && phaseSpeed);
             trigger.DropDownStyle = ComboBoxStyle.DropDownList; trigger.Name = "bindingTrigger";
@@ -789,6 +820,9 @@ namespace PBZKeyForge
             watchedKeys.ItemCheck += delegate { if (IsHandleCreated) BeginInvoke((Action)RefreshConsumeKeys); };
             foreach (var number in new[] { seconds, interval, count, threshold, damageMultiplier, startupSpeed, recoverySpeed }) number.ValueChanged += delegate { UpdatePreview(); };
             bypassResources.CheckedChanged += delegate { UpdatePreview(); };
+            bypassRestrictions.CheckedChanged += delegate { ShowField(restrictionBypasses, bypassRestrictions.Checked); UpdatePreview(); };
+            restrictionBypasses.ItemCheck += delegate { if (IsHandleCreated) BeginInvoke((Action)UpdatePreview); };
+            superArmor.CheckedChanged += delegate { UpdatePreview(); }; invincible.CheckedChanged += delegate { UpdatePreview(); };
             priority.ValueChanged += delegate { UpdatePreview(); };
             bindingEnabled.CheckedChanged += delegate { UpdatePreview(); }; consume.CheckedChanged += delegate { UpdatePreview(); };
             condition.SelectedIndexChanged += delegate { UpdatePreview(); }; outputMode.SelectedIndexChanged += delegate { UpdatePreview(); };
@@ -851,6 +885,10 @@ namespace PBZKeyForge
                 : when == "function(context) return context.foreground end" ? 2 : when == "function(context) return not context.paused end" ? 3 : 4;
             nativeAbilityTrigger.Checked = workspace.UsesNativeTrigger(function.Id);
             bypassResources.Checked = current != null && current.BypassResources;
+            bypassRestrictions.Checked = current != null && current.BypassRestrictions;
+            for (int index = 0; index < BindingRestrictionKinds.All.Length; index++)
+                restrictionBypasses.SetItemChecked(index, current == null || current.RestrictionBypasses.Contains(BindingRestrictionKinds.All[index]));
+            superArmor.Checked = current != null && current.SuperArmor; invincible.Checked = current != null && current.Invincible;
             SetNumber(damageMultiplier, current == null ? 1 : current.DamageMultiplier);
             SetNumber(startupSpeed, current == null ? 1 : current.StartupSpeed); SetNumber(recoverySpeed, current == null ? 1 : current.RecoverySpeed);
             LoadOutput(current == null ? function.DefaultOutputValue : current.OutputValue);
@@ -881,6 +919,13 @@ namespace PBZKeyForge
         static void ShowField(Control control, bool visible)
         {
             control.Visible = visible;
+        }
+        void SizeRestrictionChoices()
+        {
+            int height = restrictionBypasses.ItemHeight * restrictionBypasses.Items.Count + 4;
+            restrictionBypasses.MinimumSize = new Size(0, height);
+            restrictionBypasses.MaximumSize = new Size(0, height);
+            restrictionBypasses.Height = height;
         }
         static Panel Parameter(string title, Control input)
         {
@@ -1028,13 +1073,16 @@ namespace PBZKeyForge
             }
             finally { fields.ResumeLayout(true); scroll.ResumeLayout(true); }
         }
+        string[] SelectedRestrictionBypasses()
+        { return restrictionBypasses.CheckedIndices.Cast<int>().Select(index => BindingRestrictionKinds.All[index]).ToArray(); }
         void UpdatePreview()
         {
             string id = TriggerIds[Math.Max(0, trigger.SelectedIndex)];
             preview.Text = I18n.Str("binding.triggerhelp." + id);
             bool plain = id == "default" && extraKeys.Count == 0 && bindingEnabled.Checked && priority.Value == 0 && condition.SelectedIndex == 0 && !consume.Checked && outputMode.SelectedIndex == 0;
             var specification = new BindingEntry { Keys = string.IsNullOrEmpty(SelectedKey()) ? new string[0] : new[] { SelectedKey() }, Trigger = plain ? "default" : "press",
-                BypassResources = bypassResources.Checked, DamageMultiplier = (double)damageMultiplier.Value,
+                BypassResources = bypassResources.Checked, BypassRestrictions = bypassRestrictions.Checked,
+                RestrictionBypasses = SelectedRestrictionBypasses(), SuperArmor = superArmor.Checked, Invincible = invincible.Checked, DamageMultiplier = (double)damageMultiplier.Value,
                 StartupSpeed = (double)startupSpeed.Value, RecoverySpeed = (double)recoverySpeed.Value };
             bool native = !multipleFunctions && workspace.UsesSaveBinding(function.Id, specification, current);
             bindingEnabled.Enabled = true;
@@ -1118,6 +1166,8 @@ namespace PBZKeyForge
             }
             entry.Priority = (int)priority.Value; entry.Enabled = bindingEnabled.Checked;
             entry.BypassResources = bypassResources.Checked;
+            entry.BypassRestrictions = bypassRestrictions.Checked; entry.RestrictionBypasses = SelectedRestrictionBypasses();
+            entry.SuperArmor = superArmor.Checked; entry.Invincible = invincible.Checked;
             entry.DamageMultiplier = (double)damageMultiplier.Value; entry.StartupSpeed = (double)startupSpeed.Value; entry.RecoverySpeed = (double)recoverySpeed.Value;
             entry.OutputValue = outputMode.SelectedIndex == 0 ? null : new Dictionary<string, object> { { "x", (double)outputX.Value }, { "y", (double)outputY.Value }, { "z", (double)outputZ.Value } };
             if (consumptionChanged)

@@ -21,7 +21,7 @@ if ($LASTEXITCODE -ne 0) { throw "UE4SS context imports failed: $LASTEXITCODE" }
 & $compiler.Path /nologo /LD /O2 /MT "/Fo:$object" "/Fe:$binary" $source /link user32.lib "/IMPLIB:$library"
 if ($LASTEXITCODE -ne 0) { throw "Native input probe build failed: $LASTEXITCODE" }
 $contextBinary = Join-Path $OutputDirectory 'pbzability-context.dll'
-& $compiler.Path /nologo /LD /O2 /MD /EHsc /std:c++17 "/Fo:$OutputDirectory\script-context.obj" "/Fe:$contextBinary" "$PSScriptRoot\script-context.cpp" /link $contextImport "/IMPLIB:$OutputDirectory\pbzability-context.lib"
+& $compiler.Path /nologo /LD /O2 /MD /EHsc /std:c++17 "/Fo:$OutputDirectory\\" "/Fe:$contextBinary" "$PSScriptRoot\script-context.cpp" "$PSScriptRoot\input-observation.cpp" "$PSScriptRoot\ability-selection.cpp" "$PSScriptRoot\weapon-equipment.cpp" "$PSScriptRoot\opaque-values.cpp" "$PSScriptRoot\ledge-protection.cpp" /link $contextImport "/IMPLIB:$OutputDirectory\pbzability-context.lib"
 if ($LASTEXITCODE -ne 0) { throw "Native ability context build failed: $LASTEXITCODE" }
 Write-Output $binary
 Write-Output $contextBinary

@@ -275,5 +275,62 @@ test("asset creation notifications replace repeated global discovery", function(
         "asset caching lost current allocation restoration")
 end)
 
+test("native observations skip stable Lua walks and retain live restoration", function()
+    NotifyOnNewObject = nil
+    local native,backend,state = fixture({special})
+    local first,other = trigger(special),trigger(dash)
+    local loaded = asset({binding(data({first,other}))})
+    state.assets = {loaded}
+    local walks,observations,forgotten = 0,{},0
+    local function counted(groups)
+        local entries = array(groups)
+        return {ForEach=function(_,callback) walks=walks+1;entries:ForEach(callback) end}
+    end
+    loaded.Bindings = counted({binding(data({first,other}))})
+    local rows = {first,other}
+    native.observe_native = function(address,token)
+        check(address==loaded.pointer,"observation must use the live asset address")
+        token = token~=0 and token or 1
+        local tags={}
+        for index,row in ipairs(rows) do tags[index]=row.tag end
+        observations[token]={bindings=loaded.Bindings,tags=tags}
+        return token
+    end
+    native.unchanged_native = function(token,address,sentinel)
+        check(address==loaded.pointer and sentinel==true,"native comparison arguments changed")
+        local before=observations[token]
+        if not before or before.bindings~=loaded.Bindings then return end
+        for index,row in ipairs(rows) do if row.tag~=before.tags[index] then return end end
+        return true
+    end
+    native.forget_native = function(token) observations[token]=nil;forgotten=forgotten+1 end
+    native:prepare()
+    for frame=1,120 do native:prepare() end
+    check(walks==1 and first.tag=="None" and first.writes==1,
+        "stable suppression must not create Lua trigger wrappers or rewrite tags")
+    other.tag=special;native:prepare()
+    check(walks==2 and other.tag=="None","an in-place edit must be suppressed in the next frame")
+    backend.config.ability_suppressions={dash};native:prepare()
+    check(first.tag==special and other.tag==special,"changed configuration must restore saved tags immediately")
+    other.tag=dash;native:prepare()
+    check(other.tag=="None","external tag replacement must become the new original")
+    first.alive=false;other.alive=false
+    local replacement=trigger(dash)
+    rows={replacement};loaded.Bindings=counted({binding(data(rows))})
+    native:prepare();native:restore()
+    check(replacement.tag==dash and first.writes==2 and other.writes==3,
+        "rebuilt allocation must restore current rows without touching retired wrappers")
+    check(next(observations)==nil and next(native.observations)==nil and forgotten==1,
+        "restoration must release native snapshots")
+    native:prepare();loaded.valid=false;native:prepare()
+    check(next(native.masked)==nil and next(native.observations)==nil and forgotten==2,
+        "invalid assets must release snapshots without reading native memory")
+    backend.config.ability_suppressions={dash};loaded.valid=true
+    rows={trigger(special)};loaded.Bindings=counted({binding(data(rows))})
+    native:prepare();native:restore()
+    check(next(native.observations)==nil and forgotten==3,
+        "an observer with no masked rows must also be released on restore")
+end)
+
 if #failures > 0 then error(table.concat(failures, "\n"), 0) end
 print("NativeAbilityTests: PASS " .. passed)

@@ -127,12 +127,12 @@ do
     check(backend:refresh() and backend:context().gameplay,
         "an invalid or unfocused editable widget blocked gameplay routing")
     for _, mode in ipairs({1, 2}) do
-        state.mode, backend.ui_only = mode, true
-        check(backend:refresh() and not backend:context().input_layer and not state.masks,
-            "UI-only state failed to restore native input in an active gameplay input mode")
-        backend.ui_only = false
-        check(backend:refresh() and backend:context().gameplay and state.masks,
-            "leaving UI-only state did not resume gameplay routing")
+        state.mode = 0
+        check(backend:refresh() and not backend:context().gameplay and not state.masks,
+            "entering a menu did not restore native input")
+        state.mode = mode
+        check(backend:refresh() and backend:context().input_layer and backend:context().gameplay and state.masks,
+            "returning from a menu without a Blueprint input-mode call did not resume gameplay")
     end
 end
 
@@ -169,7 +169,6 @@ end
 do
     local backend, state = fixture(false)
     state.class, state.mode = nil, 0
-    backend.ui_only = true
     state.widgets.EditableText = {object(100, {keyboard = true})}
     check(backend:refresh() and backend:context().input_layer and backend:context().gameplay,
         "legacy routing unexpectedly required the unified CommonUI input-layer policy")
@@ -201,6 +200,35 @@ end
 
 do
     local backend,state=fixture()
+    backend:refresh()
+    state.paused=true
+    backend:refresh()
+    local restores=state.restores
+    for _=1,120 do backend:refresh() end
+    check(state.restores==restores,"stable paused frames repeatedly restored gameplay capture")
+    state.paused=false;backend:refresh()
+    state.paused=true;backend:refresh()
+    check(state.restores==restores+1,"a second menu entry skipped gameplay restoration")
+    backend.config.enabled=false;backend:refresh()
+    check(state.restores==restores+2,"disabling enhancement skipped full restoration after a preserved release")
+end
+
+do
+    local backend,state=fixture()
+    backend:refresh()
+    local restore=backend.native_input.restore
+    local failed=false
+    function backend.native_input:restore()
+        if not failed then failed=true;error("restore pending",0) end
+        return restore(self)
+    end
+    state.paused=true
+    check(not pcall(backend.refresh,backend),"restoration failure was not exercised")
+    check(backend:refresh() and not state.masks and state.restores==1,"failed restoration was skipped on the next paused frame")
+end
+
+do
+    local backend,state=fixture()
     local tuning={inputs={G=true},snapshots={projectile=11},suspends=0,updates=0,resets=0}
     function tuning:suspend() self.inputs={};self.suspends=self.suspends+1 end
     function tuning:update() self.updates=self.updates+1 end
@@ -220,6 +248,61 @@ do
     backend:retire()
     check(not backend.resource_costs and tuning.resets==1 and not next(tuning.snapshots),
         "leaving the pawn fully releases projectile tuning")
+end
+
+do
+    local backend, state = fixture()
+    local config = backend.config
+    config.runtime_hotkeys = false
+    config.targets = {finish = {kind="event", tag="finish"}}
+    config.bindings = {{id="finish", keys={"G"}, trigger="press", outputs={"finish"}}}
+    local frame, pressed, finishes = nil, false, 0
+    function backend.native_input:apply_masks() end
+    local hooks = {}
+    local find = StaticFindObject
+    function StaticFindObject(path)
+        if path:find("/Script/UMG.WidgetBlueprintLibrary:", 1, true) == 1 then return object(500) end
+        return find(path)
+    end
+    function RegisterHook(path, callback) hooks[path] = callback; return 10, 11 end
+    function UnregisterHook(path) hooks[path] = nil end
+    function backend:snapshot() return {G=pressed and 1 or 0} end
+    function backend:time() return 1 end
+    function backend:dispatch(_, phase)
+        if phase == "triggered" then finishes = finishes + 1 end
+        return true
+    end
+    package.loaded["router-config"] = config
+    package.loaded["backend"] = {new=function() return backend end}
+    package.loaded["live-config"] = {new=function() return {poll=function() end} end}
+    EngineTickAvailable = true
+    function LoopInGameThreadAfterFrames(_, callback) frame = callback; return 1 end
+    function CancelDelayedAction() end
+    local lifecycle = dofile(scripts .. "main.lua")
+    frame()
+    local function ui_call(name)
+        local callback = hooks["/Script/UMG.WidgetBlueprintLibrary:" .. name]
+        if callback then callback(nil, {get=function() return backend.controller end}) end
+    end
+    for _, name in ipairs({"SetInputMode_UIOnlyEx", "SetInputMode_GameAndUIEx"}) do
+        state.mode = 0
+        ui_call(name)
+        pressed = true
+        frame()
+        local before = finishes
+        check(not backend.state.gameplay and not state.masks,
+            "menu input mode left enhancement active")
+        state.mode = 1
+        frame()
+        check(backend.state.gameplay and finishes == before,
+            "native gameplay restoration failed or replayed a key held through the menu")
+        pressed = false; frame()
+        pressed = true; frame()
+        check(finishes == before + 1,
+            "G binding stayed disabled after native input restoration without SetInputMode_GameOnly")
+        pressed = false; frame()
+    end
+    lifecycle.stop()
 end
 
 print("UnifiedBackendTests: " .. passed .. " assertions passed")

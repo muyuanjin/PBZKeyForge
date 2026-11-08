@@ -1,0 +1,284 @@
+{
+  "build": "CL-302256",
+  "runtimeVerified": false,
+  "evidenceType": "Static equipped ability, original Kismet ToRelease selector, timeline event times and release projectile references",
+  "recipes": [
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.CombatArt.ChiRen.Release1",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Long.CounterB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C.GA_Hun_ChiRen_C_C",
+        "activateByClass": true,
+        "entryPoint": "ToRelease",
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.9594816432723999,
+          "property_minimum": {
+            "ChargeCount": 0
+          },
+          "before_time": 1.2873826026916504,
+          "cancel_on_expire": true
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "prepareInput": "/PBZInput/InputActions/IA_CombatArt_Hold.IA_CombatArt_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.LongBlade.ChiRen"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Release_01",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.charge",
+          "1",
+          "moves.release"
+        ],
+        "searchAliases": [
+          "ChiRen",
+          "炽刃",
+          "GA_Hun_ChiRen_C",
+          "Release_01",
+          "炽刃",
+          "BLAZING EDGE",
+          "熾刃",
+          "치인",
+          "Пылающий Клинок",
+          "熾刃",
+          "LAME ARDENTE",
+          "FLAMMENDE KLINGE",
+          "HOJA ABRASADORA",
+          "LÂMINA FLAMEJANTE",
+          "LAMA ROVENTE",
+          "คมอัคคีโชติช่วง",
+          "HỎA NHẬN",
+          "GUME ARDENTE",
+          "FILO ABRASADOR"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "炽刃",
+          "en": "BLAZING EDGE",
+          "ja": "熾刃",
+          "ko": "치인",
+          "ru": "Пылающий Клинок",
+          "zh-Hant": "熾刃",
+          "fr": "LAME ARDENTE",
+          "de": "FLAMMENDE KLINGE",
+          "es-ES": "HOJA ABRASADORA",
+          "pt-BR": "LÂMINA FLAMEJANTE",
+          "it": "LAMA ROVENTE",
+          "th": "คมอัคคีโชติช่วง",
+          "vi": "HỎA NHẬN",
+          "pt-PT": "GUME ARDENTE",
+          "es-419": "FILO ABRASADOR"
+        },
+        "category": "weapons/Weapon_014/IA_UltimateSkill"
+      },
+      "evidence": {
+        "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C",
+        "normalActivation": "Normal equipped ability activation initializes CanRelease=false and ChargeCount=0 after BP_CombatArt_Base qualification and cost.",
+        "holdInput": "/PBZInput/InputActions/IA_CombatArt_Hold",
+        "canReleaseEventTime": 0.9594806432723999,
+        "gainChargeEventTimes": [
+          1.2873826026916504,
+          1.5260030031204224,
+          1.7283397912979126
+        ],
+        "requiredChargeCount": 0,
+        "releaseTimeline": "Release_01",
+        "releaseBullet": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/ChiRen/BD_GA_Hun_ChiRen_C_01",
+        "callback": "ToRelease",
+        "callbackUbergraphEntry": 995,
+        "selectionUbergraphOffset": 1022,
+        "cleanup": "Original timeline replacement and inherited K2_OnEndAbility retain action, montage, tags and combat-art cleanup; virtual Hold is stopped on dispatch, refusal, cancellation or reset."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.CombatArt.ChiRen.Release2",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Long.CounterB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C.GA_Hun_ChiRen_C_C",
+        "activateByClass": true,
+        "entryPoint": "ToRelease",
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.2873836026916503,
+          "property_minimum": {
+            "ChargeCount": 1
+          },
+          "before_time": 1.5260030031204224,
+          "cancel_on_expire": true
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "prepareInput": "/PBZInput/InputActions/IA_CombatArt_Hold.IA_CombatArt_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.LongBlade.ChiRen"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Release_02",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.charge",
+          "2",
+          "moves.release"
+        ],
+        "searchAliases": [
+          "ChiRen",
+          "炽刃",
+          "GA_Hun_ChiRen_C",
+          "Release_02",
+          "炽刃",
+          "BLAZING EDGE",
+          "熾刃",
+          "치인",
+          "Пылающий Клинок",
+          "熾刃",
+          "LAME ARDENTE",
+          "FLAMMENDE KLINGE",
+          "HOJA ABRASADORA",
+          "LÂMINA FLAMEJANTE",
+          "LAMA ROVENTE",
+          "คมอัคคีโชติช่วง",
+          "HỎA NHẬN",
+          "GUME ARDENTE",
+          "FILO ABRASADOR"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "炽刃",
+          "en": "BLAZING EDGE",
+          "ja": "熾刃",
+          "ko": "치인",
+          "ru": "Пылающий Клинок",
+          "zh-Hant": "熾刃",
+          "fr": "LAME ARDENTE",
+          "de": "FLAMMENDE KLINGE",
+          "es-ES": "HOJA ABRASADORA",
+          "pt-BR": "LÂMINA FLAMEJANTE",
+          "it": "LAMA ROVENTE",
+          "th": "คมอัคคีโชติช่วง",
+          "vi": "HỎA NHẬN",
+          "pt-PT": "GUME ARDENTE",
+          "es-419": "FILO ABRASADOR"
+        },
+        "category": "weapons/Weapon_014/IA_UltimateSkill"
+      },
+      "evidence": {
+        "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C",
+        "normalActivation": "Normal equipped ability activation initializes CanRelease=false and ChargeCount=0 after BP_CombatArt_Base qualification and cost.",
+        "holdInput": "/PBZInput/InputActions/IA_CombatArt_Hold",
+        "canReleaseEventTime": 0.9594806432723999,
+        "gainChargeEventTimes": [
+          1.2873826026916504,
+          1.5260030031204224,
+          1.7283397912979126
+        ],
+        "requiredChargeCount": 1,
+        "releaseTimeline": "Release_02",
+        "releaseBullet": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/ChiRen/BD_GA_Hun_ChiRen_C_02",
+        "callback": "ToRelease",
+        "callbackUbergraphEntry": 995,
+        "selectionUbergraphOffset": 1022,
+        "cleanup": "Original timeline replacement and inherited K2_OnEndAbility retain action, montage, tags and combat-art cleanup; virtual Hold is stopped on dispatch, refusal, cancellation or reset."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:Ability.Action.Hun.CombatArt.ChiRen.Release3",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Long.CounterB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C.GA_Hun_ChiRen_C_C",
+        "activateByClass": true,
+        "entryPoint": "ToRelease",
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.5260040031204223,
+          "property_minimum": {
+            "ChargeCount": 2
+          }
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "prepareInput": "/PBZInput/InputActions/IA_CombatArt_Hold.IA_CombatArt_Hold",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.LongBlade.ChiRen"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Release_03",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.charge",
+          "3",
+          "moves.release"
+        ],
+        "searchAliases": [
+          "ChiRen",
+          "炽刃",
+          "GA_Hun_ChiRen_C",
+          "Release_03",
+          "炽刃",
+          "BLAZING EDGE",
+          "熾刃",
+          "치인",
+          "Пылающий Клинок",
+          "熾刃",
+          "LAME ARDENTE",
+          "FLAMMENDE KLINGE",
+          "HOJA ABRASADORA",
+          "LÂMINA FLAMEJANTE",
+          "LAMA ROVENTE",
+          "คมอัคคีโชติช่วง",
+          "HỎA NHẬN",
+          "GUME ARDENTE",
+          "FILO ABRASADOR"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "炽刃",
+          "en": "BLAZING EDGE",
+          "ja": "熾刃",
+          "ko": "치인",
+          "ru": "Пылающий Клинок",
+          "zh-Hant": "熾刃",
+          "fr": "LAME ARDENTE",
+          "de": "FLAMMENDE KLINGE",
+          "es-ES": "HOJA ABRASADORA",
+          "pt-BR": "LÂMINA FLAMEJANTE",
+          "it": "LAMA ROVENTE",
+          "th": "คมอัคคีโชติช่วง",
+          "vi": "HỎA NHẬN",
+          "pt-PT": "GUME ARDENTE",
+          "es-419": "FILO ABRASADOR"
+        },
+        "category": "weapons/Weapon_014/IA_UltimateSkill"
+      },
+      "evidence": {
+        "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C",
+        "normalActivation": "Normal equipped ability activation initializes CanRelease=false and ChargeCount=0 after BP_CombatArt_Base qualification and cost.",
+        "holdInput": "/PBZInput/InputActions/IA_CombatArt_Hold",
+        "canReleaseEventTime": 0.9594806432723999,
+        "gainChargeEventTimes": [
+          1.2873826026916504,
+          1.5260030031204224,
+          1.7283397912979126
+        ],
+        "requiredChargeCount": 2,
+        "releaseTimeline": "Release_03",
+        "releaseBullet": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/ChiRen/BD_GA_Hun_ChiRen_C_03",
+        "callback": "ToRelease",
+        "callbackUbergraphEntry": 995,
+        "selectionUbergraphOffset": 1022,
+        "cleanup": "Original timeline replacement and inherited K2_OnEndAbility retain action, montage, tags and combat-art cleanup; virtual Hold is stopped on dispatch, refusal, cancellation or reset."
+      }
+    }
+  ]
+}

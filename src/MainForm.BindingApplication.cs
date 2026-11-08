@@ -36,6 +36,8 @@ namespace PBZKeyForge
             var state = new BindingApplicationState();
             if (Session == null) return state;
             if (Session.IsOffline) { state.CanApply = !IsApplying; return state; }
+            if (keyEnhancementState == KeyEnhancementInstallState.Conflict && !keyEnhancementUninstall)
+            { state.Reason = keyEnhancementError; return state; }
             if (!lastRunning)
             {
                 state.CanApply = !IsApplying && Session.Conflicts.Length == 0 && (Session.HasChanges || ResourceModPending || KeyEnhancementPending
@@ -44,15 +46,16 @@ namespace PBZKeyForge
             }
             state.Connection = keyEnhancementBaseline.Enabled && keyEnhancementInstallation != null ? keyEnhancementInstallation.LiveStatus() : null;
             state.Live = state.Connection != null && state.Connection.Available;
+            if (EnhancedSchemes) SyncActiveEnhancedScheme(state.Connection);
             state.Deferred = HasDeferredComponents;
             state.Reason = !state.Live ? state.Connection == null ? I18n.Str("live.unavailable") : state.Connection.Detail
                 : Session.IsResetPending ? I18n.Str("live.lifecycle")
                 : keyEnhancement.Schemes.Count > 0 && Session.HasAnyDrafts ? I18n.Str("schemes.nativepending")
-                : EnhancedSchemes && keyEnhancementRepair ? I18n.Str("live.lifecycle")
+                : KeyEnhancementUpdatePending ? KeyEnhancementUpdateHint
                 : keyEnhancement.Schemes.Count == 0 && (Session.SelectedProfile != Session.ActiveProfile || Session.ActivationPending || Session.SchemeError != null) ? I18n.Str("live.scope")
                 : Session.Conflicts.Length > 0 ? I18n.Str("editor.conflictinfo") : null;
             state.CanApply = !IsApplying && state.Live && state.Reason == null
-                && (Session.ScopeChangeCount > 0 || LiveBindingPending || keyEnhancement.Enabled && keyEnhancement.SelectedSchemeId != state.Connection.ActiveSchemeId || !state.Connection.RoutingEnabled);
+                && (Session.ScopeChangeCount > 0 || LiveBindingPending || EnhancedSchemes && keyEnhancement.SelectedSchemeId != keyEnhancement.ActiveSchemeId || !state.Connection.RoutingEnabled);
             if (state.Reason == null && state.Deferred) state.Reason = I18n.Str(state.CanApply ? "flow.deferred.withbindings" : "flow.deferred.only");
             return state;
         }
@@ -62,8 +65,14 @@ namespace PBZKeyForge
             if (Session.IsResetPending) return I18n.Str("editor.resetscope", Session.ScopeChangeCount);
             string summary = keyboardBindingChanges + gamepadBindingChanges > 0
                 ? I18n.Str("flow.pending", keyboardBindingChanges, gamepadBindingChanges)
+                : KeyEnhancementUpdatePending ? I18n.Str("enhancement.update.button")
+                : messageError ? I18n.Str("flow.failed.details")
                 : KeyEnhancementPending && LiveBindingPending ? I18n.Str("flow.pending.advanced") : I18n.Str("flow.clean");
-            if (HasDeferredComponents) summary += " · " + I18n.Str("flow.components.pending");
+            if (KeyEnhancementUpdatePending)
+            {
+                if (keyboardBindingChanges + gamepadBindingChanges > 0) summary += " · " + I18n.Str("enhancement.update.button");
+            }
+            else if (HasDeferredComponents) summary += " · " + I18n.Str("flow.components.pending");
             if (Session.ActivationPending) summary += I18n.Str("editor.activationscope");
             return summary;
         }
@@ -163,7 +172,8 @@ namespace PBZKeyForge
                 if (e.Control && e.KeyCode == Keys.Z && HasBindingHistory && !IsApplying)
                 { UndoFromBindingEditor(); refresh(); update(); e.SuppressKeyPress = true; }
             };
-            timer.Tick += delegate { update(); };
+            timer.Tick += delegate { if (keyEnhancementFlame.ApplicationActive) update(); };
+            dialog.Activated += delegate { update(); };
             update(); timer.Start();
             dialog.FormClosed += delegate { timer.Dispose(); };
         }

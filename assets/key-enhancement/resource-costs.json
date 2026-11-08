@@ -11,6 +11,24 @@
       "shachi",
       "spirit"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Air/GA_Hun_FengLeiJian_Air_B.GA_Hun_FengLeiJian_Air_B_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Air/GA_Hun_Double_Air_B.GA_Hun_Double_Air_B_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_Air_B_Base_New.BP_Air_B_Base_New_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Air_Base.BP_HeavyAttack_Air_Base_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Air/GA_Hun_FengLeiJian_Air_B_Draw.GA_Hun_FengLeiJian_Air_B_Draw_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Air/GA_Hun_Double_Air_B_Draw.GA_Hun_Double_Air_B_Draw_C": [
+      "shachi"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Dash/GA_Hun_FengLeiJian_B_Dash.GA_Hun_FengLeiJian_B_Dash_C": [
       "shachi"
     ],
@@ -124,6 +142,18 @@
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/BP_Hun_Long_C_Base.BP_Hun_Long_C_Base_C": [
       "ultimate"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/GA_Hun_BaiYing_Air_B.GA_Hun_BaiYing_Air_B_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Air/GA_Hun_Long_Air_B.GA_Hun_Long_Air_B_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/GA_Hun_BaiYing_Air_B_Draw.GA_Hun_BaiYing_Air_B_Draw_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Air/GA_Hun_Long_Air_B_Draw.GA_Hun_Long_Air_B_Draw_C": [
+      "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/GA_Hun_BaiYing_B_Dash.GA_Hun_BaiYing_B_Dash_C": [
       "shachi"
@@ -252,6 +282,12 @@
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/GA_Hun_Chaos_SwitchFormPhysic_SWT.GA_Hun_Chaos_SwitchFormPhysic_SWT_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/GA_Hun_Chaos_SWT_Power.GA_Hun_Chaos_SWT_Power_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/Prototypes/Abilities/BP_SwitchAttack_Default.BP_SwitchAttack_Default_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/Ice/GA_Hun_Chaos_AAAB_Ice.GA_Hun_Chaos_AAAB_Ice_C": [
@@ -545,6 +581,12 @@
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_ABB.GA_Hun_DualHook_ABB_C": [
       "shachi"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_Air_B.GA_Hun_DualHook_Air_B_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_Air_B_Draw.GA_Hun_DualHook_Air_B_Draw_C": [
+      "shachi"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_B.GA_Hun_DualHook_B_C": [
       "shachi"
     ],
@@ -579,6 +621,9 @@
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_DB_SWT.GA_Hun_DualHook_DB_SWT_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_SWT_Power.GA_Hun_DualHook_SWT_Power_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_AAAAAB.GA_Hun_HeiMoShang_AAAAAB_C": [
@@ -632,6 +677,9 @@
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_C1.GA_Hun_HeiMoShang_C1_C": [
       "ultimate"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_Reborn.GA_Hun_HeiMoShang_Reborn_C": [
+      "shachi"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_AAAB.GA_Hun_Horizontal_AAAB_C": [
       "shachi"
     ],
@@ -675,6 +723,9 @@
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_CounterAttack_02.GA_Hun_Horizontal_CounterAttack_02_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_SWT_Power.GA_Hun_Horizontal_SWT_Power_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorseCart/GA_Hun_AdvancedDash_HorseCart.GA_Hun_AdvancedDash_HorseCart_C": [
@@ -888,6 +939,12 @@
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_AB.GA_Hun_Jigsaw_AB_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_Air_B.GA_Hun_Jigsaw_Air_B_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_Air_B_Draw.GA_Hun_Jigsaw_Air_B_Draw_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_B.GA_Hun_Jigsaw_B_C": [
@@ -1329,6 +1386,9 @@
       "shachi",
       "spirit"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Reborn.GA_XuKongHuaShan_Reborn_C": [
+      "shachi"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Skill.GA_XuKongHuaShan_Skill_C": [
       "shachi",
       "spirit"
@@ -1410,16 +1470,22 @@
       "ultimate"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_DB.GA_Hun_ShuangYue_DB_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_DB_SWT.GA_Hun_ShuangYue_DB_SWT_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_PB.GA_Hun_ShuangYue_PB_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_PBB.GA_Hun_ShuangYue_PBB_C": [
       "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_SWT.GA_Hun_ShuangYue_SWT_C": [
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/GA_Hun_AdvancedDash_ShuangYue.GA_Hun_AdvancedDash_ShuangYue_C": [
       "shachi"
@@ -1466,6 +1532,9 @@
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_C.GA_Hun_SlitheringSword_C_C": [
       "ultimate"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_DA.GA_Hun_SlitheringSword_DA_C": [
+      "shachi"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_DB4.GA_Hun_SlitheringSword_DB4_C": [
       "shachi"
     ],
@@ -1485,6 +1554,24 @@
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/GA_Hun_StanceDash_SlitheringSword.GA_Hun_StanceDash_SlitheringSword_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/Air/GA_Hun_SnakeDual_Air_B_Double.GA_Hun_SnakeDual_Air_B_Double_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/Air/GA_Hun_SnakeDual_Air_B_Draw_Double.GA_Hun_SnakeDual_Air_B_Draw_Double_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/Air/GA_Hun_SnakeDual_Air_B_Draw_Tang.GA_Hun_SnakeDual_Air_B_Draw_Tang_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/Default/Air/GA_Hun_Tang_Air_B_Draw.GA_Hun_Tang_Air_B_Draw_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/Air/GA_Hun_SnakeDual_Air_B_Tang.GA_Hun_SnakeDual_Air_B_Tang_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/Default/Air/GA_Hun_Tang_Air_B.GA_Hun_Tang_Air_B_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/GA_Hun_SnakeDual_AB.GA_Hun_SnakeDual_AB_C": [
@@ -1531,6 +1618,9 @@
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/GA_Hun_SnakeDual_C.GA_Hun_SnakeDual_C_C": [
       "ultimate"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/GA_Hun_SnakeDual_DA.GA_Hun_SnakeDual_DA_C": [
+      "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/GA_Hun_SnakeDual_DB.GA_Hun_SnakeDual_DB_C": [
       "shachi"
@@ -1679,6 +1769,12 @@
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/DefaultHun/GA_Hun_WoodenSword_ABB.GA_Hun_WoodenSword_ABB_C": [
       "shachi"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/DefaultHun/GA_Hun_WoodenSword_Air_B.GA_Hun_WoodenSword_Air_B_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/DefaultHun/GA_Hun_WoodenSword_Air_B_Draw.GA_Hun_WoodenSword_Air_B_Draw_C": [
+      "shachi"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/DefaultHun/GA_Hun_WoodenSword_B.GA_Hun_WoodenSword_B_C": [
       "shachi"
     ],
@@ -1722,6 +1818,12 @@
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/YoungHun/GA_Hun_Young_AdvancedDash.GA_Hun_Young_AdvancedDash_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/YoungHun/GA_Hun_Young_Air_B.GA_Hun_Young_Air_B_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/YoungHun/GA_Hun_Young_Air_B_Draw.GA_Hun_Young_Air_B_Draw_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/WoodenSword/YoungHun/GA_Hun_Young_B.GA_Hun_Young_B_C": [
@@ -1829,6 +1931,12 @@
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_AB.GA_Hun_ZhanMa_AB_C": [
       "shachi"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_Air_B.GA_Hun_ZhanMa_Air_B_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_Air_B_Draw.GA_Hun_ZhanMa_Air_B_Draw_C": [
+      "shachi"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_B.GA_Hun_ZhanMa_B_C": [
       "shachi"
     ],
@@ -1846,6 +1954,9 @@
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_BB.GA_Hun_ZhanMa_BB_C": [
       "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C.GA_Hun_ZhanMa_C_C": [
+      "ultimate"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_DB.GA_Hun_ZhanMa_DB_C": [
       "shachi"
@@ -2019,6 +2130,36 @@
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Unarm/GA_Hun_AdvancedDash_Unarmed.GA_Hun_AdvancedDash_Unarmed_C": [
       "shachi"
+    ],
+    "/PBZCombatAsset/Prototypes/Abilities/BP_SwitchAttack_DefaultAir.BP_SwitchAttack_DefaultAir_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/Prototypes/Abilities/BP_SwitchAttack_DefaultDash.BP_SwitchAttack_DefaultDash_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Temp_MaleDollArm/GA_Hun_TempMaleDollArm_B.GA_Hun_TempMaleDollArm_B_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Temp_MaleDollArm/GA_Hun_TempMaleDollArm_BB.GA_Hun_TempMaleDollArm_BB_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Temp_MaleDollArm/GA_Hun_TempMaleDollArm_BBB.GA_Hun_TempMaleDollArm_BBB_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Temp_MaleDollArm/GA_Hun_TempMaleDollArm_BBBB.GA_Hun_TempMaleDollArm_BBBB_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_BBBB_TempWeapon_Base.BP_BBBB_TempWeapon_Base_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Temp_MaleThugClub/GA_Hun_TempMaleThugClub_B.GA_Hun_TempMaleThugClub_B_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Temp_MaleThugClub/GA_Hun_TempMaleThug_Club_BB.GA_Hun_TempMaleThug_Club_BB_C": [
+      "shachi"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Temp_MaleThugClub/GA_Hun_TempMaleThug_Club_BBB.GA_Hun_TempMaleThug_Club_BBB_C": [
+      "shachi"
     ]
   },
   "tags": {
@@ -2026,7 +2167,13 @@
       "shachi",
       "spirit"
     ],
+    "Ability.Action.Hun.Heavy.AirAtk01": [
+      "shachi"
+    ],
     "Ability.Action.Hun.Heavy": [
+      "shachi"
+    ],
+    "Ability.Action.Hun.Heavy.DrawAirAtk01": [
       "shachi"
     ],
     "Ability.Action.Hun.Heavy.DashAtk01": [
@@ -2082,6 +2229,14 @@
     ],
     "Ability.Action.Hun.CombatArt": [
       "ultimate"
+    ],
+    "Ability.Action.Hun.Weapon.Switch.Normal": [
+      "shachi",
+      "weapon_charge"
+    ],
+    "Ability.Action.Hun.Weapon.Switch.Dash": [
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Light.ADash.Draw": [
       "shachi"
@@ -2186,6 +2341,9 @@
     "Ability.Action.Hun.Heavy.Tang.BBBB": [
       "shachi"
     ],
+    "Ability.Action.Hun.HeiMoShang.Reborn": [
+      "shachi"
+    ],
     "Ability.Action.Hun.Heavy.Horizontal.NoCostB": [
       "shachi"
     ],
@@ -2209,6 +2367,9 @@
     ],
     "Ability.Action.Hun.CombatArt.JueYing.Air": [
       "ultimate"
+    ],
+    "Ability.Action.Hun.Weapon.Switch.Air": [
+      "shachi"
     ],
     "Ability.Action.Hun.Heavy.ComboAtk_N4H2": [
       "shachi"
@@ -2502,6 +2663,9 @@
       "shachi",
       "spirit"
     ],
+    "Ability.Action.Hun.XuKongHuaShan.Reborn": [
+      "shachi"
+    ],
     "Ability.Action.Hun.ShachiAbility.YouLongCha.Dash": [
       "shachi",
       "spirit"
@@ -2519,15 +2683,20 @@
       "spirit"
     ],
     "Ability.Action.Hun.Heavy.ShuangYue.DB": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.ShuangYue.SWTDB": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.ShuangYue.PB": [
       "shachi"
     ],
     "Ability.Action.Hun.Heavy.ShuangYue.PBB": [
+      "shachi"
+    ],
+    "Ability.Action.Hun.Light.SlitheringSword.DA": [
       "shachi"
     ],
     "Ability.Action.Hun.Heavy.SlitheringSword.DB1": [
@@ -2567,6 +2736,9 @@
       "shachi"
     ],
     "Ability.Action.Hun.Heavy.SnakeDual.BABB": [
+      "shachi"
+    ],
+    "Ability.Action.Hun.Light.SnakeDual.DA": [
       "shachi"
     ],
     "Ability.Action.Hun.Heavy.SnakeDual.DB": [
@@ -2648,20 +2820,42 @@
   },
   "inputTags": {
     "/PBZInput/InputActions/IA_AttackL_Press": [
+      "Ability.Action.Hun.Heavy.BronzeSword.Nsp",
       "Ability.Action.Hun.Light.A.Draw",
       "Ability.Action.Hun.Light.A.Normal",
       "Ability.Action.Hun.Light.AA",
       "Ability.Action.Hun.Light.AAA",
       "Ability.Action.Hun.Light.AAAA",
+      "Ability.Action.Hun.Light.AAAAA",
+      "Ability.Action.Hun.Light.AAAAAA",
       "Ability.Action.Hun.Light.ADash.Draw",
       "Ability.Action.Hun.Light.ADash.Normal",
       "Ability.Action.Hun.Light.Air.A.Draw",
       "Ability.Action.Hun.Light.Air.A.Normal",
       "Ability.Action.Hun.Light.Air.AA",
       "Ability.Action.Hun.Light.Air.AAA",
+      "Ability.Action.Hun.Light.Double.BTA",
+      "Ability.Action.Hun.Light.DualHook.Pursure",
+      "Ability.Action.Hun.Light.JigSaw.RA",
+      "Ability.Action.Hun.Light.JigSaw.RAA",
+      "Ability.Action.Hun.Light.JigSaw.RAAA",
+      "Ability.Action.Hun.Light.JigSaw.SA",
+      "Ability.Action.Hun.Light.Long.AAAAA",
+      "Ability.Action.Hun.Light.Long.AAAAAA",
       "Ability.Action.Hun.Light.SlitheringSword.DA",
+      "Ability.Action.Hun.Light.SnakeDual.ABA",
+      "Ability.Action.Hun.Light.SnakeDual.ABAA",
+      "Ability.Action.Hun.Light.SnakeDual.ABABA",
+      "Ability.Action.Hun.Light.SnakeDual.ABABAA",
       "Ability.Action.Hun.Light.SnakeDual.A_Deflect",
+      "Ability.Action.Hun.Light.SnakeDual.A_Fast",
+      "Ability.Action.Hun.Light.SnakeDual.BA",
+      "Ability.Action.Hun.Light.SnakeDual.BAA",
+      "Ability.Action.Hun.Light.SnakeDual.BABA",
+      "Ability.Action.Hun.Light.SnakeDual.BABAA",
       "Ability.Action.Hun.Light.Snap",
+      "Ability.Action.Hun.Light.Tang.AAAAAA",
+      "Ability.Action.Hun.Light.ZhanMa.SA",
       "Ability.Action.Hun.ShachiAbility.ShachiHook.Drag"
     ],
     "/PBZInput/InputActions/IA_AttackH_Press": [
@@ -2669,21 +2863,79 @@
       "Ability.Action.Hun.Heavy.AirAtk01",
       "Ability.Action.Hun.Heavy.Atk01",
       "Ability.Action.Hun.Heavy.Atk02",
+      "Ability.Action.Hun.Heavy.Atk03",
+      "Ability.Action.Hun.Heavy.Atk04",
+      "Ability.Action.Hun.Heavy.BronzeSword.Deflect.B",
+      "Ability.Action.Hun.Heavy.BronzeSword.Deflect.BB",
       "Ability.Action.Hun.Heavy.ChaosBlade.SWT",
+      "Ability.Action.Hun.Heavy.ChaosBlade.ToBing",
+      "Ability.Action.Hun.Heavy.ChaosBlade.ToHunDun",
+      "Ability.Action.Hun.Heavy.ChaosBlade.ToWuLi",
+      "Ability.Action.Hun.Heavy.ChiZheCanJian.Drink.Normal",
       "Ability.Action.Hun.Heavy.ComboAtk_N1H1",
+      "Ability.Action.Hun.Heavy.ComboAtk_N1H2",
       "Ability.Action.Hun.Heavy.ComboAtk_N2H1",
+      "Ability.Action.Hun.Heavy.ComboAtk_N2H2",
       "Ability.Action.Hun.Heavy.ComboAtk_N3H1",
+      "Ability.Action.Hun.Heavy.ComboAtk_N3H2",
       "Ability.Action.Hun.Heavy.ComboAtk_N3H3",
+      "Ability.Action.Hun.Heavy.ComboAtk_N4H1",
+      "Ability.Action.Hun.Heavy.ComboAtk_N4H2",
       "Ability.Action.Hun.Heavy.DashAtk01",
+      "Ability.Action.Hun.Heavy.Double.ATB",
+      "Ability.Action.Hun.Heavy.Double.ATBB",
+      "Ability.Action.Hun.Heavy.Double.ATBBB",
       "Ability.Action.Hun.Heavy.DrawAirAtk01",
       "Ability.Action.Hun.Heavy.DrawAtk01",
       "Ability.Action.Hun.Heavy.DrawDashAtk01",
+      "Ability.Action.Hun.Heavy.DualHook.DB",
+      "Ability.Action.Hun.Heavy.DualHook.Pursure",
       "Ability.Action.Hun.Heavy.DualHook.SWTDB",
+      "Ability.Action.Hun.Heavy.Horizontal.BladeWave",
       "Ability.Action.Hun.Heavy.Horizontal.NoCostB",
+      "Ability.Action.Hun.Heavy.Horizontal.Overcharge",
+      "Ability.Action.Hun.Heavy.Iron.BJump",
+      "Ability.Action.Hun.Heavy.Iron.Buff",
+      "Ability.Action.Hun.Heavy.Jigsaw.RB",
+      "Ability.Action.Hun.Heavy.Jigsaw.RBB",
+      "Ability.Action.Hun.Heavy.Jigsaw.SB",
+      "Ability.Action.Hun.Heavy.Long.BD",
+      "Ability.Action.Hun.Heavy.Long.BSup",
+      "Ability.Action.Hun.Heavy.Long.CounterB",
+      "Ability.Action.Hun.Heavy.PoJun.DB",
+      "Ability.Action.Hun.Heavy.PoJun.DB2",
+      "Ability.Action.Hun.Heavy.ShuangYue.DB",
+      "Ability.Action.Hun.Heavy.ShuangYue.PB",
+      "Ability.Action.Hun.Heavy.ShuangYue.PBB",
       "Ability.Action.Hun.Heavy.ShuangYue.SWTDB",
+      "Ability.Action.Hun.Heavy.SlitheringSword.DB1",
+      "Ability.Action.Hun.Heavy.SlitheringSword.DB3",
+      "Ability.Action.Hun.Heavy.SnakeDual.AB",
+      "Ability.Action.Hun.Heavy.SnakeDual.ABAB",
+      "Ability.Action.Hun.Heavy.SnakeDual.ABABB",
+      "Ability.Action.Hun.Heavy.SnakeDual.ABB",
+      "Ability.Action.Hun.Heavy.SnakeDual.BAB",
+      "Ability.Action.Hun.Heavy.SnakeDual.BABAB",
+      "Ability.Action.Hun.Heavy.SnakeDual.BABABB",
+      "Ability.Action.Hun.Heavy.SnakeDual.BABB",
+      "Ability.Action.Hun.Heavy.SnakeDual.B_Fast",
+      "Ability.Action.Hun.Heavy.SnakeDual.DB",
       "Ability.Action.Hun.Heavy.Snap",
+      "Ability.Action.Hun.Heavy.Tang.AAAAAB",
+      "Ability.Action.Hun.Heavy.Tang.AAAAABB",
+      "Ability.Action.Hun.Heavy.Tang.BBBB",
+      "Ability.Action.Hun.Heavy.XieShan.DB",
+      "Ability.Action.Hun.Heavy.YanYueDao.Reinforced.01",
+      "Ability.Action.Hun.Heavy.YanYueDao.Special01",
+      "Ability.Action.Hun.Heavy.ZhanMa.DB",
+      "Ability.Action.Hun.Heavy.ZiMingJian.DB.FirstTime",
+      "Ability.Action.Hun.Light.AA",
+      "Ability.Action.Hun.Special.Double.Buff",
+      "Ability.Action.Hun.Special.Double.Clone",
       "Ability.Action.Hun.Special.Double.YingSha.CB",
+      "Ability.Action.Hun.Special.Jade.DB",
       "Ability.Action.Hun.Special.Long.LieZhan.CB",
+      "Ability.Action.Hun.Special.Tang.Buff",
       "Ability.Action.Hun.Special.Tang.ShunSha.CB"
     ],
     "/PBZInput/InputActions/IA_Jump": [
@@ -2720,7 +2972,8 @@
     "/PBZInput/InputActions/IA_CombatArt": [
       "Ability.Action.Hun.CombatArt.Atk01",
       "Ability.Action.Hun.CombatArt.Atk02",
-      "Ability.Action.Hun.CombatArt.Atk03"
+      "Ability.Action.Hun.CombatArt.Atk03",
+      "Ability.Action.Hun.CombatArt.JueYing.Air"
     ],
     "/PBZInput/InputActions/IA_ShachiAbility": [
       "Ability.Action.Execution.Channel.ShachiWeapon",
@@ -2732,9 +2985,13 @@
       "Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack",
       "Ability.Action.Hun.ShachiAbility.JinGua.Main",
       "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB",
+      "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default",
       "Ability.Action.Hun.ShachiAbility.MoJi.AAA",
       "Ability.Action.Hun.ShachiAbility.PiPa.Skill",
+      "Ability.Action.Hun.ShachiAbility.ShachiHook.CA",
+      "Ability.Action.Hun.ShachiAbility.ShachiHook.CB",
       "Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC",
+      "Ability.Action.Hun.ShachiAbility.ShachiHook.CD",
       "Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack",
       "Ability.Action.Hun.ShachiAbility.TanLang.Normal",
       "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04",
@@ -2748,6 +3005,7 @@
     ],
     "/PBZInput/InputActions/IA_Execution": [
       "Ability.Action.Execution.Channel.Execution",
+      "Ability.Action.Hun.Light.SnakeDual.DA",
       "Ability.Action.Hun.Special.Double.YingSha.C",
       "Ability.Action.Hun.Special.Long.LieZhan.C",
       "Ability.Action.Hun.Special.Tang.ShunSha.C"
@@ -2755,10 +3013,17 @@
     "/PBZInput/InputActions/IA_AttackH_PressLong": [
       "Ability.Action.Hun.Heavy.Atk01_Hold",
       "Ability.Action.Hun.Heavy.BronzeSword.BHold",
-      "Ability.Action.Hun.Heavy.GuiTouDao.BHold.Start"
+      "Ability.Action.Hun.Heavy.GuiTouDao.BHold.Start",
+      "Ability.Action.Hun.Heavy.Horizontal.CriticalAttack",
+      "Ability.Action.Hun.Heavy.Iron.BCharge",
+      "Ability.Action.Hun.Heavy.YuuBlade.FastAttack",
+      "Ability.Action.Hun.Special.SlitheringSword.EvalutionCombo"
     ],
     "/PBZDeflectSystem/Input/IA_PerfectDodge": [
       "Ability.Action.Hun.PerfectDodge"
+    ],
+    "/PBZInput/InputActions/IA_AttackL_PressLong": [
+      "Ability.Action.Hun.Light.YuuBlade.FastAttack"
     ]
   }
 }

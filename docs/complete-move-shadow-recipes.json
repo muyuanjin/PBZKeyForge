@@ -4139,7 +4139,8 @@
           "Shoot"
         ],
         "entryWhen": {
-          "timeline": "Loop"
+          "timeline": "Loop",
+          "minimum_time": 0.056
         }
       },
       "weapon": "DuYanBow",
@@ -4147,7 +4148,13 @@
       "callbackOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
       "nativeSelection": {
         "resourceRule": "Retain normal activation, original preparation fee and native release cleanup.",
-        "completionTimeline": "Shoot"
+        "completionTimeline": "Shoot",
+        "minimumSetupTime": 0.056,
+        "retainedUpgradeEvents": [
+          "GAA_BulletBurst_C_3",
+          "GAA_BulletBurstWithDeflect_C_3"
+        ],
+        "upgradeEffectTag": "CharacterState.WeaponUpgrade.DuYanBow.LaserEyes"
       }
     },
     {

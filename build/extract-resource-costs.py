@@ -34,21 +34,40 @@ def extract(archive, universe):
         records[key] = row
         inherited = read(parent) if parent else None
         resources = set(inherited["resources"] if inherited else [])
-        if key.endswith("/bp_combatart_base"):
+        if key.endswith(("/bp_combatart_base", "/ga_hun_zhanma_c")):
             resources.add("ultimate")
-        if key.endswith(("/bp_heavyattack_base", "/bp_playerdodge_base")):
+        if key.endswith(("/bp_heavyattack_base", "/bp_heavyattack_air_base", "/bp_playerdodge_base",
+                         "/ga_hun_slitheringsword_da", "/ga_hun_snakedual_da",
+                         "/ga_hun_heimoshang_reborn", "/ga_xukonghuashan_reborn")):
             resources.add("shachi")
         if key.endswith("/bp_shachiability_base"):
             resources.update(("spirit", "shachi"))
+        if key.endswith("/ga_hun_shuangyue_db"):
+            resources.add("weapon_charge")
         row["resources"] = sorted(resources)
         row["tags"] = row["ownTags"] or (inherited["tags"] if inherited else [])
+        if key.endswith("/bp_switchattack_default") or inherited and "switchTargets" in inherited:
+            row["switchTargets"] = [tag for tag in row["ownTags"] if not tag.startswith("Ability.Action.Hun.Weapon.Switch.")]
+            if not row["switchTargets"] and inherited:
+                row["switchTargets"] = inherited.get("switchTargets", [])
         return row
 
     for group in ("player-referenced", "player-and-npc-referenced"):
         for path in universe[group]:
             read(path)
+    moves = []
+    for filename in ("complete-moves.json", "weapon-moves.json", "shadow-moves.json"):
+        moves.extend(json.loads((ROOT / "assets/key-enhancement" / filename).read_text(encoding="utf-8"))["moves"])
+    for move in moves:
+        for path in ([move["abilityClass"]] if move.get("abilityClass") else []) + move.get("activeAbilityClasses", []):
+            read(path)
     tags = {}
     for row in records.values():
+        for tag in row["tags"]:
+            tags[tag] = sorted(set(tags.get(tag, [])) | set(row["resources"]))
+    for row in records.values():
+        for tag in row.get("switchTargets", []):
+            row["resources"] = sorted(set(row["resources"]) | set(tags.get(tag, [])))
         for tag in row["tags"]:
             tags[tag] = sorted(set(tags.get(tag, [])) | set(row["resources"]))
     path = "/PBZCombatAsset/ActorData/Players/Hun/InputConfig_Hun"
@@ -65,9 +84,8 @@ def extract(archive, universe):
     input_tags = {action: sorted({entry["tag"] for entry in catalog["abilities"]
                                 if any(source["asset"] == binding for source in entry["sources"])})
                   for action, binding in pairs if binding}
-    moves = json.loads((ROOT / "assets/key-enhancement/complete-moves.json").read_text(encoding="utf-8"))["moves"]
     for move in moves:
-        if move.get("activeAbilityClasses") or not move.get("inputAction"):
+        if move.get("activeAbilityClasses") or not move.get("inputAction") or not move.get("tag"):
             continue
         action = move["inputAction"].split(".")[0]
         input_tags[action] = sorted(set(input_tags.get(action, [])) | {move["tag"]})

@@ -94,6 +94,13 @@ namespace PBZKeyForge
             if (captionMaximize != null) captionMaximize.AccessibleName = I18n.Str(WindowState == FormWindowState.Maximized ? "editor.restore" : "editor.maximize");
             if (captionClose != null) captionClose.AccessibleName = I18n.Str("editor.close");
         }
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            // WinForms only applies CenterParent automatically to modal dialogs.
+            if (!Modal && StartPosition == FormStartPosition.CenterParent && Owner != null)
+                CenterToParent();
+        }
         protected override void OnShown(EventArgs e)
         {
             captionMinimize.Visible = MinimizeBox; captionMaximize.Visible = MaximizeBox;

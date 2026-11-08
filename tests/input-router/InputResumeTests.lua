@@ -7,6 +7,7 @@ end
 local function rig(binding, targets)
     targets = targets or {once = {kind = "event", tag = "once"}}
     local backend = {events = {}}
+    function backend:allowed(condition, context) return condition(context) end
     function backend:dispatch(target, phase, value)
         self.events[#self.events + 1] = {name = target.path or target.tag, phase = phase, value = value}
         return true
@@ -143,4 +144,40 @@ do
     check(#step(0, {}) == 1, "an evaluator without watched keys was permanently suspended by recovery")
 end
 
+for _, kind in ipairs({"move", "ability"}) do
+    for _, trigger in ipairs({"down", "axis"}) do
+        local binding = {id="mixed", keys={"K"}, trigger=trigger, outputs={"move", "attack"}}
+        if trigger == "axis" then binding.axis, binding.keys = "K", {} end
+        local router, step = rig(binding, {move={kind="action",path="move",resume_continuous=true},
+            attack={kind=kind,tag="attack",move_id="attack"}})
+        router:resume({K=1},{})
+        for frame=0,2 do
+            local events=step(frame/60,{K=1})
+            check(#events==1 and has(events,"move"), "mixed recovery must resume movement and suppress held " .. kind)
+        end
+        step(.1,{})
+        local events=step(.2,{K=1})
+        check(#events==2 and has(events,"attack"), "fresh input must rearm mixed " .. kind)
+    end
+end
+for _,trigger in ipairs({"down","axis"}) do
+    local gate=true
+    local binding={id="deflect",keys={"K"},trigger=trigger,when=function() return gate end,
+        outputs={{target="stance",pulse=true},"continuous"}}
+    if trigger=="axis" then binding.axis,binding.keys="K",{} end
+    local router,step=rig(binding,{
+        stance={kind="action",path="stance",resume_continuous=true},
+        continuous={kind="action",path="continuous",resume_continuous=true}})
+    router:resume({K=1},{})
+    for frame=0,2 do
+        local events=step(frame/60,{K=1})
+        check(#events==1 and has(events,"continuous"),"recovery replayed the stance pulse of independent deflect")
+    end
+    step(.1,{})
+    local events=step(.2,{K=1})
+    check(#events==2 and has(events,"stance"),"fresh deflect press failed to rearm its stance pulse")
+    gate=false;step(.3,{K=1})
+    gate=true;events=step(.4,{K=1})
+    check(#events==1 and has(events,"continuous"),"condition recovery replayed an independent deflect pulse")
+end
 print("InputResumeTests: " .. passed .. " assertions passed")

@@ -16,7 +16,7 @@ namespace PBZKeyForge
         static readonly Dictionary<Type, string[]> Fields = new Dictionary<Type, string[]> {
             { typeof(KeyEnhancementConfiguration), new[] { "Enabled", "RuntimeHotkeys", "NativeBindings", "Rules", "CustomFunctions", "Suppressions", "Hooks", "NativeAbilitySuppressions", "CustomLua" } },
             { typeof(NativeBindingOverride), new[] { "FunctionId", "Device", "Keys" } },
-            { typeof(KeyEnhancementRule), new[] { "Id", "Keys", "Outputs", "Trigger", "Enabled", "Seconds", "InputGroup", "Consume", "ConsumeKeys", "Suppressions", "WhenLua", "Axis", "AxisDirection", "Threshold", "Interval", "Count", "Steps", "Watch", "EvaluateLua", "Priority", "BlockOriginalWhenDisabled", "DefaultTrigger", "BypassResources", "DamageMultiplier", "StartupSpeed", "RecoverySpeed" } },
+            { typeof(KeyEnhancementRule), new[] { "Id", "Keys", "Outputs", "Trigger", "Enabled", "Seconds", "InputGroup", "Consume", "ConsumeKeys", "Suppressions", "WhenLua", "Axis", "AxisDirection", "Threshold", "Interval", "Count", "Steps", "Watch", "EvaluateLua", "Priority", "BlockOriginalWhenDisabled", "DefaultTrigger", "BypassResources", "DamageMultiplier", "StartupSpeed", "RecoverySpeed", "SuperArmor", "Invincible", "BypassRestrictions", "RestrictionBypasses" } },
             { typeof(KeyEnhancementOutput), new[] { "Kind", "Path", "Tag", "MappingName", "MappingActions", "Device", "Value", "Id", "Name", "FunctionId", "Receiver", "ValueType", "Property", "Code", "InputAction", "Clamp", "Modifiers", "Triggers", "Payload", "Args", "Force", "Priority", "NativePipeline" } },
             { typeof(KeyEnhancementSuppression), new[] { "ActionPath", "Key", "FunctionId" } }
         };
@@ -140,7 +140,8 @@ namespace PBZKeyForge
                     foreach (var field in fields)
                     {
                         object original = field.GetValue(Defaults[type]);
-                        field.SetValue(value, original is IList ? Activator.CreateInstance(field.FieldType) : original);
+                        field.SetValue(value, original is Array ? ((Array)original).Clone()
+                            : original is IList ? Activator.CreateInstance(field.FieldType) : original);
                     }
                     for (int i = 0; i < fields.Length; i++) if ((mask & (1UL << i)) != 0)
                         fields[i].SetValue(value, fields[i].FieldType == typeof(bool) ? !(bool)fields[i].GetValue(Defaults[type]) : Read(fields[i].FieldType));

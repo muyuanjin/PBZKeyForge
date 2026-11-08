@@ -1,0 +1,1072 @@
+{
+  "schemaVersion": 1,
+  "build": "CL-302256",
+  "entries": {
+    "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.431936741,
+          "property_minimum": {
+            "Current Charge": 0
+          },
+          "before_time": 1.701008201,
+          "cancel_on_expire": true
+        },
+        "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release1"
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal.GA_BrutalAxe_Normal_C"
+        ],
+        "family": "BrutalAxe"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.Dash",
+          "CharacterState.Native.Attitude.Sprinting"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.BrutalAxe.RunCharge"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint.GA_BrutalAxe_Sprint_C"
+        ],
+        "family": "BrutalAxe"
+      }
+    },
+    "move:Shadow.CaoOuSiXian.GA_CaoOuSiXian_Normal_01": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ]
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/CaoOuSiXian/GA_CaoOuSiXian_Normal_01.GA_CaoOuSiXian_Normal_01_C"
+        ],
+        "family": "CaoOuSiXian"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser": {
+      "groups": {
+        "stance": [
+          "CharacterState.AbilityState.Stance.HoldingStanceKey"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.DuYanBow.BulletPassThrough"
+        ],
+        "space": [
+          "CharacterState.Space.Ground"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Loop",
+          "minimum_time": 0.056
+        },
+        "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser.Shoot"
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser.GA_DuYan_Bow_Laser_C"
+        ],
+        "family": "DuYanBow"
+      }
+    },
+    "move:Shadow.DuYanBow.GA_DuYan_Bow_Normal": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.169093013,
+          "object_variable": {
+            "property": "Variables",
+            "key": "DuYanBow_1",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_GA_DuYan_Bow_Normal_P1_01.BD_GA_DuYan_Bow_Normal_P1_01",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "before_time": 1.973573685,
+          "cancel_on_expire": true
+        },
+        "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage1"
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal.GA_DuYan_Bow_Normal_C"
+        ],
+        "family": "DuYanBow"
+      }
+    },
+    "move:Shadow.HuangJinHuoChong.GA_HuangJinHuoChong_Normal_02": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ]
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_02.GA_HuangJinHuoChong_Normal_02_C"
+        ],
+        "family": "HuangJinHuoChong"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAA",
+          "Ability.Action.ShaqiReinforced"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.HuoLiuXing.AAAA"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ]
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA.GA_Hun_HuoLiuXing_AAAA_C"
+        ],
+        "family": "HuoLiuXing"
+      }
+    },
+    "move:Shadow.JianKeZhaoJiLing.GA_JianKeZhaoJiLing_Normal_01": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ]
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JianKeZhaoJiLing/GA_JianKeZhaoJiLing_Normal_01.GA_JianKeZhaoJiLing_Normal_01_C"
+        ],
+        "family": "JianKeZhaoJiLing"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.JinGua.Main",
+          "Ability.Action.ShaqiReinforced"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.JinGua.ExtraAttack"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_ExtraAttack.GA_JinGua_ExtraAttack_C"
+        ],
+        "family": "JinGua"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "required_tags": [
+            "CharacterState.AbilityState.JinGua.Charge1"
+          ]
+        },
+        "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.JinGua.Main.Release.Charge1"
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal.GA_JinGua_Normal_C"
+        ],
+        "family": "JinGua"
+      }
+    },
+    "move:Shadow.KuYeSiZhuChuan.GA_KuYeSiZhuChuan_Normal_01": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ]
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/KuYeSiZhuChuan/GA_KuYeSiZhuChuan_Normal_01.GA_KuYeSiZhuChuan_Normal_01_C"
+        ],
+        "family": "KuYeSiZhuChuan"
+      }
+    },
+    "move:Shadow.LionHead.GA_LionHead": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.9051806926727295
+        },
+        "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.Default.LionHead.End"
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead.GA_LionHead_C"
+        ],
+        "family": "LionHead"
+      }
+    },
+    "move:Shadow.Lute.GA_Hun_Lute_A": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A.GA_Hun_Lute_A_C"
+        ],
+        "family": "Lute"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.PiPa.Skill": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "stance": [
+          "CharacterState.AbilityState.Stance.HoldingStanceKey"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.Lute.SitDown_Combo"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Loop"
+        },
+        "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.PiPa.Skill.End"
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill.GA_Hun_Lute_SKill_C"
+        ],
+        "family": "Lute"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB": {
+      "groups": {
+        "stance": [
+          "CharacterState.AbilityState.Stance.HoldingStanceKey"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.MiaoShouFeiDao.Dash_B"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB.GA_MiaoShouFeiDao_DB_C"
+        ],
+        "family": "MiaoShouFeiDao"
+      }
+    },
+    "move:Shadow.Mojian.GA_Hun_Mojian_AA": {
+      "groups": {},
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AA.GA_Hun_Mojian_AA_C"
+        ],
+        "family": "Mojian"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.MoJi.AAA": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "CharacterState.AbilityState.Mojian.HasProjectile",
+          "CharacterState.AbilityState.Mojian.ProjectileFull",
+          "Ability.Action.ShaqiReinforced",
+          "Ability.Action.Hun.ShachiAbility.MoJi.AA",
+          "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.MoJian.FreeStrike",
+          "CharacterState.WeaponUpgrade.MoJian.Evolution"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AAA.GA_Hun_Mojian_AAA_C"
+        ],
+        "family": "Mojian"
+      }
+    },
+    "move:Shadow.NiTouChe.GA_HorseCart_Charge": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ]
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/Game/Test/HorseTest/GA_HorseCart_Charge.GA_HorseCart_Charge_C"
+        ],
+        "family": "NiTouChe"
+      }
+    },
+    "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CA": {
+      "groups": {},
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CA.GA_Hun_ShachiHook_CA_C"
+        ],
+        "family": "ShachiHook"
+      }
+    },
+    "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CB": {
+      "groups": {},
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CB.GA_Hun_ShachiHook_CB_C"
+        ],
+        "family": "ShachiHook"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC",
+          "Ability.Action.ShaqiReinforced"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.ShachiHook.Tornado"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCCC.GA_Hun_ShachiHook_CCCC_C"
+        ],
+        "family": "ShachiHook"
+      }
+    },
+    "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CD": {
+      "groups": {},
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CD.GA_Hun_ShachiHook_CD_C"
+        ],
+        "family": "ShachiHook"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.ShachiHook.C",
+          "Ability.Action.ShaqiReinforced",
+          "Ability.Action.Hun.ShachiAbility.ShachiHook.CC",
+          "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.ShachiHook.ABSnapCombo"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Drag.GA_Hun_ShachiHook_Drag_C"
+        ],
+        "family": "ShachiHook"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.TanLang.Normal",
+          "Ability.Action.ShaqiReinforced"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.TanLang.ExtraAttack"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_ExtraAttack.GA_TanLang_ExtraAttack_C"
+        ],
+        "family": "TanLang"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TanLang.Normal": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 9.999999747378752e-05
+        },
+        "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.TanLang.Normal.FastEnd"
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal.GA_TanLang_Normal_C"
+        ],
+        "family": "TanLang"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04": {
+      "groups": {
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_03",
+          "Ability.Action.ShaqiReinforced"
+        ],
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.ThunderSpear.CA"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_SpecialAttack_04.GA_ThunderSpear_SpecialAttack_04_C"
+        ],
+        "family": "ThunderSpear"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C",
+          "Ability.Action.ShaqiReinforced"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AA.GA_TieKuangQuanTao_Charge_AA_C"
+        ],
+        "family": "TieKuangQuanTao"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC",
+          "Ability.Action.ShaqiReinforced"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AAA.GA_TieKuangQuanTao_Charge_AAA_C"
+        ],
+        "family": "TieKuangQuanTao"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 0
+        },
+        "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal.Launch"
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon.GA_TigerCannon_C"
+        ],
+        "family": "TigerCannon"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "CharacterState.AbilityState.TigerCannon.CanQuickCharge",
+          "Ability.Action.Hun.ShachiAbility.Default",
+          "Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+          "Ability.Action.Hun.ShachiAbility.TigerCannon.Counter",
+          "Ability.Action.Hun.ShachiAbility.TigerCannon.Dash"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.TigerCannon.QuickCharge"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge.GA_TigerCannon_QuickCharge_C"
+        ],
+        "family": "TigerCannon"
+      }
+    },
+    "move:Shadow.UnnamedBow.GA_UnnamedBow": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.454123855,
+          "object_variable": {
+            "property": "Variables",
+            "key": "UnnamedBow",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiWeapon/B_UnnamedBow_Normal.B_UnnamedBow_Normal",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "before_time": 2.596182823,
+          "cancel_on_expire": true
+        },
+        "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.Default.UnnamedBow.Shoot.Normal"
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow.GA_UnnamedBow_C"
+        ],
+        "family": "UnnamedBow"
+      }
+    },
+    "move:Shadow.XuKongHuaShan.GA_XuKongHuaShan_Skill": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Skill.GA_XuKongHuaShan_Skill_C"
+        ],
+        "family": "XuKongHuaShan"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.XueDiZi.AAA",
+          "Ability.Action.ShaqiReinforced"
+        ],
+        "training": [
+          "CharacterState.WeaponUpgrade.XueDiZi.ExtraAttack"
+        ]
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_SpecialAttack.GA_XueDiZi_SpecialAttack_C"
+        ],
+        "family": "XueDiZi"
+      }
+    },
+    "move:Shadow.XueSeLingDang.GA_XueSeLingDang_Normal_01": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ]
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueSeLingDang/GA_XueSeLingDang_Normal_01.GA_XueSeLingDang_Normal_01_C"
+        ],
+        "family": "XueSeLingDang"
+      }
+    },
+    "move:Shadow.YouLongCha.GA_YouLongCha_Normal": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.245917797,
+          "object_variable": {
+            "property": "Variables",
+            "key": "UnnamedBow",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YouLongCha/B_YouLongCha_Normal.B_YouLongCha_Normal",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "before_time": 1.533529043,
+          "cancel_on_expire": true
+        },
+        "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.Default.YouLongCha.Shoot.Normal"
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal.GA_YouLongCha_Normal_C"
+        ],
+        "family": "YouLongCha"
+      }
+    },
+    "move:Shadow.YouLongHead.GA_YouLongHead_Water": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ]
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Water.GA_YouLongHead_Water_C"
+        ],
+        "family": "YouLongHead"
+      }
+    },
+    "move:Shadow.ZhuoBiDun.GA_ZhuoBiDun": {
+      "groups": {
+        "space": [
+          "CharacterState.Space.Ground"
+        ],
+        "prerequisite": [
+          "Ability.Action.Hun.ShachiAbility.Default"
+        ]
+      },
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Loop"
+        },
+        "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push"
+      },
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C"
+        ],
+        "family": "ZhuoBiDun"
+      }
+    }
+  },
+  "nativeReleaseTaskEvidence": [
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -219
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/CaoOuSiXian/GA_CaoOuSiXian_Normal_01",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -86
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+      "export": "ExecuteUbergraph_GA_DuYan_Bow_Laser",
+      "exportOffset": 9214,
+      "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+      "taskInstanceName": "None",
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -203
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "export": "ExecuteUbergraph_GA_DuYan_Bow_Normal",
+      "exportOffset": 5102,
+      "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+      "taskInstanceName": "None",
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -151
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_02",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -98
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_04",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -98
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -102
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JianKeZhaoJiLing/GA_JianKeZhaoJiLing_Normal_01",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -84
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Air",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -244
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -185
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack",
+      "export": "IsHolding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -97
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/KuYeSiZhuChuan/GA_KuYeSiZhuChuan_Normal_01",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -79
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+      "export": "ExecuteUbergraph_GA_LionHead",
+      "exportOffset": 2284,
+      "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+      "taskInstanceName": "None",
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -100
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+      "export": "ExecuteUbergraph_GA_Hun_Lute_SKill",
+      "exportOffset": 3171,
+      "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+      "taskInstanceName": "None",
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -91
+    },
+    {
+      "package": "/Game/Test/HorseTest/GA_HorseCart_Charge",
+      "export": "ExecuteUbergraph_GA_HorseCart_Charge",
+      "exportOffset": 16749,
+      "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+      "taskInstanceName": "None",
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -146
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+      "export": "IsHolding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -115
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_01",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -92
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_02",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -116
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_03",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -123
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "export": "ExecuteUbergraph_GA_TigerCannon",
+      "exportOffset": 1448,
+      "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+      "taskInstanceName": "None",
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -114
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "export": "ExecuteUbergraph_GA_UnnamedBow",
+      "exportOffset": 5590,
+      "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+      "taskInstanceName": "None",
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -158
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueSeLingDang/GA_XueSeLingDang_Normal_01",
+      "export": "Is Holding",
+      "exportOffset": 355,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -83
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "export": "ExecuteUbergraph_GA_YouLongCha_Normal",
+      "exportOffset": 3328,
+      "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+      "taskInstanceName": "None",
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -106
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Water",
+      "export": "ExecuteUbergraph_GA_YouLongHead_Water",
+      "exportOffset": 3556,
+      "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+      "taskInstanceName": "None",
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -100
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "export": "ExecuteUbergraph_GA_ZhuoBiDun",
+      "exportOffset": 19848,
+      "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+      "taskInstanceName": "None",
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -296
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "export": "ExecuteUbergraph_GA_ZhuoBiDun",
+      "exportOffset": 40771,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_Interaction_ShaChiAttactkBroken.IA_Interaction_ShaChiAttactkBroken",
+      "inputPointer": -291
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "export": "OnTick",
+      "exportOffset": 2301,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/Game/PBZContent/Input/InputActions/IA_Interaction_ShaChiAttactkBroken.IA_Interaction_ShaChiAttactkBroken",
+      "inputPointer": -291
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "export": "OnTick",
+      "exportOffset": 2368,
+      "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+      "taskInstanceName": null,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold",
+      "inputPointer": -296
+    }
+  ]
+}

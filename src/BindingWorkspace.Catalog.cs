@@ -67,6 +67,7 @@ namespace PBZKeyForge
 
         static string WeaponLabel(FunctionLocalization localization)
         {
+            if (localization == null || localization.labels.Count == 0) return "";
             string label;
             if (!localization.labels.TryGetValue(I18n.Current, out label)) label = localization.labels["en"];
             int separator = label.IndexOf(" · ", StringComparison.Ordinal);

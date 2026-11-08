@@ -41,7 +41,7 @@ do
     check(ok and result == 42 and calls == 2, "implemented interface was rejected")
     receiver.interface, receiver.class = nil, other
     ok = backend:dispatch(target,"triggered",nil,"wrong-weapon")
-    check(not ok and calls == 2 and backend:target_failed(target), "wrong receiver reached native code")
+    check(not ok and calls == 2 and backend:target_failed(target,"wrong-weapon"), "wrong receiver reached native code")
     local reported = #logs
     for _=1,120 do backend:dispatch(target,"triggered",nil,"wrong-weapon") end
     check(calls == 2 and #logs == reported, "failed target retried native code or repeated diagnostics")
@@ -100,7 +100,7 @@ do
         check(callbacks["/Script/Test:Predicate"]() == nil, "bad hook replaced the native result")
     end
     os.clock=clock
-    check(failures == 1 and healthy == 120 and shutdowns == 0,
+    check(failures == 2 and healthy == 120 and shutdowns == 0,
         "one bad target suspended the scheduler or kept throwing every frame")
     check(predicates == 1 and registrations == 1 and missingLookups <= 6,
         "bad hooks retried every frame or missing Blueprint hooks repeated lookup without delay")

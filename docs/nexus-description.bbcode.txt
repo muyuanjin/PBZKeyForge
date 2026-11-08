@@ -1,5 +1,5 @@
-[color=#e8b96a][b]ONE KEY, SEVERAL ACTIONS[/b][/color]
-Phantom Blade Zero's binding screen rejects shared keys. PBZKeyForge edits the game's own settings file so a single key can trigger several actions: attack and guard together, dodge on your former guard button, or your own keyboard and controller layout.
+[color=#e8b96a][b]YOUR CONTROLS, MORE MOVES, LESS REPEATED RUNTIME WORK[/b][/color]
+Build the keyboard or controller layout you want: combine attack and guard on one key, bind extra weapon moves independently, and choose how each move behaves. Version 1.3.1 expands the move selection, fixes independent activation and reduces repeated work during play. Ordinary shared-key editing needs no runtime loader.
 
 Windows editor with ordinary save editing and optional Key Enhancement. Ordinary bindings need no loader; Key Enhancement includes the pinned Kintaro PBZ UE4SS runtime. Open source; release downloads are built and uploaded by GitHub Actions.
 
@@ -17,41 +17,7 @@ The editor remembers the last opened save and follows Steam's installation recor
 
 [color=#cc4125][b]IMPORTANT[/b][/color]
 [quote][b]Do not apply or reset bindings in the game's own key binding screen afterwards.[/b] The game rewrites these settings. If this happens, reapply your layout with PBZKeyForge.[/quote]
-Copying a preset save replaces your saved layouts. Ordinary shared keys trigger several actions together; Key Enhancement adds timed triggers and independent move bindings. Complete moves retain the game's equipment, upgrade, target and activation requirements.
-
-[color=#e8b96a][b]KEY ENHANCEMENT: EXTRA ACTIONS AND YOUR OWN SCHEMES[/b][/color]
-Click any key and [b]Add action[/b], or browse [b]By action[/b]. The grouped catalog includes weapon attacks, Combat Art finishers, charged releases, Phantom Edge attacks, counters, movement and other supported actions. Search by action name, weapon or technical code. Bind several functions to one key, or give one function multiple inputs.
-
-[center][b]Search extra weapon moves and bind complete Combat Arts[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794062226-768847947.png[/img][/center]
-
-Use press, release, tap/hold, chords, repeated presses or sequences. Each combat binding can independently bypass supported resource costs and adjust health damage, startup speed and recovery speed. Defaults preserve normal costs and 1× multipliers. Projectiles and native follow-ups retain the settings of their own activation.
-
-[center][b]Set resource costs, damage and animation speed for each binding[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794062224-915392486.png[/img][/center]
-
-Enhancement uses independent schemes, initially copied from the three game layouts. Use [b]+[/b] to copy a scheme and [b]•••[/b] to rename or remove an added scheme. Scheme-switch bindings work in game even after closing the editor. Applying a scheme deploys its bindings; clicking a tab only selects what you edit. Turning enhancement off returns to the game's ordinary schemes and retains the enhancement library.
-
-[center][b]Build independent enhancement schemes and add actions to any key[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794062227-666933177.png[/img][/center]
-
-[b]Live editing:[/b] after the Mod connects, change a binding and apply without restarting the game. Loading shows a neutral waiting state. Runtime failures retain the full error details for copying; rejected changes preserve the draft. Update the installed runtime with the game closed.
-
-[color=#e8b96a][b]OPTIONAL: PERFECT GUARD WITHOUT THE RAPID-CLICK PENALTY[/b][/color]
-Repeated guard inputs shorten or stop refreshing the original perfect-guard window. When attack and guard share a key, repeated attacks can trigger the same penalty.
-
-The [b]Perfect guard: no rapid-click penalty[/b] option is [b]off by default[/b]. Check it on the right side of the footer, then click [b]Apply changes[/b] to install. The checkbox only stages the change. Click [b]?[/b] for an explanation. All schemes, difficulties and guard keys share this gameplay change. Each input still uses the game's current base perfect-guard window; difficulty, accessories, guard-break state and eligibility follow the original rules.
-
-The embedded patch changes one cooldown value in each of five difficulty configuration assets and preserves the game's combat scripts. It installs in its own Paks/~mods/PBZKeyForge_PerfectDeflectNoRapidClickPenalty folder without replacing original game containers or saves. [b]Exit the game before enabling or disabling it.[/b] Uncheck the option and apply to remove it and restore the original rules. The presets-only archive does not include this mod.
-
-[color=#e8b96a][b]CHOOSE HOW A PRESET CHANGES YOUR KEYS[/b][/color]
-Three choices stay visible beside the preset picker. Hover over a choice for details.
-[list]
-[*][b]Add keys:[/b] keep existing keys and add the preset's bindings; duplicates are ignored.
-[*][b]Replace keys:[/b] replace the bindings of the actions covered by the preset; other actions stay as they are.
-[*][b]Preset only:[/b] start from factory bindings for the devices included in the preset, then use that preset's layout. Devices outside its scope keep their settings.
-[/list]
-The initial choice is Preset only, and your choice is remembered. Selecting a preset creates a draft. [b]Apply changes[/b] writes it to the game. Longer writes show progress; if a write fails, your draft remains available to retry. Ordinary save writes require the game to be closed; connected enhancement bindings support live edits.
+Copying a preset save replaces your saved layouts. Ordinary shared keys trigger several actions together; Key Enhancement adds timed triggers and independent move bindings. Complete moves use the game's native preparation. Supported restrictions can be bypassed per binding; real targets, hit results and required gameplay objects still apply.
 
 [color=#e8b96a][b]SEE AND EDIT YOUR BINDINGS[/b][/color]
 [b]By key:[/b] click a key on the keyboard, mouse or controller diagram to see and edit its actions on the right. The keyboard and mouse appear together. Number badges count actions: gray matches factory settings, blue marks saved customization, and yellow marks edits waiting to be applied. Removed actions are gray and crossed out.
@@ -66,6 +32,15 @@ The interface supports all 15 game languages, including Simplified and Tradition
 
 [center][b]Select a key, edit its actions, and review the scheme changes[/b]
 [img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794063153-420949216.png[/img][/center]
+
+[color=#e8b96a][b]CHOOSE HOW A PRESET CHANGES YOUR KEYS[/b][/color]
+Three choices stay visible beside the preset picker. Hover over a choice for details.
+[list]
+[*][b]Add keys:[/b] keep existing keys and add the preset's bindings; duplicates are ignored.
+[*][b]Replace keys:[/b] replace the bindings of the actions covered by the preset; other actions stay as they are.
+[*][b]Preset only:[/b] start from factory bindings for the devices included in the preset, then use that preset's layout. Devices outside its scope keep their settings.
+[/list]
+The initial choice is Preset only, and your choice is remembered. Selecting a preset creates a draft. [b]Apply changes[/b] writes it to the game. Longer writes show progress; if a write fails, your draft remains available to retry. Ordinary save writes require the game to be closed; connected enhancement bindings support live edits.
 
 [color=#e8b96a][b]YOUR PRESETS AND SHARE CODES[/b][/color]
 Click [b]Save as preset[/b] in the scheme bar to name the current draft and choose its devices. [b]Preset manager[/b] beside Quick setup previews, shares, imports and deletes personal presets. Personal presets remain separate from built-ins; deleting a preset does not change your current bindings.
@@ -91,6 +66,35 @@ Paste a share code, click [b]Preview[/b], and inspect the included devices and c
 [*][b]Restore factory defaults:[/b] restore the selected scheme in Quick setup, or all schemes through More.
 [/list]
 The included [b]PRESETS.md[/b] lists the factory-based layouts used by the eight ready-made settings files. Add keys mode can retain additional existing bindings; the hover preview shows the preset relative to factory settings.
+
+[color=#e8b96a][b]KEY ENHANCEMENT: EXTRA ACTIONS AND YOUR OWN SCHEMES[/b][/color]
+Click any key and [b]Add action[/b], or browse [b]By action[/b]. The expanded grouped catalog includes weapon attack chains such as ChiRen, Combat Art finishers, charged releases, Phantom Edge attacks, counters and follow-ups. Search by the game's localized move names, related upgrades, weapon or technical code. One-Eyed Bow entries use the real held-input and projectile preparation; Thousand-Eyed Gaze is a related upgrade of its native entrance. Bind several functions to one key, or give one function multiple inputs.
+
+[center][b]Search extra weapon moves and bind complete Combat Arts[/b]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794062226-768847947.png[/img][/center]
+
+Use press, release, tap/hold, chords, repeated presses or sequences. Each combat binding can independently bypass supported resource costs, use full-resource release effects and adjust health damage, startup speed and recovery speed. Separate restriction controls cover equipment, training, ground/air, stance, predecessor and cooldown where supported. Optional super armor and invincibility apply during this move. Defaults preserve normal rules and 1× multipliers. Projectiles and native follow-ups retain their own activation settings; temporary equipment and effects are restored when the move ends.
+
+[b]Independent Deflect:[/b] hold to repeat short defense presses with complete release frames, including when several bindings overlap. Independent Stance stays held; ordinary Guard keeps the game's combined behavior. Explicit single-press and repeat-interval choices remain available.
+
+[center][b]Choose resource and restriction bypasses, damage, speed and move effects[/b]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794062224-915392486.png[/img][/center]
+
+Enhancement uses independent schemes, initially copied from the three game layouts. Use [b]+[/b] to copy a scheme and [b]•••[/b] to rename or remove an added scheme. Scheme-switch bindings work in game even after closing the editor. Applying a scheme deploys its bindings; clicking a tab only selects what you edit. Turning enhancement off returns to the game's ordinary schemes and retains the enhancement library.
+
+[center][b]Build independent enhancement schemes and add actions to any key[/b]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794062227-666933177.png[/img][/center]
+
+The runtime reduces repeated ability scans and mapping work, and checks current inputs and scene changes every frame. These optimizations address measured hotspots; no post-update in-game FPS figure is claimed.
+
+[b]Live editing:[/b] after the Mod connects, change a binding and apply without restarting the game. Loading shows a neutral waiting state. Runtime failures retain the full error details for copying; rejected changes preserve the draft. Update the installed runtime with the game closed.
+
+[color=#e8b96a][b]OPTIONAL: PERFECT GUARD WITHOUT THE RAPID-CLICK PENALTY[/b][/color]
+Repeated guard inputs shorten or stop refreshing the original perfect-guard window. When attack and guard share a key, repeated attacks can trigger the same penalty.
+
+The [b]Perfect guard: no rapid-click penalty[/b] option is [b]off by default[/b]. Check it on the right side of the footer, then click [b]Apply changes[/b] to install. The checkbox only stages the change. Click [b]?[/b] for an explanation. All schemes, difficulties and guard keys share this gameplay change. Each input still uses the game's current base perfect-guard window; difficulty, accessories, guard-break state and eligibility follow the original rules.
+
+The embedded patch changes one cooldown value in each of five difficulty configuration assets and preserves the game's combat scripts. It installs in its own Paks/~mods/PBZKeyForge_PerfectDeflectNoRapidClickPenalty folder without replacing original game containers or saves. [b]Exit the game before enabling or disabling it.[/b] Uncheck the option and apply to remove it and restore the original rules. The presets-only archive does not include this mod.
 
 [color=#e8b96a][b]COMPATIBILITY AND UNINSTALL[/b][/color]
 Windows 10/11, Steam launch build [b]CL-301524[/b] and patch [b]1.0302256 / CL-302256[/b]. Keyboard/mouse and controller bindings use the installed build's slot rules, including Phantom Edge's changed slots in 1.0302256. Existing preset layouts and PBZ2 share codes keep the same baseline. Compatible later-build scheme settings can be discovered and authenticated locally in the background; later input-rule changes may still need an update.

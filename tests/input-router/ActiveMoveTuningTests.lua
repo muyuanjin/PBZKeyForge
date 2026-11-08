@@ -4,14 +4,24 @@ local nativeShots, nativeAbilities = {}, {}
 local function check(value,message) assert(value,message); checks=checks+1 end
 local function parameter(value) return {get=function() return value end} end
 local function array(values)
-    return {ForEach=function(_,callback) for i,value in ipairs(values) do callback(i,parameter(value)) end end}
+    return setmetatable({GetArrayNum=function() return #values end,ForEach=function(_,callback) for i,value in ipairs(values) do callback(i,parameter(value)) end end},{__index=values})
+end
+local classes, nextClass = {}, 1000
+function StaticFindObject(path)
+    if not classes[path] then
+        nextClass = nextClass + 1
+        local address = nextClass
+        classes[path] = {IsValid=function() return true end,GetAddress=function() return address end,
+            GetFullName=function() return "Class " .. path end}
+    end
+    return classes[path]
 end
 local function object(address,properties)
     local value=properties or {}
     function value:IsValid() return self.valid ~= false end
     function value:GetAddress() return address end
     function value:GetPropertyValue(name) return self[name] end
-    function value:GetClass() return {GetFullName=function() return "Class "..self.class end} end
+    function value:GetClass() return StaticFindObject(self.class) end
     function value:IsA() return not self.nonLego end
     return value
 end

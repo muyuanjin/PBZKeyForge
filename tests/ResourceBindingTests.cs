@@ -55,6 +55,23 @@ class ResourceBindingTests
         var config = new KeyEnhancementConfiguration { Enabled = true };
         var workspace = new BindingWorkspace(EditorSession.CreateOffline(), config, config.Clone(), false, -1);
         Check(workspace.ResourceKinds(Move).SequenceEqual(new[] { "shachi" }), "The tag-only N3H3 move must expose its shachi cost");
+        foreach (string tag in new[] { "Ability.Action.Hun.Light.SlitheringSword.DA", "Ability.Action.Hun.Light.SnakeDual.DA",
+            "Ability.Action.Hun.HeiMoShang.Reborn", "Ability.Action.Hun.XuKongHuaShan.Reborn" })
+            Check(ResourceCostCatalog.ForOutput(new KeyEnhancementOutput { Kind = "ability", Tag = tag }).Contains("shachi"),
+                "Independent resource costs must expose bypass: " + tag);
+        foreach (string id in new[] { "ability:Ability.Action.Hun.Heavy.ShuangYue.DB",
+            "move:WeaponSpecial.GA_Hun_ShuangYue_DB_SWT", "move:WeaponSwitch.ShuangYue" })
+        {
+            Check(workspace.ResourceKinds(id).Contains("weapon_charge"), "Dual-axe entry must expose its independent energy: " + id);
+            using (var dialog = new UnifiedBindingEditDialog(workspace, id, null, "G", null))
+            {
+                dialog.Show(); Application.DoEvents();
+                var bypass = Field<CheckBox>(dialog, "bypassResources");
+                Check(bypass.Visible && bypass.Text.Contains(I18n.Str("binding.resources.weapon_charge")),
+                    "Direct, switch-leaf and wrapper bindings must expose weapon-energy bypass");
+                if (id == "ability:Ability.Action.Hun.Heavy.ShuangYue.DB") Shot(dialog, "dual-axe-resource-option");
+            }
+        }
         using (var dialog = new UnifiedBindingEditDialog(workspace, Move, null, "G", null))
         {
             dialog.Show(); Application.DoEvents();
@@ -174,6 +191,67 @@ class ResourceBindingTests
         try { config.CompileLua(); throw new Exception("Callback-only recovery settings accepted"); }
         catch (InvalidDataException) { checks++; }
     }
+    static void AttachedEffects()
+    {
+        var session = EditorSession.CreateOffline();
+        var config = new KeyEnhancementConfiguration { Enabled = true };
+        var workspace = new BindingWorkspace(session, config, config.Clone(), false, -1);
+        Check(!new KeyEnhancementRule().SuperArmor && !new KeyEnhancementRule().Invincible,
+            "Attached effects must be opt-in for existing configurations");
+        using (var dialog = new UnifiedBindingEditDialog(workspace, Move, null, "G", null))
+        {
+            dialog.Show(); Application.DoEvents();
+            var armor = Field<CheckBox>(dialog,"superArmor"); var invincible = Field<CheckBox>(dialog,"invincible");
+            Check(armor.Visible && invincible.Visible && !armor.Checked && !invincible.Checked,
+                "New move bindings must expose two independent unchecked effect options");
+            Check(armor.PointToScreen(Point.Empty).Y < invincible.PointToScreen(Point.Empty).Y
+                && invincible.PointToScreen(Point.Empty).Y < Field<NumericUpDown>(dialog,"startupSpeed").PointToScreen(Point.Empty).Y,
+                "Attached effects must be immediately above the phase speed settings");
+            armor.Checked = invincible.Checked = true;
+            Shot(dialog,"attached-effects"); Call(dialog,"Save"); workspace.Add(Move,dialog.Result);
+        }
+        var entry = workspace.Entries(Move).Single();
+        Check(entry.SuperArmor && entry.Invincible && !BindingWorkspace.IsPlainBinding(entry),
+            "Effect-only tuning must retain enhancement ownership");
+        using (var dialog = new UnifiedBindingEditDialog(workspace, Move, entry, null, null))
+        {
+            dialog.Show(); Application.DoEvents();
+            Check(Field<CheckBox>(dialog,"superArmor").Checked && Field<CheckBox>(dialog,"invincible").Checked,
+                "Editing an existing move lost its effect settings");
+            Field<CheckBox>(dialog,"superArmor").Checked = false; Call(dialog,"Save");
+            entry = workspace.Replace(entry,dialog.Result);
+        }
+        Check(!entry.SuperArmor && entry.Invincible,"Effect checkboxes must be independent");
+        var copy = workspace.CopyBinding(entry,Move);
+        Check(!copy.SuperArmor && copy.Invincible,"Copy lost independent effect settings");
+        var restored = KeyEnhancementConfiguration.FromJson(config.ToJson());
+        var shared = UserPresetStore.ParseShare(UserPresetStore.Share(UserPresetStore.Capture(session,"Attached effects",restored))).KeyEnhancement;
+        Check(shared.Rules.Count == 2 && shared.Rules.All(rule => !rule.SuperArmor && rule.Invincible),
+            "Share roundtrip lost effect-only tuning");
+        string bundle = Path.Combine(output,"effects.zip");
+        new BindingDocument {Session=session,Configuration=shared}.Export(bundle);
+        var unzipped = BindingDocument.Open(bundle).Configuration;
+        Check(unzipped.Rules.All(rule => !rule.SuperArmor && rule.Invincible),"ZIP roundtrip lost effect settings");
+        string lua = unzipped.CompileLua();
+        Check(lua.Contains("invincible") && !lua.Contains("super_armor") && lua.Contains("resource_inputs"),
+            "Effect-only bindings must compile their enabled policy and activation inputs");
+        restored.Rules[0].SuperArmor = true;
+        Check(restored.CompileLua().Contains("super_armor"),"Super armor was omitted from compiled configuration");
+        var menu = workspace.Entries("IA_OpenMapMenu").First(item => item.IsNative && !item.ReadOnly);
+        using (var dialog = new UnifiedBindingEditDialog(workspace,"IA_OpenMapMenu",menu,null,null))
+        {
+            dialog.Show(); Application.DoEvents();
+            Check(!Field<CheckBox>(dialog,"superArmor").Visible && !Field<CheckBox>(dialog,"invincible").Visible,
+                "Menu bindings must not expose move-only attached effects");
+        }
+        foreach (string language in I18n.Languages)
+        {
+            I18n.Current = language;
+            foreach (string key in new[] {"binding.effects.superArmor","binding.effects.invincible","binding.effects.help"})
+                Check(I18n.Str(key) != key,"Missing effect translation: " + language + ":" + key);
+        }
+        I18n.Current = "zh-Hans";
+    }
     static void TuningChains()
     {
         var config = new KeyEnhancementConfiguration { Enabled = true };
@@ -182,7 +260,7 @@ class ResourceBindingTests
             "move:Ability.Action.Hun.Heavy.GuiTouDao.BHold.EarlyRelease",
             "move:WeaponSwitch.ChaosBlade", "move:WeaponSwitch.DualHook", "move:WeaponSwitch.ShuangYue" })
         {
-            var rule = new KeyEnhancementRule { BypassResources = true, DamageMultiplier = 3, StartupSpeed = 2, RecoverySpeed = 4 };
+            var rule = new KeyEnhancementRule { BypassResources = true, DamageMultiplier = 3, StartupSpeed = 2, RecoverySpeed = 4, SuperArmor = true, Invincible = true };
             rule.Keys.Add("G"); rule.Outputs.Add(new KeyEnhancementOutput { Kind = "move", Tag = id });
             config.Rules.Add(rule);
         }
@@ -194,7 +272,7 @@ class ResourceBindingTests
         {
             Application.EnableVisualStyles(); I18n.Current = "zh-Hans";
             output = Path.GetFullPath(args.FirstOrDefault() ?? "dist/resource-binding-check"); Directory.CreateDirectory(output);
-            MenuBindings(); TagResources(); UndoResources(false); UndoResources(true); Tuning(); ActiveTuning(); TuningChains();
+            MenuBindings(); TagResources(); UndoResources(false); UndoResources(true); Tuning(); ActiveTuning(); AttachedEffects(); TuningChains();
             Console.WriteLine("ResourceBindingTests PASS " + checks); return 0;
         }
         catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }

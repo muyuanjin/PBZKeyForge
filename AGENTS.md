@@ -59,3 +59,27 @@ Scheme selection belongs to `PBZSharedSetting.sav`, not the profile identifier i
 ## Commit & Pull Request Guidelines
 
 History uses short subjects prefixed with `feat:`, `fix:`, `docs:`, `ci:`, or `assets:`. Describe concrete behavior and validation in PRs, link relevant issues, and attach screenshots for UI changes. Preserve existing uncommitted work. Commit, tag, push, and publish only when explicitly authorized.
+
+## Release Workflow and Compatibility Baseline
+
+For an authorized full release, follow [the publishing procedure](docs/publishing.md): commit the release changes, inspect everything about to be pushed for privacy, push only after it is clear, then publish the new version on both GitHub and Nexus Mods. Inspect the complete outgoing commits and files, including screenshots and packaged assets, for credentials, game encryption keys, personal saves, local paths and other private information. If private content is found, remove it from the outgoing content before pushing; never reproduce secrets in reports.
+
+Only a version actually published to users counts as an old version. Uncommitted work, local commits, pushed commits, tags and release drafts without a public release do not establish a historical compatibility requirement. Base compatibility decisions and changelogs on actual public releases; revise unpublished formats and implementations directly instead of adding legacy handling for them. Preserve compatibility required by real published versions.
+
+Use the CLI/GitHub Actions path for Nexus file publication and file descriptions, through `.github/workflows/publish-nexusmods.yml` and `docs/releases/<version>*.nexus.txt`. Keep file descriptions on that path when correcting them as well. Inspect the existing file version before retrying: rerunning the upload action creates another version.
+
+After the Nexus file is published, use `$browser-skill` to update the mod homepage description, the existing Posts sticky changelog, media, gallery order and thumbnail. Read the skill's upload guidance before uploading images. Image uploads open a native Windows file picker; handle it with Windows UI automation as part of the upload. Browser automation alone cannot complete that dialog.
+
+A release is complete only when both platforms expose the intended version and downloads, and the public Nexus Description, Files, Posts and Images tabs show the corresponding text and media. A successful push or upload workflow alone does not complete the release.
+
+## Nexus Copy and Media
+
+Maintain the homepage in `docs/nexus-description.bbcode.txt`, the sticky post in `docs/nexus-pinned-post.bbcode.txt`, file descriptions in `docs/releases/`, and image mappings in `docs/nexus-media-<version>.md`.
+
+Write the homepage, file descriptions and sticky announcement from the player's perspective. Open with the value the mod brings to the user, then explain the relevant behavior and use. For the next release, lead with smoother performance, a more complete move selection and fixes to independent move activation. Describe the actual shipped improvements rather than implementation activity.
+
+Organize the homepage around a new user's complete usage sequence: understand the benefits, install and get started, edit bindings and use presets, then explore enhancement features. Place feature illustrations beside their explanations. Integrate new features into that sequence rather than prepending each update; repair an existing update-first structure when editing the page. Keep the sticky changelog consistent with the style and approximate length of neighboring release entries, covering changes since the previous public version.
+
+The visible homepage gallery must contain exactly eight complete application screenshots plus one banner. Use four English images followed by four Simplified Chinese images; within each language, order them as PC key view, Xbox key view, PlayStation key view, then action view. Put the banner last and use the English PC key view as the thumbnail. Show the current version's enhancement mode and its extra actions in the English and Chinese screenshots. These must be full application views, not isolated dialogs.
+
+The homepage body uses at most eight images to explain the software's features. Its illustrations need not match the visible gallery: reuse gallery images where helpful and add only the feature illustrations the text needs. Keep any dialog screenshots referenced by the body under Hidden images, outside the main visible gallery. Upload only images needed for the gallery or body. Replace old image references with current ones and delete outdated version images. Verify the public gallery order, visibility, thumbnail and embedded images after saving.

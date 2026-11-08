@@ -4,7 +4,14 @@ NativeInput.__index = NativeInput
 local function values(array)
     local result = {}
     if not array then return result end
-    array:ForEach(function(_, item) result[#result + 1] = item:get() end)
+    for index = 1, array:GetArrayNum() do result[index] = array[index] end
+    return result
+end
+
+local function applied_contexts(input)
+    local result = {}
+    local contexts = input:GetPropertyValue("AppliedInputContextData")
+    contexts:ForEach(function(key) result[#result + 1] = key:get() end)
     return result
 end
 
@@ -32,7 +39,15 @@ local function path(action)
 end
 
 function NativeInput.new(backend)
-    return setmetatable({backend = backend, masked = {}, consumed = {}, maintained = {}, remapped = {}, expanded = nil}, NativeInput)
+    local source = debug.getinfo(1,"S").source:sub(2):match("^(.*[/\\])")
+    local dll = source and source:gsub("Scripts[/\\]$", "") .. "lib/pbzability-context.dll"
+    local observe, unchanged
+    if dll then
+        observe = package.loadlib(dll,"pbz_input_mappings_observe")
+        unchanged = package.loadlib(dll,"pbz_input_mappings_unchanged")
+    end
+    return setmetatable({backend = backend, masked = {}, consumed = {}, maintained = {}, remapped = {}, expanded = nil,
+        observe_native = observe and unchanged and observe, unchanged_native = observe and unchanged and unchanged}, NativeInput)
 end
 
 function NativeInput:mappings()
@@ -44,14 +59,18 @@ function NativeInput:mappings()
     return mappings
 end
 
-local function mapping_name(mapping)
+local function mapping_name(mapping, names)
     local behavior = mapping.SettingBehavior
     local settings
     if behavior == 0 then settings = mapping.Action.PlayerMappableKeySettings
     elseif behavior == 1 then settings = mapping.PlayerMappableKeySettings end
     if settings and settings:IsValid() then
+        local id = names and settings:GetAddress()
+        if id and names[id] ~= nil then return names[id] end
         local name = settings.Name:ToString()
-        if name ~= "None" then return name end
+        name = name ~= "None" and name or false
+        if id then names[id] = name end
+        return name
     end
     return false
 end
@@ -65,9 +84,59 @@ local function owns_mapping(spec, current, key)
     return false
 end
 
-local function row(mapping)
+local function action_index(specs, targets)
+    local result = {}
+    local iterator = targets and pairs or ipairs
+    for name, spec in iterator(specs or {}) do
+        local seen = {}
+        local function add(action)
+            if seen[action] then return end
+            seen[action] = true
+            local group = result[action]
+            if not group then group = {}; result[action] = group end
+            group[#group+1] = name
+        end
+        for _, requested in ipairs(spec.actions or {}) do
+            local action = requested:gsub("%.[^./]+$", "")
+            add(action)
+            -- Deflect sets the shared guard state; only Stance.Completed releases it.
+            if targets and action == "/PBZDeflectSystem/Input/IA_Deflect" then add("/PBZDeflectSystem/Input/IA_Stance") end
+        end
+    end
+    return result
+end
+
+local function isolated_deflect(spec)
+    local deflect, stance = false, false
+    for _, requested in ipairs(spec.actions or {}) do
+        requested = requested:gsub("%.[^./]+$", "")
+        if requested == "/PBZDeflectSystem/Input/IA_Deflect" then deflect = true end
+        if requested == "/PBZDeflectSystem/Input/IA_Stance" then stance = true end
+    end
+    return deflect and not stance
+end
+
+local function row(mapping, inspected, names)
+    if inspected then
+        return {object = inspected.object, modifier_objects = inspected.modifier_objects,
+            trigger_objects = inspected.trigger_objects, location = inspected.location, mapping_name = inspected.mapping_name,
+            action_path = inspected.action_path, action_name = inspected.action_name, action_info = inspected.action_info,
+            action_triggers = inspected.action_triggers, pipeline_metadata = inspected.pipeline_metadata}
+    end
     return {object = mapping.Action, modifier_objects = values(mapping.Modifiers),
-        trigger_objects = values(mapping.Triggers), location = mapping:GetStructAddress(), mapping_name = mapping_name(mapping)}
+        trigger_objects = values(mapping.Triggers), location = mapping:GetStructAddress(), mapping_name = mapping_name(mapping, names)}
+end
+
+local function source_path(source)
+    if not source.action_path then
+        local info = source.action_info or source
+        if not info.action_path then
+            info.action_name = source.object:GetFullName():gsub("^%S+ ", "")
+            info.action_path = info.action_name:gsub("%.[^./]+$", "")
+        end
+        source.action_name, source.action_path = info.action_name, info.action_path
+    end
+    return source.action_path
 end
 
 local movement = {
@@ -76,38 +145,65 @@ local movement = {
     ["/SGameLocomotionDriver/Input/IA_Sprint"] = true,
 }
 
-local function continuous_triggers(triggers)
+local continuous_actions = {
+    ["/Game/PBZContent/Input/InputActions/IA_ShipForward"] = true,
+    ["/Game/PBZContent/Input/InputActions/IA_ShipBackword"] = true,
+    ["/Game/PBZContent/Input/InputActions/IA_ShipRight"] = true,
+    ["/PBZDeflectSystem/Input/IA_Stance"] = true,
+    ["/SGameCombatSystem/Weapon/Input/IA_ChangingWeapon"] = true,
+    ["/SGameLocomotionDriver/Input/IA_JoyStickLookInput"] = true,
+    ["/SGameLocomotionDriver/Input/IA_MouseLookInput"] = true,
+    ["/SGameCombatSystem/Targeting/IA_JoystickChangeLockTargetAxis"] = true,
+    ["/SGameCombatSystem/Targeting/IA_MouseChangeLockTargetAxis"] = true,
+    ["/Game/PBZContent/Input/InputActions/IA_MoveInput"] = true,
+    ["/Game/PBZContent/Input/InputActions/IA_LookInput"] = true,
+    ["/Game/PBZContent/Input/InputActions/IA_ClimblMove"] = true,
+    ["/Game/PBZContent/Input/InputActions/IA_ClimbMoveGamePad"] = true,
+    ["/Game/PBZContent/Input/InputActions/IA_ShipLook"] = true,
+}
+
+local function class_name(object, metadata)
+    local id = metadata and address(object)
+    local info = id and metadata[id]
+    if info then return info.class end
+    local class = object:GetClass()
+    local name = (type(class) == "string" and class or class:GetFullName()):match("([^%. /]+)$")
+    if id then metadata[id] = {class=name} end
+    return name
+end
+
+local function continuous_triggers(triggers, metadata)
     for _, trigger in ipairs(triggers) do
-        local class = trigger:GetClass()
-        local name = type(class) == "string" and class or class:GetFullName()
-        if not name:match("InputTriggerDown$") then return false end
+        if class_name(trigger,metadata) ~= "InputTriggerDown" then return false end
     end
     return true
 end
 
 local function continuous_pipeline(source)
-    return continuous_triggers(source.trigger_objects) and continuous_triggers(values(source.object.Triggers))
+    return continuous_triggers(source.trigger_objects,source.pipeline_metadata)
+        and continuous_triggers(source.action_triggers or values(source.object.Triggers),source.pipeline_metadata)
 end
 
-local function class_name(object)
-    local class = object:GetClass()
-    return (type(class) == "string" and class or class:GetFullName()):match("([^%. /]+)$")
+local function resumable(source)
+    local action = source_path(source)
+    return (movement[action] == true or continuous_actions[action] == true) and continuous_pipeline(source)
 end
 
-local function same_movement_pipeline(first, second)
+local function same_continuous_pipeline(first, second)
     if not first or not second or address(first.object) ~= address(second.object)
         or first.mapping_name ~= second.mapping_name
-        or not continuous_pipeline(first) or not continuous_pipeline(second)
+        or not continuous_pipeline(first) or not continuous_triggers(second.trigger_objects,first.pipeline_metadata)
         or #first.modifier_objects ~= #second.modifier_objects or #first.trigger_objects ~= #second.trigger_objects then return false end
     for index, trigger in ipairs(first.trigger_objects) do
         local other = second.trigger_objects[index]
-        if class_name(trigger) ~= class_name(other) or trigger.ActuationThreshold ~= other.ActuationThreshold then return false end
+        if class_name(trigger,first.pipeline_metadata) ~= class_name(other,first.pipeline_metadata)
+            or trigger.ActuationThreshold ~= other.ActuationThreshold then return false end
     end
     for index, modifier in ipairs(first.modifier_objects) do
         local other = second.modifier_objects[index]
         if address(modifier) ~= address(other) then
-            local class = class_name(modifier)
-            if class ~= class_name(other) then return false end
+            local class = class_name(modifier,first.pipeline_metadata)
+            if class ~= class_name(other,first.pipeline_metadata) then return false end
             if class == "InputModifierNegate" then
                 if modifier.bX ~= other.bX or modifier.bY ~= other.bY or modifier.bZ ~= other.bZ then return false end
             elseif class == "InputModifierSwizzleAxis" then
@@ -128,11 +224,10 @@ local resettable = {InputTriggerDown=true, InputTriggerPressed=true, InputTrigge
     InputTriggerHold=true, InputTriggerHoldAndRelease=true, InputTriggerTap=true, InputTriggerPulse=true,
     InputTrigger_HoldAndReleaseEarly=true}
 
-local function schedulable(source, key)
+local function pipeline_support(source, key)
     if key == "Mouse2D" or key == "MouseX" or key == "MouseY" or key:match("^MouseScroll") or key:match("^PBZ_Touchpad_") then return false, "input source remains native" end
     for _, trigger in ipairs(source.trigger_objects) do
-        local class = trigger:GetClass()
-        local name = type(class) == "string" and class or class:GetFullName()
+        local name = class_name(trigger,source.pipeline_metadata)
         if name:find("Chord", 1, true) or name:find("Touchpad", 1, true) then return false, "dependent trigger remains native" end
         local short = name:match("([^%. /]+)$")
         if not resettable[short] or trigger.ActuationThreshold <= 0
@@ -140,14 +235,27 @@ local function schedulable(source, key)
             return false, "trigger cancellation reset is not covered: " .. name
         end
     end
-    if not continuous_triggers(values(source.object.Triggers)) then return false, "action-level temporal trigger remains native" end
+    if not continuous_triggers(source.action_triggers or values(source.object.Triggers),source.pipeline_metadata) then return false, "action-level temporal trigger remains native" end
     return true
 end
 
-function NativeInput:original_key(index, mapping, current)
+local function schedulable(source, key)
+    if source.checked_key ~= key then
+        source.supported, source.unsupported_reason = pipeline_support(source, key)
+        source.checked_key = key
+    end
+    return source.supported, source.unsupported_reason
+end
+
+function NativeInput:original_key(index, mapping, current, frame)
+    if frame and frame.original_keys and frame.original_keys[index] then return frame.original_keys[index] end
     local key = mapping.Key.KeyName:ToString()
     local old = (self.originals or {})[current.location]
-    if old and (old.native_remapped or key == "None") and same_pipeline(old, current) then return old.key end
+    if old and (old.native_remapped or key == "None") and same_pipeline(old, current) then key = old.key end
+    if frame then
+        frame.original_keys = frame.original_keys or {}
+        frame.original_keys[index] = key
+    end
     return key
 end
 
@@ -173,20 +281,20 @@ end
 local function array_matches(array, previous, limits, holds)
     local count, limit, matches = 0, 0, true
     if array then
-        array:ForEach(function(_, entry)
+        for index = 1, array:GetArrayNum() do
             count = count + 1
-            if not matches then return end
-            local object = entry:get()
-            if address(object) ~= address(previous[count]) then matches = false; return end
+            if not matches then break end
+            local object = array[index]
+            if address(object) ~= previous[count] then matches = false; break end
             if limits then
                 limit = limit + 1
-                if object.ActuationThreshold ~= limits[limit] then matches = false; return end
+                if object.ActuationThreshold ~= limits[limit] then matches = false; break end
                 if holds[count] then
                     limit = limit + 1
                     if object.HoldTimeThreshold ~= limits[limit] then matches = false end
                 end
             end
-        end)
+        end
     end
     return matches and count == #previous
 end
@@ -194,58 +302,64 @@ end
 function NativeInput:unchanged()
     local previous = self.observed
     if not previous then return false end
-    local unchanged, count, actions = true, 0, {}
+    if self.unchanged_native then
+        local input = self.backend.controller.PlayerInput
+        if not input or not input:IsValid() then error("Local EnhancedPlayerInput unavailable", 0) end
+        return self.unchanged_native(input:GetAddress(),true) == true
+    end
+    local unchanged, count, actions, names = true, 0, {}, {}
     local function matches(mapping, before, context)
         if not before or before.context ~= context or before.location ~= mapping:GetStructAddress()
-            or before.mapping_name ~= mapping_name(mapping)
-            or before.key ~= mapping.Key.KeyName:ToString() or address(mapping.Action) ~= address(before.object)
-            or not array_matches(mapping.Modifiers, before.modifier_objects)
-            or not array_matches(mapping.Triggers, before.trigger_objects, before.trigger_limits, before.trigger_holds) then return false end
-        local id = address(before.object)
+            or before.mapping_name ~= mapping_name(mapping, names)
+            or before.key ~= mapping.Key.KeyName:ToString() then return false end
+        local action = mapping.Action
+        local id = address(action)
+        if id ~= before.object_address
+            or not array_matches(mapping.Modifiers, before.modifier_addresses)
+            or not array_matches(mapping.Triggers, before.trigger_addresses, before.trigger_limits, before.trigger_holds) then return false end
         if not actions[id] then
-            if not array_matches(mapping.Action.Triggers, before.action_triggers) then return false end
+            if not array_matches(action.Triggers, before.action_trigger_addresses) then return false end
             actions[id] = true
         end
         return true
     end
     local mappings = self:mappings()
-    mappings:ForEach(function(_, entry)
+    for index = 1, mappings:GetArrayNum() do
         count = count + 1
-        if unchanged and not matches(entry:get(), previous.rows[count]) then unchanged = false end
-    end)
+        if unchanged and not matches(mappings[index], previous.rows[count]) then unchanged = false end
+    end
     if not unchanged or count ~= #previous.rows then return false end
     local context_count, template_count = 0, 0
-    local contexts = self.backend.controller.PlayerInput:GetPropertyValue("AppliedInputContextData")
-    contexts:ForEach(function(key)
+    for _, context in ipairs(applied_contexts(self.backend.controller.PlayerInput)) do
         context_count = context_count + 1
-        if not unchanged then return end
-        local context = key:get()
+        if not unchanged then break end
         local id = context:GetAddress()
-        if previous.contexts[context_count] ~= id then unchanged = false; return end
+        if previous.contexts[context_count] ~= id then unchanged = false; break end
         local defaults = context.DefaultKeyMappings.Mappings
-        defaults:ForEach(function(_, entry)
+        for index = 1, defaults:GetArrayNum() do
             template_count = template_count + 1
-            if unchanged and not matches(entry:get(), previous.templates[template_count], id) then unchanged = false end
-        end)
-    end)
+            if unchanged and not matches(defaults[index], previous.templates[template_count], id) then unchanged = false end
+        end
+    end
     return unchanged and context_count == #previous.contexts and template_count == #previous.templates
 end
 
 function NativeInput:inspect()
-    local frame = {rows={}, templates={}, contexts={}}
-    local action_triggers = {}
+    local frame = {rows={}, templates={}, contexts={}, pipeline_metadata={}}
+    local actions, names = {}, {}
     local previous, unchanged = self.observed, self.observed ~= nil
     local function inspect(mapping, index, destination, old, context)
-        local current = row(mapping)
+        local current = row(mapping, nil, names)
+        current.pipeline_metadata = frame.pipeline_metadata
         current.key, current.context = mapping.Key.KeyName:ToString(), context
         local action = address(current.object)
-        if not action_triggers[action] then action_triggers[action] = values(current.object.Triggers) end
-        current.action_triggers = action_triggers[action]
+        if not actions[action] then actions[action] = {triggers=values(current.object.Triggers)} end
+        current.action_info, current.action_triggers = actions[action], actions[action].triggers
         if #current.trigger_objects > 0 then
             current.trigger_limits, current.trigger_holds = {}, {}
             for index, trigger in ipairs(current.trigger_objects) do
                 current.trigger_limits[#current.trigger_limits+1] = trigger.ActuationThreshold
-                if class_name(trigger) == "InputTriggerHold" then
+                if class_name(trigger,frame.pipeline_metadata) == "InputTriggerHold" then
                     current.trigger_holds[index] = true
                     current.trigger_limits[#current.trigger_limits+1] = trigger.HoldTimeThreshold
                 end
@@ -260,17 +374,15 @@ function NativeInput:inspect()
         destination[slot] = {mapping=mapping, index=index, current=current}
     end
     local mappings = self:mappings()
-    mappings:ForEach(function(index, entry) inspect(entry:get(), index, frame.rows, previous and previous.rows) end)
-    local contexts = self.backend.controller.PlayerInput:GetPropertyValue("AppliedInputContextData")
-    contexts:ForEach(function(key)
-        local context = key:get()
+    for index = 1, mappings:GetArrayNum() do inspect(mappings[index], index, frame.rows, previous and previous.rows) end
+    for _, context in ipairs(applied_contexts(self.backend.controller.PlayerInput)) do
         local id = context:GetAddress()
         frame.contexts[#frame.contexts+1] = id
         local defaults = context.DefaultKeyMappings.Mappings
-        defaults:ForEach(function(index, entry)
-            inspect(entry:get(), "template_" .. tostring(id) .. "_" .. index, frame.templates, previous and previous.templates, id)
-        end)
-    end)
+        for index = 1, defaults:GetArrayNum() do
+            inspect(defaults[index], "template_" .. tostring(id) .. "_" .. index, frame.templates, previous and previous.templates, id)
+        end
+    end
     if previous and (#previous.rows ~= #frame.rows or #previous.templates ~= #frame.templates
         or not same_settings(previous.contexts, frame.contexts)) then unchanged = false end
     return frame, unchanged
@@ -279,38 +391,77 @@ end
 function NativeInput:observe(frame, settings)
     -- Keep copied metadata, never native array/struct wrappers, across frames.
     local observed = {rows={}, templates={}, contexts=frame.contexts}
+    local actions = {}
+    local function addresses(objects)
+        local result = {}
+        for index, object in ipairs(objects) do result[index] = address(object) end
+        return result
+    end
+    local function observe(current)
+        current.object_address = address(current.object)
+        current.modifier_addresses = addresses(current.modifier_objects)
+        current.trigger_addresses = addresses(current.trigger_objects)
+        local id = current.object_address
+        if not actions[id] then actions[id] = addresses(current.action_triggers) end
+        current.action_trigger_addresses = actions[id]
+        return current
+    end
     for _, entry in ipairs(frame.rows) do
         entry.current.key = entry.mapping.Key.KeyName:ToString()
-        observed.rows[#observed.rows+1] = entry.current
+        observed.rows[#observed.rows+1] = observe(entry.current)
     end
-    for _, entry in ipairs(frame.templates) do observed.templates[#observed.templates+1] = entry.current end
+    for _, entry in ipairs(frame.templates) do observed.templates[#observed.templates+1] = observe(entry.current) end
     self.observed, self.prepared_config, self.prepared_config_source = observed, copy_settings(settings), self.backend.config
+    if self.observe_native then
+        local failure = self.observe_native(self.backend.controller.PlayerInput:GetAddress())
+        if failure then
+            self.observe_native, self.unchanged_native = nil, nil
+            self.backend:report("input-observation", "Native mapping observation unavailable: " .. tostring(failure))
+        end
+    end
 end
 
-function NativeInput:source_key(mapping, index)
-    local current = row(mapping)
-    local key = self:original_key(index, mapping, current)
+function NativeInput:source_key(mapping, index, frame)
+    if frame and frame.source_keys and frame.source_keys[index] then return frame.source_keys[index] end
+    local current = frame and frame.rows[index].current or row(mapping)
+    local key = self:original_key(index, mapping, current, frame)
     if key ~= "None" then return key end
     -- A saved None retains its action and pipeline; the registered context keeps its device.
-    local contexts = self.backend.controller.PlayerInput:GetPropertyValue("AppliedInputContextData")
     local found, ambiguous
-    contexts:ForEach(function(entry)
-        local context = entry:get()
-        local defaults = context.DefaultKeyMappings.Mappings
-        defaults:ForEach(function(_, item)
-            local template = item:get()
-            if same_pipeline(current, row(template)) then
-                local original = template.Key.KeyName:ToString()
-                if original ~= "None" then
-                    if found and device_of(found) ~= device_of(original) then ambiguous = true else found = original end
-                end
+    local function consider(template, original)
+        if original ~= "None" and same_pipeline(current, template) then
+            if found and device_of(found) ~= device_of(original) then ambiguous = true else found = original end
+        end
+    end
+    if frame then
+        if not frame.template_actions then
+            frame.template_actions = {}
+            for _, entry in ipairs(frame.templates) do
+                local id = address(entry.current.object)
+                local group = frame.template_actions[id]
+                if not group then group = {}; frame.template_actions[id] = group end
+                group[#group+1] = entry.current
             end
-        end)
-    end)
-    return not ambiguous and found or key
+        end
+        for _, template in ipairs(frame.template_actions[address(current.object)] or {}) do consider(template, template.key) end
+    else
+        for _, context in ipairs(applied_contexts(self.backend.controller.PlayerInput)) do
+            local defaults = context.DefaultKeyMappings.Mappings
+            for index = 1, defaults:GetArrayNum() do
+                local template = defaults[index]
+                consider(row(template), template.Key.KeyName:ToString())
+            end
+        end
+    end
+    local result = not ambiguous and found or key
+    if frame then
+        frame.source_keys = frame.source_keys or {}
+        frame.source_keys[index] = result
+    end
+    return result
 end
 
-function NativeInput:apply_masks(reserved, snapshot)
+function NativeInput:apply_masks(reserved, snapshot, frame)
     if reserved then
         for key in pairs(reserved) do self.consumed[key] = true end
         for key in pairs(self.consumed) do
@@ -325,41 +476,53 @@ function NativeInput:apply_masks(reserved, snapshot)
     if not next(self.masked) and not next(self.consumed) and not next(self.maintained) and #(self.backend.config.suppressions or {}) == 0
         and #(self.backend.config.native_bindings or {}) == 0 and not next(self.remapped or {}) then return end
     local masked, remapped, positions, originals = {}, {}, {}, {}
-    -- UE4SS does not root the ForEach receiver while Lua callbacks allocate.
+    local overrides = self.backend.config.native_bindings or {}
+    local overrides_by_action = frame and frame.overrides_by_action or action_index(overrides)
+    local empty = {}
+    -- Indexed reads avoid nested UE4SS callbacks and temporary LocalUnrealParam getters.
     local mappings = self:mappings()
-    mappings:ForEach(function(index, entry)
-        local mapping = entry:get()
-        local current = row(mapping)
-        local original = self:original_key(index, mapping, current)
-        local key = original == "None" and self:source_key(mapping, index) or original
+    for index = 1, mappings:GetArrayNum() do
+        local mapping = mappings[index]
+        local current = row(mapping, frame and frame.rows[index].current)
+        local actionPath = source_path(current)
+        local actionOverrides = overrides_by_action[actionPath] or empty
+        local original = self:original_key(index, mapping, current, frame)
+        local key = original == "None" and self:source_key(mapping, index, frame) or original
         local unified = self.backend.config.unified_native
         local replacement = original
         if not self.maintained[index] and self.backend.config.enabled ~= false then
             local device = device_of(key)
-            for _, override in ipairs(self.backend.config.native_bindings or {}) do
+            for _, overrideIndex in ipairs(actionOverrides) do
+                local override = overrides[overrideIndex]
                 if override.device == device and owns_mapping(override, current, key) then
                     for _, action in ipairs(override.actions or {}) do
-                        if action:gsub("%.[^./]+$", "") == path(mapping.Action) then
+                        if action:gsub("%.[^./]+$", "") == source_path(current) then
                             local identity = action .. ":" .. device
                             positions[identity] = (positions[identity] or 0) + 1
                             replacement = #override.keys > 0 and override.keys[(positions[identity]-1) % #override.keys + 1] or "None"
                             current.key, current.native_remapped = original, true; remapped[index] = current
                             originals[current.location] = current
+                            self.remapped[index] = current
+                            self.originals = self.originals or {}
+                            self.originals[current.location] = current
                         end
                     end
                 end
             end
         end
-        local mask = key ~= "None" and (self.maintained[index] or not unified and (self.consumed[key] or self.backend:baseline_suppressed(mapping.Action, key, current.mapping_name)))
+        local mask = key ~= "None" and (self.maintained[index] or not unified and (self.consumed[key] or self.backend:baseline_suppressed(mapping.Action, key, current.mapping_name, actionOverrides, current.action_name)))
         if mask then
             current.key = original
             masked[index] = current
             originals[current.location] = current
+            self.masked[index] = current
+            self.originals = self.originals or {}
+            self.originals[current.location] = current
             if mapping.Key.KeyName:ToString() ~= "None" then mapping.Key.KeyName = FName("None") end
         elseif mapping.Key.KeyName:ToString() ~= replacement then
             mapping.Key.KeyName = FName(replacement)
         end
-    end)
+    end
     self.masked = masked
     self.remapped = remapped
     self.originals = originals
@@ -370,24 +533,39 @@ function NativeInput:restore()
     local input = controller and controller:IsValid() and controller.PlayerInput
     if (next(self.masked) or next(self.remapped or {})) and input and input:IsValid() then
         local mappings = self:mappings()
-        mappings:ForEach(function(index, entry)
-            local mapping = entry:get()
+        for index = 1, mappings:GetArrayNum() do
+            local mapping = mappings[index]
             local current = row(mapping)
             local original = self:original_key(index, mapping, current)
             if mapping.Key.KeyName:ToString() ~= original then
                 mapping.Key.KeyName = FName(original)
             end
-        end)
+        end
     end
     self.masked, self.consumed, self.maintained, self.remapped, self.expanded = {}, {}, {}, {}, nil
     self.originals, self.observed, self.prepared_config, self.prepared_config_source = nil, nil, nil, nil
 end
 
+function NativeInput:prepare_overrides()
+    local settings = self.override_settings
+    if not settings then settings = {native_only=true}; self.override_settings = settings end
+    settings.enabled, settings.unified = self.backend.config.enabled, self.backend.config.unified_native
+    settings.overrides, settings.suppressions = self.backend.config.native_bindings, self.backend.config.suppressions
+    local prepared = self.prepared_config_source == self.backend.config and same_settings(settings, self.prepared_config)
+    if prepared and self:unchanged() then return end
+    local frame, unchanged = self:inspect()
+    if not prepared or not unchanged then self:apply_masks(nil,nil,frame) end
+    self:observe(frame,settings)
+end
+
 function NativeInput:prepare()
     local backend = self.backend
-    local settings = {enabled=backend.config.enabled, unified=backend.config.unified_native,
-        live=backend.live_validation == true, actions=backend.config.native_actions,
-        overrides=backend.config.native_bindings, suppressions=backend.config.suppressions, targets={}}
+    local settings = self.settings
+    if not settings then settings = {targets={}}; self.settings = settings end
+    settings.enabled, settings.unified = backend.config.enabled, backend.config.unified_native
+    settings.live, settings.actions = backend.live_validation == true, backend.config.native_actions
+    settings.overrides, settings.suppressions = backend.config.native_bindings, backend.config.suppressions
+    for name in pairs(settings.targets) do settings.targets[name] = nil end
     for name, target in pairs(backend.config.targets or {}) do
         if target.kind == "mapping" then settings.targets[name] = target end
     end
@@ -396,16 +574,21 @@ function NativeInput:prepare()
     local expanded, sources, maintained = {}, {}, {}
     local frame, unchanged = self:inspect()
     if unchanged and prepared and self.expanded then
-        if not backend.config.unified_native then self:apply_masks(); self:observe(frame, settings) end
+        if not backend.config.unified_native then self:apply_masks(nil,nil,frame) end
+        self:observe(frame, settings)
         return
     end
     local candidates = {}; for _, action in ipairs(backend.config.native_actions or {}) do candidates[action] = true end
+    local targets_by_action = action_index(backend.config.targets, true)
+    local overrides = backend.config.native_bindings or {}
+    local overrides_by_action = action_index(overrides)
+    frame.overrides_by_action = overrides_by_action
+    local empty = {}
     local function requested_pipeline(actionPath, key)
-        for _, target in pairs(backend.config.targets or {}) do
+        for _, name in ipairs(targets_by_action[actionPath] or {}) do
+            local target = backend.config.targets[name]
             if target.catalog_pipeline and (not target.device or target.device == device_of(key)) then
-                for _, action in ipairs(target.actions) do
-                    if action:gsub("%.[^./]+$", "") == actionPath then return true end
-                end
+                return true
             end
         end
         return false
@@ -415,23 +598,33 @@ function NativeInput:prepare()
     for name, target in pairs(backend.config.targets or {}) do
         if target.kind == "mapping" then expanded[name] = {} end
     end
-    local remembered, maintained_sources = {}, {}
-    local function remember(mapping, suffix, key)
+    local remembered, maintained_sources, sources_by_action = {}, {}, {}
+    local previous_sources = {}
+    for name, previous in pairs(self.expanded or {}) do
+        local id = address(previous.object)
+        if id then
+            local group = previous_sources[id]
+            if not group then group = {}; previous_sources[id] = group end
+            group[name] = previous
+        end
+    end
+    local function remember(mapping, suffix, key, inspected)
         if remembered[suffix] then return remembered[suffix], sources[remembered[suffix]] end
-        local current = row(mapping)
-        local continuous = movement[path(current.object)] and continuous_pipeline(current)
+        local current = row(mapping, inspected)
+        local actionId = address(current.object)
+        local continuous = resumable(current)
         if continuous then
-            for name, source in pairs(sources) do
-                if source.key == key and same_movement_pipeline(current, source) then
+            for name, source in pairs(sources_by_action[actionId] or {}) do
+                if source.key == key and same_continuous_pipeline(current, source) then
                     remembered[suffix] = name
                     return name, source
                 end
             end
         end
         local name
-        for previousName, previous in pairs(self.expanded or {}) do
+        for previousName, previous in pairs(previous_sources[actionId] or {}) do
             if not sources[previousName] and previous.key == key and (same_pipeline(current, previous)
-                or continuous and same_movement_pipeline(current, previous)) then name = previousName; break end
+                or continuous and same_continuous_pipeline(current, previous)) then name = previousName; break end
         end
         if not name then
             self.next_source_id = (self.next_source_id or 0) + 1
@@ -439,19 +632,21 @@ function NativeInput:prepare()
         end
         current.kind, current.key = "action", key
         sources[name] = current
+        sources_by_action[actionId] = sources_by_action[actionId] or {}
+        sources_by_action[actionId][name] = current
         remembered[suffix] = name
         return name, current
     end
     for _, entry in ipairs(frame.rows) do
         local index, mapping, current = entry.index, entry.mapping, entry.current
-        local key = self:original_key(index, mapping, current)
-        local actionPath = path(mapping.Action)
+        local key = self:original_key(index, mapping, current, frame)
+        local actionPath = source_path(current)
         active_actions[actionPath] = true
         local candidate = backend.config.unified_native and (candidates[actionPath] or requested_pipeline(actionPath, key)) or not backend.config.unified_native and movement[actionPath] and continuous_pipeline(current)
         local supported, reason = schedulable(current, key)
-        local suppressed = backend:baseline_suppressed(mapping.Action, key, current.mapping_name)
+        local suppressed = backend:baseline_suppressed(mapping.Action, key, current.mapping_name, overrides_by_action[actionPath] or empty, current.action_name)
         if candidate and key ~= "None" and supported and (backend.config.unified_native or not suppressed) then
-            local name = remember(mapping, index, key)
+            local name = remember(mapping, index, key, current)
             if not maintained_sources[name] then
                 maintained[#maintained + 1] = {target=name, key=key, axis=true, action=mapping.Action,
                     suppressed=suppressed}
@@ -461,10 +656,9 @@ function NativeInput:prepare()
             coverage[#coverage+1] = {action=actionPath, key=key, owner=suppressed and "suppressed" or "scheduler"}
         elseif candidate and key == "None" and supported then
             local overridden = false
-            for _, override in ipairs(backend.config.native_bindings or {}) do
-                for _, action in ipairs(override.actions or {}) do
-                    if action:gsub("%.[^./]+$", "") == actionPath and owns_mapping(override, current, self:source_key(mapping,index)) then overridden = true end
-                end
+            local sourceKey = self:source_key(mapping,index,frame)
+            for _, overrideIndex in ipairs(overrides_by_action[actionPath] or {}) do
+                if owns_mapping(overrides[overrideIndex], current, sourceKey) then overridden = true; break end
             end
             if overridden then self.maintained[index] = true end
             coverage[#coverage+1] = {action=actionPath, key=key, owner=overridden and "scheduler" or "uncovered", reason="unbound mapping"}
@@ -486,41 +680,36 @@ function NativeInput:prepare()
     if next(expanded) then
         local nativePaths, outputSeen = {}, {}
         for name in pairs(expanded) do nativePaths[name], outputSeen[name] = {}, {} end
-        expand = function(mapping, suffix, fallback)
-            local current = row(mapping)
-            local key = fallback and mapping.Key.KeyName:ToString() or self:original_key(suffix, mapping, current)
+        expand = function(mapping, suffix, fallback, current)
+            local key = fallback and mapping.Key.KeyName:ToString() or self:original_key(suffix, mapping, current, frame)
             if key == "None" then return end
-            local nativePath = path(mapping.Action)
+            local nativePath = source_path(current)
             local supported = not backend.config.unified_native or (candidates[nativePath] or requested_pipeline(nativePath,key)) and schedulable(current, key)
             local pad = key:match("^Gamepad_") or key:match("^PBZ_Touchpad_")
             local device = pad and "gamepad" or "keyboard"
             local identity = nativePath .. ":" .. device
-            for name, outputs in pairs(expanded) do
+            for _, name in ipairs(targets_by_action[nativePath] or {}) do
+                local outputs = expanded[name]
                 local target = backend.config.targets[name]
-                if owns_mapping(target, current, key) and (not target.device or target.device == device)
+                if outputs and owns_mapping(target, current, key) and (not target.device or target.device == device)
                     and (not fallback or not nativePaths[name][identity]) then
-                    for _, targetPath in ipairs(target.actions or {}) do
-                        if targetPath:gsub("%.[^./]+$", "") == nativePath then
-                            -- Runtime dependencies take precedence over the context's default pipeline.
-                            if not fallback then nativePaths[name][identity] = true end
-                            if supported then
-                                local cloneName = remember(mapping, suffix, key)
-                                if not outputSeen[name][cloneName] then
-                                    outputs[#outputs + 1] = cloneName
-                                    outputSeen[name][cloneName] = true
-                                end
-                            end
-                            break
+                    -- Runtime dependencies take precedence over the context's default pipeline.
+                    if not fallback then nativePaths[name][identity] = true end
+                    if supported then
+                        local cloneName = remember(mapping, suffix, key, current)
+                        if not outputSeen[name][cloneName] then
+                            outputs[#outputs + 1] = cloneName
+                            outputSeen[name][cloneName] = true
                         end
                     end
                 end
             end
         end
-        for _, entry in ipairs(frame.rows) do expand(entry.mapping, entry.index, false) end
+        for _, entry in ipairs(frame.rows) do expand(entry.mapping, entry.index, false, entry.current) end
     end
     for _, entry in ipairs(frame.templates) do
-        active_actions[path(entry.mapping.Action)] = true
-        if expand then expand(entry.mapping, entry.index, true) end
+        active_actions[source_path(entry.current)] = true
+        if expand then expand(entry.mapping, entry.index, true, entry.current) end
     end
     local function active_target(target)
         -- Scene contexts may remove an action entirely; its bindings wait for that context to return.
@@ -542,14 +731,15 @@ function NativeInput:prepare()
         for name, outputs in pairs(expanded) do
             local device = backend.config.targets[name].device
             if device then
-                for _, output in ipairs(outputs) do captured_actions[path(sources[output].object) .. ":" .. device] = true end
+                for _, output in ipairs(outputs) do captured_actions[source_path(sources[output]) .. ":" .. device] = true end
             end
         end
         for _, entry in ipairs(frame.rows) do
-            local actionPath = path(entry.mapping.Action)
-            local key = self:source_key(entry.mapping, entry.index)
+            local actionPath = source_path(entry.current)
+            local key = self:source_key(entry.mapping, entry.index, frame)
             local device = device_of(key)
-            for _, override in ipairs(backend.config.native_bindings or {}) do
+            for _, overrideIndex in ipairs(overrides_by_action[actionPath] or {}) do
+                local override = overrides[overrideIndex]
                 local owned = owns_mapping(override, entry.current, key)
                 if owned then
                     active_mappings[actionPath .. ":" .. tostring(override["function"])] = true
@@ -561,7 +751,7 @@ function NativeInput:prepare()
                 end
             end
         end
-        for _, override in ipairs(backend.config.native_bindings or {}) do
+        for _, override in ipairs(overrides) do
             for _, requested in ipairs(override.actions or {}) do
                 local actionPath = requested:gsub("%.[^./]+$", "")
                 local identity = actionPath .. ":" .. override.device .. ":" .. tostring(override["function"])
@@ -572,9 +762,11 @@ function NativeInput:prepare()
             end
         end
     end
-    local changed = self.expanded == nil
+    local changed = self.expanded == nil or not prepared
+    local retained = {}
     for name, source in pairs(sources) do
-        if not self.expanded or not same_pipeline(source, self.expanded[name]) or source.key ~= self.expanded[name].key then changed = true end
+        retained[name] = self.expanded and same_pipeline(source, self.expanded[name]) and source.key == self.expanded[name].key
+        if not retained[name] then changed = true end
     end
     for name in pairs(self.expanded or {}) do if not sources[name] then changed = true end end
     if changed then
@@ -584,23 +776,24 @@ function NativeInput:prepare()
         local triggers, modifiers = {}, {}
         for name, target in pairs(backend.config.targets) do
             config.targets[name] = target
-            if target.kind == "action" and movement[(target.path or ""):gsub("%.[^./]+$", "")] then
+            local actionPath = (target.path or ""):gsub("%.[^./]+$", "")
+            if target.kind == "action" and (movement[actionPath] or continuous_actions[actionPath]) then
                 local copy = {}; for key, value in pairs(target) do copy[key] = value end
                 local action = target.object or backend:object(target.path, "InputAction")
                 local pipeline = target.trigger_objects or backend:object_array(target.triggers, "InputTrigger")
-                copy.native_continuous, copy.resume_continuous = true, continuous_pipeline({object=action, trigger_objects=pipeline})
+                copy.native_continuous = movement[actionPath] == true
+                copy.resume_continuous = continuous_pipeline({object=action, trigger_objects=pipeline})
                 config.targets[name] = copy
             end
         end
         for name, source in pairs(sources) do
-            local previous = self.expanded and self.expanded[name]
-            local target = same_pipeline(source, previous) and source.key == previous.key and backend.dynamic_config.targets[name] or
+            local target = retained[name] and backend.dynamic_config.targets[name] or
                 {kind = "action", object = source.object,
                     native_action_id = tostring(address(source.object)),
                     modifier_objects = backend:clone_pipeline_objects(source.modifier_objects),
                     trigger_objects = backend:clone_pipeline_objects(source.trigger_objects),
-                    resume_continuous = movement[path(source.object)] == true and continuous_pipeline(source),
-                    source_relation=name, native_continuous = movement[path(source.object)] == true}
+                    resume_continuous = resumable(source),
+                    source_relation=name, native_continuous = movement[source_path(source)] == true}
             if target ~= (backend.dynamic_config and backend.dynamic_config.targets[name]) and backend.config.unified_native then
                 backend:reset_trigger_objects(target.trigger_objects)
             end
@@ -615,19 +808,34 @@ function NativeInput:prepare()
                 local name = type(output) == "string" and output or output.target
                 if expanded[name] then
                     for _, cloneName in ipairs(expanded[name]) do
-                        outputs[#outputs + 1] = {target = cloneName, value = type(output) == "table" and output.value or nil}
+                        local actionPath = source_path(sources[cloneName])
+                        local targetName = name .. ":" .. cloneName
+                        if not config.targets[targetName] then
+                            local target = prepared and retained[cloneName] and backend.dynamic_config.targets[targetName]
+                            if not target then
+                                target = {}
+                                for key, value in pairs(backend.config.targets[name]) do target[key] = value end
+                                for key, value in pairs(config.targets[cloneName]) do target[key] = value end
+                            end
+                            config.targets[targetName] = target
+                        end
+                        outputs[#outputs + 1] = {target = targetName, value = type(output) == "table" and output.value or nil,
+                            pulse = isolated_deflect(backend.config.targets[name])
+                                and (actionPath == "/PBZDeflectSystem/Input/IA_Deflect" or actionPath == "/PBZDeflectSystem/Input/IA_Stance") or nil}
                     end
                 else outputs[#outputs + 1] = output end
             end
             if #outputs > 0 then copy.outputs = outputs; config.bindings[#config.bindings + 1] = copy end
         end
         for _, entry in ipairs(maintained) do
-            local key = entry.key
-            config.bindings[#config.bindings + 1] = {id="maintain:" .. entry.target,
-                keys=entry.axis and {} or {entry.key}, axis=entry.axis and entry.key or nil,
-                trigger=entry.axis and "axis" or "down", threshold=.001, priority=-2147483648,
-                outputs={entry.target}, native_continuous=true, relation_key=key,
-                when=function() return not self.consumed[key] and not entry.suppressed end}
+            if not entry.suppressed then
+                local key = entry.key
+                config.bindings[#config.bindings + 1] = {id="maintain:" .. entry.target,
+                    keys=entry.axis and {} or {entry.key}, axis=entry.axis and entry.key or nil,
+                    trigger=entry.axis and "axis" or "down", threshold=.001, priority=-2147483648,
+                    outputs={entry.target}, native_continuous=true, relation_key=key,
+                    when=function() return not self.consumed[key] end}
+            end
         end
         if #triggers > 0 or #modifiers > 0 then backend:hold_objects(triggers, modifiers) end
         backend.dynamic_config, backend.dynamic_contexts = config, {}
@@ -635,7 +843,7 @@ function NativeInput:prepare()
         self.expanded = sources
         backend.log("Gameplay scheduler relations=" .. #config.bindings)
     end
-    self:apply_masks()
+    self:apply_masks(nil,nil,frame)
     self:observe(frame, settings)
 end
 

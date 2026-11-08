@@ -1,0 +1,4977 @@
+{
+  "build": "CL-302256",
+  "runtimeVerified": false,
+  "evidenceType": "Static original combat-art timelines, attack resources, native branch control flow and retained preparation events",
+  "recipes": [
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_ChiZheCanJian_C.Stage2",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_C.GA_Hun_ChiZheCanJian_C_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          2.75,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.03,
+          "before_time": 2.75,
+          "timeline": "Main"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.ChiZheCanJian"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · ChiZheCanJian_C · Stage2",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "ChiZheCanJian_C",
+          "catalog.followup",
+          "2"
+        ],
+        "searchAliases": [
+          "GA_Hun_ChiZheCanJian_C",
+          "Stage2",
+          "痴者残剑",
+          "THE FANATIC'S BROKEN BLADE",
+          "痴者の残剣",
+          "광인의 잔검",
+          "Сломанный Клинок Фанатика",
+          "痴者殘劍",
+          "LAME BRISÉE DU FANATIQUE",
+          "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+          "ESPADA ROTA DEL FANÁTICO",
+          "LÂMINA QUEBRADA DO FANÁTICO",
+          "LAMA SPEZZATA DEL FANATICO",
+          "กระบี่หักของจอมคลั่ง",
+          "SI GIẢ TÀN KIẾM",
+          "A ESPADA PARTIDA DO FANÁTICO",
+          "ESPADA ROTA DEL FANÁTICO"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "痴者残剑",
+          "en": "THE FANATIC'S BROKEN BLADE",
+          "ja": "痴者の残剣",
+          "ko": "광인의 잔검",
+          "ru": "Сломанный Клинок Фанатика",
+          "zh-Hant": "痴者殘劍",
+          "fr": "LAME BRISÉE DU FANATIQUE",
+          "de": "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+          "es-ES": "ESPADA ROTA DEL FANÁTICO",
+          "pt-BR": "LÂMINA QUEBRADA DO FANÁTICO",
+          "it": "LAMA SPEZZATA DEL FANATICO",
+          "th": "กระบี่หักของจอมคลั่ง",
+          "vi": "SI GIẢ TÀN KIẾM",
+          "pt-PT": "A ESPADA PARTIDA DO FANÁTICO",
+          "es-419": "ESPADA ROTA DEL FANÁTICO"
+        },
+        "category": "weapons/Weapon_008/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 2.75,
+          "attack_start": 3.0533957481384277,
+          "attack_end": 6.817487001419067
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/Weapon_Hun_ChiZheCanJian",
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/Weapon_Hun_ChiZheZuiJian"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.03,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 29,
+                "exportByteOffset": 1201,
+                "startTime": 3.0533957481384277,
+                "duration": 3.5756545066833496,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 50,
+                "action": "LGAAction_DurationBulletWithDeflect_2",
+                "guid": "30acbd69b7c14949937e7e5db12de8da",
+                "trackIndex": 8,
+                "sections": [
+                  {
+                    "0": 1.7878272533416748,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 1.7878272533416748,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ChiZheCanJian/Use/BulletData_Hun_ChiZheCanJian_C_04"
+                  }
+                ]
+              },
+              {
+                "index": 31,
+                "exportByteOffset": 1299,
+                "startTime": 3.8460440635681152,
+                "duration": 2.971442937850952,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 41,
+                "action": "GAAction_ReadyBulletWithAim_C_1",
+                "guid": "c8a265b9b52f254fbf301ccb314ce664",
+                "trackIndex": 14,
+                "sections": [],
+                "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReadyBulletWithAim",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 6,
+                    "path": "/PBZCombatAsset/ActorData/Mobs/HuaQianXiao/Bullet/BD_JiuTan_L0"
+                  }
+                ]
+              },
+              {
+                "index": 47,
+                "exportByteOffset": 1895,
+                "startTime": 6.024430751800537,
+                "duration": 0.5000338554382324,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 52,
+                "action": "LGAAction_DurationBulletWithDeflect_4",
+                "guid": "dc75aa7d8595e84696739fc4af110c55",
+                "trackIndex": 10,
+                "sections": [
+                  {
+                    "0": 0.2500169277191162,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.2500169277191162,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ChiZheCanJian/Use/BulletData_Hun_ChiZheCanJian_C_06"
+                  }
+                ]
+              },
+              {
+                "index": 48,
+                "exportByteOffset": 1958,
+                "startTime": 6.091833114624023,
+                "duration": 0,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 42,
+                "action": "GAAction_ReleaseBullet_C_1",
+                "guid": "7cc0cf5b9bed8c41bdf066c22a783548",
+                "trackIndex": 15,
+                "sections": [],
+                "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReleaseBullet",
+                "directAttackAction": true,
+                "resourceReferences": []
+              }
+            ],
+            "entryTime": 2.75
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_ChiZheCanJian_C_ToZui.Release",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_C_ToZui.GA_Hun_ChiZheCanJian_C_ToZui_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          3.1,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 1.8143,
+          "before_time": 3.1,
+          "timeline": "Main",
+          "object_variable": {
+            "property": "Variables",
+            "key": "JiuTan",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Mobs/HuaQianXiao/Bullet/BD_JiuTan_L0.BD_JiuTan_L0"
+          }
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.ChiZheCanJian"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · ChiZheCanJian_C_ToZui · Release",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "ChiZheCanJian_C_ToZui",
+          "moves.release"
+        ],
+        "searchAliases": [
+          "GA_Hun_ChiZheCanJian_C_ToZui",
+          "Release",
+          "痴者残剑",
+          "THE FANATIC'S BROKEN BLADE",
+          "痴者の残剣",
+          "광인의 잔검",
+          "Сломанный Клинок Фанатика",
+          "痴者殘劍",
+          "LAME BRISÉE DU FANATIQUE",
+          "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+          "ESPADA ROTA DEL FANÁTICO",
+          "LÂMINA QUEBRADA DO FANÁTICO",
+          "LAMA SPEZZATA DEL FANATICO",
+          "กระบี่หักของจอมคลั่ง",
+          "SI GIẢ TÀN KIẾM",
+          "A ESPADA PARTIDA DO FANÁTICO",
+          "ESPADA ROTA DEL FANÁTICO"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "痴者残剑",
+          "en": "THE FANATIC'S BROKEN BLADE",
+          "ja": "痴者の残剣",
+          "ko": "광인의 잔검",
+          "ru": "Сломанный Клинок Фанатика",
+          "zh-Hant": "痴者殘劍",
+          "fr": "LAME BRISÉE DU FANATIQUE",
+          "de": "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+          "es-ES": "ESPADA ROTA DEL FANÁTICO",
+          "pt-BR": "LÂMINA QUEBRADA DO FANÁTICO",
+          "it": "LAMA SPEZZATA DEL FANATICO",
+          "th": "กระบี่หักของจอมคลั่ง",
+          "vi": "SI GIẢ TÀN KIẾM",
+          "pt-PT": "A ESPADA PARTIDA DO FANÁTICO",
+          "es-419": "ESPADA ROTA DEL FANÁTICO"
+        },
+        "category": "weapons/Weapon_008/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 3.1,
+          "attack_start": 3.1,
+          "attack_end": 3.648129940032959
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_C_ToZui",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/Weapon_Hun_ChiZheCanJian",
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/Weapon_Hun_ChiZheZuiJian"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 1.8143,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 7,
+                "exportByteOffset": 323,
+                "startTime": 0.09487974643707275,
+                "duration": 3.5124013423919678,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 26,
+                "action": "LGAAction_DurationBulletWithDeflect_0",
+                "guid": "c6d980d3a141064aba485b4e780cf42c",
+                "trackIndex": 4,
+                "sections": [
+                  {
+                    "0": 1.7562006711959839,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 1.7562006711959839,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ChiZheCanJian/Use/BulletData_Hun_ChiZheCanJian_C_ToZui_01"
+                  }
+                ]
+              },
+              {
+                "index": 20,
+                "exportByteOffset": 830,
+                "startTime": 3.1407668590545654,
+                "duration": 0,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 21,
+                "action": "GAAction_ReleaseBullet_C_1",
+                "guid": "1711758878693949b33e01b73aa20595",
+                "trackIndex": 7,
+                "sections": [],
+                "class": "/PBZCombatAsset/Prototypes/Actions/GAAction_ReleaseBullet",
+                "directAttackAction": true,
+                "resourceReferences": []
+              },
+              {
+                "index": 21,
+                "exportByteOffset": 865,
+                "startTime": 3.1480960845947266,
+                "duration": 0.5000338554382324,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 27,
+                "action": "LGAAction_DurationBulletWithDeflect_1",
+                "guid": "90f61afed5beb84d9cf6bec8686dbd09",
+                "trackIndex": 6,
+                "sections": [
+                  {
+                    "0": 0.2500169277191162,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.2500169277191162,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ChiZheCanJian/Use/BulletData_Hun_ChiZheCanJian_C_ToZui_02"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 3.1
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_ChiZheCanJian_C_Zui.Final",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_C_Zui.GA_Hun_ChiZheCanJian_C_Zui_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          4.4,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 4.4,
+          "timeline": "Main"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.ChiZheCanJian"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · ChiZheCanJian_C_Zui · Final",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "ChiZheCanJian_C_Zui",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_ChiZheCanJian_C_Zui",
+          "Final",
+          "痴者残剑",
+          "THE FANATIC'S BROKEN BLADE",
+          "痴者の残剣",
+          "광인의 잔검",
+          "Сломанный Клинок Фанатика",
+          "痴者殘劍",
+          "LAME BRISÉE DU FANATIQUE",
+          "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+          "ESPADA ROTA DEL FANÁTICO",
+          "LÂMINA QUEBRADA DO FANÁTICO",
+          "LAMA SPEZZATA DEL FANATICO",
+          "กระบี่หักของจอมคลั่ง",
+          "SI GIẢ TÀN KIẾM",
+          "A ESPADA PARTIDA DO FANÁTICO",
+          "ESPADA ROTA DEL FANÁTICO"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "痴者残剑",
+          "en": "THE FANATIC'S BROKEN BLADE",
+          "ja": "痴者の残剣",
+          "ko": "광인의 잔검",
+          "ru": "Сломанный Клинок Фанатика",
+          "zh-Hant": "痴者殘劍",
+          "fr": "LAME BRISÉE DU FANATIQUE",
+          "de": "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+          "es-ES": "ESPADA ROTA DEL FANÁTICO",
+          "pt-BR": "LÂMINA QUEBRADA DO FANÁTICO",
+          "it": "LAMA SPEZZATA DEL FANATICO",
+          "th": "กระบี่หักของจอมคลั่ง",
+          "vi": "SI GIẢ TÀN KIẾM",
+          "pt-PT": "A ESPADA PARTIDA DO FANÁTICO",
+          "es-419": "ESPADA ROTA DEL FANÁTICO"
+        },
+        "category": "weapons/Weapon_008/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 4.4,
+          "attack_start": 4.463503837585449,
+          "attack_end": 5.70931601524353
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_C_Zui",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/Weapon_Hun_ChiZheCanJian",
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/Weapon_Hun_ChiZheZuiJian"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 43,
+                "exportByteOffset": 1791,
+                "startTime": 4.463503837585449,
+                "duration": 0.21676254272460938,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 71,
+                "action": "LGAAction_DurationBulletWithDeflect_7",
+                "guid": "4f9a1bf10252b148ab33eb39dd1b43c6",
+                "trackIndex": 8,
+                "sections": [
+                  {
+                    "0": 0.10838127136230469,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.10838127136230469,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ChiZheCanJian/Use/BulletData_Hun_ChiZheCanJian_C_Zui_06"
+                  }
+                ]
+              },
+              {
+                "index": 55,
+                "exportByteOffset": 2259,
+                "startTime": 5.600255966186523,
+                "duration": 0.10906004905700684,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 65,
+                "action": "LGAAction_DurationBulletWithDeflect_1",
+                "guid": "04683cb143559a4a96d507ca028d9dd1",
+                "trackIndex": 8,
+                "sections": [
+                  {
+                    "0": 0.05453002452850342,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.05453002452850342,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ChiZheCanJian/Use/BulletData_Hun_ChiZheCanJian_C_Zui_07"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 4.4
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C.Crow",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C.GA_Hun_Double_JueYing_C_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          0.92,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 0.92,
+          "timelines": [
+            "Main",
+            "NearTimeline"
+          ]
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.DoubleBlade.JueYing"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Double_JueYing_C · Crow",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "catalog.followup",
+          "2"
+        ],
+        "searchAliases": [
+          "GA_Hun_Double_JueYing_C",
+          "Crow",
+          "绝影",
+          "SHADOWLESS EDGE",
+          "絶影",
+          "절영",
+          "Неуловимые Клинки",
+          "絕影",
+          "OMBRES INSAISISSABLES",
+          "SCHATTENLOSE KLINGE",
+          "FILOS SIN SOMBRA",
+          "LÂMINA SEM SOMBRA",
+          "LAMA SENZ'OMBRA",
+          "ดาบเงาสูญ",
+          "TUYỆT ẢNH",
+          "GUME SEM SOMBRA",
+          "FILO SIN SOMBRA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "绝影",
+          "en": "SHADOWLESS EDGE",
+          "ja": "絶影",
+          "ko": "절영",
+          "ru": "Неуловимые Клинки",
+          "zh-Hant": "絕影",
+          "fr": "OMBRES INSAISISSABLES",
+          "de": "SCHATTENLOSE KLINGE",
+          "es-ES": "FILOS SIN SOMBRA",
+          "pt-BR": "LÂMINA SEM SOMBRA",
+          "it": "LAMA SENZ'OMBRA",
+          "th": "ดาบเงาสูญ",
+          "vi": "TUYỆT ẢNH",
+          "pt-PT": "GUME SEM SOMBRA",
+          "es-419": "FILO SIN SOMBRA"
+        },
+        "category": "weapons/Weapon_024/IA_UltimateSkill",
+        "phaseWindows": [
+          {
+            "timeline": "Main",
+            "entry_time": 0.92,
+            "attack_start": 1.0054361820220947,
+            "attack_end": 2.1921606063842773
+          },
+          {
+            "timeline": "NearTimeline",
+            "entry_time": 0.92,
+            "attack_start": 1.0054359436035156,
+            "attack_end": 2.192160978913307
+          }
+        ]
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Double/Weapon_Hun_JueYing"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main",
+          "NearTimeline"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 29,
+                "exportByteOffset": 1225,
+                "startTime": 1.0054361820220947,
+                "duration": 0.5909204483032227,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 7,
+                "action": "GAA_DelayDeflectProjectileBullet_C_0",
+                "guid": "c47794ce88db4547932c97ec45cd5932",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/JueYing/BD_GA_Hun_Double_JueYing_C_Crow"
+                  }
+                ]
+              },
+              {
+                "index": 30,
+                "exportByteOffset": 1264,
+                "startTime": 1.0067925453186035,
+                "duration": 0.6461743116378784,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 51,
+                "action": "GAAction_DurationBullet_Simple_C_5",
+                "guid": "0e2a278a3adebb499449edd60a0fe0f8",
+                "trackIndex": 4,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/JueYing/BD_GA_Hun_Double_JueYing_C_Sweep"
+                  }
+                ]
+              },
+              {
+                "index": 43,
+                "exportByteOffset": 1779,
+                "startTime": 2.0519137382507324,
+                "duration": 0.14024686813354492,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 50,
+                "action": "GAAction_DurationBullet_Simple_C_18",
+                "guid": "9de7aee1881cf241b72dff01c1494b78",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/JueYing/BD_GA_Hun_JueYing_C_End"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 0.92
+          },
+          {
+            "timeline": "NearTimeline",
+            "retainedAttackActions": [
+              {
+                "index": 29,
+                "exportByteOffset": 1205,
+                "startTime": 1.0054359436035156,
+                "duration": 0.5909199714660645,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 8,
+                "action": "GAA_DelayDeflectProjectileBullet_C_0",
+                "guid": "f747aac047d9d2489d46003371df752b",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/JueYing/BD_GA_Hun_Double_JueYing_C_Crow_Near"
+                  }
+                ]
+              },
+              {
+                "index": 30,
+                "exportByteOffset": 1244,
+                "startTime": 1.0067930221557617,
+                "duration": 0.6461740136146545,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 55,
+                "action": "GAAction_DurationBullet_Simple_C_5",
+                "guid": "3d4124e4889e0846b1d18fb970b25085",
+                "trackIndex": 4,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/JueYing/BD_GA_Hun_Double_JueYing_C_Sweep"
+                  }
+                ]
+              },
+              {
+                "index": 45,
+                "exportByteOffset": 1813,
+                "startTime": 2.0519139766693115,
+                "duration": 0.14024700224399567,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 54,
+                "action": "GAAction_DurationBullet_Simple_C_18",
+                "guid": "18cb96e45e6bb94f833dbe137446c3f1",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/JueYing/BD_GA_Hun_JueYing_C_End"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 0.92
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Crow",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.JueYing.Air",
+        "tag": "Ability.Action.Hun.CombatArt.JueYing.Air",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C_Air.GA_Hun_Double_JueYing_C_Air_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          0.92,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 0.92,
+          "timeline": "Main"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.DoubleBlade.JueYing"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Double_JueYing_C_Air · Crow",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.air",
+          "catalog.followup",
+          "2"
+        ],
+        "searchAliases": [
+          "GA_Hun_Double_JueYing_C_Air",
+          "Crow",
+          "绝影",
+          "SHADOWLESS EDGE",
+          "絶影",
+          "절영",
+          "Неуловимые Клинки",
+          "絕影",
+          "OMBRES INSAISISSABLES",
+          "SCHATTENLOSE KLINGE",
+          "FILOS SIN SOMBRA",
+          "LÂMINA SEM SOMBRA",
+          "LAMA SENZ'OMBRA",
+          "ดาบเงาสูญ",
+          "TUYỆT ẢNH",
+          "GUME SEM SOMBRA",
+          "FILO SIN SOMBRA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "绝影",
+          "en": "SHADOWLESS EDGE",
+          "ja": "絶影",
+          "ko": "절영",
+          "ru": "Неуловимые Клинки",
+          "zh-Hant": "絕影",
+          "fr": "OMBRES INSAISISSABLES",
+          "de": "SCHATTENLOSE KLINGE",
+          "es-ES": "FILOS SIN SOMBRA",
+          "pt-BR": "LÂMINA SEM SOMBRA",
+          "it": "LAMA SENZ'OMBRA",
+          "th": "ดาบเงาสูญ",
+          "vi": "TUYỆT ẢNH",
+          "pt-PT": "GUME SEM SOMBRA",
+          "es-419": "FILO SIN SOMBRA"
+        },
+        "category": "weapons/Weapon_024/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 0.92,
+          "attack_start": 1.0054359436035156,
+          "attack_end": 2.192160978913307
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C_Air",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Double/Weapon_Hun_JueYing"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 24,
+                "exportByteOffset": 1024,
+                "startTime": 1.0054359436035156,
+                "duration": 0.5909199714660645,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 7,
+                "action": "GAA_DelayDeflectProjectileBullet_C_1",
+                "guid": "4401ba56fcc78046874f8416f848d3bd",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/JueYing/BD_GA_Hun_Double_JueYing_C_Crow_Near"
+                  }
+                ]
+              },
+              {
+                "index": 25,
+                "exportByteOffset": 1063,
+                "startTime": 1.0067930221557617,
+                "duration": 0.6461740136146545,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 30,
+                "action": "GAAction_DurationBullet_Simple_C_6",
+                "guid": "5fea855aa0d3374abf10b009c6b537ad",
+                "trackIndex": 4,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/JueYing/BD_GA_Hun_Double_JueYing_C_Sweep"
+                  }
+                ]
+              },
+              {
+                "index": 40,
+                "exportByteOffset": 1628,
+                "startTime": 2.0519139766693115,
+                "duration": 0.14024700224399567,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 29,
+                "action": "GAAction_DurationBullet_Simple_C_4",
+                "guid": "6bb64918212c9f4fa1c7b8800f2d73b0",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/JueYing/BD_GA_Hun_JueYing_C_End"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 0.92
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_LuanYing_CA.Stage2",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/CA/GA_Hun_LuanYing_CA.GA_Hun_LuanYing_CA_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          0.74,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 0.74,
+          "timeline": "Main"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.LuanYing"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · LuanYing_CA · Stage2",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "LuanYing_CA",
+          "catalog.followup",
+          "2"
+        ],
+        "searchAliases": [
+          "GA_Hun_LuanYing_CA",
+          "Stage2",
+          "乱莺剑",
+          "WILD ORIOLE SWORD",
+          "乱鶯剣",
+          "난앵검",
+          "Клинок Дикой Иволги",
+          "亂鶯劍",
+          "ÉPÉE DU LORIOT SAUVAGE",
+          "WILDER PIROL",
+          "ESPADA DE LA OROPÉNDOLA SALVAJE",
+          "ESPADA DO ROUXINOL SELVAGEM",
+          "LAMA DELL'ORIOLO",
+          "กระบี่วิหคอลหม่าน",
+          "LOẠN OANH KIẾM",
+          "PAPA-FIGOS SELVAGEM",
+          "ESPADA DE LA OROPÉNDOLA SALVAJE"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "乱莺剑",
+          "en": "WILD ORIOLE SWORD",
+          "ja": "乱鶯剣",
+          "ko": "난앵검",
+          "ru": "Клинок Дикой Иволги",
+          "zh-Hant": "亂鶯劍",
+          "fr": "ÉPÉE DU LORIOT SAUVAGE",
+          "de": "WILDER PIROL",
+          "es-ES": "ESPADA DE LA OROPÉNDOLA SALVAJE",
+          "pt-BR": "ESPADA DO ROUXINOL SELVAGEM",
+          "it": "LAMA DELL'ORIOLO",
+          "th": "กระบี่วิหคอลหม่าน",
+          "vi": "LOẠN OANH KIẾM",
+          "pt-PT": "PAPA-FIGOS SELVAGEM",
+          "es-419": "ESPADA DE LA OROPÉNDOLA SALVAJE"
+        },
+        "category": "weapons/Weapon_003/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 0.74,
+          "attack_start": 0.7703215479850769,
+          "attack_end": 2.111839532852173
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/CA/GA_Hun_LuanYing_CA",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/LuanYing/Weapon_Hun_LuanYing_Evolution"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 16,
+                "exportByteOffset": 706,
+                "startTime": 0.7703215479850769,
+                "duration": 0.23826462030410767,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 4,
+                "action": "GAA_DelayDeflectProjectileBullet_C_1",
+                "guid": "1835779d83f79f46a02ad4af0d6757fd",
+                "trackIndex": 9,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/Wave/BulletData_Hun_LuanYing_CA_03"
+                  }
+                ]
+              },
+              {
+                "index": 19,
+                "exportByteOffset": 823,
+                "startTime": 0.9244544506072998,
+                "duration": 0.388882040977478,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 54,
+                "action": "LGAAction_DurationBulletWithDeflect_9",
+                "guid": "b6046509574aed448d5d8596bb1878ff",
+                "trackIndex": 4,
+                "sections": [
+                  {
+                    "0": 0.194441020488739,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.194441020488739,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 15,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_CA_04"
+                  }
+                ]
+              },
+              {
+                "index": 20,
+                "exportByteOffset": 886,
+                "startTime": 0.9454177021980286,
+                "duration": 0.30764883756637573,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 7,
+                "action": "GAA_DelayDeflectProjectileBullet_C_4",
+                "guid": "2e63e34ae1e7ec4fa2e5da4d2663094f",
+                "trackIndex": 10,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/Wave/BulletData_Hun_LuanYing_CA_05"
+                  }
+                ]
+              },
+              {
+                "index": 26,
+                "exportByteOffset": 1120,
+                "startTime": 1.1787753105163574,
+                "duration": 0.22805345058441162,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 3,
+                "action": "GAA_DelayDeflectProjectileBullet_C_0",
+                "guid": "e4e5eba248774746a92345bd1a799348",
+                "trackIndex": 9,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/Wave/BulletData_Hun_LuanYing_CA_06"
+                  }
+                ]
+              },
+              {
+                "index": 28,
+                "exportByteOffset": 1198,
+                "startTime": 1.3538001775741577,
+                "duration": 0.11798667907714844,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 51,
+                "action": "LGAAction_DurationBulletWithDeflect_10",
+                "guid": "11fd8ac241b58047a420544986604e83",
+                "trackIndex": 4,
+                "sections": [
+                  {
+                    "0": 0.05899333953857422,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.05899333953857422,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_CA_07"
+                  }
+                ]
+              },
+              {
+                "index": 30,
+                "exportByteOffset": 1300,
+                "startTime": 1.444270372390747,
+                "duration": 0.2893214225769043,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 5,
+                "action": "GAA_DelayDeflectProjectileBullet_C_2",
+                "guid": "3968d632f6c29446ab6cadeb4232801a",
+                "trackIndex": 10,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/Wave/BulletData_Hun_LuanYing_CA_08"
+                  }
+                ]
+              },
+              {
+                "index": 34,
+                "exportByteOffset": 1456,
+                "startTime": 1.6780211925506592,
+                "duration": 0.2293238639831543,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 50,
+                "action": "LGAAction_DurationBulletWithDeflect_1",
+                "guid": "7ef8a1fe0320774c9becbdd13b839fba",
+                "trackIndex": 4,
+                "sections": [
+                  {
+                    "0": 0.11466193199157715,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.11466193199157715,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 15,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_CA_09"
+                  }
+                ]
+              },
+              {
+                "index": 37,
+                "exportByteOffset": 1597,
+                "startTime": 1.7971190214157104,
+                "duration": 0.252595990896225,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 8,
+                "action": "GAA_DelayDeflectProjectileBullet_C_5",
+                "guid": "e8a6fb6a0e374042809abba850510230",
+                "trackIndex": 12,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/Wave/BulletData_Hun_LuanYing_CA"
+                  }
+                ]
+              },
+              {
+                "index": 38,
+                "exportByteOffset": 1636,
+                "startTime": 1.7971190214157104,
+                "duration": 0.252595990896225,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 9,
+                "action": "GAA_DelayDeflectProjectileBullet_C_6",
+                "guid": "241a307336b9d441a08c84138d636858",
+                "trackIndex": 13,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/Wave/BulletData_Hun_LuanYing_CA"
+                  }
+                ]
+              },
+              {
+                "index": 39,
+                "exportByteOffset": 1675,
+                "startTime": 1.797119140625,
+                "duration": 0.2525959014892578,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 6,
+                "action": "GAA_DelayDeflectProjectileBullet_C_3",
+                "guid": "58bf1818ff27d44e8e0a027ce546bc78",
+                "trackIndex": 11,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/Wave/BulletData_Hun_LuanYing_CA"
+                  }
+                ]
+              },
+              {
+                "index": 42,
+                "exportByteOffset": 1796,
+                "startTime": 2.007629156112671,
+                "duration": 0.10421037673950195,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 52,
+                "action": "LGAAction_DurationBulletWithDeflect_11",
+                "guid": "ccdd7c37629d6f4488a7138b7e7692c0",
+                "trackIndex": 4,
+                "sections": [
+                  {
+                    "0": 0.05210518836975098,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.05210518836975098,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_CA"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 0.74
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_LuanYing_P2_CA.Stage2",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/CA/GA_Hun_LuanYing_P2_CA.GA_Hun_LuanYing_P2_CA_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          1.2,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 1.2,
+          "timeline": "Main"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.LuanYing"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · LuanYing_P2_CA · Stage2",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "LuanYing_P2_CA",
+          "catalog.followup",
+          "2"
+        ],
+        "searchAliases": [
+          "GA_Hun_LuanYing_P2_CA",
+          "Stage2",
+          "乱莺剑",
+          "WILD ORIOLE SWORD",
+          "乱鶯剣",
+          "난앵검",
+          "Клинок Дикой Иволги",
+          "亂鶯劍",
+          "ÉPÉE DU LORIOT SAUVAGE",
+          "WILDER PIROL",
+          "ESPADA DE LA OROPÉNDOLA SALVAJE",
+          "ESPADA DO ROUXINOL SELVAGEM",
+          "LAMA DELL'ORIOLO",
+          "กระบี่วิหคอลหม่าน",
+          "LOẠN OANH KIẾM",
+          "PAPA-FIGOS SELVAGEM",
+          "ESPADA DE LA OROPÉNDOLA SALVAJE"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "乱莺剑",
+          "en": "WILD ORIOLE SWORD",
+          "ja": "乱鶯剣",
+          "ko": "난앵검",
+          "ru": "Клинок Дикой Иволги",
+          "zh-Hant": "亂鶯劍",
+          "fr": "ÉPÉE DU LORIOT SAUVAGE",
+          "de": "WILDER PIROL",
+          "es-ES": "ESPADA DE LA OROPÉNDOLA SALVAJE",
+          "pt-BR": "ESPADA DO ROUXINOL SELVAGEM",
+          "it": "LAMA DELL'ORIOLO",
+          "th": "กระบี่วิหคอลหม่าน",
+          "vi": "LOẠN OANH KIẾM",
+          "pt-PT": "PAPA-FIGOS SELVAGEM",
+          "es-419": "ESPADA DE LA OROPÉNDOLA SALVAJE"
+        },
+        "category": "weapons/Weapon_003/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 1.2,
+          "attack_start": 1.3358440399169922,
+          "attack_end": 2.320129871368408
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/CA/GA_Hun_LuanYing_P2_CA",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/LuanYing/Weapon_Hun_LuanYing_Evolution"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 30,
+                "exportByteOffset": 1276,
+                "startTime": 1.3358440399169922,
+                "duration": 0.08937263488769531,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 48,
+                "action": "LGAAction_DurationBulletWithDeflect_10",
+                "guid": "11fd8ac241b58047a420544986604e83",
+                "trackIndex": 4,
+                "sections": [
+                  {
+                    "0": 0.044686317443847656,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.044686317443847656,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_P2_CA_08"
+                  }
+                ]
+              },
+              {
+                "index": 36,
+                "exportByteOffset": 1526,
+                "startTime": 1.6013059616088867,
+                "duration": 0.18285465240478516,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 49,
+                "action": "LGAAction_DurationBulletWithDeflect_3",
+                "guid": "3fbc61b8e0c15d469d7e561d98c3abf4",
+                "trackIndex": 9,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 19,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_P2_CA_09"
+                  }
+                ]
+              },
+              {
+                "index": 42,
+                "exportByteOffset": 1764,
+                "startTime": 2.092041254043579,
+                "duration": 0.20000910758972168,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 7,
+                "action": "GAA_DelayDeflectProjectileBullet_C_8",
+                "guid": "a1a11a5112cb9c41951ed9161fe65c18",
+                "trackIndex": 11,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_P2_CA"
+                  }
+                ]
+              },
+              {
+                "index": 43,
+                "exportByteOffset": 1807,
+                "startTime": 2.092088222503662,
+                "duration": 0.20021557807922363,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 8,
+                "action": "GAA_DelayDeflectProjectileBullet_C_9",
+                "guid": "3574ec54c3418844aa27d0c0dc90a2c7",
+                "trackIndex": 12,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_P2_CA"
+                  }
+                ]
+              },
+              {
+                "index": 45,
+                "exportByteOffset": 1893,
+                "startTime": 2.194833755493164,
+                "duration": 0.12529611587524414,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 50,
+                "action": "LGAAction_DurationBulletWithDeflect_7",
+                "guid": "8f324617def5c149ac9534e4f93ce0e4",
+                "trackIndex": 4,
+                "sections": [
+                  {
+                    "0": 0.06264805793762207,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06264805793762207,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_P2_CA"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 1.2
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_LuanYing_P2_CA.Final",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/CA/GA_Hun_LuanYing_P2_CA.GA_Hun_LuanYing_P2_CA_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          1.5,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 1.5,
+          "timeline": "Main"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.LuanYing"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · LuanYing_P2_CA · Final",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "LuanYing_P2_CA",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_LuanYing_P2_CA",
+          "Final",
+          "乱莺剑",
+          "WILD ORIOLE SWORD",
+          "乱鶯剣",
+          "난앵검",
+          "Клинок Дикой Иволги",
+          "亂鶯劍",
+          "ÉPÉE DU LORIOT SAUVAGE",
+          "WILDER PIROL",
+          "ESPADA DE LA OROPÉNDOLA SALVAJE",
+          "ESPADA DO ROUXINOL SELVAGEM",
+          "LAMA DELL'ORIOLO",
+          "กระบี่วิหคอลหม่าน",
+          "LOẠN OANH KIẾM",
+          "PAPA-FIGOS SELVAGEM",
+          "ESPADA DE LA OROPÉNDOLA SALVAJE"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "乱莺剑",
+          "en": "WILD ORIOLE SWORD",
+          "ja": "乱鶯剣",
+          "ko": "난앵검",
+          "ru": "Клинок Дикой Иволги",
+          "zh-Hant": "亂鶯劍",
+          "fr": "ÉPÉE DU LORIOT SAUVAGE",
+          "de": "WILDER PIROL",
+          "es-ES": "ESPADA DE LA OROPÉNDOLA SALVAJE",
+          "pt-BR": "ESPADA DO ROUXINOL SELVAGEM",
+          "it": "LAMA DELL'ORIOLO",
+          "th": "กระบี่วิหคอลหม่าน",
+          "vi": "LOẠN OANH KIẾM",
+          "pt-PT": "PAPA-FIGOS SELVAGEM",
+          "es-419": "ESPADA DE LA OROPÉNDOLA SALVAJE"
+        },
+        "category": "weapons/Weapon_003/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 1.5,
+          "attack_start": 1.6013059616088867,
+          "attack_end": 2.320129871368408
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/CA/GA_Hun_LuanYing_P2_CA",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/LuanYing/Weapon_Hun_LuanYing_Evolution"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 36,
+                "exportByteOffset": 1526,
+                "startTime": 1.6013059616088867,
+                "duration": 0.18285465240478516,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 49,
+                "action": "LGAAction_DurationBulletWithDeflect_3",
+                "guid": "3fbc61b8e0c15d469d7e561d98c3abf4",
+                "trackIndex": 9,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 19,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_P2_CA_09"
+                  }
+                ]
+              },
+              {
+                "index": 42,
+                "exportByteOffset": 1764,
+                "startTime": 2.092041254043579,
+                "duration": 0.20000910758972168,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 7,
+                "action": "GAA_DelayDeflectProjectileBullet_C_8",
+                "guid": "a1a11a5112cb9c41951ed9161fe65c18",
+                "trackIndex": 11,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_P2_CA"
+                  }
+                ]
+              },
+              {
+                "index": 43,
+                "exportByteOffset": 1807,
+                "startTime": 2.092088222503662,
+                "duration": 0.20021557807922363,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 8,
+                "action": "GAA_DelayDeflectProjectileBullet_C_9",
+                "guid": "3574ec54c3418844aa27d0c0dc90a2c7",
+                "trackIndex": 12,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_P2_CA"
+                  }
+                ]
+              },
+              {
+                "index": 45,
+                "exportByteOffset": 1893,
+                "startTime": 2.194833755493164,
+                "duration": 0.12529611587524414,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 50,
+                "action": "LGAAction_DurationBulletWithDeflect_7",
+                "guid": "8f324617def5c149ac9534e4f93ce0e4",
+                "trackIndex": 4,
+                "sections": [
+                  {
+                    "0": 0.06264805793762207,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06264805793762207,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_P2_CA"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 1.5
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_ShuangYue_C.Spin",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_C.GA_Hun_ShuangYue_C_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          1.25,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 1.25,
+          "timeline": "Main"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.ShuangYue"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · ShuangYue_C · Spin",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "catalog.followup",
+          "2"
+        ],
+        "searchAliases": [
+          "GA_Hun_ShuangYue_C",
+          "Spin",
+          "天煞双钺",
+          "SUNDERING DUAL AXES",
+          "天煞双鉞",
+          "천살쌍월",
+          "Небесная Кара",
+          "天煞雙鉞",
+          "CROISSANTS CÉLESTES",
+          "SPALTENDE ZWILLINGSÄXTE",
+          "HACHAS DOBLES CERCENADORAS",
+          "MACHADOS DUPLOS DILACERANTES",
+          "ASCE FRANTUMANTI",
+          "ขวานคู่อสูรฟ้า",
+          "THIÊN SÁT SONG VIỆT",
+          "MACHADOS IMPIEDOSOS",
+          "HACHAS GEMELAS DESTRUCTORAS"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "天煞双钺",
+          "en": "SUNDERING DUAL AXES",
+          "ja": "天煞双鉞",
+          "ko": "천살쌍월",
+          "ru": "Небесная Кара",
+          "zh-Hant": "天煞雙鉞",
+          "fr": "CROISSANTS CÉLESTES",
+          "de": "SPALTENDE ZWILLINGSÄXTE",
+          "es-ES": "HACHAS DOBLES CERCENADORAS",
+          "pt-BR": "MACHADOS DUPLOS DILACERANTES",
+          "it": "ASCE FRANTUMANTI",
+          "th": "ขวานคู่อสูรฟ้า",
+          "vi": "THIÊN SÁT SONG VIỆT",
+          "pt-PT": "MACHADOS IMPIEDOSOS",
+          "es-419": "HACHAS GEMELAS DESTRUCTORAS"
+        },
+        "category": "weapons/Weapon_026/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 1.25,
+          "attack_start": 1.456926941871643,
+          "attack_end": 4.907577037811279
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ShuangYue/Weapon_Hun_ShuangYue"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 25,
+                "exportByteOffset": 1085,
+                "startTime": 1.456926941871643,
+                "duration": 0.13075876235961914,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 99,
+                "action": "LGAAction_DurationBulletWithDeflect_2",
+                "guid": "ae078929abc4c645b9560fad11eeaf73",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R"
+                  }
+                ]
+              },
+              {
+                "index": 26,
+                "exportByteOffset": 1144,
+                "startTime": 1.456926941871643,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 100,
+                "action": "LGAAction_DurationBulletWithDeflect_2_Enhanced",
+                "guid": "38ea357b084084314e7265baff2ea3c5",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 27,
+                "exportByteOffset": 1203,
+                "startTime": 1.456926941871643,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 101,
+                "action": "LGAAction_DurationBulletWithDeflect_2_SuperEnhanced",
+                "guid": "548a80f94e4a03917b37f98c19cd2d5c",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 33,
+                "exportByteOffset": 1457,
+                "startTime": 1.6375590562820435,
+                "duration": 0.13075876235961914,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 102,
+                "action": "LGAAction_DurationBulletWithDeflect_3",
+                "guid": "47dae70b54ed32459f15428c9e8f04b4",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 15,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L"
+                  }
+                ]
+              },
+              {
+                "index": 34,
+                "exportByteOffset": 1516,
+                "startTime": 1.6375590562820435,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 103,
+                "action": "LGAAction_DurationBulletWithDeflect_3_Enhanced",
+                "guid": "4512e942a444251d59a7f6a04d658553",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 15,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 35,
+                "exportByteOffset": 1575,
+                "startTime": 1.6375590562820435,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 104,
+                "action": "LGAAction_DurationBulletWithDeflect_3_SuperEnhanced",
+                "guid": "1a7158b93249adb903c5de8d8342e6cc",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 15,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 41,
+                "exportByteOffset": 1829,
+                "startTime": 1.8648090362548828,
+                "duration": 0.13075876235961914,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 105,
+                "action": "LGAAction_DurationBulletWithDeflect_4",
+                "guid": "c1a567737fdd574aa5afb4a8594a9361",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R"
+                  }
+                ]
+              },
+              {
+                "index": 42,
+                "exportByteOffset": 1888,
+                "startTime": 1.8648090362548828,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 106,
+                "action": "LGAAction_DurationBulletWithDeflect_4_Enhanced",
+                "guid": "e4c37e7d6b40f28efe7ddf8384065ac2",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 43,
+                "exportByteOffset": 1947,
+                "startTime": 1.8648090362548828,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 107,
+                "action": "LGAAction_DurationBulletWithDeflect_4_SuperEnhanced",
+                "guid": "598f922c9345caf1ac308499bbad0e1a",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 49,
+                "exportByteOffset": 2201,
+                "startTime": 2.134326934814453,
+                "duration": 0.144608736038208,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 108,
+                "action": "LGAAction_DurationBulletWithDeflect_5",
+                "guid": "efffc25c8ec3e04697d90601243261a1",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.072304368019104,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.072304368019104,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L"
+                  }
+                ]
+              },
+              {
+                "index": 50,
+                "exportByteOffset": 2264,
+                "startTime": 2.134326934814453,
+                "duration": 0.1446090042591095,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 109,
+                "action": "LGAAction_DurationBulletWithDeflect_5_Enhanced",
+                "guid": "41526d69c3418fa847479b93ffce7fa7",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.07230450212955475,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.07230450212955475,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 51,
+                "exportByteOffset": 2327,
+                "startTime": 2.134326934814453,
+                "duration": 0.1446090042591095,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 110,
+                "action": "LGAAction_DurationBulletWithDeflect_5_SuperEnhanced",
+                "guid": "a0e7a3827c42e00e5a1e7c9efe2ce53d",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.07230450212955475,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.07230450212955475,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 56,
+                "exportByteOffset": 2546,
+                "startTime": 2.3417389392852783,
+                "duration": 0.1480848789215088,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 111,
+                "action": "LGAAction_DurationBulletWithDeflect_6",
+                "guid": "d386ace658e3e2468b766c8342bdaab4",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.0740424394607544,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.0740424394607544,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R"
+                  }
+                ]
+              },
+              {
+                "index": 57,
+                "exportByteOffset": 2605,
+                "startTime": 2.3417389392852783,
+                "duration": 0.14808499813079834,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 112,
+                "action": "LGAAction_DurationBulletWithDeflect_6_Enhanced",
+                "guid": "e247c3fa454fab1dae3744a5dd071da0",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.07404249906539917,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.07404249906539917,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 58,
+                "exportByteOffset": 2664,
+                "startTime": 2.3417389392852783,
+                "duration": 0.14808499813079834,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 113,
+                "action": "LGAAction_DurationBulletWithDeflect_6_SuperEnhanced",
+                "guid": "08e7c5620f4c0ddc20a64ab9977554ad",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.07404249906539917,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.07404249906539917,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 63,
+                "exportByteOffset": 2879,
+                "startTime": 2.597352981567383,
+                "duration": 0.13904666900634766,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 114,
+                "action": "LGAAction_DurationBulletWithDeflect_7",
+                "guid": "3842109d5654a547a9eb63e064447e75",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.06952333450317383,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06952333450317383,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L"
+                  }
+                ]
+              },
+              {
+                "index": 64,
+                "exportByteOffset": 2938,
+                "startTime": 2.597352981567383,
+                "duration": 0.13904699683189392,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 115,
+                "action": "LGAAction_DurationBulletWithDeflect_7_Enhanced",
+                "guid": "2dba2c1f6d40b369347e1fa0139c2b11",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.06952349841594696,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06952349841594696,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 65,
+                "exportByteOffset": 2997,
+                "startTime": 2.597352981567383,
+                "duration": 0.13904699683189392,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 116,
+                "action": "LGAAction_DurationBulletWithDeflect_7_SuperEnhanced",
+                "guid": "4052cc6e7340a9c91cee6490d208745c",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.06952349841594696,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06952349841594696,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 70,
+                "exportByteOffset": 3212,
+                "startTime": 2.825853109359741,
+                "duration": 0.12050724029541016,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 117,
+                "action": "LGAAction_DurationBulletWithDeflect_8",
+                "guid": "2ea83fc23ed3c94a8c5414f9d821f5a3",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.06025362014770508,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06025362014770508,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R"
+                  }
+                ]
+              },
+              {
+                "index": 71,
+                "exportByteOffset": 3271,
+                "startTime": 2.825853109359741,
+                "duration": 0.12050700187683105,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 118,
+                "action": "LGAAction_DurationBulletWithDeflect_8_Enhanced",
+                "guid": "cec2f62fb04f83c536ebef8980f066c1",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.06025350093841553,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06025350093841553,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 72,
+                "exportByteOffset": 3330,
+                "startTime": 2.825853109359741,
+                "duration": 0.12050700187683105,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 119,
+                "action": "LGAAction_DurationBulletWithDeflect_8_SuperEnhanced",
+                "guid": "4ae46a01024d2bce4e633a8bfb9ac85d",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.06025350093841553,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06025350093841553,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 77,
+                "exportByteOffset": 3545,
+                "startTime": 3.1264259815216064,
+                "duration": 0.13075876235961914,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 120,
+                "action": "LGAAction_DurationBulletWithDeflect_9",
+                "guid": "6df062bede5adb4395c186a3863f0899",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L"
+                  }
+                ]
+              },
+              {
+                "index": 78,
+                "exportByteOffset": 3604,
+                "startTime": 3.1264259815216064,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 121,
+                "action": "LGAAction_DurationBulletWithDeflect_9_Enhanced",
+                "guid": "c86d5be90247a6fff427c6a95fc5fde5",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 79,
+                "exportByteOffset": 3663,
+                "startTime": 3.1264259815216064,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 122,
+                "action": "LGAAction_DurationBulletWithDeflect_9_SuperEnhanced",
+                "guid": "10c34176a04da8c7770e41828a1e36f7",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 84,
+                "exportByteOffset": 3878,
+                "startTime": 3.322482109069824,
+                "duration": 0.13075876235961914,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 84,
+                "action": "LGAAction_DurationBulletWithDeflect_10",
+                "guid": "98603f2e0b218e41991a1620e218dde0",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R"
+                  }
+                ]
+              },
+              {
+                "index": 85,
+                "exportByteOffset": 3937,
+                "startTime": 3.322482109069824,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 85,
+                "action": "LGAAction_DurationBulletWithDeflect_10_Enhanced",
+                "guid": "7cb827abf249c907a838adb05f06aff7",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 86,
+                "exportByteOffset": 3996,
+                "startTime": 3.322482109069824,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 86,
+                "action": "LGAAction_DurationBulletWithDeflect_10_SuperEnhanced",
+                "guid": "3a7ed46cfa4f3921173235b40763ef63",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 92,
+                "exportByteOffset": 4250,
+                "startTime": 3.5808770656585693,
+                "duration": 0.13075876235961914,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 87,
+                "action": "LGAAction_DurationBulletWithDeflect_11",
+                "guid": "010632dfbb33d04bbc59b0a69c0836f9",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537938117980957,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L"
+                  }
+                ]
+              },
+              {
+                "index": 93,
+                "exportByteOffset": 4309,
+                "startTime": 3.5808770656585693,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 88,
+                "action": "LGAAction_DurationBulletWithDeflect_11_Enhanced",
+                "guid": "a8b4dfc3f64e33c86a21d3b8e830b6f4",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 94,
+                "exportByteOffset": 4368,
+                "startTime": 3.5808770656585693,
+                "duration": 0.13075900077819824,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 89,
+                "action": "LGAAction_DurationBulletWithDeflect_11_SuperEnhanced",
+                "guid": "fa538c38a2445cc0582827b7b7814b5b",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.06537950038909912,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_L_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 101,
+                "exportByteOffset": 4661,
+                "startTime": 3.869399070739746,
+                "duration": 0.1813488006591797,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 90,
+                "action": "LGAAction_DurationBulletWithDeflect_12",
+                "guid": "7db30d2a615c0048a867b15cf10aa119",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.09067440032958984,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.09067440032958984,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R"
+                  }
+                ]
+              },
+              {
+                "index": 102,
+                "exportByteOffset": 4720,
+                "startTime": 3.869399070739746,
+                "duration": 0.1813489943742752,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 91,
+                "action": "LGAAction_DurationBulletWithDeflect_12_Enhanced",
+                "guid": "3adf327f1b4a8ed31cd1e7b1d04e86ca",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.0906744971871376,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.0906744971871376,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 103,
+                "exportByteOffset": 4779,
+                "startTime": 3.869399070739746,
+                "duration": 0.1813489943742752,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 92,
+                "action": "LGAAction_DurationBulletWithDeflect_12_SuperEnhanced",
+                "guid": "c8af7a84ea4280892c698faaf54a96bd",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.0906744971871376,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.0906744971871376,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 113,
+                "exportByteOffset": 5189,
+                "startTime": 4.372230052947998,
+                "duration": 0.4327731132507324,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 93,
+                "action": "LGAAction_DurationBulletWithDeflect_13",
+                "guid": "9e2c47dca16ecf449a8a43788c52df64",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.2163865566253662,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.2163865566253662,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 21,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_02"
+                  }
+                ]
+              },
+              {
+                "index": 114,
+                "exportByteOffset": 5248,
+                "startTime": 4.372230052947998,
+                "duration": 0.43277299404144287,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 94,
+                "action": "LGAAction_DurationBulletWithDeflect_13_Enhanced",
+                "guid": "48e6ee10d645822922c4f5a0d9f5ad0e",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.21638649702072144,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.21638649702072144,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 21,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_02_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 115,
+                "exportByteOffset": 5307,
+                "startTime": 4.372230052947998,
+                "duration": 0.43277299404144287,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 95,
+                "action": "LGAAction_DurationBulletWithDeflect_13_SuperEnhanced",
+                "guid": "6c21d8485d43d5f8dc8faeb7ec22d8b9",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.21638649702072144,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.21638649702072144,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 21,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_02_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 116,
+                "exportByteOffset": 5366,
+                "startTime": 4.810544013977051,
+                "duration": 0.09703302383422852,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 96,
+                "action": "LGAAction_DurationBulletWithDeflect_15",
+                "guid": "4c7ced7b9e458d489faa8602e8ab36e7",
+                "trackIndex": 18,
+                "sections": [
+                  {
+                    "0": 0.04851651191711426,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.04851651191711426,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_04"
+                  }
+                ]
+              },
+              {
+                "index": 117,
+                "exportByteOffset": 5425,
+                "startTime": 4.810544013977051,
+                "duration": 0.09703300148248672,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 97,
+                "action": "LGAAction_DurationBulletWithDeflect_15_Enhanced",
+                "guid": "ec7edda79049d20ac8d1fe990cef535d",
+                "trackIndex": 21,
+                "sections": [
+                  {
+                    "0": 0.04851650074124336,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.04851650074124336,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_04_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 118,
+                "exportByteOffset": 5484,
+                "startTime": 4.810544013977051,
+                "duration": 0.09703300148248672,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 98,
+                "action": "LGAAction_DurationBulletWithDeflect_15_SuperEnhanced",
+                "guid": "e0f44aa944440a24b8a02591daec0a88",
+                "trackIndex": 24,
+                "sections": [
+                  {
+                    "0": 0.04851650074124336,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.04851650074124336,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_04_SuperEnhanced"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 1.25
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_ShuangYue_C.Final",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_C.GA_Hun_ShuangYue_C_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          4.25,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 4.25,
+          "timeline": "Main"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.ShuangYue"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · ShuangYue_C · Final",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_ShuangYue_C",
+          "Final",
+          "天煞双钺",
+          "SUNDERING DUAL AXES",
+          "天煞双鉞",
+          "천살쌍월",
+          "Небесная Кара",
+          "天煞雙鉞",
+          "CROISSANTS CÉLESTES",
+          "SPALTENDE ZWILLINGSÄXTE",
+          "HACHAS DOBLES CERCENADORAS",
+          "MACHADOS DUPLOS DILACERANTES",
+          "ASCE FRANTUMANTI",
+          "ขวานคู่อสูรฟ้า",
+          "THIÊN SÁT SONG VIỆT",
+          "MACHADOS IMPIEDOSOS",
+          "HACHAS GEMELAS DESTRUCTORAS"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "天煞双钺",
+          "en": "SUNDERING DUAL AXES",
+          "ja": "天煞双鉞",
+          "ko": "천살쌍월",
+          "ru": "Небесная Кара",
+          "zh-Hant": "天煞雙鉞",
+          "fr": "CROISSANTS CÉLESTES",
+          "de": "SPALTENDE ZWILLINGSÄXTE",
+          "es-ES": "HACHAS DOBLES CERCENADORAS",
+          "pt-BR": "MACHADOS DUPLOS DILACERANTES",
+          "it": "ASCE FRANTUMANTI",
+          "th": "ขวานคู่อสูรฟ้า",
+          "vi": "THIÊN SÁT SONG VIỆT",
+          "pt-PT": "MACHADOS IMPIEDOSOS",
+          "es-419": "HACHAS GEMELAS DESTRUCTORAS"
+        },
+        "category": "weapons/Weapon_026/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 4.25,
+          "attack_start": 4.372230052947998,
+          "attack_end": 4.907577037811279
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ShuangYue/Weapon_Hun_ShuangYue"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 113,
+                "exportByteOffset": 5189,
+                "startTime": 4.372230052947998,
+                "duration": 0.4327731132507324,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 93,
+                "action": "LGAAction_DurationBulletWithDeflect_13",
+                "guid": "9e2c47dca16ecf449a8a43788c52df64",
+                "trackIndex": 16,
+                "sections": [
+                  {
+                    "0": 0.2163865566253662,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.2163865566253662,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 21,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_02"
+                  }
+                ]
+              },
+              {
+                "index": 114,
+                "exportByteOffset": 5248,
+                "startTime": 4.372230052947998,
+                "duration": 0.43277299404144287,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 94,
+                "action": "LGAAction_DurationBulletWithDeflect_13_Enhanced",
+                "guid": "48e6ee10d645822922c4f5a0d9f5ad0e",
+                "trackIndex": 19,
+                "sections": [
+                  {
+                    "0": 0.21638649702072144,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.21638649702072144,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 21,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_02_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 115,
+                "exportByteOffset": 5307,
+                "startTime": 4.372230052947998,
+                "duration": 0.43277299404144287,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 95,
+                "action": "LGAAction_DurationBulletWithDeflect_13_SuperEnhanced",
+                "guid": "6c21d8485d43d5f8dc8faeb7ec22d8b9",
+                "trackIndex": 22,
+                "sections": [
+                  {
+                    "0": 0.21638649702072144,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.21638649702072144,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 21,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_02_SuperEnhanced"
+                  }
+                ]
+              },
+              {
+                "index": 116,
+                "exportByteOffset": 5366,
+                "startTime": 4.810544013977051,
+                "duration": 0.09703302383422852,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 96,
+                "action": "LGAAction_DurationBulletWithDeflect_15",
+                "guid": "4c7ced7b9e458d489faa8602e8ab36e7",
+                "trackIndex": 18,
+                "sections": [
+                  {
+                    "0": 0.04851651191711426,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.04851651191711426,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_04"
+                  }
+                ]
+              },
+              {
+                "index": 117,
+                "exportByteOffset": 5425,
+                "startTime": 4.810544013977051,
+                "duration": 0.09703300148248672,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 97,
+                "action": "LGAAction_DurationBulletWithDeflect_15_Enhanced",
+                "guid": "ec7edda79049d20ac8d1fe990cef535d",
+                "trackIndex": 21,
+                "sections": [
+                  {
+                    "0": 0.04851650074124336,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.04851650074124336,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_04_Enhanced"
+                  }
+                ]
+              },
+              {
+                "index": 118,
+                "exportByteOffset": 5484,
+                "startTime": 4.810544013977051,
+                "duration": 0.09703300148248672,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 98,
+                "action": "LGAAction_DurationBulletWithDeflect_15_SuperEnhanced",
+                "guid": "e0f44aa944440a24b8a02591daec0a88",
+                "trackIndex": 24,
+                "sections": [
+                  {
+                    "0": 0.04851650074124336,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.04851650074124336,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_04_SuperEnhanced"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 4.25
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_SlitheringSword_C.Stage2",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_C.GA_Hun_SlitheringSword_C_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          1.5,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 1.5,
+          "timelines": [
+            "Main",
+            "Perfect"
+          ]
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.SlitheringSword"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · SlitheringSword_C · Stage2",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "catalog.followup",
+          "2"
+        ],
+        "searchAliases": [
+          "GA_Hun_SlitheringSword_C",
+          "Stage2",
+          "灵蛇软剑",
+          "SOFT SNAKE SWORD",
+          "霊蛇軟剣",
+          "영사연검",
+          "Гибкий Змеиный Меч",
+          "靈蛇軟劍",
+          "ÉPÉE AGILE DU SERPENT",
+          "BIEGSAMES SCHLANGENSCHWERT",
+          "ESPADA DE SERPIENTE FLEXIBLE",
+          "ESPADA FLEXÍVEL DA SERPENTE",
+          "SPADA FLESSIBILE DEL SERPENTE",
+          "กระบี่อ่อนอสรพิษ",
+          "LINH XÀ NHUYỄN KIẾM",
+          "ESPADA SERPENTINA",
+          "ESPADA DE LA SERPIENTE SUAVE"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "灵蛇软剑",
+          "en": "SOFT SNAKE SWORD",
+          "ja": "霊蛇軟剣",
+          "ko": "영사연검",
+          "ru": "Гибкий Змеиный Меч",
+          "zh-Hant": "靈蛇軟劍",
+          "fr": "ÉPÉE AGILE DU SERPENT",
+          "de": "BIEGSAMES SCHLANGENSCHWERT",
+          "es-ES": "ESPADA DE SERPIENTE FLEXIBLE",
+          "pt-BR": "ESPADA FLEXÍVEL DA SERPENTE",
+          "it": "SPADA FLESSIBILE DEL SERPENTE",
+          "th": "กระบี่อ่อนอสรพิษ",
+          "vi": "LINH XÀ NHUYỄN KIẾM",
+          "pt-PT": "ESPADA SERPENTINA",
+          "es-419": "ESPADA DE LA SERPIENTE SUAVE"
+        },
+        "category": "weapons/Weapon_009/IA_UltimateSkill",
+        "phaseWindows": [
+          {
+            "timeline": "Main",
+            "entry_time": 1.5,
+            "attack_start": 1.6361809968948364,
+            "attack_end": 2.972665309906006
+          },
+          {
+            "timeline": "Perfect",
+            "entry_time": 1.5,
+            "attack_start": 1.6130808591842651,
+            "attack_end": 4.729172229766846
+          }
+        ]
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SlitheringSword/Weapon_Hun_SlitheringSword"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main",
+          "Perfect"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 26,
+                "exportByteOffset": 1052,
+                "startTime": 1.6361809968948364,
+                "duration": 0.18429076671600342,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 95,
+                "action": "LGAAction_DurationBulletWithDeflect_4",
+                "guid": "bd7b67f2a67f1c4787272c716937e222",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Normal_05"
+                  }
+                ]
+              },
+              {
+                "index": 28,
+                "exportByteOffset": 1134,
+                "startTime": 2.0015296936035156,
+                "duration": 0.18429076671600342,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 96,
+                "action": "LGAAction_DurationBulletWithDeflect_5",
+                "guid": "19d24bb14b7a834b9237eb8b1671fd17",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Normal_06"
+                  }
+                ]
+              },
+              {
+                "index": 32,
+                "exportByteOffset": 1290,
+                "startTime": 2.136392116546631,
+                "duration": 0.16636896133422852,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 98,
+                "action": "LGAAction_DurationBulletWithDeflect_7",
+                "guid": "2801864a96d79841bc3f3c73acfcf238",
+                "trackIndex": 6,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 17,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Normal_09"
+                  }
+                ]
+              },
+              {
+                "index": 36,
+                "exportByteOffset": 1446,
+                "startTime": 2.44124174118042,
+                "duration": 0.22770309448242188,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 97,
+                "action": "LGAAction_DurationBulletWithDeflect_6",
+                "guid": "00d902763c04c74886ed6a1ec973de5d",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Normal_07"
+                  }
+                ]
+              },
+              {
+                "index": 42,
+                "exportByteOffset": 1684,
+                "startTime": 2.912334442138672,
+                "duration": 0.060330867767333984,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 99,
+                "action": "LGAAction_DurationBulletWithDeflect_8",
+                "guid": "618fd597a8369f45ac35ea2b016eaf26",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Normal_08"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 1.5
+          },
+          {
+            "timeline": "Perfect",
+            "retainedAttackActions": [
+              {
+                "index": 25,
+                "exportByteOffset": 1017,
+                "startTime": 1.6130808591842651,
+                "duration": 0.30983030796051025,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 101,
+                "action": "LGAAction_DurationBulletWithDeflect_1",
+                "guid": "df0d5c270916d84182b0d07c13cf5f28",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect_05"
+                  }
+                ]
+              },
+              {
+                "index": 27,
+                "exportByteOffset": 1095,
+                "startTime": 1.7660574913024902,
+                "duration": 0.6183457374572754,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 110,
+                "action": "LGAAction_DurationBulletWithDeflect_6",
+                "guid": "35c3772be0594245b07a3a6309a8bade",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 17,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect_06"
+                  }
+                ]
+              },
+              {
+                "index": 35,
+                "exportByteOffset": 1411,
+                "startTime": 2.4089527130126953,
+                "duration": 0.1413975954055786,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 109,
+                "action": "LGAAction_DurationBulletWithDeflect_5",
+                "guid": "274dc50bf9338647b754e0f3994112bc",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect_07"
+                  }
+                ]
+              },
+              {
+                "index": 39,
+                "exportByteOffset": 1571,
+                "startTime": 2.641453266143799,
+                "duration": 0.12175345420837402,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 111,
+                "action": "LGAAction_DurationBulletWithDeflect_7",
+                "guid": "19a29ce5809ab74da089f388eecb74c1",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect_08"
+                  }
+                ]
+              },
+              {
+                "index": 40,
+                "exportByteOffset": 1614,
+                "startTime": 2.814143419265747,
+                "duration": 0.12175345420837402,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 112,
+                "action": "LGAAction_DurationBulletWithDeflect_8",
+                "guid": "f23e9f4b153f984d9554e77f5c2c45b5",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect_09"
+                  }
+                ]
+              },
+              {
+                "index": 43,
+                "exportByteOffset": 1735,
+                "startTime": 3.2116775512695312,
+                "duration": 0.16579627990722656,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 113,
+                "action": "LGAAction_DurationBulletWithDeflect_9",
+                "guid": "f5f0d378f2d4dd4c897cd9f96442c400",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect"
+                  }
+                ]
+              },
+              {
+                "index": 46,
+                "exportByteOffset": 1852,
+                "startTime": 3.6031153202056885,
+                "duration": 0.23562288284301758,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 102,
+                "action": "LGAAction_DurationBulletWithDeflect_10",
+                "guid": "51f9722326c03043ad95b4a29ca5f49d",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect"
+                  }
+                ]
+              },
+              {
+                "index": 51,
+                "exportByteOffset": 2047,
+                "startTime": 3.8235366344451904,
+                "duration": 0.3417842388153076,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 103,
+                "action": "LGAAction_DurationBulletWithDeflect_11",
+                "guid": "04ee6b0567d3c947929b99e4f23ecc00",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 17,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect"
+                  }
+                ]
+              },
+              {
+                "index": 54,
+                "exportByteOffset": 2168,
+                "startTime": 4.13932991027832,
+                "duration": 0.2395486831665039,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 106,
+                "action": "LGAAction_DurationBulletWithDeflect_2",
+                "guid": "e20214d38b627f48bbe0aed2da6d6dd9",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect"
+                  }
+                ]
+              },
+              {
+                "index": 60,
+                "exportByteOffset": 2406,
+                "startTime": 4.55869722366333,
+                "duration": 0.17047500610351562,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 107,
+                "action": "LGAAction_DurationBulletWithDeflect_3",
+                "guid": "c63809a42596e64ab350b5ed449922a2",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 1.5
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_SlitheringSword_C.PerfectFinal",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_C.GA_Hun_SlitheringSword_C_C",
+        "activateByClass": false,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          4.4,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 4.4,
+          "timeline": "Perfect"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.SlitheringSword"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · SlitheringSword_C · PerfectFinal",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "moves.perfect",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_SlitheringSword_C",
+          "PerfectFinal",
+          "灵蛇软剑",
+          "SOFT SNAKE SWORD",
+          "霊蛇軟剣",
+          "영사연검",
+          "Гибкий Змеиный Меч",
+          "靈蛇軟劍",
+          "ÉPÉE AGILE DU SERPENT",
+          "BIEGSAMES SCHLANGENSCHWERT",
+          "ESPADA DE SERPIENTE FLEXIBLE",
+          "ESPADA FLEXÍVEL DA SERPENTE",
+          "SPADA FLESSIBILE DEL SERPENTE",
+          "กระบี่อ่อนอสรพิษ",
+          "LINH XÀ NHUYỄN KIẾM",
+          "ESPADA SERPENTINA",
+          "ESPADA DE LA SERPIENTE SUAVE"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "灵蛇软剑",
+          "en": "SOFT SNAKE SWORD",
+          "ja": "霊蛇軟剣",
+          "ko": "영사연검",
+          "ru": "Гибкий Змеиный Меч",
+          "zh-Hant": "靈蛇軟劍",
+          "fr": "ÉPÉE AGILE DU SERPENT",
+          "de": "BIEGSAMES SCHLANGENSCHWERT",
+          "es-ES": "ESPADA DE SERPIENTE FLEXIBLE",
+          "pt-BR": "ESPADA FLEXÍVEL DA SERPENTE",
+          "it": "SPADA FLESSIBILE DEL SERPENTE",
+          "th": "กระบี่อ่อนอสรพิษ",
+          "vi": "LINH XÀ NHUYỄN KIẾM",
+          "pt-PT": "ESPADA SERPENTINA",
+          "es-419": "ESPADA DE LA SERPIENTE SUAVE"
+        },
+        "category": "weapons/Weapon_009/IA_UltimateSkill",
+        "activeAbilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_C.GA_Hun_SlitheringSword_C_C"
+        ],
+        "phaseWindow": {
+          "timeline": "Perfect",
+          "entry_time": 4.4,
+          "attack_start": 4.55869722366333,
+          "attack_end": 4.729172229766846
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SlitheringSword/Weapon_Hun_SlitheringSword"
+        ],
+        "normalActivation": "Requires the same normally activated ability instance already playing the named real native timeline; no new execution target, counter event or fee is fabricated.",
+        "nativeTimelineSelection": [
+          "Perfect"
+        ],
+        "activeInstanceOnly": true,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Perfect",
+            "retainedAttackActions": [
+              {
+                "index": 60,
+                "exportByteOffset": 2406,
+                "startTime": 4.55869722366333,
+                "duration": 0.17047500610351562,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 107,
+                "action": "LGAAction_DurationBulletWithDeflect_3",
+                "guid": "c63809a42596e64ab350b5ed449922a2",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 4.4
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_SnakeDual_C.Final",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/GA_Hun_SnakeDual_C.GA_Hun_SnakeDual_C_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          2.5,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 2.5,
+          "timeline": "Main"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.SnakeDual.CurrentHanded"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · SnakeDual_C · Final",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_SnakeDual_C",
+          "Final",
+          "白蟒赤练",
+          "WHITE SERPENT & CRIMSON VIPER",
+          "白蟒赤練",
+          "백망적련",
+          "Белый Удав и Алая Гадюка",
+          "白蟒赤練",
+          "SERPENT BLANC ET VIPÈRE ROUGE",
+          "WEISSSCHLANGE & KARMESINVIPER",
+          "SERPIENTE BLANCA Y VÍBORA ROJA",
+          "SERPENTE BRANCA E VÍBORA CARMESIM",
+          "SERPE BIANCA E VIPERA CREMISI",
+          "คู่อสรพิษขาวชาด",
+          "BẠCH MÃNG XÍCH LUYỆN",
+          "SERPENTE BRANCA E VÍBORA ESCARLATE",
+          "SERPIENTE BLANCA Y VÍBORA ROJA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "白蟒赤练",
+          "en": "WHITE SERPENT & CRIMSON VIPER",
+          "ja": "白蟒赤練",
+          "ko": "백망적련",
+          "ru": "Белый Удав и Алая Гадюка",
+          "zh-Hant": "白蟒赤練",
+          "fr": "SERPENT BLANC ET VIPÈRE ROUGE",
+          "de": "WEISSSCHLANGE & KARMESINVIPER",
+          "es-ES": "SERPIENTE BLANCA Y VÍBORA ROJA",
+          "pt-BR": "SERPENTE BRANCA E VÍBORA CARMESIM",
+          "it": "SERPE BIANCA E VIPERA CREMISI",
+          "th": "คู่อสรพิษขาวชาด",
+          "vi": "BẠCH MÃNG XÍCH LUYỆN",
+          "pt-PT": "SERPENTE BRANCA E VÍBORA ESCARLATE",
+          "es-419": "SERPIENTE BLANCA Y VÍBORA ROJA"
+        },
+        "category": "weapons/Weapon_027/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 2.5,
+          "attack_start": 2.5756211280822754,
+          "attack_end": 3.1416854858398438
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/GA_Hun_SnakeDual_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SnakeDual/Weapon_Hun_SnakeDual"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 55,
+                "exportByteOffset": 2195,
+                "startTime": 2.5756211280822754,
+                "duration": 0.15160679817199707,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 80,
+                "action": "LGAAction_DurationBulletWithDeflect_7",
+                "guid": "ec94621c1ce7f24fa66b82cb1c4c8b93",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SnakeDual/Attack/B_Hun_SnakeDual_C"
+                  }
+                ]
+              },
+              {
+                "index": 63,
+                "exportByteOffset": 2515,
+                "startTime": 2.784404993057251,
+                "duration": 0.10883975028991699,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 76,
+                "action": "LGAAction_DurationBulletWithDeflect_3",
+                "guid": "83a23f70e39b3b48af590c0c736c5b13",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SnakeDual/Attack/B_Hun_SnakeDual_C_09"
+                  }
+                ]
+              },
+              {
+                "index": 67,
+                "exportByteOffset": 2679,
+                "startTime": 2.999377489089966,
+                "duration": 0.14230799674987793,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 77,
+                "action": "LGAAction_DurationBulletWithDeflect_4",
+                "guid": "8af9a88b1e066e45a45f1eeac84d233e",
+                "trackIndex": 2,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SnakeDual/Attack/B_Hun_SnakeDual_C"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 2.5
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_ZiMingJian_New_CC.Stage2",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk02",
+        "tag": "Ability.Action.Hun.CombatArt.Atk02",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZiMingJian/New/GA_Hun_ZiMingJian_New_CC.GA_Hun_ZiMingJian_New_CC_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          1.2,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 1.2,
+          "timeline": "Main"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.TangBlade.Default"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · ZiMingJian_New_CC · Stage2",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "2",
+          "catalog.followup",
+          "2"
+        ],
+        "searchAliases": [
+          "GA_Hun_ZiMingJian_New_CC",
+          "Stage2",
+          "紫冥剑",
+          "AUREATE",
+          "紫冥剣",
+          "자명검",
+          "Златозар",
+          "紫冥劍",
+          "LAME DORÉE",
+          "GOLDKLINGE",
+          "AUREATA",
+          "ÁUREA",
+          "DORATA",
+          "กระบี่ม่วงทมิฬ",
+          "TỬ MINH KIẾM",
+          "AUREATE",
+          "ÁUREA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "紫冥剑",
+          "en": "AUREATE",
+          "ja": "紫冥剣",
+          "ko": "자명검",
+          "ru": "Златозар",
+          "zh-Hant": "紫冥劍",
+          "fr": "LAME DORÉE",
+          "de": "GOLDKLINGE",
+          "es-ES": "AUREATA",
+          "pt-BR": "ÁUREA",
+          "it": "DORATA",
+          "th": "กระบี่ม่วงทมิฬ",
+          "vi": "TỬ MINH KIẾM",
+          "pt-PT": "AUREATE",
+          "es-419": "ÁUREA"
+        },
+        "category": "weapons/Weapon_011/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 1.2,
+          "attack_start": 1.23451828956604,
+          "attack_end": 2.452219996601343
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZiMingJian/New/GA_Hun_ZiMingJian_New_CC",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ZiMingJian/Weapon_Hun_ZiMingJian"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 7,
+                "exportByteOffset": 319,
+                "startTime": 1.23451828956604,
+                "duration": 0.4666644334793091,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 15,
+                "action": "GAA_DelayDeflectProjectileBullet_C_6",
+                "guid": "5780e57c320cec49a0382e4089f8aed9",
+                "trackIndex": 8,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ZiMingJian/BulletData_Hun_ZiMingJian_YuCha_01"
+                  }
+                ]
+              },
+              {
+                "index": 9,
+                "exportByteOffset": 397,
+                "startTime": 1.3646992444992065,
+                "duration": 0.46666398644447327,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 11,
+                "action": "GAA_DelayDeflectProjectileBullet_C_0",
+                "guid": "846bfe17b2668a4b9bf59ee7ffb7853b",
+                "trackIndex": 9,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ZiMingJian/BulletData_Hun_ZiMingJian_YuCha_02"
+                  }
+                ]
+              },
+              {
+                "index": 10,
+                "exportByteOffset": 440,
+                "startTime": 1.5043755769729614,
+                "duration": 0.46666398644447327,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 12,
+                "action": "GAA_DelayDeflectProjectileBullet_C_1",
+                "guid": "4b79655587cbe74d8b1a4cae1942f5ec",
+                "trackIndex": 10,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ZiMingJian/BulletData_Hun_ZiMingJian_YuCha_03"
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "exportByteOffset": 518,
+                "startTime": 2.418886661529541,
+                "duration": 0.03333333507180214,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 13,
+                "action": "GAA_DelayDeflectProjectileBullet_C_2",
+                "guid": "2650958760ec6046a5c66a8384c89fb1",
+                "trackIndex": 12,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ZiMingJian/BulletData_Hun_ZiMingJian_CC_02"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 1.2
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_ZiMingJian_New_CC.Final",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk02",
+        "tag": "Ability.Action.Hun.CombatArt.Atk02",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZiMingJian/New/GA_Hun_ZiMingJian_New_CC.GA_Hun_ZiMingJian_New_CC_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          2.3,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 2.3,
+          "timeline": "Main"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.TangBlade.Default"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · ZiMingJian_New_CC · Final",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "2",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_ZiMingJian_New_CC",
+          "Final",
+          "紫冥剑",
+          "AUREATE",
+          "紫冥剣",
+          "자명검",
+          "Златозар",
+          "紫冥劍",
+          "LAME DORÉE",
+          "GOLDKLINGE",
+          "AUREATA",
+          "ÁUREA",
+          "DORATA",
+          "กระบี่ม่วงทมิฬ",
+          "TỬ MINH KIẾM",
+          "AUREATE",
+          "ÁUREA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "紫冥剑",
+          "en": "AUREATE",
+          "ja": "紫冥剣",
+          "ko": "자명검",
+          "ru": "Златозар",
+          "zh-Hant": "紫冥劍",
+          "fr": "LAME DORÉE",
+          "de": "GOLDKLINGE",
+          "es-ES": "AUREATA",
+          "pt-BR": "ÁUREA",
+          "it": "DORATA",
+          "th": "กระบี่ม่วงทมิฬ",
+          "vi": "TỬ MINH KIẾM",
+          "pt-PT": "AUREATE",
+          "es-419": "ÁUREA"
+        },
+        "category": "weapons/Weapon_011/IA_UltimateSkill",
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 2.3,
+          "attack_start": 2.418886661529541,
+          "attack_end": 2.452219996601343
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZiMingJian/New/GA_Hun_ZiMingJian_New_CC",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ZiMingJian/Weapon_Hun_ZiMingJian"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 12,
+                "exportByteOffset": 518,
+                "startTime": 2.418886661529541,
+                "duration": 0.03333333507180214,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 13,
+                "action": "GAA_DelayDeflectProjectileBullet_C_2",
+                "guid": "2650958760ec6046a5c66a8384c89fb1",
+                "trackIndex": 12,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ZiMingJian/BulletData_Hun_ZiMingJian_CC_02"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 2.3
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_ZhanMa_C.NormalFinal",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C.GA_Hun_ZhanMa_C_C",
+        "activateByClass": false,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          4.1,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 4.1,
+          "timeline": "ExecutionTimeline"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.ZhanMaBlade"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · ZhanMa_C · NormalFinal",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher",
+          "catalog.normal"
+        ],
+        "searchAliases": [
+          "GA_Hun_ZhanMa_C",
+          "NormalFinal",
+          "亡命斩马刀",
+          "OUTLAW WARBLADE",
+          "亡命斬馬刀",
+          "무법자 참마도",
+          "Клинок Разбойника",
+          "亡命斬馬刀",
+          "LAME GUERRIÈRE DU HORS-LA-LOI",
+          "KRIEGSKLINGE DES GESETZLOSEN",
+          "ESPADA DE GUERRA DEL FORAJIDO",
+          "LÂMINA DE GUERRA DO FORA DA LEI",
+          "LAMA DA GUERRA DEL FUORILEGGE",
+          "ดาบฟันอาชา",
+          "VONG MẠNG ĐAO",
+          "ESPADA FORA DA LEI",
+          "ESPADA DE GUERRA DEL FORAJIDO"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "亡命斩马刀",
+          "en": "OUTLAW WARBLADE",
+          "ja": "亡命斬馬刀",
+          "ko": "무법자 참마도",
+          "ru": "Клинок Разбойника",
+          "zh-Hant": "亡命斬馬刀",
+          "fr": "LAME GUERRIÈRE DU HORS-LA-LOI",
+          "de": "KRIEGSKLINGE DES GESETZLOSEN",
+          "es-ES": "ESPADA DE GUERRA DEL FORAJIDO",
+          "pt-BR": "LÂMINA DE GUERRA DO FORA DA LEI",
+          "it": "LAMA DA GUERRA DEL FUORILEGGE",
+          "th": "ดาบฟันอาชา",
+          "vi": "VONG MẠNG ĐAO",
+          "pt-PT": "ESPADA FORA DA LEI",
+          "es-419": "ESPADA DE GUERRA DEL FORAJIDO"
+        },
+        "category": "weapons/Weapon_013/IA_UltimateSkill",
+        "activeAbilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C.GA_Hun_ZhanMa_C_C"
+        ],
+        "phaseWindow": {
+          "timeline": "ExecutionTimeline",
+          "entry_time": 4.1,
+          "attack_start": 4.724143981933594,
+          "attack_end": 4.810329437255859
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ZhanMaBlade/Weapon_Hun_ZhanMaBlade"
+        ],
+        "normalActivation": "Requires the same normally activated ability instance already playing the named real native timeline; no new execution target, counter event or fee is fabricated.",
+        "nativeTimelineSelection": [
+          "ExecutionTimeline"
+        ],
+        "activeInstanceOnly": true,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "ExecutionTimeline",
+            "retainedAttackActions": [
+              {
+                "index": 68,
+                "exportByteOffset": 2756,
+                "startTime": 4.724143981933594,
+                "duration": 0.08618545532226562,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 177,
+                "action": "LGAAction_DurationBulletWithDeflect_6",
+                "guid": "9af8105e4ef57e4c968cef91f85b9720",
+                "trackIndex": 7,
+                "sections": [
+                  {
+                    "0": 0.04309272766113281,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.04309272766113281,
+                    "1": "0000b4ff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ZhanMaBlade/BD_Hun_ZhanMa_C_06"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 4.1
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_ZhanMa_C.GrabFinal",
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C.GA_Hun_ZhanMa_C_C",
+        "activateByClass": false,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          3.3,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 1.328,
+          "before_time": 3.3,
+          "timeline": "GrabSuccess"
+        },
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.ZhanMaBlade"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · ZhanMa_C · GrabFinal",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher",
+          "catalog.grab"
+        ],
+        "searchAliases": [
+          "GA_Hun_ZhanMa_C",
+          "GrabFinal",
+          "亡命斩马刀",
+          "OUTLAW WARBLADE",
+          "亡命斬馬刀",
+          "무법자 참마도",
+          "Клинок Разбойника",
+          "亡命斬馬刀",
+          "LAME GUERRIÈRE DU HORS-LA-LOI",
+          "KRIEGSKLINGE DES GESETZLOSEN",
+          "ESPADA DE GUERRA DEL FORAJIDO",
+          "LÂMINA DE GUERRA DO FORA DA LEI",
+          "LAMA DA GUERRA DEL FUORILEGGE",
+          "ดาบฟันอาชา",
+          "VONG MẠNG ĐAO",
+          "ESPADA FORA DA LEI",
+          "ESPADA DE GUERRA DEL FORAJIDO"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "亡命斩马刀",
+          "en": "OUTLAW WARBLADE",
+          "ja": "亡命斬馬刀",
+          "ko": "무법자 참마도",
+          "ru": "Клинок Разбойника",
+          "zh-Hant": "亡命斬馬刀",
+          "fr": "LAME GUERRIÈRE DU HORS-LA-LOI",
+          "de": "KRIEGSKLINGE DES GESETZLOSEN",
+          "es-ES": "ESPADA DE GUERRA DEL FORAJIDO",
+          "pt-BR": "LÂMINA DE GUERRA DO FORA DA LEI",
+          "it": "LAMA DA GUERRA DEL FUORILEGGE",
+          "th": "ดาบฟันอาชา",
+          "vi": "VONG MẠNG ĐAO",
+          "pt-PT": "ESPADA FORA DA LEI",
+          "es-419": "ESPADA DE GUERRA DEL FORAJIDO"
+        },
+        "category": "weapons/Weapon_013/IA_UltimateSkill",
+        "activeAbilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C.GA_Hun_ZhanMa_C_C"
+        ],
+        "phaseWindow": {
+          "timeline": "GrabSuccess",
+          "entry_time": 3.3,
+          "attack_start": 4.717964172363281,
+          "attack_end": 4.717964172363281
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ZhanMaBlade/Weapon_Hun_ZhanMaBlade"
+        ],
+        "normalActivation": "Requires the same normally activated ability instance already playing the named real native timeline; no new execution target, counter event or fee is fabricated.",
+        "nativeTimelineSelection": [
+          "GrabSuccess"
+        ],
+        "activeInstanceOnly": true,
+        "minimumSetupTime": 1.328,
+        "timelineEvidence": [
+          {
+            "timeline": "GrabSuccess",
+            "retainedAttackActions": [
+              {
+                "index": 56,
+                "exportByteOffset": 2227,
+                "startTime": 4.717964172363281,
+                "duration": 0,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 38,
+                "action": "GAA_ExecutionBullet_C_17",
+                "guid": "015fa2bd39774045a36c46fffd2f8091",
+                "trackIndex": 9,
+                "sections": [],
+                "class": "/SGameExecution/Actions/GAA_ExecutionBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ZhanMaBlade/EB_Hun_ZhanMa_C_03"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 3.3
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_Jigsaw_C.HasSawHitStage2",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Jigsaw.RB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C.GA_Hun_Jigsaw_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.Jigsaw"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Jigsaw_C · HasSawHitStage2",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.followup",
+          "catalog.onhit",
+          "2"
+        ],
+        "searchAliases": [
+          "GA_Hun_Jigsaw_C",
+          "CombatArt.Final",
+          "GAAction_DurationBullet_Simple_C_9",
+          "GAAction_DurationBullet_Simple_C_10",
+          "B_Hun_JigSaw_C_04",
+          "B_Hun_JigSaw_C_09",
+          "断肢锯",
+          "BONESAW",
+          "断肢鋸",
+          "절단톱",
+          "Костогрыз",
+          "斷肢鋸",
+          "SCIE CRANTÉE",
+          "KNOCHENSÄGE",
+          "SIERRA ÓSEA",
+          "SERRA DE OSSOS",
+          "SEGAOSSA",
+          "เลื่อยตัดแขนขา",
+          "ĐOẠN CHI CƯA",
+          "SERRA DE OSSOS",
+          "SIERRA DENTADA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "断肢锯",
+          "en": "BONESAW",
+          "ja": "断肢鋸",
+          "ko": "절단톱",
+          "ru": "Костогрыз",
+          "zh-Hant": "斷肢鋸",
+          "fr": "SCIE CRANTÉE",
+          "de": "KNOCHENSÄGE",
+          "es-ES": "SIERRA ÓSEA",
+          "pt-BR": "SERRA DE OSSOS",
+          "it": "SEGAOSSA",
+          "th": "เลื่อยตัดแขนขา",
+          "vi": "ĐOẠN CHI CƯA",
+          "pt-PT": "SERRA DE OSSOS",
+          "es-419": "SIERRA DENTADA"
+        },
+        "category": "weapons/Weapon_015/IA_UltimateSkill",
+        "activateByClass": false,
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          2.05,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "timeline": "HasSawHit",
+          "minimum_time": 0.001,
+          "before_time": 2.05
+        },
+        "activeAbilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C.GA_Hun_Jigsaw_C_C"
+        ],
+        "phaseWindow": {
+          "timeline": "HasSawHit",
+          "entry_time": 2.05,
+          "attack_start": 2.1313343048095703,
+          "attack_end": 3.3370130956172943
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Jigsaw/Weapon_Hun_Jigsaw"
+        ],
+        "normalActivation": "Existing normally activated HasSawHit instance only; original GAA_JumpTimelineByHitResult and DirectHit qualification are retained.",
+        "nativeTimelineSelection": [
+          "HasSawHit"
+        ],
+        "activeInstanceOnly": true,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "HasSawHit",
+            "retainedAttackActions": [
+              {
+                "index": 21,
+                "exportByteOffset": 841,
+                "startTime": 2.1313343048095703,
+                "duration": 0.6861212253570557,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 74,
+                "action": "LGAAction_DurationBulletWithDeflect_0",
+                "guid": "6c638dd78f5ef7429c9020809632be07",
+                "trackIndex": 13,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 19,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/Jigsaw/B_Hun_JigSaw_C_06"
+                  }
+                ]
+              },
+              {
+                "index": 25,
+                "exportByteOffset": 989,
+                "startTime": 2.90685772895813,
+                "duration": 0.08210492134094238,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 55,
+                "action": "GAAction_DurationBullet_Simple_C_9",
+                "guid": "81ba88e6bd4f67419866643073fa28d8",
+                "trackIndex": 14,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 5,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/Jigsaw/B_Hun_JigSaw_C_07"
+                  }
+                ]
+              },
+              {
+                "index": 39,
+                "exportByteOffset": 1519,
+                "startTime": 3.2015790939331055,
+                "duration": 0.13543400168418884,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 54,
+                "action": "GAAction_DurationBullet_Simple_C_10",
+                "guid": "b31879bafedf4f42a6ca7cc3faa6d6ca",
+                "trackIndex": 14,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 5,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/Jigsaw/B_Hun_JigSaw_C_08"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 2.05
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:WeaponPhase.GA_Hun_Jigsaw_C.HasSawHitFinal",
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Jigsaw.RB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C.GA_Hun_Jigsaw_C_C",
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.Jigsaw"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "CombatArt · Jigsaw_C · HasSawHitFinal",
+        "labelParts": [
+          "moves.combatart",
+          "moves.finisher",
+          "catalog.onhit"
+        ],
+        "searchAliases": [
+          "GA_Hun_Jigsaw_C",
+          "CombatArt.Final",
+          "GAAction_DurationBullet_Simple_C_9",
+          "GAAction_DurationBullet_Simple_C_10",
+          "B_Hun_JigSaw_C_04",
+          "B_Hun_JigSaw_C_09",
+          "断肢锯",
+          "BONESAW",
+          "断肢鋸",
+          "절단톱",
+          "Костогрыз",
+          "斷肢鋸",
+          "SCIE CRANTÉE",
+          "KNOCHENSÄGE",
+          "SIERRA ÓSEA",
+          "SERRA DE OSSOS",
+          "SEGAOSSA",
+          "เลื่อยตัดแขนขา",
+          "ĐOẠN CHI CƯA",
+          "SERRA DE OSSOS",
+          "SIERRA DENTADA"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "断肢锯",
+          "en": "BONESAW",
+          "ja": "断肢鋸",
+          "ko": "절단톱",
+          "ru": "Костогрыз",
+          "zh-Hant": "斷肢鋸",
+          "fr": "SCIE CRANTÉE",
+          "de": "KNOCHENSÄGE",
+          "es-ES": "SIERRA ÓSEA",
+          "pt-BR": "SERRA DE OSSOS",
+          "it": "SEGAOSSA",
+          "th": "เลื่อยตัดแขนขา",
+          "vi": "ĐOẠN CHI CƯA",
+          "pt-PT": "SERRA DE OSSOS",
+          "es-419": "SIERRA DENTADA"
+        },
+        "category": "weapons/Weapon_015/IA_UltimateSkill",
+        "activateByClass": false,
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          3.16,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "timeline": "HasSawHit",
+          "minimum_time": 0.001,
+          "before_time": 3.16
+        },
+        "activeAbilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C.GA_Hun_Jigsaw_C_C"
+        ],
+        "phaseWindow": {
+          "timeline": "HasSawHit",
+          "entry_time": 3.16,
+          "attack_start": 3.2015790939331055,
+          "attack_end": 3.3370130956172943
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Jigsaw/Weapon_Hun_Jigsaw"
+        ],
+        "normalActivation": "Existing normally activated HasSawHit instance only; original GAA_JumpTimelineByHitResult and DirectHit qualification are retained.",
+        "nativeTimelineSelection": [
+          "HasSawHit"
+        ],
+        "activeInstanceOnly": true,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "HasSawHit",
+            "retainedAttackActions": [
+              {
+                "index": 39,
+                "exportByteOffset": 1519,
+                "startTime": 3.2015790939331055,
+                "duration": 0.13543400168418884,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 54,
+                "action": "GAAction_DurationBullet_Simple_C_10",
+                "guid": "b31879bafedf4f42a6ca7cc3faa6d6ca",
+                "trackIndex": 14,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 5,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/Jigsaw/B_Hun_JigSaw_C_08"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 3.16
+          }
+        ],
+        "cleanup": "Original ability and timeline end retain montage, projectile, tags, warp and state cleanup."
+      }
+    }
+  ]
+}

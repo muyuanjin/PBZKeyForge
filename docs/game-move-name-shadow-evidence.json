@@ -1,0 +1,3439 @@
+{
+  "build": "CL-302256",
+  "runtimeVerified": false,
+  "table": "/Game/PBZContent/DataTable/UI/DT_ShaqiWeaponData",
+  "typedUpgradeRecords": [
+    {
+      "offset": 1336,
+      "nameKey": "PhantomEdges_FunctionName_001_5",
+      "descriptionKey": "PhantomEdges_Function_001_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/BrutalAxe/UpgradeData/GE_ShachiWeapon_BrutalAxe_Charge"
+    },
+    {
+      "offset": 2047,
+      "nameKey": "PhantomEdges_FunctionName_001_10",
+      "descriptionKey": "PhantomEdges_Function_001_10",
+      "effect": "None"
+    },
+    {
+      "offset": 2776,
+      "nameKey": "PhantomEdges_FunctionName_001_15",
+      "descriptionKey": "PhantomEdges_Function_001_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/BrutalAxe/UpgradeData/GE_ShachiWeapon_BrutalAxe_RunCharge"
+    },
+    {
+      "offset": 4150,
+      "nameKey": "PhantomEdges_FunctionName_001_25",
+      "descriptionKey": "PhantomEdges_Function_001_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/BrutalAxe/UpgradeData/GE_ShachiWeapon_BrutalAxe_RunCharge_Combo"
+    },
+    {
+      "offset": 10639,
+      "nameKey": "PhantomEdges_FunctionName_009_5",
+      "descriptionKey": "PhantomEdges_Function_009_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/UnnamedBow/UpgradeData/GE_ShachiWeapon_Bow_Dash_LR"
+    },
+    {
+      "offset": 11350,
+      "nameKey": "PhantomEdges_FunctionName_009_10",
+      "descriptionKey": "PhantomEdges_Function_009_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/UnnamedBow/UpgradeData/GE_ShachiWeapon_Bow_Ambush_Lv1"
+    },
+    {
+      "offset": 12095,
+      "nameKey": "PhantomEdges_FunctionName_009_15",
+      "descriptionKey": "PhantomEdges_Function_009_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/UnnamedBow/UpgradeData/GE_ShachiWeapon_Bow_Dash_F"
+    },
+    {
+      "offset": 13586,
+      "nameKey": "PhantomEdges_FunctionName_009_25",
+      "descriptionKey": "PhantomEdges_Function_009_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/UnnamedBow/UpgradeData/GE_ShachiWeapon_Bow_Dash_B"
+    },
+    {
+      "offset": 20111,
+      "nameKey": "PhantomEdges_FunctionName_014_5",
+      "descriptionKey": "PhantomEdges_Function_014_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/UpgradeData/GE_ShachiWeapon_ShachiHook_ABSnapCombo"
+    },
+    {
+      "offset": 20822,
+      "nameKey": "PhantomEdges_FunctionName_014_10",
+      "descriptionKey": "PhantomEdges_Function_014_10",
+      "effect": "None"
+    },
+    {
+      "offset": 21551,
+      "nameKey": "PhantomEdges_FunctionName_014_15",
+      "descriptionKey": "PhantomEdges_Function_014_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/UpgradeData/GE_ShachiWeapon_ShachiHook_HookMove"
+    },
+    {
+      "offset": 22925,
+      "nameKey": "PhantomEdges_FunctionName_014_25",
+      "descriptionKey": "PhantomEdges_Function_014_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/UpgradeData/GE_ShachiWeapon_ShachiHook_Tornado"
+    },
+    {
+      "offset": 29569,
+      "nameKey": "PhantomEdges_FunctionName_010_5",
+      "descriptionKey": "PhantomEdges_Function_010_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/UpgradeData/GE_ShachiWeapon_MiaoShouFeiDao_Dash_LR"
+    },
+    {
+      "offset": 30280,
+      "nameKey": "PhantomEdges_FunctionName_010_10",
+      "descriptionKey": "PhantomEdges_Function_010_10",
+      "effect": "None"
+    },
+    {
+      "offset": 31041,
+      "nameKey": "PhantomEdges_FunctionName_010_15",
+      "descriptionKey": "PhantomEdges_Function_010_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/UpgradeData/GE_ShachiWeapon_MiaoShouFeiDao_Dash_F"
+    },
+    {
+      "offset": 32447,
+      "nameKey": "PhantomEdges_FunctionName_010_25",
+      "descriptionKey": "PhantomEdges_Function_010_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/UpgradeData/GE_ShachiWeapon_MiaoShouFeiDao_Dash_B"
+    },
+    {
+      "offset": 38997,
+      "nameKey": "PhantomEdges_FunctionName_017_5",
+      "descriptionKey": "PhantomEdges_Function_017_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TieKuangQuanTao/UpgradeData/GE_ShachiWeapon_TieKuangQuanTao_CanCharge"
+    },
+    {
+      "offset": 39708,
+      "nameKey": "PhantomEdges_FunctionName_017_10",
+      "descriptionKey": "PhantomEdges_Function_017_10",
+      "effect": "None"
+    },
+    {
+      "offset": 40453,
+      "nameKey": "PhantomEdges_FunctionName_017_15",
+      "descriptionKey": "PhantomEdges_Function_017_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TieKuangQuanTao/UpgradeData/GE_ShachiWeapon_TieKuangQuanTao_DeflectCombo"
+    },
+    {
+      "offset": 41843,
+      "nameKey": "PhantomEdges_FunctionName_017_25",
+      "descriptionKey": "PhantomEdges_Function_017_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TieKuangQuanTao/UpgradeData/GE_ShachiWeapon_TieKuangQuanTao_CanClearChargeFreeUse"
+    },
+    {
+      "offset": 48521,
+      "nameKey": "PhantomEdges_FunctionName_004_5",
+      "descriptionKey": "PhantomEdges_Function_004_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/UpgradeData/GE_ShachiWeapon_ZhuoBiDun_Rush"
+    },
+    {
+      "offset": 49232,
+      "nameKey": "PhantomEdges_FunctionName_004_10",
+      "descriptionKey": "PhantomEdges_Function_004_10",
+      "effect": "None"
+    },
+    {
+      "offset": 49993,
+      "nameKey": "PhantomEdges_FunctionName_004_15",
+      "descriptionKey": "PhantomEdges_Function_004_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/UpgradeData/GE_ShachiWeapon_ZhuoBiDun_Slide"
+    },
+    {
+      "offset": 51399,
+      "nameKey": "PhantomEdges_FunctionName_004_25",
+      "descriptionKey": "PhantomEdges_Function_004_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/UpgradeData/GE_ShachiWeapon_ZhuoBiDun_Fast"
+    },
+    {
+      "offset": 57860,
+      "nameKey": "PhantomEdges_FunctionName_013_5",
+      "descriptionKey": "PhantomEdges_Function_013_5",
+      "effect": "None"
+    },
+    {
+      "offset": 58571,
+      "nameKey": "PhantomEdges_FunctionName_013_10",
+      "descriptionKey": "PhantomEdges_Function_013_10",
+      "effect": "None"
+    },
+    {
+      "offset": 59300,
+      "nameKey": "PhantomEdges_FunctionName_013_15",
+      "descriptionKey": "PhantomEdges_Function_013_15",
+      "effect": "None"
+    },
+    {
+      "offset": 60674,
+      "nameKey": "PhantomEdges_FunctionName_013_25",
+      "descriptionKey": "PhantomEdges_Function_013_25",
+      "effect": "None"
+    },
+    {
+      "offset": 66955,
+      "nameKey": "PhantomEdges_FunctionName_025_5",
+      "descriptionKey": "PhantomEdges_Function_025_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/CaoOuSiXian/UpgradeData/GE_ShachiWeapon_CaoOuSiXian_MoreAction_Lv1"
+    },
+    {
+      "offset": 67666,
+      "nameKey": "PhantomEdges_FunctionName_013_10",
+      "descriptionKey": "PhantomEdges_Function_013_10",
+      "effect": "None"
+    },
+    {
+      "offset": 68395,
+      "nameKey": "PhantomEdges_FunctionName_025_15",
+      "descriptionKey": "PhantomEdges_Function_025_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/CaoOuSiXian/UpgradeData/GE_ShachiWeapon_CaoOuSiXian_MoreAction_Lv2"
+    },
+    {
+      "offset": 69769,
+      "nameKey": "PhantomEdges_FunctionName_025_25",
+      "descriptionKey": "PhantomEdges_Function_025_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/CaoOuSiXian/UpgradeData/GE_ShachiWeapon_CaoOuSiXian_MoreAction_Lv3"
+    },
+    {
+      "offset": 76226,
+      "nameKey": "PhantomEdges_FunctionName_024_5",
+      "descriptionKey": "PhantomEdges_Function_024_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/UpgradeData/GE_ShachiWeapon_Lute_Dash_LR"
+    },
+    {
+      "offset": 76937,
+      "nameKey": "PhantomEdges_FunctionName_024_10",
+      "descriptionKey": "PhantomEdges_Function_024_10",
+      "effect": "None"
+    },
+    {
+      "offset": 77682,
+      "nameKey": "PhantomEdges_FunctionName_024_15",
+      "descriptionKey": "PhantomEdges_Function_024_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/UpgradeData/GE_ShachiWeapon_Lute_Dash_FB"
+    },
+    {
+      "offset": 79072,
+      "nameKey": "PhantomEdges_FunctionName_024_25",
+      "descriptionKey": "PhantomEdges_Function_024_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/UpgradeData/GE_ShachiWeapon_Lute_SitDown_Combo"
+    },
+    {
+      "offset": 85656,
+      "nameKey": "PhantomEdges_FunctionName_015_5",
+      "descriptionKey": "PhantomEdges_Function_015_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuoLiuXing/UpgradeData/GE_ShachiWeapon_HuoLiuXing_AAAA"
+    },
+    {
+      "offset": 86367,
+      "nameKey": "PhantomEdges_FunctionName_015_10",
+      "descriptionKey": "PhantomEdges_Function_015_10",
+      "effect": "None"
+    },
+    {
+      "offset": 87096,
+      "nameKey": "PhantomEdges_FunctionName_015_15",
+      "descriptionKey": "PhantomEdges_Function_015_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuoLiuXing/UpgradeData/GE_ShachiWeapon_HuoLiuXing_CanDeadExplosion"
+    },
+    {
+      "offset": 88470,
+      "nameKey": "PhantomEdges_FunctionName_015_25",
+      "descriptionKey": "PhantomEdges_Function_015_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuoLiuXing/UpgradeData/GE_ShachiWeapon_HuoLiuXing_DB"
+    },
+    {
+      "offset": 94917,
+      "nameKey": "PhantomEdges_FunctionName_012_5",
+      "descriptionKey": "PhantomEdges_Function_012_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/UpgradeData/GE_Weapon_LionHead_CanFireBall"
+    },
+    {
+      "offset": 95628,
+      "nameKey": "PhantomEdges_FunctionName_012_10",
+      "descriptionKey": "PhantomEdges_Function_012_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/UpgradeData/GE_Weapon_LionHead_DamageEnhance_Lv1"
+    },
+    {
+      "offset": 96341,
+      "nameKey": "PhantomEdges_FunctionName_012_15",
+      "descriptionKey": "PhantomEdges_Function_012_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/UpgradeData/GE_Weapon_LionHead_CanDash"
+    },
+    {
+      "offset": 97699,
+      "nameKey": "PhantomEdges_FunctionName_012_25",
+      "descriptionKey": "PhantomEdges_Function_012_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/UpgradeData/GE_Weapon_LionHead_CanDoubleFireBall"
+    },
+    {
+      "offset": 104118,
+      "nameKey": "PhantomEdges_FunctionName_023_5",
+      "descriptionKey": "PhantomEdges_Function_023_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XuKongHuaShan/UpgradeData/GE_ShachiWeapon_XuKongHuaShan_BuffAttribute"
+    },
+    {
+      "offset": 104989,
+      "nameKey": "PhantomEdges_FunctionName_023_10",
+      "descriptionKey": "PhantomEdges_Function_023_10",
+      "effect": "None"
+    },
+    {
+      "offset": 105878,
+      "nameKey": "PhantomEdges_FunctionName_023_15",
+      "descriptionKey": "PhantomEdges_Function_023_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XuKongHuaShan/UpgradeData/GE_ShachiWeapon_XuKongHuaShan_Debuff"
+    },
+    {
+      "offset": 107572,
+      "nameKey": "PhantomEdges_FunctionName_023_25",
+      "descriptionKey": "PhantomEdges_Function_023_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XuKongHuaShan/UpgradeData/GE_ShachiWeapon_XuKongHuaShan_BiggerRadius"
+    },
+    {
+      "offset": 115203,
+      "nameKey": "PhantomEdges_FunctionName_002_5",
+      "descriptionKey": "PhantomEdges_Function_002_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/UpgradeData/GE_JinGua_CanAirAttack"
+    },
+    {
+      "offset": 115914,
+      "nameKey": "PhantomEdges_FunctionName_002_10",
+      "descriptionKey": "PhantomEdges_Function_002_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/UpgradeData/GE_JinGua_Stronger_Lv1"
+    },
+    {
+      "offset": 116627,
+      "nameKey": "PhantomEdges_FunctionName_002_15",
+      "descriptionKey": "PhantomEdges_Function_002_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/UpgradeData/GE_JinGua_CanAdditiveWave"
+    },
+    {
+      "offset": 117985,
+      "nameKey": "PhantomEdges_FunctionName_002_25",
+      "descriptionKey": "PhantomEdges_Function_002_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/UpgradeData/GE_JinGua_CanExtraAttack"
+    },
+    {
+      "offset": 124349,
+      "nameKey": "PhantomEdges_FunctionName_026_5",
+      "descriptionKey": "PhantomEdges_Function_026_5",
+      "effect": "None"
+    },
+    {
+      "offset": 125060,
+      "nameKey": "PhantomEdges_FunctionName_013_10",
+      "descriptionKey": "PhantomEdges_Function_013_10",
+      "effect": "None"
+    },
+    {
+      "offset": 125789,
+      "nameKey": "PhantomEdges_FunctionName_026_15",
+      "descriptionKey": "PhantomEdges_Function_026_15",
+      "effect": "None"
+    },
+    {
+      "offset": 127163,
+      "nameKey": "PhantomEdges_FunctionName_026_25",
+      "descriptionKey": "PhantomEdges_Function_026_25",
+      "effect": "None"
+    },
+    {
+      "offset": 133607,
+      "nameKey": "PhantomEdges_FunctionName_109_5",
+      "descriptionKey": "PhantomEdges_Function_109_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/DuYanBow/UpgradeData/GE_ShachiWeapon_DuYanBow_Laser"
+    },
+    {
+      "offset": 134318,
+      "nameKey": "PhantomEdges_FunctionName_109_10",
+      "descriptionKey": "PhantomEdges_Function_109_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/DuYanBow/UpgradeData/GE_ShachiWeapon_DuYanBow_LaserDamageFalloff_V1"
+    },
+    {
+      "offset": 135031,
+      "nameKey": "PhantomEdges_FunctionName_109_15",
+      "descriptionKey": "PhantomEdges_Function_109_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/DuYanBow/UpgradeData/GE_ShachiWeapon_DuYanBow_Laser_V2"
+    },
+    {
+      "offset": 136389,
+      "nameKey": "PhantomEdges_FunctionName_109_25",
+      "descriptionKey": "PhantomEdges_Function_109_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/DuYanBow/UpgradeData/GE_ShachiWeapon_DuYanBow_Laser_Eyes"
+    },
+    {
+      "offset": 143018,
+      "nameKey": "PhantomEdges_FunctionName_016_5",
+      "descriptionKey": "PhantomEdges_Function_016_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongCha/UpgradeData/GE_ShachiWeapon_YouLongCha_Underwater"
+    },
+    {
+      "offset": 143729,
+      "nameKey": "PhantomEdges_FunctionName_016_10",
+      "descriptionKey": "PhantomEdges_Function_016_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongCha/UpgradeData/GE_ShachiWeapon_YouLongCha_UpgradeAttack_1"
+    },
+    {
+      "offset": 144442,
+      "nameKey": "PhantomEdges_FunctionName_016_15",
+      "descriptionKey": "PhantomEdges_Function_016_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongCha/UpgradeData/GE_ShachiWeapon_YouLongCha_Dash_F"
+    },
+    {
+      "offset": 145800,
+      "nameKey": "PhantomEdges_FunctionName_016_25",
+      "descriptionKey": "PhantomEdges_Function_016_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongCha/UpgradeData/GE_ShachiWeapon_YouLongCha_Dash_B"
+    },
+    {
+      "offset": 152559,
+      "nameKey": "PhantomEdges_FunctionName_011_5",
+      "descriptionKey": "PhantomEdges_Function_011_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongHead/UpgradeData/GE_YouLongHead_WaterCannon"
+    },
+    {
+      "offset": 153270,
+      "nameKey": "PhantomEdges_FunctionName_011_10",
+      "descriptionKey": "PhantomEdges_Function_011_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongHead/UpgradeData/GE_YouLongHead_BetterWater_Lv1"
+    },
+    {
+      "offset": 153983,
+      "nameKey": "PhantomEdges_FunctionName_011_15",
+      "descriptionKey": "PhantomEdges_Function_011_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongHead/UpgradeData/GE_YouLongHead_StrikeThrough"
+    },
+    {
+      "offset": 155341,
+      "nameKey": "PhantomEdges_FunctionName_011_25",
+      "descriptionKey": "PhantomEdges_Function_011_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongHead/UpgradeData/GE_YouLongHead_WaterCannon_V2"
+    },
+    {
+      "offset": 161801,
+      "nameKey": "PhantomEdges_FunctionName_008_5",
+      "descriptionKey": "PhantomEdges_Function_008_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Upgrade/GE_HuangJinHuoChong_Upgrade_DashLR"
+    },
+    {
+      "offset": 162512,
+      "nameKey": "PhantomEdges_FunctionName_008_10",
+      "descriptionKey": "PhantomEdges_Function_008_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Upgrade/GE_HuangJinHuoChong_Upgrade_Lv10"
+    },
+    {
+      "offset": 163225,
+      "nameKey": "PhantomEdges_FunctionName_008_15",
+      "descriptionKey": "PhantomEdges_Function_008_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Upgrade/GE_HuangJinHuoChong_Upgrade_DashF"
+    },
+    {
+      "offset": 164583,
+      "nameKey": "PhantomEdges_FunctionName_008_25",
+      "descriptionKey": "PhantomEdges_Function_008_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Upgrade/GE_HuangJinHuoChong_Upgrade_DashB"
+    },
+    {
+      "offset": 171037,
+      "nameKey": "PhantomEdges_FunctionName_018_5",
+      "descriptionKey": "PhantomEdges_Function_018_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Mojian/UpgradeData/GE_MoJian_FreeStrike"
+    },
+    {
+      "offset": 171748,
+      "nameKey": "PhantomEdges_FunctionName_018_10",
+      "descriptionKey": "PhantomEdges_Function_018_10",
+      "effect": "None"
+    },
+    {
+      "offset": 172477,
+      "nameKey": "PhantomEdges_FunctionName_018_15",
+      "descriptionKey": "PhantomEdges_Function_018_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Mojian/UpgradeData/GE_MoJian_DamageCharge"
+    },
+    {
+      "offset": 173851,
+      "nameKey": "PhantomEdges_FunctionName_018_25",
+      "descriptionKey": "PhantomEdges_Function_018_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Mojian/UpgradeData/GE_MoJian_CriticalStrike"
+    },
+    {
+      "offset": 180206,
+      "nameKey": "PhantomEdges_FunctionName_005_5",
+      "descriptionKey": "PhantomEdges_Function_005_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TanLang/UpgradeData/GE_TanLang_DeflectDrain"
+    },
+    {
+      "offset": 180917,
+      "nameKey": "PhantomEdges_FunctionName_005_10",
+      "descriptionKey": "PhantomEdges_Function_005_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TanLang/UpgradeData/GE_TanLang_ExtraDrain_Lv1"
+    },
+    {
+      "offset": 181630,
+      "nameKey": "PhantomEdges_FunctionName_005_15",
+      "descriptionKey": "PhantomEdges_Function_005_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TanLang/UpgradeData/GE_TanLang_ExtraAttack"
+    },
+    {
+      "offset": 182988,
+      "nameKey": "PhantomEdges_FunctionName_005_25",
+      "descriptionKey": "PhantomEdges_Function_005_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TanLang/UpgradeData/GE_TanLang_SpeicalAttack"
+    },
+    {
+      "offset": 189579,
+      "nameKey": "PhantomEdges_FunctionName_020_5",
+      "descriptionKey": "PhantomEdges_Function_020_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/UpgradeData/GE_ShachiWeapon_XueDiZi_BleedInitial"
+    },
+    {
+      "offset": 190290,
+      "nameKey": "PhantomEdges_FunctionName_020_10",
+      "descriptionKey": "PhantomEdges_Function_020_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/UpgradeData/GE_ShachiWeapon_XueDiZi_Bleed_Lv1"
+    },
+    {
+      "offset": 191003,
+      "nameKey": "PhantomEdges_FunctionName_020_15",
+      "descriptionKey": "PhantomEdges_Function_020_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/UpgradeData/GE_ShachiWeapon_XueDiZi_ExtraAttack"
+    },
+    {
+      "offset": 192361,
+      "nameKey": "PhantomEdges_FunctionName_020_25",
+      "descriptionKey": "PhantomEdges_Function_020_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/UpgradeData/GE_ShachiWeapon_XueDiZi_ExtraExecution"
+    },
+    {
+      "offset": 198690,
+      "nameKey": "PhantomEdges_FunctionName_019_5",
+      "descriptionKey": "PhantomEdges_Function_019_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ThunderSpear/UpgradeData/GE_ShachiWeapon_Upgrade_DashAttack"
+    },
+    {
+      "offset": 199401,
+      "nameKey": "PhantomEdges_FunctionName_019_10",
+      "descriptionKey": "PhantomEdges_Function_019_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ThunderSpear/UpgradeData/GE_ShachiWeapon_Upgrade_ThunderSpear_Lv1"
+    },
+    {
+      "offset": 200114,
+      "nameKey": "PhantomEdges_FunctionName_019_15",
+      "descriptionKey": "PhantomEdges_Function_019_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ThunderSpear/UpgradeData/GE_ShachiWeapon_Upgrade_HuiMaQiang"
+    },
+    {
+      "offset": 201472,
+      "nameKey": "PhantomEdges_FunctionName_019_25",
+      "descriptionKey": "PhantomEdges_Function_019_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ThunderSpear/UpgradeData/GE_ShachiWeapon_Upgrade_CA"
+    },
+    {
+      "offset": 225730,
+      "nameKey": "PhantomEdges_FunctionName_006_5",
+      "descriptionKey": "PhantomEdges_Function_006_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/UpgradeData/GE_ShachiWeapon_TigerCannon_CanDash"
+    },
+    {
+      "offset": 226441,
+      "nameKey": "PhantomEdges_FunctionName_006_10",
+      "descriptionKey": "PhantomEdges_Function_006_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/UpgradeData/GE_ShachiWeapon_TigerCannon_FireGround"
+    },
+    {
+      "offset": 227170,
+      "nameKey": "PhantomEdges_FunctionName_006_15",
+      "descriptionKey": "PhantomEdges_Function_006_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/UpgradeData/GE_ShachiWeapon_TigerCannon_QuickCharge"
+    },
+    {
+      "offset": 228544,
+      "nameKey": "PhantomEdges_FunctionName_006_25",
+      "descriptionKey": "PhantomEdges_Function_006_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/UpgradeData/GE_ShachiWeapon_TigerCannon_CanCounter"
+    },
+    {
+      "offset": 234928,
+      "nameKey": "PhantomEdges_FunctionName_022_5",
+      "descriptionKey": "PhantomEdges_Function_022_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/NiTouChe/UpgradeData/GE_Upgrade_NiTouChe_Sprint"
+    },
+    {
+      "offset": 235639,
+      "nameKey": "PhantomEdges_FunctionName_022_10",
+      "descriptionKey": "PhantomEdges_Function_022_10",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/NiTouChe/UpgradeData/GE_Upgrade_NiTouChe_CostDecrease_Lv1"
+    },
+    {
+      "offset": 236352,
+      "nameKey": "PhantomEdges_FunctionName_022_15",
+      "descriptionKey": "PhantomEdges_Function_022_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/NiTouChe/UpgradeData/GE_Upgrade_NiTouChe_IncreaseDamage"
+    },
+    {
+      "offset": 237710,
+      "nameKey": "PhantomEdges_FunctionName_022_25",
+      "descriptionKey": "PhantomEdges_Function_022_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/NiTouChe/UpgradeData/GE_Upgrade_NiTouChe_EnableTurnAttack"
+    },
+    {
+      "offset": 252864,
+      "nameKey": "PhantomEdges_FunctionName_015_5",
+      "descriptionKey": "PhantomEdges_Function_015_5",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuoLiuXing/UpgradeData/GE_ShachiWeapon_HuoLiuXing_AAAA"
+    },
+    {
+      "offset": 253575,
+      "nameKey": "PhantomEdges_FunctionName_015_10",
+      "descriptionKey": "PhantomEdges_Function_015_10",
+      "effect": "None"
+    },
+    {
+      "offset": 254304,
+      "nameKey": "PhantomEdges_FunctionName_015_15",
+      "descriptionKey": "PhantomEdges_Function_015_15",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuoLiuXing/UpgradeData/GE_ShachiWeapon_HuoLiuXing_CanDeadExplosion"
+    },
+    {
+      "offset": 255678,
+      "nameKey": "PhantomEdges_FunctionName_015_25",
+      "descriptionKey": "PhantomEdges_Function_015_25",
+      "effect": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuoLiuXing/UpgradeData/GE_ShachiWeapon_HuoLiuXing_DB"
+    }
+  ],
+  "catalogCoverage": [
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Combo",
+      "family": "BrutalAxe",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/Archive/GA_BrutalAxe_Combo",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release1",
+      "family": "BrutalAxe",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.BrutalAxe.Charge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.FastCharge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.RunChargeCombo"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_001_5",
+        "PhantomEdges_FunctionName_001_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release2",
+      "family": "BrutalAxe",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.BrutalAxe.Charge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.FastCharge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.RunChargeCombo"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_001_5",
+        "PhantomEdges_FunctionName_001_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release3",
+      "family": "BrutalAxe",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.BrutalAxe.Charge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.FastCharge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.RunChargeCombo"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_001_5",
+        "PhantomEdges_FunctionName_001_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+      "family": "BrutalAxe",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.BrutalAxe.Charge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.FastCharge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.RunChargeCombo"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_001_5",
+        "PhantomEdges_FunctionName_001_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
+      "family": "BrutalAxe",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.BrutalAxe.Charge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.FastCharge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.RunChargeCombo"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_001_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_001_5",
+        "PhantomEdges_FunctionName_001_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease1",
+      "family": "BrutalAxe",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.BrutalAxe.Charge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.FastCharge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.RunChargeCombo"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_001_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_001_5",
+        "PhantomEdges_FunctionName_001_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease2",
+      "family": "BrutalAxe",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.BrutalAxe.Charge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.FastCharge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.RunChargeCombo"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_001_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_001_5",
+        "PhantomEdges_FunctionName_001_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
+      "family": "BrutalAxe",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.BrutalAxe.Charge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.FastCharge",
+        "CharacterState.WeaponUpgrade.BrutalAxe.RunChargeCombo"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_001_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_001_5",
+        "PhantomEdges_FunctionName_001_25"
+      ]
+    },
+    {
+      "id": "move:Shadow.CaoOuSiXian.GA_CaoOuSiXian_Normal_01",
+      "family": "CaoOuSiXian",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/CaoOuSiXian/GA_CaoOuSiXian_Normal_01",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser.Shoot",
+      "family": "DuYanBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V1",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V2",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V3",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserEyes",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserV2"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_109_5",
+        "PhantomEdges_FunctionName_109_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_109_10",
+        "PhantomEdges_FunctionName_109_15",
+        "PhantomEdges_FunctionName_109_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser",
+      "family": "DuYanBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V1",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V2",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V3",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserEyes",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserV2"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_109_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_109_10",
+        "PhantomEdges_FunctionName_109_15",
+        "PhantomEdges_FunctionName_109_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage1",
+      "family": "DuYanBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.DuYanBow.Evolution",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V1",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V2",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V3"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_109_10"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage2",
+      "family": "DuYanBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.DuYanBow.Evolution",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V1",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V2",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V3"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_109_10"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage3",
+      "family": "DuYanBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.DuYanBow.Evolution",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V1",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V2",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V3"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_109_10"
+      ]
+    },
+    {
+      "id": "move:Shadow.DuYanBow.GA_DuYan_Bow_Normal",
+      "family": "DuYanBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.DuYanBow.Evolution",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V1",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V2",
+        "CharacterState.WeaponUpgrade.DuYanBow.LaserDamageFalloff.V3"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_109_10"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Dash",
+      "family": "HuangJinHuoChong",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Dash",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.HuangJinHuoChong.DashLR",
+        "CharacterState.WeaponUpgrade.HuangJinHuoChong.Dash_B",
+        "CharacterState.WeaponUpgrade.HuangJinHuoChong.Dash_F"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_008_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_008_5",
+        "PhantomEdges_FunctionName_008_15",
+        "PhantomEdges_FunctionName_008_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.DeflectCounter",
+      "family": "HuangJinHuoChong",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_DeflectCounter",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.HuangJinHuoChong.GA_HuangJinHuoChong_Normal_02",
+      "family": "HuangJinHuoChong",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_02",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Common_02",
+      "family": "HuangJinHuoChong",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_04",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.A",
+      "family": "HuoLiuXing",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.HuoLiuXing.Evolution"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AShort",
+      "family": "HuoLiuXing",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A_Short",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.HuoLiuXing.Evolution"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AA",
+      "family": "HuoLiuXing",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.HuoLiuXing.Evolution"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAA",
+      "family": "HuoLiuXing",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.HuoLiuXing.Evolution"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA.Final",
+      "family": "HuoLiuXing",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.HuoLiuXing.Evolution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_015_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA.Training",
+      "family": "HuoLiuXing",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.HuoLiuXing.Evolution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_015_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA",
+      "family": "HuoLiuXing",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.HuoLiuXing.Evolution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_015_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.DB",
+      "family": "HuoLiuXing",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_DB",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.HuoLiuXing.Evolution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_015_25"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.JianKeZhaoJiLing.GA_JianKeZhaoJiLing_Normal_01",
+      "family": "JianKeZhaoJiLing",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JianKeZhaoJiLing/GA_JianKeZhaoJiLing_Normal_01",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.JinGua.Air",
+      "family": "JinGua",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Air",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.JinGua.AdditiveWave"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_002_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_002_15"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack.Training",
+      "family": "JinGua",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_ExtraAttack",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.JinGua.AdditiveWave"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_002_25"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_002_15"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack",
+      "family": "JinGua",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_ExtraAttack",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.JinGua.AdditiveWave"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_002_25"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_002_15"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.JinGua.Main.Release.Charge1",
+      "family": "JinGua",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.JinGua.AdditiveWave"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_002_15"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.JinGua.Main.Release.Charge2",
+      "family": "JinGua",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.JinGua.AdditiveWave"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_002_15"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.JinGua.Main.Release.Charge3",
+      "family": "JinGua",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.JinGua.AdditiveWave"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_002_15"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main",
+      "family": "JinGua",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.JinGua.AdditiveWave"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_002_15"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.JinGua.RotateAttack",
+      "family": "JinGua",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.YanYueDao.Unstoppable"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.KuYeSiZhuChuan.GA_KuYeSiZhuChuan_Normal_01",
+      "family": "KuYeSiZhuChuan",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/KuYeSiZhuChuan/GA_KuYeSiZhuChuan_Normal_01",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.LionHead.End",
+      "family": "LionHead",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.LionHead.Evolution"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.LionHead.GA_LionHead",
+      "family": "LionHead",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.LionHead.Evolution"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.LionHead.Dash",
+      "family": "LionHead",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_Dash",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.LionHead.Evolution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_012_15"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.LionHead.DoubleFireBall",
+      "family": "LionHead",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_DoubleFireBall",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.LionHead.Evolution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_012_25"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.LionHead.FireBall",
+      "family": "LionHead",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_FireBall",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.LionHead.Evolution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_012_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.Lute.GA_Hun_Lute_A",
+      "family": "Lute",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Lute.BlueBullet"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.PiPa.AA",
+      "family": "Lute",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Lute.BlueBullet"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.PiPa.AAA",
+      "family": "Lute",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AAA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Lute.RedBullet"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.PiPa.Skill.End",
+      "family": "Lute",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Lute.BlueBullet",
+        "CharacterState.WeaponUpgrade.Lute.RedBullet"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_024_25"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.PiPa.Skill",
+      "family": "Lute",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Lute.BlueBullet",
+        "CharacterState.WeaponUpgrade.Lute.RedBullet"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_024_25"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.PiPa.Dash",
+      "family": "Lute",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Lute_Dash",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Lute.BlueBullet",
+        "CharacterState.WeaponUpgrade.Lute.Dash_FB",
+        "CharacterState.WeaponUpgrade.Lute.Dash_LR",
+        "CharacterState.WeaponUpgrade.Lute.RedBullet"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_024_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_024_5",
+        "PhantomEdges_FunctionName_024_15"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB.End",
+      "family": "MiaoShouFeiDao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.MiaoShouFeiDao.DeflectCounter"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_010_25"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB",
+      "family": "MiaoShouFeiDao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.MiaoShouFeiDao.DeflectCounter"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_010_25"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.01",
+      "family": "MiaoShouFeiDao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_01",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.MiaoShouFeiDao.DeflectCounter"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_010_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.02",
+      "family": "MiaoShouFeiDao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_02",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.MiaoShouFeiDao.DeflectCounter"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_010_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.03",
+      "family": "MiaoShouFeiDao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_03",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.MiaoShouFeiDao.DeflectCounter"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_010_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_01",
+      "family": "MiaoShouFeiDao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_01",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.MiaoShouFeiDao.Dash_F",
+        "CharacterState.WeaponUpgrade.MiaoShouFeiDao.DeflectCounter"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_010_15"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_02",
+      "family": "MiaoShouFeiDao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_02",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.MiaoShouFeiDao.Dash_F",
+        "CharacterState.WeaponUpgrade.MiaoShouFeiDao.DeflectCounter"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_010_15"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_03",
+      "family": "MiaoShouFeiDao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_03",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.MiaoShouFeiDao.Dash_F",
+        "CharacterState.WeaponUpgrade.MiaoShouFeiDao.DeflectCounter"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_010_15"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.MoJi.A.Default",
+      "family": "Mojian",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.MoJi.A.Short",
+      "family": "Mojian",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A_Short",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.Mojian.GA_Hun_Mojian_AA",
+      "family": "Mojian",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.MoJian.Evolution"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.MoJi.AAA.Training",
+      "family": "Mojian",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AAA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.MoJian.CriticalStrike",
+        "CharacterState.WeaponUpgrade.MoJian.DamageCharge",
+        "CharacterState.WeaponUpgrade.MoJian.Evolution",
+        "CharacterState.WeaponUpgrade.MoJian.FreeStrike"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_018_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_018_5",
+        "PhantomEdges_FunctionName_018_15",
+        "PhantomEdges_FunctionName_018_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.MoJi.AAA",
+      "family": "Mojian",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AAA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.MoJian.CriticalStrike",
+        "CharacterState.WeaponUpgrade.MoJian.DamageCharge",
+        "CharacterState.WeaponUpgrade.MoJian.Evolution",
+        "CharacterState.WeaponUpgrade.MoJian.FreeStrike"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_018_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_018_5",
+        "PhantomEdges_FunctionName_018_15",
+        "PhantomEdges_FunctionName_018_25"
+      ]
+    },
+    {
+      "id": "move:Shadow.NiTouChe.GA_HorseCart_Charge",
+      "family": "NiTouChe",
+      "class": "/Game/Test/HorseTest/GA_HorseCart_Charge",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.NiTouChe.CostDecrease.Lv1",
+        "CharacterState.WeaponUpgrade.NiTouChe.CostDecrease.Lv2",
+        "CharacterState.WeaponUpgrade.NiTouChe.CostDecrease.Lv3",
+        "CharacterState.WeaponUpgrade.NiTouChe.EnableSprint",
+        "CharacterState.WeaponUpgrade.NiTouChe.EnableTurnAttack",
+        "CharacterState.WeaponUpgrade.NiTouChe.IncreaseDamage",
+        "CharacterState.WeaponUpgrade.NiTouChe.OffCombatNotCost"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_022_5",
+        "PhantomEdges_FunctionName_022_10",
+        "PhantomEdges_FunctionName_022_15",
+        "PhantomEdges_FunctionName_022_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.C",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_C",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CA",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CA",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CAA",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CAA",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CB",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CB",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CBB",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CBB",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CC",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CC",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CCC",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCC",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC.Training",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCCC",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_014_25"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCCC",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_014_25"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CD",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CD",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CDD",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CDD",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training1",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Drag",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_014_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training2",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Drag",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_014_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training3",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Drag",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_014_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Drag",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_014_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.HookMove",
+      "family": "ShachiHook",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_HookMove",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.ShachiHook.CanJumpOut"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_014_15"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack.Training",
+      "family": "TanLang",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_ExtraAttack",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TanLang.Evolution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_005_15"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack",
+      "family": "TanLang",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_ExtraAttack",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TanLang.Evolution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_005_15"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.TanLang.Normal.FastEnd",
+      "family": "TanLang",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TanLang.Evolution",
+        "CharacterState.WeaponUpgrade.YanYueDao.Unstoppable"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.TanLang.Normal",
+      "family": "TanLang",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TanLang.Evolution",
+        "CharacterState.WeaponUpgrade.YanYueDao.Unstoppable"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.TanLang.SpecialAttack",
+      "family": "TanLang",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_SpeicalAttack",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TanLang.Evolution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_005_25"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Dash",
+      "family": "ThunderSpear",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Dash",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_019_5"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.ThunderSpear.DeflectCounter.Native",
+      "family": "ThunderSpear",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DeflectCounter",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Dodge",
+      "family": "ThunderSpear",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DodgeAttack_01",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_019_15"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_01",
+      "family": "ThunderSpear",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_01",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_02",
+      "family": "ThunderSpear",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_02",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_03",
+      "family": "ThunderSpear",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_03",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04.Training",
+      "family": "ThunderSpear",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_SpecialAttack_04",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_019_25"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04",
+      "family": "ThunderSpear",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_SpecialAttack_04",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_019_25"
+      ],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.GpAttack.Normal",
+      "family": "TieKuangQuanTao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/GA_TieKuangQuanTao_GuardPoint",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C.PerfectRelease",
+      "family": "TieKuangQuanTao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_A",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.CanCharge",
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.FreeUse",
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.Shockwave"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_017_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_017_5",
+        "PhantomEdges_FunctionName_017_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC.PerfectRelease",
+      "family": "TieKuangQuanTao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.CanCharge",
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.FreeUse",
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.Shockwave"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_017_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_017_5",
+        "PhantomEdges_FunctionName_017_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC",
+      "family": "TieKuangQuanTao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.CanCharge",
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.FreeUse",
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.Shockwave"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_017_5",
+        "PhantomEdges_FunctionName_017_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC.PerfectRelease",
+      "family": "TieKuangQuanTao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AAA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.CanCharge",
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.FreeUse",
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.Shockwave"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_017_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_017_5",
+        "PhantomEdges_FunctionName_017_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC",
+      "family": "TieKuangQuanTao",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AAA",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.CanCharge",
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.FreeUse",
+        "CharacterState.WeaponUpgrade.TieKuangQuanTao.Shockwave"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_017_5",
+        "PhantomEdges_FunctionName_017_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal.Launch",
+      "family": "TigerCannon",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TigerCannon.FireGround"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_006_10"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal.Launch.Great",
+      "family": "TigerCannon",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TigerCannon.FireGround"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_006_10"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal.Launch.Perfect",
+      "family": "TigerCannon",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TigerCannon.FireGround"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_006_10"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+      "family": "TigerCannon",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TigerCannon.FireGround"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_006_10"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Dash",
+      "family": "TigerCannon",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Dash",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TigerCannon.FireGround"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_006_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_006_10"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch",
+      "family": "TigerCannon",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TigerCannon.FireGround"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_006_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_006_10"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch.Great",
+      "family": "TigerCannon",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TigerCannon.FireGround"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_006_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_006_10"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch.Perfect",
+      "family": "TigerCannon",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TigerCannon.FireGround"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_006_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_006_10"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge",
+      "family": "TigerCannon",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.TigerCannon.FireGround"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_006_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_006_10"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Ultimate",
+      "family": "TigerCannon",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Ultimate",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.UnnamedBow.Shoot.Normal",
+      "family": "UnnamedBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Bow.MaxBullet",
+        "CharacterState.WeaponUpgrade.Bow.PerfectBullet"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.UnnamedBow.Shoot.Perfect",
+      "family": "UnnamedBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Bow.MaxBullet",
+        "CharacterState.WeaponUpgrade.Bow.PerfectBullet"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.UnnamedBow.Shoot.Max",
+      "family": "UnnamedBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Bow.MaxBullet",
+        "CharacterState.WeaponUpgrade.Bow.PerfectBullet"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.UnnamedBow.GA_UnnamedBow",
+      "family": "UnnamedBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Bow.MaxBullet",
+        "CharacterState.WeaponUpgrade.Bow.PerfectBullet"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.Bow.Dash",
+      "family": "UnnamedBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_Dash",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Bow.Dash_B",
+        "CharacterState.WeaponUpgrade.Bow.Dash_F",
+        "CharacterState.WeaponUpgrade.Bow.Dash_LR"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_009_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_009_5",
+        "PhantomEdges_FunctionName_009_15",
+        "PhantomEdges_FunctionName_009_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.Bow.DeflectCounter",
+      "family": "UnnamedBow",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_DeflectCounter",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Bow.PerfectBullet"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.XuKongHuaShan.GA_XuKongHuaShan_Skill",
+      "family": "XuKongHuaShan",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Skill",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.A",
+      "family": "XueDiZi",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_A",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.AA",
+      "family": "XueDiZi",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AA",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.AAA",
+      "family": "XueDiZi",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AAA",
+      "referencedUpgradeTags": [],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.EvolutionAttack",
+      "family": "XueDiZi",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_EvolutionAttack",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.XueDiZi.ExtraExecution"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_020_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack.Training",
+      "family": "XueDiZi",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_SpecialAttack",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.XueDiZi.ExtraExecution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_020_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_020_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack",
+      "family": "XueDiZi",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_SpecialAttack",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.XueDiZi.ExtraExecution"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_020_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_020_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.YouLongCha.Dash",
+      "family": "YouLongCha",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Dash",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.YouLongCha.Dash_B",
+        "CharacterState.WeaponUpgrade.YouLongCha.Dash_F"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_016_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_016_15",
+        "PhantomEdges_FunctionName_016_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.YouLongCha.Shoot.Normal",
+      "family": "YouLongCha",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.YouLongCha.PerfectHit"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.YouLongCha.Shoot.Perfect",
+      "family": "YouLongCha",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.YouLongCha.PerfectHit"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.YouLongCha.Shoot.Max",
+      "family": "YouLongCha",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.YouLongCha.PerfectHit"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.YouLongCha.GA_YouLongCha_Normal",
+      "family": "YouLongCha",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.YouLongCha.PerfectHit"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:Shadow.YouLongHead.GA_YouLongHead_Water",
+      "family": "YouLongHead",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Water",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.YouLongTou.StikeThrough"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_011_15"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.YouLongTou.WaterCannon",
+      "family": "YouLongHead",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_WaterCannon",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.YouLongTou.WaterCannon_V2"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_011_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_011_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push",
+      "family": "ZhuoBiDun",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Counterx2",
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Fast",
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Rush"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_004_5",
+        "PhantomEdges_FunctionName_004_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Rush",
+      "family": "ZhuoBiDun",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Counterx2",
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Fast",
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Rush"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_004_5"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_004_5",
+        "PhantomEdges_FunctionName_004_25"
+      ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Counter",
+      "family": "ZhuoBiDun",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Counterx2",
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Fast",
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Rush"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_004_5",
+        "PhantomEdges_FunctionName_004_25"
+      ]
+    },
+    {
+      "id": "move:Shadow.ZhuoBiDun.GA_ZhuoBiDun",
+      "family": "ZhuoBiDun",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Counterx2",
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Fast",
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Rush"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_004_5",
+        "PhantomEdges_FunctionName_004_25"
+      ]
+    },
+    {
+      "id": "ability:Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Slide",
+      "family": "ZhuoBiDun",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun_Slide",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.ZhuoBiDun.Slide"
+      ],
+      "officialNameKeys": [
+        "PhantomEdges_FunctionName_004_15"
+      ],
+      "effectKeys": [
+        "PhantomEdges_FunctionName_004_15"
+      ]
+    }
+  ],
+  "families": [
+    {
+      "family": "BrutalAxe",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_001_Terrian",
+          "nativeName": "斩铁断链",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_001_5",
+          "nativeName": "强行蓄力",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release1",
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release2",
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release3",
+            "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+            "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease1",
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease2"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_001_10",
+          "nativeName": "厚甲护身·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_001_15",
+          "nativeName": "疾行斧",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease1",
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease2"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_001_25",
+          "nativeName": "千钧之势",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release1",
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release2",
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release3",
+            "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+            "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease1",
+            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease2"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_001_Re",
+          "nativeName": "急速蓄力",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "CaoOuSiXian",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_025_5",
+          "nativeName": "强盾",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_013_10",
+          "nativeName": "不灭·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_025_15",
+          "nativeName": "防守反击",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_025_25",
+          "nativeName": "无意识强击",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_025_Re",
+          "nativeName": "深渊铃铛",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "DuYanBow",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_109_Terrian",
+          "nativeName": "远射破物",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_109_5",
+          "nativeName": "死光",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_109_10",
+          "nativeName": "透射·{之一|之二|之三}",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser",
+            "move:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser.Shoot",
+            "move:Shadow.DuYanBow.GA_DuYan_Bow_Normal",
+            "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage1",
+            "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage2",
+            "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage3"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_109_15",
+          "nativeName": "凝视",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser",
+            "move:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser.Shoot"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_109_25",
+          "nativeName": "千目凝视",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser",
+            "move:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser.Shoot"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_109_Re",
+          "nativeName": "快速射击",
+          "catalogIds": [
+            "move:Shadow.DuYanBow.GA_DuYan_Bow_Normal",
+            "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage1",
+            "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage2",
+            "move:Ability.Action.Hun.ShachiAbility.Default.DuYanBow.Shoot.Stage3"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "HanBingPiPa",
+      "names": [],
+      "status": "no-official-function-names-in-table-row"
+    },
+    {
+      "family": "HuangJinHuoChong",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_008_Terrian",
+          "nativeName": "远射破物",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_008_5",
+          "nativeName": "火枪步·侧",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_008_10",
+          "nativeName": "穿甲弹·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_008_15",
+          "nativeName": "火枪步·进",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_008_25",
+          "nativeName": "火枪步·退",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_008_Re",
+          "nativeName": "闪避反击",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "HuoLiuXing",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_015_Advance",
+          "nativeName": "磷火",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_015_5",
+          "nativeName": "铁花飞溅",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA",
+            "move:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA.Final",
+            "move:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA.Training"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_015_10",
+          "nativeName": "烈火灼心·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_015_15",
+          "nativeName": "磷火爆炸",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_015_25",
+          "nativeName": "磷火龙卷",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.DB"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_015_Re",
+          "nativeName": "销骨鬼火",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "JianKeZhaoJiLing",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_026_5",
+          "nativeName": "剑气纵横",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_013_10",
+          "nativeName": "不灭·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_026_15",
+          "nativeName": "小型剑阵",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_026_25",
+          "nativeName": "摧枯拉朽",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_026_Re",
+          "nativeName": "高手剑客",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "JinGua",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_002_Terrian",
+          "nativeName": "破地通途",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_002_5",
+          "nativeName": "天降金瓜",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.JinGua.Air"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_002_10",
+          "nativeName": "强势打断·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_002_15",
+          "nativeName": "地动山摇",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.JinGua.Air",
+            "move:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack.Training",
+            "ability:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack",
+            "move:Ability.Action.Hun.ShachiAbility.JinGua.Main.Release.Charge1",
+            "move:Ability.Action.Hun.ShachiAbility.JinGua.Main.Release.Charge2",
+            "move:Ability.Action.Hun.ShachiAbility.JinGua.Main.Release.Charge3",
+            "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_002_25",
+          "nativeName": "余势未消",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack.Training",
+            "ability:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_002_Re",
+          "nativeName": "旋锤猛进",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "KuYeSiZhuChuan",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_013_5",
+          "nativeName": "金身",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_013_10",
+          "nativeName": "不灭·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_013_15",
+          "nativeName": "铜人阵",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_013_25",
+          "nativeName": "反弹",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_013_Re",
+          "nativeName": "金身阵起",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "LionHead",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_012_Terrian",
+          "nativeName": "焚荆开路",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_012_5",
+          "nativeName": "火球速射",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.LionHead.FireBall"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_012_10",
+          "nativeName": "烈火不熄·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_012_15",
+          "nativeName": "狮头突进",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.LionHead.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_012_25",
+          "nativeName": "双重火球",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.LionHead.DoubleFireBall"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_012_Re",
+          "nativeName": "混沌烈焰",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "Lute",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_024_Advance",
+          "nativeName": "音刃",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_024_5",
+          "nativeName": "转轴拨弦",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.PiPa.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_024_10",
+          "nativeName": "金戈鸣·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_024_15",
+          "nativeName": "移商换羽",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.PiPa.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_024_25",
+          "nativeName": "破阵曲",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.PiPa.Skill",
+            "move:Ability.Action.Hun.ShachiAbility.PiPa.Skill.End"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_024_Re",
+          "nativeName": "幻术琵琶",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "MiaoShouFeiDao",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_010_Advance",
+          "nativeName": "淬毒",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_010_Terrian",
+          "nativeName": "远射破物",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_010_5",
+          "nativeName": "探花步",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.01",
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.02",
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.03"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_010_10",
+          "nativeName": "例不虚发·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_010_15",
+          "nativeName": "无影步",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_01",
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_02",
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_03"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_010_25",
+          "nativeName": "疾风步",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB",
+            "move:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB.End"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_010_Re",
+          "nativeName": "妙手连连",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "Mojian",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_018_Advance",
+          "nativeName": "光轮剑",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_018_5",
+          "nativeName": "剑光葬",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.MoJi.AAA.Training",
+            "ability:Ability.Action.Hun.ShachiAbility.MoJi.AAA"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_018_10",
+          "nativeName": "墨痕不散·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_018_15",
+          "nativeName": "以墨养剑",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.MoJi.AAA.Training",
+            "ability:Ability.Action.Hun.ShachiAbility.MoJi.AAA"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_018_25",
+          "nativeName": "墨贯长虹",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.MoJi.AAA.Training",
+            "ability:Ability.Action.Hun.ShachiAbility.MoJi.AAA"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_018_Re",
+          "nativeName": "双生光轮",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "NiTouChe",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_022_5",
+          "nativeName": "全速冲刺",
+          "catalogIds": [
+            "move:Shadow.NiTouChe.GA_HorseCart_Charge"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_022_10",
+          "nativeName": "铁甲横行·{之一|之二|之三}",
+          "catalogIds": [
+            "move:Shadow.NiTouChe.GA_HorseCart_Charge"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_022_15",
+          "nativeName": "横冲直撞",
+          "catalogIds": [
+            "move:Shadow.NiTouChe.GA_HorseCart_Charge"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_022_25",
+          "nativeName": "力荡四方",
+          "catalogIds": [
+            "move:Shadow.NiTouChe.GA_HorseCart_Charge"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_022_Re",
+          "nativeName": "一骑绝尘",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "ShachiHook",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_014_Terrian",
+          "nativeName": "钩锁飞渡",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_014_5",
+          "nativeName": "如影附形",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag",
+            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training1",
+            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training2",
+            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training3"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_014_10",
+          "nativeName": "穷追猛打·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_014_15",
+          "nativeName": "锁镰飞渡",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.HookMove"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_014_25",
+          "nativeName": "追命龙卷",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC",
+            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC.Training"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_014_Re",
+          "nativeName": "寒光之钩",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "TanLang",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_005_5",
+          "nativeName": "嗜血",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_005_10",
+          "nativeName": "饮血充饥·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_005_15",
+          "nativeName": "全力一击",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack",
+            "move:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack.Training"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_005_25",
+          "nativeName": "贪狼穿心",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TanLang.SpecialAttack"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_005_Re",
+          "nativeName": "鬼火缠身",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "ThunderSpear",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_019_5",
+          "nativeName": "雷枪突刺",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_019_10",
+          "nativeName": "雷霆之怒·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_019_15",
+          "nativeName": "回马枪",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Dodge"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_019_25",
+          "nativeName": "雷霆再临",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04",
+            "move:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04.Training"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_019_Re",
+          "nativeName": "连环惊雷",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "TieKuangQuanTao",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_017_Advance",
+          "nativeName": "拳意",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_017_5",
+          "nativeName": "化境之拳",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C.PerfectRelease",
+            "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC.PerfectRelease",
+            "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC",
+            "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC.PerfectRelease",
+            "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_017_10",
+          "nativeName": "拳意如狂·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_017_15",
+          "nativeName": "拳挡四方",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_017_25",
+          "nativeName": "狂意倾泻",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C.PerfectRelease",
+            "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC.PerfectRelease",
+            "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC",
+            "move:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC.PerfectRelease",
+            "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_017_Re",
+          "nativeName": "拳风冲击",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "TigerCannon",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_006_EX",
+          "nativeName": "火器",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_006_Terrian",
+          "nativeName": "碎石开道",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_006_5",
+          "nativeName": "虎步",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_006_10",
+          "nativeName": "烈火燎原·{之一|之二|之三}",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal.Launch",
+            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal.Launch.Great",
+            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal.Launch.Perfect",
+            "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+            "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Dash",
+            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch",
+            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch.Great",
+            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch.Perfect",
+            "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_006_15",
+          "nativeName": "二重咆哮",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch",
+            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch.Great",
+            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch.Perfect",
+            "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_006_25",
+          "nativeName": "以牙还牙",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_006_Re",
+          "nativeName": "火力全开",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "UnnamedBow",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_009_Terrian",
+          "nativeName": "远射破物",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_009_5",
+          "nativeName": "跨蹑柳行·侧",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.Bow.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_009_10",
+          "nativeName": "百步穿杨·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_009_15",
+          "nativeName": "跨蹑柳行·进",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.Bow.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_009_25",
+          "nativeName": "跨蹑柳行·退",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.Bow.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_009_Re",
+          "nativeName": "精准射击",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "XuKongHuaShan",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_023_5",
+          "nativeName": "无上护佑",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_023_10",
+          "nativeName": "结界延续·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_023_15",
+          "nativeName": "平静的仇恨",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_023_25",
+          "nativeName": "无限结界",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_023_Re",
+          "nativeName": "涅槃",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "XueDiZi",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_020_Advance",
+          "nativeName": "枭首",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_020_Terrian",
+          "nativeName": "嵌锁开关",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_020_5",
+          "nativeName": "血轮",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_020_10",
+          "nativeName": "流血不止·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_020_15",
+          "nativeName": "血滴穿空",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack.Training",
+            "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_020_25",
+          "nativeName": "斩首夺魄",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.EvolutionAttack",
+            "move:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack.Training",
+            "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_020_Re",
+          "nativeName": "撕裂锯轮",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "XueSeLingDang",
+      "names": [],
+      "status": "no-official-function-names-in-table-row"
+    },
+    {
+      "family": "YouLongCha",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_016_Advance",
+          "nativeName": "潮湿",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_016_EX",
+          "nativeName": "入水无门",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_016_5",
+          "nativeName": "水行之主",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_016_10",
+          "nativeName": "龙牙穿透·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_016_15",
+          "nativeName": "龙行·进",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.YouLongCha.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_016_25",
+          "nativeName": "龙行·退",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.YouLongCha.Dash"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_016_Re",
+          "nativeName": "精准投掷",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "YouLongHead",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_011_Advance",
+          "nativeName": "潮湿",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_011_EX",
+          "nativeName": "灭火",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_011_Terrian",
+          "nativeName": "除荆开路",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_011_5",
+          "nativeName": "水炮",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.YouLongTou.WaterCannon"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_011_10",
+          "nativeName": "阴雨连绵·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_011_15",
+          "nativeName": "穿透水柱",
+          "catalogIds": [
+            "move:Shadow.YouLongHead.GA_YouLongHead_Water"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_011_25",
+          "nativeName": "连环水炮",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.YouLongTou.WaterCannon"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_011_Re",
+          "nativeName": "蒸汽烧灼",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    },
+    {
+      "family": "ZhuoBiDun",
+      "names": [
+        {
+          "key": "PhantomEdges_FunctionName_004_Advance",
+          "nativeName": "反伤冲击",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_004_Terrian",
+          "nativeName": "挡箭之盾",
+          "catalogIds": [],
+          "status": "native-context-interaction"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_004_5",
+          "nativeName": "冲盾推敌",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push",
+            "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Rush",
+            "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Counter",
+            "move:Shadow.ZhuoBiDun.GA_ZhuoBiDun"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_004_10",
+          "nativeName": "铜墙铁壁·{之一|之二|之三}",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_004_15",
+          "nativeName": "悬浮盾",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Slide"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_004_25",
+          "nativeName": "举盾如风",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push",
+            "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Rush",
+            "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Counter",
+            "move:Shadow.ZhuoBiDun.GA_ZhuoBiDun"
+          ],
+          "status": "mapped-native-entrance-or-upgrade"
+        },
+        {
+          "key": "PhantomEdges_FunctionName_004_Re",
+          "nativeName": "猛烈反击",
+          "catalogIds": [],
+          "status": "no-proven-independent-entry-relation"
+        }
+      ],
+      "status": "native-names-recorded"
+    }
+  ],
+  "nativeEyeUpgrade": {
+    "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+    "actions": [
+      {
+        "exportIndex": 26,
+        "export": "GAA_BulletBurst_C_3",
+        "requiredUpgradeTag": "CharacterState.WeaponUpgrade.DuYanBow.LaserEyes",
+        "tagExportOffset": 85,
+        "timeline": "Loop",
+        "startTime": 0.05339889973402023
+      },
+      {
+        "exportIndex": 27,
+        "export": "GAA_BulletBurstWithDeflect_C_3",
+        "requiredUpgradeTag": "CharacterState.WeaponUpgrade.DuYanBow.LaserEyes",
+        "tagExportOffset": 85,
+        "timeline": "Loop",
+        "startTime": 0.055938899517059326
+      }
+    ],
+    "eyeBullet": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_DuYan_Bow_Eye"
+  }
+}

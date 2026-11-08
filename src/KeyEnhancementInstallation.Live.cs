@@ -39,7 +39,7 @@ namespace PBZKeyForge
                     lastLiveUpdate = updated;
                 }
             }
-            // The runtime writes this file on the game thread. A partial read must not
+            // A read may overlap the runtime's heartbeat write. A partial read must not
             // discard the last complete heartbeat or extend its lifetime.
             catch (IOException) { }
             bool connected = lastLiveState != null && DateTime.UtcNow - lastLiveUpdate < TimeSpan.FromSeconds(4);
@@ -89,8 +89,8 @@ namespace PBZKeyForge
                 try { value = File.Exists(response) ? File.ReadAllText(response).Replace("\r", "") : ""; }
                 catch (IOException) { continue; }
                 var lines = value.Split(new[] { '\n' }, 3);
-                if (lines.Length < 2 || lines[0] != id) continue;
-                if (lines[1] != "ok") throw new IOException(I18n.Str("live.rejected", lines.Length > 2 ? lines[2] : value));
+                if (lines.Length < 3 || lines[0] != id || (lines[1] != "ok" && lines[1] != "error")) continue;
+                if (lines[1] == "error") throw new IOException(I18n.Str("live.rejected", lines[2]));
                 return;
             }
             // A canceled request must not become a delayed apply when the game resumes.
@@ -117,7 +117,7 @@ namespace PBZKeyForge
                 Directory.CreateDirectory(backup);
                 File.WriteAllText(Path.Combine(backup, "router-config.lua"), oldLua, Utf8);
                 if (oldJson != null) File.WriteAllText(Path.Combine(backup, "configuration.json"), oldJson, Utf8);
-                await SendLive(compiled, 6000).ConfigureAwait(false);
+                await SendLive(compiled, 15000).ConfigureAwait(false);
                 Exception failure = null;
                 try
                 {
@@ -136,7 +136,7 @@ namespace PBZKeyForge
                     string rollbackError = null;
                     try
                     {
-                        await SendLive(previous.CompileLua(), 6000).ConfigureAwait(false);
+                        await SendLive(previous.CompileLua(), 15000).ConfigureAwait(false);
                     }
                     catch (Exception rollback) { rollbackError = rollback.Message; }
                     try

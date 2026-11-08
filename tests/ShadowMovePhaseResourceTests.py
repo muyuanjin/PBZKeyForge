@@ -146,7 +146,26 @@ def main():
                                    event["startTime"] + event["triggerTimeOffset"]))
             for key in ("minimum_time", "before_time"):
                 if key in condition:
+                    if expected["id"] == "move:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser.Shoot" and key == "minimum_time":
+                        assert condition[key] == .056
+                        continue
                     assert any(math.isclose(condition[key], value, abs_tol=1e-7) for value in boundaries), (expected["id"], key)
+            if expected["id"] == "move:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser.Shoot":
+                assert condition["timeline"] == "Loop"
+                ability = info(row["abilityEvidence"])
+                eyes = [action for action in timeline["actions"]
+                        if action["action"] in row["nativeSelection"]["retainedUpgradeEvents"]]
+                assert len(eyes) == 2
+                assert [action["startTime"] for action in eyes] == [.05339889973402023, .055938899517059326]
+                assert max(action["startTime"] + action["triggerTimeOffset"] for action in eyes) < condition["minimum_time"]
+                assert condition["minimum_time"] < max(action["startTime"] for action in eyes) + .001
+                tag = row["nativeSelection"]["upgradeEffectTag"]
+                assert tag not in actual["requiredTags"], "Eye generation remains conditional on the real optional upgrade"
+                for action in eyes:
+                    payload = ability["package"].exports[action["actionPointer"] - 1][1]
+                    assert tag in state_names(ability["package"], payload)
+                    assert any(ref["path"].endswith("/BD_DuYan_Bow_Eye")
+                               for ref in combat_art.object_references(ability["package"], payload))
             if condition.get("before_time"):
                 assert condition["before_time"] > condition.get("minimum_time", 0)
                 assert condition["cancel_on_expire"]

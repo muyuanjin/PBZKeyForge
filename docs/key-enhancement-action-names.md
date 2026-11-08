@@ -84,7 +84,7 @@
 | 绝技 · 持续 | `action:/PBZInput/InputActions/IA_CombatArt_Hold` | UI_Setting_314 |
 | 绝技 · 空中 | `ability:Ability.Action.Hun.CombatArt.JueYing.Air` | UI_Setting_314；AIM_JueYing_CombatArt |
 | 特殊攻击 | `ability:Ability.Action.Execution.Channel.SpecialAttack` | AIM_Hun_HeavyAttack；AIM_BaiYing_HeavyAttack |
-| 完美格挡 | `action:/PBZDeflectSystem/Input/IA_Deflect` | Tutorial_Defense_Title_2 |
+| 点按防御 | `action:/PBZDeflectSystem/Input/IA_Deflect` | IA_Deflect.Triggered：刷新防御窗口并启动架势；完美判定由游戏决定 |
 | 架势状态 | `action:/PBZDeflectSystem/Input/IA_Stance` | Tutorial_Defense_Title_1 |
 | 闪避 · 普通 | `ability:Ability.Action.Hun.Dash` | UI_Setting_313；AIM_Hun_Dash；AIM_Mojian_Dash；AIM_ShachiHook_Dash；AIM_JadeDual_Dash；AIM_PoJun_Dash；AIM_Tang_HorseCartCombat_Dodge |
 | 瞬身 | `ability:Ability.Action.Hun.SpecialDash` | UI_AbilityName_23；AIM_Hun_Dash |

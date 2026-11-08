@@ -741,8 +741,10 @@
     },
     "action:/PBZDeflectSystem/Input/IA_Deflect": {
       "section": "gameplay",
-      "prefix": "native",
-      "parts": [],
+      "prefix": "none",
+      "parts": [
+        "@unified.function.IA_Deflect"
+      ],
       "aliases": [
         "Deflect",
         "完美防御",
@@ -751,7 +753,7 @@
         "perfect defence",
         "perfect deflect"
       ],
-      "semantic": false,
+      "semantic": true,
       "variant": "Deflect",
       "nativeMapping": true,
       "factoryKeyboardKeys": [

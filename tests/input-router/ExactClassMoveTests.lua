@@ -9,20 +9,25 @@ end
 local function object(values)
     local result = values or {}
     function result:IsValid() return true end
+    function result:GetAddress() return self end
     return result
 end
 local first = "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Common/GA_Hun_PerfectDodge_FireBallCounter"
 local second = "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Common/GA_Hun_PerfectDodge_ThunderCounter"
 local function fixture(granted)
     local specs, classes = {}, {}
-    for _, path in ipairs(granted) do
+    for _, path in ipairs({first, second}) do
         classes[path] = object({GetFullName=function() return "LegoAbilityBlueprintGeneratedClass " .. path end})
-        local cdo = object({GetClass=function() return classes[path] end})
-        specs[#specs+1] = {Ability=cdo, ActiveCount=0}
     end
-    local asc = object({ActivatableAbilities={Items={ForEach=function(_, callback)
+    function StaticFindObject(path) return classes[path] end
+    for _, path in ipairs(granted) do
+        local cdo = object({GetClass=function() return classes[path] end})
+        local empty = {GetArrayNum=function() return 0 end}
+        specs[#specs+1] = {Ability=cdo, ActiveCount=0,NonReplicatedInstances=empty,ReplicatedInstances=empty}
+    end
+    local asc = object({ActivatableAbilities={Items=setmetatable({GetArrayNum=function() return #specs end,ForEach=function(_, callback)
         for index, spec in ipairs(specs) do callback(index, {get=function() return spec end}) end
-    end}}})
+    end},{__index=specs})}})
     local receiver, input = object(), object()
     local backend = {calls=0}
     function backend:receiver(target) return target.receiver == "ability_system" and asc or receiver end

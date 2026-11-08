@@ -57,6 +57,7 @@ namespace
     RC::Unreal::Hook::ScriptCallback pre, post;
     std::unordered_map<const void*, std::wstring> names;
     std::unordered_map<void*, RC::Unreal::UFunction*> nodes;
+    std::unordered_map<void*, unsigned char*> locals;
     using NativeExec = void(*)(RC::Unreal::UObject*, RC::Unreal::FFrame&, void*);
     std::unordered_map<const void*, NativeExec> nativeExecs;
     std::unordered_map<const void*, RC::Unreal::FProperty*> properties;
@@ -78,6 +79,9 @@ namespace RC::Unreal
 {
     std::wstring UObject::GetFullName(UObject*) const { return names.at(this); }
     UFunction*& FFrame::Node() { return nodes.at(this); }
+    unsigned char*& FFrame::Locals() { return locals.at(this); }
+    FName::FName(const wchar_t*,EFindName,void*) {}
+    FProperty* UStruct::FindProperty(FName) { return namedProperties[this][L"DeltaTime"]; }
     int UFunction::RegisterPreHook(const Callback& callback, void*) { interfacePre.push_back(callback); return 1; }
     int UFunction::RegisterPostHook(const Callback& callback, void*) { interfacePost.push_back(callback); return 2; }
     auto UFunction::GetFuncPtr() -> void(*)(UObject*, FFrame&, void*) { return nativeExecs[this]; }
@@ -341,11 +345,61 @@ namespace
         names[&bullet.owner] = L"Bullet /Level.Projectile";
         RC::Unreal::UnrealScriptFunctionCallableContext context{
             reinterpret_cast<RC::Unreal::UObject*>(static_cast<NativeInterface*>(&bullet)), frame, nullptr};
+        begin(pbz_script_context_interface_address); finish(0, 0);
         interfacePre.back()(context, nullptr);
+        begin(pbz_script_context_interface_address); finish(0, 1);
+        assert(luaApi.tointeger(state.lua,1,nullptr) == reinterpret_cast<long long>(&bullet.owner));
         begin(pbz_script_context_interface_object); finish(0, 1);
         assert(std::string(luaApi.tolstring(state.lua, 1, nullptr)) == "Bullet /Level.Projectile");
         interfacePost.back()(context, nullptr);
         begin(pbz_script_context_interface_object); finish(0, 0);
+        begin(pbz_script_context_interface_address); finish(0, 0);
+        RC::Unreal::UFunction chargeFunction, unrelatedFunction, invalidChargeFunction;
+        RC::Unreal::FProperty deltaProperty, invalidDeltaProperty;
+        struct TickParameters { int marker = 19; float delta = .125f; } tickParameters, nestedParameters;
+        propertyOffsets[&deltaProperty]=offsetof(TickParameters,delta);
+        propertySizes[&deltaProperty]=sizeof(float);
+        propertySizes[&invalidDeltaProperty]=sizeof(double);
+        namedProperties[&chargeFunction][L"DeltaTime"]=&deltaProperty;
+        namedProperties[&invalidChargeFunction][L"DeltaTime"]=&invalidDeltaProperty;
+        begin(pbz_charge_watch_tick); pointer(&invalidChargeFunction); finish(1,1);
+        assert(luaApi.tolstring(state.lua,1,nullptr) && !chargeTicks.count(&invalidChargeFunction));
+        begin(pbz_charge_watch_tick); pointer(&chargeFunction); finish(1,1);
+        assert(luaApi.tointeger(state.lua,1,nullptr)==1);
+        RC::Unreal::FFrame tickFrame, nestedTickFrame;
+        RC::Unreal::UObject ordinaryOwner;
+        nodes[&tickFrame]=nodes[&nestedTickFrame]=&chargeFunction;
+        locals[&tickFrame]=reinterpret_cast<unsigned char*>(&tickParameters);
+        locals[&nestedTickFrame]=reinterpret_cast<unsigned char*>(&nestedParameters);
+        auto chargeRate = [&](double rate) {
+            begin(pbz_charge_ability); pointer(&owner); luaApi.pushnumber(state.lua,rate); finish(2,1);
+            assert(luaApi.tointeger(state.lua,1,nullptr)==1);
+        };
+        for (double rate : {.5,2.,10.})
+        {
+            chargeRate(rate);
+            pre(&owner,tickFrame,nullptr);
+            assert(tickParameters.marker==19 && tickParameters.delta==.125f*rate);
+            assert(tickParameters.delta*350*.34==.125*rate*350*.34);
+            pre(&ordinaryOwner,nestedTickFrame,nullptr);
+            assert(nestedParameters.delta==.125f);
+            post(&ordinaryOwner,nestedTickFrame,nullptr);
+            assert(tickParameters.delta==.125f*rate);
+            post(&owner,tickFrame,nullptr);
+            assert(tickParameters.delta==.125f && chargeTickFrames.empty());
+        }
+        nodes[&tickFrame]=&unrelatedFunction;
+        pre(&owner,tickFrame,nullptr); post(&owner,tickFrame,nullptr);
+        assert(tickParameters.delta==.125f);
+        nodes[&tickFrame]=&chargeFunction;
+        chargeRate(1);
+        pre(&owner,tickFrame,nullptr); post(&owner,tickFrame,nullptr);
+        assert(tickParameters.delta==.125f && chargeRates.empty());
+        chargeRate(2);
+        begin(pbz_script_context_enable); luaApi.pushboolean(state.lua,0); finish(1,0);
+        pre(&owner,tickFrame,nullptr); post(&owner,tickFrame,nullptr);
+        assert(tickParameters.delta==.125f && chargeRates.empty() && chargeTicks.empty());
+        begin(pbz_script_context_enable); luaApi.pushboolean(state.lua,1); finish(1,0);
         auto* code = static_cast<unsigned char*>(VirtualAlloc(nullptr, 4096, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE));
         assert(code);
         const unsigned char dispatch[] = {0xff, 0x90, 0, 0, 0, 0, 0xc3};

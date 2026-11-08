@@ -742,7 +742,7 @@ namespace PBZKeyForge
                     row.Operation.Text = entry.Suppressed && entry.IsDefault ? I18n.Str("views.restore") : entry.Suppressed || !entry.Enabled ? I18n.Str("binding.enable") : I18n.Str("binding.unbind");
                     row.Operation.Enabled = !currentSession.IsResetPending && (!entry.IsNative || !entry.ReadOnly || Workspace.KeyEnhancementEnabled);
                     row.Operation.AccessibleName = row.Operation.Text + " " + UnifiedBindingUi.BindingText(entry);
-                    ownershipTip.SetToolTip(row.Edit, function.TechnicalName + Environment.NewLine + UnifiedBindingUi.FunctionIdentity(function)
+                    ownershipTip.SetToolTip(row.Edit, GameMoveNames.Details(function.Id) + Environment.NewLine + function.TechnicalName + Environment.NewLine + UnifiedBindingUi.FunctionIdentity(function)
                         + Environment.NewLine + UnifiedBindingUi.EntryDescription(entry) + Environment.NewLine + UnifiedBindingUi.EntryScope(entry)
                         + Environment.NewLine + UnifiedBindingUi.EntryExecution(entry) + Environment.NewLine + UnifiedBindingUi.EntryPolicy(entry));
                     row.Edit.Invalidate();

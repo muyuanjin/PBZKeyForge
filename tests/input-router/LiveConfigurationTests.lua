@@ -17,7 +17,7 @@ live:poll(1)
 check(current==1 and applies==0,"startup replayed an old request")
 check(read("live-status.txt"):match("^PBZ%-LIVE%-1\n"),"heartbeat protocol missing")
 write("live-request.lua", 'return {id="ok",configuration={value=2}}');write("live-request.id","ok")
-live:poll(1.06)
+live:poll(1.3)
 check(current==2 and applies==1 and read("live-response.txt"):match("^ok\nok\n"),"success acknowledged before acceptance")
 live:poll(3);check(applies==1,"request applied twice")
 write("live-request.lua", 'return {id="reject",configuration={value=-1}}');write("live-request.id","reject")
@@ -32,6 +32,69 @@ check(read("live-status.txt"):find("\nsuspended\ninput pipeline unavailable",1,t
 write("live-request.lua", 'return {id="recover",configuration={value=4}}');write("live-request.id","recover")
 live:poll(8)
 check(current==4 and read("live-status.txt"):match("\nready\n$"),"suspended connection could not accept a recovery configuration")
+
+do
+    local original_open = io.open
+    local opens = 0
+    io.open = function(...)
+        opens = opens + 1
+        return original_open(...)
+    end
+    for i=1,24 do live:poll(8+i*.01) end
+    check(opens == 0, "stable frames performed live file work before the polling interval")
+    io.open = original_open
+
+    write("live-request.lua", 'return {id="write-retry",configuration={value=5}}')
+    write("live-request.id", "write-retry")
+    io.open = function(path, mode)
+        if path == prefix .. "live-response.txt" and mode == "wb" then return nil, "fixture sharing violation" end
+        return original_open(path, mode)
+    end
+    local ok = pcall(function() live:poll(9) end)
+    check(not ok and current == 5 and applies == 3 and live.pending,
+        "a response sharing violation lost the applied request's result")
+    io.open = original_open
+    live:poll(9.3)
+    check(applies == 3 and not live.pending and read("live-response.txt"):match("^write%-retry\nok\n"),
+        "retrying a failed acknowledgment repeated the apply or lost confirmation")
+
+    write("live-request.lua", 'return {id="flush-retry",configuration={value=6}}')
+    write("live-request.id", "flush-retry")
+    local closed = false
+    io.open = function(path, mode)
+        if path == prefix .. "live-response.txt" and mode == "wb" then
+            return {write=function() return nil, "fixture disk full" end,
+                close=function() closed=true;return true end}
+        end
+        return original_open(path, mode)
+    end
+    ok = pcall(function() live:poll(10) end)
+    check(not ok and closed and current == 6 and applies == 4 and live.pending,
+        "an unflushed acknowledgment was treated as delivered or left the file open")
+    io.open = original_open
+    live:poll(10.3)
+    check(applies == 4 and read("live-response.txt"):match("^flush%-retry\nok\n"),
+        "write failure replayed an accepted edit")
+
+    write("live-request.lua", 'return {id="loading-cancel",configuration={value=7}}')
+    write("live-request.id", "loading-cancel")
+    local original_loadfile = loadfile
+    loadfile = function(path)
+        local chunk, err = original_loadfile(path)
+        write("live-request.id", "cancel-loading-cancel")
+        return chunk, err
+    end
+    live:poll(11)
+    loadfile = original_loadfile
+    check(current == 6 and applies == 4 and read("live-response.txt"):find("cancelled",1,true),
+        "a cancellation during configuration loading still changed the game")
+    live:poll(11.3)
+    write("live-request.lua", 'return {id="after-cancel",configuration={value=8}}')
+    write("live-request.id", "after-cancel")
+    live:poll(11.6)
+    check(current == 8 and applies == 5 and read("live-response.txt"):match("^after%-cancel\nok\n"),
+        "a cancelled request blocked the next valid edit")
+end
 
 local configuration = {enabled=true,targets={old={kind="event",tag="old"}},bindings={{id="old",keys={"J"},trigger="press",outputs={"old"}}},hooks={}}
 package.preload["router-config"]=function() return configuration end
@@ -88,4 +151,39 @@ local unscheduled = dofile(scripts .. "main.lua")
 check(reported_state == "suspended" and reported_error:find("frame scheduler unavailable",1,true),
     "Missing frame scheduling must publish an actionable error without waiting for a tick")
 unscheduled.stop()
+do
+    local workers, polls, publications, in_game = 0, 0, 0, false
+    local status_callback
+    package.loaded["live-config"] = {new=function(_,_,status,dispatch)
+        check(dispatch == nil, "live editing queued work into a second Lua coroutine")
+        status_callback = status
+        return {poll=function()
+            check(in_game, "live protocol ran outside the serialized game frame")
+            polls=polls+1
+        end,publish=function() publications=publications+1 end}
+    end}
+    function LoopAsync() workers=workers+1 end
+    function ExecuteInGameThread() error("live editing must use the existing game frame") end
+    function StaticFindObject() return nil end
+    EngineTickAvailable = true
+    function backend:refresh() return true end
+    local serialized = dofile(scripts .. "main.lua")
+    check(workers == 0, "live editing started an unsafe background Lua worker")
+    in_game = true
+    frame();frame()
+    check(polls == 2, "game frame did not service live editing")
+    function backend:refresh() error("serialized runtime failure") end
+    frame()
+    local state, detail = status_callback()
+    check(state=="suspended" and detail:find("serialized runtime failure",1,true) and publications==1,
+        "suspension did not publish its state on the game thread")
+    frame()
+    check(polls == 4, "suspension backoff blocked live recovery requests")
+    serialized.stop()
+    frame()
+    check(polls == 4, "stopped runtime kept polling live files")
+    in_game = false
+    LoopAsync, ExecuteInGameThread = nil, nil
+end
+
 print("LiveConfigurationTests: " .. count .. " assertions passed")

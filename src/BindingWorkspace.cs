@@ -29,7 +29,8 @@ namespace PBZKeyForge
         public string DisplayName;
         public bool OriginalInputBlocked;
         public bool? KeepNativeTrigger;
-        public bool BypassResources;
+        public bool BypassResources, BypassRestrictions, SuperArmor, Invincible;
+        public string[] RestrictionBypasses = { "equipment", "training", "space", "stance", "predecessor", "cooldown" };
         public double DamageMultiplier = 1, StartupSpeed = 1, RecoverySpeed = 1;
         public string[] Keys = new string[0];
         public double Seconds = .25, Interval = .3, Threshold = .5;
@@ -186,7 +187,7 @@ namespace PBZKeyForge
                     FunctionLocalization localization;
                     bool localized = Localizations.TryGetValue(CompleteMoveCatalog.SourceId(function.Id), out localization) && localization.labels != null && localization.labels.ContainsKey(I18n.Current);
                     function.LabelSource = localized && !ActionCatalogLabels.IsSemantic(function.Id) && function.Id != "action:" + KeyboardMovement && function.Id != "action:/SGameLocomotionDriver/Input/IA_JoystickMoveInput" ? localization.source : "semantic";
-                    function.SearchNames = new[] { function.Label }.Concat(PlayerAliases(function.Id))
+                    function.SearchNames = new[] { function.Label }.Concat(GameMoveNames.SearchNames(function.Id)).Concat(PlayerAliases(function.Id))
                         .Concat(function.NativeAction == null && localization != null ? localization.aliases ?? new string[0] : new string[0])
                         .Concat(function.NativeAction == null ? new string[0] : I18n.Translations("act." + function.NativeAction)).ToArray();
                     function.SearchText = function.Label + " " + function.TechnicalName + " " + function.Id + " " + string.Join(" ", function.SearchNames) + " " + ActionCatalogLabels.SearchAliases(function.Id);
@@ -221,7 +222,7 @@ namespace PBZKeyForge
         }
 
         public static string FunctionLabel(string id)
-        { return ActionCatalogLabels.Label(id, BaseFunctionLabel(id)); }
+        { return GameMoveNames.Label(id, ActionCatalogLabels.Label(id, BaseFunctionLabel(id))); }
 
         static string BaseFunctionLabel(string id)
         {
@@ -229,7 +230,7 @@ namespace PBZKeyForge
             if (CompleteMoveCatalog.Contains(id))
             {
                 string sourceId = CompleteMoveCatalog.SourceId(id);
-                string source = ActionCatalogLabels.Prefix(sourceId, BaseFunctionLabel(sourceId));
+                string source = sourceId == id ? "" : ActionCatalogLabels.Prefix(sourceId, BaseFunctionLabel(sourceId));
                 string prefix = CompleteMoveCatalog.LabelPrefix(id, source);
                 return string.Join(" · ", new[] { prefix, CompleteMoveCatalog.LabelSuffix(id) }.Where(part => !string.IsNullOrWhiteSpace(part)));
             }
@@ -366,7 +367,9 @@ namespace PBZKeyForge
                             ExecutionOwner = !source.Enabled || !rule.Enabled ? "inactive" : KeyEnhancementInputPlan.SupportsMapping(rule.Outputs[i]) ? "scheduler" : "uncovered",
                             Trigger = rule.DefaultTrigger ? "default" : rule.Trigger,
                             Seconds = rule.Seconds, Interval = rule.Interval, Threshold = rule.Threshold, Count = rule.Count, Priority = rule.Priority, BypassResources = rule.BypassResources,
+                            BypassRestrictions = rule.BypassRestrictions, RestrictionBypasses = rule.RestrictionBypasses.ToArray(),
                             DamageMultiplier = rule.DamageMultiplier, StartupSpeed = rule.StartupSpeed, RecoverySpeed = rule.RecoverySpeed,
+                            SuperArmor = rule.SuperArmor, Invincible = rule.Invincible,
                             RuleId = rule.Id, OutputIndex = i, Rule = new JavaScriptSerializer().Deserialize<KeyEnhancementRule>(serialized), OutputValue = rule.Outputs[i].Kind == "action" || rule.Outputs[i].Kind == "mapping" ? rule.Outputs[i].Value : null,
                             Enabled = rule.Enabled, Active = source.Enabled && rule.Enabled && KeyEnhancementInputPlan.SupportsMapping(rule.Outputs[i]), Shared = rule.Outputs.Count > 1,
                             Pending = pending });
@@ -440,7 +443,7 @@ namespace PBZKeyForge
         public static bool IsPlainBinding(BindingEntry entry)
         {
             var rule = entry.Rule;
-            return !entry.BypassResources && entry.DamageMultiplier == 1 && entry.StartupSpeed == 1 && entry.RecoverySpeed == 1
+            return !entry.BypassResources && !entry.BypassRestrictions && !entry.SuperArmor && !entry.Invincible && entry.DamageMultiplier == 1 && entry.StartupSpeed == 1 && entry.RecoverySpeed == 1
                 && entry.Trigger == "default" && entry.Keys.Length == 1 && entry.OutputValue == null
                 && entry.Priority == 0 && entry.Enabled && (rule == null || !rule.Consume && rule.ConsumeKeys.Count == 0
                     && string.IsNullOrWhiteSpace(rule.WhenLua) && string.IsNullOrWhiteSpace(rule.EvaluateLua)
@@ -617,6 +620,8 @@ namespace PBZKeyForge
             rule.Seconds = specification.Seconds; rule.Interval = specification.Interval; rule.Threshold = specification.Threshold;
             rule.Count = specification.Count; rule.Priority = specification.Priority; rule.Enabled = specification.Enabled;
             rule.BypassResources = specification.BypassResources;
+            rule.BypassRestrictions = specification.BypassRestrictions; rule.RestrictionBypasses = specification.RestrictionBypasses.ToArray();
+            rule.SuperArmor = specification.SuperArmor; rule.Invincible = specification.Invincible;
             rule.DamageMultiplier = specification.DamageMultiplier; rule.StartupSpeed = specification.StartupSpeed; rule.RecoverySpeed = specification.RecoverySpeed;
         }
 

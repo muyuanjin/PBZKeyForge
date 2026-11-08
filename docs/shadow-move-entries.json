@@ -1,0 +1,3928 @@
+{
+  "build": "CL-302256",
+  "runtimeVerified": false,
+  "evidenceType": "Static actual Equip/Owning arrays, generated-class inheritance and CDO input identities",
+  "configurations": [
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/BrutalAxe/Weapon_BrutalAxe",
+      "family": "BrutalAxe",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Strength",
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/Archive/GA_BrutalAxe_Combo",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/BrutalAxe/Weapon_BrutalAxe_Interact",
+      "family": "BrutalAxe",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakChain"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/CaoOuSiXian/Weapon_CaoOuSiXian",
+      "family": "CaoOuSiXian",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+        "Weapon.Type.ShaqiWeapon.Category.Summon"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/CaoOuSiXian/GA_CaoOuSiXian_Normal_01"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/CaoOuSiXian/Weapon_CaoOuSiXian_Evolution",
+      "family": "CaoOuSiXian",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+        "Weapon.Type.ShaqiWeapon.Category.Summon"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/CaoOuSiXian/GA_CaoOuSiXian_Normal_01"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/DuYanBow/Weapon_DuYan_Bow",
+      "family": "DuYanBow",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Bow",
+        "Weapon.Type.ShaqiWeapon.Category.Ranged",
+        "Bullet.Tag.Feature.ShieldBreakLevel.None"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HanBingPiPa/Weapon_HanBingPiPa_Interact",
+      "family": "HanBingPiPa",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_Break_PhantomBarrier_Blocker"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Weapon_HuangJinHuoChong",
+      "family": "HuangJinHuoChong",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Ranged",
+        "Weapon.Type.ShaqiWeapon.HuangJinHuoChong",
+        "Bullet.Tag.Feature.ShieldBreakLevel.None"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_DeflectCounter",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_02",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_04"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Weapon_HuangJinHuoChong_Interact",
+      "family": "HuangJinHuoChong",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Ranged",
+        "Weapon.Type.ShaqiWeapon.HuangJinHuoChong",
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_HuoChong"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuoLiuXing/Weapon_HuoLiuXing",
+      "family": "HuoLiuXing",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.HuoLiuXing",
+        "Weapon.Type.ShaqiWeapon.Category.Martial",
+        "Bullet.Tag.Feature.ShieldBreakLevel.Medium"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A_Short",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_DB"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JianKeZhaoJiLing/Weapon_JianKeZhaoJiLing",
+      "family": "JianKeZhaoJiLing",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+        "Weapon.Type.ShaqiWeapon.Category.Summon"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JianKeZhaoJiLing/GA_JianKeZhaoJiLing_Normal_01"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JianKeZhaoJiLing/Weapon_JianKeZhaoJiLing_Evolution",
+      "family": "JianKeZhaoJiLing",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+        "Weapon.Type.ShaqiWeapon.Category.Summon"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JianKeZhaoJiLing/GA_JianKeZhaoJiLing_Normal_01"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua",
+      "family": "JinGua",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Strength",
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_ExtraAttack",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Air",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua_Interact",
+      "family": "JinGua",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakGround"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/KuYeSiZhuChuan/Weapon_KuYeSiZhuChuan",
+      "family": "KuYeSiZhuChuan",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+        "Weapon.Type.ShaqiWeapon.Category.Summon"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/KuYeSiZhuChuan/GA_KuYeSiZhuChuan_Normal_01"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/KuYeSiZhuChuan/Weapon_KuYeSiZhuChuan_Evolution",
+      "family": "KuYeSiZhuChuan",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+        "Weapon.Type.ShaqiWeapon.Category.Summon"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/KuYeSiZhuChuan/GA_KuYeSiZhuChuan_Normal_01"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/Weapon_LionHead",
+      "family": "LionHead",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.None",
+        "Weapon.Type.ShaqiWeapon.Category.Magic"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_FireBall",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_DoubleFireBall"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/Weapon_LionHead_Evolution",
+      "family": "LionHead",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.None",
+        "Weapon.Type.ShaqiWeapon.Category.Magic"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_FireBall",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_DoubleFireBall"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/Weapon_LionHead_Interact",
+      "family": "LionHead",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BurnVine"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute",
+      "family": "Lute",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Lute",
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+        "Weapon.Type.ShaqiWeapon.Category.Magic"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Lute_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute_Evolution",
+      "family": "Lute",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+        "Weapon.Type.ShaqiWeapon.Category.Magic",
+        "Weapon.Type.ShaqiWeapon.Lute.Evolution"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Lute_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/Weapon_MiaoShouFeiDao",
+      "family": "MiaoShouFeiDao",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.MiaoShouFeiDao",
+        "Weapon.Type.ShaqiWeapon.Category.Ranged",
+        "Bullet.Tag.Feature.ShieldBreakLevel.None"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_01",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_02",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_03",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_01",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_02",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_03"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/Weapon_MiaoShouFeiDao_Evlotion",
+      "family": "MiaoShouFeiDao",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.MiaoShouFeiDao",
+        "Weapon.Type.ShaqiWeapon.Category.Ranged",
+        "Bullet.Tag.Feature.ShieldBreakLevel.None"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_01",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_02",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_03",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_01",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_02",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_03"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/Weapon_MiaoShouFeiDao_Interact",
+      "family": "MiaoShouFeiDao",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.MiaoShouFeiDao",
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+        "Weapon.Type.ShaqiWeapon.Category.Ranged"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_FeiDao"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Mojian/Weapon_Mojian",
+      "family": "Mojian",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Mojian",
+        "Weapon.Type.ShaqiWeapon.Category.Martial",
+        "Bullet.Tag.Feature.ShieldBreakLevel.Medium"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A_Short",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_ASM_UpRunExecution_Mojian",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_UpRunGEx_01",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_MoJian_PerfectDodge"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/NiTouChe/Weapon_NiTouChe",
+      "family": "NiTouChe",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Strength",
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/Game/Test/HorseTest/GA_HorseCart_Charge"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook",
+      "family": "ShachiHook",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.ShachiHook",
+        "Weapon.Type.ShaqiWeapon.Category.Martial",
+        "Bullet.Tag.Feature.ShieldBreakLevel.Medium"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_C",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CC",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCC",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CB",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CBB",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CD",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CDD",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Drag",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_HookMove",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCCC"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Evolution",
+      "family": "ShachiHook",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.ShachiHook",
+        "Weapon.Type.ShaqiWeapon.Category.Martial",
+        "Bullet.Tag.Feature.ShieldBreakLevel.Medium"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_C",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CC",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCC",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CB",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CBB",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CD",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CDD",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Drag",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_HookMove",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCCC"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Interact",
+      "family": "ShachiHook",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_GrapplingHook_Old"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TanLang/Weapon_TanLang",
+      "family": "TanLang",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Strength",
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_ExtraAttack",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_SpeicalAttack"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ThunderSpear/Weapon_ThunderSpear",
+      "family": "ThunderSpear",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Martial.ThunderSpear",
+        "Bullet.Tag.Feature.ShieldBreakLevel.Medium"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_01",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DeflectCounter",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_02",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_03",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DodgeAttack_01",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_SpecialAttack_04"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TieKuangQuanTao/Weapon_TieKuangQuanTao",
+      "family": "TieKuangQuanTao",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong",
+        "Weapon.Type.ShaqiWeapon.Category.Martial"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_A",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/GA_TieKuangQuanTao_GuardPoint"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/Weapon_TigerCannon",
+      "family": "TigerCannon",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Strength",
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Ultimate"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/Weapon_TigerCannon_Interact",
+      "family": "TigerCannon",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakStoneWall"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/UnnamedBow/Weapon_UnnamedBow",
+      "family": "UnnamedBow",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Bow",
+        "Weapon.Type.ShaqiWeapon.Category.Ranged",
+        "Bullet.Tag.Feature.ShieldBreakLevel.None"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_DeflectCounter"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/UnnamedBow/Weapon_UnnamedBow_Interact",
+      "family": "UnnamedBow",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XuKongHuaShan/Weapon_XuKongHuaShan",
+      "family": "XuKongHuaShan",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Magic",
+        "Bullet.Tag.Feature.ShieldBreakLevel.None"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Skill"
+      ],
+      "owningAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Reborn"
+      ]
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/Weapon_XueDiZi",
+      "family": "XueDiZi",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Magic",
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_Execution",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_A",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_SpecialAttack",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_EvolutionAttack"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/Weapon_XueDiZi_Interact",
+      "family": "XueDiZi",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Strong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakXueDiZiBlocker"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueSeLingDang/Weapon_XueSeLingDang",
+      "family": "XueSeLingDang",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+        "Weapon.Type.ShaqiWeapon.Category.Summon"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueSeLingDang/GA_XueSeLingDang_Normal_01"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueSeLingDang/Weapon_XueSeLingDang_Evolution",
+      "family": "XueSeLingDang",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+        "Weapon.Type.ShaqiWeapon.Category.Summon"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueSeLingDang/GA_XueSeLingDang_Normal_01"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongCha/Weapon_YouLongCha",
+      "family": "YouLongCha",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Ranged",
+        "Bullet.Tag.Feature.ShieldBreakLevel.None"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Dash"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongCha/Weapon_YouLongCha_Interact",
+      "family": "YouLongCha",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Strong",
+        "Weapon.Type.ShaqiWeapon.Category.Ranged",
+        "Weapon.Type.ShaqiWeapon.YouLongCha"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_YouLongCha"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongHead/Weapon_YouLongHead",
+      "family": "YouLongHead",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.None",
+        "Weapon.Type.ShaqiWeapon.Category.Magic"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Water",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_WaterCannon"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongHead/Weapon_YouLongHead_Interact",
+      "family": "YouLongHead",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.Weak"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakFireBlocker"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/Weapon_ZhuoBiDun",
+      "family": "ZhuoBiDun",
+      "equipTags": [
+        "Weapon.Type.ShaqiWeapon.Category.Strength",
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BP_Hun_PerfectDodge_General",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun_Slide"
+      ],
+      "owningAbilities": []
+    },
+    {
+      "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/Weapon_ZhuoBiDun_Interact",
+      "family": "ZhuoBiDun",
+      "equipTags": [
+        "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong"
+      ],
+      "owningTags": [],
+      "equipAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_ZhuoBiDunBlocker"
+      ],
+      "owningAbilities": []
+    }
+  ],
+  "families": [
+    {
+      "family": "BrutalAxe",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/BrutalAxe/Weapon_BrutalAxe",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/BrutalAxe/Weapon_BrutalAxe_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakChain",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/Archive/GA_BrutalAxe_Combo",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakChain",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakChain",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/Archive/GA_BrutalAxe_Combo",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/Archive/GA_BrutalAxe_Combo",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/Archive/GA_BrutalAxe_Combo",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.BrutalAxe.Combo"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Combo"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+            "Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+            "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "CaoOuSiXian",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/CaoOuSiXian/Weapon_CaoOuSiXian",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/CaoOuSiXian/Weapon_CaoOuSiXian_Evolution"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/CaoOuSiXian/GA_CaoOuSiXian_Normal_01"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/CaoOuSiXian/GA_CaoOuSiXian_Normal_01",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/CaoOuSiXian/GA_CaoOuSiXian_Normal_01",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Summon",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.CaoOuSiXian.GA_CaoOuSiXian_Normal_01",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "DuYanBow",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/DuYanBow/Weapon_DuYan_Bow"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.DuYanBow.Laser"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.DuYanBow.GA_DuYan_Bow_Normal",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "HanBingPiPa",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HanBingPiPa/Weapon_HanBingPiPa_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_Break_PhantomBarrier_Blocker"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_Break_PhantomBarrier_Blocker",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_Break_PhantomBarrier_Blocker",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        }
+      ],
+      "nativeNameStatus": "unresolved",
+      "displayIdentity": "HanBingPiPa"
+    },
+    {
+      "family": "HuangJinHuoChong",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Weapon_HuangJinHuoChong",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Weapon_HuangJinHuoChong_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_HuoChong",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_DeflectCounter",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_02",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_04"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_HuoChong",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_HuoChong",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Dash",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Dash",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Dash",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Dash"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Dash"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_DeflectCounter",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_DeflectCounter",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_DeflectCounter",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.DeflectCounter"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.DeflectCounter"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_02",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_02",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_02",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.HuangJinHuoChong.GA_HuangJinHuoChong_Normal_02",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_04",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_04",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_04",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Common_02"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Common_02"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "HuoLiuXing",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuoLiuXing/Weapon_HuoLiuXing"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A_Short",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_DB"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.A"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.A"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AA",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AA"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AA"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAA",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAA"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAA"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A_Short",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A_Short",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_A_Short",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AShort"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AShort"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_DB",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_DB",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_DB",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.DB"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.DB"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "JianKeZhaoJiLing",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JianKeZhaoJiLing/Weapon_JianKeZhaoJiLing",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JianKeZhaoJiLing/Weapon_JianKeZhaoJiLing_Evolution"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JianKeZhaoJiLing/GA_JianKeZhaoJiLing_Normal_01"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JianKeZhaoJiLing/GA_JianKeZhaoJiLing_Normal_01",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JianKeZhaoJiLing/GA_JianKeZhaoJiLing_Normal_01",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Summon",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.JianKeZhaoJiLing.GA_JianKeZhaoJiLing_Normal_01",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "JinGua",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakGround",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Air",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_ExtraAttack",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakGround",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakGround",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Air",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Air",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Air",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.JinGua.Air"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.JinGua.Air"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_ExtraAttack",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_ExtraAttack",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_ExtraAttack",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack"
+          ],
+          "status": "existing-equipment-exact-entry",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack.Training"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.JinGua.Main"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.JinGua.RotateAttack"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.JinGua.RotateAttack"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "KuYeSiZhuChuan",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/KuYeSiZhuChuan/Weapon_KuYeSiZhuChuan",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/KuYeSiZhuChuan/Weapon_KuYeSiZhuChuan_Evolution"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/KuYeSiZhuChuan/GA_KuYeSiZhuChuan_Normal_01"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/KuYeSiZhuChuan/GA_KuYeSiZhuChuan_Normal_01",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/KuYeSiZhuChuan/GA_KuYeSiZhuChuan_Normal_01",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Summon",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.KuYeSiZhuChuan.GA_KuYeSiZhuChuan_Normal_01",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "LionHead",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/Weapon_LionHead",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/Weapon_LionHead_Evolution",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/LionHead/Weapon_LionHead_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BurnVine",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_DoubleFireBall",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_FireBall"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BurnVine",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BurnVine",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default",
+            "Ability.Action.Hun.ShachiAbility.LionHead"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.LionHead.GA_LionHead",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_Dash",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_Dash",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_Dash",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.LionHead.Dash"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.LionHead.Dash"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_DoubleFireBall",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_DoubleFireBall",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_FireBall",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_DoubleFireBall",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.LionHead.DoubleFireBall"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.LionHead.DoubleFireBall"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_FireBall",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_FireBall",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead_FireBall",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.LionHead.FireBall"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.LionHead.FireBall"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "Lute",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute_Evolution"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Lute_Dash"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.Lute.GA_Hun_Lute_A",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.PiPa.AA"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.PiPa.AA"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AAA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AAA",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AAA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.PiPa.AAA"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.PiPa.AAA"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.PiPa.Skill"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.PiPa.Skill"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Lute_Dash",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Lute_Dash",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Lute_Dash",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.PiPa.Dash"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.PiPa.Dash"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "MiaoShouFeiDao",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/Weapon_MiaoShouFeiDao",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/Weapon_MiaoShouFeiDao_Evlotion",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/MiaoShouFeiDao/Weapon_MiaoShouFeiDao_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_FeiDao",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_01",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_02",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_03",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_01",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_02",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_03"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_FeiDao",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_FeiDao",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_01",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_01",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_01",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.01"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.01"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_02",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_02",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_02",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.02"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.02"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_03",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_03",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Escape_03",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.03"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.03"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_01",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_01",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/BP_MiaoShouFeiDao_NormalBase",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_01",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_01"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_01"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_02",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_02",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/BP_MiaoShouFeiDao_NormalBase",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_02",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_02"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_02"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_03",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_03",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/BP_MiaoShouFeiDao_NormalBase",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_Normal_03",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_03"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_03"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "Mojian",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Mojian/Weapon_Mojian"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_ASM_UpRunExecution_Mojian",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_MoJian_PerfectDodge",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A_Short",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_UpRunGEx_01"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_ASM_UpRunExecution_Mojian",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_ASM_UpRunExecution_Mojian",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SpecialMove/GA_ASM_UpRunExecution",
+            "/AdvancedSpecialMove/GA/GA_ASM_UpRunning_Base",
+            "/AdvancedSpecialMove/GA/GA_ASM_CommonStandard",
+            "/AdvancedSpecialMove/GA/Base/GA_ASM_Base",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_MoJian_PerfectDodge",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_MoJian_PerfectDodge",
+            "/PBZDeflectSystem/Abilities/BP_PlayerPerfectDodge_Base_Special",
+            "/PBZDeflectSystem/Abilities/BP_PlayerPerfectDodge_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.MoJi.A.Default"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MoJi.A.Default"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AA",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.Mojian.GA_Hun_Mojian_AA",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AAA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AAA",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AAA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.MoJi.AAA"
+          ],
+          "status": "existing-equipment-exact-entry",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.MoJi.AAA.Training"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A_Short",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A_Short",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_A_Short",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.MoJi.A.Short"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.MoJi.A.Short"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_UpRunGEx_01",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_UpRunGEx_01",
+            "/SGameExecution/GA/GA_ExecutionAbilityBase_Grab",
+            "/SGameExecution/GA/GA_ExecutionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "NiTouChe",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/NiTouChe/Weapon_NiTouChe"
+      ],
+      "grantedAbilities": [
+        "/Game/Test/HorseTest/GA_HorseCart_Charge"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/Game/Test/HorseTest/GA_HorseCart_Charge",
+          "ancestry": [
+            "/Game/Test/HorseTest/GA_HorseCart_Charge",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.NiTouChe.GA_HorseCart_Charge",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "ShachiHook",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Evolution",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_GrapplingHook_Old",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_C",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CB",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CBB",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CC",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCC",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCCC",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CD",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CDD",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Drag",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_HookMove"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_GrapplingHook_Old",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_GrapplingHook_Old",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_C",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_C",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_C",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.C"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.C"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CA",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CA"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CA",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CAA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CAA",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CAA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CAA"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CAA"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CB",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CB",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CB",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CB"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CB",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CBB",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CBB",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CBB",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CBB"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CBB"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CC",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CC",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CC",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CC"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CC"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCC",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCC",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCC",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CCC"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCCC",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCCC",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CCCC",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC"
+          ],
+          "status": "existing-equipment-exact-entry",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC.Training"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CD",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CD",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CD",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CD"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CD",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CDD",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CDD",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CDD",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CDD"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CDD"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Drag",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Drag",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Drag",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.Drag"
+          ],
+          "status": "existing-equipment-exact-entry",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training1",
+            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training2",
+            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training3"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_HookMove",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_HookMove",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_HookMove",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.HookMove"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.HookMove"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "TanLang",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TanLang/Weapon_TanLang"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_ExtraAttack",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_SpeicalAttack"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_ExtraAttack",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_ExtraAttack",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_ExtraAttack",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack"
+          ],
+          "status": "existing-equipment-exact-entry",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack.Training"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.TanLang.Normal"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TanLang.Normal"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_SpeicalAttack",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_SpeicalAttack",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_SpeicalAttack",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.TanLang.SpecialAttack"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TanLang.SpecialAttack"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "ThunderSpear",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ThunderSpear/Weapon_ThunderSpear"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DeflectCounter",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DodgeAttack_01",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_01",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_02",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_03",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_SpecialAttack_04"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Dash",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Dash",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Dash",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Dash"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Dash"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DeflectCounter",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DeflectCounter",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DeflectCounter",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.DeflectCounter"
+          ],
+          "status": "existing-equipment-exact-entry",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.ThunderSpear.DeflectCounter.Native"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DodgeAttack_01",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DodgeAttack_01",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_DodgeAttack_01",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Dodge"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Dodge"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_01",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_01",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_01",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_01"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_01"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_02",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_02",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_02",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_02"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_02"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_03",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_03",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_03",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_03"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_03"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_SpecialAttack_04",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_SpecialAttack_04",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_SpecialAttack_04",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04"
+          ],
+          "status": "existing-equipment-exact-entry",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04.Training"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "TieKuangQuanTao",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TieKuangQuanTao/Weapon_TieKuangQuanTao"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/GA_TieKuangQuanTao_GuardPoint",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_A",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AAA"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/GA_TieKuangQuanTao_GuardPoint",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/GA_TieKuangQuanTao_GuardPoint",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/GA_TieKuangQuanTao_GuardPoint",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.GpAttack.Normal"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.GpAttack.Normal"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_A",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_A",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_ChargeBase",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_ChargeBase",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AA",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_ChargeBase",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AAA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AAA",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_ChargeBase",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Martial",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_Charge_AAA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "TigerCannon",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/Weapon_TigerCannon",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TigerCannon/Weapon_TigerCannon_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakStoneWall",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Ultimate"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakStoneWall",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakStoneWall",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Dash",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Dash",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Dash",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.TigerCannon.Dash"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Dash"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_QuickCharge",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Ultimate",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Ultimate",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon_Ultimate",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.TigerCannon.Ultimate"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Ultimate"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "UnnamedBow",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/UnnamedBow/Weapon_UnnamedBow",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/UnnamedBow/Weapon_UnnamedBow_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_DeflectCounter"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.UnnamedBow.GA_UnnamedBow",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_Dash",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_Dash",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_Dash",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Bow.Dash"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.Bow.Dash"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_DeflectCounter",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_DeflectCounter",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow_DeflectCounter",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Bow.DeflectCounter"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.Bow.DeflectCounter"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "XuKongHuaShan",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XuKongHuaShan/Weapon_XuKongHuaShan"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Reborn",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Skill"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Reborn",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Reborn",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Skill",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Skill",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.XuKongHuaShan.GA_XuKongHuaShan_Skill",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "XueDiZi",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/Weapon_XueDiZi",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/Weapon_XueDiZi_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakXueDiZiBlocker",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_A",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AAA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_EvolutionAttack",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_Execution",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_SpecialAttack"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakXueDiZiBlocker",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakXueDiZiBlocker",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_A",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_A",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_A",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.XueDiZi.A"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.A"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AA",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.XueDiZi.AA"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.AA"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AAA",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AAA",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_AAA",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.XueDiZi.AAA"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.AAA"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_EvolutionAttack",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_EvolutionAttack",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_SpecialAttack",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_EvolutionAttack",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.XueDiZi.EvolutionAttack"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.EvolutionAttack"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_Execution",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_Execution",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/PBZ_ShachiWeaponExecutionBase",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/Execution/PBZ_CombatExecutionAbilityBase",
+            "/SGameCombatSystem/Weapon/Abilities/BP_CombatExecutionAbilityBase",
+            "/SGameExecution/GA/GA_ExecutionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_SpecialAttack",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_SpecialAttack",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueDiZi/GA_XueDiZi_SpecialAttack",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack"
+          ],
+          "status": "existing-equipment-exact-entry",
+          "catalogIds": [
+            "move:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack.Training"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "XueSeLingDang",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueSeLingDang/Weapon_XueSeLingDang",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueSeLingDang/Weapon_XueSeLingDang_Evolution"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueSeLingDang/GA_XueSeLingDang_Normal_01"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueSeLingDang/GA_XueSeLingDang_Normal_01",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueSeLingDang/GA_XueSeLingDang_Normal_01",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Summon",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.XueSeLingDang.GA_XueSeLingDang_Normal_01",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        }
+      ],
+      "nativeNameStatus": "unresolved",
+      "displayIdentity": "BloodBell"
+    },
+    {
+      "family": "YouLongCha",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongCha/Weapon_YouLongCha",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongCha/Weapon_YouLongCha_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_YouLongCha",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Dash",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_YouLongCha",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift_YouLongCha",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakHangingGift",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Dash",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Dash",
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_ShachiAbility_Dash_Base",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Dash",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.YouLongCha.Dash"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.YouLongCha.Dash"
+          ]
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.YouLongCha.GA_YouLongCha_Normal",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "YouLongHead",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongHead/Weapon_YouLongHead",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/YouLongHead/Weapon_YouLongHead_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakFireBlocker",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Water",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_WaterCannon"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakFireBlocker",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_BreakFireBlocker",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Water",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Water",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Water",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.YouLongTou.DeflectCounter",
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.YouLongHead.GA_YouLongHead_Water",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_WaterCannon",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_WaterCannon",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_WaterCannon",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.YouLongTou.WaterCannon"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.YouLongTou.WaterCannon"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    },
+    {
+      "family": "ZhuoBiDun",
+      "equipment": [
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/Weapon_ZhuoBiDun",
+        "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/Weapon_ZhuoBiDun_Interact"
+      ],
+      "grantedAbilities": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BP_Hun_PerfectDodge_General",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_ZhuoBiDunBlocker",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun_Slide"
+      ],
+      "abilities": [
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BP_Hun_PerfectDodge_General",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BP_Hun_PerfectDodge_General",
+            "/PBZDeflectSystem/Abilities/BP_PlayerPerfectDodge_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_ZhuoBiDunBlocker",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GameplayBlocker/GA_ZhuoBiDunBlocker",
+            "/AdvancedSpecialMove/GA/Base/GA_BreakBlocker_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "status": "separate-passive-execution-or-context-lifecycle"
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.Default",
+            "Ability.Action.Hun.Dash"
+          ],
+          "status": "equipment-entry-added",
+          "moveId": "move:Shadow.ZhuoBiDun.GA_ZhuoBiDun",
+          "lifecycle": "Normal exact-class activation of a granted ability; native charge, aim, summon and release behavior retained."
+        },
+        {
+          "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun_Slide",
+          "ancestry": [
+            "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun_Slide",
+            "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+            "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+            "/MagCombatAbilities/Abilities/BP_AbilityBase"
+          ],
+          "tagOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun_Slide",
+          "tagCandidates": [
+            "Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Slide"
+          ],
+          "status": "existing-equipment-input-entry",
+          "catalogIds": [
+            "ability:Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Slide"
+          ]
+        }
+      ],
+      "nativeNameStatus": "resolved"
+    }
+  ],
+  "moves": [
+    {
+      "id": "move:Shadow.CaoOuSiXian.GA_CaoOuSiXian_Normal_01",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/CaoOuSiXian/GA_CaoOuSiXian_Normal_01.GA_CaoOuSiXian_Normal_01_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "CaoOuSiXian_Normal_01",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.normal"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "操偶铃铛",
+        "en": "PUPPETEER'S BELL",
+        "ja": "操偶の鈴",
+        "ko": "인형술사의 종",
+        "ru": "Колокол Кукловода",
+        "zh-Hant": "操偶鈴鐺",
+        "fr": "CLOCHE DU MARIONNETTISTE",
+        "de": "PUPPENSPIELERGLOCKE",
+        "es-ES": "CAMPANA DEL MARIONETISTA",
+        "pt-BR": "SINO DO MARIONETISTA",
+        "it": "CAMPANA DEL MARIONETTISTA",
+        "th": "กระดิ่งเชิดหุ่น",
+        "vi": "THAO NGẪU LINH ĐANG",
+        "pt-PT": "SINO DO MARIONETISTA",
+        "es-419": "CAMPANA DEL MARIONETISTA"
+      },
+      "category": "shadow/PhantomEdges_025/IA_ShadowArm",
+      "searchAliases": [
+        "CaoOuSiXian",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/CaoOuSiXian/GA_CaoOuSiXian_Normal_01",
+        "GA_CaoOuSiXian_Normal_01",
+        "CaoOuSiXian_Normal_01",
+        "操偶铃铛",
+        "PUPPETEER'S BELL",
+        "操偶の鈴",
+        "인형술사의 종",
+        "Колокол Кукловода",
+        "操偶鈴鐺",
+        "CLOCHE DU MARIONNETTISTE",
+        "PUPPENSPIELERGLOCKE",
+        "CAMPANA DEL MARIONETISTA",
+        "SINO DO MARIONETISTA",
+        "CAMPANA DEL MARIONETTISTA",
+        "กระดิ่งเชิดหุ่น",
+        "THAO NGẪU LINH ĐANG",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.DuYanBow.GA_DuYan_Bow_Normal",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal.GA_DuYan_Bow_Normal_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "DuYan_Bow_Normal",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.charge"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "独眼弓",
+        "en": "ONE-EYED BOW",
+        "ja": "隻眼弓",
+        "ko": "독안궁",
+        "ru": "Лук Ока",
+        "zh-Hant": "獨眼弓",
+        "fr": "ARC BORGNE",
+        "de": "BOGEN DES EINÄUGIGEN",
+        "es-ES": "ARCO DEL TUERTO",
+        "pt-BR": "ARCO DE UM OLHO SÓ",
+        "it": "ARCO DELL'OCCHIO",
+        "th": "คันศรตาเดียว",
+        "vi": "ĐỘC NHÃN CUNG",
+        "pt-PT": "ARCO ZAROLHO",
+        "es-419": "ARCO DEL TUERTO"
+      },
+      "category": "shadow/PhantomEdges_109/IA_ShadowArm",
+      "searchAliases": [
+        "DuYanBow",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+        "GA_DuYan_Bow_Normal",
+        "DuYan_Bow_Normal",
+        "独眼弓",
+        "ONE-EYED BOW",
+        "隻眼弓",
+        "독안궁",
+        "Лук Ока",
+        "獨眼弓",
+        "ARC BORGNE",
+        "BOGEN DES EINÄUGIGEN",
+        "ARCO DEL TUERTO",
+        "ARCO DE UM OLHO SÓ",
+        "ARCO DELL'OCCHIO",
+        "คันศรตาเดียว",
+        "ĐỘC NHÃN CUNG",
+        "ARCO ZAROLHO",
+        "Main",
+        "Shoot"
+      ]
+    },
+    {
+      "id": "move:Shadow.HuangJinHuoChong.GA_HuangJinHuoChong_Normal_02",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_02.GA_HuangJinHuoChong_Normal_02_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "HuangJinHuoChong_Normal_02",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.normal"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "黄金火铳",
+        "en": "GOLDBLAZE",
+        "ja": "黄金火銃",
+        "ko": "황금 화승총",
+        "ru": "Золотое Пламя",
+        "zh-Hant": "黃金火銃",
+        "fr": "FEU DE L'AURORE",
+        "de": "GOLDBÜCHSE",
+        "es-ES": "FULGOR ÁUREO",
+        "pt-BR": "CHAMA DOURADA",
+        "it": "VAMPA DORATA",
+        "th": "ปืนไฟทองคำ",
+        "vi": "HOÀNG KIM HỎA SÚNG",
+        "pt-PT": "RAJADA DOURADA",
+        "es-419": "LLAMARADA DORADA"
+      },
+      "category": "shadow/PhantomEdges_008/IA_ShadowArm",
+      "searchAliases": [
+        "HuangJinHuoChong",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_02",
+        "GA_HuangJinHuoChong_Normal_02",
+        "HuangJinHuoChong_Normal_02",
+        "黄金火铳",
+        "GOLDBLAZE",
+        "黄金火銃",
+        "황금 화승총",
+        "Золотое Пламя",
+        "黃金火銃",
+        "FEU DE L'AURORE",
+        "GOLDBÜCHSE",
+        "FULGOR ÁUREO",
+        "CHAMA DOURADA",
+        "VAMPA DORATA",
+        "ปืนไฟทองคำ",
+        "HOÀNG KIM HỎA SÚNG",
+        "RAJADA DOURADA",
+        "LLAMARADA DORADA",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.JianKeZhaoJiLing.GA_JianKeZhaoJiLing_Normal_01",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JianKeZhaoJiLing/GA_JianKeZhaoJiLing_Normal_01.GA_JianKeZhaoJiLing_Normal_01_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "JianKeZhaoJiLing_Normal_01",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.normal"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "剑客召集令",
+        "en": "SWORDSMAN'S SUMMON",
+        "ja": "剣客召集令",
+        "ko": "검객 소집령",
+        "ru": "Призыв Мечников",
+        "zh-Hant": "劍客召集令",
+        "fr": "INVOCATION DE L'ÉPÉISTE",
+        "de": "RUF DES SCHWERTKÄMPFERS",
+        "es-ES": "LLAMADA DEL ESPADACHÍN",
+        "pt-BR": "CHAMADO DO ESPADACHIM",
+        "it": "PEGNO DELLA SPADA",
+        "th": "ตรารวมพลจอมกระบี่",
+        "vi": "LỆNH BÀI KIẾM KHÁCH",
+        "pt-PT": "INVOCAÇÃO DO ESPADACHIM",
+        "es-419": "INVOCACIÓN DE UN ESPADACHÍN"
+      },
+      "category": "shadow/PhantomEdges_026/IA_ShadowArm",
+      "searchAliases": [
+        "JianKeZhaoJiLing",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JianKeZhaoJiLing/GA_JianKeZhaoJiLing_Normal_01",
+        "GA_JianKeZhaoJiLing_Normal_01",
+        "JianKeZhaoJiLing_Normal_01",
+        "剑客召集令",
+        "SWORDSMAN'S SUMMON",
+        "剣客召集令",
+        "검객 소집령",
+        "Призыв Мечников",
+        "劍客召集令",
+        "INVOCATION DE L'ÉPÉISTE",
+        "RUF DES SCHWERTKÄMPFERS",
+        "LLAMADA DEL ESPADACHÍN",
+        "CHAMADO DO ESPADACHIM",
+        "PEGNO DELLA SPADA",
+        "ตรารวมพลจอมกระบี่",
+        "LỆNH BÀI KIẾM KHÁCH",
+        "INVOCAÇÃO DO ESPADACHIM",
+        "INVOCACIÓN DE UN ESPADACHÍN",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.KuYeSiZhuChuan.GA_KuYeSiZhuChuan_Normal_01",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/KuYeSiZhuChuan/GA_KuYeSiZhuChuan_Normal_01.GA_KuYeSiZhuChuan_Normal_01_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "KuYeSiZhuChuan_Normal_01",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.normal"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "苦叶寺珠串",
+        "en": "KUYE TEMPLE PRAYER BEADS",
+        "ja": "苦葉寺の数珠",
+        "ko": "고엽사 염주",
+        "ru": "Молитвенные Четки Храма Куе",
+        "zh-Hant": "苦葉寺珠串",
+        "fr": "CHAPELET DU TEMPLE KUYE",
+        "de": "KUYE-TEMPEL-GEBETSPERLEN",
+        "es-ES": "ROSARIO DEL TEMPLO KUYE",
+        "pt-BR": "CONTAS DE ORAÇÃO DO TEMPLO KUYE",
+        "it": "MALA DEL TEMPIO KUYE",
+        "th": "ลูกประคำวัดคู๋เยี่ย",
+        "vi": "NIỆM CHÂU CHÙA KHỔ DIỆP",
+        "pt-PT": "CONTAS JUZU DO TEMPLO KUYE",
+        "es-419": "ROSARIO DEL TEMPLO KUYE"
+      },
+      "category": "shadow/PhantomEdges_013/IA_ShadowArm",
+      "searchAliases": [
+        "KuYeSiZhuChuan",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/KuYeSiZhuChuan/GA_KuYeSiZhuChuan_Normal_01",
+        "GA_KuYeSiZhuChuan_Normal_01",
+        "KuYeSiZhuChuan_Normal_01",
+        "苦叶寺珠串",
+        "KUYE TEMPLE PRAYER BEADS",
+        "苦葉寺の数珠",
+        "고엽사 염주",
+        "Молитвенные Четки Храма Куе",
+        "苦葉寺珠串",
+        "CHAPELET DU TEMPLE KUYE",
+        "KUYE-TEMPEL-GEBETSPERLEN",
+        "ROSARIO DEL TEMPLO KUYE",
+        "CONTAS DE ORAÇÃO DO TEMPLO KUYE",
+        "MALA DEL TEMPIO KUYE",
+        "ลูกประคำวัดคู๋เยี่ย",
+        "NIỆM CHÂU CHÙA KHỔ DIỆP",
+        "CONTAS JUZU DO TEMPLO KUYE",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.LionHead.GA_LionHead",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead.GA_LionHead_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "LionHead",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.normal"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "烈焰狮头",
+        "en": "FLAMING MANE",
+        "ja": "烈焔獅子頭",
+        "ko": "열염 사자탈",
+        "ru": "Пламенная Грива",
+        "zh-Hant": "烈焰獅頭",
+        "fr": "CRINIÈRE FLAMBOYANTE",
+        "de": "FLAMMENMÄHNE",
+        "es-ES": "CRIN LLAMEANTE",
+        "pt-BR": "JUBA FLAMEJANTE",
+        "it": "CRINIERA FIAMMEGGIANTE",
+        "th": "เศียรสิงโตเพลิง",
+        "vi": "LIỆT DIỄM SƯ ĐẦU",
+        "pt-PT": "CRINA ARDENTE",
+        "es-419": "CRIN LLAMEANTE"
+      },
+      "category": "shadow/PhantomEdges_012/IA_ShadowArm",
+      "searchAliases": [
+        "LionHead",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+        "GA_LionHead",
+        "烈焰狮头",
+        "FLAMING MANE",
+        "烈焔獅子頭",
+        "열염 사자탈",
+        "Пламенная Грива",
+        "烈焰獅頭",
+        "CRINIÈRE FLAMBOYANTE",
+        "FLAMMENMÄHNE",
+        "CRIN LLAMEANTE",
+        "JUBA FLAMEJANTE",
+        "CRINIERA FIAMMEGGIANTE",
+        "เศียรสิงโตเพลิง",
+        "LIỆT DIỄM SƯ ĐẦU",
+        "CRINA ARDENTE",
+        "End",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.Lute.GA_Hun_Lute_A",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A.GA_Hun_Lute_A_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "Lute_A",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.normal"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "催心琵琶",
+        "en": "HEARTREND PIPA",
+        "ja": "催心の琵琶",
+        "ko": "최심비파",
+        "ru": "Душераздирающая Пипа",
+        "zh-Hant": "催心琵琶",
+        "fr": "PIPA DÉCHIRE-CŒUR",
+        "de": "HERZREISSER-PIPA",
+        "es-ES": "PIPA DESGARRACORAZONES",
+        "pt-BR": "PIPA DILACERADOR DE CORAÇÕES",
+        "it": "PIPA SPACCACUORI",
+        "th": "พิณผีผาสลายใจ",
+        "vi": "TỲ BÀ THÔI TÂM",
+        "pt-PT": "PIPÁ AMARGURADO",
+        "es-419": "PIPA DESGARRACORAZONES"
+      },
+      "category": "shadow/PhantomEdges_024/IA_ShadowArm",
+      "searchAliases": [
+        "Lute",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A",
+        "GA_Hun_Lute_A",
+        "Lute_A",
+        "催心琵琶",
+        "HEARTREND PIPA",
+        "催心の琵琶",
+        "최심비파",
+        "Душераздирающая Пипа",
+        "PIPA DÉCHIRE-CŒUR",
+        "HERZREISSER-PIPA",
+        "PIPA DESGARRACORAZONES",
+        "PIPA DILACERADOR DE CORAÇÕES",
+        "PIPA SPACCACUORI",
+        "พิณผีผาสลายใจ",
+        "TỲ BÀ THÔI TÂM",
+        "PIPÁ AMARGURADO",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.Mojian.GA_Hun_Mojian_AA",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AA.GA_Hun_Mojian_AA_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "Mojian_AA",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.attack",
+        "AA"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "墨血无痕",
+        "en": "INK CUT",
+        "ja": "墨血無痕",
+        "ko": "묵혈무흔",
+        "ru": "Чернильный Порез",
+        "zh-Hant": "墨血無痕",
+        "fr": "TAILLE D'ENCRE",
+        "de": "TINTENBLUT",
+        "es-ES": "TAJO DE TINTA",
+        "pt-BR": "CORTE DE TINTA",
+        "it": "LAMA D'INCHIOSTRO",
+        "th": "กระบี่หมึกโลหิต",
+        "vi": "MẶC HUYẾT VÔ NGÂN",
+        "pt-PT": "CORTE NEGRO",
+        "es-419": "CORTE DE TINTA"
+      },
+      "category": "shadow/PhantomEdges_018/IA_ShadowArm",
+      "searchAliases": [
+        "Mojian",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MoJian/GA_Hun_Mojian_AA",
+        "GA_Hun_Mojian_AA",
+        "Mojian_AA",
+        "墨血无痕",
+        "INK CUT",
+        "墨血無痕",
+        "묵혈무흔",
+        "Чернильный Порез",
+        "TAILLE D'ENCRE",
+        "TINTENBLUT",
+        "TAJO DE TINTA",
+        "CORTE DE TINTA",
+        "LAMA D'INCHIOSTRO",
+        "กระบี่หมึกโลหิต",
+        "MẶC HUYẾT VÔ NGÂN",
+        "CORTE NEGRO",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.NiTouChe.GA_HorseCart_Charge",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/Game/Test/HorseTest/GA_HorseCart_Charge.GA_HorseCart_Charge_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "HorseCart_Charge",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.normal"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "泥头车",
+        "en": "WAR WAGON",
+        "ja": "泥戦車",
+        "ko": "철갑마차",
+        "ru": "Штурмовая Колесница",
+        "zh-Hant": "泥頭車",
+        "fr": "CHAR BLINDÉ",
+        "de": "KRIEGSWAGEN",
+        "es-ES": "CARRUAJE DE GUERRA",
+        "pt-BR": "CARROÇA DE GUERRA",
+        "it": "CARRO DA GUERRA",
+        "th": "รถศึกหัวดิน",
+        "vi": "CHIẾN XA",
+        "pt-PT": "CARROÇA BLINDADA",
+        "es-419": "CARRUAJE DE GUERRA"
+      },
+      "category": "shadow/PhantomEdges_022/IA_ShadowArm",
+      "searchAliases": [
+        "NiTouChe",
+        "/Game/Test/HorseTest/GA_HorseCart_Charge",
+        "GA_HorseCart_Charge",
+        "HorseCart_Charge",
+        "泥头车",
+        "WAR WAGON",
+        "泥戦車",
+        "철갑마차",
+        "Штурмовая Колесница",
+        "泥頭車",
+        "CHAR BLINDÉ",
+        "KRIEGSWAGEN",
+        "CARRUAJE DE GUERRA",
+        "CARROÇA DE GUERRA",
+        "CARRO DA GUERRA",
+        "รถศึกหัวดิน",
+        "CHIẾN XA",
+        "CARROÇA BLINDADA",
+        "Drive",
+        "End",
+        "Spawn",
+        "TurnAttack"
+      ]
+    },
+    {
+      "id": "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CA",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.ShachiHook.CA",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CA.GA_Hun_ShachiHook_CA_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "ShachiHook_CA",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.attack",
+        "CA"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "追命锁镰",
+        "en": "HUNTER'S CHAIN SICKLE",
+        "ja": "追命の鎖鎌",
+        "ko": "추명 사슬낫",
+        "ru": "Охотничьи Цепи",
+        "zh-Hant": "追命鎖鐮",
+        "fr": "FAUCILLES ENCHAÎNÉES DU CHASSEUR",
+        "de": "KETTENSICHEL DES JÄGERS",
+        "es-ES": "HOZ ENCADENADA DEL CAZADOR",
+        "pt-BR": "FOICES DO CARRASCO",
+        "it": "CATENE PREDATRICI",
+        "th": "เคียวโซ่ทวงชีพ",
+        "vi": "TRUY MỆNH TỎA LIÊM",
+        "pt-PT": "FOICE COM CORRENTE DO PREDADOR",
+        "es-419": "HOZ ENCADENADA DEL CAZADOR"
+      },
+      "category": "shadow/PhantomEdges_014/IA_ShadowArm",
+      "searchAliases": [
+        "ShachiHook",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CA",
+        "GA_Hun_ShachiHook_CA",
+        "ShachiHook_CA",
+        "追命锁镰",
+        "HUNTER'S CHAIN SICKLE",
+        "追命の鎖鎌",
+        "추명 사슬낫",
+        "Охотничьи Цепи",
+        "追命鎖鐮",
+        "FAUCILLES ENCHAÎNÉES DU CHASSEUR",
+        "KETTENSICHEL DES JÄGERS",
+        "HOZ ENCADENADA DEL CAZADOR",
+        "FOICES DO CARRASCO",
+        "CATENE PREDATRICI",
+        "เคียวโซ่ทวงชีพ",
+        "TRUY MỆNH TỎA LIÊM",
+        "FOICE COM CORRENTE DO PREDADOR",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CB",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.ShachiHook.CB",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CB.GA_Hun_ShachiHook_CB_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "ShachiHook_CB",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.attack",
+        "CB"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "追命锁镰",
+        "en": "HUNTER'S CHAIN SICKLE",
+        "ja": "追命の鎖鎌",
+        "ko": "추명 사슬낫",
+        "ru": "Охотничьи Цепи",
+        "zh-Hant": "追命鎖鐮",
+        "fr": "FAUCILLES ENCHAÎNÉES DU CHASSEUR",
+        "de": "KETTENSICHEL DES JÄGERS",
+        "es-ES": "HOZ ENCADENADA DEL CAZADOR",
+        "pt-BR": "FOICES DO CARRASCO",
+        "it": "CATENE PREDATRICI",
+        "th": "เคียวโซ่ทวงชีพ",
+        "vi": "TRUY MỆNH TỎA LIÊM",
+        "pt-PT": "FOICE COM CORRENTE DO PREDADOR",
+        "es-419": "HOZ ENCADENADA DEL CAZADOR"
+      },
+      "category": "shadow/PhantomEdges_014/IA_ShadowArm",
+      "searchAliases": [
+        "ShachiHook",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CB",
+        "GA_Hun_ShachiHook_CB",
+        "ShachiHook_CB",
+        "追命锁镰",
+        "HUNTER'S CHAIN SICKLE",
+        "追命の鎖鎌",
+        "추명 사슬낫",
+        "Охотничьи Цепи",
+        "追命鎖鐮",
+        "FAUCILLES ENCHAÎNÉES DU CHASSEUR",
+        "KETTENSICHEL DES JÄGERS",
+        "HOZ ENCADENADA DEL CAZADOR",
+        "FOICES DO CARRASCO",
+        "CATENE PREDATRICI",
+        "เคียวโซ่ทวงชีพ",
+        "TRUY MỆNH TỎA LIÊM",
+        "FOICE COM CORRENTE DO PREDADOR",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.ShachiHook.GA_Hun_ShachiHook_CD",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.ShachiHook.CD",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CD.GA_Hun_ShachiHook_CD_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "ShachiHook_CD",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.attack",
+        "CD"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "追命锁镰",
+        "en": "HUNTER'S CHAIN SICKLE",
+        "ja": "追命の鎖鎌",
+        "ko": "추명 사슬낫",
+        "ru": "Охотничьи Цепи",
+        "zh-Hant": "追命鎖鐮",
+        "fr": "FAUCILLES ENCHAÎNÉES DU CHASSEUR",
+        "de": "KETTENSICHEL DES JÄGERS",
+        "es-ES": "HOZ ENCADENADA DEL CAZADOR",
+        "pt-BR": "FOICES DO CARRASCO",
+        "it": "CATENE PREDATRICI",
+        "th": "เคียวโซ่ทวงชีพ",
+        "vi": "TRUY MỆNH TỎA LIÊM",
+        "pt-PT": "FOICE COM CORRENTE DO PREDADOR",
+        "es-419": "HOZ ENCADENADA DEL CAZADOR"
+      },
+      "category": "shadow/PhantomEdges_014/IA_ShadowArm",
+      "searchAliases": [
+        "ShachiHook",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_CD",
+        "GA_Hun_ShachiHook_CD",
+        "ShachiHook_CD",
+        "追命锁镰",
+        "HUNTER'S CHAIN SICKLE",
+        "追命の鎖鎌",
+        "추명 사슬낫",
+        "Охотничьи Цепи",
+        "追命鎖鐮",
+        "FAUCILLES ENCHAÎNÉES DU CHASSEUR",
+        "KETTENSICHEL DES JÄGERS",
+        "HOZ ENCADENADA DEL CAZADOR",
+        "FOICES DO CARRASCO",
+        "CATENE PREDATRICI",
+        "เคียวโซ่ทวงชีพ",
+        "TRUY MỆNH TỎA LIÊM",
+        "FOICE COM CORRENTE DO PREDADOR",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.UnnamedBow.GA_UnnamedBow",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow.GA_UnnamedBow_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "UnnamedBow",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.charge"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "羽弓",
+        "en": "FEATHER BOW",
+        "ja": "羽弓",
+        "ko": "우궁",
+        "ru": "Перьевой Лук",
+        "zh-Hant": "羽弓",
+        "fr": "ARC DE PLUMES",
+        "de": "FEDERBOGEN",
+        "es-ES": "ARCO DE PLUMAS",
+        "pt-BR": "ARCO PLUMADO",
+        "it": "ARCO PIUMATO",
+        "th": "คันศรขนนก",
+        "vi": "CUNG LÔNG VŨ",
+        "pt-PT": "ARCO EMPLUMADO",
+        "es-419": "ARCO DE PLUMAS"
+      },
+      "category": "shadow/PhantomEdges_009/IA_ShadowArm",
+      "searchAliases": [
+        "UnnamedBow",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+        "GA_UnnamedBow",
+        "羽弓",
+        "FEATHER BOW",
+        "우궁",
+        "Перьевой Лук",
+        "ARC DE PLUMES",
+        "FEDERBOGEN",
+        "ARCO DE PLUMAS",
+        "ARCO PLUMADO",
+        "ARCO PIUMATO",
+        "คันศรขนนก",
+        "CUNG LÔNG VŨ",
+        "ARCO EMPLUMADO",
+        "Main",
+        "Shoot",
+        "ShootMax"
+      ]
+    },
+    {
+      "id": "move:Shadow.XuKongHuaShan.GA_XuKongHuaShan_Skill",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Skill.GA_XuKongHuaShan_Skill_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "XuKongHuaShan_Skill",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.normal"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "虚空华扇",
+        "en": "INANIS' RADIANT FAN",
+        "ja": "虚空華扇",
+        "ko": "허공의 화선",
+        "ru": "Сиящий Веер Инанис",
+        "zh-Hant": "虛空華扇",
+        "fr": "ÉVENTAIL RADIEUX D'INANIS",
+        "de": "INANIS’ STRAHLENDER FÄCHER",
+        "es-ES": "ABANICO RADIANTE DE INANIS",
+        "pt-BR": "LEQUE RADIANTE DE INANIS",
+        "it": "VENTAGLIO RADIOSO DI INANIS",
+        "th": "พัดบุปผาของซวีคง",
+        "vi": "HƯ KHÔNG HOA PHIẾN",
+        "pt-PT": "LEQUE RADIANTE DE INANIS",
+        "es-419": "ABANICO RADIANTE DE INANIS"
+      },
+      "category": "shadow/PhantomEdges_023/IA_ShadowArm",
+      "searchAliases": [
+        "XuKongHuaShan",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XuKongHuaShan/GA_XuKongHuaShan_Skill",
+        "GA_XuKongHuaShan_Skill",
+        "XuKongHuaShan_Skill",
+        "虚空华扇",
+        "INANIS' RADIANT FAN",
+        "虚空華扇",
+        "허공의 화선",
+        "Сиящий Веер Инанис",
+        "虛空華扇",
+        "ÉVENTAIL RADIEUX D'INANIS",
+        "INANIS’ STRAHLENDER FÄCHER",
+        "ABANICO RADIANTE DE INANIS",
+        "LEQUE RADIANTE DE INANIS",
+        "VENTAGLIO RADIOSO DI INANIS",
+        "พัดบุปผาของซวีคง",
+        "HƯ KHÔNG HOA PHIẾN",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.XueSeLingDang.GA_XueSeLingDang_Normal_01",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueSeLingDang/GA_XueSeLingDang_Normal_01.GA_XueSeLingDang_Normal_01_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "XueSeLingDang_Normal_01",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.normal"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "BloodBell",
+        "en": "BloodBell",
+        "ja": "BloodBell",
+        "ko": "BloodBell",
+        "ru": "BloodBell",
+        "zh-Hant": "BloodBell",
+        "fr": "BloodBell",
+        "de": "BloodBell",
+        "es-ES": "BloodBell",
+        "pt-BR": "BloodBell",
+        "it": "BloodBell",
+        "th": "BloodBell",
+        "vi": "BloodBell",
+        "pt-PT": "BloodBell",
+        "es-419": "BloodBell"
+      },
+      "category": "shadow/XueSeLingDang/IA_ShadowArm",
+      "searchAliases": [
+        "XueSeLingDang",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueSeLingDang/GA_XueSeLingDang_Normal_01",
+        "GA_XueSeLingDang_Normal_01",
+        "XueSeLingDang_Normal_01",
+        "BloodBell",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.YouLongCha.GA_YouLongCha_Normal",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal.GA_YouLongCha_Normal_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "YouLongCha_Normal",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.charge"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "游龙叉",
+        "en": "LOONG TRIDENT",
+        "ja": "遊龍の銛",
+        "ko": "유룡차",
+        "ru": "Трезубец Луна",
+        "zh-Hant": "游龍叉",
+        "fr": "TRIDENT DE LOONG",
+        "de": "LOONG-DREIZACK",
+        "es-ES": "TRIDENTE DE LOONG",
+        "pt-BR": "TRIDENTE DO DRAGÃO",
+        "it": "TRIDENTE LOONG",
+        "th": "ฉมวกมังกรวารี",
+        "vi": "DU LONG XOA",
+        "pt-PT": "LANÇA LOONG",
+        "es-419": "TRIDENTE DE LOONG"
+      },
+      "category": "shadow/PhantomEdges_016/IA_ShadowArm",
+      "searchAliases": [
+        "YouLongCha",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+        "GA_YouLongCha_Normal",
+        "YouLongCha_Normal",
+        "游龙叉",
+        "LOONG TRIDENT",
+        "遊龍の銛",
+        "유룡차",
+        "Трезубец Луна",
+        "游龍叉",
+        "TRIDENT DE LOONG",
+        "LOONG-DREIZACK",
+        "TRIDENTE DE LOONG",
+        "TRIDENTE DO DRAGÃO",
+        "TRIDENTE LOONG",
+        "ฉมวกมังกรวารี",
+        "DU LONG XOA",
+        "LANÇA LOONG",
+        "Main",
+        "Shoot",
+        "ShootMax"
+      ]
+    },
+    {
+      "id": "move:Shadow.YouLongHead.GA_YouLongHead_Water",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Water.GA_YouLongHead_Water_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "YouLongHead_Water",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.normal"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "游龙头",
+        "en": "YOU LOONG'S DELUGE",
+        "ja": "遊龍の頭",
+        "ko": "유룡두",
+        "ru": "Драконья Пасть",
+        "zh-Hant": "游龍頭",
+        "fr": "DÉLUGE DE YOU LOONG",
+        "de": "YOU LOONGS SINTFLUT",
+        "es-ES": "DILUVIO DE YOU LOONG",
+        "pt-BR": "DILÚVIO DE YOU LOONG",
+        "it": "SOFFIO DI YOU LOONG",
+        "th": "เศียรมังกรวารี",
+        "vi": "DU LONG ĐẦU",
+        "pt-PT": "DILÚVIO DE YOU LOONG",
+        "es-419": "DILUVIO DE YOU LOONG"
+      },
+      "category": "shadow/PhantomEdges_011/IA_ShadowArm",
+      "searchAliases": [
+        "YouLongHead",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Water",
+        "GA_YouLongHead_Water",
+        "YouLongHead_Water",
+        "游龙头",
+        "YOU LOONG'S DELUGE",
+        "遊龍の頭",
+        "유룡두",
+        "Драконья Пасть",
+        "游龍頭",
+        "DÉLUGE DE YOU LOONG",
+        "YOU LOONGS SINTFLUT",
+        "DILUVIO DE YOU LOONG",
+        "DILÚVIO DE YOU LOONG",
+        "SOFFIO DI YOU LOONG",
+        "เศียรมังกรวารี",
+        "DU LONG ĐẦU",
+        "End",
+        "Main"
+      ]
+    },
+    {
+      "id": "move:Shadow.ZhuoBiDun.GA_ZhuoBiDun",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C",
+      "activateByClass": true,
+      "nativeEntry": true,
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [],
+      "priority": -5,
+      "code": "ZhuoBiDun",
+      "usageKey": "moves.nativeentrance.usage",
+      "labelParts": [
+        "catalog.normal"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "拙壁盾",
+        "en": "BASTION",
+        "ja": "拙壁の盾",
+        "ko": "졸벽 방패",
+        "ru": "Бастион",
+        "zh-Hant": "拙壁盾",
+        "fr": "BASTION",
+        "de": "BASTION",
+        "es-ES": "BASTIÓN",
+        "pt-BR": "BASTIÃO",
+        "it": "BASTIONE",
+        "th": "โล่ปราการ",
+        "vi": "CHUYẾT BÍCH THUẪN",
+        "pt-PT": "BASTIÃO",
+        "es-419": "BASTIÓN"
+      },
+      "category": "shadow/PhantomEdges_004/IA_ShadowArm",
+      "searchAliases": [
+        "ZhuoBiDun",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+        "GA_ZhuoBiDun",
+        "拙壁盾",
+        "BASTION",
+        "拙壁の盾",
+        "졸벽 방패",
+        "Бастион",
+        "BASTIÓN",
+        "BASTIÃO",
+        "BASTIONE",
+        "โล่ปราการ",
+        "CHUYẾT BÍCH THUẪN",
+        "Broken",
+        "CounterAttack",
+        "CounterAttack_02",
+        "Dodge_B",
+        "Dodge_F",
+        "Dodge_L",
+        "Dodge_R",
+        "FastRelease",
+        "Loop",
+        "Main",
+        "Push_F",
+        "Release",
+        "Rush_F"
+      ]
+    }
+  ],
+  "limitations": [
+    "Ability entrance coverage does not establish complete internal phase coverage.",
+    "Native unlock, resource, target, aim, summon and release qualification remains in the game."
+  ]
+}

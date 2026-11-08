@@ -6,7 +6,7 @@ local function parameter(value)
     return {get=function() return value end,set=function(_,replacement) value=replacement end}
 end
 local function array(values)
-    return {ForEach=function(_,callback) for i,value in ipairs(values) do callback(i,parameter(value)) end end}
+    return setmetatable({GetArrayNum=function() return #values end,ForEach=function(_,callback) for i,value in ipairs(values) do callback(i,parameter(value)) end end},{__index=values})
 end
 function FName(name) return {ToString=function() return name end} end
 local function object(address,properties)
@@ -15,9 +15,14 @@ local function object(address,properties)
     function value:GetAddress() return address end
     function value:GetPropertyValue(name) return self[name] end
     function value:GetFullName() return "Class "..self.class end
-    function value:GetClass() return object(address+10000,{class=self.class}) end
+    function value:GetClass() return StaticFindObject(self.class) end
     function value:IsA(type) return self.ability and (type.class=="/Script/GameplayAbilities.GameplayAbility" or type.class=="/Script/LegoAbility.LegoAbility") end
     return value
+end
+local classes, nextClass = {}, 100000
+function StaticFindObject(path)
+    if not classes[path] then nextClass=nextClass+1;classes[path]=object(nextClass,{class=path}) end
+    return classes[path]
 end
 local function tags(...)
     local entries={}
@@ -72,7 +77,18 @@ local function fixture()
     local backend=setmetatable({config={resource_inputs={}},state={ready=true},pawn=pawn,subsystem=object(9),missing={},log=function() end},Backend)
     function backend:receiver(target) return target.receiver=="ability_input" and input or asc end
     function backend:object(path) return object(100,{class=path}) end
-    function backend:invoke(value,path,rate)
+    backend.protectionTags={}
+    function backend:library() return asc end
+    function backend:invoke(value,path,rate,tag)
+        if path:find("LooseGameplayTagForSystem",1,true) then
+            self.protectionCalls=(self.protectionCalls or 0)+1
+            if self.failProtection and self.failProtection(path,tag) then error("protection unavailable") end
+            local name=tag.TagName:ToString()
+            local delta=path:find(":Add",1,true) and 1 or -1
+            self.protectionTags[name]=(self.protectionTags[name] or 0)+delta
+            check(self.protectionTags[name]>=0,"protection cleanup must remove only its own tag counts")
+            return
+        end
         if path:find(":GetActor",1,true) then return value.actor end
         if path:find(":GetPlayTimelineTask",1,true) then return task end
         if path:find(":SetPlayRate",1,true) then task.rate=rate;return end
@@ -207,7 +223,7 @@ for _,reversed in ipairs({false,true}) do
             if injections==1 then check(next(cost.instances)==nil,"input injection never pre-arms shared abilities") end
             hooks[forceTag].pre(parameter(self:receiver({receiver="ability_input"})),parameter({TagName=FName(tag)}),parameter(action))
             check(consume(self,source)==(policy.bypass_resources and 0 or -2),"only the first successful native request supplies resource policy")
-            local state=cost.instances[source:GetAddress()]
+            local state=cost.instances[source:GetAddress()] or {damage=1,startup=1,recovery=1}
             check(state.damage==(policy.damage_multiplier or 1) and state.startup==(policy.startup_speed or 1)
                 and state.recovery==(policy.recovery_speed or 1),"a later binding cannot change an active ability's policy")
             source.bIsActive=true
@@ -291,7 +307,7 @@ for _,otherKind in ipairs({"action","ability","move"}) do
                 local entry=hooks["/Script/SGameInputSystem.AbilityInputComponent:TryActivateExternalActionAbilityInterruptLowerByTag"]
                 entry.pre(parameter(self:receiver({receiver="ability_input"})),parameter({TagName=FName("Ability.Start")} ),
                     parameter(path:find(":InjectInputVectorForAction",1,true) and arg or self:object(action)))
-                local state=cost.instances[source:GetAddress()]
+                local state=cost.instances[source:GetAddress()] or {damage=1,startup=1,recovery=1}
                 check(state and state.damage==(policy.damage_multiplier or 1) and state.startup==(policy.startup_speed or 1)
                     and state.recovery==(policy.recovery_speed or 1),"the successful binding alone supplies the activation's multipliers")
                 check(consume(self,source)==(policy.bypass_resources and 0 or -2),"simultaneous entry kinds cannot donate resource policy")
@@ -326,7 +342,7 @@ do
             injections=injections+1;current=nil
             hooks[forceTag].pre(parameter(self:receiver({receiver="ability_input"})),
                 parameter({TagName=FName("Ability.Start")}),parameter(argument))
-            local state=cost.instances[source:GetAddress()]
+            local state=cost.instances[source:GetAddress()] or {damage=1,startup=1,recovery=1}
             check(state and state.damage==(protected and 1 or 3) and state.startup==(protected and 1 or 2)
                 and state.recovery==(protected and 1 or 4),"a retained native pipeline keeps the complete InputAction policy at defaults")
             check(consume(self,source)==(protected and -2 or 0),"dispatch cannot overwrite the retained native pipeline's normal resource policy")
@@ -374,7 +390,9 @@ do
     local receiver=parameter(backend:receiver({receiver="ability_input"}))
     entry.pre(receiver,parameter({TagName=FName("Ability.Release")}),parameter(ordinaryAction))
     check(consume(backend,release)==-2,"a same-key ordinary action pays its own resources")
-    check(cost.instances[release:GetAddress()].damage==1,"an ordinary action sharing the key cannot borrow damage")
+    local ordinaryProjectile=object(205)
+    launch(backend,ordinaryProjectile,release)
+    check(ordinaryProjectile.damage==1,"an ordinary action sharing the key cannot borrow damage")
     release.bIsActive=true;entry.post(nil,parameter(true));current=nil
     entry.pre(receiver,parameter({TagName=FName("Ability.Start")}),parameter(tunedAction))
     check(consume(backend,source)==0,"the matching InputAction receives the requested resource bypass")
@@ -412,7 +430,7 @@ do
     end,{})
     local original=cost.instances[source:GetAddress()]
     cost:activate({ability_class=source.class},true,function() return false end,settings)
-    check(cost.instances[source:GetAddress()]==original and original.damage==1 and not original.bypass,
+    check(cost.instances[source:GetAddress()]==original and (not original or original.damage==1 and not original.bypass),
         "a rejected tuned binding cannot change an already active ordinary action")
     check(consume(backend,release)==-2 and not cost.instances[release:GetAddress()],"an unrelated move retains its own resource policy")
     source.bIsActive=false;cost:update()
@@ -467,6 +485,58 @@ do
     cost:reset()
 end
 
+for _,reflectedRate in ipairs({false,1.25}) do
+    local backend,cost,source,release,other,specs,grant,timeline,oldTask=fixture()
+    source.bIsActive=true
+    specs[1].ActiveCount=1
+    timeline.bAutoPlay=true
+    local task=oldTask
+    local invoke=backend.invoke
+    function backend:invoke(value,path,...)
+        if path:find(":GetPlayTimelineTask",1,true) then return task end
+        if path:find(":SetPlayRate",1,true) then value.rate=(...);return end
+        return invoke(self,value,path,...)
+    end
+    local settings={damage_multiplier=3,startup_speed=2,recovery_speed=4}
+    local target={ability_class=source.class}
+    local entry=hooks[forceClass]
+    cost:activate(target,true,function()
+        entry.pre(parameter(backend:receiver({receiver="ability_input"})),parameter(source:GetClass()))
+        if reflectedRate then hooks[play].pre(parameter(source),parameter(timeline),parameter(reflectedRate)) end
+        task=object(900,{Timeline=timeline,CurrentTime=0})
+        entry.post(nil,parameter(true))
+        return true
+    end,settings)
+    local state=cost.instances[source:GetAddress()]
+    check(state and state.damage==3 and state.startup==2 and state.recovery==4,
+        "native restart on an active original instance receives the enhanced binding's complete policy")
+    check(consume(backend,source)==0,"restarted instance retains its requested bypass for subsequent costs")
+    local projectile=object(901)
+    launch(backend,projectile,source)
+    check(projectile.damage==3,"restarted instance publishes its damage before later projectile creation")
+    source['Action Phase']={TagName=FName("CharacterState.Action.Phase.Start")};cost:update()
+    check(task.rate==2*(reflectedRate or 1),"nested restart retains the new activation's initial playback rate")
+    check(cost.instances[source:GetAddress()]==state,"outer activation cannot replace a nested restart's scope")
+    current=nil
+    cost:activate(target,false,function() return false end,{startup_speed=7})
+    check(cost.instances[source:GetAddress()]==state,"rejected requests after restart preserve the successful scope")
+    local enhancedTask=task
+    entry.pre(parameter(backend:receiver({receiver="ability_input"})),parameter(source:GetClass()))
+    task=object(902,{Timeline=timeline,CurrentTime=0,rate=1})
+    entry.post(nil,parameter(true))
+    check(not cost.instances[source:GetAddress()] and enhancedTask.rate==(reflectedRate or 1),
+        "ordinary native restart releases the enhanced scope and restores its playback baseline")
+    check(consume(backend,source)==-2,"ordinary native restart pays its own subsequent costs")
+    local ordinaryProjectile=object(903)
+    launch(backend,ordinaryProjectile,source)
+    check(ordinaryProjectile.damage==1 and projectile.damage==3,
+        "ordinary native restart uses normal damage while retaining already launched projectile damage")
+    source.bIsActive=false;cost:update()
+    check(task.rate==1 and projectile.damage==3 and next(cost.instances)==nil,
+        "restart cleanup restores its own task and preserves launched projectile damage")
+    cost:reset()
+end
+
 for _,kind in ipairs({"ability","move"}) do
     local backend,cost,source=fixture()
     local requests=0
@@ -502,8 +572,8 @@ do
                     if (type(output)=="table" and output.target or output)==name then settings=binding end
                 end
             end
-            check(settings and settings.damage_multiplier==3 and settings.startup_speed==2 and settings.recovery_speed==4,
-                "compiled special entry retains all three tuning settings")
+            check(settings and settings.damage_multiplier==3 and settings.startup_speed==2 and settings.recovery_speed==4
+                and settings.super_armor and settings.invincible,"compiled special entry retains all tuning and protection settings")
             local backend,cost,source,release,other,specs,grant,timeline,task=fixture()
             source.class=target.ability_class;specs[1].Ability.class=source.class
             source.AbilityTags=tags(target.tag);specs[1].Ability.AbilityTags=source.AbilityTags
@@ -518,6 +588,9 @@ do
                 check(consume(backend,release)==0,"compiled release retains resource bypass on the attack instance")
                 source.bIsActive,specs[1].ActiveCount=false,0
                 release.bIsActive,specs[2].ActiveCount=true,1
+                check(backend.protectionTags["CharacterState.Hitreact.Endure.Stand.Ultimate"]==2
+                    and backend.protectionTags["CharacterState.Stand.Invulnerable.Debug"]==2,
+                    "compiled native continuation retains both attached effects")
                 hooks[play].pre(parameter(release),parameter(timeline),parameter(1.25))
                 projectile=object(21)
                 launch(backend,projectile,release)
@@ -625,5 +698,189 @@ do
     cost:update()
     check(next(nativeAbilities)==nil,"destroyed abilities clear native snapshots without dereferencing their UObject")
     cost:reset()
+end
+local armor="CharacterState.Hitreact.Endure.Stand.Ultimate"
+local invincible="CharacterState.Stand.Invulnerable.Debug"
+do
+    local backend,cost,source=fixture()
+    backend.protectionTags[armor]=2;backend.protectionTags[invincible]=1
+    local target={ability_class=source.class}
+    check(Costs.tuned({super_armor=true}) and Costs.tuned({invincible=true}),"protection-only bindings request activation ownership")
+    cost:activate(target,false,function() source.bIsActive=true;return true end,{super_armor=true,invincible=true})
+    check(backend.protectionTags[armor]==3 and backend.protectionTags[invincible]==2,"both independent options add a single native state count")
+    local calls=backend.protectionCalls
+    for _=1,120 do cost:update() end
+    check(backend.protectionCalls==calls,"stable active protection performs no repeated tag reads or writes")
+    source.bIsActive=false;cost:update()
+    check(backend.protectionTags[armor]==2 and backend.protectionTags[invincible]==1,"ending preserves preexisting native buffs")
+    cost:activate(target,false,function() return false end,{super_armor=true})
+    check(backend.protectionTags[armor]==2 and not next(cost.instances),"failed activation cannot leave protection")
+    check(not pcall(function() cost:activate(target,false,function() error("failed move") end,{invincible=true}) end),"activation errors propagate")
+    check(backend.protectionTags[invincible]==1 and not next(cost.instances),"activation error releases protection")
+    cost:reset()
+end
+do
+    local backend,cost,source,release=fixture()
+    cost:activate({ability_class=source.class},false,function() source.bIsActive=true;return true end,{super_armor=true,invincible=true})
+    current=source
+    hooks[forceClass].pre(parameter(backend:receiver({receiver="ability_input"})),parameter(release:GetClass()))
+    release.bIsActive=true
+    hooks[forceClass].post(nil,parameter(true))
+    check(backend.protectionTags[armor]==2 and backend.protectionTags[invincible]==2,"native continuation inherits both states")
+    source.bIsActive=false;cost:update()
+    check(backend.protectionTags[armor]==1 and backend.protectionTags[invincible]==1,"parent ending preserves the continuation's protection")
+    release.bIsActive=false;cost:update()
+    check(backend.protectionTags[armor]==0 and backend.protectionTags[invincible]==0,"continuation ending balances all added counts")
+    cost:activate({ability_class=source.class},false,function() source.bIsActive=true;return true end,{super_armor=true})
+    cost:activate({ability_class=release.class},false,function() release.bIsActive=true;return true end,{invincible=true})
+    check(backend.protectionTags[armor]==1 and backend.protectionTags[invincible]==1,"unrelated bindings retain their own selected effects")
+    source.bIsActive=false;cost:update()
+    check(backend.protectionTags[armor]==0 and backend.protectionTags[invincible]==1,"ending armor does not remove unrelated invincibility")
+    cost:reset()
+    check(backend.protectionTags[invincible]==0,"shutdown clears active protection")
+end
+do
+    local backend,cost,source=fixture()
+    local target={ability_class=source.class}
+    local pending=cost:arm(source,false,{super_armor=true})
+    cost:activate(target,false,function() return false end,{invincible=true})
+    check(cost.instances[source:GetAddress()]==pending and backend.protectionTags[armor]==1 and backend.protectionTags[invincible]==0,
+        "failed nested activation restores the pending binding's protection")
+    source.bIsActive=true;pending.activated=true
+    Costs.with_active(backend,source,false,function() return true end,{invincible=true},true)
+    check(cost.instances[source:GetAddress()]==pending and backend.protectionTags[armor]==1 and backend.protectionTags[invincible]==0,
+        "temporary active callback restores the original activation's protection")
+    cost:reset()
+    check(backend.protectionTags[armor]==0,"restored previous protection remains balanced")
+end
+do
+    local backend,cost,source=fixture()
+    local action=object(20)
+    cost:input({object=action},false,{super_armor=true,invincible=true},1)
+    current=nil
+    hooks[forceClass].pre(parameter(backend:receiver({receiver="ability_input"})),parameter(source:GetClass()),parameter(action))
+    source.bIsActive=true
+    hooks[forceClass].post(nil,parameter(true))
+    check(backend.protectionTags[armor]==1 and backend.protectionTags[invincible]==1,"native input activation retains protection-only settings")
+    cost:reset()
+end
+do
+    local backend,cost,source=fixture()
+    cost:activate({ability_class=source.class},false,function() source.bIsActive=true;return true end,{super_armor=true,invincible=true})
+    backend.failProtection=function(path) return path:find(":Remove",1,true) end
+    check(not pcall(cost.reset,cost),"failed native tag cleanup is reported")
+    check(next(cost.instances),"failed cleanup retains ownership for retry")
+    backend.failProtection=nil
+    cost:reset()
+    check(backend.protectionTags[armor]==0 and backend.protectionTags[invincible]==0,"cleanup retry balances only remaining counts")
+end
+do
+    local backend,cost,source=fixture()
+    local adds=0
+    backend.failProtection=function(path)
+        if path:find(":Add",1,true) then adds=adds+1;return adds==2 end
+    end
+    check(not pcall(cost.activate,cost,{ability_class=source.class},false,function() return false end,{super_armor=true,invincible=true}),
+        "partial native protection failure is visible")
+    check(cost.closed and not next(cost.transfers) and not backend.resource_costs,
+        "failed protection setup clears pending activation scopes before another binding can run")
+    check((backend.protectionTags[armor] or 0)==0 and (backend.protectionTags[invincible] or 0)==0,
+        "failed setup immediately removes its first attached effect")
+    backend.failProtection=nil
+    cost:reset()
+    check((backend.protectionTags[armor] or 0)==0 and (backend.protectionTags[invincible] or 0)==0,"partial protection setup is recoverable")
+end
+do
+    local backend,cost,source=fixture()
+    local originalOwner=backend:receiver({receiver="ability_system"})
+    cost:activate({ability_class=source.class},false,function() source.bIsActive=true;return true end,{super_armor=true,invincible=true})
+    local replacement=object(99)
+    local invoke=backend.invoke
+    function backend:receiver() return replacement end
+    function backend:invoke(value,path,owner,...)
+        if path:find(":RemoveLooseGameplayTagForSystem",1,true) then
+            check(owner==originalOwner,"pawn replacement cleans the original ability system, not the replacement")
+        end
+        return invoke(self,value,path,owner,...)
+    end
+    cost:reset()
+    check(backend.protectionTags[armor]==0 and backend.protectionTags[invincible]==0,"pawn replacement preserves balanced tag ownership")
+end
+do
+    local consumeTag="GameplayEvent.Ability.TianShaShuangYue.ConsumeAll"
+    local send="/Script/GameplayAbilities.GameplayAbility:SendGameplayEvent"
+    for _,suffix in ipairs({"DB","DB_SWT"}) do
+        local backend,cost,source,release,other,specs=fixture()
+        local path="/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_"..suffix
+        source.class=path..".GA_Hun_ShuangYue_"..suffix.."_C"
+        specs[1].Ability.class=source.class
+        local first,second=object(41,{capacity=100,value=7}),object(42,{capacity=100,value=5})
+        local passiveClass="/Script/PBZCombatAsset.GA_TianShaShuangYue_EnergyChargePassiveBase"
+        local passive=object(43,{class=passiveClass,bIsActive=true,ChargeObjectPhase1=first,ChargeObjectPhase2=second})
+        local passiveCdo=object(44,{class=passiveClass})
+        function passiveCdo:IsA(class)
+            return class.class=="/Script/PBZCombatAsset.GA_TianShaShuangYue_EnergyChargePassiveBase"
+        end
+        specs[#specs+1]={Ability=passiveCdo,ActiveCount=1,NonReplicatedInstances=array({passive}),ReplicatedInstances=array({})}
+        local payload=object(45,{ConsumeValue=0})
+        function payload:IsA(class) return class.class=="/Script/PBZCombatAsset.TianShaShuangYue_ConsumeAllPayload" end
+        function payload:SetPropertyValue(key,value) self[key]=value end
+        source.Payload=payload
+        local invoke=backend.invoke
+        function backend:invoke(value,name,...)
+            if name=="/Script/PBZCombatAsset.UIChargeObject:GetMax" then return value.capacity end
+            return invoke(self,value,name,...)
+        end
+        local function sendEvent(instance,tag,eventPayload)
+            local event=parameter({TagName=FName(tag or consumeTag)})
+            hooks[send].pre(parameter(instance),event,parameter({OptionalObject=eventPayload or payload}))
+            if event:get().TagName:ToString()==consumeTag then
+                payload.ConsumeValue=first.value+second.value
+                first.value,second.value=0,0
+            end
+            return event:get().TagName:ToString()
+        end
+        for _,bypass in ipairs({true,false}) do
+            current=source
+            cost:activate({ability_class=source.class},bypass,function()
+                source.bIsActive=true
+                sendEvent(source)
+                check(payload.ConsumeValue==(bypass and 200 or 12),
+                    "dual-axe attacks must use full energy only for the owning bypass binding: "..suffix)
+                check(first.value==(bypass and 7 or 0) and second.value==(bypass and 5 or 0),
+                    "full-energy bypass must preserve the real charge objects; ordinary attacks consume them")
+                first.capacity,second.capacity=150,120
+                first.value,second.value=9,3
+                sendEvent(source)
+                check(payload.ConsumeValue==(bypass and 270 or 12),
+                    "dual-axe effects must follow the equipped weapon's current limits instead of fixed energy")
+                if bypass then
+                    first.value,second.value=0,0
+                    sendEvent(source)
+                    check(payload.ConsumeValue==270 and first.value==0 and second.value==0,
+                        "empty real energy must still produce the full current-capacity attack without granting real energy")
+                    local fresh=object(47,{class=source.class,ability=true,bIsActive=true,Payload=payload})
+                    payload.ConsumeValue=0
+                    sendEvent(fresh)
+                    check(payload.ConsumeValue==270 and first.value==0 and second.value==0,
+                        "an instance created inside native activation must acquire the full-energy view before its first event")
+                    local wrong=object(46)
+                    function wrong:IsA() return true end
+                    check(sendEvent(source,"GameplayEvent.Other",wrong)=="GameplayEvent.Other",
+                        "resource bypass must preserve unrelated gameplay events")
+                    check(sendEvent(source,consumeTag,wrong)==consumeTag,
+                        "a different payload must not borrow the energy bypass")
+                    check(sendEvent(other)==consumeTag,"an unrelated ability must retain native consumption")
+                end
+                source.bIsActive=false
+                return false
+            end)
+            check(not next(cost.instances),"a completed or rejected activation must release its resource scope")
+            first.capacity,second.capacity=100,100
+            first.value,second.value=7,5
+        end
+        cost:reset()
+        check(not hooks[send],"stopping resource bypass must restore native gameplay-event delivery")
+    end
 end
 print("BindingTuningLifecycleTests PASS "..checks)

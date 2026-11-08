@@ -125,6 +125,10 @@ namespace PBZKeyForge
         bool KeyEnhancementPending { get { return keyEnhancement.DeploymentJson() != keyEnhancementBaseline.DeploymentJson() || keyEnhancementRepair || keyEnhancementUninstall; } }
         bool HasKeyEnhancementConfiguration { get { return keyEnhancement.ToJson() != new KeyEnhancementConfiguration().ToJson(); } }
         bool keyEnhancementRepair;
+        bool KeyEnhancementUpdatePending
+        { get { return Session != null && !Session.IsOffline && keyEnhancement.Enabled && keyEnhancementRepair && !keyEnhancementUninstall; } }
+        string KeyEnhancementUpdateHint
+        { get { return I18n.Str(lastRunning ? "enhancement.update.waitexit" : "enhancement.update.hint"); } }
         bool flameEffectsEnabled;
         FlameAppearance flameAppearance;
         int previousFlameTop;
@@ -196,6 +200,7 @@ namespace PBZKeyForge
             if (keyEnhancement.Enabled && keyEnhancementError != null && !messageError) SetMessage("editor.failed", true, keyEnhancementError);
             keyEnhancementBar.Pending = KeyEnhancementPending && (keyEnhancement.Enabled || keyEnhancementBaseline.Enabled || keyEnhancementUninstall);
             string status = keyEnhancementUninstall ? I18n.Str("enhancement.lifecycle.willuninstall")
+                : KeyEnhancementUpdatePending ? KeyEnhancementUpdateHint
                 : KeyEnhancementPending && !offline && lastRunning ? I18n.Str(keyEnhancement.Enabled && keyEnhancementBaseline.Enabled && !keyEnhancementUninstall
                     ? "live.unavailable"
                     : "enhancement.lifecycle.waitexit")
@@ -221,8 +226,8 @@ namespace PBZKeyForge
 
         void RenderLiveEnhancementStatus(KeyEnhancementLiveStatus status)
         {
-            keyEnhancementBar.Status = status.ErrorDetail != null ? "" : status.Detail;
-            string hint = status.ErrorDetail != null ? I18n.Str("flow.connection.open") : status.Detail;
+            keyEnhancementBar.Status = KeyEnhancementUpdatePending ? KeyEnhancementUpdateHint : status.ErrorDetail != null ? "" : status.Detail;
+            string hint = KeyEnhancementUpdatePending ? KeyEnhancementUpdateHint : status.ErrorDetail != null ? I18n.Str("flow.connection.open") : status.Detail;
             SetTip(keyEnhancementBar, hint);
             SetTip(keyEnhancementBar.Toggle, hint);
             keyEnhancementBar.Invalidate();

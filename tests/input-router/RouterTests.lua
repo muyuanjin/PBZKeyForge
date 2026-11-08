@@ -464,4 +464,75 @@ do
         check(#e==(kind=="action" and 1 or 2) and e[1].settings==high,"Conflicting tuning follows binding priority without stacking or maximizing values")
     end
 end
+do
+    local router,backend=rig({{id="old",keys={"K"},outputs={"a"}}})
+    local sampled=0
+    function backend:snapshot(keys)
+        sampled=sampled+1
+        check(#keys==1 and keys[1]=="J","reconfiguration must sample the replacement's input keys")
+        return {J=1}
+    end
+    local replacement=router:reconfigure({targets=router.config.targets,
+        bindings={{id="new",keys={"J"},trigger="press",outputs={"a"}}}},nil,{})
+    replacement:step(0,{J=1},{})
+    check(sampled==1 and #backend.events==0,"reconfiguration samples once and suppresses a newly held press")
+    replacement:step(.1,{},{})
+    replacement:step(.2,{J=1},{})
+    check(#backend.events==1,"a replacement binding rearms after physical release")
+end
+for _,kind in ipairs({"move","ability","action"}) do
+    local ordinary={id="ordinary",keys={"G"},outputs={"shared"}}
+    local armor={id="armor",keys={"H"},priority=1,super_armor=true,outputs={"shared"}}
+    local invincible={id="invincible",keys={"J"},priority=2,invincible=true,outputs={"shared"}}
+    local _,_,step=rig({ordinary,armor,invincible},{shared={kind=kind,path="shared",move_id="shared",tag="shared"}})
+    local events=step(0,{G=1,H=1,J=1})
+    check(#events==(kind=="action" and 1 or 3),"different protection policies must remain separate activation requests")
+    check(events[1].settings==invincible,"protection policy follows binding priority")
+    step(.05,{})
+    events=step(.1,{G=1,H=1})
+    check(#events==(kind=="action" and 1 or 2) and events[1].settings==armor,"removing invincibility does not donate it to another binding")
+    step(.15,{})
+    events=step(.2,{G=1})
+    check(#events==1 and events[1].settings==ordinary,"ordinary binding retains unmodified protection settings")
+end
+for _,trigger in ipairs({"press","pulse"}) do
+    local _,_,step=rig({{id="deflect",keys={"K"},trigger=trigger,interval=.2,outputs={{target="a",pulse=true}}}})
+    check(step(0,{K=1})[1].phase=="started","an explicit pulse must start normally")
+    check(step(.05,{K=1})[1].phase=="completed","a pulse must have its native release frame")
+    check(#step(.1,{K=1})==0,"continuous deflect must not override a chosen single press or pulse interval")
+    local events=step(.2,{K=1})
+    check(trigger=="pulse" and #events==1 and events[1].phase=="started" or trigger=="press" and #events==0,
+        "explicit triggers must retain their repeat policy")
+    step(.3,{})
+    check(step(.4,{K=1})[1].phase=="started","a released pulse must rearm for a fresh physical press")
+end
+do
+    local router,_,step=rig({
+        {id="first",keys={"K"},trigger="press",outputs={{target="a",pulse=true}}},
+        {id="second",keys={"J"},trigger="press",outputs={{target="a",pulse=true},"extra"}}
+    },{a={kind="action",path="a"},extra={kind="action",path="extra"}})
+    check(step(0,{K=1})[1].phase=="started","first independent press starts immediately")
+    local events=step(.01,{K=1,J=1})
+    check(#events==2 and events[1].target=="extra" and events[2].phase=="completed",
+        "a staggered single press must leave the shared native release frame and preserve other outputs")
+    events=step(.02,{})
+    check(#events==2 and events[1].target=="a" and events[1].phase=="started",
+        "a queued single press must execute once after the shared release frame")
+    check(step(.03,{})[1].phase=="completed" and #step(.04,{})==0,"queued presses must release without repeating")
+    step(.05,{K=1});step(.06,{J=1});router:reset(true)
+    check(#step(.07,{})==0,"reset must discard queued pulses")
+end
+for _,default in ipairs({false,true}) do
+    local _,_,step=rig({{id="mixed",keys={"G"},trigger="press",default_trigger=default,
+        outputs={"move","ability","once","a"}}},{move={kind="move",move_id="move",tag="move"},
+        ability={kind="ability",tag="ability"},once={kind="event",tag="once"},a={kind="action",path="a"}})
+    check(#step(0,{G=1})==4,"a fresh mixed binding must request every output")
+    for frame=1,20 do
+        local events=step(frame/60,{G=1})
+        local expected=(default and 2 or 1)+(frame==1 and 1 or 0)
+        check(#events==expected and events[1].target=="move",
+            "held default abilities must repeat alongside moves without replaying single outputs")
+    end
+    check(#step(1,{})==0,"mixed move and ability requests must stop on release")
+end
 print("RouterTests: " .. count .. " assertions passed")

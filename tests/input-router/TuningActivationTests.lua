@@ -31,6 +31,14 @@ check(Costs.with(ordinary,{},false,function() return "ordinary" end,{damage_mult
     "explicit defaults retain the original callback")
 check(not ordinary.resource_costs and #contexts==0 and not next(hooks),"defaults load no context and install no tuning hooks")
 
+for _,settings in ipairs({{super_armor=true},{invincible=true}}) do
+    local protection=Costs.new(backend())
+    protection:enable(false,settings)
+    check(not prefix("ModifyCharacterAttributeValue") and not prefix("LegoAbility") and not prefix("BulletInterface"),
+        "protection-only settings install no resource, speed or damage hooks")
+    check(not contexts[#contexts].damage,"protection-only settings do not enable native damage")
+    protection:reset()
+end
 local resources=Costs.new(backend())
 resources:enable(true,{})
 check(prefix("ModifyCharacterAttributeValue") and not prefix("LegoAbility") and not prefix("BulletInterface"),
@@ -100,6 +108,10 @@ local action={IsValid=function() return true end,GetAddress=function() return 5 
 check(dispatch:dispatch({kind="action",object=action},"triggered",nil,"default",false,{damage_multiplier=1,startup_speed=1,recovery_speed=1}),
     "direct InputAction dispatch accepts explicit defaults")
 check(not dispatch.resource_costs,"direct InputAction defaults do not create tuning")
+dispatch.native_input={coverage=setmetatable({}, {__index=function() error("Untuned input must not enumerate coverage") end})}
+dispatch:prepare_input_settings({})
+dispatch:prepare_input_settings({{target={kind="action",object=action},settings={damage_multiplier=1}}})
+check(not dispatch.native_tuning_actions,"idle and untuned frames skip native tuning coverage")
 dispatch.native_input={coverage={{action="/Input/Attack",key="MouseWheelAxis",owner="game"}}}
 dispatch:prepare_input_settings({{target={kind="action",object=action},bypass_resources=true,settings={damage_multiplier=100}}})
 check(not dispatch.resource_costs,"an action retaining a native input does not install unused tuning")
@@ -107,6 +119,27 @@ dispatch.config.enabled=false
 check(not dispatch:dispatch({kind="action",object=action},"triggered",nil,"disabled",true,{damage_multiplier=100}),
     "disabled enhancement rejects tuned dispatch before touching game objects")
 check(not dispatch.resource_costs and not next(hooks),"disabled dispatch leaves every tuning hook absent")
+
+do
+    local owner=setmetatable({config={enabled=true},native_input={coverage={
+        {action="/Input/Attack",key="MouseWheelAxis",owner="game"}}}},Backend)
+    local request={{target={kind="action",object=action},bypass_resources=true,settings={damage_multiplier=3}}}
+    owner:prepare_input_settings(request)
+    local initial=owner.native_tuning_actions
+    check(initial["/Input/Attack"] and not owner.resource_costs,"native inputs retain their ordinary tuning policy")
+    owner:prepare_input_settings(request)
+    check(owner.native_tuning_actions==initial,"stable frames reuse the native tuning coverage")
+    owner.native_input.coverage={{action="/Input/Attack",key="E",owner="scheduler"}}
+    owner:prepare_input_settings(request)
+    check(owner.native_tuning_actions~=initial and owner.resource_costs.inputs[5].damage==3,
+        "new native ownership enables the requested binding tuning")
+    owner.resource_costs.inputs={}
+    owner.native_input.coverage={{action="/Input/Attack",key="MouseWheelAxis",owner="game"}}
+    owner:prepare_input_settings(request)
+    check(not owner.resource_costs.inputs[5].bypass and owner.resource_costs.inputs[5].damage==1,
+        "returning native ownership immediately restores ordinary tuning")
+    owner.resource_costs:reset()
+end
 
 do
     local owner=setmetatable(backend(),Backend)

@@ -21,9 +21,9 @@ end
 function FName(value) return {ToString = function() return value end} end
 
 local function array(values)
-    return {ForEach = function(self, callback)
+    return setmetatable({GetArrayNum=function() return #values end, ForEach = function(self, callback)
         for index, value in ipairs(values) do callback(index, {get = function() return value end}) end
-    end}
+    end}, {__index=values})
 end
 
 local function fixture()
@@ -499,6 +499,33 @@ do
         and backend.dispatch_error:find("stack traceback:",1,true)
         and backend.dispatch_error:find("BackendTests.lua",1,true),
         "Synchronous dispatch failures must retain the original call stack for copying: " .. tostring(backend.dispatch_error))
+end
+
+do
+    local backend = fixture()
+    local logs, accepted = {}, false
+    backend.log = function(message) logs[#logs+1] = message end
+    local receiver = object(700, "receiver")
+    function backend:receiver() return receiver end
+    function backend:object() return receiver end
+    function backend:invoke(_, method)
+        assert(method:match(":TryActivateExternalActionAbilityInterruptLowerByTag$"))
+        return accepted
+    end
+    local target = {kind="ability",tag="Ability.Action.Test"}
+    for attempt=1,60 do
+        local ok,result,reason = backend:dispatch(target,"triggered",nil,"first")
+        check(ok and result==false and reason:find(target.tag,1,true),
+            "Native qualification refusal must retain a diagnostic without becoming a dispatch exception")
+    end
+    backend:dispatch(target,"triggered",nil,"second")
+    check(#logs==2 and logs[1]:find("first",1,true) and logs[2]:find("second",1,true),
+        "Repeated qualification refusal must log once per binding and reason")
+    check(not backend:target_failed(target,"first") and backend.dispatch_error==nil,
+        "A normal native refusal must not put a held input into error backoff")
+    accepted=true
+    local ok,result = backend:dispatch(target,"triggered",nil,"first")
+    check(ok and result and #logs==2,"A held request must remain able to activate when its native qualification changes")
 end
 
 print("BackendTests: " .. passed .. " assertions passed")

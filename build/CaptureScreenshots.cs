@@ -196,6 +196,9 @@ internal static class CaptureScreenshots
                 dialog.Show(form); Place(dialog, 840, 840);
                 Field<NumericUpDown>(dialog, "damageMultiplier").Value = 1.5m;
                 Field<NumericUpDown>(dialog, "startupSpeed").Value = 1.25m;
+                Field<CheckBox>(dialog, "bypassResources").Checked = true;
+                Field<CheckBox>(dialog, "bypassRestrictions").Checked = true;
+                Field<CheckBox>(dialog, "superArmor").Checked = true;
                 Application.DoEvents();
                 Capture(dialog, path, null, null); dialog.Close();
             }

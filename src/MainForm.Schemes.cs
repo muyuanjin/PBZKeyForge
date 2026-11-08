@@ -215,13 +215,17 @@ namespace PBZKeyForge
             finally { EndModal(); RenderSession(); }
         }
 
-        void RenderActiveEnhancedScheme(KeyEnhancementLiveStatus status)
+        void SyncActiveEnhancedScheme(KeyEnhancementLiveStatus status)
         {
             if (status != null && status.Available && keyEnhancement.Schemes.Any(item => item.Id == status.ActiveSchemeId))
             {
                 keyEnhancement.ActiveSchemeId = status.ActiveSchemeId;
                 if (keyEnhancementBaseline.Schemes.Any(item => item.Id == status.ActiveSchemeId)) keyEnhancementBaseline.ActiveSchemeId = status.ActiveSchemeId;
             }
+        }
+
+        void RenderActiveEnhancedScheme()
+        {
             chkActivate.Text = I18n.Str("schemes.active", EnhancedSchemeLabel(keyEnhancement.ActiveSchemeId));
             foreach (var tab in schemeTabs) tab.Badge = !Session.IsOffline && (string)tab.Tag == keyEnhancement.ActiveSchemeId ? I18n.Str("editor.current") : null;
         }

@@ -31,12 +31,17 @@ class KeyEnhancementLocalizationTests
                 document = new JavaScriptSerializer { MaxJsonLength = 16777216 }.Deserialize<Dictionary<string, object>>(reader.ReadToEnd());
         }
         var entries = (Dictionary<string, object>)document["entries"];
+        Dictionary<string, object> moveNames;
+        using (var stream = typeof(BindingWorkspace).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.game-move-names.json"))
+        using (var reader = new StreamReader(stream))
+            moveNames = (Dictionary<string, object>)new JavaScriptSerializer { MaxJsonLength = 16777216 }.Deserialize<Dictionary<string, object>>(reader.ReadToEnd())["entries"];
         Dictionary<string, object> details;
         using (var stream = typeof(BindingWorkspace).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.action-details.json"))
         using (var reader = new StreamReader(stream))
             details = (Dictionary<string, object>)new JavaScriptSerializer { MaxJsonLength = 16777216 }.Deserialize<Dictionary<string, object>>(reader.ReadToEnd())["entries"];
         var translations = (Dictionary<string, Dictionary<string, string>>)typeof(I18n).GetField("T", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-        Check(KeyEnhancementCatalog.Targets.Length == 334 && entries.Count == 334, "The native catalog must cover all 334 targets.");
+        var nativeTargets = KeyEnhancementCatalog.Targets.Where(target => target.Kind != "move").ToArray();
+        Check(nativeTargets.Length == 334 && entries.Count == 334, "The native catalog must cover all 334 targets.");
         var sources = entries.Values.Select(value => Convert.ToString(((Dictionary<string, object>)value)["source"])).ToArray();
         Check(sources.All(source => source == "native" || source == "native-category" || source == "unresolved"),
             "A localization entry has an unknown source kind.");
@@ -49,7 +54,7 @@ class KeyEnhancementLocalizationTests
             Check(workspace.Functions.Where(item => item.FixedKeys != null).All(item => item.LabelSource == "semantic"
                 && !string.IsNullOrWhiteSpace(item.Label) && !item.Label.StartsWith("unified.")), language + ": directional movement translation missing");
             Check(I18n.Str("ownership.source.fixed") != "ownership.source.fixed", language + ": fixed mapping provenance missing");
-            foreach (var target in KeyEnhancementCatalog.Targets)
+            foreach (var target in nativeTargets)
             {
                 var function = workspace.Functions.Single(item => item.Id == target.Id);
                 Check(function.GroupLabels.All(label => !string.IsNullOrWhiteSpace(label) && !label.StartsWith("unified.")),
@@ -61,7 +66,16 @@ class KeyEnhancementLocalizationTests
                 Check(!string.IsNullOrWhiteSpace(function.Label) && function.Label != target.Name && function.Label != target.Id
                     && !function.Label.Contains("IA_") && !function.Label.Contains("Ability.") && !function.Label.Contains("/Game/"),
                     language + ": technical code displayed as a label for " + target.Id);
-                if (target.Name == "IA_KeyboardMoveInput" || target.Name == "IA_JoystickMoveInput")
+                object official;
+                var officialEntry = moveNames.TryGetValue(target.Id, out official) ? (Dictionary<string, object>)official : null;
+                if (officialEntry != null && officialEntry.ContainsKey("labels"))
+                {
+                    string label = Convert.ToString(((Dictionary<string, object>)officialEntry["labels"])[language]);
+                    var parts = officialEntry.ContainsKey("labelParts") ? ((System.Collections.IEnumerable)officialEntry["labelParts"]).Cast<object>().Select(Convert.ToString) : Enumerable.Empty<string>();
+                    Check(function.Label == string.Join(" · ", new[] { label }.Concat(parts.Select(part => I18n.Str(part)))),
+                        language + ": official move name and stage detail lost: " + target.Id);
+                }
+                else if (target.Name == "IA_KeyboardMoveInput" || target.Name == "IA_JoystickMoveInput")
                     Check(function.Label.StartsWith(I18n.Str("unified.movement." + (target.Name == "IA_KeyboardMoveInput" ? "keyboard" : "joystick")), StringComparison.Ordinal)
                         && function.LabelSource == "semantic", language + ": movement axis lacks its device identity");
                 else if (!ActionCatalogLabels.IsSemantic(target.Id))

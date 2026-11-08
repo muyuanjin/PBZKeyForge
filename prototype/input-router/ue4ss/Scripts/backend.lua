@@ -2,6 +2,12 @@ local PhysicalInput = require("physical-input")
 local CompleteMoves = require("complete-moves")
 local ResourceCosts = require("resource-costs")
 local ObjectPool = require("object-pool")
+local LedgeProtection = require("ledge-protection")
+local WeaponSwitch = require("weapon-switch")
+local MoveInputs = require("move-inputs")
+local MoveEquipment = require("move-equipment")
+local MovePreparation = require("move-preparation")
+local SnakePreparation = require("snake-preparation")
 local Backend = {}
 Backend.__index = Backend
 
@@ -102,19 +108,61 @@ function Backend:invoke_configured(object, path, ...)
     return self:invoke(object, path, ...)
 end
 
-function Backend:target_failed(spec)
+function Backend:target_failures(spec, create)
     if not self.failed_targets or self.failed_config ~= self.config or self.failed_generation ~= self.generation then
-        self.failed_targets, self.failed_config, self.failed_generation = {}, self.config, self.generation
+        self.failed_targets, self.failed_config, self.failed_generation = setmetatable({},{__mode="k"}), self.config, self.generation
     end
-    return self.failed_targets[spec] ~= nil
+    local failures = self.failed_targets[spec]
+    if not failures and create then failures = {}; self.failed_targets[spec] = failures end
+    return failures
+end
+
+function Backend:target_failed(spec, bindingId)
+    local failures = self:target_failures(spec)
+    local failure = failures and failures[bindingId or spec]
+    return failure ~= nil and os.clock() < failure.retry_at
 end
 
 function Backend:fail_target(spec, failure, bindingId)
-    self:target_failed(spec)
-    self.failed_targets[spec] = failure
+    local failures, key = self:target_failures(spec,true), bindingId or spec
+    local previous, now = failures[key], os.clock()
+    local attempts = previous and previous.attempts + 1 or 1
+    local delay = math.min(30, 2 ^ math.min(attempts - 1, 5))
+    failures[key] = {attempts=attempts, failed_at=now, retry_at=now + delay}
     self.dispatch_error = "Dispatch failed [" .. tostring(bindingId or spec.move_id or spec.tag or spec.path) .. "]: " .. tostring(failure)
-    self:report("dispatch:" .. tostring(spec), self.dispatch_error)
-    if spec.kind == "move" then CompleteMoves.abort(self, spec) end
+    if not previous then
+        self:report("dispatch:" .. tostring(spec) .. ":" .. tostring(key), self.dispatch_error .. "; automatic retry with backoff")
+    end
+    if spec.kind == "move" then CompleteMoves.abort(self, spec, bindingId) end
+    SnakePreparation.abort(self,spec,bindingId)
+end
+
+function Backend:target_succeeded(spec, bindingId)
+    local failures = self.failed_targets and self.failed_targets[spec]
+    local key = bindingId or spec
+    local previous = failures and failures[key]
+    if not previous then return end
+    local now = os.clock()
+    previous.recovered_at = previous.recovered_at or now
+    if now - previous.recovered_at >= 30 then
+        failures[key] = nil
+        if not next(failures) then self.failed_targets[spec] = nil end
+    end
+end
+
+function Backend:move_rejected(spec, bindingId, reason)
+    if not reason or not self.log then return end
+    local identity = tostring(bindingId or spec.move_id or spec.tag)
+    self:report("move-rejected:" .. tostring(spec) .. ":" .. identity .. ":" .. reason,
+        "Move not activated [" .. identity .. "]: " .. reason)
+end
+
+function Backend:evaluate_binding(binding, callback)
+    if self:target_failed(binding,binding.id) then return nil end
+    local ok, result, allowed = xpcall(callback, debug.traceback)
+    if not ok then self:fail_target(binding,result,binding.id); return nil end
+    self:target_succeeded(binding,binding.id)
+    return result, allowed
 end
 
 function Backend:library(name)
@@ -142,7 +190,6 @@ function Backend:refresh()
     if changed then
         self:retire()
         self.controller, self.pawn, self.subsystem = controller, pawn, nil
-        self.ui_only = nil
         self.generation = self.generation + 1
         self.log("Local player changed; generation=" .. self.generation)
     end
@@ -164,19 +211,25 @@ function Backend:refresh()
         move_ignored = moveIgnored == true, generation = self.generation,
         input_layer = inputLayer,
         gameplay = valid(pawn) and paused ~= true and not cursor and foreground and inputLayer}
+    LedgeProtection.update(self)
     if self.state.gameplay and self.config.enabled ~= false then
+        self.released_preserving = nil
         if self.config.dynamic_capture then self:prepare_dynamic_capture() end
         self:take_capture()
     else
-        self:release_capture(self.state.ready and self.config.enabled ~= false)
+        local preserve = self.state.ready and self.config.enabled ~= false
+        if self.released_preserving ~= preserve then self:release_capture(preserve) end
         if self.config.enabled ~= false and #(self.config.native_bindings or {}) > 0 then
             if not self.native_input then self.native_input = require("native-input").new(self) end
-            self.native_input:apply_masks()
+            self.native_input:prepare_overrides()
         end
     end
     if self.state.ready and self.resource_costs then self.resource_costs:update() end
     if self.state.ready and self.state.gameplay and self.config.enabled ~= false then
+        SnakePreparation.update(self)
         CompleteMoves.update(self)
+        MovePreparation.update(self)
+        MoveEquipment.update(self)
     end
     return self.state.ready
 end
@@ -196,14 +249,14 @@ function Backend:gameplay_input_layer()
     end
     if not valid(router) then return false end
     local mode = self:invoke(router, "/Script/ProjectPBZ.PBZUIActionRouterBase:GetActiveInputMode")
-    if mode == 0 or self.ui_only then return false end
+    if mode ~= 1 and mode ~= 2 then return false end
     for _, name in ipairs({"EditableText", "EditableTextBox", "MultiLineEditableText", "MultiLineEditableTextBox"}) do
         for _, widget in ipairs(ObjectPool.get(name, "/Script/UMG." .. name)) do
             if valid(widget) and (self:invoke(widget, "/Script/UMG.Widget:HasKeyboardFocus")
                 or self:invoke(widget, "/Script/UMG.Widget:HasFocusedDescendants")) then return false end
         end
     end
-    return mode == 1 or mode == 2
+    return true
 end
 
 function Backend:take_capture()
@@ -239,12 +292,18 @@ function Backend:retire()
 end
 
 function Backend:release_capture(preserveTuning)
+    self.released_preserving = nil
     local failures = {}
     local function attempt(label,callback)
         local ok,failure = pcall(callback)
         if not ok then failures[#failures+1] = label..": "..tostring(failure) end
     end
+    attempt("Ledge protection restore",function() LedgeProtection.reset(self) end)
+    attempt("Native move input release",function() MoveInputs.reset(self) end)
     attempt("Complete move release",function() CompleteMoves.reset(self) end)
+    attempt("Snake projectile release",function() SnakePreparation.reset(self) end)
+    attempt("Native move effect release",function() MovePreparation.reset(self) end)
+    attempt("Move equipment restore",function() MoveEquipment.reset(self) end)
     if self.resource_costs then
         attempt("Binding tuning release",function()
             if preserveTuning and not self.resource_costs.closed
@@ -286,6 +345,7 @@ function Backend:release_capture(preserveTuning)
         self.dynamic_config, self.dynamic_contexts = nil, nil
         self.config_generation = self.config_generation + 1
     end
+    self.released_preserving = preserveTuning == true
 end
 
 local function array_values(array)
@@ -365,14 +425,16 @@ function Backend:pipeline_identity(spec)
     return table.concat(parts, "|")
 end
 
-function Backend:baseline_suppressed(action, key, mappingName)
-    local actual = action:GetFullName():gsub("^%S+ ", "")
+function Backend:baseline_suppressed(action, key, mappingName, overrideIndexes, actual)
+    actual = actual or action:GetFullName():gsub("^%S+ ", "")
     local function path(value)
         local short = value:match("/([^/]+)$")
         return short and not short:find(".", 1, true) and value .. "." .. short or value
     end
     local device = (key:match("^Gamepad_") or key:match("^PBZ_Touchpad_")) and "gamepad" or "keyboard"
-    for _, override in ipairs(self.config.native_bindings or {}) do
+    local overrides = self.config.native_bindings or {}
+    for _, candidate in ipairs(overrideIndexes or overrides) do
+        local override = overrideIndexes and overrides[candidate] or candidate
         local owned = mappingName and (not override["function"] or mappingName == override["function"])
         for _, fixed in ipairs(override.fixed_keys or {}) do if not mappingName and fixed == key then owned = true end end
         if override.device == device and owned then
@@ -403,6 +465,10 @@ end
 
 function Backend:reserve_inputs(reserved, snapshot)
     if self.native_input then self.native_input:apply_masks(reserved, snapshot) end
+end
+
+function Backend:release_reserved_input(key)
+    if self.native_input then self.native_input.consumed[key] = nil end
 end
 
 function Backend:clone_pipeline_objects(objects)
@@ -540,30 +606,64 @@ end
 
 function Backend:prepare_input_settings(requests)
     if self.config.enabled == false then return end
-    local native = {}
-    for _,entry in ipairs(self.native_input and self.native_input.coverage or {}) do
-        if (entry.owner == "game" or entry.owner == "uncovered") and entry.key ~= "None" then
-            native[entry.action] = true
-        end
-    end
+    LedgeProtection.prepare(self, requests)
     for _,request in ipairs(requests) do
-        if request.target.kind == "action" and (self.resource_costs or request.bypass_resources or ResourceCosts.tuned(request.settings)) then
-            local action = request.target.object or self:object(request.target.path,"InputAction")
-            local bypass,settings,rank = request.bypass_resources,request.settings,request.rank
-            if native[action_path(action)] then bypass,settings,rank = false,nil,0 end
-            if not self.resource_costs and (bypass or ResourceCosts.tuned(settings)) then
-                self.resource_costs = ResourceCosts.new(self)
-            end
-            if self.resource_costs then self.resource_costs:input(request.target,bypass,settings,rank) end
+        if request.target.kind == "action" and not self:target_failed(request.target,request.binding)
+            and (self.resource_costs or request.bypass_resources or ResourceCosts.tuned(request.settings)) then
+            local ok, failure = xpcall(function()
+                local coverage = self.native_input and self.native_input.coverage
+                if self.native_tuning_coverage ~= coverage or not self.native_tuning_actions then
+                    local native = {}
+                    for _,entry in ipairs(coverage or {}) do
+                        if (entry.owner == "game" or entry.owner == "uncovered") and entry.key ~= "None" then
+                            native[entry.action] = true
+                        end
+                    end
+                    self.native_tuning_coverage, self.native_tuning_actions = coverage, native
+                end
+                local action = request.target.object or self:object(request.target.path,"InputAction")
+                local bypass,settings,rank = request.bypass_resources,request.settings,request.rank
+                if self.native_tuning_actions[action_path(action)] then bypass,settings,rank = false,nil,0 end
+                if not self.resource_costs and (bypass or ResourceCosts.tuned(settings)) then
+                    self.resource_costs = ResourceCosts.new(self)
+                end
+                if self.resource_costs then self.resource_costs:input(request.target,bypass,settings,rank) end
+            end, debug.traceback)
+            if not ok then self:fail_target(request.target,failure,request.binding) end
         end
     end
 end
 
-function Backend:dispatch(spec, phase, value, bindingId, bypass, settings)
+function Backend:prepare_move_inputs(requests)
+    MoveInputs.prepare(self,requests)
+end
+function Backend:reset_move_inputs()
+    MoveInputs.reset(self)
+end
+
+function Backend:dispatch(spec, phase, value, bindingId, bypass, settings, nativePrepared)
     if spec.kind == "action" and phase == "canceled" and (not valid(self.controller) or not valid(self.subsystem)) then return true end
     if self.config.enabled == false or not self.state.ready then return false end
-    if spec.kind ~= "action" and self:target_failed(spec) then return true, false end
-    local ok, result = xpcall(function()
+    local releasing = phase == "completed" or phase == "canceled"
+    if not releasing and self:target_failed(spec, bindingId) then return true, false end
+    if spec.native_hold_inputs and not nativePrepared then
+        local ok,accepted,result,reason = xpcall(function()
+            return MoveInputs.dispatch(self,spec,phase,value,bindingId,bypass,settings)
+        end,debug.traceback)
+        if not ok then self:fail_target(spec,accepted,bindingId); return false,accepted end
+        if result == false then self:move_rejected(spec,bindingId,reason) end
+        return accepted,result,reason
+    end
+    local preparation
+    local ok, result, reason = xpcall(function()
+        if not releasing then
+            local prepared, rejection = MoveEquipment.prepare(self,spec,settings)
+            if not prepared then return false, rejection end
+            preparation, rejection = MovePreparation.begin(self,spec,settings,bindingId)
+            if not preparation then return false,rejection end
+        end
+        local handled,rejection = SnakePreparation.prepare(self,spec,phase,value,bindingId,bypass,settings)
+        if handled ~= nil then return handled,rejection end
         if spec.kind == "action" then
             if (self.resource_costs or bypass or ResourceCosts.tuned(settings)) and phase ~= "completed" and phase ~= "canceled" then
                 if not self.resource_costs then self.resource_costs = ResourceCosts.new(self) end
@@ -595,7 +695,7 @@ function Backend:dispatch(spec, phase, value, bindingId, bypass, settings)
                 self.configured_functions[variable.getter] = true
                 if variable.status_getter then self.configured_functions[variable.status_getter] = true end
             end
-            return CompleteMoves.dispatch(self, spec, phase, bypass,settings)
+            return CompleteMoves.dispatch(self, spec, phase, bypass,settings,bindingId)
         end
         if spec.kind == "lua" then
             return spec.run(self, {phase = phase, value = value, binding = bindingId,
@@ -605,11 +705,15 @@ function Backend:dispatch(spec, phase, value, bindingId, bypass, settings)
             local component = self:receiver({receiver = "ability_input"})
             local method = spec.force and "ForceActivateExternalActionAbilityByTag"
                 or "TryActivateExternalActionAbilityInterruptLowerByTag"
-            return self:activate_with_resources(spec,bypass,function()
-                return self:invoke(component, "/Script/SGameInputSystem.AbilityInputComponent:" .. method,
-                    {TagName = FName(spec.tag)},
-                    self:object(spec.input_action or "/PBZDeflectSystem/Input/IA_Dodge.IA_Dodge"), spec.priority or -5)
+            local activated = self:activate_with_resources(spec,bypass,function()
+                return WeaponSwitch.with(self,spec,function()
+                    return self:invoke(component, "/Script/SGameInputSystem.AbilityInputComponent:" .. method,
+                        {TagName = FName(spec.tag)},
+                        self:object(spec.input_action or "/PBZDeflectSystem/Input/IA_Dodge.IA_Dodge"), spec.priority or -5)
+                end)
             end,settings)
+            if activated == false then return false, "Native ability activation refused: " .. spec.tag end
+            return activated
         end
         if spec.kind == "event" then
             local tag = {TagName = FName(spec.tag)}
@@ -637,10 +741,26 @@ function Backend:dispatch(spec, phase, value, bindingId, bypass, settings)
         end
         error("Unsupported target kind: " .. tostring(spec.kind), 0)
     end, debug.traceback)
-    if not ok then
-        self:fail_target(spec, result, bindingId)
+    local cleaned,cleanup = pcall(MovePreparation.finish,self,preparation,ok and result ~= false)
+    if not cleaned then
+        result = (ok and "" or tostring(result).."\n")..tostring(cleanup)
+        ok = false
     end
-    return ok, result
+    if not ok then
+        if spec.kind == "action" then
+            -- Releases must complete before this pipeline can be isolated or retried.
+            if releasing then self.dispatch_error = tostring(result); return false, result end
+            local released = self:dispatch(spec, "canceled", {x=0,y=0,z=0}, bindingId)
+            if not released then return false, result end
+        end
+        self:fail_target(spec, result, bindingId)
+        if spec.kind == "action" then return true, false end
+    elseif not releasing and result == false and (spec.kind == "move" or spec.kind == "ability") then
+        self:move_rejected(spec,bindingId,reason)
+    elseif not releasing then
+        self:target_succeeded(spec,bindingId)
+    end
+    return ok, result, reason
 end
 
 function Backend:scheme_notice(name)

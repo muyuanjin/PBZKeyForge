@@ -50,6 +50,33 @@ class CatalogInputPipelineTests
                 string lua = legacy.CompileLua();
                 Check(lua.Contains("[\"catalog_pipeline\"]=true") && lua.Contains("[\"device\"]=\"" + (pad ? "gamepad" : "keyboard") + "\""), "Existing catalog rules must inherit the source pipeline on their input device.");
             }
+            foreach (bool pad in new[] { false, true })
+            {
+                var abilities = new KeyEnhancementConfiguration { Enabled = true };
+                foreach (var ability in KeyEnhancementCatalog.Targets.Where(target => target.Kind == "ability"))
+                foreach (string trigger in new[] { "default", "press" })
+                {
+                    var single = new KeyEnhancementConfiguration { Enabled = true };
+                    var abilityWorkspace = new BindingWorkspace(session, single, single.Clone(), pad, pad ? 0 : -1);
+                    var entry = abilityWorkspace.Add(ability.Id, new BindingEntry { Keys = new[] { pad ? "Gamepad_RightShoulder" : "G" }, Trigger = trigger });
+                    var rule = single.Rules.Single(item => item.Id == entry.RuleId);
+                    Check(entry.Trigger == trigger && rule.DefaultTrigger == (trigger == "default"), "Ability binding lost its trigger policy: " + ability.Tag);
+                    abilities.Rules.Add(rule);
+                }
+                Check(abilities.Rules.Any(rule => rule.Outputs.Any(output => output.Tag == "Ability.Action.Hun.Heavy.ZhanMa.DB")), "Ability sweep must include ZhanMa charge slash.");
+                var abilityShared = UserPresetStore.ParseShare(UserPresetStore.Share(UserPresetStore.Capture(session, "能力输入", abilities))).KeyEnhancement;
+                Check(abilityShared.Rules.Count == abilities.Rules.Count && abilityShared.Rules.Count(rule => rule.DefaultTrigger) * 2 == abilities.Rules.Count, "Sharing lost default versus explicit ability triggers.");
+                Check(abilityShared.CompileLua().Contains("[\"default_trigger\"]=true"), "Compiled ability bindings lost the default trigger policy.");
+                File.WriteAllText(Path.Combine(directory, (pad ? "pad" : "keyboard") + "-abilities.lua"), abilityShared.CompileLua());
+
+                var config = new KeyEnhancementConfiguration { Enabled = true };
+                var workspace = new BindingWorkspace(session, config, config.Clone(), pad, pad ? 0 : -1);
+                workspace.Add("action:/PBZDeflectSystem/Input/IA_Deflect", new BindingEntry { Keys = new[] { pad ? "Gamepad_RightShoulder" : "F9" }, Trigger = "default" });
+                workspace.Add("action:/PBZDeflectSystem/Input/IA_Stance", new BindingEntry { Keys = new[] { pad ? "Gamepad_LeftShoulder" : "F10" }, Trigger = "default" });
+                Check(config.Rules.All(rule => rule.DefaultTrigger && rule.Trigger == "down" && rule.Outputs[0].NativePipeline == true), "Default guard inputs must track physical hold and release on both devices.");
+                var shared = UserPresetStore.ParseShare(UserPresetStore.Share(UserPresetStore.Capture(session, "防御输入", config))).KeyEnhancement;
+                File.WriteAllText(Path.Combine(directory, (pad ? "pad" : "keyboard") + "-guard.lua"), shared.CompileLua());
+            }
             var factory = new KeyEnhancementConfiguration { Enabled = true }; factory.EnsureSchemes(session);
             File.WriteAllText(Path.Combine(directory, "factory-schemes.lua"), factory.CompileLua());
             File.WriteAllText(Path.Combine(directory, "native-actions.lua"), "return {" + string.Join(",", KeyEnhancementInputPlan.Actions.Select(action => "\"" + action.path + "\"")) + "}");

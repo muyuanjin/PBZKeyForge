@@ -45,11 +45,28 @@ class UnifiedActionViewTests
                 var enabledWorkspace = new BindingWorkspace(EditorSession.CreateOffline(), enabled, enabled.Clone(), false, -1);
                 compact.Render(enabledWorkspace);
                 var catalogTree = Field<TreeView>(compact, "groups");
-                Check((string)catalogTree.SelectedNode.Tag == "" && Field<DataGridView>(compact, "actions").RowCount == 359,
-                    "Enhanced catalog must initially show all 359 functions");
-                Check(catalogTree.Nodes.Count == 12 && catalogTree.Nodes[0].Nodes.Count == 0 && catalogTree.Nodes[0].Text.EndsWith("(359)"),
+                int functionCount = enabledWorkspace.Functions.Length;
+                Check((string)catalogTree.SelectedNode.Tag == "" && Field<DataGridView>(compact, "actions").RowCount == functionCount,
+                    "Enhanced catalog must initially show every function");
+                Check(catalogTree.Nodes.Count == enabledWorkspace.Functions.Select(function => function.GroupPath[0]).Distinct().Count() + 1
+                    && catalogTree.Nodes[0].Nodes.Count == 0 && catalogTree.Nodes[0].Text.EndsWith("(" + functionCount + ")"),
                     "All-functions entry must be a visible sibling of complete purpose groups, with the full count");
+                var pendingGroups = new System.Collections.Generic.Stack<TreeNode>(catalogTree.Nodes.Cast<TreeNode>().Skip(1));
+                var enhancedGroups = Field<System.Collections.Generic.HashSet<string>>(compact, "keyEnhancementGroups");
+                while (pendingGroups.Count > 0)
+                {
+                    var node = pendingGroups.Pop(); string path = (string)node.Tag;
+                    var members = enabledWorkspace.Functions.Where(function => string.Join("/", function.GroupPath) == path
+                        || string.Join("/", function.GroupPath).StartsWith(path + "/", StringComparison.Ordinal)).ToArray();
+                    Check(node.Text.EndsWith("(" + members.Length + ")") && enhancedGroups.Contains(path) == members.All(function => function.RequiresKeyEnhancement),
+                        "Catalog group counts and native/enhanced membership must include every descendant: " + path);
+                    foreach (TreeNode child in node.Nodes) pendingGroups.Push(child);
+                }
+                using (var image = new Bitmap(compact.Width, compact.Height))
+                { compact.DrawToBitmap(image, new Rectangle(Point.Empty, image.Size)); image.Save(Path.Combine(output, "catalog-groups.png")); }
             }
+            if (args.Contains("--groups-only"))
+            { Console.WriteLine("UnifiedActionViewTests groups PASS " + checks); return 0; }
             var config = new KeyEnhancementConfiguration();
             var workspace = new BindingWorkspace(EditorSession.CreateOffline(), config, config.Clone(), false, -1);
             using (var form = new Form { ClientSize = new Size(1040, 650), Font = new Font("Microsoft YaHei UI", 10f) })

@@ -116,11 +116,14 @@ namespace PBZKeyForge
             HandleCreated += delegate { EditorArtwork.DarkCaption(this); };
             Shown += delegate {
                 StartSchemeDiscovery();
-                Activated += delegate { if (Session != null && !Session.IsOffline && !loading && !modalActive) RefreshFromDisk(false); };
+                Activated += delegate {
+                    UpdateGameState();
+                    if (Session != null && !Session.IsOffline && !loading && !modalActive) RefreshFromDisk(false);
+                };
             };
             FormClosing += delegate(object sender, FormClosingEventArgs e) { if (IsApplying || !updatingApplication && !ConfirmDiscard()) e.Cancel = true; };
             gameTimer.Interval = 1500;
-            gameTimer.Tick += delegate { UpdateGameState(); };
+            gameTimer.Tick += delegate { if (keyEnhancementFlame.ApplicationActive) UpdateGameState(); };
             gameTimer.Start();
         }
 
@@ -300,7 +303,7 @@ namespace PBZKeyForge
                 compactLayout = ClientSize.Height / scale < 800;
                 root.RowStyles[0].Height = (compactLayout ? 48 : 72) * scale;
                 root.RowStyles[3].Height = (compactLayout ? 56 : 64) * scale;
-                root.RowStyles[5].Height = (compactLayout ? 84 : 96) * scale;
+                root.RowStyles[5].Height = ((compactLayout ? 84 : 96) + (feedbackPanel != null && feedbackPanel.Visible ? 44 : 0)) * scale;
                 appMark.SetBounds(0, (int)(6 * scale), (int)((compactLayout ? 36 : 54) * scale), (int)((compactLayout ? 36 : 54) * scale));
                 wordmark.SetBounds((int)((compactLayout ? 46 : 66) * scale), (int)(3 * scale), (int)((compactLayout ? 106 : 148) * scale), (int)((compactLayout ? 44 : 62) * scale));
                 lblTitle.SetBounds((int)((compactLayout ? 164 : 232) * scale), (int)((compactLayout ? 10 : 22) * scale), Math.Max(40, brand.Width - (int)((compactLayout ? 176 : 244) * scale)), (int)(28 * scale));
@@ -318,14 +321,19 @@ namespace PBZKeyForge
             float scale = CurrentAutoScaleDimensions.Width / 96f;
             int gap = (int)(12 * scale);
             int usable = Math.Max(1, footer.ClientSize.Width - gap * 2);
+            int contentHeight = (int)((compactLayout ? 84 : 96) * scale);
+            int noticeHeight = feedbackPanel != null && feedbackPanel.Visible ? (int)(44 * scale) : 0;
+            var layout = footer.Parent as TableLayoutPanel;
+            if (layout != null && layout.RowStyles[5].Height != contentHeight + noticeHeight)
+                layout.RowStyles[5].Height = contentHeight + noticeHeight;
             int actionWidth = (int)(usable * .18f), actionHeight = (int)(44 * scale);
             int keyEnhancementWidth = compactLayout ? (int)(usable * .30f) : Math.Max((int)(280 * scale), (int)(usable * .24f));
             int modWidth = compactLayout ? keyEnhancementWidth : (int)(usable * .34f);
             int componentTop = (int)((compactLayout ? 4 : 6) * scale);
-            int componentHeight = compactLayout ? (int)(32 * scale) : footer.Height - (int)(12 * scale);
+            int componentHeight = compactLayout ? (int)(32 * scale) : contentHeight - (int)(12 * scale);
             keyEnhancementBar.SetBounds(gap, componentTop, keyEnhancementWidth - gap, componentHeight);
             chkPerfectDeflectNoRapidClickPenalty.SetBounds(gap + keyEnhancementWidth, componentTop, modWidth - gap, componentHeight);
-            btnApply.SetBounds(footer.ClientSize.Width - actionWidth - gap, compactLayout ? (int)(6 * scale) : (footer.Height - actionHeight) / 2, actionWidth, actionHeight);
+            btnApply.SetBounds(footer.ClientSize.Width - actionWidth - gap, compactLayout ? (int)(6 * scale) : (contentHeight - actionHeight) / 2, actionWidth, actionHeight);
             int undoWidth = (int)(70 * scale), secondaryTop = btnApply.Bottom + (int)(2 * scale);
             btnUndo.SetBounds(btnApply.Left, secondaryTop, undoWidth, (int)(18 * scale));
             using (var graphics = chkPerfectDeflectNoRapidClickPenalty.CreateGraphics())
@@ -348,8 +356,8 @@ namespace PBZKeyForge
             int backupLeft = btnUndo.Right + (int)(4 * scale);
             lblBackup.SetBounds(backupLeft, secondaryTop, Math.Max(1, btnApply.Right - backupLeft), (int)(18 * scale));
             lblStatus.SetBounds(textLeft, (int)((compactLayout ? 59 : 57) * scale), textWidth,
-                Math.Max(lblStatus.Font.Height + 2, compactLayout ? (int)(21 * scale) : footer.Height - (int)(61 * scale)));
-            if (feedbackPanel != null) feedbackPanel.Bounds = lblStatus.Bounds;
+                Math.Max(lblStatus.Font.Height + 2, compactLayout ? (int)(21 * scale) : contentHeight - (int)(61 * scale)));
+            if (feedbackPanel != null) feedbackPanel.SetBounds(gap, contentHeight, usable, (int)(44 * scale));
             footer.Invalidate();
         }
 
@@ -524,9 +532,6 @@ namespace PBZKeyForge
                 btnUndo.Visible = loaded;
                 btnUndo.Enabled = loaded && (HasBindingHistory || Session.HasChanges || ResourceModPending || KeyEnhancementPending);
                 LayoutFooter();
-                lblScope.Text = !loaded ? "" : PendingBindingSummary();
-                SetTip(lblScope, lblScope.Text);
-                lblScope.ForeColor = loaded && (Session.HasChanges || ResourceModPending || KeyEnhancementPending) ? BindingStatus.Pending : EditorTheme.Muted;
                 int conflictCount = loaded ? Session.Conflicts.Length : 0;
                 btnConflicts.Visible = conflictCount > 0; btnConflicts.Text = I18n.Str("editor.conflicts", conflictCount);
                 lblScope.Visible = conflictCount == 0;
@@ -612,6 +617,9 @@ namespace PBZKeyForge
             bool loaded = Session != null, offline = loaded && Session.IsOffline;
             bool gameRunning = loaded && !offline && lastRunning;
             var application = BindingApplication();
+            lblScope.Text = !loaded ? "" : PendingBindingSummary();
+            SetTip(lblScope, lblScope.Text);
+            lblScope.ForeColor = loaded && (Session.HasChanges || ResourceModPending || KeyEnhancementPending) ? BindingStatus.Pending : EditorTheme.Muted;
             var liveStatus = application.Connection;
             bool liveConfigured = gameRunning && liveStatus != null;
             bool live = application.Live;
@@ -632,15 +640,17 @@ namespace PBZKeyForge
             SetTip(lblGame, (liveConfigured && !liveStatus.Suspended ? liveStatus.Detail : lblGame.Text) + "\n" + I18n.Str("flow.connection.open"));
             ((ApplyActionButton)btnApply).GameRunning = gameRunning && !live && !neverConnected;
             ((ApplyActionButton)btnApply).LiveConnected = live && liveStatus.RoutingEnabled;
-            btnApply.Text = I18n.Str(offline ? HasKeyEnhancementConfiguration ? "enhancement.exportbundle" : "offline.export" : live ? "live.apply" : neverConnected ? "flow.notconnected" : waiting ? "live.waiting" : gameRunning ? "editor.applyrunning" : "editor.apply");
+            btnApply.Text = KeyEnhancementUpdatePending ? I18n.Str("enhancement.update.button")
+                : I18n.Str(offline ? HasKeyEnhancementConfiguration ? "enhancement.exportbundle" : "offline.export" : live ? "live.apply" : neverConnected ? "flow.notconnected" : waiting ? "live.waiting" : gameRunning ? "editor.applyrunning" : "editor.apply");
             btnApply.Enabled = application.CanApply;
-            SetTip(btnApply, runtimeFeedback != null ? I18n.Str("flow.failed.details") : application.Reason ?? btnApply.Text);
+            SetTip(btnApply, runtimeFeedback != null ? I18n.Str("flow.failed.details") : KeyEnhancementUpdatePending ? KeyEnhancementUpdateHint : application.Reason ?? btnApply.Text);
             chkActivate.Enabled = !EnhancedSchemes && !gameRunning && !IsApplying;
-            if (EnhancedSchemes) RenderActiveEnhancedScheme(liveStatus);
+            if (EnhancedSchemes) RenderActiveEnhancedScheme();
             UpdateResourceModAvailability();
             lblStatus.Text = loaded && Session.Conflicts.Length > 0 ? I18n.Str("editor.conflictinfo")
                 : messageError && messageKey != null ? I18n.Str("flow.failed.details")
                 : runtimeFeedback != null ? I18n.Str("flow.failed.details")
+                : KeyEnhancementUpdatePending ? KeyEnhancementUpdateHint
                 : live && (messageKey == "live.saved" || messageKey == "flow.saved.deferred") && !application.CanApply
                     ? I18n.Str(HasDeferredComponents ? "flow.saved.deferred" : "live.saved")
                 : application.Reason != null ? application.Reason

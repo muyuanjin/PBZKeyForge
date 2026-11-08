@@ -1,7 +1,7 @@
 package.loaded["script-context"] = {new=function() error("Unexpected tuning in an untuned fixture") end}
 package.path = "prototype/input-router/ue4ss/Scripts/?.lua;" .. package.path
 local Router, Backend, Moves = require("router"), require("backend"), require("complete-moves")
-local path = (...) or "dist/complete-move-catalog-check/phase-moves.lua"
+local path = (...) or os.getenv("PBZ_PHASE_MOVE_CONFIG") or "dist/complete-move-catalog-check/phase-moves.lua"
 local config = assert(loadfile(path))()
 local targets, count = {}, 0
 for _, target in pairs(config.targets) do
@@ -93,21 +93,32 @@ end
 assert(breakAttacks[1].required_tags[2] == "CharacterState.WeaponUpgrade.Iron.CanBreakAct")
 
 function FName(value) return {ToString=function() return value end} end
+local classes, nextClass = {}, 1000
+function StaticFindObject(path)
+    if not classes[path] then
+        nextClass = nextClass + 1
+        local address = nextClass
+        classes[path] = {IsValid=function() return true end,GetAddress=function() return address end,
+            GetFullName=function() return "BlueprintGeneratedClass " .. path end}
+    end
+    return classes[path]
+end
 local function object(address, properties)
     local result = properties or {}
     function result:IsValid() return self.valid ~= false end
     function result:GetAddress() return address end
-    function result:GetClass() return {IsValid=function() return true end,GetFullName=function() return "BlueprintGeneratedClass " .. self.class end} end
+    function result:GetClass() return StaticFindObject(self.class) end
     function result:GetFullName() return "Object " .. self.path end
     function result:GetPropertyValue(name) return self[name] end
     return result
 end
 local function array(values)
-    return {ForEach=function(_,callback)
+    return setmetatable({GetArrayNum=function() return #values end,ForEach=function(_,callback)
         for index,value in ipairs(values) do callback(index,{get=function() return value end}) end
-    end}
+    end},{__index=values})
 end
-local function fixture(target)
+local function fixture(target, bindingKey)
+    bindingKey = bindingKey or "F8"
     local grantedClass = target.ability_class or "/Fixture/ChannelAbility.ChannelAbility_C"
     local instance = object(1,{class=grantedClass,bIsActive=false,AttackStartTime=10})
     for _, property in ipairs(target.active_boolean_properties or {}) do instance[property] = true end
@@ -136,6 +147,17 @@ local function fixture(target)
     end
     function backend:library() return library end
     function backend:report(_,message) error(message) end
+    backend.resource_costs={context={start_hold_input=function(_,owner,heldAction)
+        assert(owner==subsystem and heldAction==hold)
+        state.starts=state.starts+1;state.input_requested=true
+    end},activate=function(_,_,_,callback) return callback() end}
+    backend.resource_costs.instances={}
+    function backend.resource_costs:restore(address) self.instances[address]=nil end
+    function backend.resource_costs:arm(value)
+        local state={instance=value};self.instances[value:GetAddress()]=state;return state
+    end
+    function backend.resource_costs:protect() end
+    function backend.resource_costs.context:ability_damage() end
     function backend:invoke(current,path,...)
         local args = {...}
         if path:find(":GetGameplayTagCount",1,true) then return state.tags[args[1].TagName:ToString()] or 0
@@ -144,6 +166,7 @@ local function fixture(target)
                 and args[2] == input and args[3] == target.priority)
             if state.reject_activation then return false end
             state.activations = state.activations + 1
+            ability.ActiveCount,instance.bIsActive = 1,true
             return true
         elseif path:find(":TryActivateExternalActionAbilityInterruptLowerByTag",1,true) then
             assert(current == receiver and args[1].TagName:ToString() == target.tag and args[2] == input)
@@ -165,11 +188,13 @@ local function fixture(target)
             assert(current == instance and args[1]:ToString() == (target.completion_timeline or target.entry_when.timeline))
             return namedTimeline
         elseif path:find(":StartContinuousInputInjectionForAction",1,true) then
-            assert(current == subsystem and args[1] == hold and args[2].X == 1)
-            state.starts = state.starts + 1
+            error("Continuous native Hold must preserve its value in the native bridge")
+        elseif path == "/Script/EnhancedInput.EnhancedInputLibrary:MakeInputActionValueOfType" then
+            error("Opaque FInputActionValue must not return through Lua reflection")
         elseif path:find(":StopContinuousInputInjectionForAction",1,true) then
             assert(current == subsystem and args[1] == hold)
             state.stops = state.stops + 1
+            state.input_requested = false
         elseif path == "/Script/SGameInputSystem.SGameInputUtils:GetSGameInputComponent" then return gameInput
         elseif path == "/Script/SGameInputSystem.SGameInputComponent:IsHolding" then return state.holding == true
         elseif path == "/Script/SGameCombatSystem.BulletInterface:GetData" then
@@ -188,14 +213,91 @@ local function fixture(target)
         else error("Unexpected compiled phase call " .. path) end
     end
     local router = Router.new({targets={selected=target},bindings={
-        {id="compiled-phase",keys={"F8"},trigger="down",outputs={"selected"}}
+        {id="compiled-phase",keys={bindingKey},trigger="down",outputs={"selected"}}
     }},backend)
     local function step(time,held)
         Moves.update(backend)
-        router:step(time,held and {F8=1} or {})
+        router:step(time,held and {[bindingKey]=1} or {})
     end
+    function state:advance_input() self.holding = self.input_requested == true end
     return state,backend,step
 end
+
+local preparations = 0
+for _, target in pairs(targets) do
+    if target.prepare_input then
+        preparations = preparations + 1
+        for _, key in ipairs({"F8", "Gamepad_DPad_Down"}) do
+            local function prepared_fixture()
+                local state, backend, step = fixture(target,key)
+                for _, tag in ipairs(target.activation_required_tags or {}) do state.tags[tag] = 1 end
+                if target.activation_any_tags then state.tags[target.activation_any_tags[1]] = 1 end
+                state.task.Timeline = object(70)
+                return state, backend, step
+            end
+            local state, backend, step = prepared_fixture()
+            step(0,true); step(.01,true)
+            assert(state.starts == 1 and state.activations == 0,
+                "Every prepared entrance must wait for effective native input: " .. target.move_id)
+            state:advance_input(); step(.02,true)
+            assert(state.activations == 1 and state.entries == 0 and state.stops == 0,
+                "Activation must retain Hold until the actual phase is ready: " .. target.move_id)
+            local condition = target.entry_when or {}
+            state.task.Timeline = state.namedTimeline
+            state.task.CurrentTime = condition.minimum_time or 0
+            for name, minimum in pairs(condition.property_minimum or {}) do state.instance[name] = minimum end
+            for _, tag in ipairs(condition.required_tags or {}) do state.tags[tag] = 1 end
+            if condition.object_variable then
+                Moves.update(backend)
+                assert(state.entries == 0 and state.stops == 0,
+                    "A ready timeline cannot replace a missing projectile: " .. target.move_id)
+                state.bullet_data = object(71,{path=condition.object_variable.object})
+                state.bullet_status = 0
+                Moves.update(backend)
+                assert(state.entries == 0 and state.stops == 0,
+                    "An unready projectile cannot be released: " .. target.move_id)
+                state.bullet_status = condition.object_variable.status
+            end
+            Moves.update(backend)
+            if target.release_input_before_entry then
+                assert(state.entries == 0 and state.stops == 1,
+                    "Release-dependent stages must wait for the game's input update: " .. target.move_id)
+                state:advance_input(); Moves.update(backend)
+            end
+            assert(state.entries == (target.entry_point and 1 or 0) and state.stops == 1
+                and not next(backend.complete_move_pending or {}) and not next(backend.complete_move_inputs or {}),
+                "A prepared entrance must release exactly once and relinquish all Hold ownership: " .. target.move_id)
+            step(.1,false); Moves.reset(backend)
+            assert(state.stops == 1 and not state.canceled and state.instance.bIsActive,
+                "Completed preparation must preserve the native attack: " .. target.move_id)
+
+            for _, outcome in ipairs({"refused","reset-preparing","reset-active","ended"}) do
+                state, backend, step = prepared_fixture()
+                state.reject_activation, state.activation_refused = outcome == "refused", outcome == "refused"
+                step(0,true)
+                if outcome ~= "reset-preparing" then state:advance_input(); Moves.update(backend) end
+                if outcome == "ended" then
+                    state.instance.bIsActive, state.ability.ActiveCount = false,0
+                    Moves.update(backend)
+                else Moves.reset(backend) end
+                assert(state.starts == 1 and state.stops == 1 and not next(backend.complete_move_pending or {})
+                    and not next(backend.complete_move_inputs or {}) and state.entries == 0,
+                    "Preparation must clean up after " .. outcome .. ": " .. target.move_id)
+                assert((state.canceled == true) == (outcome == "reset-active"),
+                    "Only an owned active preparation may be canceled: " .. target.move_id)
+            end
+            if condition.cancel_on_expire and condition.before_time then
+                state, backend, step = prepared_fixture()
+                step(0,true); state:advance_input(); step(.01,true)
+                state.task.Timeline, state.task.CurrentTime = state.namedTimeline, condition.before_time
+                Moves.update(backend)
+                assert(state.canceled and state.entries == 0 and state.stops == 1,
+                    "An expired exact-charge window must cancel without firing another tier: " .. target.move_id)
+            end
+        end
+    end
+end
+assert(preparations == 37, "The full preparation inventory must include every compiled Hold recipe")
 
 for _, selected in ipairs({tigerCounter,baiAssault,breakAttacks[1],breakAttacks[2]}) do
     local state,backend,step = fixture(selected)
@@ -286,6 +388,35 @@ for _, target in pairs(targets) do
     end
 end
 assert(finishers == 17)
+
+do
+    local laser = assert(targets["move:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser.Shoot"])
+    assert(laser.entry_when.timeline == "Loop" and laser.entry_when.minimum_time == .056,
+        "The laser finisher must preserve both original eye generation events before releasing")
+    for _, upgraded in ipairs({false,true}) do
+        local state,backend,step = fixture(laser)
+        state.tags["CharacterState.WeaponUpgrade.DuYanBow.LaserEyes"] = upgraded and 1 or 0
+        step(0,true)
+        state.holding = true
+        step(.1,true)
+        assert(state.activations == 1 and state.entries == 0 and state.stops == 0,
+            "The laser finisher must wait after normally entering Loop")
+        for index,time in ipairs({.05339889973402023,.055938899517059326,.055999}) do
+            state.task.CurrentTime = time
+            step(.1 + index*.1,true)
+            assert(state.entries == 0 and state.stops == 0,
+                "Neither eye's original event time may be skipped by the finisher")
+        end
+        state.task.CurrentTime = .056
+        step(.5,true)
+        assert(state.entries == 1 and state.stops == 1 and not state.canceled,
+            "After native eye preparation the finisher releases once, with or without the optional upgrade")
+        step(.6,false)
+        Moves.reset(backend)
+        assert(state.entries == 1 and state.stops == 1 and state.instance.bIsActive,
+            "The laser finisher preserves the native Shoot lifecycle after releasing virtual Hold")
+    end
+end
 
 do
     local state,backend,step = fixture(bow)
@@ -465,8 +596,8 @@ for _, device in ipairs({"keyboard","pad"}) do
         router:step(frame[1],frame[2])
     end
     for id, target in pairs(mixed.targets) do
-        assert(states[id].activations == (target.kind == "move" and 3 or 1),
-            "Mixed selection must keep complete moves continuous and ordinary abilities one-shot through the real dispatcher")
+        assert(states[id].activations == 3,
+            "Mixed defaults must keep moves and abilities continuous through the real dispatcher")
     end
 end
-print("CompiledPhaseMoveTests PASS: 17 four-parameter finishers; keyboard/gamepad multi-select, held and explicit one-shot requests")
+print("CompiledPhaseMoveTests PASS: " .. preparations .. " prepared entrances on both devices; native readiness, refusal, reset, expiry; 17 finishers and multi-select triggers")

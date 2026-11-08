@@ -2361,7 +2361,7 @@
     },
     {
       "id": "action:/PBZDeflectSystem/Input/IA_Deflect",
-      "label": "完美格挡",
+      "label": "点按防御",
       "category": [
         "defense",
         "IA_Guard"
@@ -2374,7 +2374,7 @@
           "relationship": "native tutorial title for the action category"
         }
       ],
-      "labelType": "native",
+      "labelType": "semantic",
       "inputAsset": "/PBZDeflectSystem/Input/IA_Deflect",
       "nativeMappings": [
         "IA_Guard"

@@ -8,6 +8,14 @@
 
 用户要求“点按防御，不因按住而保持架势”时，需要检查资源及能力逻辑。`IA_Deflect.Triggered` 会设置 Passive 的按下状态、刷新完美防御窗口并激活架势能力；现有释放入口来自 `IA_Stance.Completed`。架势能力又维护自己的按下状态，并据此进入持续架势。实现分离须同时处理输入来源与释放事件、Passive 的状态与激活、架势能力的状态及动画循环；只移除 Stance 输入会丢失释放入口，只改 Passive 状态也无法消除能力内部的持续状态。
 
+增强运行时对独立 Deflect 输出生成一帧 Deflect 与 Stance 的原厂输入脉冲，随后通过 Stance.Completed 释放两层状态。默认持续按住时按帧交替按下与释放，循环发起点按防御，松开立即停止追加；显式单次触发及连发间隔保留各自语义。独立 Stance 跟随按住与释放。普通 IA_Guard 同时包含两者，仍保留原厂长按。运行时不写两层窗口字段、不新增计时器；回归以普通 IA_Guard 连续短按的输入及状态轨迹为对照，并覆盖键鼠、手柄、重叠来源与取消。该模型验证不代替游戏内的防御判定与动画实测。
+
+多个独立 Deflect 来源按共享原生动作统一安排释放帧，不按每条绑定分别交替。释放帧内新到达的显式单次请求延至下一帧执行一次；持续来源仍在松开后停止追加。独立 Stance 和普通 Guard 的持续贡献不受脉冲释放影响，重置或取消会清理待执行脉冲。
+
+从菜单、失焦或配置重载恢复时，仍按住的独立 Stance 或普通 IA_Guard 恢复持续架势，IA_Deflect 保留等待新按下的语义，不额外刷新完美窗口。独立 Deflect 的配对 Stance 属于同次点按脉冲，也等待新按下；不能按持续架势自动恢复该脉冲。架势的持续恢复资格与 Controller 的角色移动屏蔽分别处理。
+
+原厂释放后的检测不只依赖架势能力的 held Tick。Passive 的 `Can Activate Ability On Frame` 在 `Stance Key Down || Normal Window > now` 时仍允许激活；Passive Tick 和接收攻击帧均调用 `Try Activate Stance Ability On Frame`。玩家架势能力的 `On Receive Frame` 对非 HoldDeflect 攻击继续调用 `Try Deflect`，后者同样允许正常窗口尚未结束的松键状态，并把 NormalWindow 作为 MaxImpactTime。`On Stance Key Release` 与能力的 `On Stance Key Up` 均不清除窗口。因此独立点按沿用正常短按的窗口与后续检测，不因下一帧释放而取消已有窗口；持续架势及 HoldDeflect 等特殊攻击仍由原厂能力分支处理。
+
 ## 连点完美防御的诊断
 
 原厂 `BP_PlayerDeflectPassive.Give Perfect Window` 使用共用计数。相邻防御点按不足 0.4 秒时递增，达到冷却后重置；每次点按都会更新最后点击时间。第二次使用较低倍率，连续第三次起不再刷新完美窗口；成功 Perfect 或 PerfectCounter 会触发计数与最后点击时间的重置。

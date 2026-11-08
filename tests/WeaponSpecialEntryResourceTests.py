@@ -13,6 +13,9 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("special_entries",ROOT/"build/extract-weapon-special-entries.py")
 entries = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(entries)
+SPEC = importlib.util.spec_from_file_location("move_signatures",ROOT/"tests/CompleteMoveSignatureResourceTests.py")
+signatures = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(signatures)
 
 
 def main():
@@ -49,6 +52,22 @@ def main():
         return next(row["calls"] for row in actual_resources[path]["functions"] if row["name"] == name)
 
     try:
+        utility = "/PBZCombatAsset/Prototypes/BPL_PBZCombatUtils"
+        assert signatures.blueprint_parameters(package(utility),function(utility,"Can Active Switch Attack")) == [
+            ("Avatar","ObjectProperty"),("Ability","ObjectProperty"),("__WorldContext","ObjectProperty")]
+        bases = ["/PBZCombatAsset/Prototypes/Abilities/BP_SwitchAttack_Default",
+                 "/PBZCombatAsset/Prototypes/Abilities/Base/BP_SwitchAttack_Base",
+                 "/PBZCombatAsset/Prototypes/Abilities/Base/BP_SwitchAttack_SimpleAir_Base"]
+        for path in bases:
+            assert utility in package(path).imports,path
+            assert has_name(path,function(path,"K2_CanActivateAbility"),"Can Active Switch Attack"),path
+        dual_axe = "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_DB"
+        phase = "CharacterState.AbilityState.TianShaShuangYue.DB.Phase1.1"
+        assert has_name(dual_axe+"_SWT",cdo(dual_axe+"_SWT"),phase)
+        if phase in package(dual_axe).names:
+            assert not has_name(dual_axe,cdo(dual_axe),phase)
+        assert has_name(dual_axe,function(dual_axe,"ExecuteUbergraph_GA_Hun_ShuangYue_DB"),
+                        "GameplayEvent.Ability.TianShaShuangYue.ConsumeAll")
         for path,expected in doc["equipmentEvidence"].items():
             assert entries.configuration(package(path)) == expected,path
         actual_resources = entries.read_resources(archive,symbols,doc["abilityEvidence"])

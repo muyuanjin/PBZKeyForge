@@ -150,6 +150,13 @@ class LiveEditingTests
                         seen = id; string current = mode;
                         if (current != "silent")
                         {
+                            if (current == "delayed")
+                            {
+                                Thread.Sleep(6500);
+                                File.WriteAllText(Path.Combine(install.InstallDirectory, "live-response.txt"), id + "\no");
+                                Thread.Sleep(100);
+                                current = "ok";
+                            }
                             if (current == "ok" && Interlocked.Increment(ref accepts) == Volatile.Read(ref lockAtAccept))
                                 rollbackLock = new FileStream(lua, FileMode.Open, FileAccess.Read, FileShare.Read);
                             if (current == "ok") runtimeState = "ready";
@@ -167,6 +174,10 @@ class LiveEditingTests
             Check(install.LiveStatus().Suspended, "Suspended Mod was presented as running");
             install.ApplyLive(candidate).GetAwaiter().GetResult();
             Check(accepts == 1 && KeyEnhancementConfiguration.FromJson(File.ReadAllText(install.ConfigurationPath)).NativeBindings.Single().Keys[0] == "J", "Live success did not await acknowledgment and persist");
+            mode = "delayed";
+            install.ApplyLive(candidate).GetAwaiter().GetResult();
+            Check(accepts == 2 && !File.ReadAllText(Path.Combine(install.InstallDirectory, "live-request.id")).StartsWith("cancel-"),
+                "A delayed game response or partial acknowledgment failed instead of completing the original request");
             string saved = File.ReadAllText(install.ConfigurationPath); mode = "error"; bool rejected = false;
             Check(File.ReadAllText(install.RetainedConfigurationPath) == saved, "Live apply did not retain the latest bindings outside the Mod directory");
             candidate.NativeBindings[0].Keys[0] = "K";

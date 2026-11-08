@@ -226,12 +226,27 @@ public static class KeyEnhancementInstallationTests
             installation.Apply(configuration);
             Check(!installation.ConfigurationChanged, "Explicit reload did not allow applying the refreshed configuration.");
             string mainText = File.ReadAllText(main);
+            string backend = Path.Combine(installation.InstallDirectory, @"Scripts\backend.lua");
+            byte[] backendBytes = File.ReadAllBytes(backend);
             File.WriteAllText(main, "user modification");
-            Check(installation.ReadState() == KeyEnhancementInstallState.Conflict, "An unknown script modification was not a conflict.");
-            Check(installation.ConflictDetail.Contains(main), "Modified script conflict omits its file path.");
-            Reject(() => installation.Apply(configuration), "Apply overwrote a modified managed script.");
-            Check(File.ReadAllText(main) == "user modification", "Modified script was not preserved.");
-            File.WriteAllText(main, mainText, new System.Text.UTF8Encoding(false));
+            File.WriteAllText(backend, "previous backend patch");
+            var backups = Directory.GetFiles(GameSchemeSettings.BackupDirectory(), "key-enhancement-mod-*.zip");
+            Check(installation.ReadState() == KeyEnhancementInstallState.Incomplete, "A changed managed script must allow a backed-up update.");
+            installation.Apply(configuration);
+            Check(installation.ReadState() == KeyEnhancementInstallState.Enabled && File.ReadAllText(main) == mainText,
+                "Update did not replace the changed managed script.");
+            Check(File.ReadAllBytes(backend).SequenceEqual(backendBytes), "Update did not replace the changed managed backend.");
+            string backup = Directory.GetFiles(GameSchemeSettings.BackupDirectory(), "key-enhancement-mod-*.zip").Except(backups).Single();
+            using (var stream = File.OpenRead(backup))
+            using (var zip = new ZipArchive(stream, ZipArchiveMode.Read))
+            {
+                using (var reader = new StreamReader(zip.GetEntry("Scripts/main.lua").Open()))
+                    Check(reader.ReadToEnd() == "user modification", "Update did not preserve the changed script in its backup.");
+                using (var reader = new StreamReader(zip.GetEntry("Scripts/backend.lua").Open()))
+                    Check(reader.ReadToEnd() == "previous backend patch", "Update did not back up the changed backend.");
+                using (var reader = new StreamReader(zip.GetEntry("configuration.json").Open()))
+                    Check(reader.ReadToEnd() == configuration.ToJson(), "The pre-update backup lost the configuration.");
+            }
             string foreign = Path.Combine(installation.InstallDirectory, "foreign.txt");
             File.WriteAllText(foreign, "preserve");
             Check(installation.ReadState() == KeyEnhancementInstallState.Conflict, "Foreign files were not a conflict.");

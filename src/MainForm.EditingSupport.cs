@@ -72,6 +72,7 @@ namespace PBZKeyForge
         {
             companionHotkeyEnabled = preferences.LoadCompanionHotkey();
             feedbackPanel = new NoticeCard { Visible = false, Font = lblStatus.Font };
+            feedbackPanel.VisibleChanged += delegate { LayoutFooter(); };
             feedbackDetails = UnifiedBindingUi.Button(I18n.Str("feedback.details"), "feedbackDetails");
             feedbackDetails.AutoSize = false; feedbackDetails.MinimumSize = Size.Empty;
             feedbackDetails.ForeColor = NoticeCard.Accent;
@@ -82,7 +83,7 @@ namespace PBZKeyForge
             feedbackPanel.Controls.Add(feedbackText); feedbackPanel.Controls.Add(feedbackDetails); feedbackPanel.Controls.Add(dismiss);
             feedbackPanel.Layout += delegate {
                 float scale = CurrentAutoScaleDimensions.Width / 96f;
-                int gap = Math.Max(1, (int)(2 * scale)), height = Math.Max(1, feedbackPanel.Height - gap * 2);
+                int gap = Math.Max(1, (int)(6 * scale)), height = Math.Max(1, feedbackPanel.Height - gap * 2);
                 int closeWidth = Math.Max((int)(18 * scale), height), detailsWidth = TextRenderer.MeasureText(feedbackDetails.Text, feedbackPanel.Font).Width + (int)(12 * scale);
                 dismiss.SetBounds(feedbackPanel.Width - gap - closeWidth, gap, closeWidth, height);
                 feedbackDetails.SetBounds(dismiss.Left - gap - detailsWidth, gap, detailsWidth, height);
@@ -242,6 +243,8 @@ namespace PBZKeyForge
         protected override void WndProc(ref Message message)
         {
             if (message.Msg == 0x312 && message.WParam.ToInt32() == 0x5042) { ToggleCompanion(); return; }
+            if (message.Msg == 0x1C && keyEnhancementFlame != null)
+                keyEnhancementFlame.ApplicationActive = message.WParam != IntPtr.Zero;
             base.WndProc(ref message);
         }
     }

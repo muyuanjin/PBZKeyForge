@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
 
 #ifndef PBZ_CONTEXT_API
 #define PBZ_CONTEXT_API __declspec(dllimport)
@@ -63,14 +64,23 @@ namespace RC::Unreal
         PBZ_CONTEXT_API FProperty*& GetKeyProp();
         PBZ_CONTEXT_API FProperty*& GetValueProp();
     };
+    enum EFindName { FNAME_Find, FNAME_Add };
     class FName
     {
+        unsigned int data[2];
     public:
+        PBZ_CONTEXT_API FName(const wchar_t*, EFindName, void*);
         PBZ_CONTEXT_API const std::wstring ToString() const;
+    };
+    class UStruct
+    {
+    public:
+        PBZ_CONTEXT_API FProperty* FindProperty(FName);
     };
     struct FFrame
     {
         PBZ_CONTEXT_API UFunction*& Node();
+        PBZ_CONTEXT_API unsigned char*& Locals();
     };
     namespace Hook
     {
@@ -110,6 +120,31 @@ namespace RC::LuaType
 
 namespace
 {
+    std::unordered_map<RC::Unreal::UFunction*,RC::Unreal::FProperty*> chargeTicks;
+    std::unordered_map<RC::Unreal::UObject*,double> chargeRates;
+    struct ChargeTickFrame { RC::Unreal::FFrame* frame; float* delta; float original; };
+    thread_local std::vector<ChargeTickFrame> chargeTickFrames;
+
+    void beginChargeTick(RC::Unreal::UObject* object,RC::Unreal::FFrame& frame)
+    {
+        if (chargeRates.empty()) return;
+        auto rate = chargeRates.find(object);
+        if (rate == chargeRates.end()) return;
+        auto tick = chargeTicks.find(frame.Node());
+        if (tick == chargeTicks.end()) return;
+        auto* delta = reinterpret_cast<float*>(frame.Locals()+tick->second->GetOffset_Internal());
+        chargeTickFrames.push_back({&frame,delta,*delta});
+        *delta *= static_cast<float>(rate->second);
+    }
+
+    void endChargeTick(RC::Unreal::FFrame& frame)
+    {
+        if (chargeTickFrames.empty() || chargeTickFrames.back().frame != &frame) return;
+        auto value = chargeTickFrames.back();
+        *value.delta = value.original;
+        chargeTickFrames.pop_back();
+    }
+
     struct ScriptFrame { RC::Unreal::UObject* object; RC::Unreal::FFrame* frame; };
     thread_local std::vector<ScriptFrame> frames;
     thread_local std::vector<ScriptFrame> interfaceFrames;
@@ -127,10 +162,15 @@ namespace
             reinterpret_cast<LPCWSTR>(&initialize), &module);
         RC::Unreal::Hook::RegisterProcessLocalScriptFunctionPreCallback(
             [](auto* object, auto& frame, void*) {
-                if (enabled.load(std::memory_order_relaxed)) frames.push_back({object, &frame});
+                if (enabled.load(std::memory_order_relaxed))
+                {
+                    beginChargeTick(object,frame);
+                    frames.push_back({object, &frame});
+                }
             });
         RC::Unreal::Hook::RegisterProcessLocalScriptFunctionPostCallback(
             [](auto*, auto& frame, void*) {
+                endChargeTick(frame);
                 if (!frames.empty() && frames.back().frame == &frame) frames.pop_back();
             });
         return TRUE;
@@ -182,6 +222,8 @@ extern "C" __declspec(dllexport) int pbz_script_context_enable(void* state)
         activeInterfaceFunctions.clear();
         frames.clear();
         interfaceFrames.clear();
+        chargeRates.clear();
+        chargeTicks.clear();
     }
     return 0;
 }
@@ -230,6 +272,45 @@ extern "C" __declspec(dllexport) int pbz_script_context_interface_object(void* s
     LuaStateView view{state};
     auto& lua = *reinterpret_cast<const RC::LuaMadeSimple::Lua*>(&view);
     pushName(lua, interfaceFrames.back().object);
+    return 1;
+}
+
+extern "C" __declspec(dllexport) int pbz_script_context_interface_address(void* state)
+{
+    if (!enabled.load(std::memory_order_relaxed) || interfaceFrames.empty()) return 0;
+    LuaStateView view{state};
+    auto& lua = *reinterpret_cast<const RC::LuaMadeSimple::Lua*>(&view);
+    lua.set_integer(reinterpret_cast<long long>(interfaceFrames.back().object));
+    return 1;
+}
+
+extern "C" __declspec(dllexport) int pbz_charge_watch_tick(void* state)
+{
+    LuaStateView view{state};
+    auto& lua = *reinterpret_cast<const RC::LuaMadeSimple::Lua*>(&view);
+    auto* function = reinterpret_cast<RC::Unreal::UFunction*>(lua.get_integer(1));
+    auto* delta = reinterpret_cast<RC::Unreal::UStruct*>(function)->FindProperty(
+        RC::Unreal::FName(L"DeltaTime",RC::Unreal::FNAME_Find,nullptr));
+    if (!delta || delta->GetElementSize()!=sizeof(float))
+    {
+        const std::string message = "Charge tick DeltaTime must be a reflected float";
+        lua.set_string(message.data(),message.size());
+        return 1;
+    }
+    chargeTicks[function] = delta;
+    lua.set_integer(1);
+    return 1;
+}
+
+extern "C" __declspec(dllexport) int pbz_charge_ability(void* state)
+{
+    LuaStateView view{state};
+    auto& lua = *reinterpret_cast<const RC::LuaMadeSimple::Lua*>(&view);
+    auto* ability = reinterpret_cast<RC::Unreal::UObject*>(lua.get_integer(1));
+    auto rate = lua.get_number(1);
+    if (rate==1) chargeRates.erase(ability);
+    else chargeRates[ability] = rate;
+    lua.set_integer(1);
     return 1;
 }
 

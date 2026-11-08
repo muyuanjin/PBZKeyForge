@@ -28,6 +28,15 @@ local runtime = {running = true, pending = false, generation = nil, last_error =
 local backend = Backend.new(Config, log)
 local router = Router.new(Config, backend)
 
+local function suspend(failure)
+    local now = os.clock()
+    runtime.retry_attempts = (runtime.retry_attempts or 0) + 1
+    runtime.failed_at = now
+    runtime.recovered_at = nil
+    runtime.retry_at = now + math.min(30, 2 ^ math.min(runtime.retry_attempts - 1, 5))
+    runtime.suspended, runtime.active, runtime.last_error = true, false, tostring(failure)
+end
+
 local function publish_scheme()
     if not Config.scheme_id or not io then return end
     local file, err = io.open(scheme_path, "wb")
@@ -55,10 +64,6 @@ local function uninstall_hooks()
         end
     end
     remove(runtime.hooks)
-    if runtime.ui_hooks then
-        remove(runtime.ui_hooks)
-        if not next(runtime.ui_hooks) then runtime.ui_hooks = nil end
-    end
     if #failures > 0 then error(table.concat(failures,"\n"),0) end
     runtime.failed_hooks, runtime.hook_retry = {}, {}
 end
@@ -86,8 +91,7 @@ local function apply_configuration(candidate)
     end
     local restored, restoreError = pcall(restore, candidate.enabled ~= false)
     if not restored then
-        runtime.suspended = true
-        runtime.last_error = tostring(restoreError)
+        suspend(restoreError)
         log("Reload suspended until original input restoration completes: " .. tostring(restoreError))
         return false, restoreError
     end
@@ -106,7 +110,7 @@ local function apply_configuration(candidate)
     if not prepared or not cleaned then
         backend.config = previous
         runtime.active = false
-        if not cleaned then runtime.suspended = true; runtime.last_error = tostring(cleanupError) end
+        if not cleaned then suspend(cleanupError) end
         return false, not cleaned and cleanupError or prepareError
     end
     uninstall_hooks()
@@ -114,6 +118,7 @@ local function apply_configuration(candidate)
     backend.config = Config
     runtime.active, runtime.suspended = false, false
     runtime.generation, runtime.config_generation, runtime.last_error = nil, nil, nil
+    runtime.retry_at, runtime.failed_at, runtime.retry_attempts, runtime.reported_error, runtime.recovered_at = nil, nil, nil, nil, nil
     log("Configuration reloaded; bindings=" .. #Config.bindings)
     publish_scheme()
     return true
@@ -135,7 +140,7 @@ local function switch_scheme(id)
     local applied, err = apply_configuration(candidate)
     if not applied then
         local restored, restore_error = apply_configuration(previous)
-        if not restored then runtime.suspended = true; runtime.last_error = tostring(restore_error) end
+        if not restored then suspend(restore_error) end
         log("Scheme rejected: " .. tostring(err))
         return false, err
     end
@@ -179,24 +184,12 @@ if type(io) == "table" and type(io.open) == "function" then
     end) end
 end
 
+local function publish_live()
+    if live then pcall(function() live:publish() end) end
+end
+
 local function install_hooks()
     if Config.enabled == false then return end
-    if Config.unified_native and not runtime.ui_hooks then
-        runtime.ui_hooks = {}
-        for name, blocked in pairs({SetInputMode_UIOnlyEx=true, SetInputMode_GameAndUIEx=true, SetInputMode_GameOnly=false}) do
-            local path = "/Script/UMG.WidgetBlueprintLibrary:" .. name
-            local object = StaticFindObject(path)
-            if object and object:IsValid() then
-                local value = blocked
-                local first, second = RegisterHook(path, function(_, controller)
-                    if not runtime.running or Config.enabled == false or runtime.suspended then return end
-                    local player = controller:get()
-                    if player and player:IsValid() and backend.controller and player:GetAddress() == backend.controller:GetAddress() then backend.ui_only = value end
-                end)
-                runtime.ui_hooks[path] = {first, second}
-            end
-        end
-    end
     for _, rule in ipairs(Config.hooks or {}) do
         if not runtime.hooks[rule.path] and not runtime.failed_hooks[rule.path]
             and os.clock() >= (runtime.hook_retry[rule.path] or 0) then
@@ -240,10 +233,18 @@ local function tick()
         local ok, err = pcall(function() live:poll(os.clock()) end)
         if not ok then log("Live configuration: " .. tostring(err)) end
     end
-    if not runtime.running or runtime.suspended then return end
+    if not runtime.running then return end
+    if runtime.suspended and (not runtime.retry_at or os.clock() < runtime.retry_at) then return end
+    local recovering = runtime.suspended
     local ok, err = xpcall(function()
+        if recovering then
+            restore()
+            uninstall_hooks()
+            runtime.generation, runtime.config_generation = nil, nil
+            runtime.suspended = false
+        end
         if Config.enabled == false then
-            if runtime.active or runtime.generation ~= nil or backend.resource_costs or next(runtime.hooks) or runtime.ui_hooks then
+            if runtime.active or runtime.generation ~= nil or backend.resource_costs or next(runtime.hooks) then
                 restore()
                 uninstall_hooks()
                 runtime.active, runtime.generation, runtime.config_generation = false,nil,nil
@@ -255,8 +256,7 @@ local function tick()
             local nextConfig = backend:effective_config()
             if runtime.config_generation == nil then router = Router.new(nextConfig, backend)
             else
-                local nextRouter = Router.new(nextConfig, backend)
-                router = router:reconfigure(nextConfig, backend:snapshot(nextRouter:keys()), backend:context())
+                router = router:reconfigure(nextConfig, nil, backend:context())
             end
             runtime.config_generation = backend.config_generation
         end
@@ -306,15 +306,23 @@ local function tick()
     if not ok then
         local restored, restoreError = pcall(restore)
         local unhooked, unhookError = pcall(uninstall_hooks)
-        runtime.suspended = true
-        runtime.active = false
-        runtime.last_error = tostring(err)
+        suspend(err)
         if not restored then runtime.last_error = runtime.last_error .. "\nInput restoration incomplete: " .. tostring(restoreError) end
         if not unhooked then runtime.last_error = runtime.last_error .. "\nHook removal incomplete: " .. tostring(unhookError) end
-        if live then pcall(function() live:publish() end) end
-        log("Routing suspended: " .. runtime.last_error .. (restored and "; original input restored" or "") ..
-            (Config.runtime_hotkeys ~= false and "; F8 retries" or "; restart the game to retry"))
-    elseif ok then runtime.last_error = nil end
+        publish_live()
+        local diagnostic = tostring(err):match("^[^\n]+")
+        if runtime.reported_error ~= diagnostic then
+            runtime.reported_error = diagnostic
+            log("Routing suspended; automatic retry with backoff: " .. runtime.last_error)
+        end
+    else
+        runtime.last_error = nil
+        if recovering then runtime.retry_at = nil; runtime.recovered_at = os.clock(); publish_live() end
+        if runtime.recovered_at and os.clock() - runtime.recovered_at >= 30 then
+            runtime.failed_at, runtime.retry_attempts, runtime.reported_error = nil, nil, nil
+            runtime.recovered_at = nil
+        end
+    end
 end
 
 if type(LoopInGameThreadAfterFrames) == "function" and EngineTickAvailable ~= false then
@@ -332,7 +340,7 @@ else
     if Config.unified_native then
         runtime.suspended = true
         runtime.last_error = "Game-thread frame scheduler unavailable; gameplay input remains native"
-        if live then pcall(function() live:publish() end) end
+        publish_live()
         log(runtime.last_error)
     else
     LoopAsync(8, function()
@@ -356,9 +364,8 @@ RegisterKeyBind(Key.F8, function()
         if not runtime.running then return end
         local restored, restoreError = pcall(restore)
         if not restored then
-            runtime.suspended = true
-            runtime.last_error = tostring(restoreError)
-            log("Input restoration incomplete: " .. runtime.last_error .. "; F8 retries")
+            suspend(restoreError)
+            log("Input restoration incomplete; automatic retry with backoff: " .. runtime.last_error)
             return
         end
         if runtime.suspended then Config.enabled = true; runtime.suspended = false

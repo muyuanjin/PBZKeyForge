@@ -219,12 +219,16 @@ namespace PBZKeyForge
                 groups.Nodes.Clear(); keyEnhancementGroups.Clear();
                 var all = new TreeNode(I18n.Str("unified.groups.all") + " (" + allRows.Length + ")") { Tag = "" }; groups.Nodes.Add(all);
                 var nodes = new Dictionary<string, TreeNode>();
+                var counts = new Dictionary<string, int>();
+                var nativeGroups = new HashSet<string>();
                 foreach (var row in allRows)
                 {
                     TreeNode parent = null; string path = "";
                     for (int i = 0; i < row.Function.GroupPath.Length; i++)
                     {
                         path = path.Length == 0 ? row.Function.GroupPath[i] : path + "/" + row.Function.GroupPath[i];
+                        int count; counts.TryGetValue(path, out count); counts[path] = count + 1;
+                        if (!row.Function.RequiresKeyEnhancement) nativeGroups.Add(path);
                         TreeNode node;
                         if (!nodes.TryGetValue(path, out node))
                         {
@@ -239,9 +243,8 @@ namespace PBZKeyForge
                 foreach (var pair in nodes)
                 {
                     string path = pair.Key;
-                    var members = allRows.Where(row => string.Join("/", row.Function.GroupPath) == path || string.Join("/", row.Function.GroupPath).StartsWith(path + "/", StringComparison.Ordinal)).ToArray();
-                    pair.Value.Text += " (" + members.Length + ")";
-                    if (!members.All(row => row.Function.RequiresKeyEnhancement)) continue;
+                    pair.Value.Text += " (" + counts[path] + ")";
+                    if (nativeGroups.Contains(path)) continue;
                     keyEnhancementGroups.Add(path);
                     pair.Value.ForeColor = workspace.KeyEnhancementEnabled ? EditorTheme.KeyEnhancement : EditorTheme.Muted;
                     pair.Value.ToolTipText += Environment.NewLine + (workspace.KeyEnhancementEnabled ? I18n.Str("enhancement.title") : UnifiedBindingUi.KeyEnhancementHint);
@@ -436,7 +439,12 @@ namespace PBZKeyForge
             if (e.RowIndex < 0 || e.RowIndex >= rows.Count) return; var row = rows[e.RowIndex];
             e.ToolTipText = e.ColumnIndex == 0 ? row.Function.TechnicalName : e.ColumnIndex == 1 ? row.Factory
                 : e.ColumnIndex == 3 ? UnifiedBindingUi.Text("addbinding") : string.Join("\n", row.Entries.Select((entry, index) => row.BindingTexts[index] + " · " + UnifiedBindingUi.EntryState(entry)));
-            if (e.ColumnIndex == 0) e.ToolTipText += Environment.NewLine + string.Join(" / ", row.Function.GroupLabels);
+            if (e.ColumnIndex == 0)
+            {
+                string details = GameMoveNames.Details(row.Function.Id);
+                e.ToolTipText = (details.Length == 0 ? "" : details + Environment.NewLine)
+                    + e.ToolTipText + Environment.NewLine + string.Join(" / ", row.Function.GroupLabels);
+            }
             if (e.ColumnIndex >= 0 && e.ColumnIndex < 3)
             {
                 string hint = UnifiedBindingUi.NativeEntryHint(workspace, row.Function);

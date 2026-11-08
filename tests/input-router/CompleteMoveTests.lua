@@ -11,9 +11,9 @@ local function check(value, message)
 end
 function FName(value) return {ToString = function() return value end} end
 local function array(items)
-    return {ForEach = function(_, callback)
+    return setmetatable({GetArrayNum=function() return #items end,ForEach = function(_, callback)
         for index, item in ipairs(items) do callback(index, {get = function() return item end}) end
-    end}
+    end},{__index=items})
 end
 local function map(items)
     return {ForEach = function(_, callback)
@@ -25,11 +25,21 @@ end
 local class = "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold.GA_Hun_BronzeSword_B_Hold_C"
 local move = {kind="move", tag="Ability.Action.Hun.Heavy.BronzeSword.BHold", ability_class=class,
     entry_point=class .. ":EndSuccess", input_action="/PBZInput/InputActions/IA_AttackH_PressLong.IA_AttackH_PressLong"}
+local classes, nextClass = {}, 100000
+function StaticFindObject(path)
+    if not classes[path] then
+        nextClass = nextClass+1
+        local address=nextClass
+        classes[path]={IsValid=function() return true end,GetAddress=function() return address end,
+            GetFullName=function() return "BlueprintGeneratedClass "..path end}
+    end
+    return classes[path]
+end
 local function object(address, properties)
     local result = properties or {}
     function result:IsValid() return self.valid ~= false end
     function result:GetAddress() return address end
-    function result:GetClass() return {GetFullName = function() return "BlueprintGeneratedClass " .. (self.class or class) end} end
+    function result:GetClass() return StaticFindObject(self.class or class) end
     function result:GetFullName() return "Object " .. self.path end
     function result:GetPropertyValue(name) return self[name] end
     return result
@@ -44,8 +54,10 @@ local function fixture()
     backend.timeline_task = object(8, {Timeline=backend.main_timeline, CurrentTime=0})
     backend.subsystem, backend.pawn = object(9), object(10)
     backend.input_component, backend.input_library = object(11), object(12)
+    backend.input_value_library, backend.input_value = object(15), object(16)
     backend.execution_component = object(14)
     function backend:library(name)
+        if name == "EnhancedInput.EnhancedInputLibrary" then return self.input_value_library end
         check(name == "SGameInputSystem.SGameInputUtils", "Prepared input must use the native game input utility")
         return self.input_library
     end
@@ -56,7 +68,18 @@ local function fixture()
         return input
     end
     function backend:report(_, message) self.last_report = message end
-    function backend:invoke(target, path, tag, action)
+    backend.resource_costs={context={start_hold_input=function(_,owner,heldAction)
+        check(owner==backend.subsystem and heldAction==input,"Preparation must pass its exact subsystem/action to the native Hold bridge")
+        backend.input_starts=(backend.input_starts or 0)+1
+    end},activate=function(_,_,_,callback) return callback() end}
+    backend.resource_costs.instances={}
+    function backend.resource_costs:restore(address) self.instances[address]=nil end
+    function backend.resource_costs:arm(value)
+        local state={instance=value};self.instances[value:GetAddress()]=state;return state
+    end
+    function backend.resource_costs:protect() end
+    function backend.resource_costs.context:ability_damage() end
+    function backend:invoke(target, path, tag, action, third, fourth)
         self.calls[#self.calls+1] = {receiver=target, path=path}
         if path:find(":GetGameplayTagCount",1,true) then
             local name = tag.TagName:ToString()
@@ -92,10 +115,10 @@ local function fixture()
         elseif path == "/Script/LegoAbility.LegoAbility:GetTimelineByName" then
             check(target == instance and tag:ToString() == "Main", "The named timeline must resolve on the same ability instance")
             return self.main_timeline
+        elseif path == "/Script/EnhancedInput.EnhancedInputLibrary:MakeInputActionValueOfType" then
+            error("Opaque FInputActionValue must not return through Lua reflection")
         elseif path:find(":StartContinuousInputInjectionForAction",1,true) then
-            check(target == self.subsystem and tag == input and action.X == 1 and action.Y == 0 and action.Z == 0,
-                "Preparation must continuously inject the declared original hold action")
-            self.input_starts = (self.input_starts or 0) + 1
+            error("Continuous native Hold must use the opaque native bridge")
         elseif path:find(":StopContinuousInputInjectionForAction",1,true) then
             check(target == self.subsystem and tag == input, "Preparation must stop the same action it injected")
             self.input_stops = (self.input_stops or 0) + 1
@@ -160,6 +183,29 @@ do
     check(ok and result and backend.released, "One pulse must activate and immediately enter the complete release stage")
     check(#backend.calls == 4 and backend.calls[3].path:find("TryActivate",1,true)
         and backend.calls[4].path == move.entry_point, "The release must follow normal activation without held input")
+end
+do
+    local backend, spec, _, _, asc = fixture()
+    local granted={spec}
+    for index=1,512 do
+        local path="/Unrelated/Ability_"..index
+        local unrelated=object(1000+index,{class=path})
+        StaticFindObject(path).GetFullName=function() error("Unrelated ability class names must not be converted") end
+        granted[#granted+1]={Ability=unrelated,ActiveCount=0,NonReplicatedInstances=array({}),ReplicatedInstances=array({})}
+    end
+    asc.ActivatableAbilities.Items=array(granted)
+    check(Moves.dispatch(backend,move,"triggered") and backend.released,
+        "Class-address selection failed with a large unrelated granted ability list")
+end
+do
+    local backend = fixture()
+    local lookup=StaticFindObject
+    function StaticFindObject(path) if path~=move.ability_class then return lookup(path) end end
+    local accepted=Moves.dispatch(backend,move,"triggered")
+    StaticFindObject=lookup
+    check(not accepted and not backend.activations,"An unloaded ability class must remain dormant")
+    check(Moves.dispatch(backend,move,"triggered") and backend.released,
+        "A subsequently loaded ability class must be retried without reloading the configuration")
 end
 do
     local backend = fixture(); backend.reject = true

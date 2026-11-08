@@ -3849,7 +3849,8 @@
         "ARCO DEL TUERTO"
       ],
       "entryWhen": {
-        "timeline": "Loop"
+        "timeline": "Loop",
+        "minimum_time": 0.056
       },
       "weaponLabels": {
         "zh-Hans": "独眼弓",
@@ -6168,6 +6169,1845 @@
         "Execution.Type.Combat.BreakAct.Jigsaw",
         "GA_Hun_Jigsaw_BreakAct"
       ]
+    },
+    {
+      "id": "move:Ability.Action.Hun.CombatArt.ChiRen.Release1",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Long.CounterB",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C.GA_Hun_ChiRen_C_C",
+      "activateByClass": true,
+      "entryPoint": "ToRelease",
+      "entryWhen": {
+        "timeline": "Main",
+        "minimum_time": 0.9594816432723999,
+        "property_minimum": {
+          "ChargeCount": 0
+        },
+        "before_time": 1.2873826026916504,
+        "cancel_on_expire": true
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "prepareInput": "/PBZInput/InputActions/IA_CombatArt_Hold.IA_CombatArt_Hold",
+      "requiredTags": [
+        "CharacterState.Space.Ground",
+        "Weapon.Type.LongBlade.ChiRen"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · Release_01",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.charge",
+        "1",
+        "moves.release"
+      ],
+      "searchAliases": [
+        "ChiRen",
+        "炽刃",
+        "GA_Hun_ChiRen_C",
+        "Release_01",
+        "炽刃",
+        "BLAZING EDGE",
+        "熾刃",
+        "치인",
+        "Пылающий Клинок",
+        "熾刃",
+        "LAME ARDENTE",
+        "FLAMMENDE KLINGE",
+        "HOJA ABRASADORA",
+        "LÂMINA FLAMEJANTE",
+        "LAMA ROVENTE",
+        "คมอัคคีโชติช่วง",
+        "HỎA NHẬN",
+        "GUME ARDENTE",
+        "FILO ABRASADOR"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "炽刃",
+        "en": "BLAZING EDGE",
+        "ja": "熾刃",
+        "ko": "치인",
+        "ru": "Пылающий Клинок",
+        "zh-Hant": "熾刃",
+        "fr": "LAME ARDENTE",
+        "de": "FLAMMENDE KLINGE",
+        "es-ES": "HOJA ABRASADORA",
+        "pt-BR": "LÂMINA FLAMEJANTE",
+        "it": "LAMA ROVENTE",
+        "th": "คมอัคคีโชติช่วง",
+        "vi": "HỎA NHẬN",
+        "pt-PT": "GUME ARDENTE",
+        "es-419": "FILO ABRASADOR"
+      },
+      "category": "weapons/Weapon_014/IA_UltimateSkill"
+    },
+    {
+      "id": "move:Ability.Action.Hun.CombatArt.ChiRen.Release2",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Long.CounterB",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C.GA_Hun_ChiRen_C_C",
+      "activateByClass": true,
+      "entryPoint": "ToRelease",
+      "entryWhen": {
+        "timeline": "Main",
+        "minimum_time": 1.2873836026916503,
+        "property_minimum": {
+          "ChargeCount": 1
+        },
+        "before_time": 1.5260030031204224,
+        "cancel_on_expire": true
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "prepareInput": "/PBZInput/InputActions/IA_CombatArt_Hold.IA_CombatArt_Hold",
+      "requiredTags": [
+        "CharacterState.Space.Ground",
+        "Weapon.Type.LongBlade.ChiRen"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · Release_02",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.charge",
+        "2",
+        "moves.release"
+      ],
+      "searchAliases": [
+        "ChiRen",
+        "炽刃",
+        "GA_Hun_ChiRen_C",
+        "Release_02",
+        "炽刃",
+        "BLAZING EDGE",
+        "熾刃",
+        "치인",
+        "Пылающий Клинок",
+        "熾刃",
+        "LAME ARDENTE",
+        "FLAMMENDE KLINGE",
+        "HOJA ABRASADORA",
+        "LÂMINA FLAMEJANTE",
+        "LAMA ROVENTE",
+        "คมอัคคีโชติช่วง",
+        "HỎA NHẬN",
+        "GUME ARDENTE",
+        "FILO ABRASADOR"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "炽刃",
+        "en": "BLAZING EDGE",
+        "ja": "熾刃",
+        "ko": "치인",
+        "ru": "Пылающий Клинок",
+        "zh-Hant": "熾刃",
+        "fr": "LAME ARDENTE",
+        "de": "FLAMMENDE KLINGE",
+        "es-ES": "HOJA ABRASADORA",
+        "pt-BR": "LÂMINA FLAMEJANTE",
+        "it": "LAMA ROVENTE",
+        "th": "คมอัคคีโชติช่วง",
+        "vi": "HỎA NHẬN",
+        "pt-PT": "GUME ARDENTE",
+        "es-419": "FILO ABRASADOR"
+      },
+      "category": "weapons/Weapon_014/IA_UltimateSkill"
+    },
+    {
+      "id": "move:Ability.Action.Hun.CombatArt.ChiRen.Release3",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Long.CounterB",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C.GA_Hun_ChiRen_C_C",
+      "activateByClass": true,
+      "entryPoint": "ToRelease",
+      "entryWhen": {
+        "timeline": "Main",
+        "minimum_time": 1.5260040031204223,
+        "property_minimum": {
+          "ChargeCount": 2
+        }
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "prepareInput": "/PBZInput/InputActions/IA_CombatArt_Hold.IA_CombatArt_Hold",
+      "requiredTags": [
+        "CharacterState.Space.Ground",
+        "Weapon.Type.LongBlade.ChiRen"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · Release_03",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.charge",
+        "3",
+        "moves.release"
+      ],
+      "searchAliases": [
+        "ChiRen",
+        "炽刃",
+        "GA_Hun_ChiRen_C",
+        "Release_03",
+        "炽刃",
+        "BLAZING EDGE",
+        "熾刃",
+        "치인",
+        "Пылающий Клинок",
+        "熾刃",
+        "LAME ARDENTE",
+        "FLAMMENDE KLINGE",
+        "HOJA ABRASADORA",
+        "LÂMINA FLAMEJANTE",
+        "LAMA ROVENTE",
+        "คมอัคคีโชติช่วง",
+        "HỎA NHẬN",
+        "GUME ARDENTE",
+        "FILO ABRASADOR"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "炽刃",
+        "en": "BLAZING EDGE",
+        "ja": "熾刃",
+        "ko": "치인",
+        "ru": "Пылающий Клинок",
+        "zh-Hant": "熾刃",
+        "fr": "LAME ARDENTE",
+        "de": "FLAMMENDE KLINGE",
+        "es-ES": "HOJA ABRASADORA",
+        "pt-BR": "LÂMINA FLAMEJANTE",
+        "it": "LAMA ROVENTE",
+        "th": "คมอัคคีโชติช่วง",
+        "vi": "HỎA NHẬN",
+        "pt-PT": "GUME ARDENTE",
+        "es-419": "FILO ABRASADOR"
+      },
+      "category": "weapons/Weapon_014/IA_UltimateSkill"
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_ChiZheCanJian_C.Stage2",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_C.GA_Hun_ChiZheCanJian_C_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        2.75,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.03,
+        "before_time": 2.75,
+        "timeline": "Main"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.ChiZheCanJian"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · ChiZheCanJian_C · Stage2",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "ChiZheCanJian_C",
+        "catalog.followup",
+        "2"
+      ],
+      "searchAliases": [
+        "GA_Hun_ChiZheCanJian_C",
+        "Stage2",
+        "痴者残剑",
+        "THE FANATIC'S BROKEN BLADE",
+        "痴者の残剣",
+        "광인의 잔검",
+        "Сломанный Клинок Фанатика",
+        "痴者殘劍",
+        "LAME BRISÉE DU FANATIQUE",
+        "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+        "ESPADA ROTA DEL FANÁTICO",
+        "LÂMINA QUEBRADA DO FANÁTICO",
+        "LAMA SPEZZATA DEL FANATICO",
+        "กระบี่หักของจอมคลั่ง",
+        "SI GIẢ TÀN KIẾM",
+        "A ESPADA PARTIDA DO FANÁTICO",
+        "ESPADA ROTA DEL FANÁTICO"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "痴者残剑",
+        "en": "THE FANATIC'S BROKEN BLADE",
+        "ja": "痴者の残剣",
+        "ko": "광인의 잔검",
+        "ru": "Сломанный Клинок Фанатика",
+        "zh-Hant": "痴者殘劍",
+        "fr": "LAME BRISÉE DU FANATIQUE",
+        "de": "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+        "es-ES": "ESPADA ROTA DEL FANÁTICO",
+        "pt-BR": "LÂMINA QUEBRADA DO FANÁTICO",
+        "it": "LAMA SPEZZATA DEL FANATICO",
+        "th": "กระบี่หักของจอมคลั่ง",
+        "vi": "SI GIẢ TÀN KIẾM",
+        "pt-PT": "A ESPADA PARTIDA DO FANÁTICO",
+        "es-419": "ESPADA ROTA DEL FANÁTICO"
+      },
+      "category": "weapons/Weapon_008/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 2.75,
+        "attack_start": 3.0533957481384277,
+        "attack_end": 6.817487001419067
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_ChiZheCanJian_C_ToZui.Release",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_C_ToZui.GA_Hun_ChiZheCanJian_C_ToZui_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        3.1,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 1.8143,
+        "before_time": 3.1,
+        "timeline": "Main",
+        "object_variable": {
+          "property": "Variables",
+          "key": "JiuTan",
+          "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+          "object": "/PBZCombatAsset/ActorData/Mobs/HuaQianXiao/Bullet/BD_JiuTan_L0.BD_JiuTan_L0"
+        }
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.ChiZheCanJian"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · ChiZheCanJian_C_ToZui · Release",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "ChiZheCanJian_C_ToZui",
+        "moves.release"
+      ],
+      "searchAliases": [
+        "GA_Hun_ChiZheCanJian_C_ToZui",
+        "Release",
+        "痴者残剑",
+        "THE FANATIC'S BROKEN BLADE",
+        "痴者の残剣",
+        "광인의 잔검",
+        "Сломанный Клинок Фанатика",
+        "痴者殘劍",
+        "LAME BRISÉE DU FANATIQUE",
+        "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+        "ESPADA ROTA DEL FANÁTICO",
+        "LÂMINA QUEBRADA DO FANÁTICO",
+        "LAMA SPEZZATA DEL FANATICO",
+        "กระบี่หักของจอมคลั่ง",
+        "SI GIẢ TÀN KIẾM",
+        "A ESPADA PARTIDA DO FANÁTICO",
+        "ESPADA ROTA DEL FANÁTICO"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "痴者残剑",
+        "en": "THE FANATIC'S BROKEN BLADE",
+        "ja": "痴者の残剣",
+        "ko": "광인의 잔검",
+        "ru": "Сломанный Клинок Фанатика",
+        "zh-Hant": "痴者殘劍",
+        "fr": "LAME BRISÉE DU FANATIQUE",
+        "de": "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+        "es-ES": "ESPADA ROTA DEL FANÁTICO",
+        "pt-BR": "LÂMINA QUEBRADA DO FANÁTICO",
+        "it": "LAMA SPEZZATA DEL FANATICO",
+        "th": "กระบี่หักของจอมคลั่ง",
+        "vi": "SI GIẢ TÀN KIẾM",
+        "pt-PT": "A ESPADA PARTIDA DO FANÁTICO",
+        "es-419": "ESPADA ROTA DEL FANÁTICO"
+      },
+      "category": "weapons/Weapon_008/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 3.1,
+        "attack_start": 3.1,
+        "attack_end": 3.648129940032959
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_ChiZheCanJian_C_Zui.Final",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_C_Zui.GA_Hun_ChiZheCanJian_C_Zui_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        4.4,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 4.4,
+        "timeline": "Main"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.ChiZheCanJian"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · ChiZheCanJian_C_Zui · Final",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "ChiZheCanJian_C_Zui",
+        "moves.finisher"
+      ],
+      "searchAliases": [
+        "GA_Hun_ChiZheCanJian_C_Zui",
+        "Final",
+        "痴者残剑",
+        "THE FANATIC'S BROKEN BLADE",
+        "痴者の残剣",
+        "광인의 잔검",
+        "Сломанный Клинок Фанатика",
+        "痴者殘劍",
+        "LAME BRISÉE DU FANATIQUE",
+        "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+        "ESPADA ROTA DEL FANÁTICO",
+        "LÂMINA QUEBRADA DO FANÁTICO",
+        "LAMA SPEZZATA DEL FANATICO",
+        "กระบี่หักของจอมคลั่ง",
+        "SI GIẢ TÀN KIẾM",
+        "A ESPADA PARTIDA DO FANÁTICO",
+        "ESPADA ROTA DEL FANÁTICO"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "痴者残剑",
+        "en": "THE FANATIC'S BROKEN BLADE",
+        "ja": "痴者の残剣",
+        "ko": "광인의 잔검",
+        "ru": "Сломанный Клинок Фанатика",
+        "zh-Hant": "痴者殘劍",
+        "fr": "LAME BRISÉE DU FANATIQUE",
+        "de": "DIE ZERBROCHENE KLINGE DES FANATIKERS",
+        "es-ES": "ESPADA ROTA DEL FANÁTICO",
+        "pt-BR": "LÂMINA QUEBRADA DO FANÁTICO",
+        "it": "LAMA SPEZZATA DEL FANATICO",
+        "th": "กระบี่หักของจอมคลั่ง",
+        "vi": "SI GIẢ TÀN KIẾM",
+        "pt-PT": "A ESPADA PARTIDA DO FANÁTICO",
+        "es-419": "ESPADA ROTA DEL FANÁTICO"
+      },
+      "category": "weapons/Weapon_008/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 4.4,
+        "attack_start": 4.463503837585449,
+        "attack_end": 5.70931601524353
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C.Crow",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C.GA_Hun_Double_JueYing_C_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        0.92,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 0.92,
+        "timelines": [
+          "Main",
+          "NearTimeline"
+        ]
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.DoubleBlade.JueYing"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · Double_JueYing_C · Crow",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "catalog.followup",
+        "2"
+      ],
+      "searchAliases": [
+        "GA_Hun_Double_JueYing_C",
+        "Crow",
+        "绝影",
+        "SHADOWLESS EDGE",
+        "絶影",
+        "절영",
+        "Неуловимые Клинки",
+        "絕影",
+        "OMBRES INSAISISSABLES",
+        "SCHATTENLOSE KLINGE",
+        "FILOS SIN SOMBRA",
+        "LÂMINA SEM SOMBRA",
+        "LAMA SENZ'OMBRA",
+        "ดาบเงาสูญ",
+        "TUYỆT ẢNH",
+        "GUME SEM SOMBRA",
+        "FILO SIN SOMBRA"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "绝影",
+        "en": "SHADOWLESS EDGE",
+        "ja": "絶影",
+        "ko": "절영",
+        "ru": "Неуловимые Клинки",
+        "zh-Hant": "絕影",
+        "fr": "OMBRES INSAISISSABLES",
+        "de": "SCHATTENLOSE KLINGE",
+        "es-ES": "FILOS SIN SOMBRA",
+        "pt-BR": "LÂMINA SEM SOMBRA",
+        "it": "LAMA SENZ'OMBRA",
+        "th": "ดาบเงาสูญ",
+        "vi": "TUYỆT ẢNH",
+        "pt-PT": "GUME SEM SOMBRA",
+        "es-419": "FILO SIN SOMBRA"
+      },
+      "category": "weapons/Weapon_024/IA_UltimateSkill",
+      "phaseWindows": [
+        {
+          "timeline": "Main",
+          "entry_time": 0.92,
+          "attack_start": 1.0054361820220947,
+          "attack_end": 2.1921606063842773
+        },
+        {
+          "timeline": "NearTimeline",
+          "entry_time": 0.92,
+          "attack_start": 1.0054359436035156,
+          "attack_end": 2.192160978913307
+        }
+      ]
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Crow",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.JueYing.Air",
+      "tag": "Ability.Action.Hun.CombatArt.JueYing.Air",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C_Air.GA_Hun_Double_JueYing_C_Air_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        0.92,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 0.92,
+        "timeline": "Main"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.DoubleBlade.JueYing"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · Double_JueYing_C_Air · Crow",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.air",
+        "catalog.followup",
+        "2"
+      ],
+      "searchAliases": [
+        "GA_Hun_Double_JueYing_C_Air",
+        "Crow",
+        "绝影",
+        "SHADOWLESS EDGE",
+        "絶影",
+        "절영",
+        "Неуловимые Клинки",
+        "絕影",
+        "OMBRES INSAISISSABLES",
+        "SCHATTENLOSE KLINGE",
+        "FILOS SIN SOMBRA",
+        "LÂMINA SEM SOMBRA",
+        "LAMA SENZ'OMBRA",
+        "ดาบเงาสูญ",
+        "TUYỆT ẢNH",
+        "GUME SEM SOMBRA",
+        "FILO SIN SOMBRA"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "绝影",
+        "en": "SHADOWLESS EDGE",
+        "ja": "絶影",
+        "ko": "절영",
+        "ru": "Неуловимые Клинки",
+        "zh-Hant": "絕影",
+        "fr": "OMBRES INSAISISSABLES",
+        "de": "SCHATTENLOSE KLINGE",
+        "es-ES": "FILOS SIN SOMBRA",
+        "pt-BR": "LÂMINA SEM SOMBRA",
+        "it": "LAMA SENZ'OMBRA",
+        "th": "ดาบเงาสูญ",
+        "vi": "TUYỆT ẢNH",
+        "pt-PT": "GUME SEM SOMBRA",
+        "es-419": "FILO SIN SOMBRA"
+      },
+      "category": "weapons/Weapon_024/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 0.92,
+        "attack_start": 1.0054359436035156,
+        "attack_end": 2.192160978913307
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_LuanYing_CA.Stage2",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/CA/GA_Hun_LuanYing_CA.GA_Hun_LuanYing_CA_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        0.74,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 0.74,
+        "timeline": "Main"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.LuanYing"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · LuanYing_CA · Stage2",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "LuanYing_CA",
+        "catalog.followup",
+        "2"
+      ],
+      "searchAliases": [
+        "GA_Hun_LuanYing_CA",
+        "Stage2",
+        "乱莺剑",
+        "WILD ORIOLE SWORD",
+        "乱鶯剣",
+        "난앵검",
+        "Клинок Дикой Иволги",
+        "亂鶯劍",
+        "ÉPÉE DU LORIOT SAUVAGE",
+        "WILDER PIROL",
+        "ESPADA DE LA OROPÉNDOLA SALVAJE",
+        "ESPADA DO ROUXINOL SELVAGEM",
+        "LAMA DELL'ORIOLO",
+        "กระบี่วิหคอลหม่าน",
+        "LOẠN OANH KIẾM",
+        "PAPA-FIGOS SELVAGEM",
+        "ESPADA DE LA OROPÉNDOLA SALVAJE"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "乱莺剑",
+        "en": "WILD ORIOLE SWORD",
+        "ja": "乱鶯剣",
+        "ko": "난앵검",
+        "ru": "Клинок Дикой Иволги",
+        "zh-Hant": "亂鶯劍",
+        "fr": "ÉPÉE DU LORIOT SAUVAGE",
+        "de": "WILDER PIROL",
+        "es-ES": "ESPADA DE LA OROPÉNDOLA SALVAJE",
+        "pt-BR": "ESPADA DO ROUXINOL SELVAGEM",
+        "it": "LAMA DELL'ORIOLO",
+        "th": "กระบี่วิหคอลหม่าน",
+        "vi": "LOẠN OANH KIẾM",
+        "pt-PT": "PAPA-FIGOS SELVAGEM",
+        "es-419": "ESPADA DE LA OROPÉNDOLA SALVAJE"
+      },
+      "category": "weapons/Weapon_003/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 0.74,
+        "attack_start": 0.7703215479850769,
+        "attack_end": 2.111839532852173
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_LuanYing_P2_CA.Stage2",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/CA/GA_Hun_LuanYing_P2_CA.GA_Hun_LuanYing_P2_CA_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        1.2,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 1.2,
+        "timeline": "Main"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.LuanYing"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · LuanYing_P2_CA · Stage2",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "LuanYing_P2_CA",
+        "catalog.followup",
+        "2"
+      ],
+      "searchAliases": [
+        "GA_Hun_LuanYing_P2_CA",
+        "Stage2",
+        "乱莺剑",
+        "WILD ORIOLE SWORD",
+        "乱鶯剣",
+        "난앵검",
+        "Клинок Дикой Иволги",
+        "亂鶯劍",
+        "ÉPÉE DU LORIOT SAUVAGE",
+        "WILDER PIROL",
+        "ESPADA DE LA OROPÉNDOLA SALVAJE",
+        "ESPADA DO ROUXINOL SELVAGEM",
+        "LAMA DELL'ORIOLO",
+        "กระบี่วิหคอลหม่าน",
+        "LOẠN OANH KIẾM",
+        "PAPA-FIGOS SELVAGEM",
+        "ESPADA DE LA OROPÉNDOLA SALVAJE"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "乱莺剑",
+        "en": "WILD ORIOLE SWORD",
+        "ja": "乱鶯剣",
+        "ko": "난앵검",
+        "ru": "Клинок Дикой Иволги",
+        "zh-Hant": "亂鶯劍",
+        "fr": "ÉPÉE DU LORIOT SAUVAGE",
+        "de": "WILDER PIROL",
+        "es-ES": "ESPADA DE LA OROPÉNDOLA SALVAJE",
+        "pt-BR": "ESPADA DO ROUXINOL SELVAGEM",
+        "it": "LAMA DELL'ORIOLO",
+        "th": "กระบี่วิหคอลหม่าน",
+        "vi": "LOẠN OANH KIẾM",
+        "pt-PT": "PAPA-FIGOS SELVAGEM",
+        "es-419": "ESPADA DE LA OROPÉNDOLA SALVAJE"
+      },
+      "category": "weapons/Weapon_003/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 1.2,
+        "attack_start": 1.3358440399169922,
+        "attack_end": 2.320129871368408
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_LuanYing_P2_CA.Final",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/CA/GA_Hun_LuanYing_P2_CA.GA_Hun_LuanYing_P2_CA_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        1.5,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 1.5,
+        "timeline": "Main"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.LuanYing"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · LuanYing_P2_CA · Final",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "LuanYing_P2_CA",
+        "moves.finisher"
+      ],
+      "searchAliases": [
+        "GA_Hun_LuanYing_P2_CA",
+        "Final",
+        "乱莺剑",
+        "WILD ORIOLE SWORD",
+        "乱鶯剣",
+        "난앵검",
+        "Клинок Дикой Иволги",
+        "亂鶯劍",
+        "ÉPÉE DU LORIOT SAUVAGE",
+        "WILDER PIROL",
+        "ESPADA DE LA OROPÉNDOLA SALVAJE",
+        "ESPADA DO ROUXINOL SELVAGEM",
+        "LAMA DELL'ORIOLO",
+        "กระบี่วิหคอลหม่าน",
+        "LOẠN OANH KIẾM",
+        "PAPA-FIGOS SELVAGEM",
+        "ESPADA DE LA OROPÉNDOLA SALVAJE"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "乱莺剑",
+        "en": "WILD ORIOLE SWORD",
+        "ja": "乱鶯剣",
+        "ko": "난앵검",
+        "ru": "Клинок Дикой Иволги",
+        "zh-Hant": "亂鶯劍",
+        "fr": "ÉPÉE DU LORIOT SAUVAGE",
+        "de": "WILDER PIROL",
+        "es-ES": "ESPADA DE LA OROPÉNDOLA SALVAJE",
+        "pt-BR": "ESPADA DO ROUXINOL SELVAGEM",
+        "it": "LAMA DELL'ORIOLO",
+        "th": "กระบี่วิหคอลหม่าน",
+        "vi": "LOẠN OANH KIẾM",
+        "pt-PT": "PAPA-FIGOS SELVAGEM",
+        "es-419": "ESPADA DE LA OROPÉNDOLA SALVAJE"
+      },
+      "category": "weapons/Weapon_003/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 1.5,
+        "attack_start": 1.6013059616088867,
+        "attack_end": 2.320129871368408
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_ShuangYue_C.Spin",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_C.GA_Hun_ShuangYue_C_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        1.25,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 1.25,
+        "timeline": "Main"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.ShuangYue"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · ShuangYue_C · Spin",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "catalog.followup",
+        "2"
+      ],
+      "searchAliases": [
+        "GA_Hun_ShuangYue_C",
+        "Spin",
+        "天煞双钺",
+        "SUNDERING DUAL AXES",
+        "天煞双鉞",
+        "천살쌍월",
+        "Небесная Кара",
+        "天煞雙鉞",
+        "CROISSANTS CÉLESTES",
+        "SPALTENDE ZWILLINGSÄXTE",
+        "HACHAS DOBLES CERCENADORAS",
+        "MACHADOS DUPLOS DILACERANTES",
+        "ASCE FRANTUMANTI",
+        "ขวานคู่อสูรฟ้า",
+        "THIÊN SÁT SONG VIỆT",
+        "MACHADOS IMPIEDOSOS",
+        "HACHAS GEMELAS DESTRUCTORAS"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "天煞双钺",
+        "en": "SUNDERING DUAL AXES",
+        "ja": "天煞双鉞",
+        "ko": "천살쌍월",
+        "ru": "Небесная Кара",
+        "zh-Hant": "天煞雙鉞",
+        "fr": "CROISSANTS CÉLESTES",
+        "de": "SPALTENDE ZWILLINGSÄXTE",
+        "es-ES": "HACHAS DOBLES CERCENADORAS",
+        "pt-BR": "MACHADOS DUPLOS DILACERANTES",
+        "it": "ASCE FRANTUMANTI",
+        "th": "ขวานคู่อสูรฟ้า",
+        "vi": "THIÊN SÁT SONG VIỆT",
+        "pt-PT": "MACHADOS IMPIEDOSOS",
+        "es-419": "HACHAS GEMELAS DESTRUCTORAS"
+      },
+      "category": "weapons/Weapon_026/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 1.25,
+        "attack_start": 1.456926941871643,
+        "attack_end": 4.907577037811279
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_ShuangYue_C.Final",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_C.GA_Hun_ShuangYue_C_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        4.25,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 4.25,
+        "timeline": "Main"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.ShuangYue"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · ShuangYue_C · Final",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "moves.finisher"
+      ],
+      "searchAliases": [
+        "GA_Hun_ShuangYue_C",
+        "Final",
+        "天煞双钺",
+        "SUNDERING DUAL AXES",
+        "天煞双鉞",
+        "천살쌍월",
+        "Небесная Кара",
+        "天煞雙鉞",
+        "CROISSANTS CÉLESTES",
+        "SPALTENDE ZWILLINGSÄXTE",
+        "HACHAS DOBLES CERCENADORAS",
+        "MACHADOS DUPLOS DILACERANTES",
+        "ASCE FRANTUMANTI",
+        "ขวานคู่อสูรฟ้า",
+        "THIÊN SÁT SONG VIỆT",
+        "MACHADOS IMPIEDOSOS",
+        "HACHAS GEMELAS DESTRUCTORAS"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "天煞双钺",
+        "en": "SUNDERING DUAL AXES",
+        "ja": "天煞双鉞",
+        "ko": "천살쌍월",
+        "ru": "Небесная Кара",
+        "zh-Hant": "天煞雙鉞",
+        "fr": "CROISSANTS CÉLESTES",
+        "de": "SPALTENDE ZWILLINGSÄXTE",
+        "es-ES": "HACHAS DOBLES CERCENADORAS",
+        "pt-BR": "MACHADOS DUPLOS DILACERANTES",
+        "it": "ASCE FRANTUMANTI",
+        "th": "ขวานคู่อสูรฟ้า",
+        "vi": "THIÊN SÁT SONG VIỆT",
+        "pt-PT": "MACHADOS IMPIEDOSOS",
+        "es-419": "HACHAS GEMELAS DESTRUCTORAS"
+      },
+      "category": "weapons/Weapon_026/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 4.25,
+        "attack_start": 4.372230052947998,
+        "attack_end": 4.907577037811279
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_SlitheringSword_C.Stage2",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_C.GA_Hun_SlitheringSword_C_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        1.5,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 1.5,
+        "timelines": [
+          "Main",
+          "Perfect"
+        ]
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.SlitheringSword"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · SlitheringSword_C · Stage2",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "catalog.followup",
+        "2"
+      ],
+      "searchAliases": [
+        "GA_Hun_SlitheringSword_C",
+        "Stage2",
+        "灵蛇软剑",
+        "SOFT SNAKE SWORD",
+        "霊蛇軟剣",
+        "영사연검",
+        "Гибкий Змеиный Меч",
+        "靈蛇軟劍",
+        "ÉPÉE AGILE DU SERPENT",
+        "BIEGSAMES SCHLANGENSCHWERT",
+        "ESPADA DE SERPIENTE FLEXIBLE",
+        "ESPADA FLEXÍVEL DA SERPENTE",
+        "SPADA FLESSIBILE DEL SERPENTE",
+        "กระบี่อ่อนอสรพิษ",
+        "LINH XÀ NHUYỄN KIẾM",
+        "ESPADA SERPENTINA",
+        "ESPADA DE LA SERPIENTE SUAVE"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "灵蛇软剑",
+        "en": "SOFT SNAKE SWORD",
+        "ja": "霊蛇軟剣",
+        "ko": "영사연검",
+        "ru": "Гибкий Змеиный Меч",
+        "zh-Hant": "靈蛇軟劍",
+        "fr": "ÉPÉE AGILE DU SERPENT",
+        "de": "BIEGSAMES SCHLANGENSCHWERT",
+        "es-ES": "ESPADA DE SERPIENTE FLEXIBLE",
+        "pt-BR": "ESPADA FLEXÍVEL DA SERPENTE",
+        "it": "SPADA FLESSIBILE DEL SERPENTE",
+        "th": "กระบี่อ่อนอสรพิษ",
+        "vi": "LINH XÀ NHUYỄN KIẾM",
+        "pt-PT": "ESPADA SERPENTINA",
+        "es-419": "ESPADA DE LA SERPIENTE SUAVE"
+      },
+      "category": "weapons/Weapon_009/IA_UltimateSkill",
+      "phaseWindows": [
+        {
+          "timeline": "Main",
+          "entry_time": 1.5,
+          "attack_start": 1.6361809968948364,
+          "attack_end": 2.972665309906006
+        },
+        {
+          "timeline": "Perfect",
+          "entry_time": 1.5,
+          "attack_start": 1.6130808591842651,
+          "attack_end": 4.729172229766846
+        }
+      ]
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_SlitheringSword_C.PerfectFinal",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_C.GA_Hun_SlitheringSword_C_C",
+      "activateByClass": false,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        4.4,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 4.4,
+        "timeline": "Perfect"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.SlitheringSword"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · SlitheringSword_C · PerfectFinal",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "moves.perfect",
+        "moves.finisher"
+      ],
+      "searchAliases": [
+        "GA_Hun_SlitheringSword_C",
+        "PerfectFinal",
+        "灵蛇软剑",
+        "SOFT SNAKE SWORD",
+        "霊蛇軟剣",
+        "영사연검",
+        "Гибкий Змеиный Меч",
+        "靈蛇軟劍",
+        "ÉPÉE AGILE DU SERPENT",
+        "BIEGSAMES SCHLANGENSCHWERT",
+        "ESPADA DE SERPIENTE FLEXIBLE",
+        "ESPADA FLEXÍVEL DA SERPENTE",
+        "SPADA FLESSIBILE DEL SERPENTE",
+        "กระบี่อ่อนอสรพิษ",
+        "LINH XÀ NHUYỄN KIẾM",
+        "ESPADA SERPENTINA",
+        "ESPADA DE LA SERPIENTE SUAVE"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "灵蛇软剑",
+        "en": "SOFT SNAKE SWORD",
+        "ja": "霊蛇軟剣",
+        "ko": "영사연검",
+        "ru": "Гибкий Змеиный Меч",
+        "zh-Hant": "靈蛇軟劍",
+        "fr": "ÉPÉE AGILE DU SERPENT",
+        "de": "BIEGSAMES SCHLANGENSCHWERT",
+        "es-ES": "ESPADA DE SERPIENTE FLEXIBLE",
+        "pt-BR": "ESPADA FLEXÍVEL DA SERPENTE",
+        "it": "SPADA FLESSIBILE DEL SERPENTE",
+        "th": "กระบี่อ่อนอสรพิษ",
+        "vi": "LINH XÀ NHUYỄN KIẾM",
+        "pt-PT": "ESPADA SERPENTINA",
+        "es-419": "ESPADA DE LA SERPIENTE SUAVE"
+      },
+      "category": "weapons/Weapon_009/IA_UltimateSkill",
+      "activeAbilityClasses": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_C.GA_Hun_SlitheringSword_C_C"
+      ],
+      "phaseWindow": {
+        "timeline": "Perfect",
+        "entry_time": 4.4,
+        "attack_start": 4.55869722366333,
+        "attack_end": 4.729172229766846
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_SnakeDual_C.Final",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SnakeDual/Attack/GA_Hun_SnakeDual_C.GA_Hun_SnakeDual_C_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        2.5,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 2.5,
+        "timeline": "Main"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.SnakeDual.CurrentHanded"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · SnakeDual_C · Final",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "moves.finisher"
+      ],
+      "searchAliases": [
+        "GA_Hun_SnakeDual_C",
+        "Final",
+        "白蟒赤练",
+        "WHITE SERPENT & CRIMSON VIPER",
+        "白蟒赤練",
+        "백망적련",
+        "Белый Удав и Алая Гадюка",
+        "白蟒赤練",
+        "SERPENT BLANC ET VIPÈRE ROUGE",
+        "WEISSSCHLANGE & KARMESINVIPER",
+        "SERPIENTE BLANCA Y VÍBORA ROJA",
+        "SERPENTE BRANCA E VÍBORA CARMESIM",
+        "SERPE BIANCA E VIPERA CREMISI",
+        "คู่อสรพิษขาวชาด",
+        "BẠCH MÃNG XÍCH LUYỆN",
+        "SERPENTE BRANCA E VÍBORA ESCARLATE",
+        "SERPIENTE BLANCA Y VÍBORA ROJA"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "白蟒赤练",
+        "en": "WHITE SERPENT & CRIMSON VIPER",
+        "ja": "白蟒赤練",
+        "ko": "백망적련",
+        "ru": "Белый Удав и Алая Гадюка",
+        "zh-Hant": "白蟒赤練",
+        "fr": "SERPENT BLANC ET VIPÈRE ROUGE",
+        "de": "WEISSSCHLANGE & KARMESINVIPER",
+        "es-ES": "SERPIENTE BLANCA Y VÍBORA ROJA",
+        "pt-BR": "SERPENTE BRANCA E VÍBORA CARMESIM",
+        "it": "SERPE BIANCA E VIPERA CREMISI",
+        "th": "คู่อสรพิษขาวชาด",
+        "vi": "BẠCH MÃNG XÍCH LUYỆN",
+        "pt-PT": "SERPENTE BRANCA E VÍBORA ESCARLATE",
+        "es-419": "SERPIENTE BLANCA Y VÍBORA ROJA"
+      },
+      "category": "weapons/Weapon_027/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 2.5,
+        "attack_start": 2.5756211280822754,
+        "attack_end": 3.1416854858398438
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_ZiMingJian_New_CC.Stage2",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk02",
+      "tag": "Ability.Action.Hun.CombatArt.Atk02",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZiMingJian/New/GA_Hun_ZiMingJian_New_CC.GA_Hun_ZiMingJian_New_CC_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        1.2,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 1.2,
+        "timeline": "Main"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.TangBlade.Default"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · ZiMingJian_New_CC · Stage2",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "2",
+        "catalog.followup",
+        "2"
+      ],
+      "searchAliases": [
+        "GA_Hun_ZiMingJian_New_CC",
+        "Stage2",
+        "紫冥剑",
+        "AUREATE",
+        "紫冥剣",
+        "자명검",
+        "Златозар",
+        "紫冥劍",
+        "LAME DORÉE",
+        "GOLDKLINGE",
+        "AUREATA",
+        "ÁUREA",
+        "DORATA",
+        "กระบี่ม่วงทมิฬ",
+        "TỬ MINH KIẾM",
+        "AUREATE",
+        "ÁUREA"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "紫冥剑",
+        "en": "AUREATE",
+        "ja": "紫冥剣",
+        "ko": "자명검",
+        "ru": "Златозар",
+        "zh-Hant": "紫冥劍",
+        "fr": "LAME DORÉE",
+        "de": "GOLDKLINGE",
+        "es-ES": "AUREATA",
+        "pt-BR": "ÁUREA",
+        "it": "DORATA",
+        "th": "กระบี่ม่วงทมิฬ",
+        "vi": "TỬ MINH KIẾM",
+        "pt-PT": "AUREATE",
+        "es-419": "ÁUREA"
+      },
+      "category": "weapons/Weapon_011/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 1.2,
+        "attack_start": 1.23451828956604,
+        "attack_end": 2.452219996601343
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_ZiMingJian_New_CC.Final",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk02",
+      "tag": "Ability.Action.Hun.CombatArt.Atk02",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZiMingJian/New/GA_Hun_ZiMingJian_New_CC.GA_Hun_ZiMingJian_New_CC_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        2.3,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 2.3,
+        "timeline": "Main"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.TangBlade.Default"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · ZiMingJian_New_CC · Final",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "2",
+        "moves.finisher"
+      ],
+      "searchAliases": [
+        "GA_Hun_ZiMingJian_New_CC",
+        "Final",
+        "紫冥剑",
+        "AUREATE",
+        "紫冥剣",
+        "자명검",
+        "Златозар",
+        "紫冥劍",
+        "LAME DORÉE",
+        "GOLDKLINGE",
+        "AUREATA",
+        "ÁUREA",
+        "DORATA",
+        "กระบี่ม่วงทมิฬ",
+        "TỬ MINH KIẾM",
+        "AUREATE",
+        "ÁUREA"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "紫冥剑",
+        "en": "AUREATE",
+        "ja": "紫冥剣",
+        "ko": "자명검",
+        "ru": "Златозар",
+        "zh-Hant": "紫冥劍",
+        "fr": "LAME DORÉE",
+        "de": "GOLDKLINGE",
+        "es-ES": "AUREATA",
+        "pt-BR": "ÁUREA",
+        "it": "DORATA",
+        "th": "กระบี่ม่วงทมิฬ",
+        "vi": "TỬ MINH KIẾM",
+        "pt-PT": "AUREATE",
+        "es-419": "ÁUREA"
+      },
+      "category": "weapons/Weapon_011/IA_UltimateSkill",
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 2.3,
+        "attack_start": 2.418886661529541,
+        "attack_end": 2.452219996601343
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_ZhanMa_C.NormalFinal",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C.GA_Hun_ZhanMa_C_C",
+      "activateByClass": false,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        4.1,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 4.1,
+        "timeline": "ExecutionTimeline"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.ZhanMaBlade"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · ZhanMa_C · NormalFinal",
+      "labelParts": [
+        "moves.combatart",
+        "moves.finisher",
+        "catalog.normal"
+      ],
+      "searchAliases": [
+        "GA_Hun_ZhanMa_C",
+        "NormalFinal",
+        "亡命斩马刀",
+        "OUTLAW WARBLADE",
+        "亡命斬馬刀",
+        "무법자 참마도",
+        "Клинок Разбойника",
+        "亡命斬馬刀",
+        "LAME GUERRIÈRE DU HORS-LA-LOI",
+        "KRIEGSKLINGE DES GESETZLOSEN",
+        "ESPADA DE GUERRA DEL FORAJIDO",
+        "LÂMINA DE GUERRA DO FORA DA LEI",
+        "LAMA DA GUERRA DEL FUORILEGGE",
+        "ดาบฟันอาชา",
+        "VONG MẠNG ĐAO",
+        "ESPADA FORA DA LEI",
+        "ESPADA DE GUERRA DEL FORAJIDO"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "亡命斩马刀",
+        "en": "OUTLAW WARBLADE",
+        "ja": "亡命斬馬刀",
+        "ko": "무법자 참마도",
+        "ru": "Клинок Разбойника",
+        "zh-Hant": "亡命斬馬刀",
+        "fr": "LAME GUERRIÈRE DU HORS-LA-LOI",
+        "de": "KRIEGSKLINGE DES GESETZLOSEN",
+        "es-ES": "ESPADA DE GUERRA DEL FORAJIDO",
+        "pt-BR": "LÂMINA DE GUERRA DO FORA DA LEI",
+        "it": "LAMA DA GUERRA DEL FUORILEGGE",
+        "th": "ดาบฟันอาชา",
+        "vi": "VONG MẠNG ĐAO",
+        "pt-PT": "ESPADA FORA DA LEI",
+        "es-419": "ESPADA DE GUERRA DEL FORAJIDO"
+      },
+      "category": "weapons/Weapon_013/IA_UltimateSkill",
+      "activeAbilityClasses": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C.GA_Hun_ZhanMa_C_C"
+      ],
+      "phaseWindow": {
+        "timeline": "ExecutionTimeline",
+        "entry_time": 4.1,
+        "attack_start": 4.724143981933594,
+        "attack_end": 4.810329437255859
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_ZhanMa_C.GrabFinal",
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C.GA_Hun_ZhanMa_C_C",
+      "activateByClass": false,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        3.3,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 1.328,
+        "before_time": 3.3,
+        "timeline": "GrabSuccess"
+      },
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.ZhanMaBlade"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · ZhanMa_C · GrabFinal",
+      "labelParts": [
+        "moves.combatart",
+        "moves.finisher",
+        "catalog.grab"
+      ],
+      "searchAliases": [
+        "GA_Hun_ZhanMa_C",
+        "GrabFinal",
+        "亡命斩马刀",
+        "OUTLAW WARBLADE",
+        "亡命斬馬刀",
+        "무법자 참마도",
+        "Клинок Разбойника",
+        "亡命斬馬刀",
+        "LAME GUERRIÈRE DU HORS-LA-LOI",
+        "KRIEGSKLINGE DES GESETZLOSEN",
+        "ESPADA DE GUERRA DEL FORAJIDO",
+        "LÂMINA DE GUERRA DO FORA DA LEI",
+        "LAMA DA GUERRA DEL FUORILEGGE",
+        "ดาบฟันอาชา",
+        "VONG MẠNG ĐAO",
+        "ESPADA FORA DA LEI",
+        "ESPADA DE GUERRA DEL FORAJIDO"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "亡命斩马刀",
+        "en": "OUTLAW WARBLADE",
+        "ja": "亡命斬馬刀",
+        "ko": "무법자 참마도",
+        "ru": "Клинок Разбойника",
+        "zh-Hant": "亡命斬馬刀",
+        "fr": "LAME GUERRIÈRE DU HORS-LA-LOI",
+        "de": "KRIEGSKLINGE DES GESETZLOSEN",
+        "es-ES": "ESPADA DE GUERRA DEL FORAJIDO",
+        "pt-BR": "LÂMINA DE GUERRA DO FORA DA LEI",
+        "it": "LAMA DA GUERRA DEL FUORILEGGE",
+        "th": "ดาบฟันอาชา",
+        "vi": "VONG MẠNG ĐAO",
+        "pt-PT": "ESPADA FORA DA LEI",
+        "es-419": "ESPADA DE GUERRA DEL FORAJIDO"
+      },
+      "category": "weapons/Weapon_013/IA_UltimateSkill",
+      "activeAbilityClasses": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ZhanMaBlade/GA_Hun_ZhanMa_C.GA_Hun_ZhanMa_C_C"
+      ],
+      "phaseWindow": {
+        "timeline": "GrabSuccess",
+        "entry_time": 3.3,
+        "attack_start": 4.717964172363281,
+        "attack_end": 4.717964172363281
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_Jigsaw_C.HasSawHitStage2",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Jigsaw.RB",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C.GA_Hun_Jigsaw_C_C",
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "CharacterState.Space.Ground",
+        "Weapon.Type.Jigsaw"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · Jigsaw_C · HasSawHitStage2",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.followup",
+        "catalog.onhit",
+        "2"
+      ],
+      "searchAliases": [
+        "GA_Hun_Jigsaw_C",
+        "CombatArt.Final",
+        "GAAction_DurationBullet_Simple_C_9",
+        "GAAction_DurationBullet_Simple_C_10",
+        "B_Hun_JigSaw_C_04",
+        "B_Hun_JigSaw_C_09",
+        "断肢锯",
+        "BONESAW",
+        "断肢鋸",
+        "절단톱",
+        "Костогрыз",
+        "斷肢鋸",
+        "SCIE CRANTÉE",
+        "KNOCHENSÄGE",
+        "SIERRA ÓSEA",
+        "SERRA DE OSSOS",
+        "SEGAOSSA",
+        "เลื่อยตัดแขนขา",
+        "ĐOẠN CHI CƯA",
+        "SERRA DE OSSOS",
+        "SIERRA DENTADA"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "断肢锯",
+        "en": "BONESAW",
+        "ja": "断肢鋸",
+        "ko": "절단톱",
+        "ru": "Костогрыз",
+        "zh-Hant": "斷肢鋸",
+        "fr": "SCIE CRANTÉE",
+        "de": "KNOCHENSÄGE",
+        "es-ES": "SIERRA ÓSEA",
+        "pt-BR": "SERRA DE OSSOS",
+        "it": "SEGAOSSA",
+        "th": "เลื่อยตัดแขนขา",
+        "vi": "ĐOẠN CHI CƯA",
+        "pt-PT": "SERRA DE OSSOS",
+        "es-419": "SIERRA DENTADA"
+      },
+      "category": "weapons/Weapon_015/IA_UltimateSkill",
+      "activateByClass": false,
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        2.05,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "timeline": "HasSawHit",
+        "minimum_time": 0.001,
+        "before_time": 2.05
+      },
+      "activeAbilityClasses": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C.GA_Hun_Jigsaw_C_C"
+      ],
+      "phaseWindow": {
+        "timeline": "HasSawHit",
+        "entry_time": 2.05,
+        "attack_start": 2.1313343048095703,
+        "attack_end": 3.3370130956172943
+      }
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_Jigsaw_C.HasSawHitFinal",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Jigsaw.RB",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C.GA_Hun_Jigsaw_C_C",
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "CharacterState.Space.Ground",
+        "Weapon.Type.Jigsaw"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "CombatArt · Jigsaw_C · HasSawHitFinal",
+      "labelParts": [
+        "moves.combatart",
+        "moves.finisher",
+        "catalog.onhit"
+      ],
+      "searchAliases": [
+        "GA_Hun_Jigsaw_C",
+        "CombatArt.Final",
+        "GAAction_DurationBullet_Simple_C_9",
+        "GAAction_DurationBullet_Simple_C_10",
+        "B_Hun_JigSaw_C_04",
+        "B_Hun_JigSaw_C_09",
+        "断肢锯",
+        "BONESAW",
+        "断肢鋸",
+        "절단톱",
+        "Костогрыз",
+        "斷肢鋸",
+        "SCIE CRANTÉE",
+        "KNOCHENSÄGE",
+        "SIERRA ÓSEA",
+        "SERRA DE OSSOS",
+        "SEGAOSSA",
+        "เลื่อยตัดแขนขา",
+        "ĐOẠN CHI CƯA",
+        "SERRA DE OSSOS",
+        "SIERRA DENTADA"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "断肢锯",
+        "en": "BONESAW",
+        "ja": "断肢鋸",
+        "ko": "절단톱",
+        "ru": "Костогрыз",
+        "zh-Hant": "斷肢鋸",
+        "fr": "SCIE CRANTÉE",
+        "de": "KNOCHENSÄGE",
+        "es-ES": "SIERRA ÓSEA",
+        "pt-BR": "SERRA DE OSSOS",
+        "it": "SEGAOSSA",
+        "th": "เลื่อยตัดแขนขา",
+        "vi": "ĐOẠN CHI CƯA",
+        "pt-PT": "SERRA DE OSSOS",
+        "es-419": "SIERRA DENTADA"
+      },
+      "category": "weapons/Weapon_015/IA_UltimateSkill",
+      "activateByClass": false,
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        3.16,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "timeline": "HasSawHit",
+        "minimum_time": 0.001,
+        "before_time": 3.16
+      },
+      "activeAbilityClasses": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Jigsaw/GA_Hun_Jigsaw_C.GA_Hun_Jigsaw_C_C"
+      ],
+      "phaseWindow": {
+        "timeline": "HasSawHit",
+        "entry_time": 3.16,
+        "attack_start": 3.2015790939331055,
+        "attack_end": 3.3370130956172943
+      }
     }
   ]
 }

@@ -39,7 +39,7 @@ class NativeFunctions:
         offset = self.offset(address)
         return self.binary[offset:self.binary.find(b"\0", offset)].decode("utf-8")
 
-    def signatures(self, name, include_return=False):
+    def property_records(self, name, include_return=False):
         binary, position, signatures = self.binary, 0, []
         while True:
             position = binary.find(name.encode() + b"\0", position)
@@ -64,8 +64,12 @@ class NativeFunctions:
                     # Native post hooks insert the return value after Context.
                     # Inner array properties are never function parameters.
                     if flags & 0x80 and (include_return or not flags & 0x400):
-                        properties.append((self.name(name_address), kind))
+                        properties.append((self.name(name_address), kind, prop))
                 signatures.append(properties)
+
+    def signatures(self, name, include_return=False):
+        return [[(field, kind) for field, kind, _ in signature]
+                for signature in self.property_records(name, include_return)]
 
 
 def blueprint_parameters(package, data):
@@ -119,9 +123,15 @@ def main():
         "TryActivateAbilityByClass": [("InAbilityToActivate", 0x11), ("bAllowRemoteActivation", 0x4c)],
         "TryActivateAbilitiesByTag": [("GameplayTagContainer", 0x19), ("bAllowRemoteActivation", 0x4c)],
         "GetGameplayAttributeValue": [("Attribute", 0x19), ("bFound", 0x4c)],
+        "BP_ApplyGameplayEffectToSelf": [("GameplayEffectClass", 0x11), ("Level", 0xa), ("EffectContext", 0x19)],
+        "MakeOutgoingSpec": [("GameplayEffectClass", 0x11), ("Level", 0xa), ("Context", 0x19)],
+        "BP_ApplyGameplayEffectSpecToSelf": [("SpecHandle", 0x19)],
+        "RemoveActiveGameplayEffect": [("Handle", 0x19), ("StacksToRemove", 0x3)],
         "GetFloatAttributeFromAbilitySystemComponent": [("AbilitySystem", 0x12), ("Attribute", 0x19), ("bSuccessfullyFoundAttribute", 0x4c)],
         "ModifyCharacterAttributeValue": [("Character", 0x12), ("Attribute", 0x19), ("ModiferOp", 0x0), ("Value", 0xa)],
         "IsHolding": [("InputAction", 0x12)],
+        "MakeInputActionValueOfType": [("X", 0xb), ("Y", 0xb), ("Z", 0xb), ("ValueType", 0x1e)],
+        "Conv_InputActionValueToBool": [("InValue", 0x19)],
         "StartContinuousInputInjectionForAction": [("Action", 0x12), ("RawValue", 0x19), ("Modifiers", 0x16), ("Triggers", 0x16)],
         "StopContinuousInputInjectionForAction": [("Action", 0x12)],
         "GetResolvedExecutionType": [("Channel", 0x14)],
@@ -148,9 +158,37 @@ def main():
     }
     expected_returns.update({"GetGameplayAttributeValue": 0xa,
                              "GetFloatAttributeFromAbilitySystemComponent": 0xa,
-                             "CalculateDamage": None})
+                             "CalculateDamage": None,
+                             "MakeInputActionValueOfType": 0x19,
+                             "Conv_InputActionValueToBool": 0x4c})
+    expected_returns.update({"BP_ApplyGameplayEffectToSelf": 0x19,"RemoveActiveGameplayEffect": 0x4c,
+                             "MakeOutgoingSpec": 0x19,"BP_ApplyGameplayEffectSpecToSelf": 0x19,
+                             "GetGameplayTagCount": 0x3})
     with args.game_exe.open("rb") as stream, mmap.mmap(stream.fileno(), 0, access=mmap.ACCESS_READ) as binary:
         native = NativeFunctions(binary)
+        def struct_getter(function, parameter, parameters=None):
+            properties = native.property_records(function, include_return=True)
+            if parameters is not None:
+                properties = [signature for signature in properties
+                              if [(name, kind) for name, kind, _ in signature if name != "ReturnValue"] == parameters]
+            matches = [pointer for signature in properties for name, kind, pointer in signature
+                       if name == parameter and kind == 0x19]
+            assert len(matches) == 1, (function, parameter)
+            return struct.unpack_from("<Q", binary, native.offset(matches[0]) + 56)[0]
+
+        input_value = struct_getter("MakeInputActionValueOfType", "ReturnValue")
+        assert input_value == struct_getter("StartContinuousInputInjectionForAction", "RawValue")
+        assert input_value == struct_getter("Conv_InputActionValueToBool", "InValue")
+        assert input_value != struct_getter("InjectInputVectorForAction", "Value"), "FInputActionValue is not FVector"
+        assert native.signatures("MakeEffectContext", include_return=True).count([("ReturnValue", 0x19)]) == 1
+        effect_context = struct_getter("MakeEffectContext", "ReturnValue", [])
+        assert effect_context == struct_getter("MakeOutgoingSpec", "Context")
+        assert struct_getter("MakeOutgoingSpec", "ReturnValue") == struct_getter("BP_ApplyGameplayEffectSpecToSelf", "SpecHandle")
+        assert struct_getter("BP_ApplyGameplayEffectToSelf", "ReturnValue") == struct_getter("BP_ApplyGameplayEffectSpecToSelf", "ReturnValue")
+        assert effect_context == struct_getter("BP_ApplyGameplayEffectToSelf", "EffectContext")
+        effect_handle = struct_getter("BP_ApplyGameplayEffectToSelf", "ReturnValue")
+        assert effect_handle == struct_getter("RemoveActiveGameplayEffect", "Handle")
+        assert effect_context != effect_handle, "Effect contexts and active-effect handles are distinct native structs"
         for name, expected in expected_native.items():
             full = native.signatures(name, include_return=True)
             signatures = [[(n, kind) for n, kind in signature if n != "ReturnValue"] for signature in full]
@@ -185,7 +223,8 @@ def main():
             if not endpoint:
                 continue
             if endpoint.startswith("/Script/"):
-                assert len(move.get("entryArguments", [])) == len(expected_native[endpoint.split(":")[1]]), move["id"]
+                count = 5 if endpoint == "/Script/LegoAbility.LegoAbility:PlayTimeline" else len(expected_native[endpoint.split(":")[1]])
+                assert len(move.get("entryArguments", [])) == count, move["id"]
             else:
                 declaring_owner, callback = endpoint.rsplit(":", 1) if ":" in endpoint else (move["abilityClass"], endpoint)
                 owner = move["abilityClass"]

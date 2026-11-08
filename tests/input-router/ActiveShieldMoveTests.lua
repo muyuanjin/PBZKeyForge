@@ -8,9 +8,9 @@ local function check(value, message)
 end
 function FName(value) return {ToString=function() return value end} end
 local function array(items)
-    return {ForEach=function(_, callback)
+    return setmetatable({GetArrayNum=function() return #items end,ForEach=function(_, callback)
         for index, item in ipairs(items) do callback(index,{get=function() return item end}) end
-    end}
+    end},{__index=items})
 end
 local class = "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C"
 local physical = "PhysicalTotal_5_DCBBD9C24A42FAEF773E3380E04B6FEB"
@@ -18,12 +18,23 @@ local shachi = "ShachiTotal_7_91654B4148BC8D0C41424AA11B894507"
 local move = {kind="move",ability_class=class,active_ability_classes={class},entry_point=class..":ToRelease",
     entry_when={timeline="Loop",property_sum_above={properties={{"ElementalChargeData",physical},
         {"ElementalChargeData",shachi}},threshold_property="Thredhold"}}}
+local classes = {}
+local nextClass = 100
+function StaticFindObject(path)
+    if not classes[path] then
+        nextClass = nextClass + 1
+        local address = nextClass
+        classes[path] = {IsValid=function() return true end,GetAddress=function() return address end,
+            GetFullName=function() return "BlueprintGeneratedClass " .. path end}
+    end
+    return classes[path]
+end
 local function object(address, properties)
     local value = properties or {}
     function value:IsValid() return self.valid ~= false end
     function value:GetAddress() return address end
     function value:GetPropertyValue(name) return self[name] end
-    function value:GetClass() return {GetFullName=function() return "BlueprintGeneratedClass "..(self.class or class) end} end
+    function value:GetClass() return StaticFindObject(self.class or class) end
     return value
 end
 local function fixture()

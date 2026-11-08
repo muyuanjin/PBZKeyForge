@@ -29,8 +29,9 @@ namespace PBZKeyForge
             public object[] entryArguments = new object[0];
             public Dictionary<string, object> entryWhen;
             public PhaseWindow phaseWindow;
+            public PhaseWindow[] phaseWindows = new PhaseWindow[0];
             public Dictionary<string, string> weaponLabels;
-            public bool releaseInputBeforeEntry, activateByClass, activeCallbackOnly;
+            public bool releaseInputBeforeEntry, activateByClass, activeCallbackOnly, nativeEntry;
             public int priority;
         }
         sealed class Document
@@ -50,6 +51,8 @@ namespace PBZKeyForge
         }
 
         public static bool Contains(string id) { return id != null && Moves.ContainsKey(id); }
+        internal static string KindLabel(string id)
+        { return I18n.Str(Moves[id].nativeEntry ? "moves.nativekind" : "moves.kind"); }
         internal static bool SupportsPhaseSpeed(string id)
         { Move move; return id == null || !Moves.TryGetValue(id, out move) || !move.activeCallbackOnly; }
         internal static string[] ResourceKinds(string id)
@@ -60,13 +63,13 @@ namespace PBZKeyForge
             return activation.Concat(move.activeAbilityClasses.SelectMany(ResourceCostCatalog.ForClass)).Distinct().ToArray();
         }
         public static string SourceId(string id)
-        { Move move; return id != null && Moves.TryGetValue(id, out move) ? move.sourceId : id; }
+        { Move move; return id != null && Moves.TryGetValue(id, out move) && !string.IsNullOrEmpty(move.sourceId) ? move.sourceId : id; }
         internal static string LabelSuffix(string id)
         { return string.Join(" · ", Moves[id].labelParts.Select(part => I18n.Str(part))); }
         internal static string LabelPrefix(string id, string fallback)
         {
             string label;
-            return Moves[id].weaponLabels != null && Moves[id].weaponLabels.TryGetValue(I18n.Current, out label) ? label : fallback;
+            return Moves[id].weaponLabels != null && Moves[id].weaponLabels.TryGetValue(I18n.Current, out label) && !string.IsNullOrEmpty(label) ? label : fallback;
         }
         internal static string SearchAliases(string id)
         { Move move; return id != null && Moves.TryGetValue(id, out move) ? string.Join(" ", move.searchAliases) : ""; }
@@ -106,10 +109,17 @@ namespace PBZKeyForge
                 if (move.entryArguments.Length > 0) target["entry_arguments"] = move.entryArguments;
                 if (move.entryWhen != null) target["entry_when"] = move.entryWhen;
                 if (move.phaseWindow != null)
+                {
                     target["phase_window"] = new Dictionary<string, object> {
                         { "timeline", move.phaseWindow.timeline }, { "entry_time", move.phaseWindow.entry_time },
                         { "attack_start", move.phaseWindow.attack_start }, { "attack_end", move.phaseWindow.attack_end }
                     };
+                }
+                if (move.phaseWindows.Length > 0)
+                    target["phase_windows"] = move.phaseWindows.Select(window => new Dictionary<string, object> {
+                        { "timeline", window.timeline }, { "entry_time", window.entry_time },
+                        { "attack_start", window.attack_start }, { "attack_end", window.attack_end }
+                    }).ToArray();
                 if (move.releaseInputBeforeEntry) target["release_input_before_entry"] = true;
                 if (move.activeBooleanProperties.Length > 0)
                     target["active_boolean_properties"] = move.activeBooleanProperties;
@@ -119,12 +129,19 @@ namespace PBZKeyForge
 
         static Dictionary<string, Move> Load()
         {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("PBZKeyForge.KeyEnhancement.complete-moves.json"))
+            var result = new Dictionary<string, Move>(StringComparer.Ordinal);
+            foreach (string name in new[] { "complete-moves.json", "weapon-moves.json", "shadow-moves.json" })
             {
-                if (stream == null) throw new InvalidDataException("PBZKeyForge.KeyEnhancement.complete-moves.json");
-                using (var reader = new StreamReader(stream))
-                    return new JavaScriptSerializer().Deserialize<Document>(reader.ReadToEnd()).moves.ToDictionary(move => move.id, StringComparer.Ordinal);
+                string resource = "PBZKeyForge.KeyEnhancement." + name;
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+                {
+                    if (stream == null) throw new InvalidDataException(resource);
+                    using (var reader = new StreamReader(stream))
+                        foreach (var move in new JavaScriptSerializer { MaxJsonLength = 16777216 }.Deserialize<Document>(reader.ReadToEnd()).moves)
+                            result.Add(move.id, move);
+                }
             }
+            return result;
         }
     }
 }

@@ -1,6 +1,6 @@
 local Context = {}
 Context.__index = Context
-local activeContext
+local activeContext, observingDamage
 local function native_ok(result,message) assert(result == 1,message) end
 
 local function new_damage_object(method,object)
@@ -17,20 +17,23 @@ local function new_damage_object(method,object)
     end
 end
 
--- Notifications share the Mod's lifetime. Their callbacks access objects only
--- while damage scaling is enabled.
-NotifyOnNewObject("/Script/SGameAttributes.DamageCalculatorBase",function(object)
-    new_damage_object("watch_damage_calculator",object)
-end)
-NotifyOnNewObject("/Script/SGameAttributes.DamagePreCalculationPayload",function(object)
-    new_damage_object("watch_damage_payload",object)
-end)
-NotifyOnNewObject("/Script/SGameCombatSystem.BulletActorBase",function(object)
-    new_damage_object("watch_damage_bullet",object)
-end)
-NotifyOnNewObject("/Script/SGameCombatSystem.BulletObjectBase",function(object)
-    new_damage_object("watch_damage_bullet",object)
-end)
+local function observe_damage()
+    if observingDamage then return end
+    -- Register once when damage scaling is first used; callbacks share the Mod's lifetime.
+    NotifyOnNewObject("/Script/SGameAttributes.DamageCalculatorBase",function(object)
+        new_damage_object("watch_damage_calculator",object)
+    end)
+    NotifyOnNewObject("/Script/SGameAttributes.DamagePreCalculationPayload",function(object)
+        new_damage_object("watch_damage_payload",object)
+    end)
+    NotifyOnNewObject("/Script/SGameCombatSystem.BulletActorBase",function(object)
+        new_damage_object("watch_damage_bullet",object)
+    end)
+    NotifyOnNewObject("/Script/SGameCombatSystem.BulletObjectBase",function(object)
+        new_damage_object("watch_damage_bullet",object)
+    end)
+    observingDamage = true
+end
 
 function Context.new(report)
     local scripts = debug.getinfo(1,"S").source:sub(2):match("^(.*[/\\])")
@@ -40,11 +43,108 @@ function Context.new(report)
     local at = assert(package.loadlib(path,"pbz_script_context_at"))
     local watchInterface = assert(package.loadlib(path,"pbz_script_context_watch_interface"))
     local interfaceObject = assert(package.loadlib(path,"pbz_script_context_interface_object"))
+    local abilitySpecs = assert(package.loadlib(path,"pbz_ability_spec_indices"))
     local self = setmetatable({enable=enable,at=at,watch_interface=watchInterface,interface_name=interfaceObject,
-        damage_modules={},damage_payloads={},damage_bullets={},path=path,report=report,observation_frame=0},Context)
+        ability_specs=abilitySpecs,damage_modules={},damage_payloads={},damage_bullets={},path=path,report=report,observation_frame=0},Context)
     enable(true)
     activeContext = self
     return self
+end
+
+function Context:charge_rate(instanceOrAddress,rate,tickFunction)
+    if not self.set_charge_rate then
+        if rate == 1 then return end
+        self.set_charge_rate = assert(package.loadlib(self.path,"pbz_charge_ability"))
+        self.watch_charge_tick = assert(package.loadlib(self.path,"pbz_charge_watch_tick"))
+        self.charge_ticks = {}
+    end
+    if tickFunction and not self.charge_ticks[tickFunction:GetAddress()] then
+        native_ok(self.watch_charge_tick(tickFunction:GetAddress()))
+        self.charge_ticks[tickFunction:GetAddress()] = true
+    end
+    local address = type(instanceOrAddress) == "number" and instanceOrAddress or instanceOrAddress:GetAddress()
+    native_ok(self.set_charge_rate(address,rate))
+end
+
+function Context:set_weapon_slot(component,slot,index,config)
+    if not self.weapon_set_slot then self.weapon_set_slot = assert(package.loadlib(self.path,"pbz_weapon_set_slot")) end
+    local fn = StaticFindObject("/Script/SGameCombatSystem.CharacterWeaponsComponent:SetSlotWeapon")
+    native_ok(self.weapon_set_slot(component:GetAddress(),fn:GetAddress(),slot,index,config:GetAddress()))
+end
+
+function Context:start_hold_input(subsystem,action)
+    if not self.input_start_hold then self.input_start_hold = assert(package.loadlib(self.path,"pbz_input_start_hold")) end
+    local library = StaticFindObject("/Script/EnhancedInput.Default__EnhancedInputLibrary")
+    local make = StaticFindObject("/Script/EnhancedInput.EnhancedInputLibrary:MakeInputActionValueOfType")
+    local inject = StaticFindObject("/Script/EnhancedInput.EnhancedInputSubsystemInterface:StartContinuousInputInjectionForAction")
+    native_ok(self.input_start_hold(subsystem:GetAddress(),library:GetAddress(),make:GetAddress(),inject:GetAddress(),action:GetAddress()))
+end
+
+function Context:apply_effect_self(component,effectClass,level,requirementScopes)
+    local make = StaticFindObject("/Script/GameplayAbilities.AbilitySystemComponent:MakeEffectContext")
+    local apply = StaticFindObject("/Script/GameplayAbilities.AbilitySystemComponent:BP_ApplyGameplayEffectToSelf")
+    local status,handle
+    if requirementScopes and #requirementScopes > 0 then
+        if not self.effect_apply_requirements then
+            self.effect_apply_requirements = assert(package.loadlib(self.path,"pbz_effect_apply_with_requirements"))
+        end
+        local arguments = {component:GetAddress(),make:GetAddress(),apply:GetAddress(),effectClass:GetAddress(),level or 1,#requirementScopes}
+        for _,scope in ipairs(requirementScopes) do
+            assert(scope.application and not scope.removal,"Native effect preparation only relaxes application requirements")
+            arguments[#arguments+1] = scope.object:GetAddress()
+        end
+        status,handle = self.effect_apply_requirements(table.unpack(arguments))
+    else
+        if not self.effect_apply then self.effect_apply = assert(package.loadlib(self.path,"pbz_effect_apply_self")) end
+        status,handle = self.effect_apply(component:GetAddress(),make:GetAddress(),apply:GetAddress(),effectClass:GetAddress(),level or 1)
+    end
+    native_ok(status,handle)
+    return handle
+end
+
+function Context:remove_effect(component,handle)
+    if not self.effect_remove then self.effect_remove = assert(package.loadlib(self.path,"pbz_effect_remove")) end
+    local remove = StaticFindObject("/Script/GameplayAbilities.AbilitySystemComponent:RemoveActiveGameplayEffect")
+    local status,result = self.effect_remove(component:GetAddress(),remove:GetAddress(),handle)
+    native_ok(status,result)
+    return result ~= 0
+end
+
+local function long_buff_time(component)
+    return StaticFindObject("/Script/Engine.Default__GameplayStatics"):GetTimeSeconds(component)
+end
+
+function Context:capture_long_buffs(component,effectDefinitions)
+    if not self.long_buff_capture then self.long_buff_capture = assert(package.loadlib(self.path,"pbz_long_buff_capture")) end
+    assert(#effectDefinitions <= 2,"Long buff preparation supports its two lower tiers")
+    local first,second = effectDefinitions[1],effectDefinitions[2]
+    local status,token = self.long_buff_capture(component:GetAddress(),long_buff_time(component),
+        first and first:GetClass():GetAddress() or 0,first and first:GetAddress() or 0,
+        second and second:GetClass():GetAddress() or 0,second and second:GetAddress() or 0)
+    native_ok(status,token)
+    return token
+end
+
+function Context:remove_long_buffs(component,token)
+    if not self.long_buff_remove then self.long_buff_remove = assert(package.loadlib(self.path,"pbz_long_buff_remove")) end
+    local remove = StaticFindObject("/Script/GameplayAbilities.AbilitySystemComponent:RemoveActiveGameplayEffect")
+    local status,result = self.long_buff_remove(component:GetAddress(),remove:GetAddress(),token)
+    native_ok(status,result)
+end
+
+function Context:restore_long_buffs(component,token)
+    if not self.long_buff_restore then self.long_buff_restore = assert(package.loadlib(self.path,"pbz_long_buff_restore")) end
+    local make = StaticFindObject("/Script/GameplayAbilities.AbilitySystemComponent:MakeOutgoingSpec")
+    local apply = StaticFindObject("/Script/GameplayAbilities.AbilitySystemComponent:BP_ApplyGameplayEffectSpecToSelf")
+    local status,result = self.long_buff_restore(component:GetAddress(),make:GetAddress(),apply:GetAddress(),token,long_buff_time(component))
+    native_ok(status,result)
+    self:discard_long_buffs(token)
+end
+
+function Context:discard_long_buffs(token)
+    if not self.long_buff_discard then self.long_buff_discard = assert(package.loadlib(self.path,"pbz_long_buff_discard")) end
+    local status,result = self.long_buff_discard(token)
+    native_ok(status,result)
 end
 
 function Context:enable_damage()
@@ -75,25 +175,15 @@ function Context:enable_damage()
         self.bullet_initialize_function = StaticFindObject("/Script/SGameCombatSystem.BulletInterface:Initialize")
         native_ok(self.prepare_bullet(self.bullet_initialize_function:GetAddress()))
         self.damage_enabled = true
+        observe_damage()
+        -- Include derived instances and class defaults without a Lua callback for
+        -- every unrelated UObject in the level.
         local calculatorClass = StaticFindObject("/Script/SGameAttributes.DamageCalculatorBase")
-        local classClass = StaticFindObject("/Script/CoreUObject.Class")
-        ForEachUObject(function(class)
-            if class:IsValid() and class:IsA(classClass) then
-                if class:IsChildOf(calculatorClass) then
-                    local object = class:GetCDO()
-                    if object then self:watch_damage_calculator(object) end
-                end
-                for _,base in ipairs(self.bullet_classes) do
-                    if class:IsChildOf(base) then
-                        local object = class:GetCDO()
-                        if object then self:watch_damage_bullet(object) end
-                        break
-                    end
-                end
-            end
-        end)
-        for _,name in ipairs({"BulletActorBase","BulletObjectBase"}) do
-            for _,object in ipairs(FindAllOf(name) or {}) do self:watch_damage_bullet(object) end
+        for _,object in ipairs(FindObjects(0,calculatorClass,nil,0,0,false)) do
+            self:watch_damage_calculator(object)
+        end
+        for _,base in ipairs(self.bullet_classes) do
+            for _,object in ipairs(FindObjects(0,base,nil,0,0,false)) do self:watch_damage_bullet(object) end
         end
         for _,object in ipairs(FindAllOf("DamagePreCalculationPayload") or {}) do self:watch_damage_payload(object) end
     end)
@@ -200,13 +290,30 @@ function Context:update_damage()
     end
 end
 
-function Context:interface_hook(backend,path,pre,post)
+function Context:interface_hook(backend,path,pre,post,owner)
     self.watch_interface(backend:object(path):GetAddress())
+    local calls
+    if owner then
+        if not self.interface_address then
+            self.interface_address = assert(package.loadlib(self.path,"pbz_script_context_interface_address"))
+        end
+        if post then calls = {} end
+    end
     return RegisterHook(path,function(_, ...)
         if self.closed then return end
-        local object = StaticFindObject(self.interface_name():gsub("^%S+ ",""))
+        local object
+        if owner then
+            object = owner()
+            local accepted = object and object:IsValid() and object:GetAddress() == self.interface_address() or false
+            if calls then calls[#calls+1] = accepted end
+            if not accepted then return end
+        else object = StaticFindObject(self.interface_name():gsub("^%S+ ","")) end
         return pre(object, ...)
-    end,post and function(...) if not self.closed then return post(...) end end)
+    end,post and function(...)
+        if self.closed then return end
+        if calls and not table.remove(calls) then return end
+        return post(...)
+    end)
 end
 
 function Context:owner(lookup, resolve)

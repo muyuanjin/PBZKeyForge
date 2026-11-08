@@ -76,7 +76,7 @@ ZIP 和 JSON 配置源会先完成增强配置的编译验证；缺少 ability T
 
 `--out`、`--apply`、`--live` 三选一；不指定就是预览。`--dry-run` 可以单独使用或与 `--live` 一起使用，不能与 `--out`、`--apply` 混用。原生存档与 Mod 配置不构成跨文件事务，失败结果的 `bindingsSaved`、`activationSaved`、`enhancementSaved` 逐项说明已经完成的部分，`inputBackup`、`activationBackup` 给出存档备份路径。`liveApplied=true` 和 `liveState=confirmed` 表示游戏已确认且配置已保存；`unconfirmed` 表示此次调用没有确认最终成功，需检查错误及当前配置后再处理。CLI 返回码 `0` 为成功，`1` 为操作失败或部分成功，`2` 为无效请求。重试时先检查现状，仅重做未完成的操作。
 
-`--inspect` 与 `--runtime-status` 的 `readiness` 提供 `canApply`、`canLiveApply`、`liveBlockedBy` 和下一步建议。常见阻塞值为 `game_closed`、`enhancement_disabled`、`waiting_for_runtime`、`scheme_unknown`、`scheme_not_active`、`not_installed_source`。状态检查本身成功不代表实时编辑已连接，必须读取 `canLiveApply`；加载期间等待后重新查询。实时请求最多等待约 6 秒，超时取消请求，避免进入场景后延迟生效。
+`--inspect` 与 `--runtime-status` 的 `readiness` 提供 `canApply`、`canLiveApply`、`liveBlockedBy` 和下一步建议。常见阻塞值为 `game_closed`、`enhancement_disabled`、`waiting_for_runtime`、`scheme_unknown`、`scheme_not_active`、`not_installed_source`。状态检查本身成功不代表实时编辑已连接，必须读取 `canLiveApply`；加载期间等待后重新查询。实时请求最多等待约 15 秒，超时取消请求，避免进入场景后延迟生效。
 
 增强普通键位存入当前方案的 `NativeBindings`，规则与屏蔽同样随方案隔离；手柄按通用引擎键名执行，原存档保留。实时应用部署完整方案库，并启用当前选中的增强方案，支持切换到其他增强方案；组件安装卸载、关闭增强、资源 Mod 或全局重置仍需退出游戏。`--runtime-status` 的 `activeScheme` 返回实际增强方案 ID，`nativeActiveScheme` 单独返回磁盘中的原生方案。首次使用需关闭游戏并应用新版 Mod，再启动游戏。详见[实时编辑](key-enhancement.md#实时编辑与游戏伴随窗口)。
 

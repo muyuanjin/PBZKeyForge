@@ -24,6 +24,12 @@ namespace PBZKeyForge
         int pendingVersion, pendingHeight, frameHeight = 30;
         bool flameEnabled;
         bool animationPaused;
+        bool applicationActive = true;
+        internal bool ApplicationActive
+        {
+            get { return applicationActive; }
+            set { if (applicationActive == value) return; applicationActive = value; Synchronize(this, EventArgs.Empty); }
+        }
         internal bool AnimationPaused
         {
             get { return animationPaused; }
@@ -87,7 +93,8 @@ namespace PBZKeyForge
             if (!flameEnabled || !host.Visible || host.WindowState == FormWindowState.Minimized)
             { animation.Stop(); RetirePendingFrame(); IsActive = false; NotifyFrameChanged(); return; }
             IsActive = true;
-            if (animationPaused || !host.Enabled) { animation.Stop(); return; }
+            if (animationPaused || !host.Enabled || !applicationActive)
+            { animation.Stop(); RetirePendingFrame(); return; }
             RenderFrame();
             animation.Start();
         }

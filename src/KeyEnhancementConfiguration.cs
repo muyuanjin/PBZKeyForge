@@ -34,7 +34,8 @@ namespace PBZKeyForge
         public string InputGroup, AxisDirection = "both";
         public string Id = Guid.NewGuid().ToString("N"), Axis, Trigger = "press", WhenLua, EvaluateLua;
         public bool Enabled = true, Consume, BlockOriginalWhenDisabled;
-        public bool DefaultTrigger, BypassResources;
+        public bool DefaultTrigger, BypassResources, BypassRestrictions, SuperArmor, Invincible;
+        public string[] RestrictionBypasses = { "equipment", "training", "space", "stance", "predecessor", "cooldown" };
         public double DamageMultiplier = 1, StartupSpeed = 1, RecoverySpeed = 1;
         public List<string> Keys = new List<string>(), ConsumeKeys = new List<string>(), Watch = new List<string>();
         public List<string[]> Steps = new List<string[]>();
@@ -129,7 +130,9 @@ namespace PBZKeyForge
                 foreach (var output in rule.Outputs)
                 {
                     string name = "output_" + targets.Count.ToString(CultureInfo.InvariantCulture);
-                    targets.Add(name, Target(output, Enabled, devices.Length == 1 ? devices[0] : null));
+                    var target = (Dictionary<string, object>)Target(output, Enabled, devices.Length == 1 ? devices[0] : null);
+                    MoveRestrictionCatalog.Apply(target, output, rule.BypassRestrictions);
+                    targets.Add(name, target);
                     var reference = new Dictionary<string, object> { { "target", name } };
                     if ((output.Kind == "action" || output.Kind == "mapping") && output.Value != null) reference["value"] = output.Value;
                     outputs.Add(reference);
@@ -140,8 +143,17 @@ namespace PBZKeyForge
                     { "count", rule.Count }, { "priority", rule.Priority }, { "outputs", outputs },
                     { "consume", rule.ConsumeKeys.Count > 0 ? (object)rule.ConsumeKeys : rule.Consume }
                 };
+                if (rule.DefaultTrigger) binding["default_trigger"] = true;
                 if (!string.IsNullOrEmpty(rule.InputGroup)) binding["input_group"] = rule.InputGroup;
                 if (rule.BypassResources) binding["bypass_resources"] = true;
+                if (rule.BypassRestrictions)
+                {
+                    if (rule.RestrictionBypasses == null || rule.RestrictionBypasses.Any(kind => !BindingRestrictionKinds.All.Contains(kind)))
+                        throw Invalid(rule.Id + ": RestrictionBypasses");
+                    binding["restriction_bypasses"] = rule.RestrictionBypasses.Distinct().ToArray();
+                }
+                if (rule.SuperArmor) binding["super_armor"] = true;
+                if (rule.Invincible) binding["invincible"] = true;
                 if (!Finite(rule.DamageMultiplier) || rule.DamageMultiplier <= 0 || rule.DamageMultiplier > 100
                     || !Finite(rule.StartupSpeed) || rule.StartupSpeed < .1 || rule.StartupSpeed > 10
                     || !Finite(rule.RecoverySpeed) || rule.RecoverySpeed < .1 || rule.RecoverySpeed > 10)
@@ -184,13 +196,14 @@ namespace PBZKeyForge
                 { "targets", targets }, { "bindings", bindings }, { "suppressions", suppressions }, { "hooks", Hooks },
                 { "ability_suppressions", NativeAbilitySuppressions }
             };
+            if (Rules.Any(rule => rule.Enabled && rule.BypassRestrictions)) config["restriction_tags"] = MoveRestrictionCatalog.ClassificationTags;
             config["native_bindings"] = NativeBindings.Select(item => new Dictionary<string, object> {
                 {"function", item.FunctionId}, {"device", item.Device}, {"keys", item.Keys},
                 {"fixed_keys", InputDefaultSet.Current.FixedForAction(item.FunctionId, item.Device == "gamepad")},
                 {"actions", KeyEnhancementCatalog.ForMapping(item.FunctionId).Select(target => target.Path).ToArray()}
             }).ToArray();
             config["native_actions"] = KeyEnhancementInputPlan.Actions.Select(action => action.path).ToArray();
-            if (Rules.Any(rule => rule.Enabled && (rule.BypassResources || rule.DamageMultiplier != 1 || rule.StartupSpeed != 1 || rule.RecoverySpeed != 1))) config["resource_inputs"] = ResourceCostCatalog.InputTags;
+            if (Rules.Any(rule => rule.Enabled && (rule.BypassResources || rule.SuperArmor || rule.Invincible || rule.DamageMultiplier != 1 || rule.StartupSpeed != 1 || rule.RecoverySpeed != 1))) config["resource_inputs"] = ResourceCostCatalog.InputTags;
             config["unified_native"] = true;
             return "local config = " + Lua(config) + "\n" + (CustomLua ?? "") + "\nreturn config\n";
         }

@@ -1,12 +1,27 @@
 LIBRARY UE4SS.dll
 EXPORTS
+    ?InitializeValue@FProperty@Unreal@RC@@QEBAXPEAX@Z
+    ?DestroyValue@FProperty@Unreal@RC@@QEBAXPEAX@Z
+    ?CopyCompleteValue@FProperty@Unreal@RC@@QEBAXPEAXPEBX@Z
+    ?ProcessEvent@UObject@Unreal@RC@@QEAAXPEAVUFunction@23@PEAX@Z
+    ?GetParmsSize@UFunction@Unreal@RC@@QEAAAEAGXZ
+    ?GetSuperStruct@UStruct@Unreal@RC@@QEAAAEAPEAV123@XZ
+    ?GetInterfaceClass@FInterfaceProperty@Unreal@RC@@QEAAAEAV?$TObjectPtr@VUClass@Unreal@RC@@@23@XZ
+    ??0FName@Unreal@RC@@QEAA@PEB_WW4EFindName@12@PEAX@Z
+    ?StaticSize@FName@Unreal@RC@@SAHXZ
+    ?FindProperty@UStruct@Unreal@RC@@QEAAPEAVFProperty@23@VFName@23@@Z
+    ?GetStruct@FStructProperty@Unreal@RC@@QEAAAEAV?$TObjectPtr@VUScriptStruct@Unreal@RC@@@23@XZ
+    ?GetInner@FArrayProperty@Unreal@RC@@QEAAAEAPEAVFProperty@23@XZ
     ?push_classproperty@LuaType@RC@@YAXAEBUPusherParams@12@@Z
     ?Node@FFrame@Unreal@RC@@QEAAAEAPEAVUFunction@23@XZ
+    ?Locals@FFrame@Unreal@RC@@QEAAAEAPEAEXZ
     ?GetFullName@UObject@Unreal@RC@@QEBA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@PEAV123@@Z
     ?RegisterProcessLocalScriptFunctionPreCallback@Hook@Unreal@RC@@YAXV?$function@$$A6AXPEAVUObject@Unreal@RC@@AEAUFFrame@23@PEAX@Z@std@@@Z
     ?RegisterProcessLocalScriptFunctionPostCallback@Hook@Unreal@RC@@YAXV?$function@$$A6AXPEAVUObject@Unreal@RC@@AEAUFFrame@23@PEAX@Z@std@@@Z
     ?get_integer@Lua@LuaMadeSimple@RC@@QEBA_JH@Z
     ?get_bool@Lua@LuaMadeSimple@RC@@QEBA_NH@Z
+    ?get_string@Lua@LuaMadeSimple@RC@@QEBA?AV?$basic_string_view@DU?$char_traits@D@std@@@std@@H@Z
+    ?GetClassPrivate@UObjectBase@Unreal@RC@@QEAAAEAPEAVUClass@23@XZ
     ?set_integer@Lua@LuaMadeSimple@RC@@QEBAX_J@Z
     ?set_string@Lua@LuaMadeSimple@RC@@QEBAXPEBD_K@Z
     ?RegisterPreHook@UFunction@Unreal@RC@@QEAAHAEBV?$function@$$A6AXAEAVUnrealScriptFunctionCallableContext@Unreal@RC@@PEAX@Z@std@@PEAX@Z

@@ -4,7 +4,7 @@ CL-302256 的资源全集包含 36 个玩家主武器配置和 4 个临时武器
 
 本报告使用安装包的 AssetRegistry、Cooked 导出表、CDO 引用和 Blueprint 字节码。结构化清单见 [complete-move-weapon-audit.json](complete-move-weapon-audit.json)。
 
-战技清点从实际 `Equip Abilities` / `Owning Abilities` 重新读取，不按 Light/Heavy 角色分类或等待输入特征过滤。40 个配置授予的 35 个战技类共有 84 条有效时间线、2707 个动作。已闭合并接入 18 个战技后段或原生结束攻击；其余时间线保留为结构与条件分支，不能按伤害节点数量直接计作招式。维护入口为 `build/extract-combat-art-phases.py`，原容器验证为 `tests/CombatArtPhaseResourceTests.py`。
+战技清点从实际 `Equip Abilities` / `Owning Abilities` 重新读取，不按 Light/Heavy 角色分类或等待输入特征过滤。40 个配置授予的 35 个战技类共有 84 条有效时间线、2707 个动作。已接入 40 项独立战技阶段，包含 18 项后段或原生结束攻击、炽刃三档释放和 19 项内部阶段；其余时间线保留为结构与条件分支，不能按伤害节点数量直接计作招式。完整覆盖见[战技阶段覆盖](complete-move-combat-art-coverage.md)。维护入口为 `build/extract-combat-art-phases.py`，原容器验证为 `tests/CombatArtPhaseResourceTests.py`。
 
 ## 全集边界
 
@@ -27,7 +27,7 @@ AssetRegistry 共 267,026 个资产，其中 5,462 个 LegoAbilityBlueprintGener
 | 青铜剑 `B_Hold` | 原能力建立 `IA_AttackH_Hold` 0.5 秒等待。 | `EndSuccess` 明确播放 `Release2`；必须先走正常激活和资格，不能由技能文字推断剑气视觉。`Release1` 已作为提前释放单独接入。 |
 | 白山风雷剑 `B_Hold` | 原能力每 tick 消耗 `350 × DeltaTime` 杀气，并累计雷能。 | 已接入原生持续蓄力：保持真实重击 Hold，保留每秒 350 杀气消耗与雷势累积，由原 Tick 取得 Thunder 后进入 End_Success，再停止虚拟 Hold。 |
 | 残钢刃 `BCharge` | 仍等待原重击键与最短蓄力事件。 | 后续目标为 `BJump`；目标已有目录，蓄力入口本身不等于完整出招。 |
-| 长形黑伤 `BCharge` | 等待原重击释放或 Combo 阶段。 | 转到 `Ability.Action.Hun.Heavy.Long.BBB`；应使用目标正常能力入口，不能声称 BCharge 已跳过蓄力。 |
+| 长形黑伤 `BCharge` | 等待原重击释放或 Combo 阶段。 | 原回调请求 `Ability.Action.Hun.Heavy.Long.BBB`，该 tag 尚未在当前目录建立。已单列的普通第三段使用实际授予类与 `Ability.Action.Hun.Heavy.Atk03`；它不证明旧蓄力回调能够完成转招。 |
 | 红妆鬼斩 `B_Hold_Start` | 等待保持/释放和 SuccessHold 事件。 | 完整释放与提前释放分别接入。提前释放调用本次 Start 的原 OnRelease(0)，原 MinDuration 和 Current Reinforced 选择 BB_UnCharge 或强化分支，保留已支付费用。 |
 | 灵蛇软剑 `DA` | 轻击保持决定 `Main → Loop → End`。 | 已接入有限释放：正常进入 Main/Loop 的真实攻击后释放原轻击 Hold，原回调进入 End 并结束 Tick；End 本身为收招。 |
 
@@ -44,7 +44,7 @@ AssetRegistry 共 267,026 个资产，其中 5,462 个 LegoAbilityBlueprintGener
 | 武器 | 已接入入口 | 保留的原生关系 |
 | --- | --- | --- |
 | 红妆鬼斩 | 蓄力提前释放 | Start 正常处理杀气后，原释放与最短时长事件选择两种 BB_UnCharge。强化子类原三项费用为零，绑定由已付费的 Start 进入。 |
-| 刺骨混沌 | 火、冰、物理形态的 SWT 攻击；切换武器攻击 | 三个叶能力分别保留 Fire、Ice、Normal 必要状态与 Hitreact.Phase.Combo 阻止条件；切换入口经真实武器槽和冷却判断后转入原攻击。 |
+| 刺骨混沌 | 火、冰、物理形态的 SWT 攻击；切换武器攻击 | 三个叶能力分别保留 Fire、Ice、Normal 必要状态与 Hitreact.Phase.Combo 阻止条件；切换绑定按真实武器槽转入原攻击，允许已持有目标武器及切换冷却期间请求。 |
 | 别离残钩、天煞双钺 | 各自 DB_SWT 及原生切换武器入口 | 精确激活装备授予的原类，保留防反、真实受击对象与攻击选择；换武器由原 wrapper 解析配置、槽位和目标索引。 |
 | 荡寇凶刃 | BladeWave 的 NoCostB 收招 | 正常激活前必须存在真实 Horizontal.Charging；沿用剑气已支付的费用，状态在原转招时可以结束。 |
 

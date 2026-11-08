@@ -35,7 +35,9 @@ class BindingTriggerContractTests
                 var entries = workspace.AddFunctions(ids, Key(key));
                 Check(entries.Length == 2 && entries.All(entry => entry.Trigger == "default"), "Mixed defaults must retain their UI semantics.");
                 Check(Rule(config, entries.Single(entry => entry.FunctionId == move)).Trigger == "down", "A complete move must remain continuous in mixed selection.");
-                Check(Rule(config, entries.Single(entry => entry.FunctionId == ability)).Trigger == "press", "A normal ability must stay one-shot in mixed selection, regardless of selection order.");
+                var abilityRule = Rule(config, entries.Single(entry => entry.FunctionId == ability));
+                Check(abilityRule.Trigger == "press" && abilityRule.DefaultTrigger,
+                    "A default ability must preserve its repeat policy independently of its serialized press trigger.");
                 File.WriteAllText(Path.Combine(directory, (pad ? "pad" : "keyboard") + "-mixed.lua"), config.CompileLua());
             }
             config.Rules.Clear();
@@ -51,7 +53,7 @@ class BindingTriggerContractTests
                 "Copying an explicit continuous mapping to an ability must preserve its trigger.");
             config.Rules.Clear();
             var all = workspace.AddFunctions(CompleteMoveCatalog.Targets.Select(item => item.Id), Key(key));
-            Check(all.Length == 119 && config.Rules.Count == 1 && config.Rules[0].Trigger == "down", "Every complete move must share the continuous default.");
+            Check(all.Length == CompleteMoveCatalog.Targets.Length && config.Rules.Count == 1 && config.Rules[0].Trigger == "down", "Every complete move must share the continuous default.");
             config.Rules.Clear();
             var property = workspace.AddCustom(new KeyEnhancementOutput { Kind = "property", Property = "bFlag", Value = true }, Key(key), "状态");
             var repeated = workspace.Add(property.FunctionId, Key(key));

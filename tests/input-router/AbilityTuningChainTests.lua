@@ -3,7 +3,7 @@ local hooks,checks,current,currentFunction={},0,nil,nil
 local function check(value,message) assert(value,message);checks=checks+1 end
 local function parameter(value) return {get=function() return value end} end
 local function array(values)
-    return {ForEach=function(_,callback) for i,value in ipairs(values) do callback(i,parameter(value)) end end}
+    return setmetatable({GetArrayNum=function() return #values end,ForEach=function(_,callback) for i,value in ipairs(values) do callback(i,parameter(value)) end end},{__index=values})
 end
 local function name(value) return {ToString=function() return value end} end
 local function object(address,properties)
@@ -16,6 +16,8 @@ local function object(address,properties)
     function value:IsA() return true end
     return value
 end
+local classesByPath = {}
+function StaticFindObject(path) return classesByPath[path] end
 function RegisterHook(path,pre,post) hooks[path]={pre=pre,post=post};return 1,2 end
 function UnregisterHook(path) hooks[path]=nil end
 package.loaded['script-context']={new=function() return {
@@ -35,10 +37,11 @@ local methods={"TryActivateExternalActionAbilityByClass","ForceActivateExternalA
     "/Script/GameplayAbilities.AbilitySystemComponent:TryActivateAbilityByClass"}
 local function fixture()
     local classes={object(11,{path="/Player.Start_C"}),object(12,{path="/Player.Release_C"}),object(13,{path="/Player.Finish_C"})}
+    for _, class in ipairs(classes) do classesByPath[class.path] = class end
     local abilities,specs={},{}
     for i,class in ipairs(classes) do
         local tags={GameplayTags=array({{TagName=name("Ability.Test."..i)}})}
-        abilities[i]=object(i,{class=class,bIsActive=false})
+        abilities[i]=object(i,{class=class,bIsActive=false,AbilityTags=tags})
         specs[i]={Ability=object(i+20,{class=class,AbilityTags=tags}),ActiveCount=0,
             NonReplicatedInstances=array({abilities[i]}),ReplicatedInstances=array({abilities[i]})}
     end
@@ -114,6 +117,70 @@ for _,condition in ipairs({'failed','inactive','unowned','unrelated','callbackOn
     entry.post(parameter(receiver),parameter(condition~='failed'))
     check((cost.instances[2]~=nil)==(condition=='nested'),"only successful owned continuation inherits: "..condition)
     check(cost.instances[1]==state,"continuation selection never replaces the caller's scope")
+    cost:reset()
+end
+do
+    local cost,backend,classes,abilities,asc,input,task,timeline,fee=fixture()
+    local selects,select=0,cost.select
+    function cost:select(...)
+        selects=selects+1
+        return select(self,...)
+    end
+    for _=1,120 do
+        cost:begin_transfer(nil,{ability_class=classes[1].path});cost:end_transfer(true)
+    end
+    check(selects==0 and not next(cost.instances),"ordinary activations after tuning must not scan or track granted abilities")
+    local receivers, receiver = 0, backend.receiver
+    function backend:receiver(...)
+        receivers = receivers + 1
+        return receiver(self,...)
+    end
+    local idle = hooks[prefix..'ForceActivateExternalActionAbilityByClass']
+    for _=1,120 do idle.pre(parameter(input),parameter(classes[1]));idle.post(nil,parameter(true)) end
+    check(receivers==0 and selects==0 and #cost.transfers==0,
+        "idle activation hooks must not query components, select abilities or retain transfer frames")
+    local action=object(101)
+    cost:input({object=action},true,{damage_multiplier=3},2)
+    current=nil
+    local result=cost:activate({ability_class=classes[1].path},false,function()
+        idle.pre(parameter(input),parameter(classes[1]),parameter(action))
+        current=abilities[1]
+        check(fee()==-2,"ordinary explicit activation cannot borrow a pending InputAction's tuning")
+        check(not next(cost.instances),"ordinary explicit activation must not create default parameter states")
+        abilities[1].bIsActive=true
+        idle.post(nil,parameter(true))
+        return "native-result"
+    end,{})
+    check(result=="native-result" and selects==0 and #cost.transfers==0,
+        "ordinary explicit activation keeps its return value without scanning grants or tracking defaults")
+    cost:input({object=action},false,{},0)
+    for _=1,120 do
+        current=nil
+        idle.pre(parameter(input),parameter(classes[1]),parameter(action))
+        current=abilities[1]
+        check(fee()==-2,"ordinary input keeps native resource costs")
+        idle.post(nil,parameter(true))
+    end
+    check(selects==0 and not next(cost.instances) and #cost.transfers==0,
+        "ordinary InputAction requests after tuning never scan grants or allocate default instance states")
+    cost.inputs={};current=nil;abilities[1].bIsActive=false
+    local state=cost:arm(abilities[1],true,{damage_multiplier=3})
+    abilities[1].bIsActive=true
+    current=nil
+    local entry=hooks[prefix..'ForceActivateExternalActionAbilityByClass']
+    entry.pre(parameter(object(90)),parameter(classes[1]));entry.post(nil,parameter(true))
+    check(selects==0 and cost.instances[1]==state,"another actor's activation must not scan or clear the player's tuning")
+    cost:begin_transfer(nil,{ability_class=classes[1].path});cost:end_transfer(true)
+    check(selects==0 and cost.instances[1]==state,"ordinary activation scanned granted abilities while all tuned instances were active")
+    for _=1,120 do
+        entry.pre(parameter(input),parameter(classes[1]));entry.post(nil,parameter(true))
+    end
+    check(selects==0 and cost.instances[1]==state,"repeated native activations scanned unrelated granted abilities")
+    abilities[1].bIsActive=false
+    cost:begin_transfer(nil,{ability_class=classes[1].path});cost:end_transfer(true)
+    check(selects==0 and not next(cost.instances),"ordinary reuse clears an inactive tuned instance without scanning granted abilities")
+    cost:begin_transfer(nil,{ability_class=classes[1].path});cost:end_transfer(false)
+    check(selects==0 and #cost.transfers==0,"idle and failed activations must leave no scan or transfer state")
     cost:reset()
 end
 print('AbilityTuningChainTests PASS '..checks)

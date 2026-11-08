@@ -224,6 +224,19 @@ namespace PBZKeyForge
             return path;
         }
 
+        void BackupModifiedMod()
+        {
+            string backup = Path.Combine(GameSchemeSettings.BackupDirectory(), "key-enhancement-mod-" + Guid.NewGuid().ToString("N") + ".zip");
+            using (var stream = new FileStream(backup, FileMode.CreateNew))
+            using (var zip = new ZipArchive(stream, ZipArchiveMode.Create))
+                foreach (string path in Directory.GetFiles(InstallDirectory, "*", SearchOption.AllDirectories))
+                {
+                    string relative = path.Substring(InstallDirectory.Length + 1).Replace('\\', '/');
+                    using (var input = File.OpenRead(path))
+                    using (var output = zip.CreateEntry(relative).Open()) input.CopyTo(output);
+                }
+        }
+
         InstallationSource ReadOwnership()
         {
             string path = Path.Combine(runtimeDirectory, OwnershipFile);
@@ -395,6 +408,7 @@ namespace PBZKeyForge
                 }
                 if (candidate.Enabled || otherMods) SetProxySuspended(source, false);
                 EnsureGameClosed(); EnsureConfigurationUnchanged();
+                if (modifiedManagedFiles) BackupModifiedMod();
                 if (Directory.Exists(InstallDirectory)) Directory.Move(InstallDirectory, retired);
                 Directory.Move(staging, InstallDirectory); replaced = true;
                 foreach (var pair in activation)
