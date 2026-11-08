@@ -64,7 +64,7 @@ Two ways to use it:
 
 The editor remembers the last successfully opened file and reads it again at startup. If it has moved or cannot be opened, discovery continues through Steam's registered libraries and installation manifests, then common `SteamLibrary` locations. **More → Find game again** searches the installation locations afresh. If several installations exist, manually choose the one you want; that choice is used on the next launch.
 
-If no save is found, the editor opens an offline scheme using built-in factory bindings. You can also choose **More → New offline scheme**. Select Keyboard/mouse or Controller, then choose Xbox or PlayStation in the controller selector. Save or share the layout through Preset manager, or use **Export game bindings** in the footer to create a `.sav` file. Offline editing does not require a game installation or a connected controller; applying directly to the game requires opening its save.
+If no save is found, the editor opens an offline scheme using built-in factory bindings. You can also choose **More → New offline scheme**. Select Keyboard/mouse or Controller, then choose Xbox or PlayStation in the controller selector. Use **Save as preset** in the scheme bar, share the saved preset through Preset manager, or use **Export game bindings** in the footer to create a `.sav` file. Offline editing does not require a game installation or a connected controller; applying directly to the game requires opening its save.
 
 Keyboard and gamepad drafts both belong to the selected scheme. Applying saves that scheme's bindings; other schemes' drafts stay pending. The footer lists what will be applied. Check *Set game scheme to…* to activate it in the same operation, or leave it unchecked to edit an inactive scheme. Consecutive quick configuration selections replace the previous preview; manual edits keep the result as a custom draft. *Restore all defaults* lives in *More* and previews a reset of both devices in every scheme before applying.
 
@@ -82,9 +82,11 @@ Each click uses the game’s current base perfect-guard window, including its di
 
 ## My presets and sharing
 
-Use **Preset manager** beside Quick setups to name and save the current scheme, including unapplied edits. Your presets appear separately from built-in presets. Select one to preview or copy its one-line share code; check several to delete them. Deleting a preset keeps your current bindings.
+**Preset manager** beside Quick setups manages your preset library independently of the editing scheme. Select a saved preset or paste a share code to view its bindings, devices and enhancement settings. Rename, save, delete, export and share presets here. Your presets appear separately from built-in presets.
 
-Paste a share code and preview it before saving or using it. It includes the name and only the changes from factory defaults. Beside **Copy share code**, choose all included devices, keyboard/mouse, controllers, or a specific controller family; the character count updates immediately. Imported presets show their included devices. **Preset only** restores and applies only those devices, preserving devices outside the preset's scope. Choose directly from **Add keys**, **Replace keys**, and **Preset only** beside Quick setups; all three choices stay visible, with details on hover. The application starts with Preset only and remembers your selected mode across launches. Using a preset creates a draft; **Apply changes** in the main window writes it to the game.
+**Load into editor…** returns the selected preset to the main window. Choose **Add keys**, **Replace keys**, or **Preset only**, review the target scheme and changes, then confirm. Saving the preset to your library is optional. **Apply changes** writes the resulting draft to the game. The application starts with Preset only and remembers your selected mode across launches. **Preset only** restores and applies ordinary bindings for the included devices.
+
+Choose all included devices, keyboard/mouse, controllers, or a specific controller family beside **Copy share code**. Export saves that share code as a text file. Share codes include a name, ordinary binding changes from factory defaults, and enhancement settings.
 
 **Save as preset** in the scheme bar saves the current draft with a name and device scope. Presets and share codes include the selected enhancement scheme; preset modes merge or replace bindings for the included devices. **Export game bindings** writes a `.sav` copy for ordinary bindings or a ZIP containing the full enhancement scheme library. Export does not activate a scheme or overwrite the source save. Your preset library is stored in `%LOCALAPPDATA%\PBZKeyForge\Presets`.
 
@@ -213,7 +215,7 @@ Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 程序记住上次成功打开的文件，启动时重新读取。文件已移动或无法打开时，继续按 Steam 登记的游戏库和安装清单查找，再尝试常见的 `SteamLibrary` 位置。“更多 → 重新查找游戏”会重新按安装位置检测。存在多份安装时，手动选择要编辑的那份，下次启动会沿用这一选择。
 
-没有找到存档时，程序直接打开内置原厂键位的离线方案，也可通过“更多 → 新建离线方案”进入。切换到“手柄”后，在家族选择器中选 Xbox 或 PlayStation，两者独立编辑。在预设管理中保存、分享，或通过底栏“导出游戏键位文件”生成 `.sav`，均不需要安装游戏或连接手柄；直接写入游戏时再打开自己的存档。
+没有找到存档时，程序直接打开内置原厂键位的离线方案，也可通过“更多 → 新建离线方案”进入。切换到“手柄”后，在家族选择器中选 Xbox 或 PlayStation，两者独立编辑。通过方案栏“保存为预设”保存草稿，在预设管理中分享，或通过底栏“导出游戏键位文件”生成 `.sav`，均不需要安装游戏或连接手柄；直接写入游戏时再打开自己的存档。
 
 8 个预设文件（7 个改键预设及 1 个原厂键位文件）和中英对照说明均由程序内同一套预设定义生成，内容为原厂布局加上对应预设，与悬浮预览和“仅用预设”模式一致。“双键攻防，自动疾跑”将左键设为轻攻击＋防御、右键设为重攻击＋防御、空格同时绑定闪避／跳跃，W／A／D 绑定高速移动，保留 F 重攻击和 Shift 闪避，仅修改键鼠。程序还在快速配置中提供恢复本方案原厂，在“更多”中提供恢复全部方案原厂；两者使用同一套原厂键位，恢复范围不同。
 
@@ -225,7 +227,9 @@ Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 ### 重要提醒
 
-快速配置旁的“预设管理”可以命名保存当前方案，包含尚未应用的修改。“我的预设”与内置预设分组显示；单选可预览、复制分享码，勾选多个可批量删除，删除不改变当前键位。复制旁可选择全部所含设备、仅键鼠、仅控制器或某个手柄家族，字符数即时更新。分享码带名称，普通绑定记录相对原厂的增减，并携带完整增强配置。粘贴后先预览，确认“包含设备”及增强配置范围再保存或套用；“仅用预设”对普通绑定只恢复和套用所含设备，其他设备保持原样。
+快速配置旁的“预设管理”独立管理预设库。选择预设或粘贴分享码，直接查看所含设备、动作、按键、触发和增强设置，并可收藏、改名、删除、导出或分享。预览展示预设本身的内容。
+
+点击“载入编辑器…”后，在主页确认编辑目标，选择“追加按键／替换按键／仅用预设”并核对实际影响，确认后形成草稿，再点击“应用更改”生效。无需先收藏，载入也不会自动保存到预设库。分享范围可选全部所含设备、仅键鼠、仅控制器或某个手柄家族；导出预设将该范围的分享码保存为文本文件。分享码带名称，普通绑定记录相对原厂的增减，并携带增强设置。
 
 快速配置区域同时显示“追加按键／替换按键／仅用预设”三个选项，点击即可选择，悬浮可查看各自说明。套用只形成草稿，主界面“应用更改”才写入游戏。方案栏“保存为预设”可命名保存当前草稿并选择设备范围；预设和分享码包含当前增强方案，按所含设备追加或替换绑定。完整方案库通过 ZIP 配置包导出，普通绑定则输出 `.sav` 副本；导出不切换游戏方案，也不覆盖源存档。预设库保存在 `%LOCALAPPDATA%\PBZKeyForge\Presets`。
 

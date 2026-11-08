@@ -21,6 +21,7 @@ namespace PBZKeyForge
         Rectangle normalBounds;
         FormWindowState previousWindowState;
         bool restoringBounds;
+        bool minimizedLayout;
 
         public EditorWindow()
         {
@@ -128,6 +129,11 @@ namespace PBZKeyForge
         }
         protected override void OnResize(EventArgs e)
         {
+            if (WindowState == FormWindowState.Minimized && !minimizedLayout)
+            {
+                SuspendLayout();
+                minimizedLayout = true;
+            }
             if (!restoringBounds && WindowState == FormWindowState.Normal)
             {
                 if (previousWindowState != FormWindowState.Normal && normalBounds.Width > 0)
@@ -138,14 +144,27 @@ namespace PBZKeyForge
                     BeginInvoke((MethodInvoker)delegate
                     {
                         try { if (!IsDisposed && WindowState == FormWindowState.Normal) Bounds = restored; }
-                        finally { restoringBounds = false; normalBounds = Bounds; }
+                        finally
+                        {
+                            restoringBounds = false; normalBounds = Bounds;
+                            ResumeMinimizedLayout();
+                        }
                     });
                 }
                 else normalBounds = Bounds;
             }
             previousWindowState = WindowState;
             base.OnResize(e);
+            if (!restoringBounds) ResumeMinimizedLayout();
             if (captionMaximize != null) { captionMaximize.Invalidate(); captionMaximize.AccessibleName = I18n.Str(WindowState == FormWindowState.Maximized ? "editor.restore" : "editor.maximize"); }
+        }
+        void ResumeMinimizedLayout()
+        {
+            if (minimizedLayout && WindowState != FormWindowState.Minimized)
+            {
+                minimizedLayout = false;
+                ResumeLayout(true);
+            }
         }
         protected override void OnLocationChanged(EventArgs e)
         {

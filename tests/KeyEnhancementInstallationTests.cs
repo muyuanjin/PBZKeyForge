@@ -65,7 +65,7 @@ public static class KeyEnhancementInstallationTests
         Check(File.ReadAllText(configPath) == "return {enabled=false}", "Unowned Lua was not preserved.");
         using (var stream = typeof(KeyEnhancementInstallation).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.runtime.zip"))
         using (var archive = new ZipArchive(stream, ZipArchiveMode.Read))
-            foreach (string name in new[] { "native-input.lua", "native-abilities.lua", "physical-input.lua", "complete-moves.lua", "object-pool.lua", "resource-costs.lua", "script-context.lua" })
+            foreach (string name in new[] { "native-input.lua", "native-abilities.lua", "physical-input.lua", "complete-moves.lua", "object-pool.lua", "resource-costs.lua", "script-context.lua", "stance-input.lua" })
                 Check(archive.Entries.Any(entry => entry.FullName.EndsWith("/Scripts/" + name, StringComparison.Ordinal)),
                     "Runtime package is missing " + name);
         using (var stream = typeof(KeyEnhancementInstallation).Assembly.GetManifestResourceStream("PBZKeyForge.KeyEnhancement.runtime.zip"))

@@ -216,7 +216,7 @@ namespace PBZKeyForge
             btnKeyEnhancementMore.AccessibleName = I18n.Str("enhancement.title") + " · " + I18n.Str("component.options");
             keyEnhancementBar.Toggle.Enabled = Session != null && !IsApplying;
             string coverage = Session == null ? I18n.Str("ownership.coverage.scope")
-                : UnifiedBindingUi.CoverageSummary(new BindingWorkspace(Session, keyEnhancement, keyEnhancementBaseline, gamepad, SelectedFamilyIndex));
+                : UnifiedBindingUi.CoverageSummary(ViewWorkspace(gamepad, SelectedFamilyIndex));
             SetTip(keyEnhancementBar, status + Environment.NewLine + coverage);
             SetTip(keyEnhancementBar.Toggle, status + Environment.NewLine + coverage);
             if (!offline && keyEnhancement.Enabled && keyEnhancementBaseline.Enabled && !keyEnhancementUninstall && lastRunning && keyEnhancementInstallation != null)
@@ -275,11 +275,12 @@ namespace PBZKeyForge
             EnhancementPresetPreview preview;
             if (!EnhancedSchemes) preview = nativePresetPreview;
             else schemePresetPreviews.TryGetValue(EditingProfile, out preview);
-            return preview != null && preview.Session == Session && preview.Profile == EditingProfile && SelectedPresetId != null ? preview : null;
+            return preview != null && preview.Session == Session && preview.Profile == EditingProfile
+                && (EnhancedSchemes || Session.HasPresetPreview) ? preview : null;
         }
 
         static string PresetValue(object value)
-        { return new System.Web.Script.Serialization.JavaScriptSerializer { MaxJsonLength = 16777216 }.Serialize(value); }
+        { return KeyEnhancementConfiguration.CanonicalJson(value); }
 
         static string SchemePresetContent(KeyEnhancementConfiguration configuration, string id)
         {
@@ -332,6 +333,9 @@ namespace PBZKeyForge
         }
 
         void StageBindingPreset(Preset preset, PresetApplyMode mode)
+        { StageReviewedBindingPreset(preset, mode, null); }
+
+        void StageReviewedBindingPreset(Preset preset, PresetApplyMode mode, BindingPresetPlan reviewedPlan)
         {
             var preview = CurrentPresetPreview();
             bool editedPreview = preview != null && PresetPreviewEdited(preview);
@@ -346,7 +350,7 @@ namespace PBZKeyForge
                 if (preview != null) { keyEnhancement = checkpoint; keyEnhancementUninstall = uninstallCheckpoint; }
                 return;
             }
-            var plan = PlanBindingPreset(preset, mode);
+            var plan = reviewedPlan ?? PlanBindingPreset(preset, mode);
             RememberBindingEdit();
             if (plan.Configuration.Enabled && plan.Configuration.Schemes.Count > 0) schemePresetSelections[plan.Configuration.SelectedSchemeId] = preset.Id;
             else plan.Apply(Session);

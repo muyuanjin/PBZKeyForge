@@ -66,7 +66,31 @@ namespace PBZKeyForge
         public static readonly string[] Triggers = { "down", "press", "release", "tap", "hold", "pulse", "multi_tap", "sequence", "axis", "toggle", "custom" };
 
         static JavaScriptSerializer Serializer() { return new JavaScriptSerializer { MaxJsonLength = 16777216 }; }
-        public string ToJson() { StoreSelectedScheme(); return Serializer().Serialize(this); }
+        internal static string CanonicalJson(object value)
+        {
+            var serializer = Serializer();
+            object data = serializer.DeserializeObject(serializer.Serialize(value));
+            return serializer.Serialize(CanonicalJsonValue(data));
+        }
+        static object CanonicalJsonValue(object value)
+        {
+            var dictionary = value as Dictionary<string, object>;
+            if (dictionary != null)
+            {
+                var sorted = new SortedDictionary<string, object>(StringComparer.Ordinal);
+                foreach (var item in dictionary) sorted.Add(item.Key, CanonicalJsonValue(item.Value));
+                return sorted;
+            }
+            var array = value as object[];
+            if (array != null)
+            {
+                var sorted = new object[array.Length];
+                for (int i = 0; i < array.Length; i++) sorted[i] = CanonicalJsonValue(array[i]);
+                return sorted;
+            }
+            return value;
+        }
+        public string ToJson() { StoreSelectedScheme(); return CanonicalJson(this); }
         public static KeyEnhancementConfiguration FromJson(string text)
         {
             var result = Serializer().Deserialize<KeyEnhancementConfiguration>(text);

@@ -1,8 +1,31 @@
-# Local verification
+﻿# Local verification
 
 Build with Windows PowerShell 5.1 and use a new isolated directory for each integration run. Resource tests never launch the game or modify its installation.
 
+Run GUI harnesses on a separate Windows desktop to keep their windows and activation away from the working desktop:
+
+```powershell
+& "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /out:dist\RunGuiTest.exe /r:System.Core.dll build\RunGuiTest.cs
+& "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /win32manifest:build\app.manifest /out:dist\WindowRestoreTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\WindowRestoreTests.cs
+.\dist\RunGuiTest.exe dist\WindowRestoreTests.exe dist\window-restore.log dist\window-restore-check
+Get-Content dist\window-restore.log
+```
+
+`RunGuiTest` never switches the visible desktop, redirects test output to the specified log and returns the test's exit code. It terminates tests that exceed three minutes. `WindowRestoreTests` checks repeated minimize/restore cycles in key, action and controller views, normal and maximized windows, stable child bounds while minimized, and resizing after restoration. It records restore timings with animation enabled and captures the restored application with `DrawToBitmap`. Tests that sample physical desktop pixels require a separately scheduled interactive run.
+
 GUI harnesses that retain unapplied drafts must call `Dispose()` during cleanup. Use `Close()` only when deliberately testing the player's close-confirmation flow; otherwise the confirmation dialog blocks unattended runs. Async Apply harnesses must start a real `Application.Run()` message loop and schedule their runner through `Application.Idle`, with `Control.CheckForIllegalCrossThreadCalls` enabled. `Application.DoEvents()` alone does not establish the WinForms synchronization context needed for representative continuation and timing behavior.
+
+Check scheme-menu dismissal, selection and dirty indicators, and deployment comparisons:
+
+```powershell
+$compiler = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\SchemeMenuTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\SchemeMenuTests.cs
+.\dist\SchemeMenuTests.exe dist\scheme-menu-check
+& $compiler /nologo /out:dist\DeploymentComparisonTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll tests\DeploymentComparisonTests.cs
+.\dist\DeploymentComparisonTests.exe
+```
+
+`SchemeMenuTests` checks background and keyboard dismissal, native mouse selection, cancelled rename, menu disposal with the editor and per-scheme versus shared dirty indicators. It captures the editor and records twelve-scheme refresh timing. `DeploymentComparisonTests` compares deployment output with the full-copy reference, including inactive drafts, shared bindings and enabled-state overrides, while preserving the edited configuration.
 
 `DialogPositionTests` opens the binding editor through the modeless presentation path on every connected monitor. It checks centering, working-area containment near screen edges, maximized owners, nested windows, modal dialogs and manual positioning, and captures the displayed editors. It uses offline fixtures.
 
@@ -334,14 +357,21 @@ Check saved user presets, share codes and game-file export:
 .\dist\UserPresetUiTests.exe samples\vanilla-base.sav dist\user-preset-ui-check
 ```
 
-The share checks use an independent Protobuf byte vector to verify stable IDs and packed encoding, raw/DEFLATE selection, skipped metadata, unknown semantic rejection, literal engine keys/family names, frozen resource defaults, explicit empty scopes, and keyboard/controller-family isolation in all three application modes. The model checks save/reload, Unicode names containing colons, pure unbinding, fixed Ctrl plus three editable keys, duplicate names, builtin deletion rejection and source-file protection. Ordinary export includes only the selected scheme's draft; a pending global reset includes all schemes. The GUI harness uses an isolated preset library and real control events for save, preview, scoped copying with live lengths, import, confirmed/cancelled batch deletion, direct mode selection and staging. Selected rows drive previews; deletion checks do not interrupt browsing. Screenshots cover regular/minimum windows, name edits across resizing, horizontal fit, and a preset affecting the second controller family. Name guidance checks cover initial focus, neutral interactive saving, empty-name clicks, whitespace and ready-state styling. Add `--native-guidance` to move the real pointer over the gray save action and capture its native tooltip. Export serialization is checked through the session API; the native export file picker is not automated.
+The share checks use an independent Protobuf byte vector to verify stable IDs and packed encoding, raw/DEFLATE selection, skipped metadata, unknown semantic rejection, literal engine keys/family names, frozen resource defaults, explicit empty scopes, and keyboard/controller-family isolation in all three application modes. The model checks save/reload, Unicode names containing colons, pure unbinding, fixed Ctrl plus three editable keys, duplicate names, builtin deletion rejection and source-file protection. Ordinary export includes only the selected scheme's draft; a pending global reset includes all schemes. The GUI harness opens the preset manager with only a library, checks full preset contents from imports and saved entries, renaming, optional favorites, scoped copying and batch deletion. Editing a code immediately clears its prior contents; selecting the library cancels a pending parse. Regular/minimum screenshots check contents and action visibility. The manager returns the chosen preset without changing an editing session. `PresetPreferenceTests` checks independent access without an open save or during reset, main-window load confirmation and cancellation, and the separate Save as preset dialog. The native export file picker is not automated.
+
+```powershell
+& $compiler /nologo /out:dist\PresetImpactTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\PresetImpactTests.cs
+.\dist\PresetImpactTests.exe
+```
+
+Checks actual current/result binding differences in all three modes, native overrides, restoring unlisted bindings, controller scope, trigger parameters, global scripts and input blocks. Main-window acceptance uses the same reviewed plan and preserves cancellation checkpoints for imported presets that have no library ID.
 
 ```powershell
 & $compiler /nologo /win32manifest:build\app.manifest /out:dist\EnhancedPresetShareTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\EnhancedPresetShareTests.cs
 .\dist\EnhancedPresetShareTests.exe dist\enhanced-preset-share-check
 ```
 
-Use a new output directory. Checks compact enhanced shares against an independent byte vector, every configuration field, custom arguments and scripts, and representative code lengths. Exercises live native overrides in all application modes, keyboard-only preservation of controller rules, preview text and device diagrams, invalidated imports, atomic conflict rejection and retry, and enabled overflow when the incoming preset was saved with enhancement disabled. UI captures use Simplified Chinese.
+Use a new output directory. Checks compact enhanced shares against an independent byte vector, every shareable configuration field, custom arguments and scripts, and representative code lengths. Exercises live native overrides in all application modes, keyboard-only preservation of controller rules, independent content previews, invalidated imports, and enabled overflow when the incoming preset was saved with enhancement disabled. Load planning and rejection are separate from library browsing. Pass `--dialogs-only` as the second argument to run only the UI cases. UI captures use Simplified Chinese.
 
 ```powershell
 & $compiler /nologo /win32manifest:build\app.manifest /out:dist\BindingViewsTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll tests\BindingViewsTests.cs
@@ -440,6 +470,7 @@ The harness uses `GAME_UE5_7` and requires an empty companion PAK. Container mod
 .\dist\KeyEnhancementConfigurationTests.exe dist\key-enhancement-test-config.lua
 python tests\input-router\run_lua.py tests\input-router\CompiledConfigurationTests.lua
 python tests\input-router\run_lua.py tests\input-router\RouterTests.lua
+python tests\input-router\run_lua.py tests\input-router\StanceInputPerformanceTests.lua
 python tests\input-router\run_lua.py tests\input-router\MovementInputTests.lua
 python tests\input-router\run_lua.py tests\input-router\BackendTests.lua
 python tests\input-router\run_lua.py tests\input-router\UnifiedBackendTests.lua
@@ -469,7 +500,11 @@ Remove-Item Env:\PBZ_SCHEME_FIXTURES
 
 The catalog harness also exports shared default and explicit single-press bindings for every direct ability on keyboard and controller. `CompiledAbilityRepeatTests` runs those fixtures through the real router and backend with native eligibility mocked: a held default retries rejected requests and starts another action after completion, release stops requests, and explicit presses remain single. The sweep includes ZhanMa charge slash and retains compiled tags, input actions and priorities. It checks continuous, hold, axis, toggle, pulse, tap, release, multi-tap and sequence policies, mixed outputs, and waiting for a fresh press after pause/resume. These checks establish scheduling behavior rather than actual game animation timing.
 
-Guard fixtures compile and share independent default Deflect/Stance bindings on both devices. The native harness models the CL-302256 Passive input order and the two guard key states, checking alternating one-frame presses and releases while Deflect is held, native defense windows, stop-on-release, sustained Stance, overlapping inputs, original sources and cancellation. Holding independent Deflect must produce the same native input trace as repeated short taps of ordinary combined guard. Explicit single presses and configured pulse intervals retain their trigger policy. Deflect retains the native Stance pipeline needed for its release; these model checks do not establish in-game animation timing.
+Guard fixtures pass keyboard and controller bindings through capture, share encoding, decoding and Lua compilation. Run `.\dist\CatalogInputPipelineTests.exe dist\catalog-input-pipelines --guard-only` to regenerate only the focused source fixtures: `keyboard-guard-sources.lua` and `pad-guard-sources.lua` contain independent Deflect, independent Stance, combined Guard and ordinary light/heavy attacks. The `{keyboard,pad}-{deflect,stance,guard}-{light,heavy}.lua` fixtures pair each guard mode with an attack on the same key; the corresponding `-attack-first.lua` fixtures reverse the output order. Assertions preserve input keys, output order, default versus explicit triggers, device identity, independent single-action outputs and combined Guard's two-action output.
+
+The native harness models the CL-302256 Passive input order and both defense key states, checking alternating one-frame presses/releases, defense windows, stop-on-release, overlapping inputs, original sources and cancellation. Independent Deflect retains the native Stance pipeline needed for release, while its paired Stance does not contribute the `HoldingStanceKey` used for combat-art eligibility. Explicit Stance and ordinary combined Guard retain that contribution. Same-key light/heavy attack checks use ten cooked AIM route conditions, including SnakeDual DB and ChaosBlade stance attacks, in both output orders over held frames; ordinary SnakeDual AB remains available and Deflect still opens its native defense window. The runtime aggregates sources before dispatch; releasing explicit Stance while Deflect remains active removes combat-art eligibility without clearing defense windows. Explicit single presses and configured pulse intervals retain their trigger policy. These model checks do not establish in-game animation timing.
+
+`StanceInputPerformanceTests` runs 2000 stable frames against 64 native coverage entries. It requires no repeated coverage scan, static object/library lookup or native contribution preparation after warmup, and requires the trigger path to sample exactly once per frame without re-registering its observation. Set `PBZ_STANCE_BENCHMARK_BASELINE` to an earlier `stance-input.lua` to print the model comparison. These are call-count bounds, not game frame-time measurements.
 
 `MovementInputTests` exercises the noncombat ledge policy through `Backend.refresh`, input preparation, shutdown and pawn retirement. Dodge input and active dodge abilities enable the movement exception when walking off is permitted or jumping is allowed. Walking alone, combat, pause, blocked movement and disabled routing retain native protection. Checks cover both eligibility branches, native/object-backed/held/direct dodge requests, action completion, native counter resets, other native owners, replacement, respawn and restoration retry. `LedgeProtectionNativeTests.cpp` checks local movement overrides, both protection counters during walking calculations, restoration after every calculation, repeated frames starting from a cleared disable counter, other actors and native layout rejection. Lua leaves native counters unchanged; the native override scopes their changes to each physics call. `MovementInputResourceTests` checks native interfaces and tags against installed resources. `NativeInputTests` retains jump, dodge press and dodge hold through keyboard and controller mappings. `MoveEquipmentTests` also checks independent flash step drawing the current weapon after each sheathing without replacing equipment or repeatedly drawing. These checks simulate engine objects; game behavior is verified separately.
 
@@ -621,6 +656,8 @@ The context bridge has a standalone native harness. In the configured Visual C++
 cl.exe /nologo /O2 /MD /EHsc /std:c++17 /Fo:dist\ScriptContextNativeTests.obj /Fe:dist\ScriptContextNativeTests.exe tests\input-router\ScriptContextNativeTests.cpp
 .\dist\ScriptContextNativeTests.exe
 python tests\input-router\run_lua.py tests\input-router\ScriptContextTests.lua
+cl.exe /nologo /O2 /MD /EHsc /std:c++17 /Fo:dist\InputTriggerNativeTests.obj /Fe:dist\InputTriggerNativeTests.exe tests\input-router\InputTriggerNativeTests.cpp
+.\dist\InputTriggerNativeTests.exe
 cl.exe /nologo /O2 /MD /EHsc /std:c++17 /Fo:dist\InputObservationNativeTests.obj /Fe:dist\InputObservationNativeTests.exe tests\input-router\InputObservationNativeTests.cpp
 .\dist\InputObservationNativeTests.exe
 ```

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -19,8 +19,20 @@ class EnhancedPresetShareTests
     static IEnumerable<Control> All(Control owner)
     { foreach (Control child in owner.Controls) { yield return child; foreach (Control nested in All(child)) yield return nested; } }
     static Button Button(Control owner, string name) { return All(owner).OfType<Button>().Single(button => button.Name == name); }
+    static void WaitForImport(UserPresetDialog dialog)
+    {
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        while (Field<Timer>(dialog, "importTimer").Enabled && watch.ElapsedMilliseconds < 3000)
+        { Application.DoEvents(); System.Threading.Thread.Sleep(10); }
+        Application.DoEvents();
+        Check(!Field<Timer>(dialog, "importTimer").Enabled, "Share code is parsed automatically within three seconds");
+    }
     static void Inspect(UserPresetDialog dialog, string code)
-    { Field<TextBox>(dialog, "shareBox").Text = code; Button(dialog, "previewShare").PerformClick(); Application.DoEvents(); }
+    {
+        Field<TextBox>(dialog, "shareBox").Text = code;
+        Check(!Button(dialog, "usePreset").Enabled, "Editing code immediately invalidates the previous review");
+        WaitForImport(dialog);
+    }
     static void Shot(Form form, string name)
     { using (var bitmap = new Bitmap(form.Width, form.Height)) { form.DrawToBitmap(bitmap, new Rectangle(Point.Empty, bitmap.Size)); bitmap.Save(Path.Combine(output, name + ".png")); } }
     static BindingEntry Key(string key, string trigger) { return new BindingEntry { Keys = new[] { key }, Trigger = trigger }; }
@@ -37,9 +49,9 @@ class EnhancedPresetShareTests
     {
         var preset = Capture(config, name);
         string code = UserPresetStore.Share(preset);
+        Console.WriteLine(name + ": " + code.Length + " chars");
         Check(UserPresetStore.ParseShare(code).KeyEnhancement.ToJson() == config.ToJson(), "Compact roundtrip: " + name);
         Check(code.Length <= maxLength, "Compact share length: " + name);
-        Console.WriteLine(name + ": " + code.Length + " chars");
     }
     static void Codec()
     {
@@ -59,8 +71,8 @@ class EnhancedPresetShareTests
         native.NativeBindings.Add(new NativeBindingOverride { FunctionId = "IA_Jump", Device = "keyboard", Keys = new List<string> { "J" } });
         Roundtrip(native, "跳跃改J", 42);
         var simple = new KeyEnhancementConfiguration { Enabled = true };
-        new BindingWorkspace(EditorSession.CreateOffline(), simple, simple.Clone(), false, -1).Add("IA_Guard", Key("F9", "hold"));
-        Roundtrip(simple, "长按防御", 80);
+        new BindingWorkspace(EditorSession.CreateOffline(), simple, simple.Clone(), false, -1).Add("IA_Jump", Key("F9", "hold"));
+        Roundtrip(simple, "长按跳跃", 180);
         var dense = new KeyEnhancementConfiguration { Enabled = true, RuntimeHotkeys = true, CustomLua = "config.example = true" };
         foreach (string trigger in KeyEnhancementConfiguration.Triggers)
         {
@@ -85,13 +97,19 @@ class EnhancedPresetShareTests
         dense.Suppressions.Add(new KeyEnhancementSuppression { ActionPath = "/Input/CustomAction" });
         dense.NativeAbilitySuppressions.Add("Ability.Action.Hun.SpecialDash");
         dense.Hooks.Add(new Dictionary<string, object> { { "path", "/Script/Example:Function" }, { "return", false }, { "args", new object[] { "x", 5 } } });
-        Roundtrip(dense, "复杂规则与脚本", 1100);
+        Roundtrip(dense, "复杂规则与脚本", 1200);
         dense.Enabled = false; dense.Rules[0].Enabled = false; dense.Rules[0].Id = Guid.NewGuid().ToString("D");
-        Roundtrip(dense, "停用配置", 1100);
+        Roundtrip(dense, "停用配置", 1200);
         var fields = new[] { typeof(KeyEnhancementConfiguration), typeof(KeyEnhancementRule), typeof(KeyEnhancementOutput), typeof(KeyEnhancementSuppression), typeof(NativeBindingOverride) };
         var codec = typeof(MainForm).Assembly.GetType("PBZKeyForge.EnhancementShare");
         var schemas = (Dictionary<Type, string[]>)codec.GetField("Fields", Hidden).GetValue(null);
-        foreach (Type type in fields) Check(!type.GetFields(BindingFlags.Instance | BindingFlags.Public).Select(field => field.Name).Except(schemas[type]).Any(), "Share schema covers " + type.Name);
+        var libraryFields = new[] { "Schemes", "SchemeSwitchBindings", "SelectedSchemeId", "ActiveSchemeId" };
+        foreach (Type type in fields)
+        {
+            var sharedFields = type.GetFields(BindingFlags.Instance | BindingFlags.Public).Select(field => field.Name);
+            if (type == typeof(KeyEnhancementConfiguration)) sharedFields = sharedFields.Except(libraryFields);
+            Check(!sharedFields.Except(schemas[type]).Any(), "Share schema covers selected-scheme fields in " + type.Name);
+        }
     }
     static void Overrides()
     {
@@ -139,56 +157,146 @@ class EnhancedPresetShareTests
             overlay.NativeBindings.Add(new NativeBindingOverride { FunctionId = "IA_Jump", Device = "gamepad", Keys = new List<string> { "Gamepad_FaceButton_Top" } });
             int ps = target.ControllerFamilies.Single(item => item.Name == "PS").Index;
             var plan = planner.GetMethod("Create", Hidden).Invoke(null, new object[] { target, overlay, padPreset, mode, ps });
-            Check(Field<KeyEnhancementConfiguration>(plan, "Configuration").NativeBindings.Single().Keys.Contains("Gamepad_LeftShoulder"), "Selected PS family determines the shared runtime binding: " + mode);
+            Check(Field<KeyEnhancementConfiguration>(plan, "Configuration").NativeBindings.Single(item => item.FunctionId == "IA_Jump" && item.Device == "gamepad").Keys.Contains("Gamepad_LeftShoulder"),
+                "Selected PS family determines the shared runtime binding: " + mode);
         }
+    }
+    static string[] Contents(UserPresetDialog dialog)
+    { return Field<DataGridView>(dialog, "grid").Rows.Cast<DataGridViewRow>().Select(row => string.Join("|", row.Cells.Cast<DataGridViewCell>().Select(cell => Convert.ToString(cell.Value)))).ToArray(); }
+    static void Review(MainForm host, Preset preset, PresetApplyMode mode, bool valid, bool accept)
+    {
+        Exception failure = null; bool seen = false;
+        using (var timer = new Timer { Interval = 50 })
+        {
+            timer.Tick += delegate {
+                var dialog = Application.OpenForms.Cast<Form>().FirstOrDefault(form => form.GetType().Name == "PresetLoadDialog");
+                if (dialog == null) return;
+                timer.Stop(); seen = true;
+                try
+                {
+                    var selector = All(dialog).Single(control => control.Name == "loadPresetMode");
+                    selector.Controls.OfType<Button>().Single(button => button.Name == "mode" + mode).PerformClick();
+                    Check(Button(dialog, "loadPresetConfirm").Enabled == valid, "Editor review determines whether the selected application is valid");
+                    if (!valid)
+                    {
+                        Check(All(dialog).Single(control => control.Name == "loadPresetSummary").Text.Length > 0, "Editor review explains an application conflict");
+                        var alternate = mode == PresetApplyMode.Append ? PresetApplyMode.Replace : PresetApplyMode.Append;
+                        selector.Controls.OfType<Button>().Single(button => button.Name == "mode" + alternate).PerformClick();
+                        Check(!Button(dialog, "loadPresetConfirm").Enabled, "Shared custom-function conflict remains blocked when switching mode");
+                    }
+                    if (accept) Button(dialog, "loadPresetConfirm").PerformClick();
+                    else ((Button)dialog.CancelButton).PerformClick();
+                }
+                catch (Exception ex) { failure = ex; dialog.DialogResult = DialogResult.Cancel; dialog.Close(); }
+            };
+            timer.Start(); Call(host, "ConfirmPresetLoad", preset); timer.Stop();
+        }
+        if (failure != null) throw failure;
+        Check(seen, "Application review is shown by the editor");
     }
     static void Dialogs()
     {
         var session = EditorSession.CreateOffline(); var config = new KeyEnhancementConfiguration { Enabled = true };
         config.NativeBindings.Add(new NativeBindingOverride { FunctionId = "IA_Jump", Device = "keyboard", Keys = new List<string> { "J" } });
-        var preset = Capture(config, "跳跃改J");
+        var workspace = new BindingWorkspace(session, config, config.Clone(), false, -1);
+        workspace.Add("IA_LightAttack", Key("F9", "press"));
+        var heavy = Key("F10", "hold"); heavy.BypassRestrictions = true; heavy.DamageMultiplier = 2;
+        workspace.Add("IA_HeavyAttack", heavy);
+        var preset = Capture(config, "轻重击独立绑定");
         var store = new UserPresetStore(Path.Combine(output, "preview-library"));
-        using (var dialog = new UserPresetDialog(session, store, PresetApplyMode.Replace))
+        var originalJumpKeys = session.Relations("IA_Jump", false, -1).Keys;
+        int originalChangeCount = session.ScopeChangeCount;
+        using (var dialog = new UserPresetDialog(store))
         {
-            dialog.Show(); Application.DoEvents(); Inspect(dialog, UserPresetStore.Share(preset));
-            Check(All(Field<Panel>(dialog, "preview")).OfType<Label>().Any(label => label.Text.Contains("→ J")), "Preview shows native override");
-            object[] diagramArgs = { session.PreviewPreset(preset), preset, false, -1, null };
-            var diagramState = (Delegate)typeof(MainForm).Assembly.GetType("PBZKeyForge.UnifiedBindingUi").GetMethod("PresetKeyStates", Hidden).Invoke(null, diagramArgs);
-            var jump = diagramState.DynamicInvoke("J"); var space = diagramState.DynamicInvoke("SpaceBar");
-            Check(Field<int>(jump, "Count") == 1 && Field<bool>(jump, "Differs") && Field<int>(space, "Count") == 0 && Field<bool>(space, "Differs"), "Diagram marks added J and removed Space");
+            dialog.Show(); Application.DoEvents();
+            Check(Field<TextBox>(dialog, "shareBox").Focused, "Library starts with the share-code input focused");
+            Check(!All(dialog).Any(control => control is PresetModeSelector), "The library does not choose how to apply to an editor");
+            Inspect(dialog, UserPresetStore.Share(preset));
+            var contents = Contents(dialog);
+            var table = Field<DataGridView>(dialog, "grid");
+            foreach (DataGridViewRow row in table.Rows)
+            foreach (DataGridViewCell cell in row.Cells)
+            {
+                string value = Convert.ToString(cell.Value); if (value.Length == 0) continue;
+                var style = cell.InheritedStyle;
+                int width = Math.Max(1, cell.Size.Width - style.Padding.Horizontal - 6);
+                int textHeight = TextRenderer.MeasureText(value, style.Font, new Size(width, int.MaxValue), TextFormatFlags.WordBreak | TextFormatFlags.NoPrefix).Height;
+                Check(row.Height >= textHeight + style.Padding.Vertical, "Imported contents keep full text after becoming visible at the current DPI");
+            }
+            Check(contents.Take(2).Any(row => row.Contains("F9")) && contents.Take(2).Any(row => row.Contains("F10") && row.Contains("0.25")), "Enhanced rules appear above default actions with their keys and hold duration");
+            Check(table.Name == "presetContentsTable" && table.Columns.Contains("keys") && !table.Columns.Contains("before") && !table.Columns.Contains("after"),
+                "The library presents complete preset contents without comparing a current editor");
+            Check(contents.Any(row => row.Contains(BindingWorkspace.FunctionLabel("IA_Jump")) && row.Contains("J")), "Full contents include the preset's native jump override");
+            Check(contents.Any(row => row.Contains(BindingWorkspace.FunctionLabel("IA_LightAttack")) && row.Contains(BindingButton.FriendlyKey("LeftMouseButton"))),
+                "Full contents also include unchanged default actions");
+            Check(store.Load().Count == 0 && session.Relations("IA_Jump", false, -1).Keys.SequenceEqual(originalJumpKeys)
+                && session.ScopeChangeCount == originalChangeCount, "Browsing neither saves nor stages the preset");
+            Check(Button(dialog, "usePreset").Enabled && Button(dialog, "saveImport").Enabled && Field<ComboBox>(dialog, "shareScope").Visible,
+                "The imported preset offers independent load, collection and sharing controls");
             Shot(dialog, "native-override-preview");
-            dialog.ClientSize = new Size(850, 740); Application.DoEvents(); Shot(dialog, "native-override-minimum");
+            dialog.Size = dialog.MinimumSize; Application.DoEvents(); Shot(dialog, "native-override-minimum");
+            Field<TextBox>(dialog, "previewName").Text = "";
+            Check(Button(dialog, "usePreset").Enabled && !Button(dialog, "saveImport").Enabled, "A collection name is optional when loading a share");
             Field<TextBox>(dialog, "shareBox").Text = "bad share";
-            Check(!Button(dialog, "usePreset").Enabled && !Button(dialog, "saveImport").Visible && !Button(dialog, "copyShare").Enabled, "Editing code invalidates old import");
-            Button(dialog, "previewShare").PerformClick();
-            Check(!Button(dialog, "usePreset").Enabled && store.Load().Count == 0, "Invalid share cannot save old preview");
+            Check(!Button(dialog, "usePreset").Enabled && !Button(dialog, "saveImport").Enabled && !Button(dialog, "copyShare").Enabled, "Editing code invalidates the old import");
+            WaitForImport(dialog);
+            Check(!Button(dialog, "usePreset").Enabled && store.Load().Count == 0, "An invalid share cannot save the previous contents");
         }
+        ConflictDialog();
+        OverflowDialog();
+    }
+    static void OverflowDialog()
+    {
+        var full = EditorSession.CreateOffline(); for (int slot = 0; slot < 3; slot++) full.SetKeyboard("IA_Guard", slot, new[] { "J", "K", "L" }[slot]);
+        var source = EditorSession.CreateOffline(); source.SetKeyboard("IA_Guard", 0, "LeftMouseButton");
+        var disabled = UserPresetStore.Capture(source, "关闭增强时的预设", new KeyEnhancementConfiguration());
+        var enabled = new KeyEnhancementConfiguration { Enabled = true };
+        var fullStore = new UserPresetStore(Path.Combine(output, "full-library"));
+        using (var host = Host(full, enabled, "full"))
+        using (var dialog = new UserPresetDialog(fullStore))
+        {
+            dialog.Show(); Application.DoEvents(); Inspect(dialog, UserPresetStore.Share(disabled)); Button(dialog, "usePreset").PerformClick();
+            Check(dialog.DialogResult == DialogResult.OK && dialog.AppliedPreset != null, "Library returns the chosen preset independently of a target's capacity");
+            Check(Field<KeyEnhancementConfiguration>(host, "keyEnhancement").ToJson() == enabled.ToJson()
+                && !full.Relations("IA_Guard", false, -1).Keys.Contains("LeftMouseButton"), "Returning a library preset does not stage it");
+            Review(host, dialog.AppliedPreset, PresetApplyMode.Append, true, true);
+            var result = Field<KeyEnhancementConfiguration>(host, "keyEnhancement");
+            var effective = new BindingWorkspace(full, result, result.Clone(), false, -1).Entries("IA_Guard").SelectMany(entry => entry.Keys).ToArray();
+            Check(result.Enabled && new[] { "J", "K", "L", "LeftMouseButton" }.All(effective.Contains), "Confirmed enhanced append preserves existing keys and adds the incoming binding");
+            Check(fullStore.Load().Count == 0, "Loading does not create an intermediate collection entry");
+        }
+    }
+    static void ConflictDialog()
+    {
+        var session = EditorSession.CreateOffline();
         var current = new KeyEnhancementConfiguration { Enabled = true };
         current.CustomFunctions.Add(new KeyEnhancementOutput { Id = "same", Name = "我的功能", Kind = "property", Property = "bFlag", Value = true });
         var incoming = current.Clone(); incoming.CustomFunctions[0].Name = "朋友功能"; incoming.CustomFunctions[0].Value = false;
         var conflict = Capture(incoming, "朋友预设"); var retryStore = new UserPresetStore(Path.Combine(output, "retry-library"));
         using (var host = Host(session, current, "retry"))
-        using (var dialog = new UserPresetDialog(session, retryStore, PresetApplyMode.Append, new EditorPreferences(Path.Combine(output, "retry-mode.txt")), () => current, null,
-            (value, mode) => Call(host, "StageBindingPreset", value, mode)))
         {
-            dialog.Show(); Application.DoEvents(); Inspect(dialog, UserPresetStore.Share(conflict));
-            Button(dialog, "usePreset").PerformClick();
-            Check(dialog.Visible && retryStore.Load().Count == 0 && Field<KeyEnhancementConfiguration>(host, "keyEnhancement").ToJson() == current.ToJson(), "Failed enhanced append does not save or stage");
-            var selector = Field<PresetModeSelector>(dialog, "modeButton");
-            selector.Controls.OfType<Button>().Single(button => button.Name == "modeReplace").PerformClick();
-            Button(dialog, "usePreset").PerformClick();
-            Check(dialog.DialogResult == DialogResult.OK && retryStore.Load().Count == 1, "Correct mode and retry without duplicate-name error");
-        }
-        var full = EditorSession.CreateOffline(); for (int slot = 0; slot < 3; slot++) full.SetKeyboard("IA_Guard", slot, new[] { "J", "K", "L" }[slot]);
-        var source = EditorSession.CreateOffline(); source.SetKeyboard("IA_Guard", 0, "LeftMouseButton");
-        var disabled = UserPresetStore.Capture(source, "关闭增强时的预设", new KeyEnhancementConfiguration());
-        var enabled = new KeyEnhancementConfiguration { Enabled = true };
-        using (var host = Host(full, enabled, "full"))
-        using (var dialog = new UserPresetDialog(full, new UserPresetStore(Path.Combine(output, "full-library")), PresetApplyMode.Append,
-            new EditorPreferences(Path.Combine(output, "full-mode.txt")), () => enabled, null, (value, mode) => Call(host, "StageBindingPreset", value, mode)))
-        {
-            dialog.Show(); Application.DoEvents(); Inspect(dialog, UserPresetStore.Share(disabled)); Button(dialog, "usePreset").PerformClick();
-            Check(dialog.DialogResult == DialogResult.OK && Field<KeyEnhancementConfiguration>(host, "keyEnhancement").Rules.Any(rule => rule.Keys.Contains("LeftMouseButton")), "Merged enabled plan accepts overflow from disabled preset");
+            using (var dialog = new UserPresetDialog(retryStore))
+            {
+                dialog.Show(); Application.DoEvents(); Inspect(dialog, UserPresetStore.Share(conflict));
+                Check(Button(dialog, "usePreset").Enabled && Contents(dialog).Length > 0, "The library can browse a preset whose custom function conflicts with an editor");
+                Button(dialog, "usePreset").PerformClick();
+                Check(dialog.AppliedPreset != null && retryStore.Load().Count == 0, "Selecting a conflicting preset only returns its contents");
+                Review(host, dialog.AppliedPreset, PresetApplyMode.Append, false, false);
+                Check(Field<KeyEnhancementConfiguration>(host, "keyEnhancement").ToJson() == current.ToJson() && !session.HasAnyDrafts,
+                    "Blocked editor review leaves custom functions and bindings unchanged");
+            }
+            incoming.CustomFunctions[0].Id = "friend";
+            using (var dialog = new UserPresetDialog(retryStore))
+            {
+                dialog.Show(); Application.DoEvents(); Inspect(dialog, UserPresetStore.Share(Capture(incoming, "朋友预设")));
+                Button(dialog, "usePreset").PerformClick();
+                Check(dialog.DialogResult == DialogResult.OK && dialog.AppliedPreset != null && dialog.AppliedPreset.Id == null,
+                    "A corrected share returns a preset without creating a collection entry");
+                Review(host, dialog.AppliedPreset, PresetApplyMode.Append, true, true);
+            }
+            var definitions = Field<KeyEnhancementConfiguration>(host, "keyEnhancement").CustomFunctions;
+            Check(definitions.Single(item => item.Id == "friend").Value.Equals(false) && definitions.Single(item => item.Id == "same").Value.Equals(true),
+                "Confirmed loading adds the new custom function while retaining the existing definition");
         }
     }
     [STAThread] static int Main(string[] args)
@@ -199,7 +307,8 @@ class EnhancedPresetShareTests
             Application.EnableVisualStyles(); I18n.Current = "zh-Hans";
             output = Path.GetFullPath(args[0]); if (Directory.Exists(output)) throw new Exception("Use a new output directory."); Directory.CreateDirectory(output);
             if (Clipboard.ContainsText()) clipboard = Clipboard.GetText();
-            Codec(); Overrides(); Dialogs(); Console.WriteLine("EnhancedPresetShareTests PASS: " + checks); return 0;
+            if (!args.Contains("--dialogs-only")) { Codec(); Overrides(); }
+            Dialogs(); Console.WriteLine("EnhancedPresetShareTests PASS: " + checks); return 0;
         }
         catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }
         finally { if (clipboard == null) Clipboard.Clear(); else Clipboard.SetText(clipboard); }

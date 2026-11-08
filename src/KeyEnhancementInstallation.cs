@@ -164,7 +164,7 @@ namespace PBZKeyForge
             var expected = ModFiles();
             Dictionary<string, byte[]> previous = null;
             var source = ReadOwnership();
-            Func<Dictionary<string, byte[]>> previousFiles = delegate { return previous ?? (previous = OwnedPayload(source)); };
+            Func<Dictionary<string, byte[]>> previousFiles = delegate { return previous ?? (previous = OwnedPayload(source, ModPrefix)); };
             bool incomplete = false;
             foreach (string path in Directory.GetFiles(directory, "*", SearchOption.AllDirectories))
             {

@@ -161,8 +161,13 @@ namespace PBZKeyForge
         }
 
         public void Refresh()
+        { RefreshIfChanged(); }
+
+        internal bool RefreshIfChanged()
         {
-            if (IsOffline) return;
+            if (IsOffline) return false;
+            string previousProfile = ActiveProfile, previousError = SchemeError;
+            bool discoveryRequired = SchemeDiscoveryRequired;
             InputDefaultSet incomingDefaults = GameSchemeSettings.InputDefaultsForSave(InputPath);
             bool defaultsChanged = incomingDefaults != Defaults;
             var pendingIds = draft.Edits.Keys.Concat(previewCheckpoint == null ? Enumerable.Empty<string>() : previewCheckpoint.Edits.Keys)
@@ -171,7 +176,8 @@ namespace PBZKeyForge
                 Address(id).IsGamepad ? InputDefaults.RawSlot(Address(id).Slot) : int.Parse(Address(id).Slot))))
                 throw new IOException(I18n.Str("editor.inputruleschanged"));
             byte[] latest = File.ReadAllBytes(InputPath);
-            if (defaultsChanged || !Same(latest, diskBytes))
+            bool changed = defaultsChanged || !Same(latest, diskBytes);
+            if (changed)
             {
                 SaveFile incoming = SaveFile.FromBytes(latest, incomingDefaults);
                 var incomingCells = Extract(incoming);
@@ -192,6 +198,7 @@ namespace PBZKeyForge
                         }
             }
             ReadScheme();
+            return changed || ActiveProfile != previousProfile || SchemeError != previousError || SchemeDiscoveryRequired != discoveryRequired;
         }
 
         internal void RefreshSchemeAfterDiscovery(Exception failure)
@@ -454,6 +461,8 @@ namespace PBZKeyForge
             if (enabled && ActiveProfile == null) throw new InvalidOperationException("The game scheme selector is unavailable.");
             ActivationPending = enabled && SelectedProfile != ActiveProfile;
         }
+
+        internal bool HasPresetPreview { get { return previewCheckpoint != null && previewProfile == SelectedProfile; } }
 
         internal void EndPreview()
         {

@@ -46,6 +46,7 @@ namespace RC::Unreal
         PBZ_CONTEXT_API int RegisterPreHook(const Callback&, void*);
         PBZ_CONTEXT_API int RegisterPostHook(const Callback&, void*);
         PBZ_CONTEXT_API auto GetFuncPtr() -> void(*)(UObject*, FFrame&, void*);
+        PBZ_CONTEXT_API unsigned short& GetParmsSize();
     };
     struct FScriptMapLayout
     {
@@ -129,6 +130,9 @@ namespace RC::LuaType
 
 namespace
 {
+    bool stanceActive();
+    void beginStanceFrame(RC::Unreal::UObject*,RC::Unreal::FFrame&);
+    void endStanceFrame(RC::Unreal::FFrame&);
     std::unordered_map<RC::Unreal::UFunction*,RC::Unreal::FProperty*> chargeTicks;
     std::unordered_map<RC::Unreal::UObject*,double> chargeRates;
     struct ChargeTickFrame { RC::Unreal::FFrame* frame; float* delta; float original; };
@@ -171,6 +175,7 @@ namespace
             reinterpret_cast<LPCWSTR>(&initialize), &module);
         RC::Unreal::Hook::RegisterProcessLocalScriptFunctionPreCallback(
             [](auto* object, auto& frame, void*) {
+                beginStanceFrame(object,frame);
                 if (enabled.load(std::memory_order_relaxed))
                 {
                     beginChargeTick(object,frame);
@@ -179,6 +184,7 @@ namespace
             });
         RC::Unreal::Hook::RegisterProcessLocalScriptFunctionPostCallback(
             [](auto*, auto& frame, void*) {
+                endStanceFrame(frame);
                 endChargeTick(frame);
                 if (!frames.empty() && frames.back().frame == &frame) frames.pop_back();
             });
@@ -324,4 +330,5 @@ extern "C" __declspec(dllexport) int pbz_charge_ability(void* state)
 }
 
 #include "damage-scaling.inl"
+#include "stance-input.inl"
 #include "input-triggers.inl"

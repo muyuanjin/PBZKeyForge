@@ -15,6 +15,7 @@ namespace PBZKeyForge
         readonly Dictionary<string, string> schemePresetNames = new Dictionary<string, string>();
         readonly Dictionary<string, string> schemePresetSelections = new Dictionary<string, string>();
         Panel schemeBar;
+        ContextMenuStrip schemeMenu, schemeOverflowMenu;
         int schemeOffset;
         string schemeSelection;
         bool arrangingSchemes;
@@ -35,6 +36,10 @@ namespace PBZKeyForge
         Control BuildSchemeBar()
         {
             schemeBar = new EditorPanel { Dock = DockStyle.Fill, Margin = Padding.Empty, BackColor = EditorTheme.Surface };
+            schemeBar.Disposed += delegate {
+                if (schemeMenu != null) schemeMenu.Dispose();
+                if (schemeOverflowMenu != null) schemeOverflowMenu.Dispose();
+            };
             schemeViewport.Controls.Add(schemeStrip); schemeViewport.Margin = Padding.Empty;
             schemeViewport.MouseWheel += delegate(object sender, MouseEventArgs e) { schemeOffset = Math.Max(0, schemeOffset - e.Delta); LayoutSchemes(false); };
             btnAddScheme.Name = "addScheme"; btnAddScheme.Text = "+"; btnAddScheme.Primary = true; btnAddScheme.AccentColor = EditorTheme.KeyEnhancementStrong;
@@ -44,14 +49,16 @@ namespace PBZKeyForge
             btnSchemeOptions.Click += delegate { if (EnhancedSchemes) ShowSchemeMenu(btnSchemeOptions, keyEnhancement.SelectedSchemeId); };
             btnSchemeMore.Text = "•••"; btnSchemeMore.Name = "moreSchemes";
             btnSchemeMore.Click += delegate {
-                var menu = new ContextMenuStrip();
+                if (schemeOverflowMenu != null) schemeOverflowMenu.Dispose();
+                var menu = schemeOverflowMenu = new ContextMenuStrip { Font = Font, BackColor = EditorTheme.Floating,
+                    ForeColor = EditorTheme.Ink, Renderer = new EditorMenuRenderer() };
                 foreach (var tab in schemeTabs)
                 {
                     var item = menu.Items.Add(tab.Text); item.Tag = tab.Tag;
                     ((ToolStripMenuItem)item).Checked = tab.Selected;
                     item.Click += delegate { SelectProfile((string)item.Tag); };
                 }
-                menu.Closed += delegate { menu.Dispose(); }; menu.Show(btnSchemeMore, new Point(0, btnSchemeMore.Height));
+                menu.Show(btnSchemeMore, new Point(0, btnSchemeMore.Height));
             };
             btnSchemeLeft.Text = "‹"; btnSchemeRight.Text = "›";
             btnSchemeLeft.Click += delegate { schemeOffset = Math.Max(0, schemeOffset - schemeViewport.Width / 2); LayoutSchemes(false); };
@@ -85,6 +92,7 @@ namespace PBZKeyForge
                     schemeStrip.Controls.Add(tab); return tab;
                 }).ToArray();
             }
+            bool sharedDirty = EnhancedSchemes && SharedSchemeContent(keyEnhancement) != SharedSchemeContent(keyEnhancementBaseline);
             foreach (var tab in schemeTabs)
             {
                 string id = (string)tab.Tag;
@@ -95,7 +103,7 @@ namespace PBZKeyForge
                 if (EnhancedSchemes)
                 {
                     var previous = keyEnhancementBaseline.Schemes.FirstOrDefault(item => item.Id == id);
-                    tab.Dirty = previous == null || keyEnhancement.ConfigurationFor(id).ToJson() != keyEnhancementBaseline.ConfigurationFor(id).ToJson();
+                    tab.Dirty = previous == null || sharedDirty || SchemePresetContent(keyEnhancement, id) != SchemePresetContent(keyEnhancementBaseline, id);
                 }
                 else tab.Dirty = Session.HasProfileDraft(id);
                 tab.Enabled = !IsApplying; tab.Invalidate();
@@ -110,6 +118,13 @@ namespace PBZKeyForge
             string selection = EnhancedSchemes ? keyEnhancement.SelectedSchemeId : Session == null ? null : Session.SelectedProfile;
             bool reveal = selection != schemeSelection; schemeSelection = selection;
             LayoutSchemes(reveal);
+        }
+
+        static string SharedSchemeContent(KeyEnhancementConfiguration configuration)
+        {
+            configuration.StoreSelectedScheme();
+            return PresetValue(new { configuration.Enabled, configuration.RuntimeHotkeys, configuration.CustomFunctions,
+                configuration.Hooks, configuration.CustomLua, configuration.SchemeSwitchBindings });
         }
 
         void LayoutSchemes(bool reveal)
@@ -170,7 +185,9 @@ namespace PBZKeyForge
         {
             if (!EnhancedSchemes) return;
             var scheme = keyEnhancement.Schemes.First(item => item.Id == id);
-            var menu = new ContextMenuStrip();
+            if (schemeMenu != null) schemeMenu.Dispose();
+            var menu = schemeMenu = new ContextMenuStrip { Font = Font, BackColor = EditorTheme.Floating,
+                ForeColor = EditorTheme.Ink, Renderer = new EditorMenuRenderer() };
             var rename = menu.Items.Add(I18n.Str("schemes.rename")); rename.Enabled = !scheme.BuiltIn;
             rename.Click += delegate {
                 modalActive = true;
@@ -186,7 +203,7 @@ namespace PBZKeyForge
                 if (MessageBox.Show(this, I18n.Str("schemes.deleteconfirm", EnhancedSchemeLabel(id)), Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
                     TryAction(delegate { RememberBindingEdit(); keyEnhancement.DeleteScheme(id); AlignSchemeBaseline(); });
             };
-            menu.Closed += delegate { menu.Dispose(); }; menu.Show(owner, new Point(0, owner.Height));
+            menu.Show(owner, new Point(0, owner.Height));
         }
 
         void SaveSchemePreset()
@@ -198,7 +215,8 @@ namespace PBZKeyForge
                 var store = UserPresetStore.Default(); var library = store.Load();
                 string id = EnhancedSchemes ? keyEnhancement.SelectedSchemeId : Session.SelectedProfile, name;
                 if (!schemePresetNames.TryGetValue(id, out name)) name = EnhancedSchemes ? EnhancedSchemeLabel(id) : SchemeLabel(id);
-                using (var dialog = new SchemeNameDialog(I18n.Str("schemes.savepreset"), name, library.Select(item => item.Name).ToArray(), true))
+                using (var dialog = new SchemeNameDialog(I18n.Str("schemes.savepreset"), name, library.Select(item => item.Name).ToArray(), true,
+                    EnhancedSchemes ? EnhancedSchemeLabel(id) : SchemeLabel(id)))
                 {
                     if (dialog.ShowDialog(this) != DialogResult.OK) return;
                     var existing = library.FirstOrDefault(item => string.Equals(item.Name, dialog.Value.Trim(), StringComparison.CurrentCultureIgnoreCase));
@@ -238,22 +256,27 @@ namespace PBZKeyForge
         public string Value { get { return name.Text.Trim(); } }
         public bool Keyboard { get { return keyboard.Checked; } }
         public bool Gamepad { get { return gamepad.Checked; } }
-        public SchemeNameDialog(string title, string initial, string[] suggestions, bool scope)
+        public SchemeNameDialog(string title, string initial, string[] suggestions, bool scope, string source = null)
         {
             Text = title; Font = new Font("Microsoft YaHei UI", 10f); AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(440, scope ? 174 : 128); FormBorderStyle = FormBorderStyle.FixedDialog;
+            int offset = source == null ? 0 : 30;
+            int contentHeight = (scope ? 174 : 128) + offset;
+            ClientSize = new Size(440, contentHeight + Caption.Height); FormBorderStyle = FormBorderStyle.FixedDialog;
             StartPosition = FormStartPosition.CenterParent; MinimizeBox = MaximizeBox = false;
             BackColor = EditorTheme.Surface; ForeColor = EditorTheme.Ink;
-            var label = new EditorLabel { Text = I18n.Str(scope ? "preset.name" : "schemes.name"), Left = 16, Top = 14, Width = 400, Height = 24 };
-            name.SetBounds(16, 42, 408, 30); name.DropDownStyle = ComboBoxStyle.DropDown; name.MaxLength = 80;
+            var content = new EditorPanel { Dock = DockStyle.Fill, Name = "schemeNameContent" };
+            Controls.Add(content);
+            if (source != null) content.Controls.Add(new EditorLabel { Text = I18n.Str("preset.save.source", source), Left = 16, Top = 14, Width = 408, Height = 24, AutoEllipsis = true, ForeColor = EditorTheme.Muted, Name = "savePresetSource" });
+            var label = new EditorLabel { Text = I18n.Str(scope ? "preset.name" : "schemes.name"), Left = 16, Top = 14 + offset, Width = 400, Height = 24 };
+            name.SetBounds(16, 42 + offset, 408, 30); name.DropDownStyle = ComboBoxStyle.DropDown; name.MaxLength = 80;
             if (suggestions != null) name.Items.AddRange(suggestions); name.Text = initial; name.Name = "schemeName";
             keyboard.Text = I18n.Str("editor.keyboard"); gamepad.Text = I18n.Str("editor.gamepad");
-            keyboard.Checked = gamepad.Checked = true; keyboard.SetBounds(16, 80, 190, 28); gamepad.SetBounds(220, 80, 190, 28);
+            keyboard.Checked = gamepad.Checked = true; keyboard.SetBounds(16, 80 + offset, 190, 28); gamepad.SetBounds(220, 80 + offset, 190, 28);
             keyboard.Visible = gamepad.Visible = scope;
-            var ok = new EditorButton { Text = I18n.Str("preset.save"), Left = 320, Top = ClientSize.Height - 44, Width = 104, Height = 32, Primary = true };
+            var ok = new EditorButton { Text = I18n.Str("preset.save"), Left = 320, Top = contentHeight - 44, Width = 104, Height = 32, Primary = true };
             var cancel = new EditorButton { Text = I18n.Str("editor.cancel"), Left = 208, Top = ok.Top, Width = 104, Height = 32, DialogResult = DialogResult.Cancel };
             ok.Click += delegate { if (Value.Length > 0 && (!scope || Keyboard || Gamepad)) { DialogResult = DialogResult.OK; Close(); } else name.Focus(); };
-            Controls.AddRange(new Control[] { label, name, keyboard, gamepad, cancel, ok }); AcceptButton = ok; CancelButton = cancel;
+            content.Controls.AddRange(new Control[] { label, name, keyboard, gamepad, cancel, ok }); AcceptButton = ok; CancelButton = cancel;
             Shown += delegate { name.Focus(); name.SelectAll(); };
             AutoScaleDimensions = new SizeF(96, 96); PerformAutoScale();
         }

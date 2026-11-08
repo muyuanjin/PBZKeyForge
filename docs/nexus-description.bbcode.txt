@@ -13,7 +13,7 @@ Windows editor with ordinary save editing and optional Key Enhancement. Ordinary
 [/list]
 The editor remembers the last opened save and follows Steam's installation records to find the game. Switching schemes reads the latest settings. Refresh preserves drafts and asks you to resolve conflicting changes. Both editing views share the same draft; switching views does not save it.
 
-[b]No game or save yet?[/b] The editor opens an offline scheme with built-in factory bindings. Keyboard/mouse, Xbox and PlayStation are available even if no controller has ever been connected. Choose Controller, then Xbox or PlayStation to edit each family independently. Save or share through Preset manager, or use [b]Export game bindings[/b] in the footer to create a .sav file. You can also start with [b]More → New offline scheme[/b]. Open your own save when you want to apply directly to the game.
+[b]No game or save yet?[/b] The editor opens an offline scheme with built-in factory bindings. Keyboard/mouse, Xbox and PlayStation are available even if no controller has ever been connected. Choose Controller, then Xbox or PlayStation to edit each family independently. Use [b]Save as preset[/b] in the scheme bar, share through Preset manager, or use [b]Export game bindings[/b] in the footer to create a .sav file. You can also start with [b]More → New offline scheme[/b]. Open your own save when you want to apply directly to the game.
 
 [color=#cc4125][b]IMPORTANT[/b][/color]
 [quote][b]Do not apply or reset bindings in the game's own key binding screen afterwards.[/b] The game rewrites these settings. If this happens, reapply your layout with PBZKeyForge.[/quote]
@@ -36,21 +36,22 @@ The interface supports all 15 game languages, including Simplified and Tradition
 [color=#e8b96a][b]CHOOSE HOW A PRESET CHANGES YOUR KEYS[/b][/color]
 Three choices stay visible beside the preset picker. Hover over a choice for details.
 [list]
-[*][b]Add keys:[/b] keep existing keys and add the preset's bindings; duplicates are ignored.
-[*][b]Replace keys:[/b] replace the bindings of the actions covered by the preset; other actions stay as they are.
-[*][b]Preset only:[/b] start from factory bindings for the devices included in the preset, then use that preset's layout. Devices outside its scope keep their settings.
+[*][b]Add keys:[/b] keep existing ordinary keys and add the preset's bindings; duplicates are ignored.
+[*][b]Replace keys:[/b] replace ordinary bindings for the actions covered by the preset.
+[*][b]Preset only:[/b] start ordinary bindings from factory defaults for the included devices, then use the preset's layout.
 [/list]
+Enhancement presets merge their rules with Add keys or replace rules for included devices with the other modes. When loading from Preset manager, review the target scheme, actual binding changes and effects on scripts, input blocks and other settings in the main window's load confirmation.
 The initial choice is Preset only, and your choice is remembered. Selecting a preset creates a draft. [b]Apply changes[/b] writes it to the game. Longer writes show progress; if a write fails, your draft remains available to retry. Ordinary save writes require the game to be closed; connected enhancement bindings support live edits.
 
 [color=#e8b96a][b]YOUR PRESETS AND SHARE CODES[/b][/color]
-Click [b]Save as preset[/b] in the scheme bar to name the current draft and choose its devices. [b]Preset manager[/b] beside Quick setup previews, shares, imports and deletes personal presets. Personal presets remain separate from built-ins; deleting a preset does not change your current bindings.
+Click [b]Save as preset[/b] in the scheme bar to name the current draft and choose its devices. [b]Preset manager[/b] beside Quick setup manages your preset library independently. Select a preset or paste a share code to see its contents, rename, save, delete, export or share it. Personal presets remain separate from built-ins.
 
 [center][b]Save your current scheme with a name[/b]
 [img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107625-878518668.png[/img][/center]
 
-Copy a named, one-line share code for all included devices, keyboard/mouse, controllers or one controller family. The character count updates with your choice. Select a saved preset to preview its factory differences; check presets in the library to delete them.
+Copy a named, one-line share code for all included devices, keyboard/mouse, controllers or one controller family. Export saves that share code as a text file. Select a saved preset to see its bindings, triggers and settings; check presets in the library to delete them.
 
-Paste a share code, click [b]Preview[/b], and inspect the included devices and changes before saving or using it. [b]Save to my presets[/b] keeps it in your library; [b]Save and use[/b] also stages it in the current scheme. Enhancement presets and share codes include the selected scheme's bindings. [b]Export game bindings[/b] creates a .sav copy for ordinary bindings or a ZIP preserving the enhancement scheme library. Export leaves the source save and active game scheme unchanged.
+Paste a share code to see the preset contents automatically. [b]Load into editor…[/b] returns it to the main window, where you choose a load mode and confirm its effect on the editing scheme. [b]Apply changes[/b] activates the resulting draft. Saving to [b]My presets[/b] is optional and separate from loading. Enhancement presets and share codes include enhancement settings. [b]Export game bindings[/b] in the main window creates a .sav copy for ordinary bindings or a ZIP preserving the enhancement scheme library. Export leaves the source save and active game scheme unchanged.
 
 [center][b]Share your layout for all devices or a selected device family[/b]
 [img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107628-2130680389.png[/img][/center]

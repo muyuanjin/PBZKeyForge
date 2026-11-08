@@ -60,6 +60,7 @@ namespace
     std::unordered_map<void*, unsigned char*> locals;
     using NativeExec = void(*)(RC::Unreal::UObject*, RC::Unreal::FFrame&, void*);
     std::unordered_map<const void*, NativeExec> nativeExecs;
+    std::unordered_map<const void*,unsigned short> parameterSizes;
     std::unordered_map<const void*,std::function<void(RC::Unreal::UFunction*,void*)>> processEvents;
     std::unordered_map<const void*, RC::Unreal::FProperty*> properties;
     std::vector<RC::Unreal::UFunction::Callback> interfacePre, interfacePost;
@@ -98,6 +99,7 @@ namespace RC::Unreal
     int UFunction::RegisterPreHook(const Callback& callback, void*) { interfacePre.push_back(callback); return 1; }
     int UFunction::RegisterPostHook(const Callback& callback, void*) { interfacePost.push_back(callback); return 2; }
     auto UFunction::GetFuncPtr() -> void(*)(UObject*, FFrame&, void*) { return nativeExecs[this]; }
+    unsigned short& UFunction::GetParmsSize() { return parameterSizes[this]; }
     FProperty* UObject::GetPropertyByName(const wchar_t* name)
     {
         auto own = namedProperties.find(this);
@@ -626,6 +628,94 @@ namespace
         std::cout << "All native context exports PASS through Lua C calls: argument consumption, return ordering, interface capture and damage isolation\n";
     }
 }
+void nativeStanceTests()
+{
+    using namespace RC::Unreal;
+    UObject owner,otherOwner,passive,otherPassive,library;
+    UFunction add,remove,down,release,otherFunction;
+    FProperty ownerProperty,tagProperty,replicateProperty;
+    propertyOffsets[&ownerProperty]=0; propertySizes[&ownerProperty]=sizeof(void*);
+    propertyOffsets[&tagProperty]=8; propertySizes[&tagProperty]=sizeof(FName);
+    propertyOffsets[&replicateProperty]=16; propertySizes[&replicateProperty]=sizeof(bool);
+    for (auto* function : {&add,&remove})
+    {
+        auto& fields=namedProperties[function];
+        fields[L"AbilitySystem"]=&ownerProperty;
+        fields[L"GameplayTag"]=&tagProperty;
+        fields[L"bShouldReplicate"]=&replicateProperty;
+        parameterSizes[function]=24;
+    }
+    int count=0,otherCount=0,unrelatedCount=0;
+    processEvents[&library]=[&](UFunction* function,void* raw) {
+        auto* bytes=static_cast<unsigned char*>(raw);
+        auto* component=*reinterpret_cast<UObject**>(bytes);
+        if (!component) return;
+        auto name=reinterpret_cast<FName*>(bytes+8)->ToString();
+        int& value=name!=L"CharacterState.AbilityState.Stance.HoldingStanceKey" ? unrelatedCount : component==&owner ? count : otherCount;
+        value=(std::max)(0,value+(function==&add ? 1 : -1));
+        assert(!*reinterpret_cast<bool*>(bytes+16));
+    };
+    TestState state; state.lua=luaApi.newstate(); liveLuaState=state.lua;
+    auto begin=[&](int(*function)(void*)) { luaApi.settop(state.lua,0);luaApi.pushcclosure(state.lua,function,0); };
+    auto pointer=[&](const void* value) { luaApi.pushinteger(state.lua,reinterpret_cast<long long>(value)); };
+    auto finish=[&](int arguments) {
+        assert(luaApi.pcall(state.lua,arguments,-1,0,0,nullptr)==0);
+        assert(luaApi.gettop(state.lua)==1 && luaApi.tointeger(state.lua,1,nullptr)==1);
+    };
+    auto prepare=[&](bool held) {
+        begin(pbz_stance_prepare);
+        for (auto* object : {&owner,&passive,&library}) pointer(object);
+        for (auto* function : {&add,&remove,&down,&release}) pointer(function);
+        luaApi.pushboolean(state.lua,held);luaApi.pushinteger(state.lua,count);finish(9);
+    };
+    auto registered=interfacePre.size();
+    prepare(false);
+    assert(interfacePre.size()==registered+2 && stanceActive() && count==0);
+    auto call=[&](UFunction* function,UObject* component,UObject* caller,UFunction* callerFunction,const wchar_t* tag=L"CharacterState.AbilityState.Stance.HoldingStanceKey") {
+        FFrame scriptFrame,nativeFrame;
+        nodes[&scriptFrame]=callerFunction;
+        unsigned char parameters[24]{};
+        *reinterpret_cast<UObject**>(parameters)=component;
+        auto name=FName(tag,FNAME_Add,nullptr);std::memcpy(parameters+8,&name,sizeof(name));
+        locals[&nativeFrame]=parameters;
+        UnrealScriptFunctionCallableContext context{&library,nativeFrame,nullptr};
+        pre(caller,scriptFrame,nullptr);
+        auto index=registered+(function==&add ? 0 : 1);
+        interfacePre[index](context,nullptr);
+        library.ProcessEvent(function,parameters);
+        interfacePost[index](context,nullptr);
+        assert(*reinterpret_cast<UObject**>(parameters)==component);
+        post(caller,scriptFrame,nullptr);
+        assert(stanceFrames.empty() && suppressedStanceCalls.empty());
+    };
+    call(&add,&owner,&passive,&down);assert(count==0);
+    prepare(true);assert(count==1);
+    call(&add,&owner,&passive,&down);assert(count==1);
+    call(&remove,&owner,&passive,&release);assert(count==1);
+    prepare(true);assert(count==1 && interfacePre.size()==registered+2);
+    prepare(false);assert(count==0);
+    call(&add,&owner,&passive,&down);assert(count==0);
+    prepare(true);assert(count==1);
+    prepare(false);assert(count==0);
+    call(&remove,&owner,&passive,&release);assert(count==0);
+    call(&add,&otherOwner,&passive,&down);assert(otherCount==1 && count==0);
+    call(&add,&owner,&otherPassive,&down);assert(count==1);
+    call(&add,&owner,&passive,&otherFunction);assert(count==2);
+    call(&add,&owner,&passive,&down,L"Unrelated.Tag");assert(unrelatedCount==1 && count==2);
+    prepare(true);assert(count==3);
+    prepare(false);assert(count==2);
+    begin(pbz_stance_restore);pointer(&owner);luaApi.pushboolean(state.lua,true);finish(2);
+    assert(!stanceActive() && count==3);
+    call(&remove,&owner,&passive,&release);assert(count==2);
+    prepare(true);assert(count==2);
+    begin(pbz_stance_restore);pointer(&owner);luaApi.pushboolean(state.lua,false);finish(2);
+    assert(!stanceActive() && count==1);
+    count=1;prepare(false);assert(count==0);
+    begin(pbz_stance_restore);pointer(nullptr);luaApi.pushboolean(state.lua,false);finish(2);
+    assert(!stanceActive() && count==0);
+    luaApi.close(state.lua);liveLuaState=nullptr;
+}
+
 int main(int argc, char** argv)
 {
     _set_error_mode(_OUT_TO_STDERR);
@@ -698,6 +788,7 @@ int main(int argc, char** argv)
     interfacePost[0](firstCall,nullptr);
     nativeDamageTests(state);
     nativeLuaStackTests(argc > 1 ? argv[1] : "C:\\Program Files\\Wireshark\\lua54.dll");
+    nativeStanceTests();
     std::cout << "ScriptContextNativeTests PASS\n";
     return 0;
 }

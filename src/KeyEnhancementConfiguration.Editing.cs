@@ -38,7 +38,7 @@ namespace PBZKeyForge
                 {
                     var a = new KeyEnhancementConfiguration(); a.Rules.Add(existing);
                     var b = new KeyEnhancementConfiguration(); b.Rules.Add(rule);
-                    if (a.ToJson() == b.ToJson()) continue;
+                    if (KeyEnhancementConfiguration.CanonicalJson(a) == KeyEnhancementConfiguration.CanonicalJson(b)) continue;
                     rule.Id = Guid.NewGuid().ToString("N");
                 }
                 if (!string.IsNullOrEmpty(rule.InputGroup))
@@ -54,8 +54,7 @@ namespace PBZKeyForge
             {
                 var existing = result.CustomFunctions.FirstOrDefault(item => item.Id == target.Id);
                 if (existing == null) result.CustomFunctions.Add(target);
-                else if (new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(existing)
-                    != new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(target))
+                else if (KeyEnhancementConfiguration.CanonicalJson(existing) != KeyEnhancementConfiguration.CanonicalJson(target))
                     throw new InvalidOperationException(I18n.Str("editing.customconflict", target.Name ?? target.Id));
             }
             foreach (var item in added.NativeBindings)
@@ -70,7 +69,7 @@ namespace PBZKeyForge
             {
                 var old = result.Hooks.FirstOrDefault(item => Convert.ToString(item["path"]) == Convert.ToString(hook["path"]));
                 if (old == null) result.Hooks.Add(hook);
-                else if (new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(old) != new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(hook))
+                else if (KeyEnhancementConfiguration.CanonicalJson(old) != KeyEnhancementConfiguration.CanonicalJson(hook))
                     throw new InvalidOperationException(I18n.Str("unified.advanced.duplicatehook"));
             }
             if (!string.IsNullOrWhiteSpace(added.CustomLua) && result.CustomLua != added.CustomLua)

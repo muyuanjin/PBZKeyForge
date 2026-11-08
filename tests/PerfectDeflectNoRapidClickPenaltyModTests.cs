@@ -51,6 +51,14 @@ public static class PerfectDeflectNoRapidClickPenaltyModTests
             var mod = new PerfectDeflectNoRapidClickPenaltyMod(root);
             Assert(PerfectDeflectNoRapidClickPenaltyMod.FindGameDirectory(save) == root, "Game directory resolution.");
             Assert(mod.HasTargetResource(), "All five resources in a TOC with an extended header must be found.");
+            using (var locked = new FileStream(toc, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                Assert(mod.HasTargetResource(), "An unchanged resource TOC was read again.");
+            byte[] changedToc = (byte[])originalToc.Clone(); changedToc[176] ^= 1;
+            DateTime sourceTime = File.GetLastWriteTimeUtc(toc);
+            File.WriteAllBytes(toc, changedToc); File.SetLastWriteTimeUtc(toc, sourceTime.AddSeconds(1));
+            Assert(!mod.HasTargetResource(), "A same-size updated TOC reused stale resource identities.");
+            File.WriteAllBytes(toc, originalToc); File.SetLastWriteTimeUtc(toc, sourceTime.AddSeconds(2));
+            Assert(mod.HasTargetResource(), "Restored source resources were not rediscovered.");
             Assert(mod.ReadState() == ResourceModState.Disabled, "Default state must be disabled.");
             mod.Apply(false); mod.Apply(true);
             Assert(mod.ReadState() == ResourceModState.Enabled && Directory.GetFiles(mod.InstallDirectory).Length == 3, "Enable must install exactly three containers.");

@@ -202,15 +202,18 @@ namespace PBZKeyForge
             }
         }
 
-        Dictionary<string, byte[]> OwnedPayload(InstallationSource source)
+        Dictionary<string, byte[]> OwnedPayload(InstallationSource source, string prefix = null)
         {
             if (string.IsNullOrEmpty(source.PayloadBackup)) return Payload;
             var result = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
             using (var stream = File.OpenRead(source.PayloadBackup))
             using (var zip = new ZipArchive(stream, ZipArchiveMode.Read))
                 foreach (var entry in zip.Entries)
+                {
+                    if (prefix != null && !entry.FullName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) continue;
                     using (var input = entry.Open()) using (var output = new MemoryStream())
                     { input.CopyTo(output); result[entry.FullName] = output.ToArray(); }
+                }
             return result;
         }
 

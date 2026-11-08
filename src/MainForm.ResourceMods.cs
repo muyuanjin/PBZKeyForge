@@ -94,18 +94,20 @@ namespace PBZKeyForge
             string input = Session != null && !Session.IsOffline ? Session.InputPath : null;
             if (!footerModInitialized || footerModSession != Session || force)
             {
+                bool sameSession = footerModSession == Session;
                 if (footerModSession != Session)
                 {
                     resourceModDraft = null; footerModState = ResourceModState.Disabled;
                     resourceModBaseline = false;
                 }
                 footerModInitialized = true; footerModSession = Session;
-                footerMod = null; footerModReady = false; footerModError = null;
+                if (!sameSession) footerMod = null;
+                footerModReady = false; footerModError = null;
                 if (input != null)
                 {
                     try
                     {
-                        footerMod = new PerfectDeflectNoRapidClickPenaltyMod(PerfectDeflectNoRapidClickPenaltyMod.FindGameDirectory(input));
+                        if (footerMod == null) footerMod = new PerfectDeflectNoRapidClickPenaltyMod(PerfectDeflectNoRapidClickPenaltyMod.FindGameDirectory(input));
                         footerModState = footerMod.ReadState(); footerModReady = footerMod.HasTargetResource();
                         if (footerModState != ResourceModState.Conflict)
                             resourceModBaseline = footerModState == ResourceModState.Enabled || footerModState == ResourceModState.Incomplete;

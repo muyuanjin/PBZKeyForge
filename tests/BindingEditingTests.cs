@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -215,18 +215,19 @@ class BindingEditingTests
             Check(All(hover).OfType<Label>().Any(label => label.Text.Contains("0.25")) && All(hover).OfType<Label>().Any(label => label.Text.Contains(I18n.Str("binding.preset")))
                 && !All(hover).OfType<Label>().Any(label => label.Text == I18n.Str("views.nofactorydiff")), "Quick preset hover omits enhancement rules or their scope");
         }
-        using (var dialog = new UserPresetDialog(session, store, PresetApplyMode.Replace))
+        using (var dialog = new UserPresetDialog(store))
         {
             dialog.Show(); Application.DoEvents(); Call(dialog, "Display", loaded); Application.DoEvents();
-            var preview = Field<Panel>(dialog, "preview");
-            Check(All(preview).OfType<Label>().Any(label => label.Text.Contains("0.25"))
-                && !All(preview).OfType<Label>().Any(label => label.Text == I18n.Str("views.nofactorydiff")), "Enhanced preset preview hides its rules or claims factory equivalence");
+            var grid = Field<DataGridView>(dialog, "grid");
+            Check(grid.Rows.Cast<DataGridViewRow>().SelectMany(row => row.Cells.Cast<DataGridViewCell>()).Any(cell => Convert.ToString(cell.Value).Contains("0.25")),
+                "Independent preset preview includes enhanced trigger parameters");
             Shot(dialog, "enhanced-preset-preview");
         }
         using (var form = new MainForm(new EditorPreferences(Path.Combine(output, "preset-preferences.txt"))))
         {
             form.UiOffline(); form.Show(); Application.DoEvents(); var picker = Field<ComboBox>(form, "cbPreset"); picker.Items.Add(loaded); picker.SelectedItem = loaded; Application.DoEvents();
-            Check(Field<KeyEnhancementConfiguration>(form, "keyEnhancement").ToJson() == config.ToJson(), "Selecting an enhanced preset lost its rules");
+            var selected = Field<KeyEnhancementConfiguration>(form, "keyEnhancement");
+            Check(new KeyEnhancementConfiguration { Enabled = selected.Enabled, Rules = selected.Rules }.ToJson() == config.ToJson(), "Selecting an enhanced preset lost its rules");
             picker.SelectedIndex = 0; Application.DoEvents();
             Check(Field<KeyEnhancementConfiguration>(form, "keyEnhancement").Rules.Count == 0 && !Field<KeyEnhancementConfiguration>(form, "keyEnhancement").Enabled,
                 "Cancelling a preset retained its enhancement configuration");

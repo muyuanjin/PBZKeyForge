@@ -14,6 +14,13 @@ namespace PBZKeyForge
         public string GameDirectory { get; private set; }
         public string InstallDirectory { get; private set; }
         readonly string contentDirectory, paksDirectory;
+        sealed class ResourceContainer
+        {
+            internal long Length;
+            internal DateTime LastWriteTimeUtc;
+            internal string[] Chunks;
+        }
+        readonly System.Collections.Generic.Dictionary<string, ResourceContainer> resourceContainers = new System.Collections.Generic.Dictionary<string, ResourceContainer>(StringComparer.OrdinalIgnoreCase);
 
         public PerfectDeflectNoRapidClickPenaltyMod(string gameDirectory)
         {
@@ -40,7 +47,17 @@ namespace PBZKeyForge
             var required = new System.Collections.Generic.HashSet<string>(RequiredChunks, StringComparer.OrdinalIgnoreCase);
             foreach (string path in Directory.EnumerateFiles(paksDirectory, "*.utoc"))
             {
-                ReadResourceIdentities(path, required);
+                var info = new FileInfo(path);
+                ResourceContainer container;
+                if (!resourceContainers.TryGetValue(path, out container) || container.Length != info.Length || container.LastWriteTimeUtc != info.LastWriteTimeUtc)
+                {
+                    var missing = new System.Collections.Generic.HashSet<string>(RequiredChunks, StringComparer.OrdinalIgnoreCase);
+                    ReadResourceIdentities(path, missing);
+                    container = new ResourceContainer { Length = info.Length, LastWriteTimeUtc = info.LastWriteTimeUtc,
+                        Chunks = RequiredChunks.Where(chunk => !missing.Contains(chunk)).ToArray() };
+                    resourceContainers[path] = container;
+                }
+                required.ExceptWith(container.Chunks);
                 if (required.Count == 0) return true;
             }
             return false;

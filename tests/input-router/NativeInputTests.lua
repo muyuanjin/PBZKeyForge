@@ -151,6 +151,14 @@ local function fixture(config)
         state.calls[#state.calls + 1] = {target = target, phase = phase, value = value}
         return true
     end
+    function backend:prepare_stance_inputs(inputs)
+        state.stance_held = false
+        for _,input in ipairs(inputs) do
+            if input.target.stance_source and (input.value.x ~= 0 or input.value.y ~= 0 or input.value.z ~= 0) then
+                state.stance_held = true
+            end
+        end
+    end
     function backend:shutdown() self.native_input:restore() end
     function state:add_context(rows)
         local context = object("/Context.Context" .. (#self.contexts + 1))
@@ -1841,6 +1849,54 @@ test("frame lifecycle keeps routing through context changes, live reload and paw
         "lifecycle shutdown failed to restore the current native rows")
 end)
 
+test("press-only attack repeat leaves the original held attack pipeline available", function()
+    for _,pad in ipairs({false,true}) do
+    for _,attack in ipairs({"L","H"}) do
+        local prefix="/PBZInput/InputActions/IA_Attack" .. attack
+        local pressPath,holdPath=prefix .. "_Press",prefix .. "_Hold"
+        local originalKey=pad and (attack=="L" and "Gamepad_FaceButton_Left" or "Gamepad_FaceButton_Top")
+            or (attack=="L" and "LeftMouseButton" or "F")
+        local repeatKey=pad and "Gamepad_DPad_Down" or "F9"
+        local config={unified_native=true,native_actions={pressPath,holdPath},targets={
+            attack={kind="mapping",catalog_pipeline=true,device=pad and "gamepad" or "keyboard",actions={pressPath}}},
+            bindings={{id="repeat",keys={repeatKey},trigger="pulse",interval=.15,outputs={"attack"}}}}
+        local backend,native,state=fixture(config)
+        local press,hold=object(pressPath .. ".IA_Attack" .. attack .. "_Press"),
+            object(holdPath .. ".IA_Attack" .. attack .. "_Hold")
+        state.rows={mapping(press,originalKey,{object("/Trigger.Pressed",{LastValue=0})}),
+            mapping(hold,originalKey,{object("/Trigger.Down",{LastValue=0})})}
+        native:prepare()
+        local router=Router.new(backend.dynamic_config,backend)
+        local function step(now,keys)
+            state.calls={};router:step(now,keys,{gameplay=true})
+            local active={}
+            for _,call in ipairs(state.calls) do
+                if call.phase~="completed" and call.phase~="canceled" then active[call.target.object]=true end
+            end
+            return active
+        end
+        step(0,{})
+        local first=step(.01,{[repeatKey]=1})
+        check(first[press] and not first[hold],"repeat key sent a held attack instead of only a press")
+        local gap=step(.10,{[repeatKey]=1})
+        check(not gap[press] and not gap[hold],"repeat input did not release the press between requests")
+        local repeated=step(.17,{[repeatKey]=1})
+        check(repeated[press] and not repeated[hold],"held repeat key failed to request the next press-only attack")
+        step(.2,{})
+        local original=step(.21,{[originalKey]=1})
+        check(original[press] and original[hold],"additional repeat binding replaced the original press/hold attack")
+        local charging=step(.4,{[originalKey]=1})
+        check(charging[hold],"original attack key lost its sustained input required by charge attacks")
+        local overlap=step(.41,{[originalKey]=1,[repeatKey]=1})
+        check(overlap[hold],"additional repeat input released a separately held original attack")
+        step(.5,{})
+        router:reset(true);native:restore()
+        check(key(state.rows[1])==originalKey and key(state.rows[2])==originalKey,
+            "restoring the repeat binding changed original attack keys")
+    end
+    end
+end)
+
 test("independent deflect pulses preserve trigger thresholds and mixed continuous outputs", function()
     local deflectPath,stancePath="/PBZDeflectSystem/Input/IA_Deflect","/PBZDeflectSystem/Input/IA_Stance"
     for _,trigger in ipairs({"down","hold","toggle"}) do
@@ -2018,6 +2074,432 @@ test("independent deflect pulses and held stance retain native defense windows a
     end
 end)
 if schemeFixtures then
+    test("compiled attack repeats retain observed input across native pipeline changes",function()
+        local loaded,preload={},{ }
+        for _,name in ipairs({"backend","router","router-config"}) do loaded[name],preload[name]=package.loaded[name],package.preload[name] end
+        local ok,failure=xpcall(function()
+            for _,device in ipairs({"keyboard","pad"}) do
+                local pad=device=="pad"
+                local fixturePath=schemeFixtures.."/"..device.."-attack-repeat.lua"
+                local function rig(options)
+                    options=options or {}
+                    local current=dofile(fixturePath)
+                    if options.consume then
+                        current.bindings[1].consume=true;current.bindings[1].priority=10
+                        current.bindings[2].keys={current.bindings[1].keys[1]}
+                    end
+                    local backend,native,state=fixture(current)
+                    backend.refresh,backend.shutdown=Backend.refresh,Backend.shutdown
+                    state.pawn,state.foreground,state.input_layer=object("/Pawn.Repeat"),true,true
+                    state.paused,backend.pawn=false,nil
+                    backend.focus_probe=function() return state.foreground end
+                    function backend:gameplay_input_layer() return state.input_layer end
+                    local subsystem=backend.subsystem
+                    function backend:library() return subsystem end
+                    local nativeInvoke,nativeObject=backend.invoke,backend.object
+                    function backend:object(path)
+                        if path=="/Script/EnhancedInput.EnhancedInputLocalPlayerSubsystem" then return subsystem end
+                        return nativeObject(self,path)
+                    end
+                    local press,hold,originalKeys={},{},{}
+                    local counts,holding={0,0},{false,false}
+                    local function pressRow(index)
+                        return mapping(press[index],originalKeys[index],{object("/Trigger.Pressed",{LastValue=0})})
+                    end
+                    for index,kind in ipairs({"L","H"}) do
+                        local prefix="/PBZInput/InputActions/IA_Attack"..kind
+                        press[index],hold[index]=object(prefix.."_Press.IA_Attack"..kind.."_Press"),object(prefix.."_Hold.IA_Attack"..kind.."_Hold")
+                        originalKeys[index]=pad and (index==1 and "Gamepad_FaceButton_Left" or "Gamepad_FaceButton_Top")
+                            or (index==1 and "LeftMouseButton" or "F")
+                        if not options.missing and not (options.consume and index==1) then state.rows[#state.rows+1]=pressRow(index) end
+                        state.rows[#state.rows+1]=mapping(hold[index],originalKeys[index],{object("/Trigger.Down",{LastValue=0})})
+                    end
+                    function backend:invoke(receiver,path,action,value,modifiers,triggers)
+                        if path=="/Script/Engine.Controller:K2_GetPawn" then return state.pawn end
+                        if path=="/Script/Engine.Controller:IsMoveInputIgnored" then return false end
+                        if path=="/Script/Engine.GameplayStatics:IsGamePaused" then return state.paused end
+                        if path=="/Script/Engine.SubsystemBlueprintLibrary:GetLocalPlayerSubSystemFromPlayerController" then return subsystem end
+                        if path:find(":InjectInputVectorForAction",1,true) then
+                            for index=1,2 do
+                                if action==hold[index] then holding[index]=value.X>.5 end
+                                if action==press[index] then
+                                    for _,trigger in ipairs(triggers) do
+                                        if value.X>.5 and trigger.LastValue<=.5 then counts[index]=counts[index]+1 end
+                                        trigger.LastValue=value.X
+                                    end
+                                end
+                            end
+                            return true
+                        end
+                        return nativeInvoke(self,receiver,path,action,value,modifiers,triggers)
+                    end
+                    backend.dispatch=Backend.dispatch
+                    package.loaded.backend,package.loaded.router,package.loaded["router-config"]=nil,nil,nil
+                    package.preload.backend=function() return {new=function() return backend end} end
+                    package.preload.router=function() return Router end
+                    package.preload["router-config"]=function() return current end
+                    local frame
+                    EngineTickAvailable=true
+                    function LoopInGameThreadAfterFrames(_,callback) frame=callback;return 1 end
+                    function CancelDelayedAction() end
+                    function StaticFindObject() return nil end
+                    local handle=dofile(scripts.."main.lua")
+                    local keys={current.bindings[1].keys[1],current.bindings[2].keys[1]}
+                    local function tick(count) for i=1,(count or 1) do frame() end end
+                    return {state=state,backend=backend,native=native,counts=counts,holding=holding,keys=keys,original=originalKeys,
+                        tick=tick,stop=handle.stop,
+                        down=function(value) for _,keyName in ipairs(keys) do state.physical[keyName]=value and 1 or 0 end end,
+                        replace=function(present)
+                            local rows={}
+                            for index=1,2 do
+                                if present then rows[#rows+1]=pressRow(index) end
+                                rows[#rows+1]=mapping(hold[index],originalKeys[index],{object("/Trigger.Down",{LastValue=0})})
+                            end
+                            state:rebuild(rows)
+                        end,
+                        reload=function(changedKey)
+                            current=dofile(fixturePath)
+                            if changedKey then current.bindings[1].keys={changedKey} end
+                            check(handle.reload(),"compiled attack-repeat reload failed")
+                        end}
+                end
+                local function repeating(r,message)
+                    local first,second=r.counts[1],r.counts[2]
+                    r.tick(10)
+                    check(r.counts[1]>=first+4 and r.counts[2]>=second+4,message)
+                end
+                local r=rig()
+                r.tick();r.down(true);r.tick()
+                check(r.counts[1]==1 and r.counts[2]==1,"first fresh press did not send its initial attack")
+                r.replace(true)
+                repeating(r,"replacing native trigger objects stopped a legally started repeat")
+                r.replace(false);r.tick(3);r.replace(true)
+                repeating(r,"a temporary missing native pipeline lost the running repeat")
+                r.down(false);r.tick()
+                local first,second=r.counts[1],r.counts[2]
+                r.tick(10);check(r.counts[1]==first and r.counts[2]==second,"release kept requesting attacks")
+                r.state.physical[r.original[1]],r.state.physical[r.original[2]]=1,1
+                r.tick(4);check(r.holding[1] and r.holding[2],"repeat mapping removed the original held attack")
+                r.down(true);r.tick(4);r.down(false);r.tick()
+                check(r.holding[1] and r.holding[2],"stopping repeats released a separately held charge attack")
+                r.state.physical[r.original[1]],r.state.physical[r.original[2]]=0,0;r.tick()
+                check(not r.holding[1] and not r.holding[2],"original held attacks did not release")
+                r.stop()
+
+                r=rig();r.tick();r.replace(true);r.down(true)
+                repeating(r,"native replacement swallowed a fresh press following an observed idle sample")
+                r.stop()
+                r=rig({missing=true});r.tick();r.down(true);r.tick(3);r.replace(true)
+                repeating(r,"late native mapping lost the first legally observed hold")
+                r.stop()
+                for _,missing in ipairs({false,true}) do
+                    r=rig({missing=missing});r.down(true);r.tick(4);r.replace(true);r.tick(10)
+                    check(r.counts[1]==0 and r.counts[2]==0,"startup replayed an already-held attack")
+                    r.down(false);r.tick();r.down(true)
+                    repeating(r,"startup suppression did not rearm after release")
+                    r.stop()
+                end
+                for _,gate in ipairs({"foreground","input_layer","paused"}) do
+                    for _,held in ipairs({false,true}) do
+                        r=rig();r.tick();r.down(true);r.tick()
+                        r.state[gate]=gate=="paused";r.tick()
+                        local before=r.counts[1]
+                        r.down(held);r.state[gate]=gate~="paused";r.tick()
+                        if held then
+                            r.tick(8);check(r.counts[1]==before,"return from "..gate.." replayed a held attack")
+                            r.down(false);r.tick()
+                        end
+                        r.down(true);repeating(r,"fresh press after "..gate.." failed to repeat")
+                        r.stop()
+                    end
+                end
+                for _,held in ipairs({false,true}) do
+                    r=rig();r.tick();r.down(held)
+                    if held then r.tick() end
+                    local before=r.counts[1]
+                    r.reload();r.tick()
+                    if held then
+                        r.tick(8);check(r.counts[1]==before,"real configuration reload continued an already-held attack")
+                        r.down(false);r.tick()
+                    end
+                    r.down(true);repeating(r,"fresh press after real configuration reload failed")
+                    r.stop()
+                end
+                r=rig({consume=true});r.tick();r.down(true);r.tick(10)
+                check(r.counts[1]==0 and r.counts[2]>=4,"pending consumer blocked a routable binding on the same key")
+                r.replace(true);r.tick(10)
+                check(r.counts[1]>=4,"returning native pipeline did not resume its observed held consumer")
+                local blocked=r.counts[2]
+                r.tick(5);check(r.counts[2]==blocked,"available consumer failed to reserve its key")
+                r.replace(false)
+                -- Keep the second action available while removing the consuming action.
+                local path="/PBZInput/InputActions/IA_AttackH_Press"
+                local retainedAction
+                for _,source in pairs(r.native.expanded or {}) do
+                    if source.object:GetFullName():find(path,1,true) then retainedAction=source.object;break end
+                end
+                check(retainedAction~=nil,"consumer test lost its ordinary attack action")
+                r.state.rows[#r.state.rows+1]=mapping(retainedAction,r.original[2],{object("/Trigger.Pressed",{LastValue=0})})
+                r.tick(10)
+                check(r.counts[2]>=blocked+4,"dormant consumer retained a previous key reservation")
+                r.stop()
+            end
+        end,debug.traceback)
+        for _,name in ipairs({"backend","router","router-config"}) do package.loaded[name],package.preload[name]=loaded[name],preload[name] end
+        if not ok then error(failure,0) end
+    end)
+    test("compiled guard sources select attacks through the native stance tag without input edges",function()
+        local loadlib,findAll = package.loadlib,FindAllOf
+        -- CL-302256 AIM route conditions; each weapon is checked independently.
+        local ground="CharacterState.Space.Ground"
+        local holding="CharacterState.AbilityState.Stance.HoldingStanceKey"
+        local attackRoutes={
+            {tag="Ability.Action.Hun.Heavy.SnakeDual.DB",attack="heavy",required={ground,holding}},
+            {tag="Ability.Action.Hun.LuanYing.Buff",attack="heavy",required={ground,holding}},
+            {tag="Ability.Action.Hun.Special.Double.Buff",attack="heavy",required={ground,holding,"CharacterState.WeaponUpgrade.Double.CanBuff"}},
+            {tag="Ability.Action.Hun.Special.Double.Clone",attack="heavy",required={ground,holding},
+                ignored={"CharacterState.AbilityState.Double.CloneCooldown","CharacterState.AbilityState.Double.BlockClone"}},
+            {tag="Ability.Action.Hun.Special.Jade.DB",attack="heavy",required={ground,holding,"CharacterState.WeaponUpgrade.Jade.EnableDB"}},
+            {tag="Ability.Action.Hun.Special.Tang.Buff",attack="heavy",required={ground,holding,"CharacterState.WeaponUpgrade.Tang.CanBuff"}},
+            {tag="Ability.Action.Hun.Heavy.ChaosBlade.ToBing",attack="heavy",required={ground,holding},ignored={"Ability.Action.Hun.Heavy.ChaosBlade.ToBing"}},
+            {tag="Ability.Action.Hun.Heavy.ChaosBlade.ToHunDun",attack="heavy",required={ground,holding},ignored={"Ability.Action.Hun.Heavy.ChaosBlade.ToHunDun"}},
+            {tag="Ability.Action.Hun.Heavy.ChaosBlade.ToWuLi",attack="heavy",required={ground,holding},ignored={"Ability.Action.Hun.Heavy.ChaosBlade.ToWuLi"}},
+            {tag="Ability.Action.Hun.Light.SlitheringSword.DA",attack="light",required={ground,holding,"CharacterState.WeaponUpgrade.SlitheringSword.EnableDA"},
+                ignored={"Ability.Action.Hun.Light.SlitheringSword.DA"}}
+        }
+        local function eligible(route,tags)
+            for _,tag in ipairs(route.required) do if not tags[tag] then return false end end
+            for _,tag in ipairs(route.ignored or {}) do if tags[tag] then return false end end
+            return true
+        end
+        local ok,failure = xpcall(function()
+            for _,device in ipairs({"keyboard","pad"}) do
+                local pad = device == "pad"
+                local guardKey = pad and "Gamepad_DPad_Right" or "Two"
+                local function run(config,exercise)
+                    local backend,native,state = fixture(config)
+                    local actions,paths = {},{}
+                    for _,target in pairs(config.targets) do
+                        for _,path in ipairs(target.actions or {}) do
+                            if not actions[path] then
+                                local action=object(path .. "." .. path:match("/([^/]+)$"));actions[path]=action;paths[action]=path
+                                local pressed=path:find("Deflect",1,true) and not path:find("Stance",1,true)
+                                    or path:find("_Press$",1) ~= nil
+                                local defensive=path=="/PBZDeflectSystem/Input/IA_Deflect" or path=="/PBZDeflectSystem/Input/IA_Stance"
+                                local key=defensive and guardKey or (pad and "Gamepad_FaceButton_Bottom" or "NativeAttack")
+                                local row=mapping(action,key,{object(pressed and "/Trigger.Pressed" or "/Trigger.Down",{LastValue=0})})
+                                row.SettingBehavior=1
+                                row.PlayerMappableKeySettings=object("/Settings.Guard",{Name=FName(defensive and "IA_Guard" or target.mapping)})
+                                state.rows[#state.rows+1]=row
+                            end
+                        end
+                    end
+                    -- Independent Deflect acquires the original Stance pipeline for its native release.
+                    local stancePath="/PBZDeflectSystem/Input/IA_Stance"
+                    if not actions[stancePath] then
+                        local action=object(stancePath .. ".IA_Stance");actions[stancePath]=action;paths[action]=stancePath
+                        local row=mapping(action,guardKey,{object("/Trigger.Down",{LastValue=0})})
+                        row.SettingBehavior=1;row.PlayerMappableKeySettings=object("/Settings.Guard",{Name=FName("IA_Guard")})
+                        state.rows[#state.rows+1]=row
+                    end
+                    native:prepare()
+                    local owner,wrongOwner=object("/ASC.Player"),object("/ASC.Other")
+                    local ability=object("/Passive.Player",{["Stance Key Down"]=false})
+                    local other=object("/Passive.Other")
+                    local objects={}
+                    local originalObject,invoke=backend.object,backend.invoke
+                    function backend:object(path)
+                        if path=="/Script/EnhancedInput.Default__InputTriggerDown" then return originalObject(self,path) end
+                        objects[path]=objects[path] or object(path);return objects[path]
+                    end
+                    function backend:library(path) return self:object(path) end
+                    function backend:receiver() return owner end
+                    FindAllOf=function() return {other,ability} end
+                    local tagCount,contribution,active,forbidden,now=0,false,false,false,0
+                    local injected,stanceActive,perfect,attacks={},false,0,{}
+                    package.loadlib=function(path,name)
+                        if name=="pbz_stance_prepare" then return function(asc,passive,_,_,_,_,_,held,count)
+                            check(asc==owner:GetAddress() and passive==ability:GetAddress(),"stance gate selected another pawn's passive")
+                            if not active then contribution=count>0 end
+                            active=true
+                            if contribution~=held then tagCount=tagCount+(held and 1 or -1);contribution=held end
+                            return 1
+                        end end
+                        if name=="pbz_stance_restore" then return function(asc,held)
+                            if asc~=0 and contribution~=held then tagCount=tagCount+(held and 1 or -1) end
+                            active,contribution=false,false;return 1
+                        end end
+                        if name=="pbz_input_watch_trigger" then return function()
+                            state.native_watched=true;return 1
+                        end end
+                        if name=="pbz_input_trigger_state" then return function()
+                            if state.native_watched then return state.native_trigger or 0,0,0 end
+                        end end
+                        return loadlib(path,name)
+                    end
+                    function backend:invoke(receiver,method,action,value,modifiers,triggers)
+                        if method:find(":GetAbilitySystemComponentFromActorInfo",1,true) then return receiver==ability and owner or wrongOwner end
+                        if method:find(":GetGameplayTagCount",1,true) then
+                            check(action.TagName:ToString()=="CharacterState.AbilityState.Stance.HoldingStanceKey","stance query used a non-game tag")
+                            return tagCount
+                        end
+                        if method:find(":Break Forbid Stance",1,true) then return forbidden end
+                        if method:find(":GetFrameCount",1,true) then return math.floor(now*100) end
+                        if method:find(":GetInputVectorKeyState",1,true) then
+                            return {X=state.physical[action.KeyName:ToString()] or 0,Y=0,Z=0}
+                        end
+                        if method:find(":InjectInputVectorForAction",1,true) then
+                            injected[#injected+1]={action=action,value=value.X,triggers=triggers};return true
+                        end
+                        return invoke(self,receiver,method,action,value,modifiers,triggers)
+                    end
+                    backend.dispatch,backend.prepare_stance_inputs=Backend.dispatch,Backend.prepare_stance_inputs
+                    local router=Router.new(backend.dynamic_config,backend)
+                    local function engine()
+                        local stance,deflect=false,false
+                        local attackInputs={}
+                        for _,entry in ipairs(injected) do
+                            local path=paths[entry.action]
+                            local down=entry.value>.5
+                            for _,trigger in ipairs(entry.triggers) do
+                                if path==stancePath and down then stance=true end
+                                if path=="/PBZDeflectSystem/Input/IA_Deflect" and down and trigger.LastValue<=.5 then deflect=true end
+                                trigger.LastValue=entry.value
+                            end
+                            if down and path:find("/IA_Attack",1,true) then attackInputs[#attackInputs+1]=path end
+                        end
+                        if stance and not forbidden then
+                            ability["Stance Key Down"]=true
+                            if tagCount==0 and not active then tagCount=1 end
+                        elseif not stance and stanceActive then
+                            ability["Stance Key Down"]=false
+                            if not active then tagCount=math.max(0,tagCount-1) end
+                        end
+                        if deflect then perfect=perfect+1;ability["Stance Key Down"]=true end
+                        for _,path in ipairs(attackInputs) do
+                            attacks[#attacks+1]=tagCount>0 and "combat-art" or "ordinary"
+                            local tags={[ground]=true,[holding]=tagCount>0,["CharacterState.Armed"]=true,
+                                ["Ability.Action.Stance"]=stance or deflect,
+                                ["CharacterState.WeaponUpgrade.Double.CanBuff"]=true,
+                                ["CharacterState.WeaponUpgrade.Jade.EnableDB"]=true,
+                                ["CharacterState.WeaponUpgrade.Tang.CanBuff"]=true,
+                                ["CharacterState.WeaponUpgrade.SlitheringSword.EnableDA"]=true}
+                            local attack=path:find("/IA_AttackL",1,true) and "light" or "heavy"
+                            for _,route in ipairs(attackRoutes) do
+                                if route.attack==attack then state.attack_routes[route.tag]=eligible(route,tags) end
+                            end
+                            if attack=="heavy" then
+                                state.snake_combo=eligible({required={ground,"CharacterState.Armed","Ability.Action.Stance"}},tags)
+                            end
+                        end
+                        local edge=stance~=stanceActive
+                        stanceActive=stance;injected={}
+                        return edge
+                    end
+                    local function step(keys)
+                        injected={};attacks={};state.attack_routes={};state.snake_combo=nil;now=now+.01
+                        router:step(now,keys,backend:context())
+                        return engine(),attacks
+                    end
+                    exercise(step,function() return tagCount,perfect,forbidden end,
+                        function(value) forbidden=value end,router,backend,ability,engine,owner,state)
+                    require("stance-input").restore(backend)
+                    native:restore()
+                    package.loadlib=loadlib
+                end
+                local sources=dofile(schemeFixtures .. "/" .. device .. "-guard-sources.lua")
+                local secondStanceKey=pad and "Gamepad_DPad_Left" or "F7"
+                sources.bindings[#sources.bindings+1]={id="second-stance",keys={secondStanceKey},trigger="down",outputs=sources.bindings[2].outputs}
+                run(sources,function(step,status,forbid,router,backend,ability,engine,owner,state)
+                    local d,s,g,l,h={},{},{},{},{}
+                    for index,slot in ipairs({d,s,g,l,h}) do slot.key=sources.bindings[index].keys[1] end
+                    local function keys(...) local result={} for _,slot in ipairs({...}) do result[slot.key]=1 end return result end
+                    local function checkAttacks(expected,outputs)
+                        check(#outputs>0,"compiled ordinary attack disappeared")
+                        for _,output in ipairs(outputs) do check(output==expected,"attack read the wrong stance tag qualification") end
+                    end
+                    step(keys(s));check(status()==1,"stance-only input did not contribute the native gameplay tag")
+                    step({[s.key]=1,[secondStanceKey]=1});step({[secondStanceKey]=1})
+                    check(status()==1,"releasing one stance source removed another source's qualification")
+                    step({});step({[guardKey]=1});check(status()==1,"maintained native guard did not contribute stance")
+                    step({})
+                    local uncovered={action="/PBZDeflectSystem/Input/IA_Stance",owner="uncovered",active_key="None",triggers={}}
+                    backend.native_input.coverage[#backend.native_input.coverage+1]=uncovered
+                    state.physical[guardKey]=1
+                    step({});check(status()==0,"masked native mapping contributed a stance tag")
+                    uncovered.active_key=guardKey
+                    step({});check(status()==1,"uncovered active native stance lost its contribution")
+                    uncovered.triggers={object("/Trigger.Unsupported")};state.native_trigger=2
+                    step({});check(status()==1,"native trigger observation did not retain an uncovered stance")
+                    state.native_watched=false
+                    step({});check(status()==1,"a shared observer reset lost the uncovered stance contribution")
+                    state.native_trigger=0
+                    step({});check(status()==0,"untriggered native input retained its stance qualification")
+                    uncovered.active_key="None";state.physical[guardKey]=nil
+                    step({});step(keys(d))
+                    local edge=step(keys(d,s));check(not edge,"overlap should share an already active native stance input")
+                    local outputs;edge,outputs=step(keys(d,l,h))
+                    check(not edge and status()==0,"releasing explicit stance required an engine input edge to clear the tag")
+                    checkAttacks("ordinary",outputs)
+                    _,outputs=step(keys(d,s,l,h));checkAttacks("combat-art",outputs)
+                    step(keys(d));check(status()==0,"held deflect retained the explicit stance contribution")
+                    _,outputs=step(keys(d,g,l,h));checkAttacks("combat-art",outputs)
+                    _,outputs=step(keys(d,l,h));checkAttacks("ordinary",outputs)
+                    step({});forbid(true)
+                    step(keys(s));check(status()==0,"forbidden new stance gained the native tag")
+                    forbid(false);step(keys(s));check(status()==1,"held stance did not retry after its native prohibition ended")
+                    forbid(true);step(keys(s));check(status()==1,"new prohibition deleted an existing legal stance")
+                    step({});check(status()==0,"forbidden-state release retained the native stance tag")
+                    forbid(false)
+                    router:resume(keys(s),backend:context());step(keys(s));check(status()==1,"stance failed to resume after suspension")
+                    step({});router:resume(keys(d),backend:context());step(keys(d));check(status()==0,"resume supplied an unrequested deflect stance tag")
+                    step({});step(keys(d));step(keys(d,s));
+                    router:reset(true);check(status()==0,"reset kept the semantic stance contribution")
+                    require("stance-input").restore(backend)
+                    check(status()==1,"restore failed to transfer the still-held native passive contribution")
+                    engine();check(status()==0,"deferred native Completed did not release the transferred contribution")
+                    step(keys(s));owner.IsValid=function() return false end
+                    router:reset(true)
+                    check(backend.stance_input==nil,"retired owner prevented stance cleanup")
+                end)
+                local shared=dofile(schemeFixtures .. "/" .. device .. "-guard-sources.lua")
+                shared.bindings[3].keys={shared.bindings[1].keys[1]}
+                run(shared,function(step,status)
+                    local _,attacks=step({[shared.bindings[1].keys[1]]=1,[shared.bindings[4].keys[1]]=1})
+                    check(status()==1 and #attacks>0,"same-key original guard lost its stance contribution")
+                    for _,value in ipairs(attacks) do check(value=="combat-art","independent deflect suppressed a same-key original guard") end
+                end)
+                for _,kind in ipairs({"deflect","stance","guard"}) do
+                    for _,attack in ipairs({"light","heavy"}) do
+                        for _,order in ipairs({"","-attack-first"}) do
+                            local config=dofile(schemeFixtures .. "/" .. device .. "-" .. kind .. "-" .. attack .. order .. ".lua")
+                            run(config,function(step,status,forbid,router,backend,ability,engine,owner,state)
+                                for frame=1,6 do
+                                    local _,attacks=step({[config.bindings[1].keys[1]]=1})
+                                    check(#attacks>0,"same-key defense/attack output disappeared")
+                                    for _,value in ipairs(attacks) do check(value==(kind=="deflect" and "ordinary" or "combat-art"),
+                                        "same-key " .. kind .. "+" .. attack .. order .. " selected the wrong attack") end
+                                    for _,route in ipairs(attackRoutes) do
+                                        if route.attack==attack then
+                                            check(state.attack_routes[route.tag]==(kind~="deflect"),
+                                                "same-key " .. kind .. "+" .. attack .. order .. " changed AIM eligibility for " .. route.tag)
+                                        end
+                                    end
+                                    if frame==1 and attack=="heavy" and kind=="deflect" then
+                                        check(state.snake_combo,"point defense suppressed the ordinary SnakeDual AB combo instead of only its DB stance art")
+                                        local _,windows=status();check(windows==1,"same-key point defense failed to open its native defense window")
+                                    end
+                                end
+                                step({});check(status()==0,"releasing the shared attack/defense key retained stance qualification")
+                            end)
+                        end
+                    end
+                end
+            end
+        end,debug.traceback)
+        package.loadlib,FindAllOf=loadlib,findAll
+        if not ok then error(failure,0) end
+    end)
     local baseline = os.getenv("PBZ_INPUT_BENCHMARK_BASELINE")
     if baseline then
         test("native input performance comparison", function()

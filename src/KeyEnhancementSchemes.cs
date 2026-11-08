@@ -24,7 +24,22 @@ namespace PBZKeyForge
         public string DeploymentJson()
         {
             if (!Enabled || Schemes.Count == 0) return ToJson();
-            var copy = Clone(); copy.SelectScheme(copy.ActiveSchemeId); return copy.ToJson();
+            StoreSelectedScheme();
+            var active = Schemes.First(item => item.Id == ActiveSchemeId);
+            return CanonicalJson(new KeyEnhancementConfiguration {
+                Enabled = Enabled, RuntimeHotkeys = RuntimeHotkeys,
+                NativeBindings = active.NativeBindings, Rules = active.Rules.Concat(SchemeSwitchBindings).ToList(),
+                Suppressions = active.Suppressions, NativeAbilitySuppressions = active.NativeAbilitySuppressions,
+                CustomFunctions = CustomFunctions, Hooks = Hooks, CustomLua = CustomLua,
+                Schemes = Schemes, SchemeSwitchBindings = SchemeSwitchBindings,
+                SelectedSchemeId = ActiveSchemeId, ActiveSchemeId = ActiveSchemeId
+            });
+        }
+
+        internal string DeploymentJson(bool enabled)
+        {
+            if (enabled == Enabled) return DeploymentJson();
+            var copy = Clone(); copy.SetEnabled(enabled); return copy.DeploymentJson();
         }
 
         public void SetEnabled(bool enabled)
@@ -115,7 +130,7 @@ namespace PBZKeyForge
             {
                 var existing = definitions.FirstOrDefault(item => item.Id == definition.Id);
                 if (existing == null) definitions.Add(definition);
-                else if (Serializer().Serialize(existing) != Serializer().Serialize(definition))
+                else if (CanonicalJson(existing) != CanonicalJson(definition))
                     throw new InvalidOperationException(I18n.Str("editing.customconflict", definition.Name ?? definition.Id));
             }
             CustomFunctions = definitions; Hooks = value.Hooks; CustomLua = value.CustomLua;

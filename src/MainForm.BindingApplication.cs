@@ -24,11 +24,7 @@ namespace PBZKeyForge
         { get { return ResourceModPending || keyEnhancementUninstall || keyEnhancement.Enabled != keyEnhancementBaseline.Enabled || keyEnhancementRepair; } }
         bool LiveBindingPending
         {
-            get
-            {
-                var draft = keyEnhancement.Clone(); draft.SetEnabled(keyEnhancementBaseline.Enabled);
-                return draft.DeploymentJson() != keyEnhancementBaseline.DeploymentJson();
-            }
+            get { return keyEnhancement.DeploymentJson(keyEnhancementBaseline.Enabled) != keyEnhancementBaseline.DeploymentJson(); }
         }
 
         internal BindingApplicationState BindingApplication()
@@ -183,8 +179,9 @@ namespace PBZKeyForge
             if (companionReturnWindow == IntPtr.Zero || companionReturnWindow == Handle)
                 foreach (var process in Process.GetProcessesByName("PBZ"))
                     using (process) if (process.MainWindowHandle != IntPtr.Zero) { companionReturnWindow = process.MainWindowHandle; break; }
-            companionVisible = true;
-            ToggleCompanion();
+            companionVisible = false;
+            TopMost = false;
+            if (companionReturnWindow != IntPtr.Zero && companionReturnWindow != Handle) SetForegroundWindow(companionReturnWindow);
         }
 
         void ShowLiveConnectionHelp()

@@ -87,7 +87,7 @@ function Context:watch_input_trigger(backend,trigger)
         backend:object("/Script/EnhancedInput.InputTrigger:UpdateState"):GetAddress(),
         backend:object("/Script/EnhancedInput.InputTrigger:GetTriggerType"):GetAddress(),
         backend:library("Engine.KismetSystemLibrary"):GetAddress(),
-        backend:object("/Script/Engine.KismetSystemLibrary:GetFrameCount"):GetAddress()))
+        backend:object("/Script/Engine.KismetSystemLibrary:GetFrameCount"):GetAddress(),false))
 end
 
 function Context:input_trigger_state(trigger,playerInput,frame)

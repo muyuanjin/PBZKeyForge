@@ -501,7 +501,7 @@ namespace PBZKeyForge
                 tabKb.Enabled = loaded; tabPad.Enabled = loaded;
                 RenderSchemeBar();
                 cbPreset.Enabled = loaded && !Session.IsResetPending;
-                btnPresetManager.Enabled = cbPreset.Enabled;
+                btnPresetManager.Enabled = !IsApplying;
                 int presetIndex = 0;
                 if (loaded && SelectedPresetId != null)
                 {
@@ -721,10 +721,25 @@ namespace PBZKeyForge
             if (loading || modalActive || IsApplying) return;
             if (Session == null) { AutoFind(false); return; }
             if (Session.IsOffline) return;
-            try { Session.Refresh(); SetMessage("editor.refreshed", false); }
+            bool changed = true;
+            var previousModState = footerModState;
+            bool previousModReady = footerModReady;
+            string previousModError = footerModError;
+            var previousEnhancementState = keyEnhancementState;
+            bool previousRepair = keyEnhancementRepair;
+            string previousEnhancementError = keyEnhancementError;
+            try
+            {
+                changed = Session.RefreshIfChanged() || keyEnhancementInstallation != null && keyEnhancementInstallation.ConfigurationChanged;
+                if (allowDiscoveryRetry || changed) SetMessage("editor.refreshed", false);
+            }
             catch (Exception ex) { SetMessage("editor.refreshfail", true, ex.Message); }
             RefreshFooterResourceMod(true);
             RefreshKeyEnhancement(true);
+            if (!allowDiscoveryRetry && !changed && previousModState == footerModState && previousModReady == footerModReady
+                && previousModError == footerModError && previousEnhancementState == keyEnhancementState
+                && previousRepair == keyEnhancementRepair && previousEnhancementError == keyEnhancementError)
+            { RenderGameStatus(); StartSchemeDiscovery(false); return; }
             RenderSession();
             StartSchemeDiscovery(allowDiscoveryRetry);
         }
@@ -899,16 +914,13 @@ namespace PBZKeyForge
 
         void ManagePresets()
         {
-            if (Session == null) return;
             modalActive = true;
             try
             {
-                using (var dialog = new UserPresetDialog(Session, UserPresetStore.Default(), presetMode, preferences,
-                    delegate { return HasKeyEnhancementConfiguration ? keyEnhancement : null; }, ExportKeyEnhancementBundle, StageBindingPreset,
-                    delegate(Preset preset, PresetApplyMode mode) { PlanBindingPreset(preset, mode); }))
+                using (var dialog = new UserPresetDialog(UserPresetStore.Default()))
                 {
-                    dialog.ShowDialog(this);
-                    presetMode = dialog.ChosenMode;
+                    if (dialog.ShowDialog(this) == DialogResult.OK && dialog.AppliedPreset != null)
+                        ConfirmPresetLoad(dialog.AppliedPreset);
                 }
             }
             catch (Exception ex) { SetMessage("editor.failed", true, ex.Message); }
@@ -916,6 +928,23 @@ namespace PBZKeyForge
             {
                 EndModal(); loading = true;
                 try { PopulatePresets(); } finally { loading = false; RenderSession(); }
+            }
+        }
+
+        void ConfirmPresetLoad(Preset preset)
+        {
+            if (Session == null) NewOfflineScheme();
+            if (Session == null) return;
+            using (var dialog = new PresetLoadDialog(preset, presetMode, delegate(PresetApplyMode mode) {
+                var plan = PlanBindingPreset(preset, mode);
+                var impact = PresetImpact.Create(Session, keyEnhancement, plan);
+                impact.Accept = delegate { StageReviewedBindingPreset(preset, mode, plan); };
+                return impact;
+            }))
+            {
+                if (dialog.ShowDialog(this) != DialogResult.OK) return;
+                presetMode = dialog.ChosenMode; preferences.SavePresetMode(presetMode);
+                btnApply.Select();
             }
         }
 

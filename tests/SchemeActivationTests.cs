@@ -232,8 +232,31 @@ public static class SchemeActivationTests
             Type sessionType = session.GetType();
             Assert((string)sessionType.GetProperty("SelectedProfile").GetValue(session, null) == profiles[2], "GUI trusted the stale profile identifier.");
             Assert((string)sessionType.GetProperty("ActiveProfile").GetValue(session, null) == profiles[2], "GUI active marker source is wrong.");
+            var foregroundRefresh = formType.GetMethod("RefreshFromDisk", Hidden, null, new[] { typeof(bool) }, null);
+            var keyView = formType.GetField("keyBindings", Hidden).GetValue(form);
+            object relations = keyView.GetType().GetField("relations", Hidden).GetValue(keyView);
+            var foregroundTime = System.Diagnostics.Stopwatch.StartNew();
+            for (int i = 0; i < 10; i++) foregroundRefresh.Invoke(form, new object[] { false });
+            Console.WriteLine("Unchanged foreground refresh: " + (foregroundTime.Elapsed.TotalMilliseconds / 10).ToString("F2") + " ms");
+            Assert(ReferenceEquals(relations, keyView.GetType().GetField("relations", Hidden).GetValue(keyView)),
+                "An unchanged foreground refresh rebuilt the binding view.");
             sessionType.GetMethod("SetKeyboard").Invoke(session, new object[] { "IA_Jump", 0, "F8" });
             formType.GetMethod("RenderSession").Invoke(form, null);
+            Activate(Load(guiShared), profiles[1]);
+            foregroundRefresh.Invoke(form, new object[] { false });
+            Assert((string)sessionType.GetProperty("ActiveProfile").GetValue(session, null) == profiles[1]
+                && (string)sessionType.GetMethod("GetKeyboard").Invoke(session, new object[] { "IA_Jump", 0 }) == "F8",
+                "Foreground refresh lost a shared-settings scheme change or the local binding draft.");
+            byte[] authenticated = File.ReadAllBytes(guiShared);
+            byte[] unauthenticated = (byte[])authenticated.Clone(); unauthenticated[unauthenticated.Length - 1] ^= 1;
+            File.WriteAllBytes(guiShared, unauthenticated); foregroundRefresh.Invoke(form, new object[] { false });
+            Assert(sessionType.GetProperty("SchemeError").GetValue(session, null) != null,
+                "Foreground refresh retained an authenticated marker for damaged shared settings.");
+            File.WriteAllBytes(guiShared, authenticated); foregroundRefresh.Invoke(form, new object[] { false });
+            Assert(sessionType.GetProperty("SchemeError").GetValue(session, null) == null
+                && (string)sessionType.GetProperty("ActiveProfile").GetValue(session, null) == profiles[1],
+                "Foreground refresh failed to recover after shared-settings authentication was restored.");
+            Activate(Load(guiShared), profiles[2]); foregroundRefresh.Invoke(form, new object[] { false });
             // Refresh and navigation must preserve drafts without writing either file.
             byte[] same = File.ReadAllBytes(guiShared);
             formType.GetMethod("RefreshFromDisk").Invoke(form, null);

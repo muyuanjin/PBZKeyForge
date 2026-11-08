@@ -156,7 +156,8 @@ local inputBackend={object=function(_,path)
     return object(path,id)
 end,library=function() return object("FrameLibrary",92) end}
 context:watch_input_trigger(inputBackend,object("NativeTrigger",89))
-check(table.concat(inputWatch,",")=="89,90,91,92,93","native trigger observation receives its real function and frame objects")
+check(table.concat({inputWatch[1],inputWatch[2],inputWatch[3],inputWatch[4],inputWatch[5]},",")=="89,90,91,92,93"
+    and inputWatch[6]==false,"native trigger observation receives its real function and frame objects")
 local triggerState,triggerKind,triggerBlocked=context:input_trigger_state(object("NativeTrigger",89),object("PlayerInput",94),127)
 check(triggerState==2 and triggerKind==1 and not triggerBlocked and table.concat(inputQuery,",")=="89,94,127",
     "native integer zero blocking becomes false while exact player and frame are preserved")

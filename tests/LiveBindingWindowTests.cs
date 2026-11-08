@@ -139,6 +139,8 @@ class LiveBindingWindowTests
                 Check(requests == 1 && config.Rules.Single().DamageMultiplier == 2 && baseline.Rules.Single().DamageMultiplier == 2,
                     "Successful apply did not accept the changed multiplier.");
                 Check(!Field<bool>(form, "companionVisible"), "Successful apply did not request returning to the game.");
+                Check(form.WindowState == FormWindowState.Normal && !form.TopMost,
+                    "Returning to the game minimized the editor or left it above the game.");
             }
             form.WindowState = FormWindowState.Normal; accept = false;
             using (var dialog = OpenEditor(form))

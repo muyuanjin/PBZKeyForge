@@ -22,6 +22,21 @@ end
 
 do
     local bindings={}
+    for index=1,64 do
+        bindings[index]={id="stable"..index,keys={"K"..index},consume=true,outputs={"a"}}
+    end
+    local checks=0
+    local backend={events={}}
+    function backend:target_failures() return {} end
+    function backend:target_failed() checks=checks+1;return false end
+    function backend:dispatch() return true end
+    local router=Router.new({targets={a={kind="action",path="a"}},bindings=bindings},backend)
+    for frame=1,120 do router:step(frame/60,{}, {}) end
+    check(checks==0,"stable consumers without reservations or failures rescanned target availability")
+end
+
+do
+    local bindings={}
     for i=1,128 do bindings[i]={id="b"..i,keys={"K"..i},outputs={"a"}} end
     local router,backend,step=rig(bindings)
     check(#router:keys()==128,"128 bindings must not use save slots")
@@ -479,6 +494,69 @@ do
     replacement:step(.1,{},{})
     replacement:step(.2,{J=1},{})
     check(#backend.events==1,"a replacement binding rearms after physical release")
+end
+do
+    local source={}
+    local function binding() return {id="repeat",keys={"K"},trigger="pulse",interval=.2,source_binding=source,outputs={"a"}} end
+    local first={kind="action",path="attack"}
+    local router,backend,step=rig({binding()},{a=first})
+    step(0,{});step(.01,{K=1})
+    local state=router.rules[1].state
+    local second={kind="action",path="attack"}
+    router=router:reconfigure({targets={a=second},bindings={binding()}},{K=1},{})
+    check(router.rules[1].state==state,"a native target replacement must preserve the same logical repeat")
+    backend.events={};router:step(.22,{K=1},{})
+    check(#backend.events==1 and backend.events[1].phase=="started","a continued legal hold stopped repeating after native target replacement")
+    source={}
+    router=router:reconfigure({targets={a=second},bindings={binding()}},{K=1},{})
+    backend.events={};router:step(.5,{K=1},{})
+    check(#backend.events==1 and backend.events[1].phase=="completed","a new logical repeat replayed a held key through an unchanged target")
+    backend.events={};router:step(.6,{K=1},{})
+    check(#backend.events==0,"a new logical repeat did not keep waiting for release")
+    router:step(.7,{},{});router:step(.8,{K=1},{})
+    check(#backend.events==1 and backend.events[1].phase=="started","a new logical repeat failed to rearm after physical release")
+end
+do
+    local source={}
+    local target={kind="action",path="attack"}
+    local otherTarget={kind="action",path="other",resume_continuous=true}
+    local function config(pending)
+        return {targets={a=target,other=otherTarget},bindings={
+            {id="repeat",keys={"K"},trigger="pulse",interval=.2,consume=true,priority=10,
+                source_binding=source,pending_outputs=pending,outputs=pending and {} or {"a"}},
+            {id="other",keys={"K"},outputs={"other"}}}}
+    end
+    local initial=config(false)
+    local router,backend,step=rig(initial.bindings,initial.targets)
+    local releases=0
+    function backend:release_reserved_input(key) check(key=="K","released another pending consumer's key");releases=releases+1 end
+    step(0,{});step(.01,{K=1})
+    router=router:reconfigure(config(true),{K=1},{})
+    backend.events={};router:step(.05,{K=1},{})
+    local continued=0
+    for _,event in ipairs(backend.events) do
+        if event.phase~="completed" and event.phase~="canceled" then
+            check(event.target=="other","a dormant repeat dispatched its unavailable output")
+            continued=continued+1
+        end
+    end
+    check(releases==1 and continued==1,"an output-less pending repeat consumed or retained its old key reservation")
+end
+do
+    local source={}
+    local target={kind="action",path="deflect"}
+    local function config(pending)
+        return {targets={a=target},bindings={{id="deflect",keys={"K"},trigger="pulse",interval=.001,
+            source_binding=source,pending_outputs=pending,outputs=pending and {} or {{target="a",pulse=true}}}}}
+    end
+    local initial=config(false)
+    local router,backend,step=rig(initial.bindings,initial.targets)
+    step(0,{K=1});step(.01,{K=1})
+    check(router.rules[1].state.pending_output_pulse,"deflect fixture did not queue its next press during a native release frame")
+    router=router:reconfigure(config(true),{K=1},{})
+    router:step(.02,{},{});router=router:reconfigure(config(false),{},{})
+    backend.events={};router:step(.03,{},{})
+    check(#backend.events==0,"restoring a missing mapping replayed a queued pulse after its key was released")
 end
 for _,kind in ipairs({"move","ability","action"}) do
     local ordinary={id="ordinary",keys={"G"},outputs={"shared"}}

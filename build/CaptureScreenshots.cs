@@ -130,27 +130,45 @@ internal static class CaptureScreenshots
         string name = chinese ? "鼠标攻防" : "Mouse attack + guard";
         try
         {
-            using (var dialog = new UserPresetDialog(form.Session, store, PresetApplyMode.OnlyPreset, preferences))
+            if (scene == "presets-save")
+            {
+                var type = typeof(MainForm).Assembly.GetType("PBZKeyForge.SchemeNameDialog");
+                using (var dialog = (Form)Activator.CreateInstance(type, new object[] {
+                    I18n.Str("schemes.savepreset"), name, new string[0], true, chinese ? "自定义 1" : "Custom 1" }))
+                {
+                    dialog.ShowInTaskbar = false; dialog.Show(form); Capture(dialog, path, null, null); dialog.Close();
+                }
+                return;
+            }
+            if (scene != "presets-import") store.Save(UserPresetStore.Capture(form.Session, name), name);
+            using (var dialog = new UserPresetDialog(store))
             {
                 dialog.ShowInTaskbar = false; dialog.StartPosition = FormStartPosition.Manual; dialog.Show(form);
-                Place(dialog, 1100, 840);
+                dialog.ImeMode = ImeMode.Disable;
+                Place(dialog, 1040, 660);
                 Field<ToolTip>(dialog, "tips").RemoveAll();
-                Field<TextBox>(dialog, "nameBox").Text = name;
                 if (scene == "presets-share")
                 {
-                    Click(dialog, "saveCurrent");
                     var scope = Field<ComboBox>(dialog, "shareScope");
                     scope.SelectedIndex = 1;
-                    Capture(dialog, path, scope, null);
+                    Capture(dialog, path, null, null);
                 }
                 else if (scene == "presets-import")
                 {
-                    var preset = UserPresetStore.Capture(form.Session, name);
+                    var source = EditorSession.CreateOffline();
+                    var configuration = new KeyEnhancementConfiguration { Enabled = true };
+                    var workspace = new BindingWorkspace(source, configuration, configuration.Clone(), false, -1);
+                    workspace.Add("IA_LightAttack", new BindingEntry { Keys = new[] { "F9" }, Trigger = "pulse", Interval = .15 });
+                    workspace.Add("IA_HeavyAttack", new BindingEntry { Keys = new[] { "F10" }, Trigger = "pulse", Interval = .15 });
+                    var preset = UserPresetStore.Capture(source, chinese ? "F9 连轻击 · F10 连重击" : "F9 light repeat · F10 heavy repeat", configuration);
                     preset = UserPresetStore.SelectScopes(preset, preset.Scopes.Where(scope => scope.Family == null));
-                    Field<TextBox>(dialog, "nameBox").Clear();
                     Field<TextBox>(dialog, "shareBox").Text = UserPresetStore.Share(preset);
-                    Click(dialog, "previewShare");
-                    Field<TextBox>(dialog, "previewName").Focus();
+                    var timer = Field<Timer>(dialog, "importTimer");
+                    var wait = Stopwatch.StartNew();
+                    while (timer.Enabled && wait.ElapsedMilliseconds < 3000) { Application.DoEvents(); System.Threading.Thread.Sleep(10); }
+                    if (!ButtonEnabled(dialog, "usePreset")) throw new InvalidOperationException(Field<Label>(dialog, "status").Text);
+                    var code = Field<TextBox>(dialog, "shareBox"); code.Select(0, 0); code.ScrollToCaret();
+                    Descendants(dialog).OfType<Button>().Single(button => button.Name == "usePreset").Select();
                     Capture(dialog, path, null, null);
                 }
                 else Capture(dialog, path, null, null);
@@ -159,6 +177,9 @@ internal static class CaptureScreenshots
         }
         finally { if (Directory.Exists(directory)) { store.Delete(store.Load()); Directory.Delete(directory); } }
     }
+
+    static bool ButtonEnabled(Control owner, string name)
+    { return owner.Controls.Find(name, true).OfType<Button>().Single().Enabled; }
 
     static void CaptureEnhancement(MainForm form, string scene, string path)
     {

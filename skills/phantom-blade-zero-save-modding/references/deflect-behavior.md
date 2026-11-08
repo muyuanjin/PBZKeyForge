@@ -10,6 +10,14 @@
 
 增强运行时对独立 Deflect 输出生成一帧 Deflect 与 Stance 的原厂输入脉冲，随后通过 Stance.Completed 释放两层状态。默认持续按住时按帧交替按下与释放，循环发起点按防御，松开立即停止追加；显式单次触发及连发间隔保留各自语义。独立 Stance 跟随按住与释放。普通 IA_Guard 同时包含两者，仍保留原厂长按。运行时不写两层窗口字段、不新增计时器；回归以普通 IA_Guard 连续短按的输入及状态轨迹为对照，并覆盖键鼠、手柄、重叠来源与取消。该模型验证不代替游戏内的防御判定与动画实测。
 
+点防的防御状态与武技派生资格分别处理。原生 Passive 的按下／释放入口同时增减 `HoldingStanceKey`，能力树通过 `CharacterState.AbilityState.Stance.HoldingStanceKey` 判断武技与部分架势派生。运行时从各输出的原始 `actions` 集合区分来源：独立 Deflect 的配对 Stance 只负责防御释放，不提供该 tag；显式 Stance 与普通 IA_Guard 的 Stance 则提供持续架势资格。C# 目录、配置与分享使用相同的独立单动作及原 Guard 双动作身份。
+
+每帧在注入输入前聚合有效架势来源，原生桥只同步本地角色 Passive 所拥有的这份 `HoldingStanceKey` 贡献，并在该 Passive 的按下／释放调用内抑制同一 ASC、同一 tag 的重复增减。其他角色、其他能力和其他 tag 继续沿原逻辑执行。点防的两层防御按下状态、NormalWindow、PerfectWindow 和防反流程保持原生行为。独立架势与点防重叠时保留武技资格；松开架势而仅保留点防后移除该资格。原 Guard 同时按住时继续提供资格。暂停与配置切换清理失效来源；运行时归还原生执行时按当前 Passive 状态恢复原生 tag 贡献关系。
+
+架势贡献遵守原厂 `Break Forbid Stance` 资格：破防禁止架势时不新增 `HoldingStanceKey` 贡献；此前已合法建立且仍持续按住的贡献保留，直到相应架势来源释放。
+
+同键攻防按输入来源验收：独立 Deflect 与普通轻／重攻击同时绑定一个键时，保留原生攻击输入和点防窗口，不因该点防提供架势组合武技资格；普通 IA_Guard 或独立 Stance 与攻击同键时仍提供该资格。绑定中的输出顺序不改变结果。白蟒赤练架势重击 `SnakeDual.DB` 的三个攻击路由均要求 `HoldingStanceKey`；`Ability.Action.Stance` 可接入的 `SnakeDual.AB` 属于普通重击连招，成功防御后的铜剑追击与拼刀强化也保留各自原生条件。
+
 多个独立 Deflect 来源按共享原生动作统一安排释放帧，不按每条绑定分别交替。释放帧内新到达的显式单次请求延至下一帧执行一次；持续来源仍在松开后停止追加。独立 Stance 和普通 Guard 的持续贡献不受脉冲释放影响，重置或取消会清理待执行脉冲。
 
 从菜单、失焦或配置重载恢复时，仍按住的独立 Stance 或普通 IA_Guard 恢复持续架势，IA_Deflect 保留等待新按下的语义，不额外刷新完美窗口。独立 Deflect 的配对 Stance 属于同次点按脉冲，也等待新按下；不能按持续架势自动恢复该脉冲。架势的持续恢复资格与 Controller 的角色移动屏蔽分别处理。

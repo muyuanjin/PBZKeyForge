@@ -778,6 +778,7 @@ function NativeInput:prepare()
         local config = {}
         for key, value in pairs(backend.config) do config[key] = value end
         config.targets, config.bindings = {}, {}
+        config.separate_stance = false
         local triggers, modifiers = {}, {}
         for name, target in pairs(backend.config.targets) do
             config.targets[name] = target
@@ -788,6 +789,7 @@ function NativeInput:prepare()
                 local pipeline = target.trigger_objects or backend:object_array(target.triggers, "InputTrigger")
                 copy.native_continuous = movement[actionPath] == true
                 copy.resume_continuous = continuous_pipeline({object=action, trigger_objects=pipeline})
+                if actionPath == "/PBZDeflectSystem/Input/IA_Stance" then copy.stance_source = true end
                 config.targets[name] = copy
             end
         end
@@ -799,6 +801,7 @@ function NativeInput:prepare()
                     trigger_objects = backend:clone_pipeline_objects(source.trigger_objects),
                     resume_continuous = resumable(source),
                     source_relation=name, native_continuous = movement[source_path(source)] == true}
+            if source_path(source) == "/PBZDeflectSystem/Input/IA_Stance" then target.stance_source = true end
             if target ~= (backend.dynamic_config and backend.dynamic_config.targets[name]) and backend.config.unified_native then
                 backend:reset_trigger_objects(target.trigger_objects)
             end
@@ -809,6 +812,7 @@ function NativeInput:prepare()
         for _, binding in ipairs(backend.config.bindings) do
             local copy, outputs = {}, {}
             for key, value in pairs(binding) do copy[key] = value end
+            copy.source_binding = binding
             for _, output in ipairs(binding.outputs or {}) do
                 local name = type(output) == "string" and output or output.target
                 if expanded[name] then
@@ -821,16 +825,23 @@ function NativeInput:prepare()
                                 target = {}
                                 for key, value in pairs(backend.config.targets[name]) do target[key] = value end
                                 for key, value in pairs(config.targets[cloneName]) do target[key] = value end
+                                if actionPath == "/PBZDeflectSystem/Input/IA_Stance" then
+                                    target.stance_source = not isolated_deflect(backend.config.targets[name])
+                                end
                             end
                             config.targets[targetName] = target
                         end
+                        if isolated_deflect(backend.config.targets[name]) then config.separate_stance = true end
                         outputs[#outputs + 1] = {target = targetName, value = type(output) == "table" and output.value or nil,
                             pulse = isolated_deflect(backend.config.targets[name])
                                 and (actionPath == "/PBZDeflectSystem/Input/IA_Deflect" or actionPath == "/PBZDeflectSystem/Input/IA_Stance") or nil}
                     end
                 else outputs[#outputs + 1] = output end
             end
-            if #outputs > 0 then copy.outputs = outputs; config.bindings[#config.bindings + 1] = copy end
+            if #outputs > 0 or binding.trigger == "pulse" then
+                copy.outputs,copy.pending_outputs = outputs,#outputs == 0
+                config.bindings[#config.bindings + 1] = copy
+            end
         end
         for _, entry in ipairs(maintained) do
             if not entry.suppressed then

@@ -79,7 +79,7 @@ function Router.new(config, backend)
     assert(type(config.targets) == "table", "targets must be a table")
     assert(type(config.bindings) == "table", "bindings must be an array")
     local self = setmetatable({ config=config, backend=backend, rules={},
-        samples={}, previous={}, lastTime=nil, consumers={} }, Router)
+        samples={}, previous={}, lastTime=nil, consumers={}, pending_consumers={} }, Router)
     local ids, keys = {}, {}
     local function add(key)
         assert(type(key) == "string" and key ~= "", "invalid input key")
@@ -108,8 +108,9 @@ function Router.new(config, backend)
             else for _, key in ipairs(step) do add(key) end end
         end
         for _, key in ipairs(binding.watch or {}) do add(key) end
-        for _, key in ipairs(consumes(binding)) do add(key) end
-        assert(#(binding.outputs or {}) > 0, "binding needs outputs")
+        local consumeKeys = consumes(binding)
+        for _, key in ipairs(consumeKeys) do add(key) end
+        assert(#(binding.outputs or {}) > 0 or binding.pending_outputs, "binding needs outputs")
         local moveIds, sourceKeys, pulseOutputs = {}, {}, false
         local settingsId = settings_identity(binding)
         for _, key in ipairs(binding.keys or {}) do sourceKeys[#sourceKeys+1] = key end
@@ -127,9 +128,15 @@ function Router.new(config, backend)
             end
         end
         self.rules[#self.rules+1] = { binding=binding, index=index, dimension=dimension, state={},
-            consume_keys=consumes(binding), input_signature=table.concat(sourceKeys, ",") .. ":", move_ids=moveIds,
+            owner=binding.input_group or binding.id,
+            input_source=binding.source_binding or binding,
+            consume_keys=consumeKeys, input_signature=table.concat(sourceKeys, ",") .. ":", move_ids=moveIds,
             pulse_outputs=pulseOutputs, repeat_ability=binding.default_trigger == true or kind ~= "press" }
-        if #self.rules[#self.rules].consume_keys > 0 then self.consumers[#self.consumers+1] = self.rules[#self.rules] end
+        if #consumeKeys > 0 then
+            local rule=self.rules[#self.rules]
+            self.consumers[#self.consumers+1]=rule
+            if #(binding.outputs or {}) == 0 then self.pending_consumers[#self.pending_consumers+1]=rule end
+        end
         end
     end
     table.sort(self.rules, function(a,b)
@@ -253,7 +260,13 @@ function Router:reconfigure(config, snapshot, context)
                 if self.config.targets[priorName] ~= config.targets[name] then same = false; break end
             end
         end
-        if same then rule.state = previous.state end
+        if rule.binding.trigger == "pulse" then
+            same = previous and previous.binding.trigger == "pulse" and previous.input_source == rule.input_source
+        end
+        if same then
+            rule.state = previous.state
+            if rule.binding.pending_outputs then rule.state.pending_output_pulse = nil end
+        end
     end
     replacement.previous, replacement.lastTime = self.previous, self.lastTime
     replacement.previous_pulses = self.previous_pulses
@@ -279,18 +292,19 @@ function Router:step(now, snapshot, context)
     local levels, reserved, canceled, owners, moves, moveOrder = {}, {}, {}, {}, {}, {}
     local actionInputs, moveInputs, nextPulses = {}, {}, {}
     local unavailable, availableOwners = {}, {}
-    if self.backend.target_failed then
+    local failureState = self.backend.target_failures and self.backend:target_failures(nil)
+    if not self.backend.target_failed or (failureState and next(failureState))
+        or #self.pending_consumers > 0 or next(self.consumed or {}) then
         for _, rule in ipairs(self.consumers) do
             local b, available = rule.binding, false
-            if not self.backend:target_failed(b,b.id) then
+            if not (self.backend.target_failed and self.backend:target_failed(b,b.id)) then
                 for _, output in ipairs(b.outputs) do
                     local name = type(output) == "string" and output or output.target
-                    if not self.backend:target_failed(self.config.targets[name],b.id) then available=true;break end
+                    if not self.backend.target_failed or not self.backend:target_failed(self.config.targets[name],b.id) then available=true;break end
                 end
             end
             unavailable[b.id] = not available
-            local owner = b.input_group or b.id
-            availableOwners[owner] = availableOwners[owner] or available
+            availableOwners[rule.owner] = availableOwners[rule.owner] or available
         end
     end
     for key, owner in pairs(self.consumed or {}) do
@@ -300,18 +314,18 @@ function Router:step(now, snapshot, context)
             self.backend:release_reserved_input(key)
         end
     end
-    local function occupied(key, binding) return reserved[key] and owners[key] ~= (binding.input_group or binding.id) end
+    local function occupied(key, owner) return reserved[key] and owners[key] ~= owner end
     for rank, rule in ipairs(self.rules) do
         local b, st = rule.binding, rule.state
         local blocked = false
-        for _, key in ipairs(b.keys or {}) do if occupied(key, b) then blocked=true end end
-        for _, key in ipairs(b.watch or {}) do if occupied(key, b) then blocked=true end end
-        if b.axis and occupied(b.axis, b) then blocked=true end
+        for _, key in ipairs(b.keys or {}) do if occupied(key, rule.owner) then blocked=true end end
+        for _, key in ipairs(b.watch or {}) do if occupied(key, rule.owner) then blocked=true end end
+        if b.axis and occupied(b.axis, rule.owner) then blocked=true end
         for _, sequenceStep in ipairs(b.steps or {}) do
             if type(sequenceStep) == "string" then
-                if occupied(sequenceStep, b) then blocked=true end
+                if occupied(sequenceStep, rule.owner) then blocked=true end
             else
-                for _, key in ipairs(sequenceStep) do if occupied(key, b) then blocked=true end end
+                for _, key in ipairs(sequenceStep) do if occupied(key, rule.owner) then blocked=true end end
             end
         end
         local function evaluate_rule()
@@ -367,7 +381,7 @@ function Router:step(now, snapshot, context)
         if blocked and b.trigger == "sequence" then st.step, st.lastStep = 0, nil end
         if not blocked and allowed then
             if result.reserve and not unavailable[b.id] then
-                for _, key in ipairs(rule.consume_keys) do reserved[key], owners[key]=true, b.input_group or b.id end
+                for _, key in ipairs(rule.consume_keys) do reserved[key], owners[key]=true, rule.owner end
             end
             if result.active or result.move_active or outputPulse then
                 for _, output in ipairs(b.outputs) do
@@ -420,6 +434,7 @@ function Router:step(now, snapshot, context)
             end
         end
     end
+    if self.backend.prepare_stance_inputs then self.backend:prepare_stance_inputs(actionInputs) end
     if self.backend.prepare_move_inputs then self.backend:prepare_move_inputs(moveInputs) end
     for _, input in ipairs(actionInputs) do
         local target, b, v = input.target, input.settings, input.value
@@ -510,6 +525,7 @@ end
 
 function Router:reset(cancel)
     local failed = {}
+    if self.backend.prepare_stance_inputs then self.backend:prepare_stance_inputs({}) end
     if self.backend.reset_move_inputs then self.backend:reset_move_inputs() end
     for native, previous in pairs(self.previous) do
         for _, contribution in pairs(previous.pipelines) do

@@ -11,7 +11,7 @@ namespace
         Object* playerInput = nullptr;
         long long frame = 0;
         unsigned char state = 0,kind = 0;
-        bool blocked = false,valid = false;
+        bool blocked = false,valid = false,stanceOnly = false;
     };
     std::mutex inputTriggerMutex;
     std::unordered_map<void**,InputTriggerHook> inputTriggerHooks;
@@ -20,12 +20,15 @@ namespace
     unsigned char observeInputTrigger(Object* trigger,Object* playerInput,const void* value,float delta)
     {
         InputTriggerHook hook;
+        bool stanceOnly=false;
         {
             std::lock_guard<std::mutex> lock(inputTriggerMutex);
             hook=inputTriggerHooks.at(*reinterpret_cast<void***>(trigger));
+            auto observation=inputTriggerObservations.find(trigger);
+            if (observation!=inputTriggerObservations.end()) stanceOnly=observation->second.stanceOnly;
         }
         auto result=hook.original(trigger,playerInput,value,delta);
-        if (!enabled.load(std::memory_order_relaxed)) return result;
+        if (!enabled.load(std::memory_order_relaxed) && !(stanceOnly && stanceActive())) return result;
         InputTriggerObservation observed;
         {
             std::lock_guard<std::mutex> lock(inputTriggerMutex);
@@ -50,7 +53,7 @@ namespace
     }
 
     void watchInputTrigger(Object* trigger,RC::Unreal::UFunction* update,RC::Unreal::UFunction* type,
-        Object* frameLibrary,RC::Unreal::UFunction* frameFunction)
+        Object* frameLibrary,RC::Unreal::UFunction* frameFunction,bool stanceOnly)
     {
         auto updateSlot=virtualSlot(update),typeSlot=virtualSlot(type);
         auto** table=*reinterpret_cast<void***>(trigger);
@@ -63,7 +66,10 @@ namespace
             try { replaceVirtual(table,updateSlot,reinterpret_cast<void*>(&observeInputTrigger)); }
             catch (...) { inputTriggerHooks.erase(table); throw; }
         }
-        inputTriggerObservations[trigger]={frameLibrary,frameFunction};
+        auto& observation=inputTriggerObservations[trigger];
+        auto observeWhileDisabled=observation.stanceOnly || stanceOnly;
+        observation={frameLibrary,frameFunction};
+        observation.stanceOnly=observeWhileDisabled;
     }
 }
 
@@ -78,9 +84,10 @@ extern "C" __declspec(dllexport) int pbz_input_watch_trigger(void* state)
         auto* type=reinterpret_cast<RC::Unreal::UFunction*>(lua.get_integer(1));
         auto* library=reinterpret_cast<Object*>(lua.get_integer(1));
         auto* frame=reinterpret_cast<RC::Unreal::UFunction*>(lua.get_integer(1));
+        auto stanceOnly=lua.get_bool(1);
         if (!trigger || !update || !type || !library || !frame)
             throw std::runtime_error("Input trigger observation arguments are invalid");
-        watchInputTrigger(trigger,update,type,library,frame);
+        watchInputTrigger(trigger,update,type,library,frame,stanceOnly);
         lua.set_integer(1);
         return 1;
     }
@@ -99,11 +106,11 @@ extern "C" __declspec(dllexport) int pbz_input_trigger_state(void* state)
     auto* trigger=reinterpret_cast<Object*>(lua.get_integer(1));
     auto* playerInput=reinterpret_cast<Object*>(lua.get_integer(1));
     auto frame=lua.get_integer(1);
-    if (!enabled.load(std::memory_order_relaxed)) return 0;
     std::lock_guard<std::mutex> lock(inputTriggerMutex);
     auto entry=inputTriggerObservations.find(trigger);
     if (entry==inputTriggerObservations.end()) return 0;
     const auto& observed=entry->second;
+    if (!enabled.load(std::memory_order_relaxed) && !(observed.stanceOnly && stanceActive())) return 0;
     if (!observed.valid || observed.playerInput!=playerInput || observed.frame!=frame) return 0;
     lua.set_integer(observed.state);
     lua.set_integer(observed.kind);

@@ -53,9 +53,9 @@ int main(int argc,char** argv)
     void* table[]={reinterpret_cast<void*>(&originalType),reinterpret_cast<void*>(&originalTrigger),nullptr,
         reinterpret_cast<void*>(&originalBlocking)};
     TriggerFixture first{table,2,0,false,0},second{table,1,1,true,0},unwatched{table,0,2,false,0};
-    auto watch=[&](TriggerFixture& trigger) {
+    auto watch=[&](TriggerFixture& trigger,bool stanceOnly=false) {
         begin(pbz_input_watch_trigger); pointer(&trigger); pointer(&updateFunction); pointer(&typeFunction);
-        pointer(&library); pointer(&frameFunction); finish(5,1);
+        pointer(&library); pointer(&frameFunction); luaApi.pushboolean(lua,stanceOnly); finish(6,1);
         assert(luaApi.tointeger(lua,1,nullptr)==1);
     };
     auto query=[&](TriggerFixture& trigger,Object& input,long long frame,int count) {
@@ -85,7 +85,14 @@ int main(int argc,char** argv)
     assert(luaApi.tointeger(lua,1,nullptr)==1 && table[1]==reinterpret_cast<void*>(&originalTrigger));
     assert(inputTriggerObservations.empty() && inputTriggerHooks.empty());
     query(first,player,currentFrame,0);
-    watch(first); evaluate(first,player); query(first,player,currentFrame,3);
+    watch(first); watch(second,true);
+    enabled.store(false); stanceGate.owner=&player;
+    evaluate(first,player); evaluate(second,player);
+    query(first,player,currentFrame,0); query(second,player,currentFrame,3);
+    assert(luaApi.tointeger(lua,1,nullptr)==1 && luaApi.tointeger(lua,2,nullptr)==1 && luaApi.tointeger(lua,3,nullptr)==1);
+    stanceGate.owner=nullptr;
+    query(second,player,currentFrame,0);
+    enabled.store(true);
     begin(pbz_input_reset_triggers); finish(0,1);
     RtlDeleteFunctionTable(entries);
     VirtualFree(code,0,MEM_RELEASE);

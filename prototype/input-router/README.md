@@ -121,6 +121,7 @@ python prototype/input-router/special_dash.py `
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File prototype/input-router/native/build.ps1
 python tests/input-router/run_lua.py tests/input-router/RouterTests.lua
+python tests/input-router/run_lua.py tests/input-router/StanceInputPerformanceTests.lua
 python tests/input-router/run_lua.py tests/input-router/BackendTests.lua
 python tests/input-router/run_lua.py tests/input-router/NativeInputTests.lua
 python tests/input-router/run_lua.py tests/input-router/NativeAbilityTests.lua

@@ -8,6 +8,7 @@ local MoveInputs = require("move-inputs")
 local MoveEquipment = require("move-equipment")
 local MovePreparation = require("move-preparation")
 local SnakePreparation = require("snake-preparation")
+local StanceInput = require("stance-input")
 local Backend = {}
 Backend.__index = Backend
 
@@ -315,6 +316,7 @@ function Backend:release_capture(preserveTuning)
     if self.native_input then attempt("Native input restore",function() self.native_input:restore() end) end
     local released, releaseError = true, nil
     if (next(self.captured) or self.dynamic_config) and self.on_release then released, releaseError = pcall(self.on_release) end
+    attempt("Stance input restore",function() StanceInput.restore(self) end)
     local failed = {}
     if valid(self.subsystem) then
         for path, entry in pairs(self.captured) do
@@ -624,6 +626,9 @@ end
 
 function Backend:prepare_move_inputs(requests)
     MoveInputs.prepare(self,requests)
+end
+function Backend:prepare_stance_inputs(requests)
+    StanceInput.prepare(self,requests)
 end
 function Backend:reset_move_inputs()
     MoveInputs.reset(self)
