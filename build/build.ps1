@@ -58,6 +58,7 @@ $artworkArgs += "/resource:$root\assets\key-enhancement\action-details.json,PBZK
 $artworkArgs += "/resource:$root\assets\key-enhancement\complete-moves.json,PBZKeyForge.KeyEnhancement.complete-moves.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\weapon-moves.json,PBZKeyForge.KeyEnhancement.weapon-moves.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\shadow-moves.json,PBZKeyForge.KeyEnhancement.shadow-moves.json"
+$artworkArgs += "/resource:$root\assets\key-enhancement\move-insights.json,PBZKeyForge.KeyEnhancement.move-insights.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\game-move-names.json,PBZKeyForge.KeyEnhancement.game-move-names.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\move-restrictions.json,PBZKeyForge.KeyEnhancement.move-restrictions.json"
 $artworkArgs += "/resource:$root\assets\key-enhancement\resource-costs.json,PBZKeyForge.KeyEnhancement.resource-costs.json"

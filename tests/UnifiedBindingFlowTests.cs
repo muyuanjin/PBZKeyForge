@@ -211,7 +211,7 @@ public static class UnifiedBindingFlowTests
                         int jumpRow = Enumerable.Range(0, grid.RowCount).Single(index => Convert.ToString(grid.Rows[index].Cells[0].Value) == BindingWorkspace.FunctionLabel("IA_Jump"));
                         int beforeDirectAdd = Workspace(form).Entries("IA_Jump").Length;
                         Modal(delegate {
-                            Call(actionView, "CellClick", grid, new DataGridViewCellMouseEventArgs(3, jumpRow, 5, 5,
+                            Call(actionView, "CellClick", grid, new DataGridViewCellMouseEventArgs(4, jumpRow, 5, 5,
                                 new MouseEventArgs(MouseButtons.Left, 1, 5, 5, 0)));
                         }, "UnifiedBindingEditDialog", delegate(Form editor) {
                             var keys = Field<ComboBox>(editor, "mainKey");

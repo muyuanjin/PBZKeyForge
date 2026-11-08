@@ -9,11 +9,12 @@ namespace PBZKeyForge
 {
     public sealed class UnifiedActionView : Panel
     {
+        const int FunctionColumn = 0, InsightColumn = 1, FactoryColumn = 2, BindingColumn = 3, AddColumn = 4;
         sealed class ActionRow
         {
             internal BindingFunction Function;
             internal BindingEntry[] Entries;
-            internal string Factory, Code;
+            internal string Factory, Code, Insight, InsightDetails;
             internal string[] BindingTexts;
             internal readonly List<BindingHit> Hits = new List<BindingHit>();
             internal int Height;
@@ -139,9 +140,10 @@ namespace PBZKeyForge
             actions.EnableHeadersVisualStyles = false; actions.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             actions.DefaultCellStyle = new DataGridViewCellStyle { BackColor = EditorTheme.Surface, ForeColor = EditorTheme.Ink, SelectionBackColor = EditorTheme.Hover, SelectionForeColor = EditorTheme.Ink, Padding = new Padding(8, 0, 8, 0) };
             actions.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle { BackColor = EditorTheme.Floating, ForeColor = EditorTheme.Muted, SelectionBackColor = EditorTheme.Floating, Alignment = DataGridViewContentAlignment.MiddleLeft, Padding = new Padding(8, 0, 8, 0) };
-            actions.Columns.Add(new DataGridViewTextBoxColumn { Name = "function", FillWeight = 40, MinimumWidth = 120, SortMode = DataGridViewColumnSortMode.NotSortable });
-            actions.Columns.Add(new DataGridViewTextBoxColumn { Name = "factory", FillWeight = 24, MinimumWidth = 80, SortMode = DataGridViewColumnSortMode.NotSortable });
-            actions.Columns.Add(new DataGridViewTextBoxColumn { Name = "bindings", FillWeight = 36, MinimumWidth = 130, SortMode = DataGridViewColumnSortMode.NotSortable });
+            actions.Columns.Add(new DataGridViewTextBoxColumn { Name = "function", FillWeight = 34, MinimumWidth = 120, SortMode = DataGridViewColumnSortMode.NotSortable });
+            actions.Columns.Add(new DataGridViewTextBoxColumn { Name = "insight", FillWeight = 26, MinimumWidth = 120, SortMode = DataGridViewColumnSortMode.NotSortable });
+            actions.Columns.Add(new DataGridViewTextBoxColumn { Name = "factory", FillWeight = 17, MinimumWidth = 76, SortMode = DataGridViewColumnSortMode.NotSortable });
+            actions.Columns.Add(new DataGridViewTextBoxColumn { Name = "bindings", FillWeight = 32, MinimumWidth = 130, SortMode = DataGridViewColumnSortMode.NotSortable });
             actions.Columns.Add(new DataGridViewTextBoxColumn { Name = "add", AutoSizeMode = DataGridViewAutoSizeColumnMode.None, Width = 40, MinimumWidth = 32, SortMode = DataGridViewColumnSortMode.NotSortable });
             actions.CellValueNeeded += CellValue;
             actions.CellPainting += PaintCell;
@@ -154,7 +156,7 @@ namespace PBZKeyForge
             {
                 if (e.KeyCode != Keys.Enter || actions.CurrentCell == null) return;
                 int index = actions.CurrentCell.RowIndex; if (index < 0 || index >= rows.Count) return;
-                if (actions.CurrentCell.ColumnIndex == 3) RequestAdd(rows[index]); else RequestDetails(rows[index]); e.Handled = true;
+                if (actions.CurrentCell.ColumnIndex == AddColumn) RequestAdd(rows[index]); else RequestDetails(rows[index]); e.Handled = true;
             };
             actions.HandleCreated += delegate { EditorArtwork.DarkScrollbars(actions); };
         }
@@ -172,7 +174,7 @@ namespace PBZKeyForge
             }
             root.RowStyles[0].Height = Scale(38);
             keyEnhancementNotice.Padding = new Padding(Scale(32), 0, Scale(4), 0);
-            actions.Font = Font; actions.ColumnHeadersHeight = Scale(32); actions.Columns[3].Width = Scale(40); groups.ItemHeight = Scale(29);
+            actions.Font = Font; actions.ColumnHeadersHeight = Scale(32); actions.Columns[AddColumn].Width = Scale(40); groups.ItemHeight = Scale(29);
             if (!sizedSplitter || previousScale != dpiScale) SizeSplitter(previousScale);
             MeasureRows();
         }
@@ -194,16 +196,18 @@ namespace PBZKeyForge
             UpdateScale();
             var timer = Stopwatch.StartNew(); workspace = value;
             searchTitle.Text = UnifiedBindingUi.Text("searchfunctions"); empty.Text = I18n.Str("unified.groups.none");
-            string[] headers = { "function", "factory", "bindings", "add" };
+            string[] headers = { "function", "insight", "factory", "bindings", "add" };
             for (int i = 0; i < headers.Length; i++) actions.Columns[i].HeaderText = I18n.Str("unified.grid." + headers[i]);
-            actions.Columns[3].HeaderText = "+"; actions.Columns[3].ToolTipText = UnifiedBindingUi.Text("addbinding");
+            actions.Columns[InsightColumn].ToolTipText = I18n.Str("moves.insight.details.source");
+            actions.Columns[AddColumn].HeaderText = "+"; actions.Columns[AddColumn].ToolTipText = UnifiedBindingUi.Text("addbinding");
             var snapshot = entrySnapshot.GroupBy(entry => entry.FunctionId).ToDictionary(group => group.Key, group => group.ToArray());
             allRows = value.Functions.Select(function =>
             {
                 BindingEntry[] entries; if (!snapshot.TryGetValue(function.Id, out entries)) entries = new BindingEntry[0];
                 string[] factory = function.FactoryKeys;
                 return new ActionRow { Function = function, Entries = entries, BindingTexts = entries.Select(UnifiedBindingUi.BindingText).ToArray(),
-                    Factory = factory == null ? I18n.Str("editor.defaultunknown") : BindingViewText.Keys(factory), Code = function.RequiresKeyEnhancement ? UnifiedBindingUi.FunctionIdentity(function) : "" };
+                    Factory = factory == null ? I18n.Str("editor.defaultunknown") : BindingViewText.Keys(factory), Code = function.RequiresKeyEnhancement ? UnifiedBindingUi.FunctionIdentity(function) : "",
+                    Insight = MoveInsightCatalog.Summary(function.Id), InsightDetails = MoveInsightCatalog.Details(function.Id) };
             }).ToArray();
             string signature = I18n.Current + "|" + value.KeyEnhancementEnabled + "|" + string.Join("\n", allRows.Select(row => string.Join("/", row.Function.GroupPath) + ":" + string.Join("/", row.Function.GroupLabels)));
             if (groupSignature != signature) { groupSignature = signature; BuildGroups(); }
@@ -334,12 +338,12 @@ namespace PBZKeyForge
 
         void MeasureRows()
         {
-            if (actions.Columns.Count < 3) return;
-            int width = Math.Max(20, actions.Columns[2].Width);
+            if (actions.Columns.Count < 5) return;
+            int width = Math.Max(20, actions.Columns[BindingColumn].Width);
             foreach (var row in rows)
             {
                 LayoutBindings(row, width); int linesHeight = row.Hits.Count == 0 ? 0 : row.Hits.Max(hit => hit.Bounds.Bottom) + Scale(3);
-                row.Height = Math.Max(Scale(row.Function.RequiresKeyEnhancement ? 40 : 28), linesHeight);
+                row.Height = Math.Max(Scale(row.Function.RequiresKeyEnhancement || row.Insight.Length > 0 ? 40 : 28), linesHeight);
             }
             if (actions.RowCount > 0) actions.UpdateRowHeightInfo(0, true); actions.Invalidate();
         }
@@ -347,8 +351,9 @@ namespace PBZKeyForge
         void LayoutNotice()
         {
             if (workspace == null) return;
-            keyEnhancementNotice.Visible = true;
-            root.RowStyles[1].Height = Scale(28);
+            bool visible = rows.Any(row => row.Function.RequiresKeyEnhancement);
+            keyEnhancementNotice.Visible = visible;
+            root.RowStyles[1].Height = visible ? Scale(28) : 0;
             if (!workspace.KeyEnhancementEnabled && !rows.Any(row => row.Function.RequiresKeyEnhancement))
                 keyEnhancementNotice.Text = I18n.Str("enhancement.title") + ": " + I18n.Str("mod.disabled");
             scopeTip.SetToolTip(searchTitle, keyEnhancementNotice.Text);
@@ -373,8 +378,10 @@ namespace PBZKeyForge
         void CellValue(object sender, DataGridViewCellValueEventArgs e)
         {
             if (e.RowIndex < 0 || e.RowIndex >= rows.Count) return; var row = rows[e.RowIndex];
-            e.Value = e.ColumnIndex == 0 ? row.Function.Label + (row.Code.Length == 0 ? "" : "\n" + row.Code) : e.ColumnIndex == 1 ? row.Factory
-                : e.ColumnIndex == 2 ? string.Join(" / ", row.BindingTexts) : "+";
+            e.Value = e.ColumnIndex == FunctionColumn ? row.Function.Label + (row.Code.Length == 0 ? "" : "\n" + row.Code)
+                : e.ColumnIndex == InsightColumn ? row.Insight
+                : e.ColumnIndex == FactoryColumn ? row.Factory
+                : e.ColumnIndex == BindingColumn ? string.Join(" / ", row.BindingTexts) : "+";
         }
 
         void PaintCell(object sender, DataGridViewCellPaintingEventArgs e)
@@ -400,7 +407,7 @@ namespace PBZKeyForge
             var bounds = e.CellBounds; bounds.Inflate(-Scale(8), 0);
             bool gated = row.Function.RequiresKeyEnhancement && !workspace.KeyEnhancementEnabled;
             var flags = TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix;
-            if (e.ColumnIndex == 0)
+            if (e.ColumnIndex == FunctionColumn)
             {
                 if (row.Function.RequiresKeyEnhancement)
                 {
@@ -415,12 +422,24 @@ namespace PBZKeyForge
                     TextRenderer.DrawText(e.Graphics, row.Code, codeFont ?? Font, new Rectangle(bounds.Left, bounds.Top + titleHeight, bounds.Width, Scale(18)), EditorTheme.Muted, flags);
                 }
             }
-            else if (e.ColumnIndex == 1) TextRenderer.DrawText(e.Graphics, row.Factory, Font, bounds, EditorTheme.Muted, flags);
-            else if (e.ColumnIndex == 3) TextRenderer.DrawText(e.Graphics, "+", Font, bounds, gated ? EditorTheme.Muted : row.Function.RequiresKeyEnhancement ? EditorTheme.KeyEnhancement : UnifiedBindingUi.Blue, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine);
-            else if (row.Entries.Length == 0) TextRenderer.DrawText(e.Graphics, UnifiedBindingUi.ShowsIndependentBindings(row.Function) ? UnifiedBindingUi.Text("additionalnone") : "—", Font, bounds, EditorTheme.Muted, flags);
-            else
+            else if (e.ColumnIndex == InsightColumn)
             {
-                foreach (var hit in row.Hits)
+                if (row.Insight.Length == 0) TextRenderer.DrawText(e.Graphics, "—", Font, bounds, EditorTheme.Muted, flags);
+                else
+                {
+                    string[] lines = row.Insight.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    int lineHeight = Math.Max(Scale(15), bounds.Height / 2);
+                    TextRenderer.DrawText(e.Graphics, lines[0], Font, new Rectangle(bounds.Left, bounds.Top, bounds.Width, lineHeight), EditorTheme.Ink, flags);
+                    if (lines.Length > 1)
+                        TextRenderer.DrawText(e.Graphics, lines[1], Font, new Rectangle(bounds.Left, bounds.Top + lineHeight, bounds.Width, Math.Max(1, bounds.Height - lineHeight)), EditorTheme.Muted, flags);
+                }
+            }
+            else if (e.ColumnIndex == FactoryColumn) TextRenderer.DrawText(e.Graphics, row.Factory, Font, bounds, EditorTheme.Muted, flags);
+            else if (e.ColumnIndex == AddColumn) TextRenderer.DrawText(e.Graphics, "+", Font, bounds, gated ? EditorTheme.Muted : row.Function.RequiresKeyEnhancement ? EditorTheme.KeyEnhancement : UnifiedBindingUi.Blue, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine);
+            else if (e.ColumnIndex == BindingColumn)
+            {
+                if (row.Entries.Length == 0) TextRenderer.DrawText(e.Graphics, UnifiedBindingUi.ShowsIndependentBindings(row.Function) ? UnifiedBindingUi.Text("additionalnone") : "—", Font, bounds, EditorTheme.Muted, flags);
+                else foreach (var hit in row.Hits)
                 {
                     var rect = hit.Bounds; rect.Offset(e.CellBounds.Location);
                     BindingEntry entry = hit.Index < 0 ? null : row.Entries[hit.Index];
@@ -436,8 +455,8 @@ namespace PBZKeyForge
         void CellClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left || e.RowIndex < 0 || e.RowIndex >= rows.Count) return; var row = rows[e.RowIndex];
-            if (e.ColumnIndex == 3) { RequestAdd(row); return; }
-            if (e.ColumnIndex == 2)
+            if (e.ColumnIndex == AddColumn) { RequestAdd(row); return; }
+            if (e.ColumnIndex == BindingColumn)
             {
                 var hit = row.Hits.FirstOrDefault(item => item.Bounds.Contains(e.X, e.Y));
                 if (hit != null && hit.Index >= 0)
@@ -451,15 +470,18 @@ namespace PBZKeyForge
         void CellTip(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
         {
             if (e.RowIndex < 0 || e.RowIndex >= rows.Count) return; var row = rows[e.RowIndex];
-            e.ToolTipText = e.ColumnIndex == 0 ? row.Function.TechnicalName : e.ColumnIndex == 1 ? row.Factory
-                : e.ColumnIndex == 3 ? UnifiedBindingUi.Text("addbinding") : string.Join("\n", row.Entries.Select((entry, index) => row.BindingTexts[index] + " · " + UnifiedBindingUi.EntryState(entry)));
-            if (e.ColumnIndex == 0)
+            e.ToolTipText = e.ColumnIndex == FunctionColumn ? row.Function.TechnicalName
+                : e.ColumnIndex == InsightColumn ? row.InsightDetails
+                : e.ColumnIndex == FactoryColumn ? row.Factory
+                : e.ColumnIndex == AddColumn ? UnifiedBindingUi.Text("addbinding")
+                : string.Join("\n", row.Entries.Select((entry, index) => row.BindingTexts[index] + " · " + UnifiedBindingUi.EntryState(entry)));
+            if (e.ColumnIndex == FunctionColumn)
             {
                 string details = GameMoveNames.Details(row.Function.Id);
                 e.ToolTipText = (details.Length == 0 ? "" : details + Environment.NewLine)
                     + e.ToolTipText + Environment.NewLine + string.Join(" / ", row.Function.GroupLabels);
             }
-            if (e.ColumnIndex >= 0 && e.ColumnIndex < 3)
+            if (e.ColumnIndex == FunctionColumn || e.ColumnIndex == FactoryColumn || e.ColumnIndex == BindingColumn)
             {
                 string hint = UnifiedBindingUi.NativeEntryHint(workspace, row.Function);
                 if (hint.Length > 0) e.ToolTipText += Environment.NewLine + hint;

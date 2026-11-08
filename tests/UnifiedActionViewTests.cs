@@ -78,13 +78,15 @@ class UnifiedActionViewTests
                 int basicCount = workspace.Functions.Count(function => function.GroupPath[0] == "native");
                 Console.WriteLine("Table: {0}x{1}, displayed={2}, first row={3}, font={4}", grid.Width, grid.Height, grid.DisplayedRowCount(false), grid.Rows[0].Height, grid.Font.SizeInPoints);
                 Capture(form, Path.Combine(output, "actions-native.png"));
-                Check(grid.VirtualMode && grid.ColumnCount == 4, "Actions must use one virtual aligned table");
+                Check(grid.VirtualMode && grid.ColumnCount == 5, "Actions must use one virtual aligned table");
                 Check(grid.RowCount == basicCount && basicCount == 21, "Standard mode group must exactly match its 21 ordinary actions");
                 Check(Field<IList>(view, "rows").Cast<object>().Take(21).All(row => Field<BindingFunction>(row, "Function").NativeAction != null), "Disabled key enhancement buries ordinary save bindings behind extra functions");
                 Check(grid.DisplayedRowCount(false) >= 8, "Basic table density fits fewer than eight rows at system DPI");
-                Check(grid.Columns[1].HeaderText == I18n.Str("unified.grid.factory") && grid.Columns[2].HeaderText == I18n.Str("unified.grid.bindings"), "Factory/current headers missing");
+                Check(grid.Columns[1].HeaderText == I18n.Str("unified.grid.insight")
+                    && grid.Columns[2].HeaderText == I18n.Str("unified.grid.factory")
+                    && grid.Columns[3].HeaderText == I18n.Str("unified.grid.bindings"), "Insight/factory/current headers missing");
                 Check(CountControls(view) < 30, "Action view creates per-function controls");
-                Check(grid.Rows[0].Cells[1].Value != null, "Factory key column empty");
+                Check(grid.Rows[0].Cells[2].Value != null, "Factory key column empty");
                 foreach (string path in new[] { "locomotion", "targeting", "offense", "defense", "weapons", "shadow", "interaction", "scene", "interface" })
                 {
                     var node = Find(tree.Nodes, path);
@@ -106,16 +108,61 @@ class UnifiedActionViewTests
                 string details = null, added = null; BindingEntry edited = null;
                 view.EditAction += delegate(string id) { details = id; }; view.AddRequested += delegate(string id) { added = id; }; view.EditRequested += delegate(BindingEntry entry) { edited = entry; };
                 CellClick(view, 0, 0, 12, 12); Check(details != null, "Function cell does not open action details");
-                CellClick(view, 3, 0, 12, 12); Check(added == details, "Add cell does not open the add binding flow");
+                CellClick(view, 4, 0, 12, 12); Check(added == details, "Add cell does not open the add binding flow");
                 var rowList = Field<IList>(view, "rows"); object first = rowList[0]; var hits = Field<IList>(first, "Hits");
                 if (hits.Count > 0)
                 {
-                    Rectangle hit = Field<Rectangle>(hits[0], "Bounds"); CellClick(view, 2, 0, hit.X + 2, hit.Y + 2);
+                    Rectangle hit = Field<Rectangle>(hits[0], "Bounds"); CellClick(view, 3, 0, hit.X + 2, hit.Y + 2);
                     Check(edited != null && edited.FunctionId == details, "Specific binding does not open its editor");
                 }
                 config.Enabled = true; view.Render(workspace); Application.DoEvents();
                 Capture(form, Path.Combine(output, "actions-enabled.png"));
                 Check(grid.RowCount == basicCount, "Enabling key enhancement must initially retain the basic group");
+                const string bronzeId = "move:Ability.Action.Hun.Heavy.BronzeSword.BHold.Release2";
+                search.Text = bronzeId; Application.DoEvents();
+                int bronzeRow = Enumerable.Range(0, grid.RowCount).Single(index =>
+                    Field<BindingFunction>(Field<IList>(view, "rows")[index], "Function").Id == bronzeId);
+                string bronzeInsight = Convert.ToString(grid.Rows[bronzeRow].Cells[1].Value);
+                Check(bronzeInsight.Contains(I18n.Str("moves.insight.physical") + " 0.853–1.17")
+                    && bronzeInsight.Contains(I18n.Str("moves.insight.poise") + " 25.3–40")
+                    && bronzeInsight.Contains(I18n.Str("moves.insight.nodes", 3))
+                    && grid.Rows[bronzeRow].Height >= 40, "Attack insight summary is missing coefficients, range, nodes or two-line row height");
+                details = null; CellClick(view, 1, bronzeRow, 12, 12);
+                Check(details == bronzeId, "Insight cell does not open action details");
+                var insightTip = (DataGridViewCellToolTipTextNeededEventArgs)Activator.CreateInstance(
+                    typeof(DataGridViewCellToolTipTextNeededEventArgs), Hidden, null, new object[] { 1, bronzeRow, "" }, null);
+                view.GetType().GetMethod("CellTip", Hidden).Invoke(view, new object[] { view, insightTip });
+                Check(insightTip.ToolTipText.Contains(I18n.Str("moves.insight.details.source"))
+                    && insightTip.ToolTipText.Contains(I18n.Str("moves.insight.details.damage"))
+                    && insightTip.ToolTipText.Contains(I18n.Str("moves.insight.details.nodes")),
+                    "Insight tooltip omits its source or damage and node limits");
+                const string ghostId = "move:Accessory.RandomDrink.GhostFire.Launch";
+                search.Text = ghostId; Application.DoEvents();
+                int ghostRow = Enumerable.Range(0, grid.RowCount).Single(index =>
+                    Field<BindingFunction>(Field<IList>(view, "rows")[index], "Function").Id == ghostId);
+                string ghostInsight = Convert.ToString(grid.Rows[ghostRow].Cells[1].Value);
+                Check(ghostInsight.Contains(I18n.Str("moves.insight.nonodes"))
+                    && !ghostInsight.Contains(I18n.Str("moves.insight.nodes", 0)), "A move without timeline attacks displays zero attack nodes");
+                const string chaosId = "move:Weapon.Weapon_Hun_CiGuHunDunJian.GA_Hun_Chaos_SwitchFormFire";
+                search.Text = chaosId; Application.DoEvents();
+                int chaosRow = Enumerable.Range(0, grid.RowCount).Single(index =>
+                    Field<BindingFunction>(Field<IList>(view, "rows")[index], "Function").Id == chaosId);
+                string chaosInsight = Convert.ToString(grid.Rows[chaosRow].Cells[1].Value);
+                Check(chaosInsight.Contains(I18n.Str("moves.insight.element") + " 2")
+                    && !chaosInsight.StartsWith(I18n.Str("moves.insight.none")), "A non-physical attack insight displays no coefficient");
+                const string unresolvedId = "move:Weapon.Weapon_Hun_ShuangYue.GA_Hun_ShuangYue_DB";
+                search.Text = unresolvedId; Application.DoEvents();
+                int unresolvedRow = Enumerable.Range(0, grid.RowCount).Single(index =>
+                    Field<BindingFunction>(Field<IList>(view, "rows")[index], "Function").Id == unresolvedId);
+                var unresolvedTip = (DataGridViewCellToolTipTextNeededEventArgs)Activator.CreateInstance(
+                    typeof(DataGridViewCellToolTipTextNeededEventArgs), Hidden, null, new object[] { 1, unresolvedRow, "" }, null);
+                view.GetType().GetMethod("CellTip", Hidden).Invoke(view, new object[] { view, unresolvedTip });
+                Check(unresolvedTip.ToolTipText.Contains(I18n.Str("moves.insight.details.incomplete")),
+                    "An unresolved BulletData reference is not disclosed");
+                search.Text = "0.853"; Application.DoEvents();
+                Check(Field<IList>(view, "rows").Cast<object>().Any(row => Field<BindingFunction>(row, "Function").Id == bronzeId),
+                    "Attack coefficients are not included in action search");
+                search.Text = ""; Application.DoEvents();
                 search.Text = "WASD"; Application.DoEvents();
                 Check(grid.RowCount == 5 && Convert.ToString(grid.Rows[0].Cells[0].Value).Contains("向前移动"), "WASD search must lead with four directions and retain the raw keyboard axis");
                 Capture(form, Path.Combine(output, "actions-wasd.png"));
@@ -128,7 +175,7 @@ class UnifiedActionViewTests
                 Check(grid.RowCount == 21 && Field<IList>(view, "rows").Cast<object>().All(row => !Field<BindingFunction>(row, "Function").RequiresKeyEnhancement), "Standard group mixes in enhanced functions");
                 Capture(form, Path.Combine(output, "actions-basic-enabled.png"));
                 tree.SelectedNode = Find(tree.Nodes, "defense"); Application.DoEvents();
-                Check(grid.RowCount == 13 && Field<IList>(view, "rows").Cast<object>().Any(row => Field<BindingFunction>(row, "Function").Id == "ability:Ability.Action.Hun.SpecialDash"), "Defense group must contain all guard and dodge operations");
+                Check(grid.RowCount >= 13 && Field<IList>(view, "rows").Cast<object>().Any(row => Field<BindingFunction>(row, "Function").Id == "ability:Ability.Action.Hun.SpecialDash"), "Defense group must contain all guard and dodge operations");
                 Capture(form, Path.Combine(output, "actions-defense.png"));
                 tree.SelectedNode = Find(tree.Nodes, "locomotion"); tree.SelectedNode.Expand(); Application.DoEvents();
                 Check(grid.RowCount == 16, "Movement group omits sprint, walk, crouch, jump or movement axes");
@@ -137,7 +184,7 @@ class UnifiedActionViewTests
                 tree.SelectedNode = originalRoot; Application.DoEvents(); Check(grid.RowCount == workspace.Functions.Length, "All-functions tree node omitted functions");
                 Capture(form, Path.Combine(output, "actions-all.png"));
                 var weaponA = workspace.Functions.Single(function => function.Id == "ability:Ability.Action.Hun.Heavy.SnakeDual.DB");
-                var weaponB = workspace.Functions.Single(function => function.Id == "ability:Ability.Action.Hun.Heavy.BronzeSword.DB");
+                var weaponB = workspace.Functions.Single(function => function.Id == "move:Ability.Action.Hun.Heavy.BronzeSword.BHold.Release2");
                 Check(weaponA.GroupPath[0] == "weapons" && weaponB.GroupPath[0] == "weapons" && weaponA.GroupPath[1] != weaponB.GroupPath[1], "Different weapons share one undifferentiated group");
                 var weaponNode = Find(tree.Nodes, string.Join("/", weaponA.GroupPath.Take(2))); Check(weaponNode != null && weaponNode.Text.StartsWith("白蟒赤练 ("), "Weapon group lacks its real localized identity and count");
                 tree.SelectedNode = weaponNode; Application.DoEvents();

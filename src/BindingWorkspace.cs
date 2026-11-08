@@ -219,6 +219,8 @@ namespace PBZKeyForge
                     if (function.Id == "ability:Ability.Action.Hun.SpecialDash") function.SearchText += " 瞬身 架势瞬身 特殊闪避 stance dash special dash";
                     if (function.Id.StartsWith("movement:", StringComparison.Ordinal) || function.TechnicalName == KeyboardMovement)
                         function.SearchText += " WASD 方向 移动 前后左右 movement direction " + string.Join(" ", function.FixedKeys ?? new string[0]);
+                    string insightSearch = MoveInsightCatalog.SearchText(function.Id);
+                    if (insightSearch.Length > 0) function.SearchText += " " + insightSearch;
                     SetGroups(function, localization);
                     function.SearchText += " " + function.GroupSearchText + " " + string.Join(" ", PlayerAliases(Purpose(function)));
                     if (function.TechnicalName != null && function.TechnicalName.Contains("Look")) function.SearchText += " 相机 镜头 摄像机 camera look view";
