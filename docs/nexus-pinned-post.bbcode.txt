@@ -5,7 +5,7 @@ If something doesn't work, please post your tool version, device/layout and a sc
 [b]Close the game for ordinary save edits, Mod installation and runtime updates. Connected Key Enhancement bindings support live editing. Applying or resetting bindings in the game's own binding screen will overwrite your layout.
 [/b][/center][center][size=5][color=#e8b96a][b]Changelog[/b][/color][/size][/center]
 [center][color=#1e84cc][b]V1.3.1[/b][/color]
-Less repeated runtime work, more weapon and Phantom Edge moves with searchable game names, and fixes to One-Eyed Bow and overlapping independent Deflect bindings. Added separate restriction bypasses and move effects; resource, damage and timing settings follow each activation. Update the enhancement runtime with the game closed, then restart.
+Smoother Key Enhancement, more weapon and Phantom Edge moves with searchable game names, and fixes to One-Eyed Bow and overlapping independent Deflect bindings. Added separate restriction bypasses and move effects; resource, damage and timing settings follow each activation. Update the enhancement runtime with the game closed, then restart.
 
 [color=#1e84cc][b]V1.3.0[/b][/color]
 Added optional Key Enhancement with extra moves, chords, tap/hold, sequences, independent schemes and live editing. Added per-binding resource, damage and timing settings, plus preset sharing and CLI workflows. Improved runtime recovery and editor responsiveness; fixed flickering action-group text.

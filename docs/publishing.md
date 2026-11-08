@@ -106,6 +106,22 @@ Keep installation, the in-game binding warning and preset apply-mode explanation
 
 Read the live Description tab before editing the homepage. Update `docs/nexus-description.bbcode.txt` to reflect current player-visible features and instructions, then paste it through **Manage → Mod details → Full description → View source** and save. Update the homepage version and short description along with it. Point the English and Chinese README sections to the matching versioned screenshots. File-upload release notes are maintained separately in `docs/releases/`.
 
+### Windows image upload picker
+
+Use browser-skill to click **Add image(s)**, then handle the native Windows picker with the checked-in helper:
+
+```powershell
+$images = @(
+    'assets\screenshots\1.3.1\enhancement-main-en.png',
+    'assets\screenshots\1.3.1\enhancement-main-zh-Hans.png'
+)
+& .\build\select-upload-files.ps1 -Files $images
+```
+
+The helper waits up to 15 seconds for the Open dialog owned by the Nexus editor's Chrome window. It selects the supplied files together, checks the filename field and clicks Open. Chinese names and spaces are supported. Use `-WindowTitle '<exact window title>'` for a differently titled owner. Keep the upload page open until selection finishes; do not navigate or click Add image(s) again while its picker is pending.
+
+Chromium's picker is a descendant of its owning browser window. Some controls expose no UI Automation value/invoke patterns; the helper uses their native Edit and Button handles and reads the filename with WM_GETTEXT. After it closes, verify the uploaded previews on the website. If it remains open, inspect the picker validation message before retrying. A completed selection alone does not prove that the website finished uploading.
+
 
 ## Verified Nexus wiring
 
