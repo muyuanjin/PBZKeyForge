@@ -8,7 +8,9 @@
     "uniqueAbilityTags": 236,
     "abilityTagsAreInputReachable": true,
     "allGameAbilitiesEnumerated": false,
-    "nativeCombatJudgmentsEnumerated": false
+    "nativeCombatJudgmentsEnumerated": false,
+    "directlyActivatableAbilityTags": 227,
+    "unsupportedInputRouteTags": 9
   },
   "inputActions": [
     {
@@ -723,20 +725,6 @@
           "ignoredTags": [
             "CharacterState.AbilityState.BaiYing.Buff.Bing"
           ]
-        }
-      ]
-    },
-    {
-      "tag": "Ability.Action.Hun.ChiZheCanJian.CToZui",
-      "sources": [
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/AIM_Hun_ChiZheCanJian_CA",
-          "group": 0,
-          "priority": -5,
-          "requiredTags": [
-            "CharacterState.AbilityState.Stance.HoldingStanceKey"
-          ],
-          "ignoredTags": []
         }
       ]
     },
@@ -2341,35 +2329,6 @@
           ],
           "ignoredTags": [
             "Ability.Action.Hun.Heavy.BronzeSword.BHold"
-          ]
-        }
-      ]
-    },
-    {
-      "tag": "Ability.Action.Hun.Heavy.BronzeSword.DB",
-      "sources": [
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BronzeSword/AIM_BronzeSword_HeavyAttack",
-          "group": 0,
-          "priority": 2,
-          "requiredTags": [
-            "CharacterState.Space.Ground",
-            "CharacterState.AbilityState.Stance.HoldingStanceKey",
-            "CharacterState.AbilityState.BronzeSword.DB"
-          ],
-          "ignoredTags": []
-        },
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BronzeSword/AIM_BronzeSword_HeavyAttack",
-          "group": 1,
-          "priority": -5,
-          "requiredTags": [
-            "CharacterState.Space.Ground",
-            "CharacterState.AbilityState.Stance.HoldingStanceKey",
-            "CharacterState.AbilityState.BronzeSword.DB"
-          ],
-          "ignoredTags": [
-            "Ability.Action.Hun.Heavy.BronzeSword.DB"
           ]
         }
       ]
@@ -5043,26 +5002,6 @@
       ]
     },
     {
-      "tag": "Ability.Action.Hun.Heavy.SlitheringSword.DB2",
-      "sources": [
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SlitheringSword/AIM_SlitheringSword_HeavyAttack",
-          "group": 0,
-          "priority": -4,
-          "requiredTags": [
-            "CharacterState.Space.Ground",
-            "CharacterState.AbilityState.SlitheringSword.RandomDB.DB2",
-            "CharacterState.AbilityState.Stance.HoldingStanceKey"
-          ],
-          "ignoredTags": [
-            "Ability.Action.Hun.Heavy.SlitheringSword.DB1",
-            "Ability.Action.Hun.Heavy.SlitheringSword.DB2",
-            "Ability.Action.Hun.Heavy.SlitheringSword.DB3"
-          ]
-        }
-      ]
-    },
-    {
       "tag": "Ability.Action.Hun.Heavy.SlitheringSword.DB3",
       "sources": [
         {
@@ -7280,41 +7219,6 @@
       ]
     },
     {
-      "tag": "Ability.Action.Hun.Light.GuiTouDao.DA",
-      "sources": [
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/AIM_GuiTouBlade_LightAttack",
-          "group": 0,
-          "priority": -4,
-          "requiredTags": [
-            "CharacterState.Space.Ground",
-            "CharacterState.AbilityState.Stance.HoldingStanceKey"
-          ],
-          "ignoredTags": []
-        },
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/AIM_GuiTouBlade_LightAttack",
-          "group": 1,
-          "priority": 2,
-          "requiredTags": [
-            "CharacterState.Space.Ground",
-            "CharacterState.AbilityState.Stance.HoldingStanceKey"
-          ],
-          "ignoredTags": []
-        },
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/AIM_GuiTouBlade_LightAttack",
-          "group": 1,
-          "priority": 2,
-          "requiredTags": [
-            "CharacterState.Space.Ground",
-            "CharacterState.AbilityState.Stance.HoldingStanceKey"
-          ],
-          "ignoredTags": []
-        }
-      ]
-    },
-    {
       "tag": "Ability.Action.Hun.Light.JigSaw.RA",
       "sources": [
         {
@@ -8269,22 +8173,6 @@
       ]
     },
     {
-      "tag": "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Common_03",
-      "sources": [
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/AIM_HuangJinHuoChong_ShachiAbility",
-          "group": 0,
-          "priority": -5,
-          "requiredTags": [
-            "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Common_02",
-            "CharacterState.Space.Ground",
-            "Ability.Action.ShaqiReinforced"
-          ],
-          "ignoredTags": []
-        }
-      ]
-    },
-    {
       "tag": "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Dash",
       "sources": [
         {
@@ -8724,23 +8612,6 @@
             "CharacterState.WeaponUpgrade.JinGua.Evolution"
           ],
           "ignoredTags": []
-        }
-      ]
-    },
-    {
-      "tag": "Ability.Action.Hun.ShachiAbility.JinGua.SprintAir",
-      "sources": [
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/AIM_JinGua_ShachiAbility",
-          "group": 0,
-          "priority": -5,
-          "requiredTags": [
-            "CharacterState.Space.Air",
-            "CharacterState.Native.Attitude.Sprinting"
-          ],
-          "ignoredTags": [
-            "CharacterState.AirState.AirAtk1"
-          ]
         }
       ]
     },
@@ -10423,28 +10294,6 @@
       ]
     },
     {
-      "tag": "Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Parry",
-      "sources": [
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/AIM_ZhuoBiDun_ShachiAbility",
-          "group": 1,
-          "priority": -5,
-          "requiredTags": [
-            "CharacterState.AbilityState.Stance.HoldingStanceKey",
-            "CharacterState.Space.Ground"
-          ],
-          "ignoredTags": []
-        },
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/AIM_ZhuoBiDun_StancePush",
-          "group": 0,
-          "priority": -5,
-          "requiredTags": [],
-          "ignoredTags": []
-        }
-      ]
-    },
-    {
       "tag": "Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Slide",
       "sources": [
         {
@@ -11222,40 +11071,6 @@
       ]
     },
     {
-      "tag": "Ability.SpecialMove.JumpOut.Left",
-      "sources": [
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/InputMap/AIM_Hun_Jump",
-          "group": 0,
-          "priority": -1,
-          "requiredTags": [
-            "CharacterState.SpecialMove.SideRunning.Right",
-            "CharacterState.SpecialMove.Phase.Loop"
-          ],
-          "ignoredTags": [
-            "CharacterState.InVolume.SpecialMove.SideRunning"
-          ]
-        }
-      ]
-    },
-    {
-      "tag": "Ability.SpecialMove.JumpOut.Right",
-      "sources": [
-        {
-          "asset": "/PBZCombatAsset/ActorData/Players/Hun/InputMap/AIM_Hun_Jump",
-          "group": 0,
-          "priority": -1,
-          "requiredTags": [
-            "CharacterState.SpecialMove.SideRunning.Left",
-            "CharacterState.SpecialMove.Phase.Loop"
-          ],
-          "ignoredTags": [
-            "CharacterState.InVolume.SpecialMove.SideRunning"
-          ]
-        }
-      ]
-    },
-    {
       "tag": "Ability.SpecialMove.Pole.UseItem",
       "sources": [
         {
@@ -11437,5 +11252,194 @@
     "costFunction": "ExecuteUbergraph_BP_PlayerDodge_Base",
     "costOperation": "Shachi += -Shaqi Cost at VM0x774..0x823",
     "relatedPerfectDodgeIsDistinct": true
-  }
+  },
+  "unsupportedInputRoutes": [
+    {
+      "tag": "Ability.Action.Hun.ChiZheCanJian.CToZui",
+      "sources": [
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/AIM_Hun_ChiZheCanJian_CA",
+          "group": 0,
+          "priority": -5,
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
+          "ignoredTags": []
+        }
+      ]
+    },
+    {
+      "tag": "Ability.Action.Hun.Heavy.BronzeSword.DB",
+      "sources": [
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BronzeSword/AIM_BronzeSword_HeavyAttack",
+          "group": 0,
+          "priority": 2,
+          "requiredTags": [
+            "CharacterState.Space.Ground",
+            "CharacterState.AbilityState.Stance.HoldingStanceKey",
+            "CharacterState.AbilityState.BronzeSword.DB"
+          ],
+          "ignoredTags": []
+        },
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BronzeSword/AIM_BronzeSword_HeavyAttack",
+          "group": 1,
+          "priority": -5,
+          "requiredTags": [
+            "CharacterState.Space.Ground",
+            "CharacterState.AbilityState.Stance.HoldingStanceKey",
+            "CharacterState.AbilityState.BronzeSword.DB"
+          ],
+          "ignoredTags": [
+            "Ability.Action.Hun.Heavy.BronzeSword.DB"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "Ability.Action.Hun.Heavy.SlitheringSword.DB2",
+      "sources": [
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SlitheringSword/AIM_SlitheringSword_HeavyAttack",
+          "group": 0,
+          "priority": -4,
+          "requiredTags": [
+            "CharacterState.Space.Ground",
+            "CharacterState.AbilityState.SlitheringSword.RandomDB.DB2",
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
+          "ignoredTags": [
+            "Ability.Action.Hun.Heavy.SlitheringSword.DB1",
+            "Ability.Action.Hun.Heavy.SlitheringSword.DB2",
+            "Ability.Action.Hun.Heavy.SlitheringSword.DB3"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "Ability.Action.Hun.Light.GuiTouDao.DA",
+      "sources": [
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/AIM_GuiTouBlade_LightAttack",
+          "group": 0,
+          "priority": -4,
+          "requiredTags": [
+            "CharacterState.Space.Ground",
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
+          "ignoredTags": []
+        },
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/AIM_GuiTouBlade_LightAttack",
+          "group": 1,
+          "priority": 2,
+          "requiredTags": [
+            "CharacterState.Space.Ground",
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
+          "ignoredTags": []
+        },
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/AIM_GuiTouBlade_LightAttack",
+          "group": 1,
+          "priority": 2,
+          "requiredTags": [
+            "CharacterState.Space.Ground",
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
+          "ignoredTags": []
+        }
+      ]
+    },
+    {
+      "tag": "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Common_03",
+      "sources": [
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/AIM_HuangJinHuoChong_ShachiAbility",
+          "group": 0,
+          "priority": -5,
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Common_02",
+            "CharacterState.Space.Ground",
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
+      ]
+    },
+    {
+      "tag": "Ability.Action.Hun.ShachiAbility.JinGua.SprintAir",
+      "sources": [
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/AIM_JinGua_ShachiAbility",
+          "group": 0,
+          "priority": -5,
+          "requiredTags": [
+            "CharacterState.Space.Air",
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
+          "ignoredTags": [
+            "CharacterState.AirState.AirAtk1"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Parry",
+      "sources": [
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/AIM_ZhuoBiDun_ShachiAbility",
+          "group": 1,
+          "priority": -5,
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey",
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/AIM_ZhuoBiDun_StancePush",
+          "group": 0,
+          "priority": -5,
+          "requiredTags": [],
+          "ignoredTags": []
+        }
+      ]
+    },
+    {
+      "tag": "Ability.SpecialMove.JumpOut.Left",
+      "sources": [
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/InputMap/AIM_Hun_Jump",
+          "group": 0,
+          "priority": -1,
+          "requiredTags": [
+            "CharacterState.SpecialMove.SideRunning.Right",
+            "CharacterState.SpecialMove.Phase.Loop"
+          ],
+          "ignoredTags": [
+            "CharacterState.InVolume.SpecialMove.SideRunning"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "Ability.SpecialMove.JumpOut.Right",
+      "sources": [
+        {
+          "asset": "/PBZCombatAsset/ActorData/Players/Hun/InputMap/AIM_Hun_Jump",
+          "group": 0,
+          "priority": -1,
+          "requiredTags": [
+            "CharacterState.SpecialMove.SideRunning.Left",
+            "CharacterState.SpecialMove.Phase.Loop"
+          ],
+          "ignoredTags": [
+            "CharacterState.InVolume.SpecialMove.SideRunning"
+          ]
+        }
+      ]
+    }
+  ]
 }

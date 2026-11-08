@@ -500,7 +500,7 @@ local naturalCharge = assert(targets["move:Ability.Action.Hun.Heavy.FengLeiJian.
 assert(naturalCharge.completion_timeline == "End_Success" and not naturalCharge.entry_point
     and naturalCharge.prepare_input == "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold",
     "Resource accumulation must remain in the original held ability, without a forced release callback")
-for _, outcome in ipairs({"success","complete","reset","ended"}) do
+for _, outcome in ipairs({"success","complete","reset","ended","failed"}) do
     local state,backend,step = fixture(naturalCharge)
     step(0,true)
     assert(state.starts == 1 and state.activations == 0)
@@ -523,6 +523,12 @@ for _, outcome in ipairs({"success","complete","reset","ended"}) do
         Moves.reset(backend)
         assert(state.stops == 1 and state.canceled, "Reset while accumulating must cancel the pending charge")
     else
+        if outcome == "failed" then
+            state.task.Timeline = object(31) -- Original End_Fail is distinct from the success timeline.
+            Moves.update(backend)
+            assert(state.stops == 0 and state.entries == 0 and not state.canceled,
+                "Native full-energy refusal must retain its own failure motion without forcing success")
+        end
         state.instance.bIsActive,state.ability.ActiveCount = false,0
         Moves.update(backend)
         assert(state.stops == 1 and not state.canceled,

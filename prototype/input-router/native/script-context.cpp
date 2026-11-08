@@ -19,6 +19,7 @@ namespace RC::Unreal
         PBZ_CONTEXT_API std::wstring GetFullName(UObject* stopOuter = nullptr) const;
         PBZ_CONTEXT_API class FProperty* GetPropertyByName(const wchar_t* name);
         PBZ_CONTEXT_API class FProperty* GetPropertyByNameInChain(const wchar_t* name);
+        PBZ_CONTEXT_API void ProcessEvent(class UFunction*,void*);
     };
     class UClass;
     struct FImplementedInterface { UClass* Class; int PointerOffset; bool bImplementedByK2; };
@@ -77,6 +78,13 @@ namespace RC::Unreal
     public:
         PBZ_CONTEXT_API FProperty* FindProperty(FName);
     };
+    class UScriptStruct;
+    template<class T> class TObjectPtr { public: T* Ptr; };
+    class FStructProperty
+    {
+    public:
+        PBZ_CONTEXT_API TObjectPtr<UScriptStruct>& GetStruct();
+    };
     struct FFrame
     {
         PBZ_CONTEXT_API UFunction*& Node();
@@ -99,6 +107,7 @@ namespace RC::LuaMadeSimple
         PBZ_CONTEXT_API bool get_bool(int index) const;
         PBZ_CONTEXT_API double get_number(int index) const;
         PBZ_CONTEXT_API void set_integer(long long value) const;
+        PBZ_CONTEXT_API void set_number(double value) const;
         PBZ_CONTEXT_API void set_string(const char* value, size_t length) const;
     };
 }
@@ -315,3 +324,4 @@ extern "C" __declspec(dllexport) int pbz_charge_ability(void* state)
 }
 
 #include "damage-scaling.inl"
+#include "input-triggers.inl"

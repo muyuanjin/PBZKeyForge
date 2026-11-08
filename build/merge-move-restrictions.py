@@ -43,11 +43,14 @@ SCOPED_ENTRANCE_TAGS = {
     },
 }
 NATIVE_STATE_TAGS = {
+    "Ability.Action.ShaqiReinforced",
     "CharacterState.Armed",
     "CharacterState.AbilityState.Horizontal.Overcharged",
     "CharacterState.AbilityState.InSpecialPerform",
     "CharacterState.AbilityState.SnakeDual.Normal",
     "CharacterState.AbilityState.YuuBlade.CriticalBuff",
+    "CharacterState.AbilityState.Mojian.HasProjectile",
+    "CharacterState.AbilityState.Mojian.ProjectileFull",
 }
 
 # These original effects provide attack modifiers, weapon form or native cues
@@ -105,6 +108,42 @@ def read(path):
 
 def package_path(path):
     return path.split(".")[0] if path else None
+
+
+def add_direct_route_groups(entries, abilities, classifications):
+    """Retain route qualifications for every direct input identity.
+
+    Alternatives can require and block the same state. Such a state must keep
+    its native branch selection; the actual GAS template still classifies its
+    own required/blocked field during the synchronous activation scope.
+    """
+    alternatives = {}
+    for identity, ability in abilities.items():
+        if not identity.startswith("ability:"):
+            continue
+        required = {tag for route in ability["sources"] for tag in route["requiredTags"]}
+        ignored = {tag for route in ability["sources"] for tag in route["ignoredTags"]}
+        ambiguous = required & ignored
+        if ambiguous:
+            alternatives[identity] = sorted(ambiguous)
+        entry = entries[identity]
+        for mode, tags in (("requiredTags", required), ("ignoredTags", ignored)):
+            for tag in tags:
+                kind = ENTRANCE_TAGS.get(tag) or classifications.get(tag)
+                if not kind and tag.startswith("Ability.Action."):
+                    kind = "predecessor"
+                if not kind and tag.startswith("CharacterState.WeaponUpgrade."):
+                    kind = "training"
+                if not kind and tag.startswith("CharacterState.Space."):
+                    kind = "space"
+                if kind in KINDS and tag not in NATIVE_STATE_TAGS:
+                    classifications.setdefault(tag, kind)
+                    if tag not in ambiguous:
+                        entry["groups"][kind][mode] = sorted(set(entry["groups"][kind][mode] + [tag]))
+        for group in entry["groups"].values():
+            for mode in ("requiredTags", "ignoredTags"):
+                group[mode] = [tag for tag in group[mode] if tag not in ambiguous]
+    return alternatives
 
 
 def equipment_sources():
@@ -309,6 +348,7 @@ def main():
              for item in read("assets/key-enhancement/" + file + ".json")["moves"]}
     abilities = {"ability:" + item["tag"]: item for item in read("prototype/input-router/actions.json")["abilities"]}
     abilities.update({"action:" + item["path"]: item for item in read("prototype/input-router/actions.json")["inputActions"]})
+    unsupported = {"ability:" + item["tag"] for item in read("prototype/input-router/actions.json")["unsupportedInputRoutes"]}
     entries = {identity: {"groups": {kind: {"requiredTags": [], "ignoredTags": []} for kind in KINDS},
                           "preparation": {}} for identity in {**moves, **abilities}}
     classifications = {}
@@ -316,8 +356,11 @@ def main():
     for kind, tags in weapons["classificationTags"].items():
         for tag in tags:
             classifications[tag] = kind
-    for contribution in (weapons, read("docs/move-restrictions-shadow.json")):
+    for contribution in (weapons, read("docs/move-restrictions-shadow.json"),
+                         read("docs/native-move-inputs.json")):
         for identity, item in contribution["entries"].items():
+            if identity in unsupported:
+                continue
             if identity not in entries:
                 raise ValueError("Unknown restriction target: " + identity)
             current = entries[identity]
@@ -368,7 +411,7 @@ def main():
                     entry["groups"][kind][mode].append(tag)
                     if tag in raw:
                         raw.remove(tag)
-    for tag in NATIVE_STATE_TAGS:
+    for tag in sorted(NATIVE_STATE_TAGS):
         classifications.pop(tag, None)
         for entry in entries.values():
             for mode in ("requiredTags", "ignoredTags"):
@@ -426,10 +469,12 @@ def main():
                 flags.append(value)
         if len(flags) == 1:
             prep["armedState"] = {"slot": "Weapon.Slot.Main", "armed": flags[0]}
+    route_alternatives = add_direct_route_groups(entries, abilities, classifications)
     hold_audit = refine_native_holds(entries, moves)
     output = {"schemaVersion": 1, "build": "CL-302256", "runtimeVerified": False,
               "classificationTags": classifications, "entries": dict(sorted(entries.items())),
-              "nativeHoldInputAudit": hold_audit}
+              "nativeHoldInputAudit": hold_audit,
+              "nativeRouteAlternatives": route_alternatives}
     path = ROOT / "assets/key-enhancement/move-restrictions.json"
     path.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("Move restrictions: %d entrances; %d native input preparations" %

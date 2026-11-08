@@ -649,15 +649,22 @@
             "timeline": "Main",
             "entry_time": 0.92,
             "attack_start": 1.0054361820220947,
-            "attack_end": 2.1921606063842773
+            "attack_end": 1.652966856956482
           },
           {
             "timeline": "NearTimeline",
             "entry_time": 0.92,
             "attack_start": 1.0054359436035156,
-            "attack_end": 2.192160978913307
+            "attack_end": 1.6529670357704163
           }
-        ]
+        ],
+        "completionWhen": {
+          "timelines": [
+            "Main",
+            "NearTimeline"
+          ],
+          "minimum_time": 1.81
+        }
       },
       "evidence": {
         "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C",
@@ -716,7 +723,10 @@
                     "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/JueYing/BD_GA_Hun_Double_JueYing_C_Sweep"
                   }
                 ]
-              },
+              }
+            ],
+            "entryTime": 0.92,
+            "omittedLaterAttackActions": [
               {
                 "index": 43,
                 "exportByteOffset": 1779,
@@ -739,7 +749,7 @@
                 ]
               }
             ],
-            "entryTime": 0.92
+            "normalCompletionTime": 1.81
           },
           {
             "timeline": "NearTimeline",
@@ -785,7 +795,10 @@
                     "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/JueYing/BD_GA_Hun_Double_JueYing_C_Sweep"
                   }
                 ]
-              },
+              }
+            ],
+            "entryTime": 0.92,
+            "omittedLaterAttackActions": [
               {
                 "index": 45,
                 "exportByteOffset": 1813,
@@ -808,10 +821,10 @@
                 ]
               }
             ],
-            "entryTime": 0.92
+            "normalCompletionTime": 1.81
           }
         ],
-        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+        "cleanup": "After the selected attack and recovery, original Move Cancel Ability stops BlockMovement and normally ends this instance; native OnEnd cleans montage, timeline, phase, rotation, warp and tags. Already emitted projectiles retain their normal lifetime."
       }
     },
     {
@@ -894,7 +907,11 @@
           "timeline": "Main",
           "entry_time": 0.92,
           "attack_start": 1.0054359436035156,
-          "attack_end": 2.192160978913307
+          "attack_end": 1.6529670357704163
+        },
+        "completionWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.81
         }
       },
       "evidence": {
@@ -953,7 +970,10 @@
                     "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/JueYing/BD_GA_Hun_Double_JueYing_C_Sweep"
                   }
                 ]
-              },
+              }
+            ],
+            "entryTime": 0.92,
+            "omittedLaterAttackActions": [
               {
                 "index": 40,
                 "exportByteOffset": 1628,
@@ -976,10 +996,10 @@
                 ]
               }
             ],
-            "entryTime": 0.92
+            "normalCompletionTime": 1.81
           }
         ],
-        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+        "cleanup": "After the selected attack and recovery, original Move Cancel Ability stops BlockMovement and normally ends this instance; native OnEnd cleans montage, timeline, phase, rotation, warp and tags. Already emitted projectiles retain their normal lifetime."
       }
     },
     {
@@ -1438,7 +1458,11 @@
           "timeline": "Main",
           "entry_time": 1.2,
           "attack_start": 1.3358440399169922,
-          "attack_end": 2.320129871368408
+          "attack_end": 1.4252166748046875
+        },
+        "completionWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.5
         }
       },
       "evidence": {
@@ -1485,7 +1509,10 @@
                     "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LuanYing/CA/BulletData_Hun_LuanYing_P2_CA_08"
                   }
                 ]
-              },
+              }
+            ],
+            "entryTime": 1.2,
+            "omittedLaterAttackActions": [
               {
                 "index": 36,
                 "exportByteOffset": 1526,
@@ -1580,10 +1607,10 @@
                 ]
               }
             ],
-            "entryTime": 1.2
+            "normalCompletionTime": 1.5
           }
         ],
-        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+        "cleanup": "After the selected attack and recovery, original Move Cancel Ability stops BlockMovement and normally ends this instance; native OnEnd cleans montage, timeline, phase, rotation, warp and tags. Already emitted projectiles retain their normal lifetime."
       }
     },
     {
@@ -1866,7 +1893,11 @@
           "timeline": "Main",
           "entry_time": 1.25,
           "attack_start": 1.456926941871643,
-          "attack_end": 4.907577037811279
+          "attack_end": 4.050748065114021
+        },
+        "completionWhen": {
+          "timeline": "Main",
+          "minimum_time": 4.25
         }
       },
       "evidence": {
@@ -2873,7 +2904,10 @@
                     "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShuangYue/BD_Hun_ShuangYue_C_R_SuperEnhanced"
                   }
                 ]
-              },
+              }
+            ],
+            "entryTime": 1.25,
+            "omittedLaterAttackActions": [
               {
                 "index": 113,
                 "exportByteOffset": 5189,
@@ -3055,10 +3089,10 @@
                 ]
               }
             ],
-            "entryTime": 1.25
+            "normalCompletionTime": 4.25
           }
         ],
-        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+        "cleanup": "After the selected attack and recovery, original Move Cancel Ability stops BlockMovement and normally ends this instance; native OnEnd cleans montage, timeline, phase, rotation, warp and tags. Already emitted projectiles retain their normal lifetime."
       }
     },
     {
@@ -3437,9 +3471,13 @@
             "timeline": "Perfect",
             "entry_time": 1.5,
             "attack_start": 1.6130808591842651,
-            "attack_end": 4.729172229766846
+            "attack_end": 4.378878593444824
           }
-        ]
+        ],
+        "completionWhen": {
+          "timeline": "Perfect",
+          "minimum_time": 4.4
+        }
       },
       "evidence": {
         "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_C",
@@ -3756,7 +3794,10 @@
                     "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/SlitheringSword/Attack/B_Hun_SlitheringSword_C_Perfect"
                   }
                 ]
-              },
+              }
+            ],
+            "entryTime": 1.5,
+            "omittedLaterAttackActions": [
               {
                 "index": 60,
                 "exportByteOffset": 2406,
@@ -3779,10 +3820,10 @@
                 ]
               }
             ],
-            "entryTime": 1.5
+            "normalCompletionTime": 4.4
           }
         ],
-        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+        "cleanup": "After the selected attack and recovery, original Move Cancel Ability stops BlockMovement and normally ends this instance; native OnEnd cleans montage, timeline, phase, rotation, warp and tags. Already emitted projectiles retain their normal lifetime."
       }
     },
     {
@@ -4164,7 +4205,11 @@
           "timeline": "Main",
           "entry_time": 1.2,
           "attack_start": 1.23451828956604,
-          "attack_end": 2.452219996601343
+          "attack_end": 1.9710395634174347
+        },
+        "completionWhen": {
+          "timeline": "Main",
+          "minimum_time": 2.1
         }
       },
       "evidence": {
@@ -4244,7 +4289,10 @@
                     "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ZiMingJian/BulletData_Hun_ZiMingJian_YuCha_03"
                   }
                 ]
-              },
+              }
+            ],
+            "entryTime": 1.2,
+            "omittedLaterAttackActions": [
               {
                 "index": 12,
                 "exportByteOffset": 518,
@@ -4267,10 +4315,10 @@
                 ]
               }
             ],
-            "entryTime": 1.2
+            "normalCompletionTime": 2.1
           }
         ],
-        "cleanup": "Original ability and timeline end retain montage, projectile, tags, chain, warp and state cleanup."
+        "cleanup": "After the selected attack and recovery, original Move Cancel Ability stops BlockMovement and normally ends this instance; native OnEnd cleans montage, timeline, phase, rotation, warp and tags. Already emitted projectiles retain their normal lifetime."
       }
     },
     {
@@ -4752,7 +4800,11 @@
           "timeline": "HasSawHit",
           "entry_time": 2.05,
           "attack_start": 2.1313343048095703,
-          "attack_end": 3.3370130956172943
+          "attack_end": 2.9889626502990723
+        },
+        "completionWhen": {
+          "timeline": "HasSawHit",
+          "minimum_time": 3.1
         }
       },
       "evidence": {
@@ -4811,7 +4863,10 @@
                     "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/LongBlade/Jigsaw/B_Hun_JigSaw_C_07"
                   }
                 ]
-              },
+              }
+            ],
+            "entryTime": 2.05,
+            "omittedLaterAttackActions": [
               {
                 "index": 39,
                 "exportByteOffset": 1519,
@@ -4834,10 +4889,10 @@
                 ]
               }
             ],
-            "entryTime": 2.05
+            "normalCompletionTime": 3.1
           }
         ],
-        "cleanup": "Original ability and timeline end retain montage, projectile, tags, warp and state cleanup."
+        "cleanup": "After the selected attack and recovery, original Move Cancel Ability stops BlockMovement and normally ends this instance; native OnEnd cleans montage, timeline, phase, rotation, warp and tags. Already emitted projectiles retain their normal lifetime."
       }
     },
     {
@@ -4971,6 +5026,1162 @@
           }
         ],
         "cleanup": "Original ability and timeline end retain montage, projectile, tags, warp and state cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.AAAAABB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_C1.GA_Hun_HeiMoShang_C1_C",
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.HeiMoShang",
+          "CharacterState.AbilityState.HeiMoShang.Buff"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "weaponLabels": {
+          "zh-Hans": "黑魔伤",
+          "en": "INFERNAL ROUGE",
+          "ja": "黒魔傷",
+          "ko": "흑마상",
+          "ru": "Багрянец Мо",
+          "zh-Hant": "黑魔傷",
+          "fr": "ROUGE INFERNAL",
+          "de": "HÖLLISCHES BLUTROT",
+          "es-ES": "ROJO INFERNAL",
+          "pt-BR": "SANGUÍNEA INFERNAL",
+          "it": "SANGUINARIA MO",
+          "th": "คมมารทมิฬ",
+          "vi": "MA HẮC THƯƠNG",
+          "pt-PT": "SANGUINE DE MÓ",
+          "es-419": "ROJO INFERNAL"
+        },
+        "category": "weapons/Weapon_005/IA_UltimateSkill",
+        "id": "move:WeaponPhase.GA_Hun_HeiMoShang_C1.BladeWave",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          2.1,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "timeline": "Exit",
+          "minimum_time": 0.60001,
+          "before_time": 2.1
+        },
+        "phaseWindow": {
+          "timeline": "Exit",
+          "entry_time": 2.1,
+          "attack_start": 2.162532091140747,
+          "attack_end": 3.049049988389015
+        },
+        "code": "CombatArt · HeiMoShang_C1 · BladeWave",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.followup",
+          "catalog.bladewave"
+        ],
+        "searchAliases": [
+          "GA_Hun_HeiMoShang_C1",
+          "BladeWave",
+          "黑魔伤",
+          "INFERNAL ROUGE",
+          "黒魔傷",
+          "흑마상",
+          "Багрянец Мо",
+          "黑魔傷",
+          "ROUGE INFERNAL",
+          "HÖLLISCHES BLUTROT",
+          "ROJO INFERNAL",
+          "SANGUÍNEA INFERNAL",
+          "SANGUINARIA MO",
+          "คมมารทมิฬ",
+          "MA HẮC THƯƠNG",
+          "SANGUINE DE MÓ",
+          "GAA_DelayDeflectProjectileBullet_C_0",
+          "GAA_DelayDeflectProjectileBullet_C_2",
+          "GAA_DelayDeflectProjectileBullet_C_3",
+          "BD_Hun_HeiMoShang_C_03_New",
+          "BD_Hun_HeiMoShang_C_04_New",
+          "BD_Hun_HeiMoShang_C_05_New"
+        ],
+        "completionWhen": {
+          "timeline": "Exit",
+          "minimum_time": 3.15
+        },
+        "completionEffects": [
+          {
+            "effect": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/GE_Hun_HeiMoShang_Buff.GE_Hun_HeiMoShang_Buff_C",
+            "stacks": -1
+          }
+        ]
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_C1",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/Weapon_Hun_HeiMoShang",
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/Weapon_Hun_HeiMoShang_Prologue"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Exit"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.60001,
+        "timelineEvidence": [
+          {
+            "timeline": "Exit",
+            "retainedAttackActions": [
+              {
+                "index": 15,
+                "exportByteOffset": 623,
+                "startTime": 2.162532091140747,
+                "duration": 0.26977699995040894,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 8,
+                "action": "GAA_DelayDeflectProjectileBullet_C_0",
+                "guid": "5273e969c5b521489e02c439a4c6a747",
+                "trackIndex": 7,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/HeiMoShang/BD_Hun_HeiMoShang_C_03_New"
+                  }
+                ]
+              },
+              {
+                "index": 21,
+                "exportByteOffset": 857,
+                "startTime": 2.5186610221862793,
+                "duration": 0.24816599488258362,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 10,
+                "action": "GAA_DelayDeflectProjectileBullet_C_2",
+                "guid": "23566618f3065c4ebb98c9607013eac0",
+                "trackIndex": 7,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/HeiMoShang/BD_Hun_HeiMoShang_C_04_New"
+                  }
+                ]
+              },
+              {
+                "index": 24,
+                "exportByteOffset": 974,
+                "startTime": 2.8347489833831787,
+                "duration": 0.2143010050058365,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 11,
+                "action": "GAA_DelayDeflectProjectileBullet_C_3",
+                "guid": "2e412dbe2233e248ac44f0d5f081bd15",
+                "trackIndex": 7,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/HeiMoShang/BD_Hun_HeiMoShang_C_05_New"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 2.1,
+            "omittedLaterAttackActions": [
+              {
+                "index": 43,
+                "exportByteOffset": 1703,
+                "startTime": 4.437198162078857,
+                "duration": 0.07614707946777344,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 75,
+                "action": "LGAAction_DurationBulletWithDeflect_0",
+                "guid": "d3d373abf5aa2b458ae51d2f2fc75977",
+                "trackIndex": 7,
+                "sections": [],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 13,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/HeiMoShang/BD_Hun_HeiMoShang_C_01_New"
+                  }
+                ]
+              }
+            ],
+            "normalCompletionTime": 3.15
+          }
+        ],
+        "priorAttackEnd": 1.4577739834785461,
+        "initializationActions": [
+          {
+            "index": 5,
+            "exportByteOffset": 237,
+            "startTime": 0.6000000238418579,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 51,
+            "action": "GAAction_ChangeArmed_C_2",
+            "guid": "2d1da3e80a489342ae2c39a420142347",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "cleanup": "After the selected attack and recovery, original Move Cancel Ability stops BlockMovement and normally ends this instance; native OnEnd cleans montage, timeline, phase, rotation, warp and tags. Already emitted projectiles retain their normal lifetime.",
+        "retainedEndConsumption": [
+          {
+            "index": 45,
+            "exportByteOffset": 1781,
+            "startTime": 4.464783668518066,
+            "duration": 0,
+            "triggerTimeOffset": 0,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 47,
+            "action": "GAA_RemoveGameplayEffect_C_0",
+            "guid": "58cd866e625af24cb9592182295367de",
+            "trackIndex": 8,
+            "sections": [],
+            "class": "/PBZCombatAsset/Prototypes/Actions/GAA_RemoveGameplayEffect",
+            "directAttackAction": false,
+            "resourceReferences": [
+              {
+                "offset": 4,
+                "path": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/GE_Hun_HeiMoShang_Buff"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "recipe": {
+        "sourceId": "ability:Ability.Action.Hun.Heavy.Horizontal.BladeWave",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_C.GA_Hun_Horizontal_C_C",
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.Horizontal"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "weaponLabels": {
+          "zh-Hans": "荡寇凶刃",
+          "en": "JUGGERNAUT",
+          "ja": "蕩寇凶刃",
+          "ko": "탕구의 흉도",
+          "ru": "Гроза Разбойников",
+          "zh-Hant": "蕩寇凶刃",
+          "fr": "SABRE TITAN",
+          "de": "BANDITENTÖTER",
+          "es-ES": "COLOSO",
+          "pt-BR": "FORÇA IRREFREÁVEL",
+          "it": "LAMA STERMINATRICE",
+          "th": "คมพิฆาตโจร",
+          "vi": "ĐÃNG KHẤU HUNG NHẬN",
+          "pt-PT": "MASTODONTE",
+          "es-419": "DEVASTADOR"
+        },
+        "category": "weapons/Weapon_019/IA_UltimateSkill",
+        "id": "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          2.16,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.001,
+          "before_time": 2.16
+        },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 2.16,
+          "attack_start": 2.1914124488830566,
+          "attack_end": 2.5130743980407715
+        },
+        "code": "CombatArt · Horizontal_C · BladeWave",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.followup",
+          "catalog.bladewave"
+        ],
+        "searchAliases": [
+          "GA_Hun_Horizontal_C",
+          "BladeWave",
+          "荡寇凶刃",
+          "JUGGERNAUT",
+          "蕩寇凶刃",
+          "탕구의 흉도",
+          "Гроза Разбойников",
+          "SABRE TITAN",
+          "BANDITENTÖTER",
+          "COLOSO",
+          "FORÇA IRREFREÁVEL",
+          "LAMA STERMINATRICE",
+          "คมพิฆาตโจร",
+          "ĐÃNG KHẤU HUNG NHẬN",
+          "MASTODONTE",
+          "DEVASTADOR",
+          "GAA_DelayDeflectProjectileBullet_C_0",
+          "GAA_DelayDeflectProjectileBullet_C_2",
+          "B_Hun_Horizontal_C_04",
+          "B_Hun_Horizontal_C_05",
+          "交叉剑气",
+          "交叉刀波",
+          "Cross blade wave"
+        ],
+        "completionWhen": {
+          "timeline": "Main",
+          "minimum_time": 2.853
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Horizontal/Weapon_Hun_Horizontal"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 52,
+                "exportByteOffset": 2110,
+                "startTime": 2.1914124488830566,
+                "duration": 0.10049819946289062,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 14,
+                "action": "GAA_DelayDeflectProjectileBullet_C_0",
+                "guid": "c9a38d71c9dd0d4696369db4c22d0272",
+                "trackIndex": 13,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 7,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/Horizontal/Default/B_Hun_Horizontal_C_04"
+                  }
+                ]
+              },
+              {
+                "index": 59,
+                "exportByteOffset": 2375,
+                "startTime": 2.4065022468566895,
+                "duration": 0.10657215118408203,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 15,
+                "action": "GAA_DelayDeflectProjectileBullet_C_2",
+                "guid": "e2bff979253008488d0464d6e931ae6c",
+                "trackIndex": 13,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 7,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/Horizontal/Default/B_Hun_Horizontal_C_05"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 2.16,
+            "omittedLaterAttackActions": [
+              {
+                "index": 88,
+                "exportByteOffset": 3490,
+                "startTime": 4.0520172119140625,
+                "duration": 0.05803489685058594,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 91,
+                "action": "LGAAction_DurationBulletWithDeflect_3",
+                "guid": "8095a9c14cb8ae468386e8dee66d9852",
+                "trackIndex": 14,
+                "sections": [
+                  {
+                    "0": 0.02901744842529297,
+                    "1": "0100dcff"
+                  },
+                  {
+                    "0": 0.02901744842529297,
+                    "1": "3a3aceff"
+                  }
+                ],
+                "class": "/Script/PBZCombatAsset.LGAAction_DurationBulletWithDeflect",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/Horizontal/Default/B_Hun_Horizontal_C_06"
+                  }
+                ]
+              }
+            ],
+            "normalCompletionTime": 2.853
+          }
+        ],
+        "priorAttackEnd": 2.1505197286605835,
+        "initializationActions": [
+          {
+            "index": 3,
+            "exportByteOffset": 159,
+            "startTime": 0,
+            "duration": 0,
+            "triggerTimeOffset": 9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 75,
+            "action": "GAAction_ChangeArmed_C_0",
+            "guid": "1589a52bd185264da051d7702adf313e",
+            "trackIndex": 5,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "cleanup": "After the selected attack and recovery, original Move Cancel Ability stops BlockMovement and normally ends this instance; native OnEnd cleans montage, timeline, phase, rotation, warp and tags. Already emitted projectiles retain their normal lifetime."
+      }
+    },
+    {
+      "recipe": {
+        "sourceId": "ability:Ability.Action.Hun.Special.Jade.DB",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/New/GA_Hun_Jade_C_Range.GA_Hun_Jade_C_Range_C",
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.Jade"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "weaponLabels": {
+          "zh-Hans": "玉双环",
+          "en": "SEAMLESS DEATH",
+          "ja": "玉双環",
+          "ko": "옥쌍환",
+          "ru": "Безупречная Смерть",
+          "zh-Hant": "玉雙環",
+          "fr": "DOUCE MORT",
+          "de": "NAHTLOSER TOD",
+          "es-ES": "MUERTE FLUIDA",
+          "pt-BR": "MORTE CIRCULAR",
+          "it": "MORTE FLUIDA",
+          "th": "จักรหยกคู่",
+          "vi": "NGỌC SONG HOÀN",
+          "pt-PT": "MORTE SUAVE",
+          "es-419": "MUERTE PERFECTA"
+        },
+        "category": "weapons/Weapon_029/IA_UltimateSkill",
+        "id": "move:WeaponPhase.GA_Hun_Jade_C_Range.Stage2",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          1.59,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.001,
+          "before_time": 1.59
+        },
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 1.59,
+          "attack_start": 1.620739221572876,
+          "attack_end": 3.0335292667150497
+        },
+        "code": "CombatArt · Jade_C_Range · Stage2",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.followup",
+          "2"
+        ],
+        "searchAliases": [
+          "GA_Hun_Jade_C_Range",
+          "Stage2",
+          "玉双环",
+          "SEAMLESS DEATH",
+          "玉双環",
+          "옥쌍환",
+          "Безупречная Смерть",
+          "玉雙環",
+          "DOUCE MORT",
+          "NAHTLOSER TOD",
+          "MUERTE FLUIDA",
+          "MORTE CIRCULAR",
+          "MORTE FLUIDA",
+          "จักรหยกคู่",
+          "NGỌC SONG HOÀN",
+          "MORTE SUAVE",
+          "MUERTE PERFECTA",
+          "GAA_DelayDeflectProjectileBullet_C_3",
+          "GAA_DelayDeflectProjectileBullet_C_2",
+          "GAA_DelayDeflectProjectileBullet_C_11",
+          "GAA_DelayDeflectProjectileBullet_C_8",
+          "GAA_DelayDeflectProjectileBullet_C_4",
+          "GAA_DelayDeflectProjectileBullet_C_5",
+          "GAA_DelayDeflectProjectileBullet_C_12",
+          "GAA_DelayDeflectProjectileBullet_C_9",
+          "GAA_DelayDeflectProjectileBullet_C_7",
+          "GAA_DelayDeflectProjectileBullet_C_13",
+          "B_Hun_Jade_C_Range",
+          "B_Hun_Jade_C_Range_3_E",
+          "B_Hun_Jade_C_Range_4_E",
+          "B_Hun_Jade_C_Range_7_E",
+          "B_Hun_Jade_C_Range_5_E",
+          "B_Hun_Jade_C_Range_8_E"
+        ],
+        "completionWhen": {
+          "timeline": "Main",
+          "minimum_time": 3.1
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/New/GA_Hun_Jade_C_Range",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/JadeDualChakram/Weapon_Hun_JadeDual",
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/JadeDualChakram/Weapon_Hun_JadeDual_Evaluation"
+        ],
+        "normalActivation": "Existing equipped exact-class normal activation preserves native GAS, branch selection, combat-art cost and initialization.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "retainedAttackActions": [
+              {
+                "index": 32,
+                "exportByteOffset": 1286,
+                "startTime": 1.620739221572876,
+                "duration": 0.19760549068450928,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 12,
+                "action": "GAA_DelayDeflectProjectileBullet_C_3",
+                "guid": "f873631309f77d49abb25039bf45fef9",
+                "trackIndex": 22,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_Range"
+                  }
+                ]
+              },
+              {
+                "index": 34,
+                "exportByteOffset": 1368,
+                "startTime": 1.7219237089157104,
+                "duration": 0.23453938961029053,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 11,
+                "action": "GAA_DelayDeflectProjectileBullet_C_2",
+                "guid": "50e6cc3a47d00b4fa91fff9a663613e6",
+                "trackIndex": 21,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_Range"
+                  }
+                ]
+              },
+              {
+                "index": 35,
+                "exportByteOffset": 1411,
+                "startTime": 1.7596904039382935,
+                "duration": 0.19760499894618988,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 8,
+                "action": "GAA_DelayDeflectProjectileBullet_C_11",
+                "guid": "40ab28e66eb28444afb65c80f5e90b67",
+                "trackIndex": 24,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_Range_3_E"
+                  }
+                ]
+              },
+              {
+                "index": 38,
+                "exportByteOffset": 1532,
+                "startTime": 1.860876202583313,
+                "duration": 0.2345390021800995,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 17,
+                "action": "GAA_DelayDeflectProjectileBullet_C_8",
+                "guid": "59e99692591e1f4d9201a832ad5dc130",
+                "trackIndex": 23,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_Range_4_E"
+                  }
+                ]
+              },
+              {
+                "index": 40,
+                "exportByteOffset": 1614,
+                "startTime": 2.07853102684021,
+                "duration": 0.43506741523742676,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 13,
+                "action": "GAA_DelayDeflectProjectileBullet_C_4",
+                "guid": "25a31acf1599fb479bbae928a31f047a",
+                "trackIndex": 22,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_Range"
+                  }
+                ]
+              },
+              {
+                "index": 41,
+                "exportByteOffset": 1657,
+                "startTime": 2.171621799468994,
+                "duration": 0.09228837490081787,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 14,
+                "action": "GAA_DelayDeflectProjectileBullet_C_5",
+                "guid": "52679155e83a4b499dd04148e6a4081e",
+                "trackIndex": 21,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_Range"
+                  }
+                ]
+              },
+              {
+                "index": 46,
+                "exportByteOffset": 1856,
+                "startTime": 2.2174832820892334,
+                "duration": 0.43506699800491333,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 9,
+                "action": "GAA_DelayDeflectProjectileBullet_C_12",
+                "guid": "60dea7b148db9348a0d7539c650c7f86",
+                "trackIndex": 24,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_Range_7_E"
+                  }
+                ]
+              },
+              {
+                "index": 48,
+                "exportByteOffset": 1938,
+                "startTime": 2.310575008392334,
+                "duration": 0.09228800237178802,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 18,
+                "action": "GAA_DelayDeflectProjectileBullet_C_9",
+                "guid": "cd00f65337aead4e818163e231a75cab",
+                "trackIndex": 23,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_Range_5_E"
+                  }
+                ]
+              },
+              {
+                "index": 56,
+                "exportByteOffset": 2262,
+                "startTime": 2.747373580932617,
+                "duration": 0.1472015380859375,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 16,
+                "action": "GAA_DelayDeflectProjectileBullet_C_7",
+                "guid": "feabef231a66e04a8c82299e66cac270",
+                "trackIndex": 22,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 9,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_Range"
+                  }
+                ]
+              },
+              {
+                "index": 59,
+                "exportByteOffset": 2379,
+                "startTime": 2.8863272666931152,
+                "duration": 0.1472020000219345,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 10,
+                "action": "GAA_DelayDeflectProjectileBullet_C_13",
+                "guid": "099814695e136b48b382ec9eaa17793c",
+                "trackIndex": 24,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_Range_8_E"
+                  }
+                ]
+              }
+            ],
+            "entryTime": 1.59,
+            "omittedLaterAttackActions": [
+              {
+                "index": 73,
+                "exportByteOffset": 2937,
+                "startTime": 3.448505401611328,
+                "duration": 0.20506906509399414,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 9.999999747378752e-05,
+                "actionPointer": 85,
+                "action": "GAAction_DurationBullet_Simple_C_10",
+                "guid": "10476a2956fb4841b64e352336f6708a",
+                "trackIndex": 6,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 3,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C_09"
+                  }
+                ]
+              },
+              {
+                "index": 82,
+                "exportByteOffset": 3300,
+                "startTime": 4.072051525115967,
+                "duration": 0.15453100204467773,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 86,
+                "action": "GAAction_DurationBullet_Simple_C_18",
+                "guid": "bbadcad8b2d6cc44bd5f9e8b226435f8",
+                "trackIndex": 6,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 3,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/Jade/B_Hun_Jade_C"
+                  }
+                ]
+              }
+            ],
+            "normalCompletionTime": 3.1
+          }
+        ],
+        "priorAttackEnd": 1.5682039260864258,
+        "initializationActions": [
+          {
+            "index": 2,
+            "exportByteOffset": 132,
+            "startTime": 0,
+            "duration": 0,
+            "triggerTimeOffset": -9.999999747378752e-05,
+            "endTriggerTimeOffset": 0,
+            "actionPointer": 84,
+            "action": "GAAction_ChangeArmed_C_0",
+            "guid": "8880ae2e8151cc46958ff078018dc626",
+            "trackIndex": 3,
+            "sections": [],
+            "class": "/SGameCombatSystem/Weapon/Action/GAAction_ChangeArmed",
+            "directAttackAction": false,
+            "resourceReferences": []
+          }
+        ],
+        "cleanup": "After the selected attack and recovery, original Move Cancel Ability stops BlockMovement and normally ends this instance; native OnEnd cleans montage, timeline, phase, rotation, warp and tags. Already emitted projectiles retain their normal lifetime."
+      }
+    },
+    {
+      "recipe": {
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "tag": "Ability.Action.Hun.CombatArt.Atk01",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C.GA_Hun_Double_JueYing_C_C",
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.DoubleBlade.JueYing"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "weaponLabels": {
+          "zh-Hans": "绝影",
+          "en": "SHADOWLESS EDGE",
+          "ja": "絶影",
+          "ko": "절영",
+          "ru": "Неуловимые Клинки",
+          "zh-Hant": "絕影",
+          "fr": "OMBRES INSAISISSABLES",
+          "de": "SCHATTENLOSE KLINGE",
+          "es-ES": "FILOS SIN SOMBRA",
+          "pt-BR": "LÂMINA SEM SOMBRA",
+          "it": "LAMA SENZ'OMBRA",
+          "th": "ดาบเงาสูญ",
+          "vi": "TUYỆT ẢNH",
+          "pt-PT": "GUME SEM SOMBRA",
+          "es-419": "FILO SIN SOMBRA"
+        },
+        "category": "weapons/Weapon_024/IA_UltimateSkill",
+        "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C.Final",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          1.82,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 1.82,
+          "timelines": [
+            "Main",
+            "NearTimeline"
+          ]
+        },
+        "code": "CombatArt · Double_JueYing_C · Final",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.combo",
+          "1",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_Double_JueYing_C",
+          "Final",
+          "BD_GA_Hun_JueYing_C_End",
+          "绝影",
+          "SHADOWLESS EDGE",
+          "絶影",
+          "절영",
+          "Неуловимые Клинки",
+          "絕影",
+          "OMBRES INSAISISSABLES",
+          "SCHATTENLOSE KLINGE",
+          "FILOS SIN SOMBRA",
+          "LÂMINA SEM SOMBRA",
+          "LAMA SENZ'OMBRA",
+          "ดาบเงาสูญ",
+          "TUYỆT ẢNH",
+          "GUME SEM SOMBRA",
+          "FILO SIN SOMBRA"
+        ],
+        "phaseWindows": [
+          {
+            "timeline": "Main",
+            "entry_time": 1.82,
+            "attack_start": 2.0519137382507324,
+            "attack_end": 2.1921606063842773
+          },
+          {
+            "timeline": "NearTimeline",
+            "entry_time": 1.82,
+            "attack_start": 2.0519139766693115,
+            "attack_end": 2.192160978913307
+          }
+        ]
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Double/Weapon_Hun_JueYing"
+        ],
+        "sourceRecipeId": "move:WeaponPhase.GA_Hun_Double_JueYing_C.Crow",
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "normalActivation": "Normal exact-class activation pays the original combat-art fee and performs ChangeArmed before entering the final melee motion.",
+        "nativeTimelineSelection": [
+          "Main",
+          "NearTimeline"
+        ],
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "entryTime": 1.82,
+            "retainedAttackActions": [
+              {
+                "index": 43,
+                "exportByteOffset": 1779,
+                "startTime": 2.0519137382507324,
+                "duration": 0.14024686813354492,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 50,
+                "action": "GAAction_DurationBullet_Simple_C_18",
+                "guid": "9de7aee1881cf241b72dff01c1494b78",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/JueYing/BD_GA_Hun_JueYing_C_End"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "timeline": "NearTimeline",
+            "entryTime": 1.82,
+            "retainedAttackActions": [
+              {
+                "index": 45,
+                "exportByteOffset": 1813,
+                "startTime": 2.0519139766693115,
+                "duration": 0.14024700224399567,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 54,
+                "action": "GAAction_DurationBullet_Simple_C_18",
+                "guid": "18cb96e45e6bb94f833dbe137446c3f1",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/JueYing/BD_GA_Hun_JueYing_C_End"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "omittedCrowEvents": "SpawnCrow and DeattachCrow belong to the omitted projectile stage. The independent End uses only its own original melee bullet; it does not create or launch a crow.",
+        "cleanup": "Original ability and timeline complete the final melee montage and normal OnEnd cleanup."
+      }
+    },
+    {
+      "recipe": {
+        "sourceId": "ability:Ability.Action.Hun.CombatArt.JueYing.Air",
+        "tag": "Ability.Action.Hun.CombatArt.JueYing.Air",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C_Air.GA_Hun_Double_JueYing_C_Air_C",
+        "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+        "requiredTags": [
+          "Weapon.Type.DoubleBlade.JueYing"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "weaponLabels": {
+          "zh-Hans": "绝影",
+          "en": "SHADOWLESS EDGE",
+          "ja": "絶影",
+          "ko": "절영",
+          "ru": "Неуловимые Клинки",
+          "zh-Hant": "絕影",
+          "fr": "OMBRES INSAISISSABLES",
+          "de": "SCHATTENLOSE KLINGE",
+          "es-ES": "FILOS SIN SOMBRA",
+          "pt-BR": "LÂMINA SEM SOMBRA",
+          "it": "LAMA SENZ'OMBRA",
+          "th": "ดาบเงาสูญ",
+          "vi": "TUYỆT ẢNH",
+          "pt-PT": "GUME SEM SOMBRA",
+          "es-419": "FILO SIN SOMBRA"
+        },
+        "category": "weapons/Weapon_024/IA_UltimateSkill",
+        "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Final",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          1.82,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "minimum_time": 0.001,
+          "before_time": 1.82,
+          "timeline": "Main"
+        },
+        "code": "CombatArt · Double_JueYing_C_Air · Final",
+        "labelParts": [
+          "moves.combatart",
+          "catalog.air",
+          "moves.finisher"
+        ],
+        "searchAliases": [
+          "GA_Hun_Double_JueYing_C_Air",
+          "Final",
+          "BD_GA_Hun_JueYing_C_End",
+          "绝影",
+          "SHADOWLESS EDGE",
+          "絶影",
+          "절영",
+          "Неуловимые Клинки",
+          "絕影",
+          "OMBRES INSAISISSABLES",
+          "SCHATTENLOSE KLINGE",
+          "FILOS SIN SOMBRA",
+          "LÂMINA SEM SOMBRA",
+          "LAMA SENZ'OMBRA",
+          "ดาบเงาสูญ",
+          "TUYỆT ẢNH",
+          "GUME SEM SOMBRA",
+          "FILO SIN SOMBRA"
+        ],
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 1.82,
+          "attack_start": 2.0519139766693115,
+          "attack_end": 2.192160978913307
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C_Air",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Double/Weapon_Hun_JueYing"
+        ],
+        "sourceRecipeId": "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Crow",
+        "activeInstanceOnly": false,
+        "minimumSetupTime": 0.001,
+        "normalActivation": "Normal exact-class activation pays the original combat-art fee and performs ChangeArmed before entering the final melee motion.",
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "entryTime": 1.82,
+            "retainedAttackActions": [
+              {
+                "index": 40,
+                "exportByteOffset": 1628,
+                "startTime": 2.0519139766693115,
+                "duration": 0.14024700224399567,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 29,
+                "action": "GAAction_DurationBullet_Simple_C_4",
+                "guid": "6bb64918212c9f4fa1c7b8800f2d73b0",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/SGameCombatSystem/Bullet/Examples/Actions/GAAction_DurationBullet_Simple",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 2,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DoubleBlade/JueYing/BD_GA_Hun_JueYing_C_End"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "omittedCrowEvents": "SpawnCrow and DeattachCrow belong to the omitted projectile stage. The independent End uses only its own original melee bullet; it does not create or launch a crow.",
+        "cleanup": "Original ability and timeline complete the final melee montage and normal OnEnd cleanup."
       }
     }
   ]

@@ -94,7 +94,7 @@ return {
 
 `hooks` 中每条规则为 `{path="完整UFunction路径", value=false, when=...}`，或以 `evaluate(...)` 计算返回值。原函数仍会执行，原有副作用不会撤销。
 
-动作目录见 `actions.json`：98 个 InputAction、114 个 InputActionBinding、236 个输入可达能力 tag，含原始条件和来源。它是输入资源目录，不是全部 GameplayAbility 或全部游戏功能目录。更多识别器配置见 `examples/triggers.lua`。
+动作目录见 `actions.json`：98 个 InputAction、114 个 InputActionBinding、236 个原始输入 TriggerTag，含原始条件和来源。直接能力目录有 227 项；九条没有能力实现的路线保留在 `unsupportedInputRoutes`，见[通用入口核查](../../docs/generic-ability-activation-audit.md)。它是输入资源目录，不是全部 GameplayAbility 或全部游戏功能目录。更多识别器配置见 `examples/triggers.lua`。
 
 应用的功能选择同时显示名称与代码。`assets/key-enhancement/action-localization.json` 为 306 个目录目标保存 15 语言原生功能名或武器／动作类别及资源引用；28 项没有原生显示名对应的内部输入使用应用语义名称。名称、技术路径及别名均可搜索，包括“瞬身”与 `SpecialDash`。`build/extract-action-localization.py` 从游戏 PAK 只读刷新译文。
 

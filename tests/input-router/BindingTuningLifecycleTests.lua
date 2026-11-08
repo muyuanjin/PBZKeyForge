@@ -1,6 +1,7 @@
 package.path = "prototype/input-router/ue4ss/Scripts/?.lua;" .. package.path
 local checks,hooks,current = 0,{},nil
 local nativeAbilities = {}
+local NativeInput=require("native-input")
 local function check(value,message) assert(value,message); checks=checks+1 end
 local function parameter(value)
     return {get=function() return value end,set=function(_,replacement) value=replacement end}
@@ -337,6 +338,7 @@ do
     }},backend)
     local protected,injections=false,0
     function backend:invoke(receiver,path,argument,vector)
+        if path:find(":GetInputVectorKeyState",1,true) then return {X=protected and 1 or 0,Y=0,Z=0} end
         if path:find(":InjectInputVectorForAction",1,true) then
             if vector.X==0 then return end
             injections=injections+1;current=nil
@@ -344,8 +346,8 @@ do
                 parameter({TagName=FName("Ability.Start")}),parameter(argument))
             local state=cost.instances[source:GetAddress()] or {damage=1,startup=1,recovery=1}
             check(state and state.damage==(protected and 1 or 3) and state.startup==(protected and 1 or 2)
-                and state.recovery==(protected and 1 or 4),"a retained native pipeline keeps the complete InputAction policy at defaults")
-            check(consume(self,source)==(protected and -2 or 0),"dispatch cannot overwrite the retained native pipeline's normal resource policy")
+                and state.recovery==(protected and 1 or 4),"only a participating native source selects the complete ordinary InputAction parameter group")
+            check(consume(self,source)==(protected and -2 or 0),"input provenance preserves both ordinary costs and enhanced resource bypass")
             source.bIsActive=true;hooks[forceTag].post(nil,parameter(true));return
         end
         check(path:find(":TryActivateExternalActionAbilityInterruptLowerByTag",1,true),"explicit requests keep their native activation entry")
@@ -355,6 +357,8 @@ do
     end
     local cases={
         {{action="/Input/Tuned",key="MouseScrollUp",owner="uncovered"}},
+        {{action="/Input/Tuned",key="MouseScrollUp",owner="uncovered"}},
+        {{action="/Input/Tuned",key="PBZ_Touchpad_SwipeUp",owner="game"}},
         {{action="/Input/Tuned",key="PBZ_Touchpad_SwipeUp",owner="game"}},
         {{action="/Input/Tuned",key="G",owner="scheduler"}},
         {{action="/Input/Tuned",key="None",owner="uncovered"}},
@@ -363,8 +367,14 @@ do
     }
     for index,coverage in ipairs(cases) do
         source.bIsActive=false;cost:update();current=nil
-        backend.native_input={coverage=coverage,apply_masks=function() end}
-        protected=index<=2
+        backend.native_input=NativeInput.new(backend)
+        backend.native_input.coverage=coverage
+        backend.native_input.apply_masks=function() end
+        for _,entry in ipairs(coverage) do
+            entry.object=entry.action=="/Input/Tuned" and action or object(999)
+            entry.triggers,entry.active_key={},entry.key
+        end
+        protected=index==2 or index==4
         router:step(index,{G=1})
         if protected then
             for _,kind in ipairs({"ability","move"}) do
@@ -374,7 +384,7 @@ do
             end
         end
     end
-    check(injections==#cases,"native row removal and scheduler takeover restore the action binding's tuning")
+    check(injections==#cases,"idle, active and removed native mappings retain the requested InputAction behavior")
     cost:reset()
 end
 

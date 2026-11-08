@@ -11,8 +11,15 @@
       "shachi",
       "spirit"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Air/GA_Hun_FengLeiJian_Air_A.GA_Hun_FengLeiJian_Air_A_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Air/GA_Hun_FengLeiJian_Air_A_Draw.GA_Hun_FengLeiJian_Air_A_Draw_C": [
+      "weapon_charge"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Air/GA_Hun_FengLeiJian_Air_B.GA_Hun_FengLeiJian_Air_B_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Air/GA_Hun_Double_Air_B.GA_Hun_Double_Air_B_C": [
       "shachi"
@@ -24,13 +31,21 @@
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Air/GA_Hun_FengLeiJian_Air_B_Draw.GA_Hun_FengLeiJian_Air_B_Draw_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Air/GA_Hun_Double_Air_B_Draw.GA_Hun_Double_Air_B_Draw_C": [
       "shachi"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Dash/GA_Hun_FengLeiJian_A_Dash.GA_Hun_FengLeiJian_A_Dash_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Dash/GA_Hun_FengLeiJian_A_Snap.GA_Hun_FengLeiJian_A_Snap_C": [
+      "weapon_charge"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Dash/GA_Hun_FengLeiJian_B_Dash.GA_Hun_FengLeiJian_B_Dash_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_B_Dash_Base.BP_B_Dash_Base_C": [
       "shachi"
@@ -39,73 +54,100 @@
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Dash/GA_Hun_FengLeiJian_B_Snap.GA_Hun_FengLeiJian_B_Snap_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Snap_Base.BP_HeavyAttack_Snap_Base_C": [
       "shachi"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_A.GA_Hun_FengLeiJian_A_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_AA.GA_Hun_FengLeiJian_AA_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_AAA.GA_Hun_FengLeiJian_AAA_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_AAAA.GA_Hun_FengLeiJian_AAAA_C": [
+      "weapon_charge"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_AAAB.GA_Hun_FengLeiJian_AAAB_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_AAAB_Base.BP_AAAB_Base_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_AAABB.GA_Hun_FengLeiJian_AAABB_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_AAABB_Base.BP_AAABB_Base_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_AAB.GA_Hun_FengLeiJian_AAB_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_AAB_Base.BP_AAB_Base_C": [
       "shachi"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_AABA.GA_Hun_FengLeiJian_AABA_C": [
+      "weapon_charge"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_AABAB.GA_Hun_FengLeiJian_AABAB_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_AAAAB_Base.BP_AAAAB_Base_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_AABB.GA_Hun_FengLeiJian_AABB_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_AABB_Base.BP_AABB_Base_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_AB.GA_Hun_FengLeiJian_AB_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_AB_Base.BP_AB_Base_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_B.GA_Hun_FengLeiJian_B_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_B_Base.BP_B_Base_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_BB.GA_Hun_FengLeiJian_BB_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_BB_Base.BP_BB_Base_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_BBB.GA_Hun_FengLeiJian_BBB_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_BBB_Base.BP_BBB_Base_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_BBBB.GA_Hun_FengLeiJian_BBBB_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_BBBB_Base.BP_BBBB_Base_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_C.GA_Hun_FengLeiJian_C_C": [
-      "ultimate"
+      "ultimate",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_C_Base.BP_C_Base_C": [
       "ultimate"
@@ -113,20 +155,54 @@
     "/PBZCombatAsset/Prototypes/Abilities/Base/BP_CombatArt_Base.BP_CombatArt_Base_C": [
       "ultimate"
     ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Default/GA_Hun_FengLeiJian_SWT_Power.GA_Hun_FengLeiJian_SWT_Power_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Draw/GA_Hun_FengLeiJian_A_DashDraw.GA_Hun_FengLeiJian_A_DashDraw_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Draw/GA_Hun_FengLeiJian_A_Draw.GA_Hun_FengLeiJian_A_Draw_C": [
+      "weapon_charge"
+    ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Draw/GA_Hun_FengLeiJian_B_DashDraw.GA_Hun_FengLeiJian_B_DashDraw_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_B_DashDraw_Base.BP_B_DashDraw_Base_C": [
       "shachi"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Draw/GA_Hun_FengLeiJian_B_Draw.GA_Hun_FengLeiJian_B_Draw_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/ExE/GA_Hun_BEd_FengLeiJian_M_01.GA_Hun_BEd_FengLeiJian_M_01_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/ExE/GA_Hun_BEd_FengLeiJian_M_02.GA_Hun_BEd_FengLeiJian_M_02_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/ExE/GA_Hun_BEx_FengLeiJian_M_01.GA_Hun_BEx_FengLeiJian_M_01_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/ExE/GA_Hun_BEx_FengLeiJian_M_02.GA_Hun_BEx_FengLeiJian_M_02_C": [
+      "weapon_charge"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/FengLeiState/GA_Hun_FengLeiJian_FengLeiState_SpecailAttack_02.GA_Hun_FengLeiJian_FengLeiState_SpecailAttack_02_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/GA_BaiShanFengLeiJian_Passive.GA_BaiShanFengLeiJian_Passive_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/GA_Hun_BaiShanFengLeiJian_SimpleExecution.GA_Hun_BaiShanFengLeiJian_SimpleExecution_C": [
+      "weapon_charge"
+    ],
+    "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/GA_Hun_BaiShanFengLeiJian_Stance.GA_Hun_BaiShanFengLeiJian_Stance_C": [
+      "weapon_charge"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Hold/GA_Hun_FengLeiJian_B_Hold.GA_Hun_FengLeiJian_B_Hold_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiYing/Default/GA_Hun_BaiYing_B.GA_Hun_BaiYing_B_C": [
       "shachi"
@@ -288,7 +364,8 @@
       "shachi"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/BP_SwitchAttack_Default.BP_SwitchAttack_Default_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChaosBlade/Ice/GA_Hun_Chaos_AAAB_Ice.GA_Hun_Chaos_AAAB_Ice_C": [
       "shachi"
@@ -2132,10 +2209,12 @@
       "shachi"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/BP_SwitchAttack_DefaultAir.BP_SwitchAttack_DefaultAir_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/Prototypes/Abilities/BP_SwitchAttack_DefaultDash.BP_SwitchAttack_DefaultDash_C": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Temp_MaleDollArm/GA_Hun_TempMaleDollArm_B.GA_Hun_TempMaleDollArm_B_C": [
       "shachi"
@@ -2163,66 +2242,110 @@
     ]
   },
   "tags": {
+    "Ability.Action.Stance": [
+      "weapon_charge"
+    ],
     "Ability.Action.Hun.ShachiAbility.Default": [
       "shachi",
       "spirit"
     ],
+    "Ability.Action.Hun.Light.Air.A.Normal": [
+      "weapon_charge"
+    ],
+    "Ability.Action.Hun.Light.Air.A.Draw": [
+      "weapon_charge"
+    ],
     "Ability.Action.Hun.Heavy.AirAtk01": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy": [
       "shachi"
     ],
     "Ability.Action.Hun.Heavy.DrawAirAtk01": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
+    ],
+    "Ability.Action.Hun.Light.ADash.Normal": [
+      "weapon_charge"
+    ],
+    "Ability.Action.Hun.Light.Snap": [
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.DashAtk01": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.Snap": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
+    ],
+    "Ability.Action.Hun.Light.A.Normal": [
+      "weapon_charge"
+    ],
+    "Ability.Action.Hun.Light.AA": [
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Light.AAA": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
+    ],
+    "Ability.Action.Hun.Light.AAAA": [
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.ComboAtk_N3H1": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.ComboAtk_N3H2": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.ComboAtk_N2H1": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
+    ],
+    "Ability.Action.Hun.FengLeiJian.AABA": [
+      "weapon_charge"
     ],
     "Ability.Action.Hun.FengLeiJian.AABAB": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.ComboAtk_N4H1": [
       "shachi"
     ],
     "Ability.Action.Hun.Heavy.ComboAtk_N2H2": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.ComboAtk_N1H1": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.Atk01": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.Atk02": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.ComboAtk_N1H2": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.Atk03": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.Atk04": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.CombatArt.Atk01": [
-      "ultimate"
+      "ultimate",
+      "weapon_charge"
     ],
     "Ability.Action.ShaqiReinforced": [
       "ultimate"
@@ -2239,19 +2362,33 @@
       "weapon_charge"
     ],
     "Ability.Action.Hun.Light.ADash.Draw": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
+    ],
+    "Ability.Action.Hun.Light.A.Draw": [
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.DrawDashAtk01": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.DrawAtk01": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
+    ],
+    "Ability.Action.Execution.Combat": [
+      "weapon_charge"
     ],
     "Ability.Action.Hun.FengLeiJian.FengLeiState.SpecialAttack01": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
+    ],
+    "Ability.Action.Hun.SimpleExecution": [
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.Atk01_Hold": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Light.AAAAA": [
       "shachi"
@@ -2369,7 +2506,8 @@
       "ultimate"
     ],
     "Ability.Action.Hun.Weapon.Switch.Air": [
-      "shachi"
+      "shachi",
+      "weapon_charge"
     ],
     "Ability.Action.Hun.Heavy.ComboAtk_N4H2": [
       "shachi"
@@ -2987,6 +3125,7 @@
       "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB",
       "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default",
       "Ability.Action.Hun.ShachiAbility.MoJi.AAA",
+      "Ability.Action.Hun.ShachiAbility.PiPa.AA",
       "Ability.Action.Hun.ShachiAbility.PiPa.Skill",
       "Ability.Action.Hun.ShachiAbility.ShachiHook.CA",
       "Ability.Action.Hun.ShachiAbility.ShachiHook.CB",

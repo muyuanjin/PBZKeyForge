@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using PBZKeyForge;
 
@@ -44,8 +45,9 @@ class ActionCatalogTests
     static void Run()
     {
         I18n.Current = "zh-Hans";
-        Check(KeyEnhancementCatalog.Targets.Length == 334 + CompleteMoveCatalog.Targets.Length && KeyEnhancementCatalog.Targets.Count(item => item.Kind == "action") == 98
-            && KeyEnhancementCatalog.Targets.Count(item => item.Kind == "ability") == 236, "The audited underlying action inventory changed.");
+        Check(KeyEnhancementCatalog.Targets.Length == 325 + CompleteMoveCatalog.Targets.Length && KeyEnhancementCatalog.Targets.Count(item => item.Kind == "action") == 98
+            && KeyEnhancementCatalog.Targets.Count(item => item.Kind == "ability") == 227, "The audited underlying action inventory changed.");
+        UnsupportedInputRoutes();
         foreach (bool pad in new[] { false, true })
         {
             var config = new KeyEnhancementConfiguration();
@@ -76,6 +78,30 @@ class ActionCatalogTests
         Console.WriteLine("ActionCatalogTests PASS " + checks);
     }
 
+    static void UnsupportedInputRoutes()
+    {
+        string[] unsupported = {
+            "Ability.Action.Hun.ChiZheCanJian.CToZui", "Ability.Action.Hun.Heavy.BronzeSword.DB",
+            "Ability.Action.Hun.Heavy.SlitheringSword.DB2", "Ability.Action.Hun.Light.GuiTouDao.DA",
+            "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Common_03", "Ability.Action.Hun.ShachiAbility.JinGua.SprintAir",
+            "Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Parry", "Ability.SpecialMove.JumpOut.Left", "Ability.SpecialMove.JumpOut.Right"
+        };
+        foreach (string tag in unsupported)
+        {
+            Check(!KeyEnhancementCatalog.Targets.Any(target => target.Kind == "ability" && target.Tag == tag), "An unsupported trigger remains directly selectable: " + tag);
+            var config = new KeyEnhancementConfiguration { Enabled = true };
+            config.Rules.Add(new KeyEnhancementRule { Keys = new List<string> { "G" },
+                Outputs = new List<KeyEnhancementOutput> { new KeyEnhancementOutput { Kind = "ability", Tag = tag } } });
+            var saved = KeyEnhancementConfiguration.FromJson(config.ToJson());
+            Check(saved.Rules[0].Outputs[0].Tag == tag, "An old binding was silently reassigned: " + tag);
+            bool rejected = false;
+            try { saved.CompileLua(); }
+            catch (InvalidDataException error) { rejected = error.Message.Contains(tag) && error.Message.Contains(I18n.Str("catalog.unavailableAbility", tag)); }
+            Check(rejected, "An unsupported saved binding compiled without a useful diagnosis: " + tag);
+        }
+        Check(KeyEnhancementCatalog.Targets.Any(target => target.Id == "ability:Ability.Native.Crouch"), "The native crouch implementation was removed with unsupported resource tags.");
+    }
+
     static void OrdinaryControls(BindingWorkspace workspace)
     {
         var controls = workspace.Functions.Where(item => !item.RequiresKeyEnhancement).ToArray();
@@ -102,7 +128,7 @@ class ActionCatalogTests
         Check(functions.Where(function => function.GroupPath[0] == "native").Select(function => function.Id).OrderBy(id => id)
             .SequenceEqual(Ordinary.OrderBy(id => id)), "Standard controls must exactly match ordinary mode, without selected enhanced actions");
         string[] roots = { "locomotion", "targeting", "offense", "defense", "weapons", "shadow", "interaction", "scene", "interface", "debug" };
-        int[] counts = { 16, 8, 48, 13, 105, 79, 13, 17, 17, 22 };
+        int[] counts = { 16, 8, 48, 13, 101, 76, 13, 15, 17, 22 };
         for (int i = 0; i < roots.Length; i++)
             Check(functions.Count(function => function.GroupPath[0] == roots[i]) == counts[i] + CompleteMoveCatalog.Targets.Count(move => ActionCatalogLabels.Category(move.Id)[0] == roots[i]), "Incomplete player category: " + roots[i]);
         foreach (var target in KeyEnhancementCatalog.Targets)
@@ -311,8 +337,7 @@ class ActionCatalogTests
         Before(workspace, Action(ship + "IA_ShipForward"), Action(ship + "IA_ShipBackword"), "Boat forward");
         Before(workspace, Action(ship + "IA_ShipBackword"), Action(ship + "IA_ShipRight"), "Boat backward");
         Before(workspace, Action(ship + "IA_ShipRight"), Action(ship + "IA_ShipLook"), "Boat movement");
-        Before(workspace, "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB1", "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB2", "Unknown DB variant 1");
-        Before(workspace, "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB2", "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB3", "Unknown DB variant 2");
+        Before(workspace, "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB1", "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB3", "Native DB variants");
         foreach (string id in new[] { "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB1", "ability:Ability.Action.Hun.Light.SlitheringSword.DA" })
             Check(!workspace.Functions.Single(item => item.Id == id).Label.Contains("冲刺"), "An unknown DA/DB variant was relabeled as a sprint attack.");
         Before(workspace, "ability:Ability.Action.Hun.Heavy.ChaosBlade.ToBing", "ability:Ability.Action.Hun.Heavy.ChaosBlade.ToHunDun", "Unranked weapon form");

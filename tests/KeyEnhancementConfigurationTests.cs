@@ -28,7 +28,7 @@ class KeyEnhancementConfigurationTests
         Check(KeyEnhancementInputPlan.Covers("IA_Execute") && !KeyEnhancementInputPlan.Covers("IA_Jump", "MouseScrollUp")
             && KeyEnhancementInputPlan.Retained("IA_Map"), "Gameplay, unsupported source and native menu domains were confused.");
         Check(KeyEnhancementCatalog.Targets.Count(t => t.Kind == "action") == 98, "Action catalog incomplete.");
-        Check(KeyEnhancementCatalog.Targets.Count(t => t.Kind == "ability") == 236, "Ability catalog incomplete.");
+        Check(KeyEnhancementCatalog.Targets.Count(t => t.Kind == "ability") == 227, "Ability catalog incomplete.");
         Check(KeyEnhancementCatalog.ForMapping("IA_Guard").Length == 2 && KeyEnhancementCatalog.ForMapping("IA_LightAttack").Length == 3,
             "Player-mappable identities must resolve every native action.");
         Check(KeyEnhancementCatalog.ForMapping("IA_Jump").Any(entry => entry.Name == "IA_Interaction_SpecialMove"),

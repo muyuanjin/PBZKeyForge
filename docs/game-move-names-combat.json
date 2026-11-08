@@ -6457,88 +6457,6 @@
             "pt-PT": "Aumenta imenso o dano de [Raio da Morte] após perfurar um inimigo.",
             "es-419": "Aumenta considerablemente el daño de [Rayo mortal] después de perforar a un enemigo."
           }
-        },
-        {
-          "key": "PhantomEdges_FunctionName_109_15",
-          "kind": "upgrade",
-          "labels": {
-            "zh-Hans": "凝视",
-            "en": "Death Gaze",
-            "ja": "凝視",
-            "ko": "응시",
-            "ru": "Взор смерти",
-            "zh-Hant": "凝視",
-            "fr": "Regard mortel",
-            "de": "Todesblick",
-            "es-ES": "Mirada mortal",
-            "pt-BR": "Olhar da Morte",
-            "it": "Sguardo Mortale",
-            "th": "เพ่งพิศ",
-            "vi": "Tử Quang Hội Tụ",
-            "pt-PT": "Olhar da Morte",
-            "es-419": "Mirada mortal"
-          },
-          "upgradeTags": [
-            "CharacterState.WeaponUpgrade.DuYanBow.LaserV2"
-          ],
-          "descriptionLabels": {
-            "zh-Hans": "按住架势状态+影之武装可持续发射【死光】。",
-            "en": "HoldMaintain Guard Stance+Phantom Edgesto continuously fire [Death Ray].",
-            "ja": "構え状態+影の武装を長押しすると【死光】を連続発射できる。",
-            "ko": "방어 자세+팬텀 무장를 길게 누르면 【죽음의 광선】을 계속 발사한다.",
-            "ru": "Удерживайте Удерживайте защитную стойку+Фантомные когти, чтобы непрерывно испускать [Луч смерти].",
-            "zh-Hant": "按住架勢狀態+影之武裝可持續發射【死光】。",
-            "fr": "Maintenez Maintenir la posture de garde+Lames spectralespour tirer en continu un [Rayon de la mort].",
-            "de": "Halte Abwehrhaltung aufrechterhalten+Phantomklingen gedrückt, um fortlaufend [Todesstrahl] abzufeuern.",
-            "es-ES": "Mantén pulsadoMantener la postura de guardia+Filos espectralespara lanzar continuamente [Rayo mortal].",
-            "pt-BR": "SegureManter Postura de Guarda+Armas-fantasmapara disparar [Raio Mortal] continuamente.",
-            "it": "Tieni premuto Mantieni la Posizione di Difesa+Eteree per scagliare [Raggi Mortali] in modo continuato.",
-            "th": "",
-            "vi": "GiữTư Thế Phòng Thủ+Vũ Khí Phantomđể liên tục bắn ra [Tử Quang].",
-            "pt-PT": "MantémPostura de Guarda+Gumes Fantasmapremidospara disparar continuamente o [Raio da Morte].",
-            "es-419": "Mantén presionadoMantener la postura de guardia+Filos espectralespara disparar de forma continua [Rayo mortal]."
-          }
-        },
-        {
-          "key": "PhantomEdges_FunctionName_109_25",
-          "kind": "upgrade",
-          "labels": {
-            "zh-Hans": "千目凝视",
-            "en": "Thousand-Eyed Gaze",
-            "ja": "千目凝視",
-            "ko": "천목 응시",
-            "ru": "Взор тысячи глаз",
-            "zh-Hant": "千目凝視",
-            "fr": "Mille regards",
-            "de": "Blick der Tausend Augen",
-            "es-ES": "Mirada de los mil ojos",
-            "pt-BR": "Encarada de Mil Olhos",
-            "it": "Sguardo dai Mille Occhi",
-            "th": "พันเนตรเพ่งพิศ",
-            "vi": "Thiên Mục Hội Tụ",
-            "pt-PT": "Olhar de Mil Olhos",
-            "es-419": "Mirada de mil ojos"
-          },
-          "upgradeTags": [
-            "CharacterState.WeaponUpgrade.DuYanBow.LaserEyes"
-          ],
-          "descriptionLabels": {
-            "zh-Hans": "按住架势状态+影之武装使用【凝视】时，两侧生成浮空的眼球，并持续发射【死光】。",
-            "en": "While holdingMaintain Guard Stance+Phantom Edgesto use [Death Gaze], floating eyes appear on both sides and continuously fire [Death Ray].",
-            "ja": "構え状態+影の武装を長押しして【凝視】を使用する際、両側に浮遊する眼球が生成され、【死光】を連続発射する。",
-            "ko": "방어 자세+팬텀 무장 버튼을 길게 눌러 [응시]를 사용하면 양옆에 떠다니는 눈알이 생성되어 [죽음의 광선]을 계속 발사한다.",
-            "ru": "Удерживайте Удерживайте защитную стойку+Фантомные когти для применения [Взора смерти]. По обе стороны появляются парящие глаза, непрерывно испускающие [Луч смерти].",
-            "zh-Hant": "按住架勢狀態+影之武裝使用【凝視】時，兩側生成浮空的眼球，並持續發射【死光】。",
-            "fr": "Lorsque vous maintenez Maintenir la posture de garde+Lames spectrales pour utiliser [Regard mortel], des yeux flottants apparaissent de chaque côté et tirent en continu un [Rayon de la mort].",
-            "de": "Während du Abwehrhaltung aufrechterhalten+Phantomklingen gedrückt hältst, um [Todesblick] einzusetzen, erscheinen schwebende Augen auf beiden Seiten und feuern fortlaufend [Todesstrahl] ab.",
-            "es-ES": "Mientras mantienes pulsadoMantener la postura de guardia+Filos espectralespara usar [Mirada mortal], aparecen ojos flotantes a ambos lados que disparan continuamente [Rayo mortal].",
-            "pt-BR": "Ao segurarManter Postura de Guarda+Armas-fantasmapara usar [Olhar da Morte], olhos flutuantes aparecem em ambos os lados e atiram [Raio Mortal] continuamente.",
-            "it": "Tenendo premuto Mantieni la Posizione di Difesa+Eteree per usare [Sguardo Mortale], degli occhi fluttuanti compaiono su entrambi i lati e scagliano [Raggi Mortali] in modo continuato.",
-            "th": "เมื่อกดท่าตั้งรับ+ศาสตราเงาค้างเพื่อใช้[เพ่งพิศ] จะสร้างดวงตาที่ลอยกลางอากาศ ที่สามารถยิง[ลำแสงมรณะ]อย่างต่อเนื่อง",
-            "vi": "Khi giữ Tư Thế Phòng Thủ+Vũ Khí Phantom để sử dụng [Tử Thị], hai bên sẽ sinh ra những nhãn cầu lơ lửng và liên tục phóng ra [Tử Quang].",
-            "pt-PT": "Enquanto manténsPostura de Guarda+Gumes Fantasmapremidos para usar [Olhar da Morte], surgem olhos flutuantes de ambos os lados que disparam continuamente [Raio da Morte].",
-            "es-419": "Mientras mantienes presionado Mantener la postura de guardia+Filos espectralespara usar [Mirada mortal], aparecen ojos flotantes a ambos lados que disparan continuamente [Rayo mortal]."
-          }
         }
       ],
       "evidence": {
@@ -7897,7 +7815,9 @@
         "recipeId": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push",
         "relationship": "Explicit phase-to-native function relationship",
         "nativeEntranceIds": [
-          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push"
+          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Counter",
+          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push",
+          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Rush"
         ]
       },
       "labels": {
@@ -8105,9 +8025,11 @@
           "/PBZCombatAsset/Prototypes/Bullet/Events/PBZ_BulletEvent_ZhuoBiDun_WaveDamage"
         ],
         "recipeId": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Rush",
-        "relationship": "Same exact granted ability class as the native entrance",
+        "relationship": "Explicit phase-to-native function relationship",
         "nativeEntranceIds": [
-          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push"
+          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Counter",
+          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push",
+          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Rush"
         ]
       },
       "labels": {
@@ -8383,9 +8305,11 @@
           "/PBZCombatAsset/Prototypes/Bullet/Events/PBZ_BulletEvent_ZhuoBiDun_WaveDamage"
         ],
         "recipeId": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Counter",
-        "relationship": "Same exact granted ability class as the native entrance",
+        "relationship": "Explicit phase-to-native function relationship",
         "nativeEntranceIds": [
-          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push"
+          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Counter",
+          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Push",
+          "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Rush"
         ]
       },
       "labels": {
@@ -11743,6 +11667,514 @@
         "moves.finisher",
         "catalog.onhit"
       ]
+    },
+    "move:WeaponPhase.GA_Hun_HeiMoShang_C1.BladeWave": {
+      "aliases": {
+        "zh-Hans": [
+          "地趟刀法"
+        ],
+        "en": [
+          "Sweeping Blade"
+        ],
+        "ja": [
+          "伏地刀法"
+        ],
+        "ko": [
+          "지당도법"
+        ],
+        "ru": [
+          "Сметающий удар"
+        ],
+        "zh-Hant": [
+          "地趟刀法"
+        ],
+        "fr": [
+          "Lame circulaire"
+        ],
+        "de": [
+          "Fegende Klinge"
+        ],
+        "es-ES": [
+          "Tajo Rasante"
+        ],
+        "pt-BR": [
+          "Lâmina Varredora"
+        ],
+        "it": [
+          "Lama Guizzante"
+        ],
+        "th": [
+          "เพลงดาบกวาดปฐพี"
+        ],
+        "vi": [
+          "Địa Thảng Đao Pháp"
+        ],
+        "pt-PT": [
+          "Lâmina Ampla"
+        ],
+        "es-419": [
+          "Tajo Rasante"
+        ]
+      },
+      "effects": [],
+      "evidence": {
+        "nameKeys": [
+          "Weapon_FunctionName_001_Skill"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_C1.GA_Hun_HeiMoShang_C1_C"
+        ],
+        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags",
+        "recipeId": "move:WeaponPhase.GA_Hun_HeiMoShang_C1.BladeWave",
+        "relationship": "Same exact granted ability class as the native entrance",
+        "nativeEntranceIds": [
+          "move:Weapon.Weapon_Hun_HeiMoShang.GA_Hun_HeiMoShang_C1",
+          "weapon-art:Weapon_Hun_HeiMoShang.GA_Hun_HeiMoShang_C1"
+        ]
+      },
+      "labels": {
+        "zh-Hans": "黑魔伤 · 地趟刀法",
+        "en": "INFERNAL ROUGE · Sweeping Blade",
+        "ja": "黒魔傷 · 伏地刀法",
+        "ko": "흑마상 · 지당도법",
+        "ru": "Багрянец Мо · Сметающий удар",
+        "zh-Hant": "黑魔傷 · 地趟刀法",
+        "fr": "ROUGE INFERNAL · Lame circulaire",
+        "de": "HÖLLISCHES BLUTROT · Fegende Klinge",
+        "es-ES": "ROJO INFERNAL · Tajo Rasante",
+        "pt-BR": "SANGUÍNEA INFERNAL · Lâmina Varredora",
+        "it": "SANGUINARIA MO · Lama Guizzante",
+        "th": "คมมารทมิฬ · เพลงดาบกวาดปฐพี",
+        "vi": "MA HẮC THƯƠNG · Địa Thảng Đao Pháp",
+        "pt-PT": "SANGUINE DE MÓ · Lâmina Ampla",
+        "es-419": "ROJO INFERNAL · Tajo Rasante"
+      },
+      "labelParts": [
+        "catalog.followup",
+        "catalog.bladewave"
+      ]
+    },
+    "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave": {
+      "aliases": {
+        "zh-Hans": [
+          "荡寇凶斩"
+        ],
+        "en": [
+          "Bandit-Slaying Rampage"
+        ],
+        "ja": [
+          "蕩寇凶斬"
+        ],
+        "ko": [
+          "탕구흉참"
+        ],
+        "ru": [
+          "Неистовство истребителя разбойников"
+        ],
+        "zh-Hant": [
+          "蕩寇凶斬"
+        ],
+        "fr": [
+          "Fureur chasse-bandits"
+        ],
+        "de": [
+          "Banditen-Gemetzel"
+        ],
+        "es-ES": [
+          "Masacre cazabandidos"
+        ],
+        "pt-BR": [
+          "Fúria Matadora de Bandidos"
+        ],
+        "it": [
+          "Furia Trucida-Banditi"
+        ],
+        "th": [
+          "คมทมิฬปราบโจร"
+        ],
+        "vi": [
+          "Hung Trảm Diệt Phỉ"
+        ],
+        "pt-PT": [
+          "Massacre de Bandidos"
+        ],
+        "es-419": [
+          "Furia matabandidos"
+        ]
+      },
+      "effects": [],
+      "evidence": {
+        "nameKeys": [
+          "Weapon_FunctionName_019_Skill"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_C.GA_Hun_Horizontal_C_C"
+        ],
+        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags",
+        "recipeId": "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave",
+        "relationship": "Same exact granted ability class as the native entrance",
+        "nativeEntranceIds": [
+          "move:Weapon.Weapon_Hun_Horizontal.GA_Hun_Horizontal_C",
+          "weapon-art:Weapon_Hun_Horizontal.GA_Hun_Horizontal_C"
+        ]
+      },
+      "labels": {
+        "zh-Hans": "荡寇凶刃 · 荡寇凶斩",
+        "en": "JUGGERNAUT · Bandit-Slaying Rampage",
+        "ja": "蕩寇凶刃 · 蕩寇凶斬",
+        "ko": "탕구의 흉도 · 탕구흉참",
+        "ru": "Гроза Разбойников · Неистовство истребителя разбойников",
+        "zh-Hant": "蕩寇凶刃 · 蕩寇凶斬",
+        "fr": "SABRE TITAN · Fureur chasse-bandits",
+        "de": "BANDITENTÖTER · Banditen-Gemetzel",
+        "es-ES": "COLOSO · Masacre cazabandidos",
+        "pt-BR": "FORÇA IRREFREÁVEL · Fúria Matadora de Bandidos",
+        "it": "LAMA STERMINATRICE · Furia Trucida-Banditi",
+        "th": "คมพิฆาตโจร · คมทมิฬปราบโจร",
+        "vi": "ĐÃNG KHẤU HUNG NHẬN · Hung Trảm Diệt Phỉ",
+        "pt-PT": "MASTODONTE · Massacre de Bandidos",
+        "es-419": "DEVASTADOR · Furia matabandidos"
+      },
+      "labelParts": [
+        "catalog.followup",
+        "catalog.bladewave"
+      ]
+    },
+    "move:WeaponPhase.GA_Hun_Jade_C_Range.Stage2": {
+      "aliases": {
+        "zh-Hans": [
+          "无尽索命环"
+        ],
+        "en": [
+          "Reaping Rings"
+        ],
+        "ja": [
+          "無尽索命環"
+        ],
+        "ko": [
+          "무진색명환"
+        ],
+        "ru": [
+          "Жатва колец"
+        ],
+        "zh-Hant": [
+          "無盡索命環"
+        ],
+        "fr": [
+          "Anneaux faucheurs"
+        ],
+        "de": [
+          "Schnitter-Ringe"
+        ],
+        "es-ES": [
+          "Anillos segadores"
+        ],
+        "pt-BR": [
+          "Aros Ceifadores"
+        ],
+        "it": [
+          "Anelli Falcianti"
+        ],
+        "th": [
+          "ห่วงพิฆาตไร้สิ้นสุด"
+        ],
+        "vi": [
+          "Phi Hoàn Đoạt Mệnh"
+        ],
+        "pt-PT": [
+          "Anéis de Ceifar"
+        ],
+        "es-419": [
+          "Aros segadores"
+        ]
+      },
+      "effects": [],
+      "evidence": {
+        "nameKeys": [
+          "Weapon_FunctionName_029_Skill"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/New/GA_Hun_Jade_C_Range.GA_Hun_Jade_C_Range_C"
+        ],
+        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags",
+        "recipeId": "move:WeaponPhase.GA_Hun_Jade_C_Range.Stage2",
+        "relationship": "Same exact granted ability class as the native entrance",
+        "nativeEntranceIds": [
+          "move:Weapon.Weapon_Hun_JadeDual.GA_Hun_Jade_C_Range",
+          "move:Weapon.Weapon_Hun_JadeDual_Evaluation.GA_Hun_Jade_C_Range",
+          "weapon-art:Weapon_Hun_JadeDual.GA_Hun_Jade_C_Range",
+          "weapon-art:Weapon_Hun_JadeDual_Evaluation.GA_Hun_Jade_C_Range"
+        ]
+      },
+      "labels": {
+        "zh-Hans": "玉双环 · 无尽索命环",
+        "en": "SEAMLESS DEATH · Reaping Rings",
+        "ja": "玉双環 · 無尽索命環",
+        "ko": "옥쌍환 · 무진색명환",
+        "ru": "Безупречная Смерть · Жатва колец",
+        "zh-Hant": "玉雙環 · 無盡索命環",
+        "fr": "DOUCE MORT · Anneaux faucheurs",
+        "de": "NAHTLOSER TOD · Schnitter-Ringe",
+        "es-ES": "MUERTE FLUIDA · Anillos segadores",
+        "pt-BR": "MORTE CIRCULAR · Aros Ceifadores",
+        "it": "MORTE FLUIDA · Anelli Falcianti",
+        "th": "จักรหยกคู่ · ห่วงพิฆาตไร้สิ้นสุด",
+        "vi": "NGỌC SONG HOÀN · Phi Hoàn Đoạt Mệnh",
+        "pt-PT": "MORTE SUAVE · Anéis de Ceifar",
+        "es-419": "MUERTE PERFECTA · Aros segadores"
+      },
+      "labelParts": [
+        "catalog.followup",
+        "2"
+      ]
+    },
+    "move:WeaponPhase.GA_Hun_Double_JueYing_C.Final": {
+      "aliases": {
+        "zh-Hans": [
+          "双刃乱舞"
+        ],
+        "en": [
+          "Dual-Blade Flurry"
+        ],
+        "ja": [
+          "双刃乱舞"
+        ],
+        "ko": [
+          "쌍검 난무"
+        ],
+        "ru": [
+          "Вихрь парных клинков"
+        ],
+        "zh-Hant": [
+          "雙刃亂舞"
+        ],
+        "fr": [
+          "Déluge de lames jumelles"
+        ],
+        "de": [
+          "Doppelklingenwirbel"
+        ],
+        "es-ES": [
+          "Ráfaga de doble hoja"
+        ],
+        "pt-BR": [
+          "Rajada Dupla"
+        ],
+        "it": [
+          "Turbine a due lame"
+        ],
+        "th": [
+          "ระบำคมดาบคู่"
+        ],
+        "vi": [
+          "Song Đao Loạn Vũ"
+        ],
+        "pt-PT": [
+          "Rajada de Lâminas Duplas"
+        ],
+        "es-419": [
+          "Ráfaga de espadas dobles"
+        ]
+      },
+      "effects": [],
+      "evidence": {
+        "nameKeys": [
+          "Weapon_FunctionName_022_Skill"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C.GA_Hun_Double_JueYing_C_C"
+        ],
+        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags",
+        "recipeId": "move:WeaponPhase.GA_Hun_Double_JueYing_C.Final",
+        "relationship": "Same exact granted ability class as the native entrance",
+        "nativeEntranceIds": [
+          "move:Weapon.Weapon_Hun_JueYing.GA_Hun_Double_JueYing_C",
+          "weapon-art:Weapon_Hun_JueYing.GA_Hun_Double_JueYing_C"
+        ]
+      },
+      "labels": {
+        "zh-Hans": "绝影 · 双刃乱舞",
+        "en": "SHADOWLESS EDGE · Dual-Blade Flurry",
+        "ja": "絶影 · 双刃乱舞",
+        "ko": "절영 · 쌍검 난무",
+        "ru": "Неуловимые Клинки · Вихрь парных клинков",
+        "zh-Hant": "絕影 · 雙刃亂舞",
+        "fr": "OMBRES INSAISISSABLES · Déluge de lames jumelles",
+        "de": "SCHATTENLOSE KLINGE · Doppelklingenwirbel",
+        "es-ES": "FILOS SIN SOMBRA · Ráfaga de doble hoja",
+        "pt-BR": "LÂMINA SEM SOMBRA · Rajada Dupla",
+        "it": "LAMA SENZ'OMBRA · Turbine a due lame",
+        "th": "ดาบเงาสูญ · ระบำคมดาบคู่",
+        "vi": "TUYỆT ẢNH · Song Đao Loạn Vũ",
+        "pt-PT": "GUME SEM SOMBRA · Rajada de Lâminas Duplas",
+        "es-419": "FILO SIN SOMBRA · Ráfaga de espadas dobles"
+      },
+      "labelParts": [
+        "moves.finisher"
+      ]
+    },
+    "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Final": {
+      "aliases": {
+        "zh-Hans": [
+          "双刃乱舞"
+        ],
+        "en": [
+          "Dual-Blade Flurry"
+        ],
+        "ja": [
+          "双刃乱舞"
+        ],
+        "ko": [
+          "쌍검 난무"
+        ],
+        "ru": [
+          "Вихрь парных клинков"
+        ],
+        "zh-Hant": [
+          "雙刃亂舞"
+        ],
+        "fr": [
+          "Déluge de lames jumelles"
+        ],
+        "de": [
+          "Doppelklingenwirbel"
+        ],
+        "es-ES": [
+          "Ráfaga de doble hoja"
+        ],
+        "pt-BR": [
+          "Rajada Dupla"
+        ],
+        "it": [
+          "Turbine a due lame"
+        ],
+        "th": [
+          "ระบำคมดาบคู่"
+        ],
+        "vi": [
+          "Song Đao Loạn Vũ"
+        ],
+        "pt-PT": [
+          "Rajada de Lâminas Duplas"
+        ],
+        "es-419": [
+          "Ráfaga de espadas dobles"
+        ]
+      },
+      "effects": [],
+      "evidence": {
+        "nameKeys": [
+          "Weapon_FunctionName_022_Skill"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C_Air.GA_Hun_Double_JueYing_C_Air_C"
+        ],
+        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags",
+        "recipeId": "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Final",
+        "relationship": "Same exact granted ability class as the native entrance",
+        "nativeEntranceIds": [
+          "ability:Ability.Action.Hun.CombatArt.JueYing.Air",
+          "move:Weapon.Weapon_Hun_JueYing.GA_Hun_Double_JueYing_C_Air",
+          "weapon-art:Weapon_Hun_JueYing.GA_Hun_Double_JueYing_C_Air"
+        ]
+      },
+      "labels": {
+        "zh-Hans": "绝影 · 双刃乱舞",
+        "en": "SHADOWLESS EDGE · Dual-Blade Flurry",
+        "ja": "絶影 · 双刃乱舞",
+        "ko": "절영 · 쌍검 난무",
+        "ru": "Неуловимые Клинки · Вихрь парных клинков",
+        "zh-Hant": "絕影 · 雙刃亂舞",
+        "fr": "OMBRES INSAISISSABLES · Déluge de lames jumelles",
+        "de": "SCHATTENLOSE KLINGE · Doppelklingenwirbel",
+        "es-ES": "FILOS SIN SOMBRA · Ráfaga de doble hoja",
+        "pt-BR": "LÂMINA SEM SOMBRA · Rajada Dupla",
+        "it": "LAMA SENZ'OMBRA · Turbine a due lame",
+        "th": "ดาบเงาสูญ · ระบำคมดาบคู่",
+        "vi": "TUYỆT ẢNH · Song Đao Loạn Vũ",
+        "pt-PT": "GUME SEM SOMBRA · Rajada de Lâminas Duplas",
+        "es-419": "FILO SIN SOMBRA · Ráfaga de espadas dobles"
+      },
+      "labelParts": [
+        "catalog.air",
+        "moves.finisher"
+      ]
+    },
+    "move:ShadowPhase.GA_Hun_Lute_A.Stage2": {
+      "aliases": {},
+      "effects": [],
+      "evidence": {
+        "nameKeys": [
+          "PhantomEdges_024"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A.GA_Hun_Lute_A_C"
+        ],
+        "source": "Existing recipe equipment identity and original locres",
+        "recipeId": "move:ShadowPhase.GA_Hun_Lute_A.Stage2",
+        "relationship": "Official equipment name; no independent proper move name established"
+      },
+      "labels": {
+        "zh-Hans": "催心琵琶",
+        "en": "HEARTREND PIPA",
+        "ja": "催心の琵琶",
+        "ko": "최심비파",
+        "ru": "Душераздирающая Пипа",
+        "zh-Hant": "催心琵琶",
+        "fr": "PIPA DÉCHIRE-CŒUR",
+        "de": "HERZREISSER-PIPA",
+        "es-ES": "PIPA DESGARRACORAZONES",
+        "pt-BR": "PIPA DILACERADOR DE CORAÇÕES",
+        "it": "PIPA SPACCACUORI",
+        "th": "พิณผีผาสลายใจ",
+        "vi": "TỲ BÀ THÔI TÂM",
+        "pt-PT": "PIPÁ AMARGURADO",
+        "es-419": "PIPA DESGARRACORAZONES"
+      },
+      "labelParts": [
+        "catalog.attack",
+        "1",
+        "catalog.followup",
+        "2"
+      ]
+    },
+    "move:ShadowPhase.GA_Hun_Lute_AA.Stage2": {
+      "aliases": {},
+      "effects": [],
+      "evidence": {
+        "nameKeys": [
+          "PhantomEdges_024"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA.GA_Hun_Lute_AA_C"
+        ],
+        "source": "Existing recipe equipment identity and original locres",
+        "recipeId": "move:ShadowPhase.GA_Hun_Lute_AA.Stage2",
+        "relationship": "Official equipment name; no independent proper move name established"
+      },
+      "labels": {
+        "zh-Hans": "催心琵琶",
+        "en": "HEARTREND PIPA",
+        "ja": "催心の琵琶",
+        "ko": "최심비파",
+        "ru": "Душераздирающая Пипа",
+        "zh-Hant": "催心琵琶",
+        "fr": "PIPA DÉCHIRE-CŒUR",
+        "de": "HERZREISSER-PIPA",
+        "es-ES": "PIPA DESGARRACORAZONES",
+        "pt-BR": "PIPA DILACERADOR DE CORAÇÕES",
+        "it": "PIPA SPACCACUORI",
+        "th": "พิณผีผาสลายใจ",
+        "vi": "TỲ BÀ THÔI TÂM",
+        "pt-PT": "PIPÁ AMARGURADO",
+        "es-419": "PIPA DESGARRACORAZONES"
+      },
+      "labelParts": [
+        "catalog.attack",
+        "2",
+        "catalog.followup",
+        "2"
+      ]
     }
   },
   "coverage": [
@@ -12300,7 +12732,7 @@
     },
     {
       "id": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Rush",
-      "relationship": "Same exact granted ability class as the native entrance",
+      "relationship": "Explicit phase-to-native function relationship",
       "nameKeys": [
         "PhantomEdges_004"
       ],
@@ -12324,7 +12756,7 @@
     },
     {
       "id": "move:Ability.Action.Hun.ShachiAbility.Default.ZhuoBiDun.Counter",
-      "relationship": "Same exact granted ability class as the native entrance",
+      "relationship": "Explicit phase-to-native function relationship",
       "nameKeys": [
         "PhantomEdges_004"
       ],
@@ -12807,6 +13239,62 @@
         "Weapon_FunctionName_015_Skill"
       ],
       "hasNativeMainName": true
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_HeiMoShang_C1.BladeWave",
+      "relationship": "Same exact granted ability class as the native entrance",
+      "nameKeys": [
+        "Weapon_FunctionName_001_Skill"
+      ],
+      "hasNativeMainName": true
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave",
+      "relationship": "Same exact granted ability class as the native entrance",
+      "nameKeys": [
+        "Weapon_FunctionName_019_Skill"
+      ],
+      "hasNativeMainName": true
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_Jade_C_Range.Stage2",
+      "relationship": "Same exact granted ability class as the native entrance",
+      "nameKeys": [
+        "Weapon_FunctionName_029_Skill"
+      ],
+      "hasNativeMainName": true
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C.Final",
+      "relationship": "Same exact granted ability class as the native entrance",
+      "nameKeys": [
+        "Weapon_FunctionName_022_Skill"
+      ],
+      "hasNativeMainName": true
+    },
+    {
+      "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Final",
+      "relationship": "Same exact granted ability class as the native entrance",
+      "nameKeys": [
+        "Weapon_FunctionName_022_Skill"
+      ],
+      "hasNativeMainName": true
+    },
+    {
+      "id": "move:ShadowPhase.GA_Hun_Lute_A.Stage2",
+      "relationship": "Official equipment name; no independent proper move name established",
+      "nameKeys": [
+        "PhantomEdges_024"
+      ],
+      "hasNativeMainName": false
+    },
+    {
+      "id": "move:ShadowPhase.GA_Hun_Lute_AA.Stage2",
+      "relationship": "Official equipment name; no independent proper move name established",
+      "nameKeys": [
+        "PhantomEdges_024"
+      ],
+      "hasNativeMainName": false
     }
   ]
 }

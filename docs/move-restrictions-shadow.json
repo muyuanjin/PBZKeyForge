@@ -4,9 +4,19 @@
   "entries": {
     "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [],
+          "ignoredTags": [
+            "CharacterState.AbilityState.BrutalAxe.CanCombo",
+            "Ability.Action.Hun.ShachiAbility.BrutalAxe.Main"
+          ]
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -32,16 +42,27 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.Dash",
-          "CharacterState.Native.Attitude.Sprinting"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.BrutalAxe.RunCharge"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.Dash",
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
+          "ignoredTags": [
+            "CharacterState.AbilityState.BrutalAxe.CanCombo"
+          ]
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.BrutalAxe.RunCharge"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -53,12 +74,18 @@
     },
     "move:Shadow.CaoOuSiXian.GA_CaoOuSiXian_Normal_01": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -74,15 +101,24 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser": {
       "groups": {
-        "stance": [
-          "CharacterState.AbilityState.Stance.HoldingStanceKey"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.DuYanBow.BulletPassThrough"
-        ],
-        "space": [
-          "CharacterState.Space.Ground"
-        ]
+        "stance": {
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.DuYanBow.BulletPassThrough"
+          ],
+          "ignoredTags": []
+        },
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -103,12 +139,18 @@
     },
     "move:Shadow.DuYanBow.GA_DuYan_Bow_Normal": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -139,12 +181,18 @@
     },
     "move:Shadow.HuangJinHuoChong.GA_HuangJinHuoChong_Normal_02": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -160,16 +208,25 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAA",
-          "Ability.Action.ShaqiReinforced"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.HuoLiuXing.AAAA"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAA",
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.HuoLiuXing.AAAA"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -185,12 +242,18 @@
     },
     "move:Shadow.JianKeZhaoJiLing.GA_JianKeZhaoJiLing_Normal_01": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -206,16 +269,25 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.JinGua.Main",
-          "Ability.Action.ShaqiReinforced"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.JinGua.ExtraAttack"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.JinGua.Main",
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.JinGua.ExtraAttack"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -227,9 +299,18 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [],
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.JinGua.Main"
+          ]
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -252,12 +333,18 @@
     },
     "move:Shadow.KuYeSiZhuChuan.GA_KuYeSiZhuChuan_Normal_01": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -273,12 +360,18 @@
     },
     "move:Shadow.LionHead.GA_LionHead": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -299,12 +392,18 @@
     },
     "move:Shadow.Lute.GA_Hun_Lute_A": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -314,17 +413,50 @@
         "family": "Lute"
       }
     },
+    "ability:Ability.Action.Hun.ShachiAbility.PiPa.AA": {
+      "groups": {
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default",
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        },
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        }
+      },
+      "preparation": {},
+      "evidence": {
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA.GA_Hun_Lute_AA_C"
+        ],
+        "family": "Lute"
+      }
+    },
     "ability:Ability.Action.Hun.ShachiAbility.PiPa.Skill": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "stance": [
-          "CharacterState.AbilityState.Stance.HoldingStanceKey"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.Lute.SitDown_Combo"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "stance": {
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.Lute.SitDown_Combo"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -344,12 +476,18 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB": {
       "groups": {
-        "stance": [
-          "CharacterState.AbilityState.Stance.HoldingStanceKey"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.MiaoShouFeiDao.Dash_B"
-        ]
+        "stance": {
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.MiaoShouFeiDao.Dash_B"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -371,20 +509,31 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.MoJi.AAA": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "CharacterState.AbilityState.Mojian.HasProjectile",
-          "CharacterState.AbilityState.Mojian.ProjectileFull",
-          "Ability.Action.ShaqiReinforced",
-          "Ability.Action.Hun.ShachiAbility.MoJi.AA",
-          "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.MoJian.FreeStrike",
-          "CharacterState.WeaponUpgrade.MoJian.Evolution"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "CharacterState.AbilityState.Mojian.HasProjectile",
+            "CharacterState.AbilityState.Mojian.ProjectileFull",
+            "Ability.Action.ShaqiReinforced",
+            "Ability.Action.Hun.ShachiAbility.MoJi.AA",
+            "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.MoJian.FreeStrike",
+            "CharacterState.WeaponUpgrade.MoJian.Evolution"
+          ],
+          "ignoredTags": [
+            "CharacterState.WeaponUpgrade.MoJian.Evolution"
+          ]
+        }
       },
       "preparation": {},
       "evidence": {
@@ -396,12 +545,18 @@
     },
     "move:Shadow.NiTouChe.GA_HorseCart_Charge": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -437,16 +592,25 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC",
-          "Ability.Action.ShaqiReinforced"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.ShachiHook.Tornado"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC",
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.ShachiHook.Tornado"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -468,18 +632,27 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.ShachiHook.C",
-          "Ability.Action.ShaqiReinforced",
-          "Ability.Action.Hun.ShachiAbility.ShachiHook.CC",
-          "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.ShachiHook.ABSnapCombo"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.C",
+            "Ability.Action.ShaqiReinforced",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CC",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.ShachiHook.ABSnapCombo"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -491,16 +664,25 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.TanLang.Normal",
-          "Ability.Action.ShaqiReinforced"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.TanLang.ExtraAttack"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.TanLang.Normal",
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.TanLang.ExtraAttack"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -512,9 +694,18 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.TanLang.Normal": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [],
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.TanLang.Normal"
+          ]
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -535,16 +726,25 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04": {
       "groups": {
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_03",
-          "Ability.Action.ShaqiReinforced"
-        ],
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.ThunderSpear.CA"
-        ]
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_03",
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        },
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.ThunderSpear.CA"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -556,13 +756,19 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C",
-          "Ability.Action.ShaqiReinforced"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C",
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -574,13 +780,19 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC",
-          "Ability.Action.ShaqiReinforced"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC",
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -592,9 +804,18 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [],
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.TigerCannon.Normal"
+          ]
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -615,19 +836,36 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "CharacterState.AbilityState.TigerCannon.CanQuickCharge",
-          "Ability.Action.Hun.ShachiAbility.Default",
-          "Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
-          "Ability.Action.Hun.ShachiAbility.TigerCannon.Counter",
-          "Ability.Action.Hun.ShachiAbility.TigerCannon.Dash"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.TigerCannon.QuickCharge"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "CharacterState.AbilityState.TigerCannon.CanQuickCharge",
+            "Ability.Action.Hun.ShachiAbility.Default",
+            "Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+            "Ability.Action.Hun.ShachiAbility.TigerCannon.Counter",
+            "Ability.Action.Hun.ShachiAbility.TigerCannon.Dash"
+          ],
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge"
+          ]
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.TigerCannon.QuickCharge"
+          ],
+          "ignoredTags": []
+        },
+        "stance": {
+          "requiredTags": [],
+          "ignoredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ]
+        }
       },
       "preparation": {},
       "evidence": {
@@ -639,12 +877,18 @@
     },
     "move:Shadow.UnnamedBow.GA_UnnamedBow": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -675,12 +919,18 @@
     },
     "move:Shadow.XuKongHuaShan.GA_XuKongHuaShan_Skill": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -692,16 +942,25 @@
     },
     "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.XueDiZi.AAA",
-          "Ability.Action.ShaqiReinforced"
-        ],
-        "training": [
-          "CharacterState.WeaponUpgrade.XueDiZi.ExtraAttack"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.XueDiZi.AAA",
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.XueDiZi.ExtraAttack"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {},
       "evidence": {
@@ -713,12 +972,18 @@
     },
     "move:Shadow.XueSeLingDang.GA_XueSeLingDang_Normal_01": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -734,12 +999,18 @@
     },
     "move:Shadow.YouLongCha.GA_YouLongCha_Normal": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -770,12 +1041,18 @@
     },
     "move:Shadow.YouLongHead.GA_YouLongHead_Water": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [
@@ -791,12 +1068,18 @@
     },
     "move:Shadow.ZhuoBiDun.GA_ZhuoBiDun": {
       "groups": {
-        "space": [
-          "CharacterState.Space.Ground"
-        ],
-        "prerequisite": [
-          "Ability.Action.Hun.ShachiAbility.Default"
-        ]
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "prerequisite": {
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
+          "ignoredTags": []
+        }
       },
       "preparation": {
         "nativeHoldInputs": [

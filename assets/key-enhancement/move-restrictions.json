@@ -348,7 +348,6 @@
     "Ability.Action.Hun.Light.Long.AAAAA": "predecessor",
     "Ability.Action.Hun.Heavy.ComboAtk_N4H1": "predecessor",
     "Ability.Action.Hun.LuanYing.BuffP2": "predecessor",
-    "Ability.Action.ShaqiReinforced": "predecessor",
     "Ability.Action.Hun.Heavy.PoJun.DB": "predecessor",
     "Ability.Action.Hun.Heavy.ShuangYue.DB": "predecessor",
     "Ability.Action.Hun.Heavy.SlitheringSword.DB1": "predecessor",
@@ -378,13 +377,13 @@
     "Ability.Action.Hun.CombatArt.Atk02": "predecessor",
     "Ability.Action.Hun.Special.Double.YingSha.C": "predecessor",
     "Ability.Action.Hun.Special.Tang.ShunSha.C": "predecessor",
+    "CharacterState.AbilityState.BrutalAxe.CanCombo": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.BrutalAxe.Main": "predecessor",
     "Ability.Action.Hun.Dash": "predecessor",
     "CharacterState.Native.Attitude.Sprinting": "stance",
     "Ability.Action.Hun.ShachiAbility.Default": "predecessor",
     "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAA": "predecessor",
     "Ability.Action.Hun.ShachiAbility.JinGua.Main": "predecessor",
-    "CharacterState.AbilityState.Mojian.HasProjectile": "predecessor",
-    "CharacterState.AbilityState.Mojian.ProjectileFull": "predecessor",
     "Ability.Action.Hun.ShachiAbility.MoJi.AA": "predecessor",
     "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default": "predecessor",
     "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC": "predecessor",
@@ -394,10 +393,11 @@
     "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_03": "predecessor",
     "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C": "predecessor",
     "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC": "predecessor",
-    "CharacterState.AbilityState.TigerCannon.CanQuickCharge": "predecessor",
     "Ability.Action.Hun.ShachiAbility.TigerCannon.Normal": "predecessor",
+    "CharacterState.AbilityState.TigerCannon.CanQuickCharge": "predecessor",
     "Ability.Action.Hun.ShachiAbility.TigerCannon.Counter": "predecessor",
     "Ability.Action.Hun.ShachiAbility.TigerCannon.Dash": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge": "predecessor",
     "Ability.Action.Hun.ShachiAbility.XueDiZi.AAA": "predecessor",
     "Weapon.Type.SnakeDual": "equipment",
     "Weapon.Type.ShaqiWeapon.HuoLiuXing": "equipment",
@@ -432,7 +432,94 @@
     "CharacterState.AbilityState.SnakeDual.Thrown": "predecessor",
     "CharacterState.AbilityState.KillBounsSnap": "predecessor",
     "GameplayCue.Buff.YanYueDao.SkillReinforced": "predecessor",
-    "CharacterState.WeaponUpgrade.Iron.BJump": "training"
+    "CharacterState.WeaponUpgrade.Iron.BJump": "training",
+    "Ability.Action.Hun.BaiYing.Assault": "predecessor",
+    "Ability.Action.Hun.SpecialMove": "predecessor",
+    "Ability.Action.Stance": "predecessor",
+    "Ability.Action.Hun.SpecialDash": "predecessor",
+    "Ability.Action.Hun.ContinuousDash.Dash_02": "predecessor",
+    "Ability.Action.Hun.Light.ADash": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.MoJi.A.Default": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ShachiHook": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.MoJi.A.Short": "predecessor",
+    "Ability.Action.Hun.Heavy.DrawDashAtk01": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.MoJi.AA.Short": "predecessor",
+    "Ability.Action.Hun.Heavy.DashAtk01": "predecessor",
+    "Ability.Action.Execution": "predecessor",
+    "Ability.Action.Hun.Light.ADash.Draw": "predecessor",
+    "Ability.Action.Hun.Light.ADash.Normal": "predecessor",
+    "Ability.Action.Hun.Jump": "predecessor",
+    "Ability.Action.Hun.Light.Air.A.Draw": "predecessor",
+    "Ability.Action.Hun.Weapon.Switch": "predecessor",
+    "Ability.Action.Hun.Heavy.SnakeDual.DB": "predecessor",
+    "Ability.Action.Hun.Heavy.Iron.Buff": "predecessor",
+    "Ability.Action.Hun.Heavy.Horizontal.BladeWave": "predecessor",
+    "Ability.Action.Hun.ChiZheCanJian.AutoDodge.Normal": "predecessor",
+    "Ability.Action.Hun.Heavy.DualHook.Pursure": "predecessor",
+    "Ability.Action.Hun.Heavy.Snap": "predecessor",
+    "Ability.Action.Hun.ShachiAbility": "predecessor",
+    "Ability.Action.Hun.Heavy.DrawAtk01": "predecessor",
+    "Ability.Action.Hun.LuanYing.Buff": "predecessor",
+    "Ability.Action.Hun.Heavy.ComboAtk_N3H2": "predecessor",
+    "Ability.Action.Hun.Heavy.ComboAtk_N2H2": "predecessor",
+    "Ability.Action.HoldDeflect": "predecessor",
+    "Ability.Action.Hun.Light.A.Draw": "predecessor",
+    "Ability.Action.Hun.Light.Snap": "predecessor",
+    "Ability.Action.Hun.Light.DualHook.Pursure": "predecessor",
+    "Ability.Action.Hun.ContinuousDash": "predecessor",
+    "Ability.Action.Hun.Light.AAAAAA": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ShachiHook.CBB": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ShachiHook.CB": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ShachiHook.CA": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ShachiHook.CAA": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.LionHead.Dash": "predecessor",
+    "Ability.Action.Hun.Dash.Direction.B": "predecessor",
+    "Ability.Action.Hun.Light": "predecessor",
+    "Ability.Action.Hun.Heavy.Jigsaw.RBB": "predecessor",
+    "Ability.Action.Hun.Weapon.Switch.UI": "predecessor",
+    "Ability.Action.Hun.Weapon.Switch.Normal": "predecessor",
+    "Ability.Action.Hun.Weapon.Switch.Dash": "predecessor",
+    "Ability.Action.Hun.Heavy.ShuangYue.PB": "predecessor",
+    "Ability.Action.Hun.Light.SnakeDual.A_Fast": "predecessor",
+    "Ability.Action.Execution.Combat": "predecessor",
+    "Ability.Action.Hun.Light.SnakeDual.A_Deflect": "predecessor",
+    "Ability.Action.Hun.Light.SnakeDual.DA": "predecessor",
+    "Ability.Action.Hun.Light.Double.BTA": "predecessor",
+    "Ability.Action.Hun.Heavy.Double.ATBBB": "predecessor",
+    "Ability.Action.Hun.Light.JigSaw.RAAA": "predecessor",
+    "Ability.Action.Execution.ShachiWeapon": "predecessor",
+    "Ability.Action.Hun.Dash.Direction": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.Bow.Dash": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.Bow.DeflectCounter": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Dash": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.DeflectCounter": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.HuoLiuXing.A": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AShort": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AA": "predecessor",
+    "Ability.Action.Hun.Dash.Direction.F": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_03": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.02": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.03": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_01": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_02": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.01": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.MoJi.A": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.PiPa.AA": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.PiPa.Dash": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ShachiHook.Drag": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ShachiHook.HookMove": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ShachiHook.CD": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ThunderSpear.Dash": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_01": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_02": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.XueDiZi.A": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.XueDiZi.AA": "predecessor",
+    "Ability.Action.Hun.ShachiAbility.YouLongCha.Dash": "predecessor",
+    "Ability.Action.Hun.Special.Long.LieZhan.C": "predecessor",
+    "Ability.Action.Hun.ContinuousDash.Dash_03": "predecessor",
+    "Ability.Action.Hun.TempWeapon.Ultimate": "predecessor"
   },
   "entries": {
     "ability:Ability.Action.Execution.Channel.Execution": {
@@ -515,7 +602,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -572,7 +661,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -580,7 +671,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.BaiYing.Assault"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -608,7 +701,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Air"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -617,7 +712,9 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.SpecialMove"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -637,15 +734,21 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Stance"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -656,41 +759,6 @@
       "preparation": {
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BaiYing/Weapon_Hun_BaiYing"
-        ],
-        "equipmentSlot": "Weapon.Slot.Main"
-      }
-    },
-    "ability:Ability.Action.Hun.ChiZheCanJian.CToZui": {
-      "groups": {
-        "equipment": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "training": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "space": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "stance": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "cooldown": {
-          "requiredTags": [],
-          "ignoredTags": []
-        }
-      },
-      "preparation": {
-        "equipmentConfigs": [
-          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/Weapon_Hun_ChiZheCanJian",
-          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChiZheCanJian/Weapon_Hun_ChiZheZuiJian"
         ],
         "equipmentSlot": "Weapon.Slot.Main"
       }
@@ -778,7 +846,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Stance"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -824,6 +894,23 @@
         ],
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_CombatArt_Hold.IA_CombatArt_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "native_completion": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C.GA_Hun_ChiRen_C_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.Heavy",
+              "Weapon.Type.Global.TwoHanded",
+              "Weapon.Type.LongBlade.ChiRen",
+              "Weapon.Type.LongBlade.Default"
+            ]
+          }
+        ],
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -962,15 +1049,22 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ]
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Dash",
+            "Ability.Action.Hun.SpecialDash"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -991,7 +1085,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -999,7 +1095,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ContinuousDash.Dash_02"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -1020,7 +1118,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -1028,8 +1128,23 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
+          "requiredTags": [
+            "Ability.Action.Execution",
+            "Ability.Action.Hun.CombatArt",
+            "Ability.Action.Hun.Heavy.PoJun.DB",
+            "Ability.Action.Hun.Light.ADash",
+            "Ability.Action.Hun.ShachiAbility.Default",
+            "Ability.Action.Hun.ShachiAbility.MoJi.A.Default",
+            "Ability.Action.Hun.ShachiAbility.MoJi.A.Short",
+            "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default",
+            "Ability.Action.Hun.ShachiAbility.MoJi.AA.Short",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook",
+            "Ability.Action.Stance"
+          ],
+          "ignoredTags": [
+            "Ability.Action.Hun.Light.ADash.Draw",
+            "Ability.Action.Hun.Light.ADash.Normal"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -1037,6 +1152,21 @@
         }
       },
       "preparation": {
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Loop"
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong",
+              "Weapon.Type.ShaqiWeapon.Category.Strength"
+            ]
+          }
+        ],
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Mojian/Weapon_Mojian",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook",
@@ -1074,7 +1204,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -1082,7 +1214,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Stance"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -1103,7 +1237,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -1111,7 +1247,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Heavy.ComboAtk_N2H1"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -1137,7 +1275,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -1145,7 +1285,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Light.AAAA"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -1171,11 +1313,15 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -1247,7 +1393,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Jump"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -1367,10 +1515,19 @@
             "Ability.Action.Hun.Heavy.Atk04",
             "Ability.Action.Hun.Heavy.ComboAtk_N2H1",
             "Ability.Action.Hun.Heavy.DualHook.Grab",
+            "Ability.Action.Hun.Heavy.SnakeDual.DB",
             "Ability.Action.Hun.Heavy.YanYueDao.Special01",
             "Ability.Action.Hun.Light.A",
+            "Ability.Action.Hun.Light.AA",
             "Ability.Action.Hun.Light.AAA",
+            "Ability.Action.Hun.Light.AAAA",
+            "Ability.Action.Hun.Light.AAAAA",
+            "Ability.Action.Hun.Light.Air.A.Draw",
             "Ability.Action.Hun.Light.Air.A.Normal",
+            "Ability.Action.Hun.PerfectDodge",
+            "Ability.Action.Hun.SimpleExecution",
+            "Ability.Action.Hun.Weapon.Switch",
+            "Ability.Action.Stance",
             "CharacterState.AbilityState.YuuBlade.CriticalBuff"
           ],
           "ignoredTags": [
@@ -1455,7 +1612,9 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.BaiShanFengLeiJian.BHold"
+          ],
           "ignoredTags": []
         },
         "space": {
@@ -1466,7 +1625,9 @@
         },
         "stance": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "CharacterState.AbilityState.BaiShanFengLeiJian.Thunder"
+          ]
         },
         "predecessor": {
           "requiredTags": [],
@@ -1484,6 +1645,22 @@
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [
           "CharacterState.AbilityState.InSpecialPerform"
+        ],
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "native_completion": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Hold/GA_Hun_FengLeiJian_B_Hold.GA_Hun_FengLeiJian_B_Hold_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+              "Weapon.Type.BaiShanFengLeiJian",
+              "Weapon.Type.Global.DualHanded"
+            ]
+          }
         ],
         "equipmentSlot": "Weapon.Slot.Main"
       }
@@ -1544,16 +1721,38 @@
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.Execution",
             "Ability.Action.Execution.Custom.Iron.BreakAct",
+            "Ability.Action.Hun.ChiZheCanJian.AutoDodge.Normal",
+            "Ability.Action.Hun.Heavy.AirAtk01",
             "Ability.Action.Hun.Heavy.Atk01",
             "Ability.Action.Hun.Heavy.ComboAtk_N1H1",
+            "Ability.Action.Hun.Heavy.ComboAtk_N2H1",
+            "Ability.Action.Hun.Heavy.ComboAtk_N3H1",
+            "Ability.Action.Hun.Heavy.ComboAtk_N4H1",
+            "Ability.Action.Hun.Heavy.DashAtk01",
+            "Ability.Action.Hun.Heavy.DrawAtk01",
+            "Ability.Action.Hun.Heavy.DrawDashAtk01",
+            "Ability.Action.Hun.Heavy.DualHook.Pursure",
+            "Ability.Action.Hun.Heavy.Horizontal.BladeWave",
+            "Ability.Action.Hun.Heavy.Horizontal.NoCostB",
             "Ability.Action.Hun.Heavy.Horizontal.Overcharge",
+            "Ability.Action.Hun.Heavy.Iron.Buff",
             "Ability.Action.Hun.Heavy.Jigsaw.SB",
             "Ability.Action.Hun.Heavy.SlitheringSword.DB1",
+            "Ability.Action.Hun.Heavy.SlitheringSword.DB2",
+            "Ability.Action.Hun.Heavy.SlitheringSword.DB3",
             "Ability.Action.Hun.Heavy.SnakeDual.B_Fast",
+            "Ability.Action.Hun.Heavy.Snap",
+            "Ability.Action.Hun.Heavy.YuuBlade.FastAttack",
             "Ability.Action.Hun.Heavy.ZhanMa.DB",
             "Ability.Action.Hun.Light.A",
+            "Ability.Action.Hun.Light.AA",
             "Ability.Action.Hun.Light.AAA",
+            "Ability.Action.Hun.Light.AAAA",
+            "Ability.Action.Hun.Light.Air.A",
+            "Ability.Action.Hun.ShachiAbility",
+            "Ability.Action.Hun.SimpleExecution",
             "Ability.Action.Hun.Special.Jade.DB",
             "CharacterState.AbilityState.DualHook.DB.Heavy"
           ],
@@ -1661,10 +1860,9 @@
         "predecessor": {
           "requiredTags": [
             "Ability.Action.Hun.Heavy.Atk02",
+            "Ability.Action.Hun.LuanYing.Buff",
             "Ability.Action.Hun.LuanYing.BuffP2",
-            "Ability.Action.ShaqiReinforced",
-            "CharacterState.AbilityState.GuiTouDao.Buff",
-            "CharacterState.AbilityState.LuanYing.SnapSoul"
+            "CharacterState.AbilityState.GuiTouDao.Buff"
           ],
           "ignoredTags": []
         },
@@ -1711,6 +1909,12 @@
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
         "equipmentSlot": "Weapon.Slot.Main",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        },
         "nativeStateEffects": [
           {
             "effectClass": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/UpgradeData/GE_Hun_GuiTouBlade_HasBuff_Base.GE_Hun_GuiTouBlade_HasBuff_Base_C",
@@ -1822,40 +2026,13 @@
         ],
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
-        "equipmentSlot": "Weapon.Slot.Main"
-      }
-    },
-    "ability:Ability.Action.Hun.Heavy.BronzeSword.DB": {
-      "groups": {
-        "equipment": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "training": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "space": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "stance": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "cooldown": {
-          "requiredTags": [],
-          "ignoredTags": []
-        }
-      },
-      "preparation": {
-        "equipmentConfigs": [
-          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BronzeSword/Weapon_Hun_TianXuanQingTongJian"
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
         ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold.GA_Hun_BronzeSword_B_Hold_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -1979,7 +2156,12 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.Heavy.ComboAtk_N1H2"
+            "Ability.Action.Hun.Heavy.Atk01",
+            "Ability.Action.Hun.Heavy.Atk02",
+            "Ability.Action.Hun.Heavy.Atk03",
+            "Ability.Action.Hun.Heavy.ComboAtk_N1H2",
+            "Ability.Action.Hun.Heavy.ComboAtk_N2H2",
+            "Ability.Action.Hun.Heavy.ComboAtk_N3H2"
           ],
           "ignoredTags": []
         },
@@ -2169,6 +2351,22 @@
         ],
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "native_completion": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous.GA_Hun_ChiZheCanJian_Drink_Continuous_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+              "Weapon.Type.ChiZheCanJian",
+              "Weapon.Type.Global.SingleHanded"
+            ]
+          }
+        ],
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -2219,16 +2417,29 @@
         "stance": {
           "requiredTags": [],
           "ignoredTags": [
-            "CharacterState.AbilityState.JigSaw.BloodSaw"
+            "CharacterState.AbilityState.JigSaw.BloodSaw",
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
           ]
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.HoldDeflect",
             "Ability.Action.Hun.Heavy.Long.BD",
+            "Ability.Action.Hun.Light.A.Draw",
+            "Ability.Action.Hun.Light.A.Normal",
+            "Ability.Action.Hun.Light.ADash.Draw",
+            "Ability.Action.Hun.Light.ADash.Normal",
+            "Ability.Action.Hun.Light.Air.A.Draw",
             "Ability.Action.Hun.Light.Air.A.Normal",
             "Ability.Action.Hun.Light.Air.AA",
             "Ability.Action.Hun.Light.Air.AAA",
+            "Ability.Action.Hun.Light.DualHook.Pursure",
             "Ability.Action.Hun.Light.JigSaw.SA",
+            "Ability.Action.Hun.Light.Snap",
+            "Ability.Action.Hun.Light.YuuBlade.FastAttack",
+            "Ability.Action.Hun.PerfectDodge",
+            "Ability.Action.Hun.SimpleExecution",
+            "Ability.Action.Hun.Weapon.Switch",
             "CharacterState.AbilityState.SnakeDual.Thrown"
           ],
           "ignoredTags": []
@@ -2887,6 +3098,8 @@
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.Hun.ContinuousDash",
+            "Ability.Action.Hun.Dash",
             "Ability.Action.Hun.Heavy.ZiMingJian.DB.FirstTime",
             "Ability.Action.Hun.Light.Long.AAAAA"
           ],
@@ -2970,7 +3183,9 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.Light.AAAA"
+            "Ability.Action.Hun.Light.AAAA",
+            "Ability.Action.Hun.Light.AAAAA",
+            "Ability.Action.Hun.Light.AAAAAA"
           ],
           "ignoredTags": []
         },
@@ -3134,7 +3349,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Jump"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -3240,7 +3457,17 @@
           ]
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.PerfectDodge",
+            "Ability.Action.Hun.ShachiAbility.LionHead.Dash",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.C",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CA",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CAA",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CB",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CBB",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CC",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -3340,7 +3567,11 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ContinuousDash",
+            "Ability.Action.Hun.Dash",
+            "Ability.Action.Hun.ShachiAbility.MoJi.AA"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -3524,6 +3755,13 @@
         ],
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start.GA_Hun_GuiTouBlade_B_Hold_Start_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -3570,6 +3808,13 @@
         ],
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave.GA_Hun_Horizontal_BladeWave_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -3715,6 +3960,13 @@
         "unclassifiedIgnoredTags": [
           "CharacterState.AbilityState.InSpecialPerform"
         ],
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge.GA_Hun_Iron_BCharge_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -3744,6 +3996,7 @@
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.Hun.Dash.Direction.B",
             "Ability.Action.Hun.Dash.Direction.N"
           ],
           "ignoredTags": []
@@ -3831,7 +4084,12 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Heavy",
+            "Ability.Action.Hun.Heavy.Jigsaw.RBB",
+            "Ability.Action.Hun.Light",
+            "Ability.Action.Hun.Light.JigSaw.SA"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -4190,6 +4448,13 @@
         ],
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB.GA_Hun_PoJun_DB_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -4219,7 +4484,11 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.Heavy.PoJun.DB"
+            "Ability.Action.Hun.Heavy.PoJun.DB",
+            "Ability.Action.Hun.PerfectDodge",
+            "Ability.Action.Hun.Weapon.Switch.Dash",
+            "Ability.Action.Hun.Weapon.Switch.Normal",
+            "Ability.Action.Hun.Weapon.Switch.UI"
           ],
           "ignoredTags": []
         },
@@ -4353,7 +4622,8 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.CombatArt"
+            "Ability.Action.Hun.CombatArt",
+            "Ability.Action.Hun.Heavy.ShuangYue.PB"
           ],
           "ignoredTags": []
         },
@@ -4401,8 +4671,7 @@
           ],
           "ignoredTags": [
             "Ability.Action.Hun.Heavy.SlitheringSword.DB1",
-            "Ability.Action.Hun.Heavy.SlitheringSword.DB2",
-            "Ability.Action.Hun.Heavy.SlitheringSword.DB3"
+            "Ability.Action.Hun.Heavy.SlitheringSword.DB2"
           ]
         },
         "cooldown": {
@@ -4416,40 +4685,6 @@
         ],
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
-        "equipmentSlot": "Weapon.Slot.Main"
-      }
-    },
-    "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB2": {
-      "groups": {
-        "equipment": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "training": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "space": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "stance": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "cooldown": {
-          "requiredTags": [],
-          "ignoredTags": []
-        }
-      },
-      "preparation": {
-        "equipmentConfigs": [
-          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SlitheringSword/Weapon_Hun_SlitheringSword"
-        ],
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -4482,8 +4717,6 @@
             "CharacterState.AbilityState.SlitheringSword.RandomDB.DB3"
           ],
           "ignoredTags": [
-            "Ability.Action.Hun.Heavy.SlitheringSword.DB1",
-            "Ability.Action.Hun.Heavy.SlitheringSword.DB2",
             "Ability.Action.Hun.Heavy.SlitheringSword.DB3"
           ]
         },
@@ -4525,7 +4758,17 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.Light.AA"
+            "Ability.Action.Execution.Combat",
+            "Ability.Action.Hun.Light.A.Normal",
+            "Ability.Action.Hun.Light.AA",
+            "Ability.Action.Hun.Light.ADash.Normal",
+            "Ability.Action.Hun.Light.SnakeDual.A_Deflect",
+            "Ability.Action.Hun.Light.SnakeDual.A_Fast",
+            "Ability.Action.Hun.Light.Snap",
+            "Ability.Action.Hun.PerfectDodge",
+            "Ability.Action.Hun.SimpleExecution",
+            "Ability.Action.Hun.Weapon.Switch",
+            "Ability.Action.Stance"
           ],
           "ignoredTags": []
         },
@@ -4567,6 +4810,7 @@
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.Hun.Light.SnakeDual.ABA",
             "Ability.Action.Hun.Light.SnakeDual.ABAA"
           ],
           "ignoredTags": []
@@ -4693,6 +4937,7 @@
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.Hun.Light.SnakeDual.BA",
             "Ability.Action.Hun.Light.SnakeDual.BAA"
           ],
           "ignoredTags": []
@@ -4904,7 +5149,10 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Heavy.SnakeDual.DB",
+            "Ability.Action.Hun.Light.SnakeDual.DA"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -5097,6 +5345,7 @@
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.Hun.Heavy.ComboAtk_N4H1",
             "Ability.Action.Hun.Heavy.Tang.AAAAAB"
           ],
           "ignoredTags": []
@@ -5284,7 +5533,9 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.Heavy.YanYueDao.Special01"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -5297,6 +5548,13 @@
         ],
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill.GA_Hun_YanYueDao_SpecialSkill_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -5443,7 +5701,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -5472,7 +5732,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -5480,7 +5742,11 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Light.AAAAA",
+            "Ability.Action.Hun.PerfectDodge",
+            "Ability.Action.Hun.SimpleExecution"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -5545,7 +5811,16 @@
           ]
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.LionHead.Dash",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.C",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CA",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CAA",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CB",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CBB",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CC",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -5655,9 +5930,12 @@
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.HoldDeflect",
             "Ability.Action.Hun.Heavy.Atk03",
+            "Ability.Action.Hun.Heavy.SnakeDual.DB",
+            "Ability.Action.Hun.Light.AAAAA",
             "Ability.Action.Hun.Light.Air.A.Normal",
-            "CharacterState.AbilityState.LuanYing.SnapSoul"
+            "Ability.Action.Stance"
           ],
           "ignoredTags": []
         },
@@ -5756,7 +6034,9 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.Double.ComboBTA"
+          ],
           "ignoredTags": []
         },
         "space": {
@@ -5768,17 +6048,43 @@
         "stance": {
           "requiredTags": [],
           "ignoredTags": [
-            "CharacterState.AbilityState.Stance.HoldingStanceKey",
-            "CharacterState.AbilityState.JigSaw.BloodSaw"
+            "CharacterState.AbilityState.JigSaw.BloodSaw",
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
           ]
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.Execution",
+            "Ability.Action.Execution.Custom.Iron.BreakAct",
+            "Ability.Action.Hun.ChiZheCanJian.AutoDodge.Normal",
+            "Ability.Action.Hun.Heavy.DashAtk01",
+            "Ability.Action.Hun.Heavy.Iron.Buff",
+            "Ability.Action.Hun.Heavy.SlitheringSword.DB1",
+            "Ability.Action.Hun.Heavy.SlitheringSword.DB2",
+            "Ability.Action.Hun.Heavy.SlitheringSword.DB3",
+            "Ability.Action.Hun.Heavy.YanYueDao.Special01",
+            "Ability.Action.Hun.Heavy.YuuBlade.FastAttack",
+            "Ability.Action.Hun.Light.A.Draw",
             "Ability.Action.Hun.Light.A.Normal",
+            "Ability.Action.Hun.Light.ADash.Draw",
+            "Ability.Action.Hun.Light.ADash.Normal",
             "Ability.Action.Hun.Light.Air.A",
+            "Ability.Action.Hun.Light.Air.A.Draw",
             "Ability.Action.Hun.Light.Air.A.Normal",
+            "Ability.Action.Hun.Light.Double.BTA",
+            "Ability.Action.Hun.Light.DualHook.Pursure",
             "Ability.Action.Hun.Light.JigSaw.SA",
-            "Ability.Action.Hun.Weapon.Switch.Air"
+            "Ability.Action.Hun.Light.SnakeDual.A_Deflect",
+            "Ability.Action.Hun.Light.SnakeDual.A_Fast",
+            "Ability.Action.Hun.Light.Snap",
+            "Ability.Action.Hun.Light.YuuBlade.FastAttack",
+            "Ability.Action.Hun.PerfectDodge",
+            "Ability.Action.Hun.SimpleExecution",
+            "Ability.Action.Hun.Weapon.Switch",
+            "Ability.Action.Hun.Weapon.Switch.Air",
+            "Ability.Action.Hun.Weapon.Switch.Dash",
+            "Ability.Action.Hun.Weapon.Switch.Normal",
+            "CharacterState.AbilityState.DualHook.DB.Heavy"
           ],
           "ignoredTags": []
         },
@@ -6238,7 +6544,10 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.Heavy"
+            "Ability.Action.Hun.ContinuousDash",
+            "Ability.Action.Hun.Dash",
+            "Ability.Action.Hun.Heavy",
+            "Ability.Action.Hun.ShachiAbility.MoJi.AA"
           ],
           "ignoredTags": []
         },
@@ -6346,7 +6655,10 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ContinuousDash",
+            "Ability.Action.Hun.Dash"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -6456,7 +6768,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Jump"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -6571,7 +6885,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Jump"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -6658,7 +6974,12 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.Heavy.Atk04"
+            "Ability.Action.Hun.Heavy.Atk04",
+            "Ability.Action.Hun.Heavy.ComboAtk_N1H2",
+            "Ability.Action.Hun.Heavy.ComboAtk_N2H2",
+            "Ability.Action.Hun.Heavy.ComboAtk_N3H2",
+            "Ability.Action.Hun.Heavy.Double.ATBB",
+            "Ability.Action.Hun.Heavy.Double.ATBBB"
           ],
           "ignoredTags": []
         },
@@ -6721,40 +7042,6 @@
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
-    "ability:Ability.Action.Hun.Light.GuiTouDao.DA": {
-      "groups": {
-        "equipment": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "training": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "space": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "stance": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "cooldown": {
-          "requiredTags": [],
-          "ignoredTags": []
-        }
-      },
-      "preparation": {
-        "equipmentConfigs": [
-          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/GuiTouBlade/Weapon_Hun_GuiTouBlade"
-        ],
-        "equipmentSlot": "Weapon.Slot.Main"
-      }
-    },
     "ability:Ability.Action.Hun.Light.JigSaw.RA": {
       "groups": {
         "equipment": {
@@ -6780,7 +7067,12 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Heavy",
+            "Ability.Action.Hun.Light",
+            "Ability.Action.Hun.Light.JigSaw.RAAA",
+            "Ability.Action.Hun.Light.JigSaw.SA"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -7000,11 +7292,11 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.Heavy"
+            "Ability.Action.Hun.Heavy",
+            "Ability.Action.Hun.Heavy.Long.BD",
+            "Ability.Action.Hun.Light.AAAA"
           ],
-          "ignoredTags": [
-            "Ability.Action.Hun.Heavy.Long.BSup"
-          ]
+          "ignoredTags": []
         },
         "cooldown": {
           "requiredTags": [],
@@ -7074,15 +7366,21 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.SlitheringSword.EnableDA"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -7095,6 +7393,13 @@
         }
       },
       "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackL_Hold.IA_AttackL_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Loop"
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_DA.GA_Hun_SlitheringSword_DA_C",
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SlitheringSword/Weapon_Hun_SlitheringSword"
         ],
@@ -7125,6 +7430,7 @@
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.Hun.Heavy.SnakeDual.AB",
             "Ability.Action.Hun.Heavy.SnakeDual.ABB"
           ],
           "ignoredTags": []
@@ -7293,7 +7599,8 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.Heavy.SnakeDual.BABAB"
+            "Ability.Action.Hun.Heavy.SnakeDual.BABAB",
+            "Ability.Action.Hun.PerfectDodge"
           ],
           "ignoredTags": []
         },
@@ -7335,7 +7642,10 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.Heavy.Atk02"
+            "Ability.Action.Hun.Heavy.Atk01",
+            "Ability.Action.Hun.Heavy.Atk02",
+            "Ability.Action.Hun.Heavy.SnakeDual.B_Fast",
+            "Ability.Action.Hun.Heavy.Snap"
           ],
           "ignoredTags": []
         },
@@ -7419,6 +7729,7 @@
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.Hun.Heavy.SnakeDual.BAB",
             "Ability.Action.Hun.Heavy.SnakeDual.BABB"
           ],
           "ignoredTags": []
@@ -7572,6 +7883,7 @@
         },
         "predecessor": {
           "requiredTags": [
+            "Ability.Action.Execution.ShachiWeapon",
             "CharacterState.AbilityState.KillBounsSnap"
           ],
           "ignoredTags": []
@@ -7768,11 +8080,15 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -7802,15 +8118,21 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.LuanYing.SnapSoul"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -7836,7 +8158,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -7861,19 +8185,29 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.Bow.Dash_LR"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Dash.Direction",
+            "Ability.Action.Hun.ShachiAbility.Bow.Dash",
+            "Ability.Action.Hun.ShachiAbility.Bow.DeflectCounter"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -7900,11 +8234,15 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -7937,7 +8275,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -7945,7 +8285,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.BrutalAxe.CanCombo"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -7983,7 +8325,10 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+            "CharacterState.AbilityState.BrutalAxe.CanCombo"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -7995,13 +8340,7 @@
           "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
         ],
         "automaticReleaseWhen": {
-          "timeline": "Main",
-          "minimum_time": 1.431936741,
-          "property_minimum": {
-            "Current Charge": 0
-          },
-          "before_time": 1.701008201,
-          "cancel_on_expire": true
+          "native_completion": true
         },
         "nativePreparationRecipeId": "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main.Release1",
         "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal.GA_BrutalAxe_Normal_C",
@@ -8040,7 +8379,9 @@
           "requiredTags": [
             "Ability.Action.Hun.Dash"
           ],
-          "ignoredTags": []
+          "ignoredTags": [
+            "CharacterState.AbilityState.BrutalAxe.CanCombo"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -8048,6 +8389,34 @@
         }
       },
       "preparation": {
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "native_completion": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal.GA_BrutalAxe_Normal_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong",
+              "Weapon.Type.ShaqiWeapon.Category.Strength"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "native_completion": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint.GA_BrutalAxe_Sprint_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong",
+              "Weapon.Type.ShaqiWeapon.Category.Strength"
+            ]
+          }
+        ],
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/BrutalAxe/Weapon_BrutalAxe",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/BrutalAxe/Weapon_BrutalAxe_Interact"
@@ -8066,7 +8435,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -8074,7 +8445,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -8083,6 +8456,123 @@
         }
       },
       "preparation": {
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Main",
+              "minimum_time": 1.169093013,
+              "object_variable": {
+                "property": "Variables",
+                "key": "DuYanBow_1",
+                "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+                "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_GA_DuYan_Bow_Normal_P1_01.BD_GA_DuYan_Bow_Normal_P1_01",
+                "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+                "status": 1
+              },
+              "before_time": 1.973573685,
+              "cancel_on_expire": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal.GA_DuYan_Bow_Normal_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.None",
+              "Weapon.Type.ShaqiWeapon.Bow",
+              "Weapon.Type.ShaqiWeapon.Category.Ranged"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Main",
+              "minimum_time": 0.9051806926727295
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead.GA_LionHead_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.None",
+              "Weapon.Type.ShaqiWeapon.Category.Magic"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Main",
+              "minimum_time": 0
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon.GA_TigerCannon_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong",
+              "Weapon.Type.ShaqiWeapon.Category.Strength"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Main",
+              "minimum_time": 1.454123855,
+              "object_variable": {
+                "property": "Variables",
+                "key": "UnnamedBow",
+                "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+                "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiWeapon/B_UnnamedBow_Normal.B_UnnamedBow_Normal",
+                "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+                "status": 1
+              },
+              "before_time": 2.596182823,
+              "cancel_on_expire": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow.GA_UnnamedBow_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.None",
+              "Weapon.Type.ShaqiWeapon.Bow",
+              "Weapon.Type.ShaqiWeapon.Category.Ranged"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Main",
+              "minimum_time": 1.245917797,
+              "object_variable": {
+                "property": "Variables",
+                "key": "UnnamedBow",
+                "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+                "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YouLongCha/B_YouLongCha_Normal.B_YouLongCha_Normal",
+                "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+                "status": 1
+              },
+              "before_time": 1.533529043,
+              "cancel_on_expire": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal.GA_YouLongCha_Normal_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.None",
+              "Weapon.Type.ShaqiWeapon.Category.Ranged"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Loop"
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong",
+              "Weapon.Type.ShaqiWeapon.Category.Strength"
+            ]
+          }
+        ],
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/CaoOuSiXian/Weapon_CaoOuSiXian",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/CaoOuSiXian/Weapon_CaoOuSiXian_Evolution",
@@ -8169,7 +8659,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -8177,42 +8669,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "cooldown": {
-          "requiredTags": [],
-          "ignoredTags": []
-        }
-      },
-      "preparation": {
-        "equipmentConfigs": [
-          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Weapon_HuangJinHuoChong",
-          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuangJinHuoChong/Weapon_HuangJinHuoChong_Interact"
-        ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
-      }
-    },
-    "ability:Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Common_03": {
-      "groups": {
-        "equipment": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "training": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "space": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "stance": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -8235,19 +8694,29 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.HuangJinHuoChong.DashLR"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Dash.Direction",
+            "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.Dash",
+            "Ability.Action.Hun.ShachiAbility.HuangJinHuoChong.DeflectCounter"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -8270,15 +8739,21 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.HuangJinHuoChong.DeflectCounter"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -8309,7 +8784,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -8318,7 +8795,9 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAA"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -8343,7 +8822,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -8351,7 +8832,10 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.A",
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AShort"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -8377,7 +8861,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -8385,7 +8871,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AA"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -8424,8 +8912,7 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAA",
-            "Ability.Action.ShaqiReinforced"
+            "Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAA"
           ],
           "ignoredTags": []
         },
@@ -8442,6 +8929,12 @@
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuoLiuXing/Weapon_HuoLiuXing"
         ],
         "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        },
         "automaticReleaseWhen": {
           "timeline": "Main",
           "required_tags": [
@@ -8461,15 +8954,29 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Execution.Combat",
+            "Ability.Action.HoldDeflect",
+            "Ability.Action.Hun.Dash",
+            "Ability.Action.Hun.Heavy",
+            "Ability.Action.Hun.Light",
+            "Ability.Action.Hun.PerfectDodge",
+            "Ability.Action.Hun.SimpleExecution",
+            "Ability.Action.Hun.Weapon.Switch",
+            "Ability.Action.Stance"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -8491,15 +8998,21 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.HuoLiuXing.DB"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -8525,12 +9038,18 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.JinGua.CanAirAttack"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
-          "ignoredTags": []
+          "requiredTags": [
+            "CharacterState.Space.Air"
+          ],
+          "ignoredTags": [
+            "CharacterState.AirState.AirAtk1"
+          ]
         },
         "stance": {
           "requiredTags": [],
@@ -8577,8 +9096,7 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.ShachiAbility.JinGua.Main",
-            "Ability.Action.ShaqiReinforced"
+            "Ability.Action.Hun.ShachiAbility.JinGua.Main"
           ],
           "ignoredTags": []
         },
@@ -8592,7 +9110,13 @@
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua_Interact"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main": {
@@ -8617,7 +9141,9 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.JinGua.Main"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -8650,15 +9176,21 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.JinGua.Evolution"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -8671,41 +9203,13 @@
         }
       },
       "preparation": {
-        "equipmentConfigs": [
-          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua",
-          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua_Interact"
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
-      }
-    },
-    "ability:Ability.Action.Hun.ShachiAbility.JinGua.SprintAir": {
-      "groups": {
-        "equipment": {
-          "requiredTags": [],
-          "ignoredTags": []
+        "automaticReleaseWhen": {
+          "native_completion": true
         },
-        "training": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "space": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "stance": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "cooldown": {
-          "requiredTags": [],
-          "ignoredTags": []
-        }
-      },
-      "preparation": {
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack.GA_JinGua_RoAttack_C",
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua_Interact"
@@ -8720,19 +9224,29 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.LionHead.CanDash"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
-          "ignoredTags": []
+          "requiredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
+          "ignoredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ]
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Dash.Direction.F"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -8756,15 +9270,21 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.LionHead.CanDoubleFireBall"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -8792,15 +9312,21 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.LionHead.CanFireBall"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -8832,7 +9358,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -8841,7 +9369,11 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_03",
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.02",
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.03"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -8868,7 +9400,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -8876,7 +9410,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_01"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -8904,7 +9440,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -8912,7 +9450,10 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_02",
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.01"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -8976,7 +9517,9 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.MiaoShouFeiDao.Dash_LR"
+          ],
           "ignoredTags": []
         },
         "space": {
@@ -8988,7 +9531,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_01"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9012,7 +9557,9 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.MiaoShouFeiDao.Dash_LR"
+          ],
           "ignoredTags": []
         },
         "space": {
@@ -9024,7 +9571,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_02"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9048,7 +9597,9 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.MiaoShouFeiDao.Dash_LR"
+          ],
           "ignoredTags": []
         },
         "space": {
@@ -9060,7 +9611,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common_03"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9088,12 +9641,16 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ]
         },
         "predecessor": {
           "requiredTags": [],
@@ -9122,15 +9679,30 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Execution.Combat",
+            "Ability.Action.Execution.ShachiWeapon",
+            "Ability.Action.HoldDeflect",
+            "Ability.Action.Hun.Dash",
+            "Ability.Action.Hun.Heavy",
+            "Ability.Action.Hun.Light",
+            "Ability.Action.Hun.PerfectDodge",
+            "Ability.Action.Hun.SimpleExecution",
+            "Ability.Action.Hun.Weapon.Switch",
+            "Ability.Action.Stance"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9152,11 +9724,15 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.MoJian.Evolution"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9164,7 +9740,10 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.MoJi.A",
+            "Ability.Action.Hun.ShachiAbility.MoJi.A.Short"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9187,7 +9766,6 @@
         },
         "training": {
           "requiredTags": [
-            "CharacterState.WeaponUpgrade.MoJian.Evolution",
             "CharacterState.WeaponUpgrade.MoJian.FreeStrike"
           ],
           "ignoredTags": []
@@ -9205,10 +9783,7 @@
         "predecessor": {
           "requiredTags": [
             "Ability.Action.Hun.ShachiAbility.MoJi.AA",
-            "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default",
-            "Ability.Action.ShaqiReinforced",
-            "CharacterState.AbilityState.Mojian.HasProjectile",
-            "CharacterState.AbilityState.Mojian.ProjectileFull"
+            "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default"
           ],
           "ignoredTags": []
         },
@@ -9221,7 +9796,15 @@
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Mojian/Weapon_Mojian"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced",
+            "CharacterState.AbilityState.Mojian.HasProjectile",
+            "CharacterState.AbilityState.Mojian.ProjectileFull"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "ability:Ability.Action.Hun.ShachiAbility.PiPa.AA": {
@@ -9235,7 +9818,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9243,7 +9828,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.Default"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9256,7 +9843,13 @@
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute_Evolution"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "ability:Ability.Action.Hun.ShachiAbility.PiPa.AAA": {
@@ -9270,7 +9863,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9278,7 +9873,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.PiPa.AA"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9301,19 +9898,28 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.Lute.Dash_LR"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Dash.Direction",
+            "Ability.Action.Hun.ShachiAbility.PiPa.Dash"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9389,7 +9995,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9397,7 +10005,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.Drag"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9425,7 +10035,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9433,7 +10045,11 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CA",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.Drag",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.HookMove"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9461,7 +10077,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9469,7 +10087,11 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CB",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.Drag",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.HookMove"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9497,7 +10119,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9505,7 +10129,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.C"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9533,7 +10159,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9541,7 +10169,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CC"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9582,8 +10212,7 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC",
-            "Ability.Action.ShaqiReinforced"
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC"
           ],
           "ignoredTags": []
         },
@@ -9598,7 +10227,13 @@
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Evolution",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Interact"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CDD": {
@@ -9612,7 +10247,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9620,7 +10257,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CD"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9663,8 +10302,7 @@
           "requiredTags": [
             "Ability.Action.Hun.ShachiAbility.ShachiHook.C",
             "Ability.Action.Hun.ShachiAbility.ShachiHook.CC",
-            "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC",
-            "Ability.Action.ShaqiReinforced"
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.CCC"
           ],
           "ignoredTags": []
         },
@@ -9679,7 +10317,13 @@
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Evolution",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Interact"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.HookMove": {
@@ -9689,19 +10333,29 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.ShachiHook.HookMove"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey",
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Dash.Direction",
+            "Ability.Action.Hun.ShachiAbility.ShachiHook.HookMove"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9742,8 +10396,7 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.ShachiAbility.TanLang.Normal",
-            "Ability.Action.ShaqiReinforced"
+            "Ability.Action.Hun.ShachiAbility.TanLang.Normal"
           ],
           "ignoredTags": []
         },
@@ -9756,7 +10409,13 @@
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TanLang/Weapon_TanLang"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "ability:Ability.Action.Hun.ShachiAbility.TanLang.Normal": {
@@ -9781,7 +10440,9 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.TanLang.Normal"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -9811,20 +10472,28 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.TanLang.SpecialAttack"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.TanLang.Normal"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -9849,7 +10518,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9857,8 +10528,13 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Dash"
+          ],
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_03",
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -9883,7 +10559,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9891,7 +10569,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_01"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9917,7 +10597,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -9925,7 +10607,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_02"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -9964,8 +10648,7 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_03",
-            "Ability.Action.ShaqiReinforced"
+            "Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_03"
           ],
           "ignoredTags": []
         },
@@ -9978,7 +10661,13 @@
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ThunderSpear/Weapon_ThunderSpear"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Dash": {
@@ -9988,19 +10677,27 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.ThunderSpear.DashAtk"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Dash.Direction.F"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -10022,15 +10719,21 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.ThunderSpear.HuiMaQiang"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -10060,7 +10763,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -10069,7 +10774,9 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -10105,8 +10812,7 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C",
-            "Ability.Action.ShaqiReinforced"
+            "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.C"
           ],
           "ignoredTags": []
         },
@@ -10119,7 +10825,13 @@
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TieKuangQuanTao/Weapon_TieKuangQuanTao"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CCC": {
@@ -10144,8 +10856,7 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC",
-            "Ability.Action.ShaqiReinforced"
+            "Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.CC"
           ],
           "ignoredTags": []
         },
@@ -10158,7 +10869,13 @@
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TieKuangQuanTao/Weapon_TieKuangQuanTao"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "ability:Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.GpAttack.Normal": {
@@ -10172,11 +10889,15 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -10202,19 +10923,27 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.TigerCannon.CanDash"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Dash"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -10252,7 +10981,9 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.TigerCannon.Normal"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -10296,7 +11027,9 @@
         },
         "stance": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ]
         },
         "predecessor": {
           "requiredTags": [
@@ -10306,7 +11039,9 @@
             "Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
             "CharacterState.AbilityState.TigerCannon.CanQuickCharge"
           ],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -10328,15 +11063,21 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.TigerCannon.Evolution"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -10367,7 +11108,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -10376,7 +11119,9 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.ShachiAbility.XueDiZi.AAA"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -10402,7 +11147,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -10410,7 +11157,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.XueDiZi.A"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -10437,7 +11186,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -10445,7 +11196,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.XueDiZi.AA"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -10468,15 +11221,21 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.XueDiZi.Evolution"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -10520,8 +11279,7 @@
         },
         "predecessor": {
           "requiredTags": [
-            "Ability.Action.Hun.ShachiAbility.XueDiZi.AAA",
-            "Ability.Action.ShaqiReinforced"
+            "Ability.Action.Hun.ShachiAbility.XueDiZi.AAA"
           ],
           "ignoredTags": []
         },
@@ -10535,7 +11293,13 @@
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/Weapon_XueDiZi",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/Weapon_XueDiZi_Interact"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "ability:Ability.Action.Hun.ShachiAbility.YouLongCha.Dash": {
@@ -10545,19 +11309,28 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.YouLongCha.Dash_F"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Dash.Direction",
+            "Ability.Action.Hun.ShachiAbility.YouLongCha.Dash"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -10580,15 +11353,21 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.YouLongTou.WaterCannon"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -10608,41 +11387,6 @@
         "equipmentSlot": "Weapon.Slot.ShaChi"
       }
     },
-    "ability:Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Parry": {
-      "groups": {
-        "equipment": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "training": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "space": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "stance": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "cooldown": {
-          "requiredTags": [],
-          "ignoredTags": []
-        }
-      },
-      "preparation": {
-        "equipmentConfigs": [
-          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/Weapon_ZhuoBiDun",
-          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/Weapon_ZhuoBiDun_Interact"
-        ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
-      }
-    },
     "ability:Ability.Action.Hun.ShachiAbility.ZhuoBiDun.Slide": {
       "groups": {
         "equipment": {
@@ -10650,15 +11394,21 @@
           "ignoredTags": []
         },
         "training": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.WeaponUpgrade.ZhuoBiDun.Slide"
+          ],
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -10897,7 +11647,9 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.Special.Jade.DB"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -10917,7 +11669,9 @@
     "ability:Ability.Action.Hun.Special.Long.LieZhan.C": {
       "groups": {
         "equipment": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Weapon.Type.Global.TwoHanded"
+          ],
           "ignoredTags": []
         },
         "training": {
@@ -10925,11 +11679,15 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -10961,7 +11719,9 @@
     "ability:Ability.Action.Hun.Special.Long.LieZhan.CB": {
       "groups": {
         "equipment": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Weapon.Type.Global.TwoHanded"
+          ],
           "ignoredTags": []
         },
         "training": {
@@ -10969,7 +11729,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -10977,7 +11739,9 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Special.Long.LieZhan.C"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -11098,11 +11862,15 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -11124,7 +11892,9 @@
     "ability:Ability.Action.Hun.Special.Tang.ShunSha.C": {
       "groups": {
         "equipment": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Weapon.Type.Global.SingleHanded"
+          ],
           "ignoredTags": []
         },
         "training": {
@@ -11132,11 +11902,15 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
@@ -11241,15 +12015,28 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Execution",
+            "Ability.Action.Hun.CombatArt",
+            "Ability.Action.Hun.ContinuousDash.Dash_02",
+            "Ability.Action.Hun.ContinuousDash.Dash_03",
+            "Ability.Action.Hun.Heavy",
+            "Ability.Action.Hun.PerfectDodge",
+            "Ability.Action.Hun.ShachiAbility",
+            "Ability.Action.Stance"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -11299,7 +12086,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -11328,7 +12117,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -11337,7 +12128,9 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.TempWeapon.Ultimate"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -11364,7 +12157,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -11393,7 +12188,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Air"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -11402,7 +12199,9 @@
         },
         "predecessor": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "Ability.Action.Hun.Weapon.Switch.Air"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -11422,15 +12221,21 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ],
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.Dash"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -11458,16 +12263,24 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "CharacterState.Native.Attitude.Sprinting"
+          ]
         },
         "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
+          "requiredTags": [
+            "Ability.Action.Hun.ShachiAbility.MoJi.AA.Default"
+          ],
+          "ignoredTags": [
+            "Ability.Action.Hun.Dash"
+          ]
         },
         "cooldown": {
           "requiredTags": [],
@@ -11496,12 +12309,16 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ]
         },
         "predecessor": {
           "requiredTags": [],
@@ -11525,7 +12342,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -11554,65 +12373,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "stance": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "cooldown": {
-          "requiredTags": [],
-          "ignoredTags": []
-        }
-      },
-      "preparation": {}
-    },
-    "ability:Ability.SpecialMove.JumpOut.Left": {
-      "groups": {
-        "equipment": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "training": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "space": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "stance": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "predecessor": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "cooldown": {
-          "requiredTags": [],
-          "ignoredTags": []
-        }
-      },
-      "preparation": {}
-    },
-    "ability:Ability.SpecialMove.JumpOut.Right": {
-      "groups": {
-        "equipment": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "training": {
-          "requiredTags": [],
-          "ignoredTags": []
-        },
-        "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -11670,7 +12433,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -11699,7 +12464,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -11733,7 +12500,9 @@
         },
         "stance": {
           "requiredTags": [],
-          "ignoredTags": []
+          "ignoredTags": [
+            "CharacterState.AbilityState.Stance.HoldingStanceKey"
+          ]
         },
         "predecessor": {
           "requiredTags": [],
@@ -11757,7 +12526,9 @@
           "ignoredTags": []
         },
         "space": {
-          "requiredTags": [],
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
           "ignoredTags": []
         },
         "stance": {
@@ -11765,7 +12536,10 @@
           "ignoredTags": []
         },
         "predecessor": {
-          "requiredTags": [],
+          "requiredTags": [
+            "Ability.Action.Hun.ContinuousDash",
+            "Ability.Action.Hun.Dash"
+          ],
           "ignoredTags": []
         },
         "cooldown": {
@@ -16605,9 +17379,7 @@
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [
-            "Ability.Action.ShaqiReinforced"
-          ],
+          "requiredTags": [],
           "ignoredTags": []
         },
         "predecessor": {
@@ -16632,7 +17404,13 @@
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/HuoLiuXing/Weapon_HuoLiuXing"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack.Training": {
@@ -16654,9 +17432,7 @@
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [
-            "Ability.Action.ShaqiReinforced"
-          ],
+          "requiredTags": [],
           "ignoredTags": []
         },
         "predecessor": {
@@ -16681,7 +17457,13 @@
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/JinGua/Weapon_JinGua"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Ability.Action.Hun.ShachiAbility.JinGua.Main.Release.Charge1": {
@@ -16895,10 +17677,7 @@
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [
-            "Ability.Action.ShaqiReinforced",
-            "CharacterState.AbilityState.Mojian.ProjectileFull"
-          ],
+          "requiredTags": [],
           "ignoredTags": []
         },
         "predecessor": {
@@ -16924,7 +17703,14 @@
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Mojian/Weapon_Mojian"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced",
+            "CharacterState.AbilityState.Mojian.ProjectileFull"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Ability.Action.Hun.ShachiAbility.PiPa.Skill.End": {
@@ -16996,9 +17782,7 @@
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [
-            "Ability.Action.ShaqiReinforced"
-          ],
+          "requiredTags": [],
           "ignoredTags": []
         },
         "predecessor": {
@@ -17024,7 +17808,13 @@
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Evolution"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training1": {
@@ -17046,9 +17836,7 @@
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [
-            "Ability.Action.ShaqiReinforced"
-          ],
+          "requiredTags": [],
           "ignoredTags": []
         },
         "predecessor": {
@@ -17074,7 +17862,13 @@
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Evolution"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training2": {
@@ -17096,9 +17890,7 @@
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [
-            "Ability.Action.ShaqiReinforced"
-          ],
+          "requiredTags": [],
           "ignoredTags": []
         },
         "predecessor": {
@@ -17124,7 +17916,13 @@
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Evolution"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training3": {
@@ -17146,9 +17944,7 @@
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [
-            "Ability.Action.ShaqiReinforced"
-          ],
+          "requiredTags": [],
           "ignoredTags": []
         },
         "predecessor": {
@@ -17174,7 +17970,13 @@
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook",
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ShachiHook/Weapon_ShachiHook_Evolution"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack.Training": {
@@ -17196,9 +17998,7 @@
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [
-            "Ability.Action.ShaqiReinforced"
-          ],
+          "requiredTags": [],
           "ignoredTags": []
         },
         "predecessor": {
@@ -17223,7 +18023,13 @@
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/TanLang/Weapon_TanLang"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Ability.Action.Hun.ShachiAbility.TanLang.Normal.FastEnd": {
@@ -17293,9 +18099,7 @@
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [
-            "Ability.Action.ShaqiReinforced"
-          ],
+          "requiredTags": [],
           "ignoredTags": []
         },
         "predecessor": {
@@ -17320,7 +18124,13 @@
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ThunderSpear/Weapon_ThunderSpear"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Ability.Action.Hun.ShachiAbility.ThunderSpear.DeflectCounter.Native": {
@@ -17868,9 +18678,7 @@
           "ignoredTags": []
         },
         "stance": {
-          "requiredTags": [
-            "Ability.Action.ShaqiReinforced"
-          ],
+          "requiredTags": [],
           "ignoredTags": []
         },
         "predecessor": {
@@ -17895,7 +18703,13 @@
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/XueDiZi/Weapon_XueDiZi"
         ],
-        "equipmentSlot": "Weapon.Slot.ShaChi"
+        "equipmentSlot": "Weapon.Slot.ShaChi",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Accessory.RandomDrink.GhostFire.Launch": {
@@ -20758,6 +21572,98 @@
         "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C",
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/ZhuoBiDun/Weapon_ZhuoBiDun"
+        ],
+        "equipmentSlot": "Weapon.Slot.ShaChi"
+      }
+    },
+    "move:ShadowPhase.GA_Hun_Lute_A.Stage2": {
+      "groups": {
+        "equipment": {
+          "requiredTags": [
+            "Weapon.Type.ShaqiWeapon.Lute"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "stance": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "predecessor": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "cooldown": {
+          "requiredTags": [],
+          "ignoredTags": []
+        }
+      },
+      "preparation": {
+        "steps": [
+          "normally_activate_ability",
+          "execute_native_one_shot_weapon_buff_or_form_initialization",
+          "await_original_timeline_and_minimum_setup_time",
+          "enter_original_phase_with_current_timeline"
+        ],
+        "externalContext": false,
+        "reason": "Normal activation preserves native resource qualification; wait for the original one-shot SpiritShadow cost before entering the second strum. Both simultaneous projectile variants and native cleanup remain in the original timeline.",
+        "equipmentConfigs": [
+          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute"
+        ],
+        "equipmentSlot": "Weapon.Slot.ShaChi"
+      }
+    },
+    "move:ShadowPhase.GA_Hun_Lute_AA.Stage2": {
+      "groups": {
+        "equipment": {
+          "requiredTags": [
+            "Weapon.Type.ShaqiWeapon.Lute"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "stance": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "predecessor": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "cooldown": {
+          "requiredTags": [],
+          "ignoredTags": []
+        }
+      },
+      "preparation": {
+        "steps": [
+          "normally_activate_ability",
+          "execute_native_one_shot_weapon_buff_or_form_initialization",
+          "await_original_timeline_and_minimum_setup_time",
+          "enter_original_phase_with_current_timeline"
+        ],
+        "externalContext": false,
+        "reason": "Normal activation preserves native resource qualification; wait for the original one-shot SpiritShadow cost before entering the second strum. Both simultaneous projectile variants and native cleanup remain in the original timeline.",
+        "equipmentConfigs": [
+          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute"
         ],
         "equipmentSlot": "Weapon.Slot.ShaChi"
       }
@@ -24686,6 +25592,13 @@
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
         "requiresGrantedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous.GA_Hun_ChiZheCanJian_Drink_Continuous_C",
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous.GA_Hun_ChiZheCanJian_Drink_Continuous_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -26162,6 +27075,13 @@
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
         "requiresGrantedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous.GA_Hun_ChiZheCanJian_Drink_Continuous_C",
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous.GA_Hun_ChiZheCanJian_Drink_Continuous_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -33944,6 +34864,13 @@
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
         "requiresGrantedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start.GA_Hun_GuiTouBlade_B_Hold_Start_C",
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start.GA_Hun_GuiTouBlade_B_Hold_Start_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -36617,6 +37544,13 @@
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
         "requiresGrantedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave.GA_Hun_Horizontal_BladeWave_C",
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave.GA_Hun_Horizontal_BladeWave_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -37804,6 +38738,13 @@
           "CharacterState.AbilityState.InSpecialPerform"
         ],
         "requiresGrantedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge.GA_Hun_Iron_BCharge_C",
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge.GA_Hun_Iron_BCharge_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -46383,7 +47324,6 @@
         "predecessor": {
           "requiredTags": [
             "Ability.Action.Hun.LuanYing.BuffP2",
-            "Ability.Action.ShaqiReinforced",
             "CharacterState.AbilityState.LuanYing.SnapSoul"
           ],
           "ignoredTags": []
@@ -46400,7 +47340,13 @@
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
         "requiresGrantedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/Default/GA_Hun_LuanYing_BBB.GA_Hun_LuanYing_BBB_C",
-        "equipmentSlot": "Weapon.Slot.Main"
+        "equipmentSlot": "Weapon.Slot.Main",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Weapon.Weapon_Hun_LuanYing_Evolution.GA_Hun_LuanYing_B_Draw": {
@@ -46831,7 +47777,6 @@
         "predecessor": {
           "requiredTags": [
             "Ability.Action.Hun.LuanYing.BuffP2",
-            "Ability.Action.ShaqiReinforced",
             "CharacterState.AbilityState.LuanYing.SnapSoul"
           ],
           "ignoredTags": []
@@ -46848,7 +47793,13 @@
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
         "requiresGrantedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LuanYing/Default/GA_Hun_LuanYing_P2_BBB.GA_Hun_LuanYing_P2_BBB_C",
-        "equipmentSlot": "Weapon.Slot.Main"
+        "equipmentSlot": "Weapon.Slot.Main",
+        "nativeStateTags": {
+          "requiredTags": [
+            "Ability.Action.ShaqiReinforced"
+          ],
+          "ignoredTags": []
+        }
       }
     },
     "move:Weapon.Weapon_Hun_LuanYing_Evolution.GA_Hun_LuanYing_P2_CA": {
@@ -49286,6 +50237,13 @@
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
         "requiresGrantedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB.GA_Hun_PoJun_DB_C",
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB.GA_Hun_PoJun_DB_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -59091,6 +60049,13 @@
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
         "requiresGrantedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold.GA_Hun_BronzeSword_B_Hold_C",
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold.GA_Hun_BronzeSword_B_Hold_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -63982,6 +64947,13 @@
         "unclassifiedRequiredTags": [],
         "unclassifiedIgnoredTags": [],
         "requiresGrantedAbility": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill.GA_Hun_YanYueDao_SpecialSkill_C",
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill.GA_Hun_YanYueDao_SpecialSkill_C",
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
@@ -70431,6 +71403,50 @@
         "equipmentSlot": "Weapon.Slot.Main"
       }
     },
+    "move:WeaponPhase.GA_Hun_Double_JueYing_C.Final": {
+      "groups": {
+        "equipment": {
+          "requiredTags": [
+            "Weapon.Type.DoubleBlade.JueYing"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "space": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "stance": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "predecessor": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "cooldown": {
+          "requiredTags": [],
+          "ignoredTags": []
+        }
+      },
+      "preparation": {
+        "steps": [
+          "normally_activate_ability",
+          "execute_native_one_shot_weapon_buff_or_form_initialization",
+          "await_original_timeline_and_minimum_setup_time",
+          "enter_original_phase_with_current_timeline"
+        ],
+        "externalContext": false,
+        "reason": "Original timeline playback reconstructs overlapping montage/tags/warp actions, but does not retroactively run skipped one-shot initialization. Preserve the actual setup boundary and original branch.",
+        "equipmentConfigs": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Double/Weapon_Hun_JueYing"
+        ],
+        "equipmentSlot": "Weapon.Slot.Main"
+      }
+    },
     "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Crow": {
       "groups": {
         "equipment": {
@@ -70471,6 +71487,192 @@
         "reason": "Original timeline playback reconstructs overlapping montage/tags/warp actions, but does not retroactively run skipped one-shot initialization. Preserve the actual setup boundary and original branch.",
         "equipmentConfigs": [
           "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Double/Weapon_Hun_JueYing"
+        ],
+        "equipmentSlot": "Weapon.Slot.Main"
+      }
+    },
+    "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Final": {
+      "groups": {
+        "equipment": {
+          "requiredTags": [
+            "Weapon.Type.DoubleBlade.JueYing"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "space": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "stance": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "predecessor": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "cooldown": {
+          "requiredTags": [],
+          "ignoredTags": []
+        }
+      },
+      "preparation": {
+        "steps": [
+          "normally_activate_ability",
+          "execute_native_one_shot_weapon_buff_or_form_initialization",
+          "await_original_timeline_and_minimum_setup_time",
+          "enter_original_phase_with_current_timeline"
+        ],
+        "externalContext": false,
+        "reason": "Original timeline playback reconstructs overlapping montage/tags/warp actions, but does not retroactively run skipped one-shot initialization. Preserve the actual setup boundary and original branch.",
+        "equipmentConfigs": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Double/Weapon_Hun_JueYing"
+        ],
+        "equipmentSlot": "Weapon.Slot.Main"
+      }
+    },
+    "move:WeaponPhase.GA_Hun_HeiMoShang_C1.BladeWave": {
+      "groups": {
+        "equipment": {
+          "requiredTags": [
+            "Weapon.Type.HeiMoShang"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "stance": {
+          "requiredTags": [
+            "CharacterState.AbilityState.HeiMoShang.Buff"
+          ],
+          "ignoredTags": []
+        },
+        "predecessor": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "cooldown": {
+          "requiredTags": [],
+          "ignoredTags": []
+        }
+      },
+      "preparation": {
+        "steps": [
+          "establish_original_weapon_buff_that_selects_Exit",
+          "normally_activate_ability",
+          "execute_native_one_shot_weapon_buff_or_form_initialization",
+          "await_original_timeline_and_minimum_setup_time",
+          "enter_original_phase_with_current_timeline"
+        ],
+        "externalContext": false,
+        "reason": "Original timeline playback reconstructs overlapping montage/tags/warp actions, but does not retroactively run skipped one-shot initialization. Preserve the actual setup boundary and original branch. Removing a Buff eligibility tag alone does not choose the native Exit branch; prepare its actual original buff state.",
+        "equipmentConfigs": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/Weapon_Hun_HeiMoShang",
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/Weapon_Hun_HeiMoShang_Prologue"
+        ],
+        "equipmentSlot": "Weapon.Slot.Main"
+      }
+    },
+    "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave": {
+      "groups": {
+        "equipment": {
+          "requiredTags": [
+            "Weapon.Type.Horizontal"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "stance": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "predecessor": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "cooldown": {
+          "requiredTags": [],
+          "ignoredTags": []
+        }
+      },
+      "preparation": {
+        "steps": [
+          "normally_activate_ability",
+          "execute_native_one_shot_weapon_buff_or_form_initialization",
+          "await_original_timeline_and_minimum_setup_time",
+          "enter_original_phase_with_current_timeline"
+        ],
+        "externalContext": false,
+        "reason": "Original timeline playback reconstructs overlapping montage/tags/warp actions, but does not retroactively run skipped one-shot initialization. Preserve the actual setup boundary and original branch.",
+        "equipmentConfigs": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Horizontal/Weapon_Hun_Horizontal"
+        ],
+        "equipmentSlot": "Weapon.Slot.Main"
+      }
+    },
+    "move:WeaponPhase.GA_Hun_Jade_C_Range.Stage2": {
+      "groups": {
+        "equipment": {
+          "requiredTags": [
+            "Weapon.Type.Jade"
+          ],
+          "ignoredTags": []
+        },
+        "training": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "space": {
+          "requiredTags": [
+            "CharacterState.Space.Ground"
+          ],
+          "ignoredTags": []
+        },
+        "stance": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "predecessor": {
+          "requiredTags": [],
+          "ignoredTags": []
+        },
+        "cooldown": {
+          "requiredTags": [],
+          "ignoredTags": []
+        }
+      },
+      "preparation": {
+        "steps": [
+          "normally_activate_ability",
+          "execute_native_one_shot_weapon_buff_or_form_initialization",
+          "await_original_timeline_and_minimum_setup_time",
+          "enter_original_phase_with_current_timeline"
+        ],
+        "externalContext": false,
+        "reason": "Original timeline playback reconstructs overlapping montage/tags/warp actions, but does not retroactively run skipped one-shot initialization. Preserve the actual setup boundary and original branch.",
+        "equipmentConfigs": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Weapon/JadeDualChakram/Weapon_Hun_JadeDual"
         ],
         "equipmentSlot": "Weapon.Slot.Main"
       }
@@ -71602,5 +72804,34 @@
         "eventAction": "GAA_GameplayEvent_C_1"
       }
     }
+  },
+  "nativeRouteAlternatives": {
+    "ability:Ability.Action.Hun.Dash": [
+      "Ability.Action.Hun.Dash",
+      "Ability.Action.Hun.Heavy.DashAtk01",
+      "Ability.Action.Hun.Heavy.DrawDashAtk01"
+    ],
+    "ability:Ability.Action.Hun.Heavy.Atk03": [
+      "CharacterState.AbilityState.LuanYing.SnapSoul"
+    ],
+    "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB1": [
+      "Ability.Action.Hun.Heavy.SlitheringSword.DB3"
+    ],
+    "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB3": [
+      "Ability.Action.Hun.Heavy.SlitheringSword.DB1",
+      "Ability.Action.Hun.Heavy.SlitheringSword.DB2"
+    ],
+    "ability:Ability.Action.Hun.Light.A.Normal": [
+      "CharacterState.AbilityState.LuanYing.SnapSoul"
+    ],
+    "ability:Ability.Action.Hun.Light.Long.AAAAA": [
+      "Ability.Action.Hun.Heavy.Long.BSup"
+    ],
+    "ability:Ability.Action.Hun.Light.SlitheringSword.DA": [
+      "Ability.Action.Hun.Light.SlitheringSword.DA"
+    ],
+    "ability:Ability.Action.Hun.ShachiAbility.MoJi.AAA": [
+      "CharacterState.WeaponUpgrade.MoJian.Evolution"
+    ]
   }
 }

@@ -522,6 +522,8 @@ function NativeInput:apply_masks(reserved, snapshot, frame)
         elseif mapping.Key.KeyName:ToString() ~= replacement then
             mapping.Key.KeyName = FName(replacement)
         end
+        local provenance = self.coverage and self.coverage[index]
+        if provenance then provenance.active_key = mask and "None" or replacement end
     end
     self.masked = masked
     self.remapped = remapped
@@ -544,6 +546,7 @@ function NativeInput:restore()
     end
     self.masked, self.consumed, self.maintained, self.remapped, self.expanded = {}, {}, {}, {}, nil
     self.originals, self.observed, self.prepared_config, self.prepared_config_source = nil, nil, nil, nil
+    self.tuning_sources, self.tuning_triggers, self.tuning_coverage = nil, nil, nil
 end
 
 function NativeInput:prepare_overrides()
@@ -667,6 +670,8 @@ function NativeInput:prepare()
         else
             coverage[#coverage+1] = {action=actionPath, key=key, owner="game", reason="outside registered gameplay domain"}
         end
+        local provenance = coverage[#coverage]
+        provenance.object, provenance.triggers, provenance.active_key = current.object, current.trigger_objects, key
     end
     self.coverage = coverage
     local lines = {}
@@ -845,6 +850,62 @@ function NativeInput:prepare()
     end
     self:apply_masks(nil,nil,frame)
     self:observe(frame, settings)
+end
+
+function NativeInput:engine_frame()
+    return self.backend:invoke(self.backend:library("Engine.KismetSystemLibrary"),
+        "/Script/Engine.KismetSystemLibrary:GetFrameCount")
+end
+
+function NativeInput:prepare_tuning(costs)
+    if self.tuning_coverage ~= self.coverage or self.tuning_costs ~= costs then
+        self.tuning_sources, self.tuning_triggers = {}, {}
+        self.tuning_coverage, self.tuning_costs = self.coverage, costs
+        for _, entry in ipairs(self.coverage or {}) do
+            if (entry.owner == "game" or entry.owner == "uncovered") and entry.key ~= "None" then
+                local id = address(entry.object)
+                if id then
+                    local sources = self.tuning_sources[id] or {}
+                    self.tuning_sources[id] = sources
+                    sources[#sources+1] = entry
+                    for _, trigger in ipairs(entry.triggers) do
+                        if not self.tuning_triggers[address(trigger)] then
+                            costs.context:watch_input_trigger(self.backend,trigger)
+                            self.tuning_triggers[address(trigger)] = true
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+function NativeInput:native_contributes(action)
+    local sources = self.tuning_sources and self.tuning_sources[address(action)]
+    if not sources then return false end
+    local frame
+    for _, source in ipairs(sources) do
+        local key = source.active_key
+        if key ~= "None" then
+            if #source.triggers == 0 then
+                local value = self.backend:invoke(self.backend.controller,
+                    "/Script/Engine.PlayerController:GetInputVectorKeyState", {KeyName=FName(key)})
+                if value.X ~= 0 or value.Y ~= 0 or value.Z ~= 0 then return true end
+            else
+                frame = frame or self:engine_frame()
+                local explicit, triggered, implicit, blocked, evaluated = false, false, true, false, true
+                for _, trigger in ipairs(source.triggers) do
+                    local state,kind,blocking = self.tuning_costs.context:input_trigger_state(trigger,self.backend.controller.PlayerInput,frame)
+                    if state == nil then evaluated = false; break end
+                    if kind == 0 then explicit,triggered = true, triggered or state == 2
+                    elseif kind == 1 then implicit = implicit and state == 2 end
+                    blocked = blocked or blocking
+                end
+                if evaluated and not blocked and implicit and (not explicit or triggered) then return true end
+            end
+        end
+    end
+    return false
 end
 
 return NativeInput

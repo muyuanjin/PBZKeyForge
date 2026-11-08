@@ -60,11 +60,14 @@ namespace
     std::unordered_map<void*, unsigned char*> locals;
     using NativeExec = void(*)(RC::Unreal::UObject*, RC::Unreal::FFrame&, void*);
     std::unordered_map<const void*, NativeExec> nativeExecs;
+    std::unordered_map<const void*,std::function<void(RC::Unreal::UFunction*,void*)>> processEvents;
     std::unordered_map<const void*, RC::Unreal::FProperty*> properties;
     std::vector<RC::Unreal::UFunction::Callback> interfacePre, interfacePost;
     std::unordered_map<const void*,std::unordered_map<std::wstring,RC::Unreal::FProperty*>> namedProperties;
     std::unordered_map<const void*,std::unordered_map<std::wstring,RC::Unreal::FProperty*>> inheritedProperties;
     std::unordered_map<const void*,int> propertyOffsets, propertySizes;
+    std::unordered_map<const void*,RC::Unreal::TObjectPtr<RC::Unreal::UScriptStruct>> propertyStructs;
+    std::unordered_map<uint64_t,std::wstring> constructedNames;
     std::unordered_map<const void*,RC::Unreal::TArray<RC::Unreal::FImplementedInterface>> implementedInterfaces;
     const TestState* test(const RC::LuaMadeSimple::Lua* lua) { return *reinterpret_cast<TestState* const*>(lua); }
     void* stack(const RC::LuaMadeSimple::Lua* lua)
@@ -78,10 +81,20 @@ namespace
 namespace RC::Unreal
 {
     std::wstring UObject::GetFullName(UObject*) const { return names.at(this); }
+    void UObject::ProcessEvent(UFunction* function,void* parameters) { processEvents.at(this)(function,parameters); }
     UFunction*& FFrame::Node() { return nodes.at(this); }
     unsigned char*& FFrame::Locals() { return locals.at(this); }
-    FName::FName(const wchar_t*,EFindName,void*) {}
-    FProperty* UStruct::FindProperty(FName) { return namedProperties[this][L"DeltaTime"]; }
+    FName::FName(const wchar_t* value,EFindName,void*)
+    {
+        uint64_t identity=1;
+        for (const auto& entry:constructedNames)
+            if (entry.second==value) { std::memcpy(this,&entry.first,sizeof(entry.first));return; }
+        while (constructedNames.count(identity)) ++identity;
+        constructedNames[identity]=value;
+        std::memcpy(this,&identity,sizeof(identity));
+    }
+    FProperty* UStruct::FindProperty(FName name) { return namedProperties[this][name.ToString()]; }
+    TObjectPtr<UScriptStruct>& FStructProperty::GetStruct() { return propertyStructs[this]; }
     int UFunction::RegisterPreHook(const Callback& callback, void*) { interfacePre.push_back(callback); return 1; }
     int UFunction::RegisterPostHook(const Callback& callback, void*) { interfacePost.push_back(callback); return 2; }
     auto UFunction::GetFuncPtr() -> void(*)(UObject*, FFrame&, void*) { return nativeExecs[this]; }
@@ -111,7 +124,14 @@ namespace RC::Unreal
     FScriptMapLayout& FMapProperty::GetMapLayout() { return mapLayout; }
     FProperty*& FMapProperty::GetKeyProp() { static FProperty* value = reinterpret_cast<FProperty*>(1); return value; }
     FProperty*& FMapProperty::GetValueProp() { static FProperty* value = reinterpret_cast<FProperty*>(2); return value; }
-    const std::wstring FName::ToString() const { return names.at(this); }
+    const std::wstring FName::ToString() const
+    {
+        auto explicitName=names.find(this);
+        if (explicitName!=names.end()) return explicitName->second;
+        uint64_t identity;
+        std::memcpy(&identity,this,sizeof(identity));
+        return constructedNames.at(identity);
+    }
     namespace Hook
     {
         void RegisterProcessLocalScriptFunctionPreCallback(ScriptCallback callback) { pre = std::move(callback); }
@@ -150,6 +170,7 @@ namespace RC::LuaMadeSimple
         if (*reinterpret_cast<void* const*>(this) != liveLuaState) const_cast<TestState*>(test(this))->address = value;
         if (lua) luaApi.pushinteger(lua, value);
     }
+    void Lua::set_number(double value) const { luaApi.pushnumber(stack(this), value); }
     void Lua::set_string(const char* text, size_t length) const
     {
         auto* lua = stack(this);
@@ -448,6 +469,17 @@ namespace
         assert(payloadObject->GetPropertyByNameInChain(L"DamageSource") == reinterpret_cast<RC::Unreal::FProperty*>(3));
         begin(pbz_damage_watch_payload); pointer(&payload); pointer(&getterFunction); finish(2,1);
         assert(luaApi.tointeger(state.lua,1,nullptr) == 1 && damagePayloads.count(&payload.map));
+        propertySizes[reinterpret_cast<RC::Unreal::FProperty*>(3)] = sizeof(void*)*2;
+        begin(pbz_damage_payload_multiplier); pointer(&payload); finish(1,1);
+        assert(luaApi.tonumber(state.lua,1,nullptr)==11);
+        watch(module,.25);
+        begin(pbz_damage_payload_multiplier); pointer(&payload); finish(1,1);
+        assert(luaApi.tonumber(state.lua,1,nullptr)==.25);
+        payload.source=ordinary;
+        begin(pbz_damage_payload_multiplier); pointer(&payload); finish(1,1);
+        assert(luaApi.tonumber(state.lua,1,nullptr)==1);
+        payload.source=module;
+        watch(module,11);
         auto hit = [&](Object* object)
         {
             payload.source = object;
@@ -667,4 +699,5 @@ int main(int argc, char** argv)
     nativeDamageTests(state);
     nativeLuaStackTests(argc > 1 ? argv[1] : "C:\\Program Files\\Wireshark\\lua54.dll");
     std::cout << "ScriptContextNativeTests PASS\n";
+    return 0;
 }

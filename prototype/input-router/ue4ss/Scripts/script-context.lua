@@ -5,7 +5,7 @@ local function native_ok(result,message) assert(result == 1,message) end
 
 local function new_damage_object(method,object)
     local self = activeContext
-    if not self or not self.damage_enabled then return end
+    if not self or not self.damage_enabled and not (self.resource_enabled and method=="watch_damage_bullet") then return end
     local ok,failure = pcall(self[method],self,object)
     if not ok then
         self.failure = method..": "..tostring(failure)
@@ -78,6 +78,22 @@ function Context:start_hold_input(subsystem,action)
     local make = StaticFindObject("/Script/EnhancedInput.EnhancedInputLibrary:MakeInputActionValueOfType")
     local inject = StaticFindObject("/Script/EnhancedInput.EnhancedInputSubsystemInterface:StartContinuousInputInjectionForAction")
     native_ok(self.input_start_hold(subsystem:GetAddress(),library:GetAddress(),make:GetAddress(),inject:GetAddress(),action:GetAddress()))
+end
+
+function Context:watch_input_trigger(backend,trigger)
+    if not self.input_watch_trigger then self.input_watch_trigger = assert(package.loadlib(self.path,"pbz_input_watch_trigger")) end
+    if not self.input_reset_triggers then self.input_reset_triggers = assert(package.loadlib(self.path,"pbz_input_reset_triggers")) end
+    native_ok(self.input_watch_trigger(trigger:GetAddress(),
+        backend:object("/Script/EnhancedInput.InputTrigger:UpdateState"):GetAddress(),
+        backend:object("/Script/EnhancedInput.InputTrigger:GetTriggerType"):GetAddress(),
+        backend:library("Engine.KismetSystemLibrary"):GetAddress(),
+        backend:object("/Script/Engine.KismetSystemLibrary:GetFrameCount"):GetAddress()))
+end
+
+function Context:input_trigger_state(trigger,playerInput,frame)
+    if not self.input_trigger_observation then self.input_trigger_observation = assert(package.loadlib(self.path,"pbz_input_trigger_state")) end
+    local state,kind,blocked = self.input_trigger_observation(trigger:GetAddress(),playerInput:GetAddress(),frame)
+    return state,kind,blocked == 1
 end
 
 function Context:apply_effect_self(component,effectClass,level,requirementScopes)
@@ -164,6 +180,7 @@ function Context:enable_damage()
         self.reset_damage = load("pbz_damage_reset")
         self.forget_module = load("pbz_damage_forget_module")
         self.damage_observation = load("pbz_damage_observation")
+        self.payload_multiplier = load("pbz_damage_payload_multiplier")
         self.payload_function = StaticFindObject("/Script/SGameAttributes.DamagePreCalculationPayload:GetModifiedAttackData")
         self.calculator_function = StaticFindObject("/Script/SGameAttributes.DamageCalculatorBase:CalculateDamage")
         self.module_class = StaticFindObject("/Script/SGameCombatSystem.BulletAttackModule")
@@ -175,6 +192,16 @@ function Context:enable_damage()
         self.bullet_initialize_function = StaticFindObject("/Script/SGameCombatSystem.BulletInterface:Initialize")
         native_ok(self.prepare_bullet(self.bullet_initialize_function:GetAddress()))
         self.damage_enabled = true
+        self.execution_modify_path = "/Script/SGameAttributes.DamagePreTakePayload:ApplyModify"
+        self.execution_modify_pre,self.execution_modify_post = RegisterHook(self.execution_modify_path,
+            function(payload,tag,operation,value)
+                if not self.damage_enabled or operation:get() ~= 3 or value:get() ~= 999999 then return end
+                local _,_,fn = self.at(1)
+                if fn ~= "Function /PBZCombatAsset/Prototypes/Abilities/Base/PBZ_ShachiWeaponExecutionBase.PBZ_ShachiWeaponExecutionBase_C:ExecuteUbergraph_PBZ_ShachiWeaponExecutionBase" then return end
+                if tag:get().TagName:ToString() ~= "Damage.Damage.Target.GeneralDamage.Physical" then return end
+                local multiplier = self.payload_multiplier(payload:get():GetAddress())
+                if multiplier ~= 1 then value:set(value:get()*multiplier) end
+            end)
         observe_damage()
         -- Include derived instances and class defaults without a Lua callback for
         -- every unrelated UObject in the level.
@@ -190,6 +217,55 @@ function Context:enable_damage()
     if not ok then
         local cleaned,cleanup = pcall(self.reset,self)
         error(tostring(failure)..(cleaned and "" or "\n"..tostring(cleanup)),0)
+    end
+end
+
+function Context:enable_weapon_resources(backend)
+    if self.resource_enabled then return end
+    assert(not self.closed,"Ability context is closed")
+    local function load(name) return assert(package.loadlib(self.path,name)) end
+    self.resource_ability = load("pbz_resource_ability")
+    self.watch_resource_action = load("pbz_resource_watch_action")
+    self.watch_bullet = self.watch_bullet or load("pbz_damage_watch_bullet")
+    self.prepare_bullet = self.prepare_bullet or load("pbz_damage_prepare_bullet")
+    self.forget_bullet = self.forget_bullet or load("pbz_damage_forget_bullet")
+    self.reset_damage = self.reset_damage or load("pbz_damage_reset")
+    self.bullet_classes = self.bullet_classes or {
+        StaticFindObject("/Script/SGameCombatSystem.BulletActorBase"),
+        StaticFindObject("/Script/SGameCombatSystem.BulletObjectBase")
+    }
+    self.bullet_interface_class = self.bullet_interface_class or StaticFindObject("/Script/SGameCombatSystem.BulletInterface")
+    self.bullet_initialize_function = self.bullet_initialize_function or StaticFindObject("/Script/SGameCombatSystem.BulletInterface:Initialize")
+    native_ok(self.prepare_bullet(self.bullet_initialize_function:GetAddress()))
+    local prepare = load("pbz_resource_prepare_actions")
+    native_ok(prepare(backend:object("/Script/LegoAbility.LegoAbility:ExecuteAction"):GetAddress(),
+        backend:object("/Script/LegoAbility.LGAAction:GetAbility"):GetAddress()))
+    local event = backend:object("/Script/PBZCombatAsset.Default__BulletEvent_FengLeiConsumeEnergy")
+    native_ok(load("pbz_resource_watch_event")(event:GetAddress(),
+        backend:object("/Script/SGameCombatSystem.BulletEventBase:Trigger"):GetAddress()))
+    self.resource_enabled = true
+    observe_damage()
+    for _,base in ipairs(self.bullet_classes) do
+        for _,object in ipairs(FindObjects(0,base,nil,0,0,false)) do self:watch_damage_bullet(object) end
+    end
+end
+
+function Context:ability_resources(backend,instanceOrAddress,bypass)
+    if not self.resource_enabled then
+        if not bypass then return end
+        self:enable_weapon_resources(backend)
+    end
+    local address = type(instanceOrAddress)=="number" and instanceOrAddress or instanceOrAddress:GetAddress()
+    native_ok(self.resource_ability(address,bypass))
+    if not bypass then return end
+    local names = backend:invoke(instanceOrAddress,"/Script/LegoAbility.LegoAbility:GetAllTimelineNames")
+    for index=1,names:GetArrayNum() do
+        local timeline = backend:invoke(instanceOrAddress,"/Script/LegoAbility.LegoAbility:GetTimelineByName",names[index])
+        local actions = timeline:GetPropertyValue("Actions")
+        for slot=1,actions:GetArrayNum() do
+            local action = actions[slot].Action
+            if action and action:IsValid() then native_ok(self.watch_resource_action(action:GetAddress())) end
+        end
     end
 end
 
@@ -241,7 +317,7 @@ function Context:ability_damage(instanceOrAddress,multiplier)
 end
 
 function Context:watch_damage_bullet(object)
-    if not self.damage_enabled then return end
+    if not self.damage_enabled and not self.resource_enabled then return end
     local base = self:bullet_base(object)
     if not base then return end
     local address = object:GetAddress()
@@ -264,9 +340,9 @@ function Context:watch_damage_payload(object)
 end
 
 function Context:update_damage()
-    if not self.damage_enabled then return end
+    if not self.damage_enabled and not self.resource_enabled then return end
     self.observation_frame = self.observation_frame+1
-    if self.report and self.observation_frame % 120 == 0 then
+    if self.damage_enabled and self.report and self.observation_frame % 120 == 0 then
         local message = self.damage_observation()
         if message then self.report(message) end
     end
@@ -303,8 +379,13 @@ function Context:interface_hook(backend,path,pre,post,owner)
         if self.closed then return end
         local object
         if owner then
-            object = owner()
-            local accepted = object and object:IsValid() and object:GetAddress() == self.interface_address() or false
+            local alternative
+            object,alternative = owner()
+            local address = object and object:IsValid() and self.interface_address()
+            local accepted = address and object:GetAddress() == address or false
+            if not accepted and address and alternative and alternative:IsValid() and alternative:GetAddress() == address then
+                object,accepted = alternative,true
+            end
             if calls then calls[#calls+1] = accepted end
             if not accepted then return end
         else object = StaticFindObject(self.interface_name():gsub("^%S+ ","")) end
@@ -335,10 +416,26 @@ end
 function Context:reset()
     self.closed = true
     self.damage_enabled = false
+    self.resource_enabled = false
     if activeContext == self then activeContext = nil end
-    self.enable(false)
-    if self.reset_damage then native_ok(self.reset_damage()) end
-    self.damage_modules,self.damage_payloads,self.damage_bullets = {},{},{}
+    local failures = {}
+    local function attempt(callback)
+        local ok,failure = pcall(callback)
+        if not ok then failures[#failures+1] = tostring(failure) end
+    end
+    attempt(function() self.enable(false) end)
+    attempt(function()
+        if self.execution_modify_pre then
+            UnregisterHook(self.execution_modify_path,self.execution_modify_pre,self.execution_modify_post)
+            self.execution_modify_pre,self.execution_modify_post = nil,nil
+        end
+    end)
+    attempt(function()
+        if self.reset_damage then native_ok(self.reset_damage()) end
+        self.damage_modules,self.damage_payloads,self.damage_bullets = {},{},{}
+    end)
+    attempt(function() if self.input_reset_triggers then native_ok(self.input_reset_triggers()) end end)
+    if #failures > 0 then error(table.concat(failures,"\n"),0) end
 end
 
 return Context

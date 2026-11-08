@@ -37,11 +37,14 @@ package.loaded["script-context"] = {new=function() return {
     ability_damage=function(_,instance,multiplier)
         nativeDamage[type(instance)=="number" and instance or instance:GetAddress()]=multiplier
     end,
+    ability_resources=function() end,
     damage_bullet=function() error("Ordinary native projectile snapshots must not be overwritten") end,
+    start_hold_input=function(_,subsystem) subsystem.requested=true end,
     charge_rate=function() end, update_damage=function() end, reset=function() end
 } end}
 local Moves = require("complete-moves")
 local Router = require("router")
+local Inputs = require("move-inputs")
 local prefix = "/Script/SGameInputSystem.AbilityInputComponent:"
 local modify = "/Script/SGameAttributes.AttributeUtils:ModifyCharacterAttributeValue"
 local read = "/Script/GameplayAbilities.AbilitySystemComponent:GetGameplayAttributeValue"
@@ -78,8 +81,9 @@ local function fixture(target)
         timelines[address]=object(30+address,{bAutoPlay=true})
         tasks[address]=object(40+address,{Timeline=timelines[address],rate=1.25,CurrentTime=0})
     end
-    local backend={pawn=pawn,calls=0,expectedDamage=2.5,expectedBypass=true,limitQueries=0}
+    local backend={pawn=pawn,subsystem=object(104),calls=0,expectedDamage=2.5,expectedBypass=true,limitQueries=0}
     function backend:report() end
+    function backend:library() return inputReceiver end
     function backend:receiver(value) return value.receiver=="ability_input" and inputReceiver or asc end
     function backend:object(path,kind)
         if path==target.input_action then
@@ -105,10 +109,15 @@ local function fixture(target)
         return bullet
     end
     function backend:invoke(value,path,a,b,priority)
-        if path:match(":GetGameplayTagCount$") then
+        if path:match(":GetSGameInputComponent$") then return inputReceiver
+        elseif path:match(":IsHolding$") then return self.nativeHeld
+        elseif path:match(":StopContinuousInputInjectionForAction$") then self.subsystem.requested=false;return
+        elseif path:match(":GetGameplayTagCount$") then
             for _,ignored in ipairs(target.ignored_tags or {}) do if a.TagName:ToString()==ignored then return 0 end end
             return 1
         elseif path==prefix.."TryActivateExternalActionAbilityByClass" then
+            check(not target.native_hold_inputs or self.nativeHeld,
+                "A tuned charge must wait for real native Hold readiness before activation")
             check(value==inputReceiver and a==selected and b==input and priority==target.priority,
                 "Tuning retains the requested existing class, native action and priority")
             self.calls=self.calls+1
@@ -133,7 +142,11 @@ local function fixture(target)
         elseif path:match(":SetPlayRate$") then value.rate=a; return end
         error("Unexpected tuning operation: "..path)
     end
-    function backend:dispatch(value,phase,_,bindingId,bypass,settings)
+    function backend:prepare_move_inputs(requests) Inputs.prepare(self,requests) end
+    function backend:dispatch(value,phase,inputValue,bindingId,bypass,settings,nativePrepared)
+        if value.native_hold_inputs and not nativePrepared then
+            return Inputs.dispatch(self,value,phase,inputValue,bindingId,bypass,settings)
+        end
         return Moves.dispatch(self,value,phase,bypass,settings,bindingId)
     end
     return backend,attack,successor,other,specs,tasks,timelines,maxima,query,fee,snapshot,inputReceiver,successorClass
@@ -153,6 +166,12 @@ for _,device in ipairs({"keyboard","pad"}) do
             local key=device=="pad" and "Gamepad_DPad_Down" or "G"
             router:step(0,{})
             router:step(.1,{[key]=1})
+            if target.native_hold_inputs then
+                check(backend.calls==0 and backend.subsystem.requested,
+                    "The real scheduler must retain tuning while native Hold input becomes ready")
+                backend.nativeHeld=true
+                router:step(.11,{[key]=1})
+            end
             check(backend.calls==1,"The real scheduler and complete-move executor activate every new catalog class")
             local cost=assert(backend.resource_costs)
             local state=assert(cost.instances[attack:GetAddress()])
@@ -207,7 +226,7 @@ for _,device in ipairs({"keyboard","pad"}) do
             check(firstBullet.multiplier==2.5 and backend.bullet.multiplier==1.25,
                 "Earlier and later bindings keep independent projectile damage snapshots")
             attack.bIsActive,specs[1].ActiveCount=false,0
-            cost:update();cost:reset();Moves.reset(backend)
+            Inputs.reset(backend);cost:update();cost:reset();Moves.reset(backend)
             check(not next(hooks),"Reset releases the exact-class activation's hooks and tuning state")
             exercised=exercised+1
         end

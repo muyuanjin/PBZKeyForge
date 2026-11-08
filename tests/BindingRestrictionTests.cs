@@ -252,6 +252,11 @@ class BindingRestrictionTests
             && holds.Contains("ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser"),
             "Native hold discovery omitted the bow preparation targets");
         Fixture("native-holds", holds);
+        var variants = document.entries.Where(pair => pair.Value.preparation.ContainsKey("nativeHoldVariants"))
+            .Select(pair => pair.Key).OrderBy(identity => identity, StringComparer.Ordinal).ToArray();
+        Check(variants.Contains("ability:Ability.Action.Hun.CombatArt.Atk01"),
+            "The shared combat-art entrance must prepare only the current weapon's native input");
+        Fixture("native-hold-variants", variants);
         var phases = document.entries.Where(pair => pair.Value.preparation.ContainsKey("nativeActivation"))
             .Select(pair => pair.Key).OrderBy(identity => identity, StringComparer.Ordinal).ToArray();
         Check(phases.Contains("move:WeaponPhase.GA_Hun_Jigsaw_C.HasSawHitStage2")

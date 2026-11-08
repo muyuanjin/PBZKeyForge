@@ -34,7 +34,9 @@ local charge_ticks = {
 -- their original class, including resource gains and resource-based attacks.
 local resource_effects = {
     ["/PBZCombatAsset/ActorData/Players/Hun/Weapon/SlitheringSword/UpgradeData/GE_SlitheringSword_EvalutionCombo_CostShachi.GE_SlitheringSword_EvalutionCombo_CostShachi_C"]=true,
-    ["/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChaosBlade/GE_Chaos_SwitchShaQiCost.GE_Chaos_SwitchShaQiCost_C"]=true
+    ["/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChaosBlade/GE_Chaos_SwitchShaQiCost.GE_Chaos_SwitchShaQiCost_C"]=true,
+    ["/PBZCombatAsset/Prototypes/Abilities/Base/GE/GE_Cost_Shachi_ToZero.GE_Cost_Shachi_ToZero_C"]=true,
+    ["/PBZCombatAsset/ActorData/Players/Hun/Weapon/ZiMingJian/GameEffects/GE_ZiMingJian_CostShaChi.GE_ZiMingJian_CostShaChi_C"]=true
 }
 local function valid(object) return object and object:IsValid() end
 local function class_path(object) return object:GetClass():GetFullName():gsub("^%S+ ", "") end
@@ -126,6 +128,7 @@ function Costs:install_transfer_hooks()
             if not source and is_owned and activation then source = activation.source end
             if not source and is_owned and receiver == "ability_input" and not self.activating and input and valid(input:get()) then
                 source = self.inputs[input:get():GetAddress()]
+                if source and backend.native_input and backend.native_input:native_contributes(input:get()) then source = nil end
             end
             self:begin_transfer(source and not source.callback_only and source,is_owned and selector(argument:get()) or nil)
             local current = self.transfers[#self.transfers]
@@ -166,9 +169,12 @@ end
 
 function Costs:install_resource_hooks()
     local function hook(...) return self:hook(...) end
-    hook("/Script/GameplayAbilities.GameplayAbility:BP_ApplyGameplayEffectToOwner",function(ability,effectClass)
+    local function pure_cost(effectClass)
         local effect = effectClass:get()
-        if not valid(effect) or not resource_effects[effect:GetFullName():gsub("^%S+ ","")] then return end
+        return valid(effect) and resource_effects[effect:GetFullName():gsub("^%S+ ","")]
+    end
+    local function ability_effect(ability,effectClass)
+        if not pure_cost(effectClass) then return end
         local instance = ability:get()
         if not valid(instance) then return end
         local address = instance:GetAddress()
@@ -176,6 +182,15 @@ function Costs:install_resource_hooks()
         if state and state.bypass and state.instance:GetAddress() == address then
             effectClass:set(self.context:empty_class())
         end
+    end
+    hook("/Script/GameplayAbilities.GameplayAbility:BP_ApplyGameplayEffectToOwner",ability_effect)
+    hook("/Script/GameplayAbilities.GameplayAbility:MakeOutgoingGameplayEffectSpec",ability_effect)
+    hook("/Script/GameplayAbilities.AbilitySystemComponent:BP_ApplyGameplayEffectToSelf",function(component,effectClass)
+        if not pure_cost(effectClass) then return end
+        local owned = self.backend:receiver({receiver="ability_system"})
+        if not valid(owned) or not valid(component:get()) or component:get():GetAddress() ~= owned:GetAddress() then return end
+        local state = self:owner()
+        if state and state.bypass then effectClass:set(self.context:empty_class()) end
     end)
     hook("/Script/SGameAttributes.AttributeUtils:ModifyCharacterAttributeValue",function(_,actor,attribute,operation,value)
         if not next(self.instances) and #self.transfers == 0 then return end
@@ -311,7 +326,7 @@ function Costs:enable(bypass,settings)
     assert(not self.closed,"Binding tuning is closed")
     settings = settings or {}
     local ok,failure = pcall(function()
-        if #(settings.restriction_bypasses or {}) > 0 and not self.restrictions_enabled then
+        if (settings.resource_tags or #(settings.restriction_bypasses or {}) > 0) and not self.restrictions_enabled then
             self:hook("/Script/GameplayAbilities.AbilitySystemComponent:GetGameplayTagCount",function() end,
                 function(component,original,tag)
                     if not next(self.instances) and #self.transfers==0 then return end
@@ -321,20 +336,23 @@ function Costs:enable(bypass,settings)
                     if not Restrictions.active(state) then return end
                     original:set(Restrictions.query(self.backend,state,tag:get().TagName:ToString(),original:get()))
                 end)
-            for _,method in ipairs({"HasMatchingGameplayTag","HasAnyMatchingGameplayTags"}) do
+            for _,method in ipairs({"HasMatchingGameplayTag","HasAnyMatchingGameplayTags","HasAllMatchingGameplayTags"}) do
                 local path="/Script/GameplayTags.GameplayTagAssetInterface:"..method
                 local calls={}
                 self.hooks[path]={self.context:interface_hook(self.backend,path,function(object,tags)
                     local owned=self.backend:receiver({receiver="ability_system"})
+                    local pawn=self.backend.pawn
                     local state
-                    if valid(owned) and valid(object) and object:GetAddress()==owned:GetAddress() then state=self:owner() end
+                    if valid(owned) and valid(object) and (object:GetAddress()==owned:GetAddress()
+                        or valid(pawn) and object:GetAddress()==pawn:GetAddress()) then state=self:owner() end
                     if not Restrictions.active(state) then calls[#calls+1]=false;return end
-                    local call={state=state,component=owned,tags={}}
+                    local call={state=state,component=owned,tags={},all=method=="HasAllMatchingGameplayTags"}
                     local function consider(name)
                         local value=Restrictions.override(state,name)
                         if value~=nil then
                             call.affected=true
                             if value==1 then call.required=true end
+                            if value==0 then call.blocked=true end
                         else call.tags[#call.tags+1]=name end
                     end
                     local value=tags:get()
@@ -348,6 +366,17 @@ function Costs:enable(bypass,settings)
                 end,function(_,original)
                     local call=table.remove(calls)
                     if not call or not call.affected then return end
+                    if call.all then
+                        if call.blocked then original:set(false);return end
+                        if original:get() then return end
+                        for _,name in ipairs(call.tags) do
+                            if self.backend:invoke(call.component,
+                                "/Script/GameplayAbilities.AbilitySystemComponent:GetGameplayTagCount",{TagName=FName(name)})<=0 then
+                                original:set(false);return
+                            end
+                        end
+                        original:set(true);return
+                    end
                     if call.required then original:set(true);return end
                     if not original:get() then return end
                     local result=false
@@ -360,7 +389,7 @@ function Costs:enable(bypass,settings)
                     original:set(result)
                 end,function()
                     if not next(self.instances) and #self.transfers==0 then return end
-                    return self.backend:receiver({receiver="ability_system"})
+                    return self.backend:receiver({receiver="ability_system"}),self.backend.pawn
                 end)}
             end
             self.restrictions_enabled = true
@@ -518,6 +547,7 @@ function Costs:end_transfer(succeeded)
                     self.instances[address] = previous
                     if previous then
                         self.context:ability_damage(address,previous.damage)
+                        if previous.native_resources then self.context:ability_resources(self.backend,previous.instance,true) end
                         if previous.charge_tick then self.context:charge_rate(address,previous.startup,previous.charge_tick) end
                         self:protect(previous)
                         Restrictions.protect(self.backend,previous)
@@ -581,6 +611,7 @@ function Costs.with_active(backend,instance,bypass,callback,settings,callbackOnl
         self.instances[address] = previous
         if previous then
             self.context:ability_damage(address,previous.damage)
+            if previous.native_resources then self.context:ability_resources(self.backend,previous.instance,true) end
             if previous.charge_tick then self.context:charge_rate(address,previous.startup,previous.charge_tick) end
             self:protect(previous)
             Restrictions.protect(self.backend,previous)
@@ -593,6 +624,7 @@ end
 
 function Costs:restore(address)
     local state = self.instances[address]
+    if state and state.native_resources then self.context:ability_resources(self.backend,address,false) end
     if state and state.charge_tick then self.context:charge_rate(address,1) end
     if state and state.protection then
         for name,tag in pairs(state.protection) do
@@ -645,12 +677,39 @@ function Costs:arm(instance,bypass,settings)
         startup=settings and settings.startup_speed or 1,recovery=settings and settings.recovery_speed or 1,
         super_armor=settings and settings.super_armor,invincible=settings and settings.invincible,
         restriction_bypasses=settings and settings.restriction_bypasses,restriction_target=settings and settings.restriction_target}
+    self.instances[address] = state
+    if bypass and class_path(instance):find("/BaiShanFengLeiJian/",1,true) then
+        state.native_resources = true
+        state.resource_tags = {
+            ["CharacterState.AbilityState.BaiShanFengLeiJian.Wind"]=1,
+            ["CharacterState.AbilityState.BaiShanFengLeiJian.Thunder"]=1
+        }
+        local tick=charge_ticks[class_path(instance)]
+        if tick then
+            -- The held-state entry rejects an already charged sword. Its Tick
+            -- checks the same tag to enter the successful release timeline.
+            local entry=class_path(instance)..":Added_1CC942FE4424EBA0DBE0A292363B2DFA"
+            state.resource_tags["CharacterState.AbilityState.BaiShanFengLeiJian.Thunder"]=function()
+                local depth,preparing=1,false
+                while true do
+                    local _,owner,fn=self.context.at(depth)
+                    if not owner then return preparing and 0 or nil end
+                    if owner==instance:GetAddress() then
+                        if fn=="Function "..tick then return 1 end
+                        if fn=="Function "..entry then preparing=true end
+                    end
+                    depth=depth+1
+                end
+            end
+        end
+        self:enable(false,{resource_tags=state.resource_tags})
+        self.context:ability_resources(self.backend,instance,true)
+    end
     if state.startup ~= 1 then
         local path = class_path(instance)
         state.startup_window = startup_windows[path]
         if charge_ticks[path] then state.charge_tick = self.backend:object(charge_ticks[path]) end
     end
-    self.instances[address] = state
     self.context:ability_damage(instance,state.damage)
     if state.charge_tick then self.context:charge_rate(instance,state.startup,state.charge_tick) end
     self:protect(state)
@@ -702,6 +761,7 @@ function Costs:input(target,bypass,settings,rank)
         startup=settings.startup_speed or 1,recovery=settings.recovery_speed or 1,rank=rank or math.huge,
         super_armor=settings.super_armor,invincible=settings.invincible,
         restriction_bypasses=settings.restriction_bypasses,restriction_target=target}
+    if self.backend.native_input then self.backend.native_input:prepare_tuning(self) end
 end
 
 function Costs:update()

@@ -191,6 +191,11 @@ class CompleteMoveCatalogTests
         Check(ghost.Label == "开光玉佩 · 鬼火 · 释放" && ghost.GroupPath[0] == "accessories" && ghost.GroupLabels[1] == "开光玉佩",
             "An accessory action must use its official name and accessory category.");
         Check(phaseWorkspace.FindFunctions("守静笃").Any(item => item.Id == MoveId), "The official charge name must find its complete release.");
+        Check(phaseWorkspace.FindFunctions("交叉剑气").Any(item => item.Id == "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave"),
+            "The cross blade waves must be separately searchable and bindable.");
+        foreach (string leaf in new[] { "GA_Hun_Lute_A", "GA_Hun_Lute_AA" })
+            Check(phaseWorkspace.Functions.Single(item => item.Id == "move:ShadowPhase." + leaf + ".Stage2").Label.StartsWith("催心琵琶 · "),
+                "Each separate second strum must retain its native weapon name.");
         foreach (string weapon in new[] { "羽弓", "游龙叉", "独眼弓", "铁拳套", "巨凶斧", "长柄金瓜", "虎炮" })
             Check(phaseWorkspace.Functions.Any(item => item.Id.StartsWith("move:") && item.Label.StartsWith(weapon + " · ")), "Missing weapon-specific release label: " + weapon);
         string phaseLua = phaseConfig.CompileLua();
@@ -204,6 +209,9 @@ class CompleteMoveCatalogTests
         Check(phaseLua.Contains("[\"prepare_input\"]") && phaseLua.Contains("[\"entry_when\"]")
             && phaseLua.Contains("[\"release_input_before_entry\"]=true") && phaseLua.Contains("[\"completed_after_property\"]=\"AttackStartTime\""),
             "Compilation must retain native preparation and natural gauntlet release completion.");
+        Check(phaseLua.Contains("[\"completion_when\"]") && phaseLua.Contains("[\"completion_effects\"]")
+            && phaseLua.Contains("GE_Hun_HeiMoShang_Buff.GE_Hun_HeiMoShang_Buff_C"),
+            "Independent phases must retain their normal completion boundary and native end consumption.");
         Check(phaseLua.Contains("[\"active_ability_classes\"]") && phaseLua.Contains("GA_Accessory_RandomDrink_GhostFire_Lv3_C")
             && phaseLua.Contains("_Lv1_C:Targeting Tick"), "An accessory must reuse the native active buff's release callback.");
         const string thunderId = "move:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04.Training";
@@ -231,7 +239,7 @@ class CompleteMoveCatalogTests
         {
             dialog.Show(); Application.DoEvents();
             var search = (TextBox)typeof(UnifiedActionChoiceDialog).GetField("search", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(dialog);
-            foreach (string query in new[] { "天玄青铜剑", "羽弓", "虎炮", "铁拳套", "开光玉佩", "雷霆再临", "情境反制", "白山风雷剑" })
+            foreach (string query in new[] { "天玄青铜剑", "羽弓", "虎炮", "铁拳套", "开光玉佩", "雷霆再临", "情境反制", "白山风雷剑", "交叉剑气", "催心琵琶" })
             {
                 search.Text = query; Application.DoEvents();
                 if (query == "开光玉佩")

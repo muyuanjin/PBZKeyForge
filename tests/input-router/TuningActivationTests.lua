@@ -112,32 +112,23 @@ dispatch.native_input={coverage=setmetatable({}, {__index=function() error("Untu
 dispatch:prepare_input_settings({})
 dispatch:prepare_input_settings({{target={kind="action",object=action},settings={damage_multiplier=1}}})
 check(not dispatch.native_tuning_actions,"idle and untuned frames skip native tuning coverage")
-dispatch.native_input={coverage={{action="/Input/Attack",key="MouseWheelAxis",owner="game"}}}
-dispatch:prepare_input_settings({{target={kind="action",object=action},bypass_resources=true,settings={damage_multiplier=100}}})
-check(not dispatch.resource_costs,"an action retaining a native input does not install unused tuning")
+dispatch.native_input=nil
 dispatch.config.enabled=false
 check(not dispatch:dispatch({kind="action",object=action},"triggered",nil,"disabled",true,{damage_multiplier=100}),
     "disabled enhancement rejects tuned dispatch before touching game objects")
 check(not dispatch.resource_costs and not next(hooks),"disabled dispatch leaves every tuning hook absent")
 
 do
-    local owner=setmetatable({config={enabled=true},native_input={coverage={
-        {action="/Input/Attack",key="MouseWheelAxis",owner="game"}}}},Backend)
+    local preparations=0
+    local owner=setmetatable(backend(),Backend)
+    owner.config={enabled=true}
+    owner.native_input={prepare_tuning=function() preparations=preparations+1 end}
     local request={{target={kind="action",object=action},bypass_resources=true,settings={damage_multiplier=3}}}
     owner:prepare_input_settings(request)
-    local initial=owner.native_tuning_actions
-    check(initial["/Input/Attack"] and not owner.resource_costs,"native inputs retain their ordinary tuning policy")
+    check(owner.resource_costs.inputs[5].bypass and owner.resource_costs.inputs[5].damage==3,
+        "enhanced bindings retain their entire parameter group for activation-time source selection")
     owner:prepare_input_settings(request)
-    check(owner.native_tuning_actions==initial,"stable frames reuse the native tuning coverage")
-    owner.native_input.coverage={{action="/Input/Attack",key="E",owner="scheduler"}}
-    owner:prepare_input_settings(request)
-    check(owner.native_tuning_actions~=initial and owner.resource_costs.inputs[5].damage==3,
-        "new native ownership enables the requested binding tuning")
-    owner.resource_costs.inputs={}
-    owner.native_input.coverage={{action="/Input/Attack",key="MouseWheelAxis",owner="game"}}
-    owner:prepare_input_settings(request)
-    check(not owner.resource_costs.inputs[5].bypass and owner.resource_costs.inputs[5].damage==1,
-        "returning native ownership immediately restores ordinary tuning")
+    check(preparations==1,"a losing repeated request does not prepare native provenance twice")
     owner.resource_costs:reset()
 end
 

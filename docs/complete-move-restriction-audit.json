@@ -3,7 +3,7 @@
   "build": "CL-302256",
   "runtimeVerified": false,
   "evidenceType": "Static recipe gates, original cooked timelines and decoded native Blueprint preparation/lifecycle",
-  "scope": "141 protected phase recipes; selection overrides are separate from original attack initialization and from resource bypass",
+  "scope": "148 protected phase recipes; selection overrides are separate from original attack initialization and from resource bypass",
   "categoryRules": {
     "equipment": "Weapon.* selection tags; actual grant and weapon actors still require preparation",
     "training": "CharacterState.WeaponUpgrade.*; native GE grant, callback and branch initialization may also be required",
@@ -7418,6 +7418,360 @@
       "nativeBranch": "HasSawHit",
       "canPrepareFromNormalActivation": true,
       "group": "native_branch_selection"
+    },
+    "move:WeaponPhase.GA_Hun_HeiMoShang_C1.BladeWave": {
+      "id": "move:WeaponPhase.GA_Hun_HeiMoShang_C1.BladeWave",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_C1.GA_Hun_HeiMoShang_C1_C",
+      "abilityTag": "Ability.Action.Hun.CombatArt.Atk01",
+      "eligibilityGates": [
+        {
+          "field": "requiredTags",
+          "tag": "CharacterState.Space.Ground",
+          "category": "space",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        },
+        {
+          "field": "requiredTags",
+          "tag": "Weapon.Type.HeiMoShang",
+          "category": "equipment",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        },
+        {
+          "field": "requiredTags",
+          "tag": "CharacterState.AbilityState.HeiMoShang.Buff",
+          "category": "stance",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        }
+      ],
+      "phaseStateGates": [],
+      "nativeEntryWhen": {
+        "timeline": "Exit",
+        "minimum_time": 0.60001,
+        "before_time": 2.1
+      },
+      "resourceStateProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "resourceBypassIsIndependent": true,
+      "existingActivation": "normal_exact_class",
+      "requiredRuntimeInputs": [
+        "local_player_ability_system",
+        "real_granted_ability_spec_of_exact_class"
+      ],
+      "prepareSteps": [
+        "establish_original_weapon_buff_that_selects_Exit",
+        "normally_activate_ability",
+        "execute_native_one_shot_weapon_buff_or_form_initialization",
+        "await_original_timeline_and_minimum_setup_time",
+        "enter_original_phase_with_current_timeline"
+      ],
+      "fullEffectsNeedExternalCombatContext": false,
+      "evidence": [
+        "docs/complete-move-combat-art-recipes.json",
+        "docs/complete-move-additional-weapon-phases.json"
+      ],
+      "reason": "Original timeline playback reconstructs overlapping montage/tags/warp actions, but does not retroactively run skipped one-shot initialization. Preserve the actual setup boundary and original branch. Removing a Buff eligibility tag alone does not choose the native Exit branch; prepare its actual original buff state.",
+      "nativeStateDependencies": [
+        "CharacterState.AbilityState.HeiMoShang.Buff"
+      ],
+      "group": "native_phase_initialization"
+    },
+    "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave": {
+      "id": "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_C.GA_Hun_Horizontal_C_C",
+      "abilityTag": "Ability.Action.Hun.CombatArt.Atk01",
+      "eligibilityGates": [
+        {
+          "field": "requiredTags",
+          "tag": "CharacterState.Space.Ground",
+          "category": "space",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        },
+        {
+          "field": "requiredTags",
+          "tag": "Weapon.Type.Horizontal",
+          "category": "equipment",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        }
+      ],
+      "phaseStateGates": [],
+      "nativeEntryWhen": {
+        "timeline": "Main",
+        "minimum_time": 0.001,
+        "before_time": 2.16
+      },
+      "resourceStateProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "resourceBypassIsIndependent": true,
+      "existingActivation": "normal_exact_class",
+      "requiredRuntimeInputs": [
+        "local_player_ability_system",
+        "real_granted_ability_spec_of_exact_class"
+      ],
+      "prepareSteps": [
+        "normally_activate_ability",
+        "execute_native_one_shot_weapon_buff_or_form_initialization",
+        "await_original_timeline_and_minimum_setup_time",
+        "enter_original_phase_with_current_timeline"
+      ],
+      "fullEffectsNeedExternalCombatContext": false,
+      "evidence": [
+        "docs/complete-move-combat-art-recipes.json",
+        "docs/complete-move-additional-weapon-phases.json"
+      ],
+      "reason": "Original timeline playback reconstructs overlapping montage/tags/warp actions, but does not retroactively run skipped one-shot initialization. Preserve the actual setup boundary and original branch.",
+      "group": "native_phase_initialization"
+    },
+    "move:WeaponPhase.GA_Hun_Jade_C_Range.Stage2": {
+      "id": "move:WeaponPhase.GA_Hun_Jade_C_Range.Stage2",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/New/GA_Hun_Jade_C_Range.GA_Hun_Jade_C_Range_C",
+      "abilityTag": "Ability.Action.Hun.CombatArt.Atk01",
+      "eligibilityGates": [
+        {
+          "field": "requiredTags",
+          "tag": "CharacterState.Space.Ground",
+          "category": "space",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        },
+        {
+          "field": "requiredTags",
+          "tag": "Weapon.Type.Jade",
+          "category": "equipment",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        }
+      ],
+      "phaseStateGates": [],
+      "nativeEntryWhen": {
+        "timeline": "Main",
+        "minimum_time": 0.001,
+        "before_time": 1.59
+      },
+      "resourceStateProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "resourceBypassIsIndependent": true,
+      "existingActivation": "normal_exact_class",
+      "requiredRuntimeInputs": [
+        "local_player_ability_system",
+        "real_granted_ability_spec_of_exact_class"
+      ],
+      "prepareSteps": [
+        "normally_activate_ability",
+        "execute_native_one_shot_weapon_buff_or_form_initialization",
+        "await_original_timeline_and_minimum_setup_time",
+        "enter_original_phase_with_current_timeline"
+      ],
+      "fullEffectsNeedExternalCombatContext": false,
+      "evidence": [
+        "docs/complete-move-combat-art-recipes.json",
+        "docs/complete-move-additional-weapon-phases.json"
+      ],
+      "reason": "Original timeline playback reconstructs overlapping montage/tags/warp actions, but does not retroactively run skipped one-shot initialization. Preserve the actual setup boundary and original branch.",
+      "group": "native_phase_initialization"
+    },
+    "move:ShadowPhase.GA_Hun_Lute_A.Stage2": {
+      "id": "move:ShadowPhase.GA_Hun_Lute_A.Stage2",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A.GA_Hun_Lute_A_C",
+      "abilityTag": "Ability.Action.Hun.ShachiAbility.Default",
+      "eligibilityGates": [
+        {
+          "field": "requiredTags",
+          "tag": "CharacterState.Space.Ground",
+          "category": "space",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        },
+        {
+          "field": "requiredTags",
+          "tag": "Weapon.Type.ShaqiWeapon.Lute",
+          "category": "equipment",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        }
+      ],
+      "phaseStateGates": [],
+      "nativeEntryWhen": {
+        "timeline": "Main",
+        "minimum_time": 0.2544252107143402,
+        "before_time": 1.2
+      },
+      "resourceStateProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "resourceBypassIsIndependent": true,
+      "existingActivation": "normal_exact_class",
+      "requiredRuntimeInputs": [
+        "local_player_ability_system",
+        "real_granted_ability_spec_of_exact_class"
+      ],
+      "prepareSteps": [
+        "normally_activate_ability",
+        "execute_native_one_shot_weapon_buff_or_form_initialization",
+        "await_original_timeline_and_minimum_setup_time",
+        "enter_original_phase_with_current_timeline"
+      ],
+      "fullEffectsNeedExternalCombatContext": false,
+      "evidence": [
+        "docs/complete-move-shadow-projectile-phases.json"
+      ],
+      "reason": "Normal activation preserves native resource qualification; wait for the original one-shot SpiritShadow cost before entering the second strum. Both simultaneous projectile variants and native cleanup remain in the original timeline.",
+      "group": "native_phase_initialization"
+    },
+    "move:ShadowPhase.GA_Hun_Lute_AA.Stage2": {
+      "id": "move:ShadowPhase.GA_Hun_Lute_AA.Stage2",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA.GA_Hun_Lute_AA_C",
+      "abilityTag": "Ability.Action.Hun.ShachiAbility.PiPa.AA",
+      "eligibilityGates": [
+        {
+          "field": "requiredTags",
+          "tag": "CharacterState.Space.Ground",
+          "category": "space",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        },
+        {
+          "field": "requiredTags",
+          "tag": "Weapon.Type.ShaqiWeapon.Lute",
+          "category": "equipment",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        }
+      ],
+      "phaseStateGates": [],
+      "nativeEntryWhen": {
+        "timeline": "Main",
+        "minimum_time": 0.21088625288009644,
+        "before_time": 1.35
+      },
+      "resourceStateProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "resourceBypassIsIndependent": true,
+      "existingActivation": "normal_exact_class",
+      "requiredRuntimeInputs": [
+        "local_player_ability_system",
+        "real_granted_ability_spec_of_exact_class"
+      ],
+      "prepareSteps": [
+        "normally_activate_ability",
+        "execute_native_one_shot_weapon_buff_or_form_initialization",
+        "await_original_timeline_and_minimum_setup_time",
+        "enter_original_phase_with_current_timeline"
+      ],
+      "fullEffectsNeedExternalCombatContext": false,
+      "evidence": [
+        "docs/complete-move-shadow-projectile-phases.json"
+      ],
+      "reason": "Normal activation preserves native resource qualification; wait for the original one-shot SpiritShadow cost before entering the second strum. Both simultaneous projectile variants and native cleanup remain in the original timeline.",
+      "group": "native_phase_initialization"
+    },
+    "move:WeaponPhase.GA_Hun_Double_JueYing_C.Final": {
+      "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C.Final",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C.GA_Hun_Double_JueYing_C_C",
+      "abilityTag": "Ability.Action.Hun.CombatArt.Atk01",
+      "eligibilityGates": [
+        {
+          "field": "requiredTags",
+          "tag": "Weapon.Type.DoubleBlade.JueYing",
+          "category": "equipment",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        }
+      ],
+      "phaseStateGates": [],
+      "nativeEntryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 1.82,
+        "timelines": [
+          "Main",
+          "NearTimeline"
+        ]
+      },
+      "resourceStateProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "resourceBypassIsIndependent": true,
+      "existingActivation": "normal_exact_class",
+      "requiredRuntimeInputs": [
+        "local_player_ability_system",
+        "real_granted_ability_spec_of_exact_class"
+      ],
+      "prepareSteps": [
+        "normally_activate_ability",
+        "execute_native_one_shot_weapon_buff_or_form_initialization",
+        "await_original_timeline_and_minimum_setup_time",
+        "enter_original_phase_with_current_timeline"
+      ],
+      "fullEffectsNeedExternalCombatContext": false,
+      "evidence": [
+        "docs/complete-move-combat-art-recipes.json",
+        "docs/complete-move-additional-weapon-phases.json"
+      ],
+      "reason": "Original timeline playback reconstructs overlapping montage/tags/warp actions, but does not retroactively run skipped one-shot initialization. Preserve the actual setup boundary and original branch.",
+      "group": "native_phase_initialization"
+    },
+    "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Final": {
+      "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Final",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C_Air.GA_Hun_Double_JueYing_C_Air_C",
+      "abilityTag": "Ability.Action.Hun.CombatArt.JueYing.Air",
+      "eligibilityGates": [
+        {
+          "field": "requiredTags",
+          "tag": "Weapon.Type.DoubleBlade.JueYing",
+          "category": "equipment",
+          "mode": "all",
+          "eligibilityMayBeRelaxed": true,
+          "doesNotInitializeNativeState": true
+        }
+      ],
+      "phaseStateGates": [],
+      "nativeEntryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 1.82,
+        "timeline": "Main"
+      },
+      "resourceStateProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "resourceBypassIsIndependent": true,
+      "existingActivation": "normal_exact_class",
+      "requiredRuntimeInputs": [
+        "local_player_ability_system",
+        "real_granted_ability_spec_of_exact_class"
+      ],
+      "prepareSteps": [
+        "normally_activate_ability",
+        "execute_native_one_shot_weapon_buff_or_form_initialization",
+        "await_original_timeline_and_minimum_setup_time",
+        "enter_original_phase_with_current_timeline"
+      ],
+      "fullEffectsNeedExternalCombatContext": false,
+      "evidence": [
+        "docs/complete-move-combat-art-recipes.json",
+        "docs/complete-move-additional-weapon-phases.json"
+      ],
+      "reason": "Original timeline playback reconstructs overlapping montage/tags/warp actions, but does not retroactively run skipped one-shot initialization. Preserve the actual setup boundary and original branch.",
+      "group": "native_phase_initialization"
     }
   },
   "groups": {
@@ -7521,7 +7875,14 @@
       "move:WeaponPhase.GA_Hun_SlitheringSword_C.Stage2",
       "move:WeaponPhase.GA_Hun_SnakeDual_C.Final",
       "move:WeaponPhase.GA_Hun_ZiMingJian_New_CC.Stage2",
-      "move:WeaponPhase.GA_Hun_ZiMingJian_New_CC.Final"
+      "move:WeaponPhase.GA_Hun_ZiMingJian_New_CC.Final",
+      "move:WeaponPhase.GA_Hun_HeiMoShang_C1.BladeWave",
+      "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave",
+      "move:WeaponPhase.GA_Hun_Jade_C_Range.Stage2",
+      "move:ShadowPhase.GA_Hun_Lute_A.Stage2",
+      "move:ShadowPhase.GA_Hun_Lute_AA.Stage2",
+      "move:WeaponPhase.GA_Hun_Double_JueYing_C.Final",
+      "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Final"
     ],
     "prepared_projectile": [
       "move:Ability.Action.Hun.ShachiAbility.Default.UnnamedBow.Shoot.Normal",
@@ -7592,13 +7953,13 @@
     ]
   },
   "summary": {
-    "recipes": 141,
+    "recipes": 148,
     "groupCounts": {
       "native_execution_channel": 4,
       "native_ability_entrance": 24,
       "initialized_native_callback": 7,
       "native_hold_and_release": 27,
-      "native_phase_initialization": 30,
+      "native_phase_initialization": 37,
       "prepared_projectile": 10,
       "persistent_effect_and_projectile": 1,
       "absorbed_damage_counter": 1,

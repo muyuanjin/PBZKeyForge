@@ -256,6 +256,8 @@ namespace PBZKeyForge
                 throw Invalid("Output.Kind=" + output.Kind);
             if ((output.Kind == "action" || output.Kind == "function") && string.IsNullOrWhiteSpace(output.Path)) throw Invalid("Output.Path: InputAction / UFunction");
             if ((output.Kind == "ability" || output.Kind == "event") && string.IsNullOrWhiteSpace(output.Tag)) throw Invalid("Output.Tag: GameplayTag");
+            if (output.Kind == "ability" && KeyEnhancementCatalog.IsUnsupportedAbilityTag(output.Tag))
+                throw Invalid(I18n.Str("catalog.unavailableAbility", output.Tag));
             if (output.Kind == "property" && string.IsNullOrWhiteSpace(output.Property)) throw Invalid("Output.Property: FName");
             if (output.Kind == "lua" && string.IsNullOrWhiteSpace(output.Code)) throw Invalid("Output.Code: function");
             var result = new Dictionary<string, object> { { "kind", output.Kind } };
@@ -346,7 +348,13 @@ namespace PBZKeyForge
     public static class KeyEnhancementCatalog
     {
         static KeyEnhancementCatalogEntry[] targets;
+        static readonly HashSet<string> unsupportedAbilityTags = new HashSet<string>(StringComparer.Ordinal);
         public static KeyEnhancementCatalogEntry[] Targets { get { return targets ?? (targets = Load()); } }
+        internal static bool IsUnsupportedAbilityTag(string tag)
+        {
+            if (targets == null) targets = Load();
+            return unsupportedAbilityTags.Contains(tag);
+        }
         public static KeyEnhancementCatalogEntry[] ForMapping(string mappingId)
         { return Targets.Where(entry => entry.Kind == "action" && entry.MappingNames.Contains(mappingId)).ToArray(); }
         static KeyEnhancementCatalogEntry[] Load()
@@ -357,6 +365,8 @@ namespace PBZKeyForge
                 using (var reader = new StreamReader(stream))
                 {
                     var data = new JavaScriptSerializer { MaxJsonLength = 16777216 }.Deserialize<Dictionary<string, object>>(reader.ReadToEnd());
+                    foreach (Dictionary<string, object> entry in (IEnumerable)data["unsupportedInputRoutes"])
+                        unsupportedAbilityTags.Add((string)entry["tag"]);
                     var result = new List<KeyEnhancementCatalogEntry>();
                     foreach (Dictionary<string, object> entry in (IEnumerable)data["inputActions"])
                     {

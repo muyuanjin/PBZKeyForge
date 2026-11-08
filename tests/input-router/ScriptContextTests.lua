@@ -9,7 +9,9 @@ local observation,reported
 local interfaceAddress,interfaceAddressCalls
 local emptyClass,emptyClassCalls={IsValid=function() return false end},0
 local nativeHold,nativeEffect,nativeRemoval
+local inputWatch,inputQuery,inputReset,inputBlocked=nil,nil,0,0
 local longCapture,longRemove,longRestore,longDiscard
+local scriptFunction,payloadMultiplier,multiplierReads=nil,1,0
 local function check(value,message) assert(value,message);checks=checks+1 end
 function NotifyOnNewObject(class,callback)
     notificationCount = notificationCount + 1
@@ -73,6 +75,9 @@ end
 local enabled,prepared
 local chargeRates,chargeTicks,chargeLoads={},{},0
 package.loadlib=function(_,name)
+    if name=="pbz_input_watch_trigger" then return function(...) inputWatch={...};return 1 end end
+    if name=="pbz_input_trigger_state" then return function(...) inputQuery={...};return 2,1,inputBlocked end end
+    if name=="pbz_input_reset_triggers" then return function() inputReset=inputReset+1;return 1 end end
     if name=="pbz_input_start_hold" then return function(...) nativeHold={...};return 1 end end
     if name=="pbz_effect_apply_self" then return function(...) nativeEffect={...};return 1,123 end end
     if name=="pbz_effect_apply_with_requirements" then return function(...) nativeEffect={...};return 1,124 end end
@@ -84,7 +89,11 @@ package.loadlib=function(_,name)
     if name=="pbz_ability_spec_indices" then return function() return "" end end
     if name=="pbz_script_context_empty_class" then return function() emptyClassCalls=emptyClassCalls+1;return emptyClass end end
     if name=="pbz_script_context_enable" then return function(value) enabled=value end end
-    if name=="pbz_script_context_at" then return function() end end
+    if name=="pbz_script_context_at" then return function() return nil,nil,scriptFunction end end
+    if name=="pbz_damage_payload_multiplier" then return function(address)
+        check(address==501,"Execution overwrite resolves the actual damage payload")
+        multiplierReads=multiplierReads+1;return payloadMultiplier
+    end end
     if name=="pbz_charge_watch_tick" then chargeLoads=chargeLoads+1;return function(address) chargeTicks[address]=(chargeTicks[address] or 0)+1;return 1 end end
     if name=="pbz_charge_ability" then chargeLoads=chargeLoads+1;return function(address,rate) chargeRates[address]=rate~=1 and rate or nil;return 1 end end
     if name=="pbz_script_context_watch_interface" then return function(address) watched[address]=true end end
@@ -133,12 +142,27 @@ end
 function StaticFindObject(name) return (assert(objects[name],name)) end
 function RegisterHook(path,pre,post)
     check(prepared,"Initialize is prepared before UE4SS replaces the native exec with a dispatcher")
-    check(watched[path=="initialize" and 10 or 11],"native interface capture is registered before its Lua consumer")
+    if not path:find("DamagePreTakePayload:ApplyModify",1,true) then
+        check(watched[path=="initialize" and 10 or 11],"native interface capture is registered before its Lua consumer")
+    end
     hooks[path]={pre=pre,post=post};return 3,4
 end
+function UnregisterHook(path) hooks[path]=nil end
 local Context=require("script-context")
 local context=Context.new(function(message) reported=message end)
 check(enabled,"context capture is enabled")
+local inputBackend={object=function(_,path)
+    local id=path:find(":UpdateState",1,true) and 90 or path:find(":GetTriggerType",1,true) and 91 or 93
+    return object(path,id)
+end,library=function() return object("FrameLibrary",92) end}
+context:watch_input_trigger(inputBackend,object("NativeTrigger",89))
+check(table.concat(inputWatch,",")=="89,90,91,92,93","native trigger observation receives its real function and frame objects")
+local triggerState,triggerKind,triggerBlocked=context:input_trigger_state(object("NativeTrigger",89),object("PlayerInput",94),127)
+check(triggerState==2 and triggerKind==1 and not triggerBlocked and table.concat(inputQuery,",")=="89,94,127",
+    "native integer zero blocking becomes false while exact player and frame are preserved")
+inputBlocked=1
+check(select(3,context:input_trigger_state(object("NativeTrigger",89),object("PlayerInput",94),127)),
+    "native blocking one becomes true")
 context:start_hold_input(object("Subsystem",76),object("Action",77))
 check(table.concat(nativeHold,",")=="76,70,71,72,77","held input passes native objects without converting the opaque value in Lua")
 local handle=context:apply_effect_self(object("ASC",78),object("EffectClass",79),2.5)
@@ -179,6 +203,28 @@ check(notificationCount==0,"untuned and resource-only modes must not install dam
 context:ability_damage(untouched,1)
 context:update_damage()
 context:enable_damage()
+local executionPath="/Script/SGameAttributes.DamagePreTakePayload:ApplyModify"
+local function argument(value) return {get=function() return value end,set=function(_,nextValue) value=nextValue end} end
+local function overwrite(tag,operation,value)
+    local result=argument(value)
+    hooks[executionPath].pre(argument(object("PreTake",501)),argument({TagName={ToString=function() return tag end}}),argument(operation),result)
+    return result:get()
+end
+scriptFunction="Function /PBZCombatAsset/Prototypes/Abilities/Base/PBZ_ShachiWeaponExecutionBase.PBZ_ShachiWeaponExecutionBase_C:ExecuteUbergraph_PBZ_ShachiWeaponExecutionBase"
+local physical="Damage.Damage.Target.GeneralDamage.Physical"
+payloadMultiplier=.25
+check(overwrite(physical,3,999999)==249999.75,"Execution final overwrite preserves a reduced binding multiplier")
+payloadMultiplier=2.5
+check(overwrite(physical,3,999999)==2499997.5,"Execution final overwrite preserves an increased binding multiplier")
+payloadMultiplier=1
+check(overwrite(physical,3,999999)==999999,"Untuned execution retains its original lethal damage")
+local reads=multiplierReads
+check(overwrite(physical,0,999999)==999999 and overwrite(physical,3,50)==50
+    and overwrite("Damage.Attribute.Target.Anger",3,999999)==999999 and multiplierReads==reads,
+    "Existing calculated values and non-health operations must not be multiplied twice")
+scriptFunction="Function /Fixture:OtherCallback"
+check(overwrite(physical,3,999999)==999999 and multiplierReads==reads,"Other damage modifiers retain their native semantics")
+scriptFunction=nil
 check(damageQueries==3,"damage discovery uses three native class queries")
 context:enable_damage()
 check(damageQueries==3 and notificationCount==4,"repeated tuning reuses damage discovery and creation listeners")
@@ -247,6 +293,11 @@ owned=nil
 for index=1,1000 do hooks.filtered.pre(invalidContext);hooks.filtered.post(invalidContext) end
 check(interfaceAddressCalls==2 and filteredPre==1 and filteredPost==1,
     "idle interface hooks must not cross the native address boundary or allocate object names")
+context:interface_hook(backend,"owned-pair",function(receiver)
+    check(receiver==second,"Restriction queries resolve the matching owned pawn as well as its ASC")
+end,nil,function() return first,second end)
+interfaceAddress=second:GetAddress()
+hooks["owned-pair"].pre(invalidContext)
 
 check(calculators[24],"existing calculator class defaults are hooked")
 notify(object("LaterCalculator",25))
@@ -281,7 +332,8 @@ context.watch_module=watch
 observation="Damage scaling (calculator output): multiplier=100 before=10 after=1000"
 for i=1,120 do context:update_damage() end
 check(reported==observation,"damage observations reach the runtime logger during updates")
-context:reset();check(not enabled,"reset disables native capture")
+context:reset();check(not enabled and not hooks[executionPath],"reset disables native capture and removes execution damage hooks")
+check(inputReset==1,"context cleanup restores native input trigger hooks")
 notify(untouched);payloadNotify(untouched);bulletNotify(untouched);objectBulletNotify(untouched)
 context:update_damage()
 local failed=Context.new()
@@ -297,4 +349,12 @@ check(not pcall(objectBulletNotify,untouched) and lateFailure.closed and not ena
 check(lateFailure.failure and lateFailure.failure:find("updated derived bullet rejected",1,true),
     "asynchronous registration failure retains its original cause after context reset")
 notify(untouched);payloadNotify(untouched);bulletNotify(untouched);objectBulletNotify(untouched)
+local cleanupContext=Context.new()
+local cleanupCalls=0
+cleanupContext.enable=function() error("capture cleanup failed") end
+cleanupContext.input_reset_triggers=function() cleanupCalls=cleanupCalls+1;return 1 end
+check(not pcall(cleanupContext.reset,cleanupContext) and cleanupCalls==1,
+    "input observation cleanup runs even when disabling capture fails")
+cleanupContext.enable=function() end
+check(pcall(cleanupContext.reset,cleanupContext) and cleanupCalls==2,"context cleanup remains retryable")
 print("ScriptContextTests PASS "..checks)

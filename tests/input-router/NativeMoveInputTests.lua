@@ -88,6 +88,7 @@ local function fixture(trigger,nativeTarget,nativeBinding,grantCount)
             local args={...};args[3].WeaponConfig=backend:object(nativeTarget.equipment_configs[1]);return true
         elseif path:match(":GetGameplayTagCount$") then
             local tag=(...).TagName
+            for _,ignored in ipairs(nativeTarget and nativeTarget.ignored_tags or {}) do if tag==ignored then return 0 end end
             for _,required in ipairs(condition.required_tags or {}) do if tag==required then return state.prepared and 1 or 0 end end
             return 1
         elseif condition.object_variable and path==condition.object_variable.getter then
@@ -104,6 +105,10 @@ local function fixture(trigger,nativeTarget,nativeBinding,grantCount)
     function state:advance()
         if self.held and not self.requested and self.active then self.shots=self.shots+1; self.active=false end
         self.held=self.requested
+    end
+    function state:complete_native()
+        check(self.active,"Only the running native ability may finish its charged attack")
+        self.shots=self.shots+1;self.active=false
     end
     local target={kind="ability",tag="Ability.Action.Hun.ShachiAbility.DuYanBow.Laser",
         native_hold_inputs={"/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"}}
@@ -132,7 +137,7 @@ end
 do
     local path=os.getenv("PBZ_NATIVE_HOLD_CONFIG") or "dist/restrictions-final-check/native-holds.lua"
     local compiled=assert(loadfile(path))()
-    local count=0
+    local count,seen=0,{}
     for _,binding in ipairs(compiled.bindings) do
         local output=binding.outputs[1]
         local target=compiled.targets[type(output)=="table" and output.target or output]
@@ -146,12 +151,18 @@ do
         check(state.activations==1 and state.stops==0,"A compiled one-shot must retain its real prepared ability: "..tostring(target.move_id or target.tag)
             .." activations="..state.activations.." stops="..state.stops)
         state.time=target.native_release_when.minimum_time or 0;state.prepared=true;state.other=false
+        if target.native_release_when.native_completion then
+            router:step(.015,{})
+            check(state.requested and state.stops==0 and state.active,
+                "Single-shot native charge must finish naturally without selecting an early release tier")
+            state:complete_native()
+        end
         router:step(.02,{});state:advance()
         check(state.shots==1 and state.starts==state.stops,"The compiled entrance must release one actual prepared attack")
         check(state.bypass==true and state.settings.damage_multiplier==binding.damage_multiplier
             and state.settings.startup_speed==binding.startup_speed and state.settings.recovery_speed==binding.recovery_speed
             and #state.settings.restriction_bypasses==6,"The native preparation handoff must retain this binding's independent tuning")
-        router:reset(true);count=count+1
+        router:reset(true);count=count+1;seen[target.move_id or target.tag]=true
 
         local identity=tostring(target.move_id or target.tag).." / "..key
         for _,outcome in ipairs({"refused","reset-preparing","reset-active","ended"}) do
@@ -191,8 +202,10 @@ do
         check(state.starts==1 and state.stops==0,"Independent bindings must share one native injection: "..identity)
         state:advance();Inputs.prepare(backend,{})
         check(state.activations==1 and state.stops==0 and next(backend.native_move_inputs),
-            "A refused binding must retain the active binding's Hold: "..identity)
+            "A refused binding must retain the active binding's Hold: "..identity
+                .." activations="..state.activations.." stops="..state.stops)
         state.time=target.native_release_when.minimum_time or 0;state.prepared=true;state.other=false
+        if target.native_release_when.native_completion then state:complete_native() end
         Inputs.prepare(backend,{});state:advance()
         check(state.shots==1 and state.starts==1 and state.stops==1
             and not next(backend.native_move_inputs) and not next(backend.complete_move_inputs),
@@ -210,7 +223,92 @@ do
             "Native filtering must retain the real pending charge: "..identity)
         router:reset(true)
     end
-    check(count==28,"The current native preparation inventory covers fourteen entrances on both devices")
+    check(count==#compiled.bindings and count>28,"Every compiled keyboard/controller native Hold entrance must run")
+    check(seen["move:Weapon.Weapon_Hun_Horizontal.GA_Hun_Horizontal_BladeWave"]
+        and seen["Ability.Action.Hun.Heavy.Horizontal.BladeWave"],
+        "Both the weapon entrance and direct blade-wave ability need real Hold input")
+end
+
+do
+    local path=os.getenv("PBZ_NATIVE_HOLD_VARIANT_CONFIG") or "dist/restrictions-final-check/native-hold-variants.lua"
+    local compiled=assert(loadfile(path))()
+    local count=0
+    for _,binding in ipairs(compiled.bindings) do
+        local output=binding.outputs[1]
+        local target=compiled.targets[type(output)=="table" and output.target or output]
+        for _,variant in ipairs(target.native_hold_variants) do
+            local effective={}
+            for name,value in pairs(target) do effective[name]=value end
+            effective.native_hold_inputs=variant.nativeHoldInputs
+            effective.native_release_when=variant.automaticReleaseWhen
+            effective.native_preparation_class=variant.abilityClass
+            local _,backend,state,_,config=fixture("tap",effective,binding)
+            state.other=true
+            config.targets.laser=target
+            local invoke=backend.invoke
+            function backend:invoke(value,name,...)
+                if name:match(":GetGameplayTagCount$") then
+                    local wanted=(...).TagName
+                    for _,tag in ipairs(variant.requiredTags) do if tag==wanted then return 1 end end
+                    return 0
+                end
+                return invoke(self,value,name,...)
+            end
+            local router=Router.new(config,backend)
+            local key=binding.keys[1]
+            router:step(0,{[key]=1});router:step(.001,{})
+            state:advance();router:step(.01,{})
+            check(state.activations==1 and state.starts==#variant.nativeHoldInputs,
+                "Shared ability must prepare only the current weapon's actual native input")
+            local pending=next(backend.native_move_inputs)
+            check(backend.native_move_inputs[pending].target.native_preparation_class==variant.abilityClass,
+                "Release readiness must observe the selected weapon's exact ability instance")
+            state.time=variant.automaticReleaseWhen.minimum_time or 0;state.prepared=true;state.other=false
+            if variant.automaticReleaseWhen.native_completion then state:complete_native() end
+            router:step(.02,{});state:advance()
+            check(state.shots==1 and state.starts==state.stops,"A shared native entrance keeps the full release lifecycle")
+            router:reset(true);count=count+1
+        end
+        for _,tagCount in ipairs({0,1}) do
+            local _,backend,state=fixture("tap",target,binding)
+            local invoke=backend.invoke
+            function backend:invoke(value,name,...)
+                if name:match(":GetGameplayTagCount$") then return tagCount end
+                return invoke(self,value,name,...)
+            end
+            local dispatch=backend.dispatch
+            local ordinary=0
+            function backend:dispatch(spec,...)
+                if not spec.native_hold_variants and not spec.native_hold_inputs then ordinary=ordinary+1;return true end
+                return dispatch(self,spec,...)
+            end
+            Inputs.dispatch(backend,target,"triggered",nil,"ordinary",false,{trigger="tap"})
+            check(ordinary==1 and state.starts==0 and not next(backend.native_move_inputs),
+                "Other granted weapons, including matching category tags, retain their own native input")
+        end
+    end
+    check(count>=4,"Both weapon branches must run for keyboard and controller shared entrances")
+end
+
+for _,trigger in ipairs({"tap","press","down"}) do
+    local router,backend,state,target,config=fixture(trigger)
+    if trigger=="press" then config.bindings[1].default_trigger=false;router=Router.new(config,backend) end
+    target.native_preparation_class="/Fixture.NativeCharge_C"
+    target.native_release_when={native_completion=true}
+    router:step(0,{G=1})
+    if trigger=="tap" then router:step(.001,{}) end
+    state:advance();router:step(.01,trigger=="tap" and {} or {G=1})
+    for frame=1,60 do router:step(.01+frame/60,trigger=="tap" and {} or {G=1}) end
+    check(state.requested and state.active and state.activations==1 and state.stops==0,
+        "Charge ownership must survive pending repeats until the original native attack completes: "..trigger)
+    if trigger=="down" then
+        router:step(1.1,{});state:advance()
+        check(state.shots==1 and state.stops==1,"A real key release retains the original early-release behavior")
+    else
+        state:complete_native();router:step(1.1,trigger=="tap" and {} or {G=1});state:advance()
+        check(state.shots==1 and state.stops==1,"A single request releases only after the full native attack")
+    end
+    router:reset(true)
 end
 
 for _,trigger in ipairs({"tap","release","press","down"}) do

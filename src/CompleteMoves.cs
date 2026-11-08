@@ -28,6 +28,8 @@ namespace PBZKeyForge
             public string[] activeAbilityClasses = new string[0];
             public object[] entryArguments = new object[0];
             public Dictionary<string, object> entryWhen;
+            public Dictionary<string, object> completionWhen;
+            public Dictionary<string, object>[] completionEffects = new Dictionary<string, object>[0];
             public PhaseWindow phaseWindow;
             public PhaseWindow[] phaseWindows = new PhaseWindow[0];
             public Dictionary<string, string> weaponLabels;
@@ -108,6 +110,8 @@ namespace PBZKeyForge
                     ? move.entryPoint : move.abilityClass + ":" + move.entryPoint;
                 if (move.entryArguments.Length > 0) target["entry_arguments"] = move.entryArguments;
                 if (move.entryWhen != null) target["entry_when"] = move.entryWhen;
+                if (move.completionWhen != null) target["completion_when"] = move.completionWhen;
+                if (move.completionEffects.Length > 0) target["completion_effects"] = move.completionEffects;
                 if (move.phaseWindow != null)
                 {
                     target["phase_window"] = new Dictionary<string, object> {

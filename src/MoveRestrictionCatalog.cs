@@ -34,6 +34,7 @@ namespace PBZKeyForge
             if (identity == null || !Data.entries.TryGetValue(identity, out entry)) return;
             object value;
             if (entry.preparation.TryGetValue("nativeHoldInputs", out value)) target["native_hold_inputs"] = value;
+            if (entry.preparation.TryGetValue("nativeHoldVariants", out value)) target["native_hold_variants"] = value;
             if (entry.preparation.TryGetValue("automaticReleaseWhen", out value)) target["native_release_when"] = value;
             if (entry.preparation.TryGetValue("abilityClass", out value)) target["native_preparation_class"] = value;
             if (restrictions)

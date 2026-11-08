@@ -28,7 +28,7 @@ class KeyEnhancementRuleEditorTests
             DefaultTriggers();
             Localization(args.Contains("--all-languages"));
             Check(KeyEnhancementCatalog.Targets.Count(entry => entry.Kind == "action") == 98, "Action catalog count");
-            Check(KeyEnhancementCatalog.Targets.Count(entry => entry.Kind == "ability") == 236, "Ability catalog count");
+            Check(KeyEnhancementCatalog.Targets.Count(entry => entry.Kind == "ability") == 227, "Ability catalog count");
             Console.WriteLine("KeyEnhancementRuleEditorTests PASS");
             return 0;
         }

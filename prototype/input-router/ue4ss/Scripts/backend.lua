@@ -611,19 +611,7 @@ function Backend:prepare_input_settings(requests)
         if request.target.kind == "action" and not self:target_failed(request.target,request.binding)
             and (self.resource_costs or request.bypass_resources or ResourceCosts.tuned(request.settings)) then
             local ok, failure = xpcall(function()
-                local coverage = self.native_input and self.native_input.coverage
-                if self.native_tuning_coverage ~= coverage or not self.native_tuning_actions then
-                    local native = {}
-                    for _,entry in ipairs(coverage or {}) do
-                        if (entry.owner == "game" or entry.owner == "uncovered") and entry.key ~= "None" then
-                            native[entry.action] = true
-                        end
-                    end
-                    self.native_tuning_coverage, self.native_tuning_actions = coverage, native
-                end
-                local action = request.target.object or self:object(request.target.path,"InputAction")
                 local bypass,settings,rank = request.bypass_resources,request.settings,request.rank
-                if self.native_tuning_actions[action_path(action)] then bypass,settings,rank = false,nil,0 end
                 if not self.resource_costs and (bypass or ResourceCosts.tuned(settings)) then
                     self.resource_costs = ResourceCosts.new(self)
                 end
@@ -646,7 +634,7 @@ function Backend:dispatch(spec, phase, value, bindingId, bypass, settings, nativ
     if self.config.enabled == false or not self.state.ready then return false end
     local releasing = phase == "completed" or phase == "canceled"
     if not releasing and self:target_failed(spec, bindingId) then return true, false end
-    if spec.native_hold_inputs and not nativePrepared then
+    if (spec.native_hold_inputs or spec.native_hold_variants) and not nativePrepared then
         local ok,accepted,result,reason = xpcall(function()
             return MoveInputs.dispatch(self,spec,phase,value,bindingId,bypass,settings)
         end,debug.traceback)

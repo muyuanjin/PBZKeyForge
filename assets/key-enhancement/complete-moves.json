@@ -6727,15 +6727,22 @@
           "timeline": "Main",
           "entry_time": 0.92,
           "attack_start": 1.0054361820220947,
-          "attack_end": 2.1921606063842773
+          "attack_end": 1.652966856956482
         },
         {
           "timeline": "NearTimeline",
           "entry_time": 0.92,
           "attack_start": 1.0054359436035156,
-          "attack_end": 2.192160978913307
+          "attack_end": 1.6529670357704163
         }
-      ]
+      ],
+      "completionWhen": {
+        "timelines": [
+          "Main",
+          "NearTimeline"
+        ],
+        "minimum_time": 1.81
+      }
     },
     {
       "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Crow",
@@ -6816,7 +6823,11 @@
         "timeline": "Main",
         "entry_time": 0.92,
         "attack_start": 1.0054359436035156,
-        "attack_end": 2.192160978913307
+        "attack_end": 1.6529670357704163
+      },
+      "completionWhen": {
+        "timeline": "Main",
+        "minimum_time": 1.81
       }
     },
     {
@@ -6984,7 +6995,11 @@
         "timeline": "Main",
         "entry_time": 1.2,
         "attack_start": 1.3358440399169922,
-        "attack_end": 2.320129871368408
+        "attack_end": 1.4252166748046875
+      },
+      "completionWhen": {
+        "timeline": "Main",
+        "minimum_time": 1.5
       }
     },
     {
@@ -7150,7 +7165,11 @@
         "timeline": "Main",
         "entry_time": 1.25,
         "attack_start": 1.456926941871643,
-        "attack_end": 4.907577037811279
+        "attack_end": 4.050748065114021
+      },
+      "completionWhen": {
+        "timeline": "Main",
+        "minimum_time": 4.25
       }
     },
     {
@@ -7325,9 +7344,13 @@
           "timeline": "Perfect",
           "entry_time": 1.5,
           "attack_start": 1.6130808591842651,
-          "attack_end": 4.729172229766846
+          "attack_end": 4.378878593444824
         }
-      ]
+      ],
+      "completionWhen": {
+        "timeline": "Perfect",
+        "minimum_time": 4.4
+      }
     },
     {
       "id": "move:WeaponPhase.GA_Hun_SlitheringSword_C.PerfectFinal",
@@ -7577,7 +7600,11 @@
         "timeline": "Main",
         "entry_time": 1.2,
         "attack_start": 1.23451828956604,
-        "attack_end": 2.452219996601343
+        "attack_end": 1.9710395634174347
+      },
+      "completionWhen": {
+        "timeline": "Main",
+        "minimum_time": 2.1
       }
     },
     {
@@ -7917,7 +7944,11 @@
         "timeline": "HasSawHit",
         "entry_time": 2.05,
         "attack_start": 2.1313343048095703,
-        "attack_end": 3.3370130956172943
+        "attack_end": 2.9889626502990723
+      },
+      "completionWhen": {
+        "timeline": "HasSawHit",
+        "minimum_time": 3.1
       }
     },
     {
@@ -8007,6 +8038,640 @@
         "entry_time": 3.16,
         "attack_start": 3.2015790939331055,
         "attack_end": 3.3370130956172943
+      }
+    },
+    {
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.AAAAABB",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_C1.GA_Hun_HeiMoShang_C1_C",
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "CharacterState.Space.Ground",
+        "Weapon.Type.HeiMoShang",
+        "CharacterState.AbilityState.HeiMoShang.Buff"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "weaponLabels": {
+        "zh-Hans": "黑魔伤",
+        "en": "INFERNAL ROUGE",
+        "ja": "黒魔傷",
+        "ko": "흑마상",
+        "ru": "Багрянец Мо",
+        "zh-Hant": "黑魔傷",
+        "fr": "ROUGE INFERNAL",
+        "de": "HÖLLISCHES BLUTROT",
+        "es-ES": "ROJO INFERNAL",
+        "pt-BR": "SANGUÍNEA INFERNAL",
+        "it": "SANGUINARIA MO",
+        "th": "คมมารทมิฬ",
+        "vi": "MA HẮC THƯƠNG",
+        "pt-PT": "SANGUINE DE MÓ",
+        "es-419": "ROJO INFERNAL"
+      },
+      "category": "weapons/Weapon_005/IA_UltimateSkill",
+      "id": "move:WeaponPhase.GA_Hun_HeiMoShang_C1.BladeWave",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        2.1,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "timeline": "Exit",
+        "minimum_time": 0.60001,
+        "before_time": 2.1
+      },
+      "phaseWindow": {
+        "timeline": "Exit",
+        "entry_time": 2.1,
+        "attack_start": 2.162532091140747,
+        "attack_end": 3.049049988389015
+      },
+      "code": "CombatArt · HeiMoShang_C1 · BladeWave",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.followup",
+        "catalog.bladewave"
+      ],
+      "searchAliases": [
+        "GA_Hun_HeiMoShang_C1",
+        "BladeWave",
+        "黑魔伤",
+        "INFERNAL ROUGE",
+        "黒魔傷",
+        "흑마상",
+        "Багрянец Мо",
+        "黑魔傷",
+        "ROUGE INFERNAL",
+        "HÖLLISCHES BLUTROT",
+        "ROJO INFERNAL",
+        "SANGUÍNEA INFERNAL",
+        "SANGUINARIA MO",
+        "คมมารทมิฬ",
+        "MA HẮC THƯƠNG",
+        "SANGUINE DE MÓ",
+        "GAA_DelayDeflectProjectileBullet_C_0",
+        "GAA_DelayDeflectProjectileBullet_C_2",
+        "GAA_DelayDeflectProjectileBullet_C_3",
+        "BD_Hun_HeiMoShang_C_03_New",
+        "BD_Hun_HeiMoShang_C_04_New",
+        "BD_Hun_HeiMoShang_C_05_New"
+      ],
+      "completionWhen": {
+        "timeline": "Exit",
+        "minimum_time": 3.15
+      },
+      "completionEffects": [
+        {
+          "effect": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/GE_Hun_HeiMoShang_Buff.GE_Hun_HeiMoShang_Buff_C",
+          "stacks": -1
+        }
+      ]
+    },
+    {
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Horizontal.BladeWave",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_C.GA_Hun_Horizontal_C_C",
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "CharacterState.Space.Ground",
+        "Weapon.Type.Horizontal"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "weaponLabels": {
+        "zh-Hans": "荡寇凶刃",
+        "en": "JUGGERNAUT",
+        "ja": "蕩寇凶刃",
+        "ko": "탕구의 흉도",
+        "ru": "Гроза Разбойников",
+        "zh-Hant": "蕩寇凶刃",
+        "fr": "SABRE TITAN",
+        "de": "BANDITENTÖTER",
+        "es-ES": "COLOSO",
+        "pt-BR": "FORÇA IRREFREÁVEL",
+        "it": "LAMA STERMINATRICE",
+        "th": "คมพิฆาตโจร",
+        "vi": "ĐÃNG KHẤU HUNG NHẬN",
+        "pt-PT": "MASTODONTE",
+        "es-419": "DEVASTADOR"
+      },
+      "category": "weapons/Weapon_019/IA_UltimateSkill",
+      "id": "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        2.16,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "timeline": "Main",
+        "minimum_time": 0.001,
+        "before_time": 2.16
+      },
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 2.16,
+        "attack_start": 2.1914124488830566,
+        "attack_end": 2.5130743980407715
+      },
+      "code": "CombatArt · Horizontal_C · BladeWave",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.followup",
+        "catalog.bladewave"
+      ],
+      "searchAliases": [
+        "GA_Hun_Horizontal_C",
+        "BladeWave",
+        "荡寇凶刃",
+        "JUGGERNAUT",
+        "蕩寇凶刃",
+        "탕구의 흉도",
+        "Гроза Разбойников",
+        "SABRE TITAN",
+        "BANDITENTÖTER",
+        "COLOSO",
+        "FORÇA IRREFREÁVEL",
+        "LAMA STERMINATRICE",
+        "คมพิฆาตโจร",
+        "ĐÃNG KHẤU HUNG NHẬN",
+        "MASTODONTE",
+        "DEVASTADOR",
+        "GAA_DelayDeflectProjectileBullet_C_0",
+        "GAA_DelayDeflectProjectileBullet_C_2",
+        "B_Hun_Horizontal_C_04",
+        "B_Hun_Horizontal_C_05",
+        "交叉剑气",
+        "交叉刀波",
+        "Cross blade wave"
+      ],
+      "completionWhen": {
+        "timeline": "Main",
+        "minimum_time": 2.853
+      }
+    },
+    {
+      "sourceId": "ability:Ability.Action.Hun.Special.Jade.DB",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/New/GA_Hun_Jade_C_Range.GA_Hun_Jade_C_Range_C",
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "CharacterState.Space.Ground",
+        "Weapon.Type.Jade"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "weaponLabels": {
+        "zh-Hans": "玉双环",
+        "en": "SEAMLESS DEATH",
+        "ja": "玉双環",
+        "ko": "옥쌍환",
+        "ru": "Безупречная Смерть",
+        "zh-Hant": "玉雙環",
+        "fr": "DOUCE MORT",
+        "de": "NAHTLOSER TOD",
+        "es-ES": "MUERTE FLUIDA",
+        "pt-BR": "MORTE CIRCULAR",
+        "it": "MORTE FLUIDA",
+        "th": "จักรหยกคู่",
+        "vi": "NGỌC SONG HOÀN",
+        "pt-PT": "MORTE SUAVE",
+        "es-419": "MUERTE PERFECTA"
+      },
+      "category": "weapons/Weapon_029/IA_UltimateSkill",
+      "id": "move:WeaponPhase.GA_Hun_Jade_C_Range.Stage2",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        1.59,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "timeline": "Main",
+        "minimum_time": 0.001,
+        "before_time": 1.59
+      },
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 1.59,
+        "attack_start": 1.620739221572876,
+        "attack_end": 3.0335292667150497
+      },
+      "code": "CombatArt · Jade_C_Range · Stage2",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.followup",
+        "2"
+      ],
+      "searchAliases": [
+        "GA_Hun_Jade_C_Range",
+        "Stage2",
+        "玉双环",
+        "SEAMLESS DEATH",
+        "玉双環",
+        "옥쌍환",
+        "Безупречная Смерть",
+        "玉雙環",
+        "DOUCE MORT",
+        "NAHTLOSER TOD",
+        "MUERTE FLUIDA",
+        "MORTE CIRCULAR",
+        "MORTE FLUIDA",
+        "จักรหยกคู่",
+        "NGỌC SONG HOÀN",
+        "MORTE SUAVE",
+        "MUERTE PERFECTA",
+        "GAA_DelayDeflectProjectileBullet_C_3",
+        "GAA_DelayDeflectProjectileBullet_C_2",
+        "GAA_DelayDeflectProjectileBullet_C_11",
+        "GAA_DelayDeflectProjectileBullet_C_8",
+        "GAA_DelayDeflectProjectileBullet_C_4",
+        "GAA_DelayDeflectProjectileBullet_C_5",
+        "GAA_DelayDeflectProjectileBullet_C_12",
+        "GAA_DelayDeflectProjectileBullet_C_9",
+        "GAA_DelayDeflectProjectileBullet_C_7",
+        "GAA_DelayDeflectProjectileBullet_C_13",
+        "B_Hun_Jade_C_Range",
+        "B_Hun_Jade_C_Range_3_E",
+        "B_Hun_Jade_C_Range_4_E",
+        "B_Hun_Jade_C_Range_7_E",
+        "B_Hun_Jade_C_Range_5_E",
+        "B_Hun_Jade_C_Range_8_E"
+      ],
+      "completionWhen": {
+        "timeline": "Main",
+        "minimum_time": 3.1
+      }
+    },
+    {
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "tag": "Ability.Action.Hun.CombatArt.Atk01",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C.GA_Hun_Double_JueYing_C_C",
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.DoubleBlade.JueYing"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "weaponLabels": {
+        "zh-Hans": "绝影",
+        "en": "SHADOWLESS EDGE",
+        "ja": "絶影",
+        "ko": "절영",
+        "ru": "Неуловимые Клинки",
+        "zh-Hant": "絕影",
+        "fr": "OMBRES INSAISISSABLES",
+        "de": "SCHATTENLOSE KLINGE",
+        "es-ES": "FILOS SIN SOMBRA",
+        "pt-BR": "LÂMINA SEM SOMBRA",
+        "it": "LAMA SENZ'OMBRA",
+        "th": "ดาบเงาสูญ",
+        "vi": "TUYỆT ẢNH",
+        "pt-PT": "GUME SEM SOMBRA",
+        "es-419": "FILO SIN SOMBRA"
+      },
+      "category": "weapons/Weapon_024/IA_UltimateSkill",
+      "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C.Final",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        1.82,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 1.82,
+        "timelines": [
+          "Main",
+          "NearTimeline"
+        ]
+      },
+      "code": "CombatArt · Double_JueYing_C · Final",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.combo",
+        "1",
+        "moves.finisher"
+      ],
+      "searchAliases": [
+        "GA_Hun_Double_JueYing_C",
+        "Final",
+        "BD_GA_Hun_JueYing_C_End",
+        "绝影",
+        "SHADOWLESS EDGE",
+        "絶影",
+        "절영",
+        "Неуловимые Клинки",
+        "絕影",
+        "OMBRES INSAISISSABLES",
+        "SCHATTENLOSE KLINGE",
+        "FILOS SIN SOMBRA",
+        "LÂMINA SEM SOMBRA",
+        "LAMA SENZ'OMBRA",
+        "ดาบเงาสูญ",
+        "TUYỆT ẢNH",
+        "GUME SEM SOMBRA",
+        "FILO SIN SOMBRA"
+      ],
+      "phaseWindows": [
+        {
+          "timeline": "Main",
+          "entry_time": 1.82,
+          "attack_start": 2.0519137382507324,
+          "attack_end": 2.1921606063842773
+        },
+        {
+          "timeline": "NearTimeline",
+          "entry_time": 1.82,
+          "attack_start": 2.0519139766693115,
+          "attack_end": 2.192160978913307
+        }
+      ]
+    },
+    {
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.JueYing.Air",
+      "tag": "Ability.Action.Hun.CombatArt.JueYing.Air",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C_Air.GA_Hun_Double_JueYing_C_Air_C",
+      "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt",
+      "requiredTags": [
+        "Weapon.Type.DoubleBlade.JueYing"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "weaponLabels": {
+        "zh-Hans": "绝影",
+        "en": "SHADOWLESS EDGE",
+        "ja": "絶影",
+        "ko": "절영",
+        "ru": "Неуловимые Клинки",
+        "zh-Hant": "絕影",
+        "fr": "OMBRES INSAISISSABLES",
+        "de": "SCHATTENLOSE KLINGE",
+        "es-ES": "FILOS SIN SOMBRA",
+        "pt-BR": "LÂMINA SEM SOMBRA",
+        "it": "LAMA SENZ'OMBRA",
+        "th": "ดาบเงาสูญ",
+        "vi": "TUYỆT ẢNH",
+        "pt-PT": "GUME SEM SOMBRA",
+        "es-419": "FILO SIN SOMBRA"
+      },
+      "category": "weapons/Weapon_024/IA_UltimateSkill",
+      "id": "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Final",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        1.82,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "minimum_time": 0.001,
+        "before_time": 1.82,
+        "timeline": "Main"
+      },
+      "code": "CombatArt · Double_JueYing_C_Air · Final",
+      "labelParts": [
+        "moves.combatart",
+        "catalog.air",
+        "moves.finisher"
+      ],
+      "searchAliases": [
+        "GA_Hun_Double_JueYing_C_Air",
+        "Final",
+        "BD_GA_Hun_JueYing_C_End",
+        "绝影",
+        "SHADOWLESS EDGE",
+        "絶影",
+        "절영",
+        "Неуловимые Клинки",
+        "絕影",
+        "OMBRES INSAISISSABLES",
+        "SCHATTENLOSE KLINGE",
+        "FILOS SIN SOMBRA",
+        "LÂMINA SEM SOMBRA",
+        "LAMA SENZ'OMBRA",
+        "ดาบเงาสูญ",
+        "TUYỆT ẢNH",
+        "GUME SEM SOMBRA",
+        "FILO SIN SOMBRA"
+      ],
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 1.82,
+        "attack_start": 2.0519139766693115,
+        "attack_end": 2.192160978913307
+      }
+    },
+    {
+      "id": "move:ShadowPhase.GA_Hun_Lute_A.Stage2",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "tag": "Ability.Action.Hun.ShachiAbility.Default",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A.GA_Hun_Lute_A_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        1.2,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "timeline": "Main",
+        "minimum_time": 0.2544252107143402,
+        "before_time": 1.2
+      },
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [
+        "CharacterState.Space.Ground",
+        "Weapon.Type.ShaqiWeapon.Lute"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "Lute_A · Stage2",
+      "labelParts": [
+        "catalog.attack",
+        "1",
+        "catalog.followup",
+        "2"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "催心琵琶",
+        "en": "HEARTREND PIPA",
+        "ja": "催心の琵琶",
+        "ko": "최심비파",
+        "ru": "Душераздирающая Пипа",
+        "zh-Hant": "催心琵琶",
+        "fr": "PIPA DÉCHIRE-CŒUR",
+        "de": "HERZREISSER-PIPA",
+        "es-ES": "PIPA DESGARRACORAZONES",
+        "pt-BR": "PIPA DILACERADOR DE CORAÇÕES",
+        "it": "PIPA SPACCACUORI",
+        "th": "พิณผีผาสลายใจ",
+        "vi": "TỲ BÀ THÔI TÂM",
+        "pt-PT": "PIPÁ AMARGURADO",
+        "es-419": "PIPA DESGARRACORAZONES"
+      },
+      "category": "shadow/PhantomEdges_024/IA_ShadowArm",
+      "searchAliases": [
+        "GA_Hun_Lute_A",
+        "Stage2",
+        "催心琵琶",
+        "HEARTREND PIPA",
+        "催心の琵琶",
+        "최심비파",
+        "Душераздирающая Пипа",
+        "催心琵琶",
+        "PIPA DÉCHIRE-CŒUR",
+        "HERZREISSER-PIPA",
+        "PIPA DESGARRACORAZONES",
+        "PIPA DILACERADOR DE CORAÇÕES",
+        "PIPA SPACCACUORI",
+        "พิณผีผาสลายใจ",
+        "TỲ BÀ THÔI TÂM",
+        "PIPÁ AMARGURADO",
+        "PIPA DESGARRACORAZONES"
+      ],
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 1.2,
+        "attack_start": 1.8692576885223389,
+        "attack_end": 1.9025910459458828
+      }
+    },
+    {
+      "id": "move:ShadowPhase.GA_Hun_Lute_AA.Stage2",
+      "sourceId": "ability:Ability.Action.Hun.ShachiAbility.PiPa.AA",
+      "tag": "Ability.Action.Hun.ShachiAbility.PiPa.AA",
+      "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA.GA_Hun_Lute_AA_C",
+      "activateByClass": true,
+      "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+      "entryArguments": [
+        {
+          "current_timeline": true
+        },
+        1.0,
+        0.0,
+        1.35,
+        {
+          "fname": "None"
+        }
+      ],
+      "entryWhen": {
+        "timeline": "Main",
+        "minimum_time": 0.21088625288009644,
+        "before_time": 1.35
+      },
+      "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+      "requiredTags": [
+        "CharacterState.Space.Ground",
+        "Weapon.Type.ShaqiWeapon.Lute"
+      ],
+      "activeBooleanProperties": [
+        "Current Shachi Reinforced"
+      ],
+      "priority": -5,
+      "code": "Lute_AA · Stage2",
+      "labelParts": [
+        "catalog.attack",
+        "2",
+        "catalog.followup",
+        "2"
+      ],
+      "weaponLabels": {
+        "zh-Hans": "催心琵琶",
+        "en": "HEARTREND PIPA",
+        "ja": "催心の琵琶",
+        "ko": "최심비파",
+        "ru": "Душераздирающая Пипа",
+        "zh-Hant": "催心琵琶",
+        "fr": "PIPA DÉCHIRE-CŒUR",
+        "de": "HERZREISSER-PIPA",
+        "es-ES": "PIPA DESGARRACORAZONES",
+        "pt-BR": "PIPA DILACERADOR DE CORAÇÕES",
+        "it": "PIPA SPACCACUORI",
+        "th": "พิณผีผาสลายใจ",
+        "vi": "TỲ BÀ THÔI TÂM",
+        "pt-PT": "PIPÁ AMARGURADO",
+        "es-419": "PIPA DESGARRACORAZONES"
+      },
+      "category": "shadow/PhantomEdges_024/IA_ShadowArm",
+      "searchAliases": [
+        "GA_Hun_Lute_AA",
+        "Stage2",
+        "催心琵琶",
+        "HEARTREND PIPA",
+        "催心の琵琶",
+        "최심비파",
+        "Душераздирающая Пипа",
+        "催心琵琶",
+        "PIPA DÉCHIRE-CŒUR",
+        "HERZREISSER-PIPA",
+        "PIPA DESGARRACORAZONES",
+        "PIPA DILACERADOR DE CORAÇÕES",
+        "PIPA SPACCACUORI",
+        "พิณผีผาสลายใจ",
+        "TỲ BÀ THÔI TÂM",
+        "PIPÁ AMARGURADO",
+        "PIPA DESGARRACORAZONES"
+      ],
+      "phaseWindow": {
+        "timeline": "Main",
+        "entry_time": 1.35,
+        "attack_start": 1.9391967058181763,
+        "attack_end": 1.9725300073623657
       }
     }
   ]

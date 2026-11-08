@@ -71,6 +71,14 @@ local function cancel(backend, instance)
     backend:invoke(instance, "/Script/GameplayAbilities.GameplayAbility:K2_CancelAbility")
 end
 
+local function complete_phase(backend, instance, spec, component)
+    for _, effect in ipairs(spec.completion_effects or {}) do
+        backend:invoke(component, "/Script/GameplayAbilities.AbilitySystemComponent:RemoveActiveGameplayEffectBySourceEffect",
+            backend:object(effect.effect),nil,effect.stacks)
+    end
+    backend:invoke(instance, "/MagCombatAbilities/Abilities/BP_ActionAbilityBase.BP_ActionAbilityBase_C:Move Cancel Ability")
+end
+
 local function remember_activation(backend, pending)
     if not pending.instance then return end
     backend.complete_move_active = backend.complete_move_active or {}
@@ -82,6 +90,7 @@ local function restartable(backend, component, instance, identity)
     if not owned or owned.component:GetAddress() ~= component:GetAddress()
         or owned.instance:GetAddress() ~= instance:GetAddress()
         or backend.complete_move_pending and backend.complete_move_pending[identity] then return false end
+    if owned.phase_entered and owned.spec.completion_when then return false end
     local phase = instance:GetPropertyValue("Action Phase")
     if not phase or phase.TagName:ToString() ~= "CharacterState.Action.Phase.Cancel" then return false end
     backend:invoke(instance, "/MagCombatAbilities/Abilities/BP_ActionAbilityBase.BP_ActionAbilityBase_C:Move Cancel Ability")
@@ -168,6 +177,7 @@ function Moves.native_release_state(backend, target, manual)
     if not valid(component) then return "completed" end
     local instance, active = owned_instance(backend,component,target.native_preparation_class or target.ability_class,target.tag)
     if not instance or not active or not instance:GetPropertyValue("bIsActive") then return "completed" end
+    if target.native_release_when.native_completion then return manual and "ready" or "waiting" end
     local state = entry_state(backend,component,instance,target.native_release_when)
     -- A physical hold may legitimately advance beyond the first finite release window.
     if manual and state == "expired" then return "ready" end
@@ -264,7 +274,9 @@ local function apply_entry(backend, component, instance, pending)
         return true
     end
     finish(backend,pending)
-    return enter(backend,component,instance,pending.spec,pending.settings)
+    local entered, reason = enter(backend,component,instance,pending.spec,pending.settings)
+    pending.phase_entered = entered
+    return entered, reason
 end
 
 local function activate_by_class(backend, component, receiver, input, target)
@@ -338,7 +350,7 @@ local function activate(backend, component, instance, pending)
     return apply_entry(backend,component,current,pending)
 end
 
-local function dispatch_active(backend, component, target, bypass, settings)
+local function dispatch_active(backend, component, target, bypass, settings, bindingId)
     local policy = {}
     for key,value in pairs(settings or {}) do policy[key] = value end
     policy.restriction_target = target
@@ -370,13 +382,22 @@ local function dispatch_active(backend, component, target, bypass, settings)
         for _, instances in ipairs({spec.NonReplicatedInstances, spec.ReplicatedInstances}) do
             instances:ForEach(function(_, instanceParameter)
                 local instance = instanceParameter:get()
+                local identity = valid(instance) and class_path(instance)..":"..tostring(instance:GetAddress())
+                local previous = identity and backend.complete_move_active and backend.complete_move_active[identity]
+                local entered = not target.active_callback_only and previous and previous.phase_entered
+                    and previous.component:GetAddress()==component:GetAddress()
                 if valid(instance) and instance:GetAddress() ~= spec.Ability:GetAddress()
                     and instance:GetPropertyValue("bIsActive") and classes[instance:GetClass():GetAddress()]
-                    and not seen[instance:GetAddress()] and qualified(instance) then
+                    and not entered and not seen[instance:GetAddress()] and qualified(instance) then
                     seen[instance:GetAddress()] = true
                     ResourceCosts.with_active(backend,instance,bypass,function()
                         return invoke_entry(backend,instance,target)
                     end,policy,target.active_callback_only,target.phase_window,target.phase_windows)
+                    if not target.active_callback_only then
+                        remember_activation(backend,{identity=identity,
+                            component=component,instance=instance,spec=target,settings=settings,
+                            binding_id=bindingId,phase_entered=true})
+                    end
                     dispatched = true
                 end
             end)
@@ -412,7 +433,9 @@ local function update_pending(backend, pending)
         local state = released_entry_state(backend,instance,pending)
         if state ~= "waiting" then
             finish(backend,pending)
-            if state == "ready" then enter(backend,component,instance,pending.spec,pending.settings) end
+            if state == "ready" then
+                pending.phase_entered = enter(backend,component,instance,pending.spec,pending.settings)
+            end
         end
     else
         local state = entry_state(backend,component,instance,pending.spec.entry_when)
@@ -429,6 +452,14 @@ end
 function Moves.update(backend)
     for identity, active in pairs(backend.complete_move_active or {}) do
         local ok, running = xpcall(function()
+            if active.phase_entered and active.spec.completion_when then
+                local instance, component = pending_instance(backend,active)
+                if not instance then return false end
+                if entry_state(backend,component,instance,active.spec.completion_when)=="ready" then
+                    complete_phase(backend,instance,active.spec,component)
+                    return false
+                end
+            end
             return valid(active.instance) and active.instance:GetPropertyValue("bIsActive")
         end, debug.traceback)
         if not ok then backend:fail_target(active.spec.request_spec or active.spec,running,active.binding_id)
@@ -463,8 +494,17 @@ function Moves.abort(backend, spec, bindingId)
 end
 
 function Moves.reset(backend)
-    backend.complete_move_active = nil
     local failures = {}
+    for _, active in pairs(backend.complete_move_active or {}) do
+        if active.phase_entered and active.spec.completion_when then
+            local ok, failure = pcall(function()
+                local instance, component = pending_instance(backend,active)
+                if instance then complete_phase(backend,instance,active.spec,component) end
+            end)
+            if not ok then failures[#failures+1] = tostring(failure) end
+        end
+    end
+    backend.complete_move_active = nil
     for _, pending in pairs(backend.complete_move_pending or {}) do
         local ok, failure = pcall(function()
             finish(backend,pending)
@@ -512,7 +552,7 @@ function Moves.dispatch(backend, spec, phase, bypass,settings,bindingId)
         end
     end
     if spec.active_ability_classes then
-        if dispatch_active(backend,component,spec,bypass,settings) then return true end
+        if dispatch_active(backend,component,spec,bypass,settings,bindingId) then return true end
         if not spec.native_activation or not Restrictions.selected(settings,"predecessor") then
             return false,"required predecessor ability is not active or ready"
         end

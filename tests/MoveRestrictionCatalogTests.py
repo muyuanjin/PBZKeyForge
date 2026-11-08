@@ -14,6 +14,11 @@ def main():
     entries = data["entries"]
     native = [move for name in ("weapon-moves", "shadow-moves")
               for move in read("assets/key-enhancement/" + name + ".json")["moves"]]
+    actions = read("prototype/input-router/actions.json")
+    protected = read("assets/key-enhancement/complete-moves.json")["moves"]
+    assert set(entries) == ({move["id"] for move in native + protected}
+                            | {"ability:" + row["tag"] for row in actions["abilities"]}
+                            | {"action:" + row["path"] for row in actions["inputActions"]})
     for move in native:
         prep = entries[move["id"]]["preparation"]
         assert prep["equipmentConfigs"], move["id"]
@@ -25,9 +30,48 @@ def main():
             assert not set(group["requiredTags"]) & set(group["ignoredTags"]), identity
         if prep.get("nativeHoldInputs"):
             assert prep.get("automaticReleaseWhen"), identity
+    native_states = {"Ability.Action.ShaqiReinforced",
+                     "CharacterState.AbilityState.Mojian.HasProjectile",
+                     "CharacterState.AbilityState.Mojian.ProjectileFull"}
+    for tag in native_states:
+        assert tag not in data["classificationTags"], tag
+        assert all(tag not in group[mode] for entry in entries.values() for group in entry["groups"].values()
+                   for mode in ("requiredTags", "ignoredTags")), tag
+    for ability in actions["abilities"]:
+        identity = "ability:" + ability["tag"]
+        required = {tag for source in ability["sources"] for tag in source["requiredTags"]}
+        ignored = {tag for source in ability["sources"] for tag in source["ignoredTags"]}
+        ambiguous = required & ignored
+        assert data["nativeRouteAlternatives"].get(identity, []) == sorted(ambiguous), identity
+        for mode, tags in (("requiredTags", required), ("ignoredTags", ignored)):
+            for tag in tags - ambiguous - native_states:
+                if tag.startswith("CharacterState.WeaponUpgrade."):
+                    kind = "cooldown" if tag.endswith("ShachiReflectCooldown") else "training"
+                elif tag.startswith("CharacterState.Space."):
+                    kind = "space"
+                else:
+                    continue
+                assert tag in entries[identity]["groups"][kind][mode], (identity, tag, mode)
+        for tag in ambiguous:
+            assert all(tag not in group[mode] for group in entries[identity]["groups"].values()
+                       for mode in ("requiredTags", "ignoredTags")), (identity, tag)
+    air = entries["ability:Ability.Action.Hun.ShachiAbility.JinGua.Air"]["groups"]
+    assert air["space"]["requiredTags"] == ["CharacterState.Space.Air"]
+    assert air["space"]["ignoredTags"] == ["CharacterState.AirState.AirAtk1"]
+    assert air["training"]["requiredTags"] == ["CharacterState.WeaponUpgrade.JinGua.CanAirAttack"]
+    assert entries["ability:Ability.Action.Hun.ShachiAbility.LionHead.Dash"]["groups"]["stance"]["ignoredTags"] == [
+        "CharacterState.AbilityState.Stance.HoldingStanceKey"]
     holds = {identity: entry["preparation"] for identity, entry in entries.items()
              if entry["preparation"].get("nativeHoldInputs")}
-    assert len(holds) == 14
+    native_inputs = read("docs/native-move-inputs.json")
+    for identity, entry in native_inputs["entries"].items():
+        for key, value in entry["preparation"].items():
+            assert entries[identity]["preparation"][key] == value, (identity, key)
+    assert len(holds) > 14
+    assert holds["ability:Ability.Action.Hun.Heavy.Horizontal.BladeWave"]["nativeHoldInputs"] == [
+        "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"]
+    assert holds["move:Weapon.Weapon_Hun_Horizontal.GA_Hun_Horizontal_BladeWave"]["automaticReleaseWhen"] == {
+        "native_completion": True}
     for fragment in ("CaoOuSiXian", "JianKeZhaoJiLing", "KuYeSiZhuChuan", "XueSeLingdang", "HuangJinHuoChong_Normal_02"):
         assert not any(fragment in identity for identity in holds), fragment
     readiness = "CharacterState.AbilityState.HuoLiuXing.CanJumpTimeline"
@@ -118,8 +162,8 @@ def main():
     for identity, recipe in read("docs/complete-move-restriction-audit.json")["recipes"].items():
         if recipe["fullEffectsNeedExternalCombatContext"]:
             assert identity not in prepared, identity
-    print("MoveRestrictionCatalogTests PASS: %d targets, %d native equipment entrances, 14 native preparations" %
-          (len(entries), len(native)))
+    print("MoveRestrictionCatalogTests PASS: %d targets, %d native equipment entrances, %d native preparations" %
+          (len(entries), len(native), len(holds)))
 
 
 if __name__ == "__main__":

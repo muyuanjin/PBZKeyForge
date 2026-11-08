@@ -109,7 +109,7 @@ function Restrictions.protect(backend,state)
     local target={}
     for key,value in pairs(state.restriction_target) do target[key]=value end
     target.restriction_groups={}
-    for kind,group in pairs(state.restriction_target.restriction_groups or {}) do
+    for kind,group in pairs(state.restriction_target and state.restriction_target.restriction_groups or {}) do
         target.restriction_groups[kind]={required_tags={},ignored_tags={}}
         for _,mode in ipairs({"required_tags","ignored_tags"}) do
             for _,tag in ipairs(group[mode] or {}) do target.restriction_groups[kind][mode][#target.restriction_groups[kind][mode]+1]=tag end
@@ -129,12 +129,17 @@ function Restrictions.protect(backend,state)
 end
 
 function Restrictions.active(state)
-    return state and state.restriction_target and #(state.restriction_bypasses or {})>0
+    return state and (state.resource_tags or state.restriction_target and #(state.restriction_bypasses or {})>0)
 end
 
 function Restrictions.override(state,name)
+    if state and state.resource_tags and state.resource_tags[name] then
+        local value=state.resource_tags[name]
+        if type(value)=="function" then return value() end
+        return value
+    end
     if not Restrictions.active(state) then return end
-    for kind,group in pairs(state.restriction_target.restriction_groups or {}) do
+    for kind,group in pairs(state.restriction_target and state.restriction_target.restriction_groups or {}) do
         if selected(state,kind) then
             for _,tag in ipairs(group.ignored_tags or {}) do if tag==name then return 0 end end
             for _,tag in ipairs(group.required_tags or {}) do if tag==name then return 1 end end

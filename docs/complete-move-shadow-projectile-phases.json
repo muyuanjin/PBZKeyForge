@@ -1,0 +1,337 @@
+{
+  "build": "CL-302256",
+  "runtimeVerified": false,
+  "evidenceType": "Static actual shadow EquipAbilities, original timeline cost, separate strum motions and conditional projectile resources",
+  "recipes": [
+    {
+      "recipe": {
+        "id": "move:ShadowPhase.GA_Hun_Lute_A.Stage2",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.Default",
+        "tag": "Ability.Action.Hun.ShachiAbility.Default",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A.GA_Hun_Lute_A_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          1.2,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.2544252107143402,
+          "before_time": 1.2
+        },
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Lute"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Lute_A · Stage2",
+        "labelParts": [
+          "catalog.attack",
+          "1",
+          "catalog.followup",
+          "2"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "催心琵琶",
+          "en": "HEARTREND PIPA",
+          "ja": "催心の琵琶",
+          "ko": "최심비파",
+          "ru": "Душераздирающая Пипа",
+          "zh-Hant": "催心琵琶",
+          "fr": "PIPA DÉCHIRE-CŒUR",
+          "de": "HERZREISSER-PIPA",
+          "es-ES": "PIPA DESGARRACORAZONES",
+          "pt-BR": "PIPA DILACERADOR DE CORAÇÕES",
+          "it": "PIPA SPACCACUORI",
+          "th": "พิณผีผาสลายใจ",
+          "vi": "TỲ BÀ THÔI TÂM",
+          "pt-PT": "PIPÁ AMARGURADO",
+          "es-419": "PIPA DESGARRACORAZONES"
+        },
+        "category": "shadow/PhantomEdges_024/IA_ShadowArm",
+        "searchAliases": [
+          "GA_Hun_Lute_A",
+          "Stage2",
+          "催心琵琶",
+          "HEARTREND PIPA",
+          "催心の琵琶",
+          "최심비파",
+          "Душераздирающая Пипа",
+          "催心琵琶",
+          "PIPA DÉCHIRE-CŒUR",
+          "HERZREISSER-PIPA",
+          "PIPA DESGARRACORAZONES",
+          "PIPA DILACERADOR DE CORAÇÕES",
+          "PIPA SPACCACUORI",
+          "พิณผีผาสลายใจ",
+          "TỲ BÀ THÔI TÂM",
+          "PIPÁ AMARGURADO",
+          "PIPA DESGARRACORAZONES"
+        ],
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 1.2,
+          "attack_start": 1.8692576885223389,
+          "attack_end": 1.9025910459458828
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute",
+          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute_Evolution"
+        ],
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "normalActivation": "Normal exact-class BP_ShachiAbility_Base_Magic activation retains Shachi/Bullet Enough, Current Shachi Reinforced, initial fee and original timeline.",
+        "minimumSetupTime": 0.2544252107143402,
+        "costAction": {
+          "index": 8,
+          "exportByteOffset": 356,
+          "startTime": 0.2534252107143402,
+          "duration": 0,
+          "triggerTimeOffset": 0,
+          "endTriggerTimeOffset": 0,
+          "actionPointer": 18,
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "guid": "ef5112fd9ffb4744a89077be64164e27",
+          "trackIndex": 5,
+          "sections": [],
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "directAttackAction": false,
+          "resourceReferences": []
+        },
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "entryTime": 1.2,
+            "retainedAttackActions": [
+              {
+                "index": 17,
+                "exportByteOffset": 699,
+                "startTime": 1.8692576885223389,
+                "duration": 0.03333299979567528,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 4,
+                "action": "GAA_DelayDeflectProjectileBullet_C_0",
+                "guid": "679b7554d8968b41861f2eb8090ad7e8",
+                "trackIndex": 3,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiAbility/Lute/BulletData_Hun_Lute_A_03"
+                  }
+                ]
+              },
+              {
+                "index": 18,
+                "exportByteOffset": 742,
+                "startTime": 1.8692580461502075,
+                "duration": 0.03333299979567528,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 7,
+                "action": "GAA_DelayDeflectProjectileBullet_C_4",
+                "guid": "0d368631af5e82408faae29aaa2d4b9d",
+                "trackIndex": 4,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiAbility/Lute/BulletData_Hun_Lute_A_04"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "priorAttackEnd": 0.6239774785935879,
+        "cleanup": "Original K2_OnEndAbility removes armed shadow weapon, accessory endure handle, timers, ShaqiReinforced and Anger.StanceForbidRegen; inherited native end clears montage, phase and projectile tasks."
+      }
+    },
+    {
+      "recipe": {
+        "id": "move:ShadowPhase.GA_Hun_Lute_AA.Stage2",
+        "sourceId": "ability:Ability.Action.Hun.ShachiAbility.PiPa.AA",
+        "tag": "Ability.Action.Hun.ShachiAbility.PiPa.AA",
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA.GA_Hun_Lute_AA_C",
+        "activateByClass": true,
+        "entryPoint": "/Script/LegoAbility.LegoAbility:PlayTimeline",
+        "entryArguments": [
+          {
+            "current_timeline": true
+          },
+          1.0,
+          0.0,
+          1.35,
+          {
+            "fname": "None"
+          }
+        ],
+        "entryWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.21088625288009644,
+          "before_time": 1.35
+        },
+        "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility",
+        "requiredTags": [
+          "CharacterState.Space.Ground",
+          "Weapon.Type.ShaqiWeapon.Lute"
+        ],
+        "activeBooleanProperties": [
+          "Current Shachi Reinforced"
+        ],
+        "priority": -5,
+        "code": "Lute_AA · Stage2",
+        "labelParts": [
+          "catalog.attack",
+          "2",
+          "catalog.followup",
+          "2"
+        ],
+        "weaponLabels": {
+          "zh-Hans": "催心琵琶",
+          "en": "HEARTREND PIPA",
+          "ja": "催心の琵琶",
+          "ko": "최심비파",
+          "ru": "Душераздирающая Пипа",
+          "zh-Hant": "催心琵琶",
+          "fr": "PIPA DÉCHIRE-CŒUR",
+          "de": "HERZREISSER-PIPA",
+          "es-ES": "PIPA DESGARRACORAZONES",
+          "pt-BR": "PIPA DILACERADOR DE CORAÇÕES",
+          "it": "PIPA SPACCACUORI",
+          "th": "พิณผีผาสลายใจ",
+          "vi": "TỲ BÀ THÔI TÂM",
+          "pt-PT": "PIPÁ AMARGURADO",
+          "es-419": "PIPA DESGARRACORAZONES"
+        },
+        "category": "shadow/PhantomEdges_024/IA_ShadowArm",
+        "searchAliases": [
+          "GA_Hun_Lute_AA",
+          "Stage2",
+          "催心琵琶",
+          "HEARTREND PIPA",
+          "催心の琵琶",
+          "최심비파",
+          "Душераздирающая Пипа",
+          "催心琵琶",
+          "PIPA DÉCHIRE-CŒUR",
+          "HERZREISSER-PIPA",
+          "PIPA DESGARRACORAZONES",
+          "PIPA DILACERADOR DE CORAÇÕES",
+          "PIPA SPACCACUORI",
+          "พิณผีผาสลายใจ",
+          "TỲ BÀ THÔI TÂM",
+          "PIPÁ AMARGURADO",
+          "PIPA DESGARRACORAZONES"
+        ],
+        "phaseWindow": {
+          "timeline": "Main",
+          "entry_time": 1.35,
+          "attack_start": 1.9391967058181763,
+          "attack_end": 1.9725300073623657
+        }
+      },
+      "evidence": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA",
+        "equipment": [
+          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute",
+          "/PBZCombatAsset/ActorData/Players/Hun/ShaqiWeapon/Lute/Weapon_Lute_Evolution"
+        ],
+        "nativeTimelineSelection": [
+          "Main"
+        ],
+        "normalActivation": "Normal exact-class BP_ShachiAbility_Base_Magic activation retains Shachi/Bullet Enough, Current Shachi Reinforced, initial fee and original timeline.",
+        "minimumSetupTime": 0.21088625288009644,
+        "costAction": {
+          "index": 7,
+          "exportByteOffset": 325,
+          "startTime": 0.20988625288009644,
+          "duration": 0,
+          "triggerTimeOffset": 0,
+          "endTriggerTimeOffset": 0,
+          "actionPointer": 19,
+          "action": "GAA_ShachiBulletInstant_C_0",
+          "guid": "7b16b3448ecc7647805ac0259dcd04b5",
+          "trackIndex": 5,
+          "sections": [],
+          "class": "/PBZCombatAsset/Prototypes/Actions/GAA_ShachiBulletInstant",
+          "directAttackAction": false,
+          "resourceReferences": []
+        },
+        "timelineEvidence": [
+          {
+            "timeline": "Main",
+            "entryTime": 1.35,
+            "retainedAttackActions": [
+              {
+                "index": 15,
+                "exportByteOffset": 629,
+                "startTime": 1.9391967058181763,
+                "duration": 0.03333330154418945,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": -9.999999747378752e-05,
+                "actionPointer": 5,
+                "action": "GAA_DelayDeflectProjectileBullet_C_0",
+                "guid": "a50886448850a34f8360ae1a3e9311d1",
+                "trackIndex": 6,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiAbility/Lute/BulletData_Hun_Lute_AA_03"
+                  }
+                ]
+              },
+              {
+                "index": 16,
+                "exportByteOffset": 672,
+                "startTime": 1.9391968250274658,
+                "duration": 0.03333299979567528,
+                "triggerTimeOffset": 0,
+                "endTriggerTimeOffset": 0,
+                "actionPointer": 8,
+                "action": "GAA_DelayDeflectProjectileBullet_C_3",
+                "guid": "861dfe71564b414793b119c59908218a",
+                "trackIndex": 7,
+                "sections": [],
+                "class": "/PBZDeflectSystem/Actions/GAA_DelayDeflectProjectileBullet",
+                "directAttackAction": true,
+                "resourceReferences": [
+                  {
+                    "offset": 11,
+                    "path": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiAbility/Lute/BulletData_Hun_Lute_AA_04"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "priorAttackEnd": 0.6452310048043728,
+        "cleanup": "Original K2_OnEndAbility removes armed shadow weapon, accessory endure handle, timers, ShaqiReinforced and Anger.StanceForbidRegen; inherited native end clears montage, phase and projectile tasks."
+      }
+    }
+  ]
+}

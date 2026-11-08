@@ -100,10 +100,11 @@ def main():
                 identities += [("ability:" + tag, tag) for tag in ability["cdoAbilityTagReferences"] if tag in catalog_tags and tag in reviewed and tag.startswith("Ability.Action.Hun.ShachiAbility.") and tag != names.shadow.DEFAULT]
                 for identity, tag in identities:
                     routes = [row for row in family["inputRoutes"] if row["tag"] == tag]
-                    required = list(dict.fromkeys(tag for row in routes for tag in row["requiredTags"]))
                     groups = {}
-                    for required_tag in required:
-                        groups.setdefault(classify(required_tag), []).append(required_tag)
+                    for mode in ("requiredTags", "ignoredTags"):
+                        for route_tag in dict.fromkeys(tag for row in routes for tag in row[mode]):
+                            group = groups.setdefault(classify(route_tag), {"requiredTags": [], "ignoredTags": []})
+                            group[mode].append(route_tag)
                     item = {"groups": groups, "preparation": {}, "evidence": {"abilityClasses": [ability["class"]], "family": family["id"]}}
                     if tasks:
                         item["preparation"]["nativeHoldInputs"] = list(dict.fromkeys(task["inputAction"] for task in tasks))
@@ -117,7 +118,9 @@ def main():
                         previous = result[identity]
                         previous["evidence"]["abilityClasses"] = list(dict.fromkeys(previous["evidence"]["abilityClasses"] + [ability["class"]]))
                         for key, values in groups.items():
-                            previous["groups"][key] = list(dict.fromkeys(previous["groups"].get(key, []) + values))
+                            group = previous["groups"].setdefault(key, {"requiredTags": [], "ignoredTags": []})
+                            for mode in ("requiredTags", "ignoredTags"):
+                                group[mode] = list(dict.fromkeys(group[mode] + values[mode]))
                         preparation = previous["preparation"]
                         if tasks:
                             preparation["nativeHoldInputs"] = list(dict.fromkeys(preparation.get("nativeHoldInputs", []) + item["preparation"]["nativeHoldInputs"]))

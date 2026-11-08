@@ -18188,6 +18188,82 @@
         ]
       }
     },
+    "move:ShadowPhase.GA_Hun_Lute_A.Stage2": {
+      "aliases": {},
+      "effects": [],
+      "evidence": {
+        "nameKeys": [
+          "PhantomEdges_024"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A.GA_Hun_Lute_A_C"
+        ],
+        "source": "Existing recipe equipment identity and original locres",
+        "recipeId": "move:ShadowPhase.GA_Hun_Lute_A.Stage2",
+        "relationship": "Official equipment name; no independent proper move name established"
+      },
+      "labels": {
+        "zh-Hans": "催心琵琶",
+        "en": "HEARTREND PIPA",
+        "ja": "催心の琵琶",
+        "ko": "최심비파",
+        "ru": "Душераздирающая Пипа",
+        "zh-Hant": "催心琵琶",
+        "fr": "PIPA DÉCHIRE-CŒUR",
+        "de": "HERZREISSER-PIPA",
+        "es-ES": "PIPA DESGARRACORAZONES",
+        "pt-BR": "PIPA DILACERADOR DE CORAÇÕES",
+        "it": "PIPA SPACCACUORI",
+        "th": "พิณผีผาสลายใจ",
+        "vi": "TỲ BÀ THÔI TÂM",
+        "pt-PT": "PIPÁ AMARGURADO",
+        "es-419": "PIPA DESGARRACORAZONES"
+      },
+      "labelParts": [
+        "catalog.attack",
+        "1",
+        "catalog.followup",
+        "2"
+      ]
+    },
+    "move:ShadowPhase.GA_Hun_Lute_AA.Stage2": {
+      "aliases": {},
+      "effects": [],
+      "evidence": {
+        "nameKeys": [
+          "PhantomEdges_024"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA.GA_Hun_Lute_AA_C"
+        ],
+        "source": "Existing recipe equipment identity and original locres",
+        "recipeId": "move:ShadowPhase.GA_Hun_Lute_AA.Stage2",
+        "relationship": "Official equipment name; no independent proper move name established"
+      },
+      "labels": {
+        "zh-Hans": "催心琵琶",
+        "en": "HEARTREND PIPA",
+        "ja": "催心の琵琶",
+        "ko": "최심비파",
+        "ru": "Душераздирающая Пипа",
+        "zh-Hant": "催心琵琶",
+        "fr": "PIPA DÉCHIRE-CŒUR",
+        "de": "HERZREISSER-PIPA",
+        "es-ES": "PIPA DESGARRACORAZONES",
+        "pt-BR": "PIPA DILACERADOR DE CORAÇÕES",
+        "it": "PIPA SPACCACUORI",
+        "th": "พิณผีผาสลายใจ",
+        "vi": "TỲ BÀ THÔI TÂM",
+        "pt-PT": "PIPÁ AMARGURADO",
+        "es-419": "PIPA DESGARRACORAZONES"
+      },
+      "labelParts": [
+        "catalog.attack",
+        "2",
+        "catalog.followup",
+        "2"
+      ]
+    },
     "move:Weapon.Weapon_Hun_BaiShanFengLeiJian.GA_Hun_FengLeiJian_A_DashDraw": {
       "aliases": {
         "zh-Hans": [
@@ -29600,6 +29676,269 @@
         "2"
       ]
     },
+    "move:WeaponPhase.GA_Hun_HeiMoShang_C1.BladeWave": {
+      "labels": {
+        "zh-Hans": "黑魔伤 · 地趟刀法",
+        "en": "INFERNAL ROUGE · Sweeping Blade",
+        "ja": "黒魔傷 · 伏地刀法",
+        "ko": "흑마상 · 지당도법",
+        "ru": "Багрянец Мо · Сметающий удар",
+        "zh-Hant": "黑魔傷 · 地趟刀法",
+        "fr": "ROUGE INFERNAL · Lame circulaire",
+        "de": "HÖLLISCHES BLUTROT · Fegende Klinge",
+        "es-ES": "ROJO INFERNAL · Tajo Rasante",
+        "pt-BR": "SANGUÍNEA INFERNAL · Lâmina Varredora",
+        "it": "SANGUINARIA MO · Lama Guizzante",
+        "th": "คมมารทมิฬ · เพลงดาบกวาดปฐพี",
+        "vi": "MA HẮC THƯƠNG · Địa Thảng Đao Pháp",
+        "pt-PT": "SANGUINE DE MÓ · Lâmina Ampla",
+        "es-419": "ROJO INFERNAL · Tajo Rasante"
+      },
+      "aliases": {
+        "zh-Hans": [
+          "地趟刀法"
+        ],
+        "en": [
+          "Sweeping Blade"
+        ],
+        "ja": [
+          "伏地刀法"
+        ],
+        "ko": [
+          "지당도법"
+        ],
+        "ru": [
+          "Сметающий удар"
+        ],
+        "zh-Hant": [
+          "地趟刀法"
+        ],
+        "fr": [
+          "Lame circulaire"
+        ],
+        "de": [
+          "Fegende Klinge"
+        ],
+        "es-ES": [
+          "Tajo Rasante"
+        ],
+        "pt-BR": [
+          "Lâmina Varredora"
+        ],
+        "it": [
+          "Lama Guizzante"
+        ],
+        "th": [
+          "เพลงดาบกวาดปฐพี"
+        ],
+        "vi": [
+          "Địa Thảng Đao Pháp"
+        ],
+        "pt-PT": [
+          "Lâmina Ampla"
+        ],
+        "es-419": [
+          "Tajo Rasante"
+        ]
+      },
+      "evidence": {
+        "nameKeys": [
+          "Weapon_FunctionName_001_Skill"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_C1.GA_Hun_HeiMoShang_C1_C"
+        ],
+        "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/HeiMoShang/Weapon_Hun_HeiMoShang",
+        "source": "Native DT_WeaponData row Skill text and exact equipped CombatArt-tagged class",
+        "recipeId": "move:WeaponPhase.GA_Hun_HeiMoShang_C1.BladeWave",
+        "relationship": "Same exact granted ability class as the native entrance",
+        "nativeEntranceIds": [
+          "weapon-art:Weapon_Hun_HeiMoShang.GA_Hun_HeiMoShang_C1",
+          "move:Weapon.Weapon_Hun_HeiMoShang.GA_Hun_HeiMoShang_C1"
+        ]
+      },
+      "labelParts": [
+        "catalog.followup",
+        "catalog.bladewave"
+      ],
+      "effects": []
+    },
+    "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave": {
+      "labels": {
+        "zh-Hans": "荡寇凶刃 · 荡寇凶斩",
+        "en": "JUGGERNAUT · Bandit-Slaying Rampage",
+        "ja": "蕩寇凶刃 · 蕩寇凶斬",
+        "ko": "탕구의 흉도 · 탕구흉참",
+        "ru": "Гроза Разбойников · Неистовство истребителя разбойников",
+        "zh-Hant": "蕩寇凶刃 · 蕩寇凶斬",
+        "fr": "SABRE TITAN · Fureur chasse-bandits",
+        "de": "BANDITENTÖTER · Banditen-Gemetzel",
+        "es-ES": "COLOSO · Masacre cazabandidos",
+        "pt-BR": "FORÇA IRREFREÁVEL · Fúria Matadora de Bandidos",
+        "it": "LAMA STERMINATRICE · Furia Trucida-Banditi",
+        "th": "คมพิฆาตโจร · คมทมิฬปราบโจร",
+        "vi": "ĐÃNG KHẤU HUNG NHẬN · Hung Trảm Diệt Phỉ",
+        "pt-PT": "MASTODONTE · Massacre de Bandidos",
+        "es-419": "DEVASTADOR · Furia matabandidos"
+      },
+      "aliases": {
+        "zh-Hans": [
+          "荡寇凶斩"
+        ],
+        "en": [
+          "Bandit-Slaying Rampage"
+        ],
+        "ja": [
+          "蕩寇凶斬"
+        ],
+        "ko": [
+          "탕구흉참"
+        ],
+        "ru": [
+          "Неистовство истребителя разбойников"
+        ],
+        "zh-Hant": [
+          "蕩寇凶斬"
+        ],
+        "fr": [
+          "Fureur chasse-bandits"
+        ],
+        "de": [
+          "Banditen-Gemetzel"
+        ],
+        "es-ES": [
+          "Masacre cazabandidos"
+        ],
+        "pt-BR": [
+          "Fúria Matadora de Bandidos"
+        ],
+        "it": [
+          "Furia Trucida-Banditi"
+        ],
+        "th": [
+          "คมทมิฬปราบโจร"
+        ],
+        "vi": [
+          "Hung Trảm Diệt Phỉ"
+        ],
+        "pt-PT": [
+          "Massacre de Bandidos"
+        ],
+        "es-419": [
+          "Furia matabandidos"
+        ]
+      },
+      "evidence": {
+        "nameKeys": [
+          "Weapon_FunctionName_019_Skill"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_C.GA_Hun_Horizontal_C_C"
+        ],
+        "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/Horizontal/Weapon_Hun_Horizontal",
+        "source": "Native DT_WeaponData row Skill text and exact equipped CombatArt-tagged class",
+        "recipeId": "move:WeaponPhase.GA_Hun_Horizontal_C.BladeWave",
+        "relationship": "Same exact granted ability class as the native entrance",
+        "nativeEntranceIds": [
+          "weapon-art:Weapon_Hun_Horizontal.GA_Hun_Horizontal_C",
+          "move:Weapon.Weapon_Hun_Horizontal.GA_Hun_Horizontal_C"
+        ]
+      },
+      "labelParts": [
+        "catalog.followup",
+        "catalog.bladewave"
+      ],
+      "effects": []
+    },
+    "move:WeaponPhase.GA_Hun_Jade_C_Range.Stage2": {
+      "labels": {
+        "zh-Hans": "玉双环 · 无尽索命环",
+        "en": "SEAMLESS DEATH · Reaping Rings",
+        "ja": "玉双環 · 無尽索命環",
+        "ko": "옥쌍환 · 무진색명환",
+        "ru": "Безупречная Смерть · Жатва колец",
+        "zh-Hant": "玉雙環 · 無盡索命環",
+        "fr": "DOUCE MORT · Anneaux faucheurs",
+        "de": "NAHTLOSER TOD · Schnitter-Ringe",
+        "es-ES": "MUERTE FLUIDA · Anillos segadores",
+        "pt-BR": "MORTE CIRCULAR · Aros Ceifadores",
+        "it": "MORTE FLUIDA · Anelli Falcianti",
+        "th": "จักรหยกคู่ · ห่วงพิฆาตไร้สิ้นสุด",
+        "vi": "NGỌC SONG HOÀN · Phi Hoàn Đoạt Mệnh",
+        "pt-PT": "MORTE SUAVE · Anéis de Ceifar",
+        "es-419": "MUERTE PERFECTA · Aros segadores"
+      },
+      "aliases": {
+        "zh-Hans": [
+          "无尽索命环"
+        ],
+        "en": [
+          "Reaping Rings"
+        ],
+        "ja": [
+          "無尽索命環"
+        ],
+        "ko": [
+          "무진색명환"
+        ],
+        "ru": [
+          "Жатва колец"
+        ],
+        "zh-Hant": [
+          "無盡索命環"
+        ],
+        "fr": [
+          "Anneaux faucheurs"
+        ],
+        "de": [
+          "Schnitter-Ringe"
+        ],
+        "es-ES": [
+          "Anillos segadores"
+        ],
+        "pt-BR": [
+          "Aros Ceifadores"
+        ],
+        "it": [
+          "Anelli Falcianti"
+        ],
+        "th": [
+          "ห่วงพิฆาตไร้สิ้นสุด"
+        ],
+        "vi": [
+          "Phi Hoàn Đoạt Mệnh"
+        ],
+        "pt-PT": [
+          "Anéis de Ceifar"
+        ],
+        "es-419": [
+          "Aros segadores"
+        ]
+      },
+      "evidence": {
+        "nameKeys": [
+          "Weapon_FunctionName_029_Skill"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/New/GA_Hun_Jade_C_Range.GA_Hun_Jade_C_Range_C"
+        ],
+        "equipmentId": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/JadeDualChakram/Weapon_Hun_JadeDual",
+        "source": "Native DT_WeaponData row Skill text and exact equipped CombatArt-tagged class",
+        "recipeId": "move:WeaponPhase.GA_Hun_Jade_C_Range.Stage2",
+        "relationship": "Same exact granted ability class as the native entrance",
+        "nativeEntranceIds": [
+          "weapon-art:Weapon_Hun_JadeDual.GA_Hun_Jade_C_Range",
+          "move:Weapon.Weapon_Hun_JadeDual.GA_Hun_Jade_C_Range",
+          "weapon-art:Weapon_Hun_JadeDual_Evaluation.GA_Hun_Jade_C_Range",
+          "move:Weapon.Weapon_Hun_JadeDual_Evaluation.GA_Hun_Jade_C_Range"
+        ]
+      },
+      "labelParts": [
+        "catalog.followup",
+        "2"
+      ],
+      "effects": []
+    },
     "move:WeaponPhase.GA_Hun_Jigsaw_C.HasSawHitFinal": {
       "aliases": {
         "zh-Hans": [
@@ -31326,6 +31665,178 @@
       },
       "labelParts": [
         "catalog.switchattack"
+      ]
+    },
+    "move:WeaponPhase.GA_Hun_Double_JueYing_C.Final": {
+      "aliases": {
+        "zh-Hans": [
+          "双刃乱舞"
+        ],
+        "en": [
+          "Dual-Blade Flurry"
+        ],
+        "ja": [
+          "双刃乱舞"
+        ],
+        "ko": [
+          "쌍검 난무"
+        ],
+        "ru": [
+          "Вихрь парных клинков"
+        ],
+        "zh-Hant": [
+          "雙刃亂舞"
+        ],
+        "fr": [
+          "Déluge de lames jumelles"
+        ],
+        "de": [
+          "Doppelklingenwirbel"
+        ],
+        "es-ES": [
+          "Ráfaga de doble hoja"
+        ],
+        "pt-BR": [
+          "Rajada Dupla"
+        ],
+        "it": [
+          "Turbine a due lame"
+        ],
+        "th": [
+          "ระบำคมดาบคู่"
+        ],
+        "vi": [
+          "Song Đao Loạn Vũ"
+        ],
+        "pt-PT": [
+          "Rajada de Lâminas Duplas"
+        ],
+        "es-419": [
+          "Ráfaga de espadas dobles"
+        ]
+      },
+      "effects": [],
+      "evidence": {
+        "nameKeys": [
+          "Weapon_FunctionName_022_Skill"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C.GA_Hun_Double_JueYing_C_C"
+        ],
+        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags",
+        "recipeId": "move:WeaponPhase.GA_Hun_Double_JueYing_C.Final",
+        "relationship": "Same exact granted ability class as the native entrance",
+        "nativeEntranceIds": [
+          "move:Weapon.Weapon_Hun_JueYing.GA_Hun_Double_JueYing_C",
+          "weapon-art:Weapon_Hun_JueYing.GA_Hun_Double_JueYing_C"
+        ]
+      },
+      "labels": {
+        "zh-Hans": "绝影 · 双刃乱舞",
+        "en": "SHADOWLESS EDGE · Dual-Blade Flurry",
+        "ja": "絶影 · 双刃乱舞",
+        "ko": "절영 · 쌍검 난무",
+        "ru": "Неуловимые Клинки · Вихрь парных клинков",
+        "zh-Hant": "絕影 · 雙刃亂舞",
+        "fr": "OMBRES INSAISISSABLES · Déluge de lames jumelles",
+        "de": "SCHATTENLOSE KLINGE · Doppelklingenwirbel",
+        "es-ES": "FILOS SIN SOMBRA · Ráfaga de doble hoja",
+        "pt-BR": "LÂMINA SEM SOMBRA · Rajada Dupla",
+        "it": "LAMA SENZ'OMBRA · Turbine a due lame",
+        "th": "ดาบเงาสูญ · ระบำคมดาบคู่",
+        "vi": "TUYỆT ẢNH · Song Đao Loạn Vũ",
+        "pt-PT": "GUME SEM SOMBRA · Rajada de Lâminas Duplas",
+        "es-419": "FILO SIN SOMBRA · Ráfaga de espadas dobles"
+      },
+      "labelParts": [
+        "moves.finisher"
+      ]
+    },
+    "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Final": {
+      "aliases": {
+        "zh-Hans": [
+          "双刃乱舞"
+        ],
+        "en": [
+          "Dual-Blade Flurry"
+        ],
+        "ja": [
+          "双刃乱舞"
+        ],
+        "ko": [
+          "쌍검 난무"
+        ],
+        "ru": [
+          "Вихрь парных клинков"
+        ],
+        "zh-Hant": [
+          "雙刃亂舞"
+        ],
+        "fr": [
+          "Déluge de lames jumelles"
+        ],
+        "de": [
+          "Doppelklingenwirbel"
+        ],
+        "es-ES": [
+          "Ráfaga de doble hoja"
+        ],
+        "pt-BR": [
+          "Rajada Dupla"
+        ],
+        "it": [
+          "Turbine a due lame"
+        ],
+        "th": [
+          "ระบำคมดาบคู่"
+        ],
+        "vi": [
+          "Song Đao Loạn Vũ"
+        ],
+        "pt-PT": [
+          "Rajada de Lâminas Duplas"
+        ],
+        "es-419": [
+          "Ráfaga de espadas dobles"
+        ]
+      },
+      "effects": [],
+      "evidence": {
+        "nameKeys": [
+          "Weapon_FunctionName_022_Skill"
+        ],
+        "abilityClasses": [
+          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/JueYing/GA_Hun_Double_JueYing_C_Air.GA_Hun_Double_JueYing_C_Air_C"
+        ],
+        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags",
+        "recipeId": "move:WeaponPhase.GA_Hun_Double_JueYing_C_Air.Final",
+        "relationship": "Same exact granted ability class as the native entrance",
+        "nativeEntranceIds": [
+          "ability:Ability.Action.Hun.CombatArt.JueYing.Air",
+          "move:Weapon.Weapon_Hun_JueYing.GA_Hun_Double_JueYing_C_Air",
+          "weapon-art:Weapon_Hun_JueYing.GA_Hun_Double_JueYing_C_Air"
+        ]
+      },
+      "labels": {
+        "zh-Hans": "绝影 · 双刃乱舞",
+        "en": "SHADOWLESS EDGE · Dual-Blade Flurry",
+        "ja": "絶影 · 双刃乱舞",
+        "ko": "절영 · 쌍검 난무",
+        "ru": "Неуловимые Клинки · Вихрь парных клинков",
+        "zh-Hant": "絕影 · 雙刃亂舞",
+        "fr": "OMBRES INSAISISSABLES · Déluge de lames jumelles",
+        "de": "SCHATTENLOSE KLINGE · Doppelklingenwirbel",
+        "es-ES": "FILOS SIN SOMBRA · Ráfaga de doble hoja",
+        "pt-BR": "LÂMINA SEM SOMBRA · Rajada Dupla",
+        "it": "LAMA SENZ'OMBRA · Turbine a due lame",
+        "th": "ดาบเงาสูญ · ระบำคมดาบคู่",
+        "vi": "TUYỆT ẢNH · Song Đao Loạn Vũ",
+        "pt-PT": "GUME SEM SOMBRA · Rajada de Lâminas Duplas",
+        "es-419": "FILO SIN SOMBRA · Ráfaga de espadas dobles"
+      },
+      "labelParts": [
+        "catalog.air",
+        "moves.finisher"
       ]
     }
   }

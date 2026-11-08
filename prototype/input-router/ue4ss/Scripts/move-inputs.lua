@@ -1,5 +1,6 @@
 local Moves = require("complete-moves")
 local Equipment = require("move-equipment")
+local Selection = require("ability-selection")
 local Inputs = {}
 
 local function key(target, binding)
@@ -38,6 +39,33 @@ local function finish_ready(backend,state)
     if not state.once and state.release_ready_seen then release(backend,state); return true end
     local status = Moves.native_release_state(backend,state.target,not state.once)
     if status ~= "waiting" then release(backend,state); return true end
+end
+
+local function resolve(backend,target)
+    if not target.native_hold_variants then return target end
+    local selected={}
+    for name,value in pairs(target) do selected[name]=value end
+    selected.native_hold_variants=nil
+    local component=backend:receiver({receiver="ability_system"})
+    if not component or not component:IsValid() then return selected end
+    local granted={}
+    Selection.each(backend,target,function(_,ability)
+        granted[ability:GetClass():GetFullName():gsub("^%S+ ","")]=true
+    end)
+    for _,variant in ipairs(target.native_hold_variants) do
+        local matches=granted[variant.abilityClass] == true
+        for _,tag in ipairs(variant.requiredTags) do
+            if backend:invoke(component,"/Script/GameplayAbilities.AbilitySystemComponent:GetGameplayTagCount",
+                {TagName=FName(tag)})<=0 then matches=false;break end
+        end
+        if matches then
+            selected.native_hold_inputs=variant.nativeHoldInputs
+            selected.native_release_when=variant.automaticReleaseWhen
+            selected.native_preparation_class=variant.abilityClass
+            return selected
+        end
+    end
+    return selected
 end
 
 function Inputs.prepare(backend, requests)
@@ -79,6 +107,10 @@ function Inputs.dispatch(backend,target,phase,value,binding,bypass,settings)
     local completed=backend.native_move_input_results and backend.native_move_input_results[identity]
     if completed then return table.unpack(completed) end
     if not state then
+        target=resolve(backend,target)
+        if not target.native_hold_inputs then
+            return backend:dispatch(target,phase,value,binding,bypass,settings,true)
+        end
         -- Equipment grants and registers the native input handlers used by IsHolding.
         local prepared,reason = Equipment.prepare(backend,target,settings)
         if not prepared then return true,false,reason end
@@ -96,6 +128,7 @@ function Inputs.dispatch(backend,target,phase,value,binding,bypass,settings)
         end)
         if not ok then release(backend,state); error(failure,0) end
     end
+    target=state.target
     if state.releasing then return true end
     if state.dispatched_frame == (backend.native_move_input_frame or 0) then return table.unpack(state.result) end
     state.pending = {target=target,phase=phase,value=value,binding=binding,bypass=bypass,settings=settings}

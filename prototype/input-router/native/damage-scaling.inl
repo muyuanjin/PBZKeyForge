@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <stdexcept>
 #include <sstream>
+#include <tuple>
 
 namespace
 {
@@ -18,6 +19,7 @@ namespace
     std::unordered_map<void**, CalculatorHook> damageCalculators;
     std::unordered_map<Object*, double> moduleDamage;
     std::unordered_map<Object*, double> abilityDamage, bulletDamage;
+    std::unordered_map<Object*, bool> abilityResources, bulletResources;
     std::unordered_map<Object*,Object*> moduleBullets;
     std::unordered_map<RC::Unreal::UFunction*,size_t> bulletInitializeSlots;
     using BulletInitialize = void(*)(NativeInterface*, const void*, Object*, Object*, Object*, bool);
@@ -71,6 +73,8 @@ namespace
         }
     }
 
+    double sourceDamageMultiplier(Object* source);
+
     void calculateDamage(Object* calculator, const void* attributes, Object* attacker, Object* target,
         const void* sourceTags, const void* attackData, const void* damageSource, void* output)
     {
@@ -88,29 +92,19 @@ namespace
         const bool outer = std::find(calculatingDamage.begin(), calculatingDamage.end(), attackData) == calculatingDamage.end();
         if (outer && enabled.load(std::memory_order_relaxed))
         {
-            std::lock_guard<std::mutex> lock(damageMutex);
-            if (damageObservation.active) ++damageObservation.calculations;
-            auto payload = damagePayloads.find(attackData);
-            if (payload != damagePayloads.end())
+            Object* source = nullptr;
             {
-                if (damageObservation.active) ++damageObservation.payloads;
-                // FScriptInterface stores the UObject first, then its native interface.
-                auto* source = *reinterpret_cast<Object**>(reinterpret_cast<unsigned char*>(payload->second.object) + payload->second.sourceOffset);
-                auto setting = moduleDamage.find(source);
-                if (setting != moduleDamage.end()) multiplier = setting->second;
-                else if (source)
+                std::lock_guard<std::mutex> lock(damageMutex);
+                if (damageObservation.active) ++damageObservation.calculations;
+                auto payload = damagePayloads.find(attackData);
+                if (payload != damagePayloads.end())
                 {
-                    // Newly created modules can deal damage inside Initialize,
-                    // before the outer bullet initialization has returned.
-                    auto* property = source->GetPropertyByNameInChain(L"Bullet");
-                    if (property && property->GetElementSize() == sizeof(void*)*2)
-                    {
-                        auto* owner = *reinterpret_cast<Object**>(reinterpret_cast<unsigned char*>(source)+property->GetOffset_Internal());
-                        auto snapshot = bulletDamage.find(owner);
-                        if (snapshot != bulletDamage.end()) multiplier = snapshot->second;
-                    }
+                    if (damageObservation.active) ++damageObservation.payloads;
+                    // FScriptInterface stores the UObject first, then its native interface.
+                    source = *reinterpret_cast<Object**>(reinterpret_cast<unsigned char*>(payload->second.object) + payload->second.sourceOffset);
                 }
             }
+            multiplier = sourceDamageMultiplier(source);
         }
         if (multiplier != 1)
         {
@@ -193,6 +187,24 @@ namespace
         else moduleDamage[module] = multiplier;
     }
 
+    double sourceDamageMultiplier(Object* source)
+    {
+        std::lock_guard<std::mutex> lock(damageMutex);
+        auto setting = moduleDamage.find(source);
+        if (setting != moduleDamage.end()) return setting->second;
+        if (source)
+        {
+            auto* property = source->GetPropertyByNameInChain(L"Bullet");
+            if (property && property->GetElementSize() == sizeof(void*)*2)
+            {
+                auto* owner = *reinterpret_cast<Object**>(reinterpret_cast<unsigned char*>(source)+property->GetOffset_Internal());
+                auto snapshot = bulletDamage.find(owner);
+                if (snapshot != bulletDamage.end()) return snapshot->second;
+            }
+        }
+        return 1;
+    }
+
     void forgetBulletModules(Object* object)
     {
         for (auto it=moduleBullets.begin(); it!=moduleBullets.end();)
@@ -234,6 +246,10 @@ namespace
             if (inherited != bulletDamage.end()) multiplier = inherited->second;
             else if (activation != abilityDamage.end()) multiplier = activation->second;
             bulletDamage[object] = multiplier;
+            auto parentResources = parent ? bulletResources.find(*static_cast<Object* const*>(parent)) : bulletResources.end();
+            auto sourceResources = abilityResources.find(ability);
+            bulletResources[object] = parentResources != bulletResources.end() ? parentResources->second
+                : sourceResources != abilityResources.end() && sourceResources->second;
             if (multiplier != 1) ++damageObservation.launches;
             forgetBulletModules(object);
             rememberBulletModules(object,hook.modulesOffset,multiplier);
@@ -323,6 +339,8 @@ namespace
     }
 }
 
+#include "resource-branches.inl"
+
 extern "C" __declspec(dllexport) int pbz_damage_prepare_bullet(void* state)
 {
     // UFunction hooks replace the exec pointer. Resolve it before registration,
@@ -368,6 +386,25 @@ extern "C" __declspec(dllexport) int pbz_damage_watch_module(void* state)
         lua.set_string(error.what(), std::strlen(error.what()));
         return 2;
     }
+}
+
+extern "C" __declspec(dllexport) int pbz_damage_payload_multiplier(void* state)
+{
+    LuaStateView view{state};
+    auto& lua = *reinterpret_cast<const RC::LuaMadeSimple::Lua*>(&view);
+    auto* payload = reinterpret_cast<Object*>(lua.get_integer(1));
+    double multiplier = 1;
+    if (payload && enabled.load(std::memory_order_relaxed) && damageEnabled.load(std::memory_order_relaxed))
+    {
+        auto* property = payload->GetPropertyByNameInChain(L"DamageSource");
+        if (property && property->GetElementSize() == sizeof(void*)*2)
+        {
+            auto* source = *reinterpret_cast<Object**>(reinterpret_cast<unsigned char*>(payload)+property->GetOffset_Internal());
+            multiplier = sourceDamageMultiplier(source);
+        }
+    }
+    lua.set_number(multiplier);
+    return 1;
 }
 
 extern "C" __declspec(dllexport) int pbz_damage_watch_calculator(void* state)
@@ -429,9 +466,15 @@ extern "C" __declspec(dllexport) int pbz_damage_reset(void* state)
         restore(entry.first,entry.second.slot,reinterpret_cast<void*>(&calculateDamage),reinterpret_cast<void*>(entry.second.original));
     for (auto& entry : bulletInitializers)
         restore(entry.first,entry.second.slot,reinterpret_cast<void*>(&initializeBullet),reinterpret_cast<void*>(entry.second.original));
+    for (auto& entry : resourceActionHooks)
+        restore(entry.first,entry.second.slot,reinterpret_cast<void*>(&resourceActionCanActivate),reinterpret_cast<void*>(entry.second.original));
+    for (auto& entry : resourceEventHooks)
+        restore(entry.first,entry.second.slot,reinterpret_cast<void*>(&resourceEventTrigger),reinterpret_cast<void*>(entry.second.original));
     moduleDamage.clear();
     abilityDamage.clear();
     bulletDamage.clear();
+    abilityResources.clear();
+    bulletResources.clear();
     moduleBullets.clear();
     damagePayloads.clear();
     damageObservation = {};
@@ -535,6 +578,7 @@ extern "C" __declspec(dllexport) int pbz_damage_forget_bullet(void* state)
     auto* object = reinterpret_cast<Object*>(lua.get_integer(1));
     std::lock_guard<std::mutex> lock(damageMutex);
     bulletDamage.erase(object);
+    bulletResources.erase(object);
     forgetBulletModules(object);
     lua.set_integer(1); return 1;
 }

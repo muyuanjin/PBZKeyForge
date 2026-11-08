@@ -1,0 +1,1715 @@
+{
+  "build": "CL-302256",
+  "runtimeVerified": false,
+  "evidenceType": "Cooked input-task arguments, complete catalog ancestry and reviewed native activation/release graphs",
+  "entries": {
+    "ability:Ability.Action.Hun.CombatArt.Atk01": {
+      "preparation": {
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_CombatArt_Hold.IA_CombatArt_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "native_completion": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C.GA_Hun_ChiRen_C_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.Heavy",
+              "Weapon.Type.Global.TwoHanded",
+              "Weapon.Type.LongBlade.ChiRen",
+              "Weapon.Type.LongBlade.Default"
+            ]
+          }
+        ]
+      }
+    },
+    "ability:Ability.Action.Hun.Dash": {
+      "preparation": {
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Loop"
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong",
+              "Weapon.Type.ShaqiWeapon.Category.Strength"
+            ]
+          }
+        ]
+      }
+    },
+    "ability:Ability.Action.Hun.Heavy.Atk01_Hold": {
+      "preparation": {
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "native_completion": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Hold/GA_Hun_FengLeiJian_B_Hold.GA_Hun_FengLeiJian_B_Hold_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+              "Weapon.Type.BaiShanFengLeiJian",
+              "Weapon.Type.Global.DualHanded"
+            ]
+          }
+        ]
+      }
+    },
+    "ability:Ability.Action.Hun.Heavy.BronzeSword.BHold": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold.GA_Hun_BronzeSword_B_Hold_C"
+      }
+    },
+    "ability:Ability.Action.Hun.Heavy.ChiZheCanJian.Drink.Normal": {
+      "preparation": {
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "native_completion": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous.GA_Hun_ChiZheCanJian_Drink_Continuous_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.Weak",
+              "Weapon.Type.ChiZheCanJian",
+              "Weapon.Type.Global.SingleHanded"
+            ]
+          }
+        ]
+      }
+    },
+    "ability:Ability.Action.Hun.Heavy.GuiTouDao.BHold.Start": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start.GA_Hun_GuiTouBlade_B_Hold_Start_C"
+      }
+    },
+    "ability:Ability.Action.Hun.Heavy.Horizontal.BladeWave": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave.GA_Hun_Horizontal_BladeWave_C"
+      }
+    },
+    "ability:Ability.Action.Hun.Heavy.Iron.BCharge": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge.GA_Hun_Iron_BCharge_C"
+      }
+    },
+    "ability:Ability.Action.Hun.Heavy.PoJun.DB": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB.GA_Hun_PoJun_DB_C"
+      }
+    },
+    "ability:Ability.Action.Hun.Heavy.YanYueDao.Special01": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill.GA_Hun_YanYueDao_SpecialSkill_C"
+      }
+    },
+    "ability:Ability.Action.Hun.Light.SlitheringSword.DA": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackL_Hold.IA_AttackL_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Loop"
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_DA.GA_Hun_SlitheringSword_DA_C"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal.GA_BrutalAxe_Normal_C"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting": {
+      "preparation": {
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "native_completion": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal.GA_BrutalAxe_Normal_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong",
+              "Weapon.Type.ShaqiWeapon.Category.Strength"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "native_completion": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint.GA_BrutalAxe_Sprint_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong",
+              "Weapon.Type.ShaqiWeapon.Category.Strength"
+            ]
+          }
+        ]
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.Default": {
+      "preparation": {
+        "nativeHoldVariants": [
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Main",
+              "minimum_time": 1.169093013,
+              "object_variable": {
+                "property": "Variables",
+                "key": "DuYanBow_1",
+                "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+                "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_GA_DuYan_Bow_Normal_P1_01.BD_GA_DuYan_Bow_Normal_P1_01",
+                "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+                "status": 1
+              },
+              "before_time": 1.973573685,
+              "cancel_on_expire": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal.GA_DuYan_Bow_Normal_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.None",
+              "Weapon.Type.ShaqiWeapon.Bow",
+              "Weapon.Type.ShaqiWeapon.Category.Ranged"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Main",
+              "minimum_time": 0.9051806926727295
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead.GA_LionHead_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.None",
+              "Weapon.Type.ShaqiWeapon.Category.Magic"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Main",
+              "minimum_time": 0
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon.GA_TigerCannon_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong",
+              "Weapon.Type.ShaqiWeapon.Category.Strength"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Main",
+              "minimum_time": 1.454123855,
+              "object_variable": {
+                "property": "Variables",
+                "key": "UnnamedBow",
+                "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+                "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiWeapon/B_UnnamedBow_Normal.B_UnnamedBow_Normal",
+                "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+                "status": 1
+              },
+              "before_time": 2.596182823,
+              "cancel_on_expire": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow.GA_UnnamedBow_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.None",
+              "Weapon.Type.ShaqiWeapon.Bow",
+              "Weapon.Type.ShaqiWeapon.Category.Ranged"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Main",
+              "minimum_time": 1.245917797,
+              "object_variable": {
+                "property": "Variables",
+                "key": "UnnamedBow",
+                "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+                "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YouLongCha/B_YouLongCha_Normal.B_YouLongCha_Normal",
+                "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+                "status": 1
+              },
+              "before_time": 1.533529043,
+              "cancel_on_expire": true
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal.GA_YouLongCha_Normal_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.None",
+              "Weapon.Type.ShaqiWeapon.Category.Ranged"
+            ]
+          },
+          {
+            "nativeHoldInputs": [
+              "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+            ],
+            "automaticReleaseWhen": {
+              "timeline": "Loop"
+            },
+            "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C",
+            "requiredTags": [
+              "Bullet.Tag.Feature.ShieldBreakLevel.UltraStrong",
+              "Weapon.Type.ShaqiWeapon.Category.Strength"
+            ]
+          }
+        ]
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Loop",
+          "minimum_time": 0.056
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser.GA_DuYan_Bow_Laser_C"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "required_tags": [
+            "CharacterState.AbilityState.JinGua.Charge1"
+          ]
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal.GA_JinGua_Normal_C"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.JinGua.RotateAttack": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack.GA_JinGua_RoAttack_C"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.PiPa.Skill": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Loop"
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill.GA_Hun_Lute_SKill_C"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TanLang.Normal": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 9.999999747378752e-05
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal.GA_TanLang_Normal_C"
+      }
+    },
+    "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 0
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon.GA_TigerCannon_C"
+      }
+    },
+    "move:Shadow.DuYanBow.GA_DuYan_Bow_Normal": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.169093013,
+          "object_variable": {
+            "property": "Variables",
+            "key": "DuYanBow_1",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/DuYanBow/BD_GA_DuYan_Bow_Normal_P1_01.BD_GA_DuYan_Bow_Normal_P1_01",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "before_time": 1.973573685,
+          "cancel_on_expire": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal.GA_DuYan_Bow_Normal_C"
+      }
+    },
+    "move:Shadow.LionHead.GA_LionHead": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 0.9051806926727295
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead.GA_LionHead_C"
+      }
+    },
+    "move:Shadow.UnnamedBow.GA_UnnamedBow": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.454123855,
+          "object_variable": {
+            "property": "Variables",
+            "key": "UnnamedBow",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/ShachiWeapon/B_UnnamedBow_Normal.B_UnnamedBow_Normal",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "before_time": 2.596182823,
+          "cancel_on_expire": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow.GA_UnnamedBow_C"
+      }
+    },
+    "move:Shadow.YouLongCha.GA_YouLongCha_Normal": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Main",
+          "minimum_time": 1.245917797,
+          "object_variable": {
+            "property": "Variables",
+            "key": "UnnamedBow",
+            "getter": "/Script/SGameCombatSystem.BulletInterface:GetData",
+            "object": "/PBZCombatAsset/ActorData/Players/Hun/BulletData/YouLongCha/B_YouLongCha_Normal.B_YouLongCha_Normal",
+            "status_getter": "/Script/SGameCombatSystem.BulletInterface:GetStatus",
+            "status": 1
+          },
+          "before_time": 1.533529043,
+          "cancel_on_expire": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal.GA_YouLongCha_Normal_C"
+      }
+    },
+    "move:Shadow.ZhuoBiDun.GA_ZhuoBiDun": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "timeline": "Loop"
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun.GA_ZhuoBiDun_C"
+      }
+    },
+    "move:Weapon.Weapon_Hun_ChiZheCanJian.GA_Hun_ChiZheCanJian_Drink_Continuous": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous.GA_Hun_ChiZheCanJian_Drink_Continuous_C"
+      }
+    },
+    "move:Weapon.Weapon_Hun_ChiZheZuiJian.GA_Hun_ChiZheCanJian_Drink_Continuous": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous.GA_Hun_ChiZheCanJian_Drink_Continuous_C"
+      }
+    },
+    "move:Weapon.Weapon_Hun_GuiTouBlade.GA_Hun_GuiTouBlade_B_Hold_Start": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start.GA_Hun_GuiTouBlade_B_Hold_Start_C"
+      }
+    },
+    "move:Weapon.Weapon_Hun_Horizontal.GA_Hun_Horizontal_BladeWave": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave.GA_Hun_Horizontal_BladeWave_C"
+      }
+    },
+    "move:Weapon.Weapon_Hun_Iron.GA_Hun_Iron_BCharge": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge.GA_Hun_Iron_BCharge_C"
+      }
+    },
+    "move:Weapon.Weapon_Hun_PoJun.GA_Hun_PoJun_DB": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB.GA_Hun_PoJun_DB_C"
+      }
+    },
+    "move:Weapon.Weapon_Hun_TianXuanQingTongJian.GA_Hun_BronzeSword_B_Hold": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold.GA_Hun_BronzeSword_B_Hold_C"
+      }
+    },
+    "move:Weapon.Weapon_Hun_YanYueDao.GA_Hun_YanYueDao_SpecialSkill": {
+      "preparation": {
+        "nativeHoldInputs": [
+          "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        ],
+        "automaticReleaseWhen": {
+          "native_completion": true
+        },
+        "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill.GA_Hun_YanYueDao_SpecialSkill_C"
+      }
+    }
+  },
+  "associations": [
+    {
+      "identity": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/BP_Hun_Long_C_Base",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/Combo/BP_C_Base",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_CombatArt_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "GainCharge increments ChargeCount; ChargeCount >= 3 automatically calls ToRelease."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.Dash",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.Heavy.Atk01_Hold",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Hold/GA_Hun_FengLeiJian_B_Hold",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Hold/GA_Hun_FengLeiJian_B_Hold",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Hold/GA_Hun_FengLeiJian_B_Hold",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "WaitSInputHold(0.5); native tick ends successfully only after the real Thunder charge tag."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.Heavy.BronzeSword.BHold",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "WaitSInputHold(0.5) and native GainCharge select the charged release."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.Heavy.ChiZheCanJian.Drink.Normal",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_DrinkBase",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_DrinkBase",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Only Drink_Continuous registers ContinDrinkCheck with a positive JumpEndTime; its finite timeline completes drinking."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.Heavy.GuiTouDao.BHold.Start",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "SuccessHold selects the original reinforced/unreinforced successor; release retains Min Duration."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.Heavy.Horizontal.BladeWave",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "WaitSInputRelease observes Hold after Charging; uninterrupted Main/DashIn launches the real wave."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.Heavy.Iron.BCharge",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "WaitSInputHold(0); ChargeEnd normally transfers to BJump; early release retains ChargeMinTime."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.Heavy.PoJun.DB",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "MinDuration checks the held input; MaxDuration selects the native final attack and strength branch."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.Heavy.YanYueDao.Special01",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Native checkpoints increment ChargeCount; ChargeCount >= MaxCount selects FastEnd."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.Light.SlitheringSword.DA",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_DA",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_DA",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_DA",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Base/BP_Hun_SlitheringSword_DeflectLightBase",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_LightAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Release waits for native Main to reach Loop and then calls Go End through the original task."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Main",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "MinDuration checks Hold; GainCharge and ToRelease events retain the normal/sprint charge progression."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "MinDuration checks Hold; GainCharge and ToRelease events retain the normal/sprint charge progression."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Sprint",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "MinDuration checks Hold; GainCharge and ToRelease events retain the normal/sprint charge progression."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.Default",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.DuYanBow.Laser",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.JinGua.Main",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.JinGua.RotateAttack",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "HoldCheck increments ChargeCount; ChargeCount >= MaxCount selects FastEnd instead of Loop."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.PiPa.Skill",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Magic",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.TanLang.Normal",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.Normal",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Power",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "move:Shadow.DuYanBow.GA_DuYan_Bow_Normal",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "move:Shadow.LionHead.GA_LionHead",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "move:Shadow.UnnamedBow.GA_UnnamedBow",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "move:Shadow.YouLongCha.GA_YouLongCha_Normal",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base_Ranged",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "move:Shadow.ZhuoBiDun.GA_ZhuoBiDun",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_ShachiAbility_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Original shadow preparation retains its native readiness and projectile initialization."
+    },
+    {
+      "identity": "move:Weapon.Weapon_Hun_ChiZheCanJian.GA_Hun_ChiZheCanJian_Drink_Continuous",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_DrinkBase",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_DrinkBase",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Only Drink_Continuous registers ContinDrinkCheck with a positive JumpEndTime; its finite timeline completes drinking."
+    },
+    {
+      "identity": "move:Weapon.Weapon_Hun_ChiZheZuiJian.GA_Hun_ChiZheCanJian_Drink_Continuous",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_DrinkBase",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/Common/GA_Hun_ChiZheCanJian_Drink_Continuous",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_DrinkBase",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Only Drink_Continuous registers ContinDrinkCheck with a positive JumpEndTime; its finite timeline completes drinking."
+    },
+    {
+      "identity": "move:Weapon.Weapon_Hun_GuiTouBlade.GA_Hun_GuiTouBlade_B_Hold_Start",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start",
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "SuccessHold selects the original reinforced/unreinforced successor; release retains Min Duration."
+    },
+    {
+      "identity": "move:Weapon.Weapon_Hun_Horizontal.GA_Hun_Horizontal_BladeWave",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "WaitSInputRelease observes Hold after Charging; uninterrupted Main/DashIn launches the real wave."
+    },
+    {
+      "identity": "move:Weapon.Weapon_Hun_Iron.GA_Hun_Iron_BCharge",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "WaitSInputHold(0); ChargeEnd normally transfers to BJump; early release retains ChargeMinTime."
+    },
+    {
+      "identity": "move:Weapon.Weapon_Hun_PoJun.GA_Hun_PoJun_DB",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "MinDuration checks the held input; MaxDuration selects the native final attack and strength branch."
+    },
+    {
+      "identity": "move:Weapon.Weapon_Hun_TianXuanQingTongJian.GA_Hun_BronzeSword_B_Hold",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "WaitSInputHold(0.5) and native GainCharge select the charged release."
+    },
+    {
+      "identity": "move:Weapon.Weapon_Hun_YanYueDao.GA_Hun_YanYueDao_SpecialSkill",
+      "ability": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill",
+      "inputOwner": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill",
+      "ancestry": [
+        "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill",
+        "/PBZCombatAsset/Prototypes/Abilities/Base/BP_HeavyAttack_Base",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase_Simple",
+        "/MagCombatAbilities/Abilities/BP_ActionAbilityBase",
+        "/MagCombatAbilities/Abilities/BP_AbilityBase"
+      ],
+      "releaseRule": "Native checkpoints increment ChargeCount; ChargeCount >= MaxCount selects FastEnd."
+    }
+  ],
+  "inputCallAudit": [
+    {
+      "package": "/Game/PBZContent/Blueprint/Item/Ability/Medicine/GA_Medicine_Base",
+      "status": "auxiliary-trigger-event",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Medicine_Base",
+          "exportOffset": 1155,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputAction": "/Game/PBZContent/Input/InputActions/IA_UseBottomItem.IA_UseBottomItem"
+        }
+      ]
+    },
+    {
+      "package": "/Game/Test/HorseTest/GA_HorseCart_Charge",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_HorseCart_Charge",
+          "exportOffset": 16749,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/AHuaBlade/V2/GA_Hun_GuiTouBlade_B_Hold_Start",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_GuiTouBlade_B_Hold_Start",
+          "exportOffset": 2176,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Hold/GA_Hun_FengLeiJian_B_Hold",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_FengLeiJian_B_Hold",
+          "exportOffset": 2752,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputHold.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold",
+          "holdSeconds": 0.5
+        },
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Press.IA_AttackH_Press"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BronzeSword/GA_Hun_BronzeSword_B_Hold",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_BronzeSword_B_Hold",
+          "exportOffset": 2612,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputHold.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold",
+          "holdSeconds": 0.5
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_DrinkBase",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_ChiZheCanJian_DrinkBase",
+          "exportOffset": 3431,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ChiZheCanJian/Use/GA_Hun_ChiZheCanJian_SWT",
+      "status": "unreachable-drink-check: literal 0 > 0",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_ChiZheCanJian_SWT",
+          "exportOffset": 2514,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/GA_Hun_BerserkPassive",
+      "status": "auxiliary-trigger-event",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_BerserkPassive",
+          "exportOffset": 8157,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility"
+        },
+        {
+          "export": "ExecuteUbergraph_GA_Hun_BerserkPassive",
+          "exportOffset": 8588,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputAction": "/PBZDeflectSystem/Input/IA_Dodge.IA_Dodge"
+        },
+        {
+          "export": "ExecuteUbergraph_GA_Hun_BerserkPassive",
+          "exportOffset": 9301,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Press.IA_AttackH_Press"
+        },
+        {
+          "export": "ExecuteUbergraph_GA_Hun_BerserkPassive",
+          "exportOffset": 9744,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_AttackL_Press.IA_AttackL_Press"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HorizontalBlade/Default/GA_Hun_Horizontal_BladeWave",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_Horizontal_BladeWave",
+          "exportOffset": 2078,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/IronBlade/Default/GA_Hun_Iron_BCharge",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_Iron_BCharge",
+          "exportOffset": 1876,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputHold.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold",
+          "holdSeconds": 0.0
+        },
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Press.IA_AttackH_Press"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_C",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "IsHolding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_CombatArt_Hold.IA_CombatArt_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Default/GA_Hun_Long_BCharge",
+      "status": "preparation-only: no independent input route; native BBB attack already exposed",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_Long_BCharge",
+          "exportOffset": 1422,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/PoJun/GA_Hun_PoJun_DB",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "IsHolding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/BrutalAxe/GA_BrutalAxe_Normal",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/CaoOuSiXian/GA_CaoOuSiXian_Normal_01",
+      "status": "unused-holding-helper",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Laser",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_DuYan_Bow_Laser",
+          "exportOffset": 9214,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/DuYanBow/GA_DuYan_Bow_Normal",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_DuYan_Bow_Normal",
+          "exportOffset": 5102,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_02",
+      "status": "unused-holding-helper",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuangJinHuoChong/GA_HuangJinHuoChong_Normal_04",
+      "status": "unused-holding-helper",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/HuoLiuXing/GA_Hun_HuoLiuXing_AAAA",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JianKeZhaoJiLing/GA_JianKeZhaoJiLing_Normal_01",
+      "status": "unused-holding-helper",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Air",
+      "status": "unused-holding-helper",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_Normal",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/JinGua/GA_JinGua_RoAttack",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "IsHolding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/KuYeSiZhuChuan/GA_KuYeSiZhuChuan_Normal_01",
+      "status": "unused-holding-helper",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/LionHead/GA_LionHead",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_LionHead",
+          "exportOffset": 2284,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_SKill",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_Lute_SKill",
+          "exportOffset": 3171,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/MiaoShouFeiDao/GA_MiaoShouFeiDao_DB",
+      "status": "auxiliary-trigger-event",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_MiaoShouFeiDao_DB",
+          "exportOffset": 13745,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility.IA_ShachiAbility"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ShachiHook/GA_Hun_ShachiHook_HookMove",
+      "status": "auxiliary-trigger-event",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_ShachiHook_HookMove",
+          "exportOffset": 14954,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_Jump.IA_Jump"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TanLang/GA_TanLang_Normal",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "IsHolding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_01",
+      "status": "unused-holding-helper",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_02",
+      "status": "unused-holding-helper",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ThunderSpear/GA_ThunderSpear_Normal_03",
+      "status": "unused-holding-helper",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TieKuangQuanTao/NewCharge/GA_TieKuangQuanTao_ChargeBase",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/TigerCannon/GA_TigerCannon",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_TigerCannon",
+          "exportOffset": 1448,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/UnnamedBow/GA_UnnamedBow",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_UnnamedBow",
+          "exportOffset": 5590,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/XueSeLingDang/GA_XueSeLingDang_Normal_01",
+      "status": "unused-holding-helper",
+      "calls": [
+        {
+          "export": "Is Holding",
+          "exportOffset": 355,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongCha/GA_YouLongCha_Normal",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_YouLongCha_Normal",
+          "exportOffset": 3328,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/YouLongHead/GA_YouLongHead_Water",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_YouLongHead_Water",
+          "exportOffset": 3556,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/ZhuoBiDun/GA_ZhuoBiDun",
+      "status": "existing-shadow-preparation",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_ZhuoBiDun",
+          "exportOffset": 19848,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        },
+        {
+          "export": "ExecuteUbergraph_GA_ZhuoBiDun",
+          "exportOffset": 40836,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputArgument": "instance property"
+        },
+        {
+          "export": "ExecuteUbergraph_GA_ZhuoBiDun",
+          "exportOffset": 41279,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputArgument": "instance property"
+        },
+        {
+          "export": "ExecuteUbergraph_GA_ZhuoBiDun",
+          "exportOffset": 41722,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputArgument": "instance property"
+        },
+        {
+          "export": "ExecuteUbergraph_GA_ZhuoBiDun",
+          "exportOffset": 42165,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputArgument": "instance property"
+        },
+        {
+          "export": "ExecuteUbergraph_GA_ZhuoBiDun",
+          "exportOffset": 40771,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/Game/PBZContent/Input/InputActions/IA_Interaction_ShaChiAttactkBroken.IA_Interaction_ShaChiAttactkBroken"
+        },
+        {
+          "export": "OnTick",
+          "exportOffset": 2301,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/Game/PBZContent/Input/InputActions/IA_Interaction_ShaChiAttactkBroken.IA_Interaction_ShaChiAttactkBroken"
+        },
+        {
+          "export": "OnTick",
+          "exportOffset": 2368,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_ShachiAbility_Hold.IA_ShachiAbility_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/SlitheringSword/Attack/GA_Hun_SlitheringSword_DA",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_SlitheringSword_DA",
+          "exportOffset": 3884,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputRelease.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_AttackL_Hold.IA_AttackL_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_C",
+      "status": "two-press-reaction-stance: FirstRelease then repress; native ToEnd exposed separately",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_YanYueDao_C",
+          "exportOffset": 1603,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_CombatArt.IA_CombatArt"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/YanYueDao/GA_Hun_YanYueDao_SpecialSkill",
+      "status": "reviewed-native-lifecycle",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_Hun_YanYueDao_SpecialSkill",
+          "exportOffset": 4300,
+          "function": "/Script/SGameInputSystem.SGameInputComponent.IsHolding",
+          "inputAction": "/PBZInput/InputActions/IA_AttackH_Hold.IA_AttackH_Hold"
+        }
+      ]
+    },
+    {
+      "package": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/YuuBlade/UpgradeData/GA_YaoJu_PlayerPassive_BP",
+      "status": "auxiliary-trigger-event",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_GA_YaoJu_PlayerPassive_BP",
+          "exportOffset": 1886,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputTrigger.CreateTask",
+          "inputAction": "/PBZInput/InputActions/IA_Execution.IA_Execution"
+        }
+      ]
+    },
+    {
+      "package": "/PBZDeflectSystem/Abilities/BP_PlayerDodge_Base",
+      "status": "optional-continuous-dodge-mode",
+      "calls": [
+        {
+          "export": "ExecuteUbergraph_BP_PlayerDodge_Base",
+          "exportOffset": 2289,
+          "function": "/Script/SGameInputSystem.AbilityTask_WaitSInputHold.CreateTask",
+          "inputAction": "/PBZDeflectSystem/Input/IA_DodgeHold.IA_DodgeHold",
+          "holdSeconds": 0.25
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "scannedPackages": 1645,
+    "packagesWithInputCalls": 45,
+    "catalogEntrances": 1250,
+    "directAbilityTags": 227,
+    "preparedIdentities": 33
+  },
+  "limitations": [
+    "Static resources establish input and lifecycle contracts; in-game animation and damage require runtime observation.",
+    "Optional dodge-mode and auxiliary interaction triggers retain their native physical-input semantics."
+  ]
+}

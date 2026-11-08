@@ -138,7 +138,7 @@ for _,target in pairs(config.targets) do
         check(instance.task.rate==1,"each finisher restores its own native baseline")
     end
 end
-check(windows==38,"all thirty-eight compiled combat-art speed windows were exercised")
+check(windows==46,"all forty-six compiled attack speed windows were exercised")
 
 local generic={ability_class="/Fixture.GenericAbility_C",tag="Ability.Fixture.Attack"}
 for _,path in ipairs(paths) do
@@ -202,4 +202,4 @@ for _,path in ipairs(paths) do
     phase("Cancel",2,1,"an ordinary native restart cannot inherit recovery speed")
     finish()
 end
-print("TimelineSpeedLifecycleTests PASS "..checks..": 38 phase windows, 8 activation APIs, 4 playback routes, InputAction and ordinary reuse")
+print("TimelineSpeedLifecycleTests PASS "..checks..": 46 phase windows, 8 activation APIs, 4 playback routes, InputAction and ordinary reuse")

@@ -127,6 +127,8 @@ def main():
         "MakeOutgoingSpec": [("GameplayEffectClass", 0x11), ("Level", 0xa), ("Context", 0x19)],
         "BP_ApplyGameplayEffectSpecToSelf": [("SpecHandle", 0x19)],
         "RemoveActiveGameplayEffect": [("Handle", 0x19), ("StacksToRemove", 0x3)],
+        "RemoveActiveGameplayEffectBySourceEffect": [("GameplayEffect", 0x11),
+            ("InstigatorAbilitySystemComponent", 0x12), ("StacksToRemove", 0x3)],
         "GetFloatAttributeFromAbilitySystemComponent": [("AbilitySystem", 0x12), ("Attribute", 0x19), ("bSuccessfullyFoundAttribute", 0x4c)],
         "ModifyCharacterAttributeValue": [("Character", 0x12), ("Attribute", 0x19), ("ModiferOp", 0x0), ("Value", 0xa)],
         "IsHolding": [("InputAction", 0x12)],
@@ -151,6 +153,8 @@ def main():
                              ("CustomDamageCause", 0x19), ("CustomCalculator", 0x12),
                              ("AttackDirection", 0x19), ("SweepDirection", 0x19)],
         "GetDamageSourceActor": [], "GetDamageSourceAbility": [], "GetSourceAbility": [],
+        "UpdateState": [("PlayerInput", 0x12), ("ModifiedValue", 0x19), ("DeltaTime", 0xa)],
+        "GetTriggerType": [], "GetFrameCount": [], "GetInputVectorKeyState": [("Key", 0x19)],
     }
     expected_returns = {
         name: 0x4c for name in expected_native
@@ -164,6 +168,8 @@ def main():
     expected_returns.update({"BP_ApplyGameplayEffectToSelf": 0x19,"RemoveActiveGameplayEffect": 0x4c,
                              "MakeOutgoingSpec": 0x19,"BP_ApplyGameplayEffectSpecToSelf": 0x19,
                              "GetGameplayTagCount": 0x3})
+    expected_returns.update({"UpdateState": 0x1e, "GetTriggerType": 0x1e,
+                             "GetFrameCount": 0x4, "GetInputVectorKeyState": 0x19})
     with args.game_exe.open("rb") as stream, mmap.mmap(stream.fileno(), 0, access=mmap.ACCESS_READ) as binary:
         native = NativeFunctions(binary)
         def struct_getter(function, parameter, parameters=None):
@@ -197,6 +203,8 @@ def main():
                 returns = [[kind for n, kind in signature if n == "ReturnValue"] for signature in full]
                 expected_return = expected_returns[name]
                 assert returns == [[] if expected_return is None else [expected_return]], (name, returns, expected_return)
+        assert [("DamageTag", 0x19), ("ModifyType", 0x1e), ("ModifyValue", 0xa),
+                ("AddIfNotPresent", 0x4c), ("bApplyToChildren", 0x4c)] in native.signatures("ApplyModify")
         expected_timelines = [
             [("Timeline", 0x12), ("PlayRate", 0xa), ("SyncPoint", 0xa), ("StartTimeSeconds", 0xa), ("PreviousTimlineName", 0x14)],
             [("OwningAbility", 0x12), ("TaskInstanceName", 0x14), ("InTimeline", 0x12), ("PlayRate", 0xa),
@@ -218,6 +226,11 @@ def main():
             cache[path] = combat_art.e.Package(archive.resource(archive.packages[path.casefold()]))
         return cache[path]
     try:
+        execution_base = package("/PBZCombatAsset/Prototypes/Abilities/Base/PBZ_ShachiWeaponExecutionBase")
+        execution_graph = dict(execution_base.exports)["ExecuteUbergraph_PBZ_ShachiWeaponExecutionBase"]
+        # Native lethal override: Override(3), 999999, add-if-missing, exact tag.
+        assert execution_graph.count(b"\x24\x03\x1e" + struct.pack("<f", 999999) + b"\x27\x28\x16") == 1
+        assert "Damage.Damage.Target.GeneralDamage.Physical" in execution_base.names
         for move in moves:
             endpoint = move.get("entryPoint")
             if not endpoint:

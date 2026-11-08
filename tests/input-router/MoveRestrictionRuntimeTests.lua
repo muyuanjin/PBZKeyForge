@@ -123,6 +123,21 @@ for _,key in ipairs({"G","Gamepad_FaceButton_Left"}) do
         single.pre(param(backend:receiver({receiver="ability_system"})),param({TagName=FName("Required."..kind)}))
         single.post(nil,value)
         check(value:get()==true,"Native gameplay-tag interface qualification must receive the owning policy")
+        for _,receiver in ipairs({backend:receiver({receiver="ability_system"}),backend.pawn}) do
+            local all=hooks["/Script/GameplayTags.GameplayTagAssetInterface:HasAllMatchingGameplayTags"]
+            value=param(false)
+            all.pre(param(receiver),param(container({"Required."..kind,"Real.ProjectileReady"})))
+            all.post(nil,value)
+            check(value:get()==true,"All-tag queries on the player's component and avatar must receive the owning policy")
+            value=param(false)
+            all.pre(param(receiver),param(container({"Required."..kind,"Real.MissingTarget"})))
+            all.post(nil,value)
+            check(value:get()==false,"Bypassed all-tag queries must still require the original target and preparation tags")
+            value=param(true)
+            all.pre(param(receiver),param(container({"Blocked."..kind,"Real.ProjectileReady"})))
+            all.post(nil,value)
+            check(value:get()==false,"A hidden blocker must remain absent in all-tag queries")
+        end
         for _,mode in ipairs({"HasAnyMatchingGameplayTags"}) do
             local hook=hooks["/Script/GameplayTags.GameplayTagAssetInterface:"..mode]
             value=param(false)
@@ -139,6 +154,11 @@ for _,key in ipairs({"G","Gamepad_FaceButton_Left"}) do
             check(value:get()==true,"Another actor's interface qualification must retain its native result")
         end
         check(state.query("Required."..kind,object(88))==0,"Another actor must retain its restrictions")
+        local all=hooks["/Script/GameplayTags.GameplayTagAssetInterface:HasAllMatchingGameplayTags"]
+        value=param(false)
+        all.pre(param(object(88)),param(container({"Required."..kind})))
+        all.post(nil,value)
+        check(not value:get(),"Another actor's all-tag query must retain its restrictions")
         current=object(99)
         check(state.query("Required."..kind)==0,"Another ability must not borrow restriction choices")
         current=nil

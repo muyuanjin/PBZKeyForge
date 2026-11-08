@@ -374,7 +374,7 @@ function Router:step(now, snapshot, context)
                     local name = type(output) == "string" and output or output.target
                     local target = self.config.targets[name]
                     if not (self.backend.target_failed and self.backend:target_failed(target,b.id)) then
-                        if target.native_hold_inputs and (result.active or result.move_active)
+                        if (target.native_hold_inputs or target.native_hold_variants) and (result.active or result.move_active)
                             and not (st.resume_outputs and st.resume_outputs[name]) then
                             moveInputs[#moveInputs+1] = {target=target,binding=b.id}
                         end

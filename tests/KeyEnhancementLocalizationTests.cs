@@ -41,7 +41,7 @@ class KeyEnhancementLocalizationTests
             details = (Dictionary<string, object>)new JavaScriptSerializer { MaxJsonLength = 16777216 }.Deserialize<Dictionary<string, object>>(reader.ReadToEnd())["entries"];
         var translations = (Dictionary<string, Dictionary<string, string>>)typeof(I18n).GetField("T", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
         var nativeTargets = KeyEnhancementCatalog.Targets.Where(target => target.Kind != "move").ToArray();
-        Check(nativeTargets.Length == 334 && entries.Count == 334, "The native catalog must cover all 334 targets.");
+        Check(nativeTargets.Length == 325 && entries.Count == 334, "The native catalog must cover 325 available targets and retain labels for nine unsupported input routes.");
         var sources = entries.Values.Select(value => Convert.ToString(((Dictionary<string, object>)value)["source"])).ToArray();
         Check(sources.All(source => source == "native" || source == "native-category" || source == "unresolved"),
             "A localization entry has an unknown source kind.");
@@ -98,11 +98,11 @@ class KeyEnhancementLocalizationTests
                             language + ": native move title lost before its stage detail: " + target.Id);
                 }
             }
-            Check(workspace.Functions.Where(item => item.Id.StartsWith("ability:")).Select(item => item.Label).Distinct().Count() == 236,
+            Check(workspace.Functions.Where(item => item.Id.StartsWith("ability:")).Select(item => item.Label).Distinct().Count() == 227,
                 language + ": ability labels repeat categories instead of identifying each move");
         }
         I18n.Current = "en";
         Check(BindingWorkspace.FunctionLabel("ability:Ability.Action.Hun.SpecialDash") == "FLASH STEP", "SpecialDash lost its native player-facing name.");
-        Console.WriteLine("KeyEnhancementLocalizationTests PASS " + assertions + "; 334 targets, 15 languages");
+        Console.WriteLine("KeyEnhancementLocalizationTests PASS " + assertions + "; 325 available targets, 15 languages");
     }
 }

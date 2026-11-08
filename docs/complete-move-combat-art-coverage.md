@@ -1,6 +1,6 @@
 # 主武器战技阶段覆盖
 
-CL-302256 的 40 个玩家主武器与临时武器配置实际授予 35 个战技类，共 84 条继承合并后的时间线。40 项独立战技阶段包含 18 项终结或原生结束攻击、炽刃三档释放和 19 项内部阶段；每个战技类同时保留装备精确授予类的完整原入口。
+CL-302256 的 40 个玩家主武器与临时武器配置实际授予 35 个战技类，共 84 条继承合并后的时间线。45 项独立战技阶段包含 18 项终结或原生结束攻击、炽刃三档释放和 24 项内部阶段；每个战技类同时保留装备精确授予类的完整原入口。
 
 独立阶段按可分开的攻击动作、蒙太奇及准备事件区分。同一刀的多次判定、效果弹体和资源条件变体由同一次原生动作处理。正常激活的阶段保留费用与初始化；依赖真实命中、防反、处决或抓取的阶段，只接受当前已进入对应原生时间线的实例。
 
@@ -17,20 +17,20 @@ CL-302256 的 40 个玩家主武器与临时武器配置实际授予 35 个战�
 | `GA_Hun_Double_C` | Main, Failed | Followup | 保留原初始化、战技费用资格、各次攻击及结束清理。 |
 | `GA_Hun_YuuBlade_C` | Main, Failed, Exit | Final | CriticalBuff 选择 Main / Exit，终结等待原生 Exit。 |
 | `GA_Hun_DualHook_C` | Main, Failed | Final | 保留原初始化、战技费用资格、各次攻击及结束清理。 |
-| `GA_Hun_HeiMoShang_C1` | Main, Failed, Exit | Final | Climax 或 HeiMoShang.Buff 选择 Exit，终结保留该选择。 |
-| `GA_Hun_Horizontal_C` | Main, Failed | Final | 保留原初始化、战技费用资格、各次攻击及结束清理。 |
+| `GA_Hun_HeiMoShang_C1` | Main, Failed, Exit | BladeWave、Final | Climax 或 HeiMoShang.Buff 选择 Exit；刀波仅执行三连波并保留原增益消费，Final 独立执行末击。 |
+| `GA_Hun_Horizontal_C` | Main, Failed | BladeWave、Final | 刀波仅执行 `C_04/C_05` 两道交叉剑气并正常收招；Final 独立执行末击；各入口保留原初始化和战技费用。 |
 | `GA_Hun_Iron_C` | Main, Failed | Final | 保留原初始化、战技费用资格、各次攻击及结束清理。 |
-| `GA_Hun_Jade_C_Range` | Main, Failed | Final | 保留原初始化、战技费用资格、各次攻击及结束清理。 |
-| `GA_Hun_Double_JueYing_C` | Main, Failed, NearTimeline | Crow | Main / NearTimeline 由真实锁定目标距离选择；保留乌鸦生成与脱离事件。 |
-| `GA_Hun_Double_JueYing_C_Air` | Main, Failed | Crow | 保留乌鸦生成、地面检测与脱离事件。 |
+| `GA_Hun_Jade_C_Range` | Main, Failed | Stage2、Final | 二段保留后三组飞环及全部强化变体，飞环段结束后正常收招；Final 单独保留两次后续近战。 |
+| `GA_Hun_Double_JueYing_C` | Main, Failed, NearTimeline | Crow、Final | Main / NearTimeline 由真实锁定目标距离选择；Crow 保留乌鸦、同步扫击、生成与脱离事件，随后正常结束；Final 独立保留原近战末击。 |
+| `GA_Hun_Double_JueYing_C_Air` | Main, Failed | Crow、Final | Crow 保留乌鸦、同步扫击、地面检测与脱离事件，随后正常结束；Final 独立保留原空中近战末击。 |
 | `GA_Hun_ChiRen_C` | Main, Failed, NewTimeline, Release_01, Release_02, Release_03 | Release1、Release2、Release3 | 真实保持输入与 ChargeCount 选择三档释放；不写入蓄力数。 |
 | `GA_Hun_Long_C` | Main, Failed | Final | 保留原初始化、战技费用资格、各次攻击及结束清理。 |
-| `GA_Hun_Jigsaw_C` | Main, Failed, HasSawHit | Final、HasSawHitStage2、HasSawHitFinal | HasSawHit 阶段只接受原 DirectHit 跳转后已在执行的真实实例。 |
+| `GA_Hun_Jigsaw_C` | Main, Failed, HasSawHit | Final、HasSawHitStage2、HasSawHitFinal | HasSawHit 阶段只接受原 DirectHit 跳转后的真实实例；二段与命中末击分别结束，持续请求不重播段首。 |
 | `GA_Hun_LuanYing_CA` | Main, Failed | Stage2 | 保留原初始化、战技费用资格、各次攻击及结束清理。 |
-| `GA_Hun_LuanYing_P2_CA` | Main, Failed | Stage2、Final | 二段与终结保留 TianMiaoShown 持续标签。 |
+| `GA_Hun_LuanYing_P2_CA` | Main, Failed | Stage2、Final | 二段只保留 CA_08，Final 保留其后攻击；两者保留 TianMiaoShown 持续标签。 |
 | `GA_Hun_PoJun_C` | Main, Failed | Final | 保留原初始化、战技费用资格、各次攻击及结束清理。 |
-| `GA_Hun_ShuangYue_C` | Main, Failed | Spin、Final | 十四处攻击的普通 / 强化 / 超强化三组条件弹体完整保留。 |
-| `GA_Hun_SlitheringSword_C` | Main, Failed, Perfect | Stage2、PerfectFinal | Main / Perfect 保留真实防反事件与目标弹体；Perfect 终结只复用原生活跃分支。 |
+| `GA_Hun_ShuangYue_C` | Main, Failed | Spin、Final | 旋转段与末击分别结束；各自普通 / 强化 / 超强化条件弹体完整保留。 |
+| `GA_Hun_SlitheringSword_C` | Main, Failed, Perfect | Stage2、PerfectFinal | Main / Perfect 保留真实防反事件与目标弹体；Perfect 二段在独立末击之前结束，末击只复用原生活跃分支。 |
 | `GA_Hun_SnakeDual_C` | Main, Failed | Final | 正常初始化保留 StartRevive 事件。 |
 | `GA_Hun_Tang_C` | Main, Failed | Followup | 保留原初始化、战技费用资格、各次攻击及结束清理。 |
 | `GA_Hun_WoodenSword_C` | Main, Failed | Followup | 保留原初始化、战技费用资格、各次攻击及结束清理。 |
@@ -39,7 +39,7 @@ CL-302256 的 40 个玩家主武器与临时武器配置实际授予 35 个战�
 | `GA_Hun_YanYueDao_C` | Main, Failed, NormalEnd, Reaction_L1, Reaction_R1 | NormalEnd | ToEnd 结束原 Tick / 等待任务并进入带伤害的 NormalEnd；Reaction 沿原生反应分支。 |
 | `GA_Hun_ZhanMa_C` | ExecutionTimeline, GrabSuccess, Failed, GrabSuccess_NonMeat | NormalFinal、GrabFinal | 终结只复用真实处决 / 抓取分支；抓取终结等待原恢复生命事件；非肉体分支走完整原入口。 |
 | `GA_Hun_ZiMingJian_New_C` | Main, Failed | 完整原入口 | 单次弹体攻击、命中闪避事件监听与结束输入缓冲保留在完整原入口。 |
-| `GA_Hun_ZiMingJian_New_CC` | Main, Failed | Stage2、Final | 保留原初始化、战技费用资格、各次攻击及结束清理。 |
+| `GA_Hun_ZiMingJian_New_CC` | Main, Failed | Stage2、Final | 二段保留三种 YuCha 投射，Final 单独保留 CC_02；各自保留原初始化、费用与结束清理。 |
 | `GA_Hun_ZiMingJian_New_CCC` | Main, Failed | 完整原入口 | 单次攻击及地面探测、IK 状态切换保留在完整原入口。 |
 
 ## 炽刃释放
@@ -54,7 +54,11 @@ CL-302256 的 40 个玩家主武器与临时武器配置实际授予 35 个战�
 
 痴者残剑抛坛等待饮药事件和实际已初始化的酒坛；绝影从乌鸦生成之前进入后段；双钺保留三种资源资格的全部条件弹体；斩马抓取终结在原恢复生命事件之后进入。这些效果与对应攻击共用原生回调。
 
+荡寇凶刃、黑魔伤与玉双环保留完整原入口、中段弹体派生和终结三个入口。中段派生只执行所选弹体段，等待完整发射与对应收招后按原生正常结束入口清理，不附带后续终结攻击。黑魔伤同时保留原 Exit 的增益消费。派生使用本次绑定独立的伤害、前后摇和资源参数，飞行弹体保留本次参数快照。边界按实际时间线位置判断，调速不改变攻击集合；[逐项边界与攻击集合](all-move-phase-validation.md)记录十条配方、十一个有限分支。维护入口为 `build/extract-projectile-combat-art-phases.py`。
+
 资源证据见[原战技终结](complete-move-combat-art-recipes.json)、[炽刃释放](complete-move-weapon-charge-recipes.json)和[内部战技阶段](complete-move-additional-weapon-phases.json)。原容器检查为 `CombatArtPhaseResourceTests.py`、`WeaponChargeMoveResourceTests.py`、`AdditionalWeaponPhaseResourceTests.py`；编译后的真实执行器与绑定参数检查为 `CompiledWeaponChargeMoveTests.lua`、`CompiledWeaponPhaseTests.lua` 和 `FinisherSpeedTests.lua`。
+
+催心琵琶普通第一、第二击各有两次独立拨弦，分别保留完整原入口和第二次拨弦入口。第二次拨弦先支付原生弹药费用，再从对应的转向与出手动作之前进入，保留普通／强化两种弹体及结束清理。来源与费用时序见[影之武装弹体阶段](complete-move-shadow-projectile-phases.json)。
 
 ## 已知问题
 

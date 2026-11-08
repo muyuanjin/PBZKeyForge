@@ -23,6 +23,7 @@ EXPORTS
     ?get_string@Lua@LuaMadeSimple@RC@@QEBA?AV?$basic_string_view@DU?$char_traits@D@std@@@std@@H@Z
     ?GetClassPrivate@UObjectBase@Unreal@RC@@QEAAAEAPEAVUClass@23@XZ
     ?set_integer@Lua@LuaMadeSimple@RC@@QEBAX_J@Z
+    ?set_number@Lua@LuaMadeSimple@RC@@QEBAXN@Z
     ?set_string@Lua@LuaMadeSimple@RC@@QEBAXPEBD_K@Z
     ?RegisterPreHook@UFunction@Unreal@RC@@QEAAHAEBV?$function@$$A6AXAEAVUnrealScriptFunctionCallableContext@Unreal@RC@@PEAX@Z@std@@PEAX@Z
     ?RegisterPostHook@UFunction@Unreal@RC@@QEAAHAEBV?$function@$$A6AXAEAVUnrealScriptFunctionCallableContext@Unreal@RC@@PEAX@Z@std@@PEAX@Z

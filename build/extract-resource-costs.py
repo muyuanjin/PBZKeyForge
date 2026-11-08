@@ -44,6 +44,8 @@ def extract(archive, universe):
             resources.update(("spirit", "shachi"))
         if key.endswith("/ga_hun_shuangyue_db"):
             resources.add("weapon_charge")
+        if "/abilities/baishanfengleijian/" in key:
+            resources.add("weapon_charge")
         row["resources"] = sorted(resources)
         row["tags"] = row["ownTags"] or (inherited["tags"] if inherited else [])
         if key.endswith("/bp_switchattack_default") or inherited and "switchTargets" in inherited:

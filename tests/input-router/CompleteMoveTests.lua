@@ -715,7 +715,7 @@ end
 
 do
     local classes = {"/Accessories/GhostFire_Lv1_C", "/Accessories/GhostFire_Lv2_C", "/Accessories/GhostFire_Lv3_C"}
-    local target = {kind="move", ability_class=classes[1], active_ability_classes=classes,
+    local target = {kind="move", ability_class=classes[1], active_ability_classes=classes, active_callback_only=true,
         entry_point=classes[1] .. ":Targeting Tick"}
     local function active_fixture()
         local backend, _, _, _, asc = fixture()

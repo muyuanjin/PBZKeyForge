@@ -2,6 +2,7 @@
 import argparse
 import importlib.util
 import json
+import struct
 from pathlib import Path
 
 
@@ -24,22 +25,47 @@ def main():
     if catalog["build"] != args.build or audit["build"] != args.build:
         raise ValueError("Catalog and equipment index must belong to the selected resource build")
     targets = [move for move in catalog["moves"] if move.get("phaseWindow") or move.get("phaseWindows")]
-    assert len(targets) == 36, "The combat-art speed-window inventory changed"
-    assert sum(len(move.get("phaseWindows", [move.get("phaseWindow")])) for move in targets) == 38
+    assert len(targets) == 43, "The independent speed-window inventory changed"
+    assert sum(len(move.get("phaseWindows", [move.get("phaseWindow")])) for move in targets) == 46
     archive = phases.e.Archive(args.game_exe, args.paks, args.oodle, args.build)
     try:
         equipment = [item["equipmentId"] for item in audit["equipment"]]
         extracted = phases.extract(archive, equipment)
         abilities = {item["package"]: item for item in extracted["records"]}
+        symbols = phases.ScriptObjects(archive.paks)
+        for move in targets:
+            path = move["abilityClass"].rsplit(".", 1)[0]
+            if path in abilities:
+                continue
+            package = phases.e.Package(archive.resource(archive.packages[path.casefold()]))
+            start = struct.unpack_from("<I", package.data, 32)[0]
+            classes = [symbols.resolve(package, struct.unpack_from("<Q", package.data, start + i * 72 + 32)[0])
+                       for i in range(len(package.exports))]
+            timelines = []
+            for index, class_name in enumerate(classes):
+                if class_name != "/Script/LegoAbility.LGATimeline":
+                    continue
+                value = phases.timeline(package, index)
+                for action in value["actions"]:
+                    pointer = action["actionPointer"]
+                    action["directAttackAction"] = pointer > 0 and any(
+                        part in classes[pointer - 1] for part in ("Bullet", "Damage", "HitBox"))
+                timelines.append(value)
+            abilities[path] = {"package": path, "timelines": timelines}
         results = []
         for move in targets:
             ability = abilities[move["abilityClass"].rsplit(".", 1)[0]]
             for window in move.get("phaseWindows", [move.get("phaseWindow")]):
                 timeline = next(item for item in ability["timelines"] if item["name"] == window["timeline"])
+                completion = move.get("completionWhen", {})
+                cutoff = completion.get("minimum_time", float("inf")) if window["timeline"] in completion.get(
+                    "timelines", [completion.get("timeline")]) else float("inf")
                 attacks = [item for item in timeline["actions"]
                            if item.get("directAttackAction")
-                           and item["startTime"] + item["duration"] >= window["entry_time"]]
+                           and item["startTime"] + item["duration"] >= window["entry_time"]
+                           and item["startTime"] < cutoff]
                 assert attacks, "No retained attack actions: " + move["id"]
+                assert all(item["startTime"] + item["duration"] < cutoff for item in attacks), move["id"]
                 start = min(max(window["entry_time"], item["startTime"]) for item in attacks)
                 end = max(item["startTime"] + item["duration"] for item in attacks)
                 assert window["entry_time"] <= start, "Entry starts after retained attacks: " + move["id"]
@@ -61,7 +87,7 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps({"build": args.build, "evidenceType": "installed cooked timelines and attack actions",
                                       "runtimeVerified": False, "windows": results}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("TimelineSpeedResourceTests PASS: 38 combat-art windows across 36 phases and Zhan Ma charge match installed attack actions")
+    print("TimelineSpeedResourceTests PASS: 46 attack windows across 43 independent phases and Zhan Ma charge match installed attack actions")
 
 
 if __name__ == "__main__":

@@ -89,7 +89,9 @@ local function query(resource,initial,queried,library)
 end
 local costEffects={
     "/PBZCombatAsset/ActorData/Players/Hun/Weapon/SlitheringSword/UpgradeData/GE_SlitheringSword_EvalutionCombo_CostShachi.GE_SlitheringSword_EvalutionCombo_CostShachi_C",
-    "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChaosBlade/GE_Chaos_SwitchShaQiCost.GE_Chaos_SwitchShaQiCost_C"
+    "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ChaosBlade/GE_Chaos_SwitchShaQiCost.GE_Chaos_SwitchShaQiCost_C",
+    "/PBZCombatAsset/Prototypes/Abilities/Base/GE/GE_Cost_Shachi_ToZero.GE_Cost_Shachi_ToZero_C",
+    "/PBZCombatAsset/ActorData/Players/Hun/Weapon/ZiMingJian/GameEffects/GE_ZiMingJian_CostShaChi.GE_ZiMingJian_CostShaChi_C"
 }
 for index,path in ipairs(costEffects) do
     local effect=object(100+index)
@@ -114,6 +116,34 @@ for index,path in ipairs(costEffects) do
         return false
     end)
     check(apply(attack,effect)==effect,"the same ability's ordinary later operation retains the resource effect")
+    local makeSpec="/Script/GameplayAbilities.GameplayAbility:MakeOutgoingGameplayEffectSpec"
+    local applySelf="/Script/GameplayAbilities.AbilitySystemComponent:BP_ApplyGameplayEffectToSelf"
+    for _,bypass in ipairs({true,false}) do
+        current=attack
+        cost:activate(target,bypass,function()
+            local specClass=class_parameter(effect)
+            hooks[makeSpec].pre(parameter(attack),specClass)
+            check(specClass.value()==(not bypass and effect or nil),
+                "timeline cost specs follow this activation's resource bypass")
+            local foreignSpec=class_parameter(effect)
+            hooks[makeSpec].pre(parameter(other),foreignSpec)
+            check(foreignSpec.value()==effect,"another ability keeps its outgoing resource cost spec")
+            local selfClass=class_parameter(effect)
+            hooks[applySelf].pre(parameter(component),selfClass)
+            check(selfClass.value()==(not bypass and effect or nil),
+                "direct ASC cost effects follow their actual caller's resource bypass")
+            local foreignSelf=class_parameter(effect)
+            hooks[applySelf].pre(parameter(other),foreignSelf)
+            check(foreignSelf.value()==effect,"another ASC keeps its direct resource cost effect")
+            current=other
+            local unrelated=class_parameter(effect)
+            hooks[applySelf].pre(parameter(component),unrelated)
+            check(unrelated.value()==effect,"an unrelated ability on this ASC keeps its cost")
+            current=attack
+            return false
+        end)
+        current=nil
+    end
 end
 for _,class in ipairs({
     "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_Reborn.GA_Hun_HeiMoShang_Reborn_C",
