@@ -184,6 +184,13 @@ class PublishingTests(unittest.TestCase):
         privacy.inspect_bytes('app.exe', ('C:' + '\\Users\\Example\\private.sav').encode('utf-16-le'), findings, images)
         self.assertEqual(findings[0]['kind'], 'private_path_or_steam_id')
 
+    def test_unix_directory_labels_are_distinct_from_personal_paths(self):
+        findings, images = [], []
+        privacy.inspect_bytes('guide.txt', b'Unix roots /home/ and /Users/', findings, images)
+        self.assertEqual(findings, [])
+        privacy.inspect_bytes('guide.txt', b'Local /home/example/private.txt', findings, images)
+        self.assertEqual(findings[0]['kind'], 'private_path_or_steam_id')
+
     def test_privacy_checks_intermediate_outgoing_commits(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -11,7 +11,7 @@ from pathlib import Path
 from publishing_common import ROOT, write_json
 
 PATTERNS = {
-    'private_path_or_steam_id': re.compile(r'(?:[A-Za-z]:[\\/](?:Users|C#WorkSpace|SteamLibrary)[\\/]|/Users/|/home/|7656119\d{10})'),
+    'private_path_or_steam_id': re.compile(r'(?:[A-Za-z]:[\\/](?:Users|C#WorkSpace|SteamLibrary)[\\/]|/Users/[A-Za-z0-9_. -]+/|/home/[A-Za-z0-9_.-]+/|7656119\d{10})'),
     'credential': re.compile(r'gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY|(?:api[_-]?key|access[_-]?token|password)\s*[:=]\s*["\x27][A-Za-z0-9+/=_-]{20,}', re.I),
     'possible_game_key': re.compile(r'(?i)(?<![a-f0-9])(?:0x)?[a-f0-9]{64}(?![a-f0-9])')
 }
