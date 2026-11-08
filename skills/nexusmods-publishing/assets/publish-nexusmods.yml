@@ -1,0 +1,87 @@
+name: Publish to Nexus Mods
+run-name: Nexus ${{ inputs.tag }} / ${{ inputs.category }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: string
+      asset_name:
+        required: true
+        type: string
+      file_id:
+        description: Stable v3 file ID from Nexus Files Advanced; not a download revision ID
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      category:
+        required: true
+        type: choice
+        default: main
+        options: [main, optional, miscellaneous]
+      description_file:
+        description: Release-tag-relative path to the player-facing file description
+        required: true
+        type: string
+      allow_mod_manager_download:
+        description: Enable only if mod managers can install this package
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nexus-${{ inputs.file_id }}
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+      - name: Read notes and download public release asset
+        id: prepare
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          ASSET_NAME: ${{ inputs.asset_name }}
+          NOTES_FILE: ${{ inputs.description_file }}
+        run: |
+          set -euo pipefail
+          gh release view "$RELEASE_TAG" --json isDraft,isPrerelease --jq '(.isDraft or .isPrerelease) | not' | grep -qx true
+          description="$(cat "$NOTES_FILE")"
+          test "${#description}" -gt 225
+          delimiter="nexus_notes_$(uuidgen)"
+          {
+            echo "description<<$delimiter"
+            printf '%s\n' "$description"
+            echo "$delimiter"
+          } >> "$GITHUB_OUTPUT"
+          gh release download "$RELEASE_TAG" --pattern "$ASSET_NAME" --dir nexus-upload
+          test -s "nexus-upload/$ASSET_NAME"
+      - name: Upload a new version of the existing file
+        id: upload
+        uses: Nexus-Mods/upload-action@v1.0.0-beta.8
+        with:
+          api_key: ${{ secrets.NEXUSMODS_API_KEY }}
+          file_id: ${{ inputs.file_id }}
+          filename: nexus-upload/${{ inputs.asset_name }}
+          version: ${{ inputs.version }}
+          description: ${{ steps.prepare.outputs.description }}
+          category: ${{ inputs.category }}
+          archive_existing_version: false
+          allow_mod_manager_download: ${{ inputs.allow_mod_manager_download }}
+          primary_mod_manager_download: false
+      - name: Record uploaded version ID
+        env:
+          VERSION_ID: ${{ steps.upload.outputs.version_id }}
+        run: |
+          printf 'Nexus uploaded version ID: %s\n' "$VERSION_ID" >> "$GITHUB_STEP_SUMMARY"

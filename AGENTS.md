@@ -62,7 +62,9 @@ History uses short subjects prefixed with `feat:`, `fix:`, `docs:`, `ci:`, or `a
 
 ## Release Workflow and Compatibility Baseline
 
-For an authorized full release, follow [the publishing procedure](docs/publishing.md): commit the release changes, inspect everything about to be pushed for privacy, push only after it is clear, then publish the new version on both GitHub and Nexus Mods. Inspect the complete outgoing commits and files, including screenshots and packaged assets, for credentials, game encryption keys, personal saves, local paths and other private information. If private content is found, remove it from the outgoing content before pushing; never reproduce secrets in reports.
+For Nexus setup, file IDs, credentials, release updates or recovery, read [the Nexus publishing skill](skills/nexusmods-publishing/SKILL.md). Follow [the project publishing procedure](docs/publishing.md) and use its maintained scripts. After the tested GitHub release is public, `build/publish-nexus.py finish --version <version> --browser <instance>` publishes missing files and completes the Nexus pages/media; `verify` performs read-only public verification. Do not recreate per-session upload/title/delete scripts or reuse old browser session IDs. Preserve the versioned media manifest and pending-effect checkpoints when resuming.
+
+For an authorized full release, commit the release changes, inspect everything about to be pushed for privacy, push only after it is clear, then publish the new version on both GitHub and Nexus Mods. `build/check-release-privacy.py` inspects every outgoing file version and selected packaged assets; visually inspect screenshots as well. Inspect for credentials, game encryption keys, personal saves, local paths and other private information. If private content is found, remove it from the outgoing content before pushing; never reproduce secrets in reports.
 
 Only a version actually published to users counts as an old version. Uncommitted work, local commits, pushed commits, tags and release drafts without a public release do not establish a historical compatibility requirement. Base compatibility decisions and changelogs on actual public releases; revise unpublished formats and implementations directly instead of adding legacy handling for them. Preserve compatibility required by real published versions.
 
@@ -74,9 +76,9 @@ A release is complete only when both platforms expose the intended version and d
 
 ## Nexus Copy and Media
 
-Maintain the homepage in `docs/nexus-description.bbcode.txt`, the sticky post in `docs/nexus-pinned-post.bbcode.txt`, file descriptions in `docs/releases/`, and image mappings in `docs/nexus-media-<version>.md`.
+Maintain the homepage in `docs/nexus-description.bbcode.txt`, its summary in `docs/nexus-short-description.txt`, the sticky post in `docs/nexus-pinned-post.bbcode.txt`, and file descriptions in `docs/releases/`. `docs/nexus-media-<version>.json` owns image mappings and upload checkpoints; the publisher generates the matching Markdown mapping.
 
-Write the homepage, file descriptions and sticky announcement from the player's perspective. Open with the value the mod brings to the user, then explain the relevant behavior and use. For the next release, lead with smoother performance, a more complete move selection and fixes to independent move activation. Describe the actual shipped improvements rather than implementation activity.
+Write the homepage, file descriptions and sticky announcement from the player's perspective. Open with the value the mod brings to the user, then explain the relevant behavior and use. Derive each release's emphasis from the actual changes since the previous public version. Describe the actual shipped improvements rather than implementation activity.
 
 Organize the homepage around a new user's complete usage sequence: understand the benefits, install and get started, edit bindings and use presets, then explore enhancement features. Place feature illustrations beside their explanations. Integrate new features into that sequence rather than prepending each update; repair an existing update-first structure when editing the page. Keep the sticky changelog consistent with the style and approximate length of neighboring release entries, covering changes since the previous public version.
 

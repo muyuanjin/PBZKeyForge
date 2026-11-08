@@ -1,0 +1,97 @@
+{
+  "version": "1.3.1",
+  "previous_version": "1.3.0",
+  "images": [
+    {
+      "key": "enhancement-main-en",
+      "source": "assets/screenshots/1.3.1/enhancement-main-en.png",
+      "title": "01 - PBZKeyForge 1.3.1 - English - PC key view",
+      "visible": true,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107614-1437476136.png"
+    },
+    {
+      "key": "enhancement-main-gamepad-en",
+      "source": "assets/screenshots/1.3.1/enhancement-main-gamepad-en.png",
+      "title": "02 - PBZKeyForge 1.3.1 - English - Xbox key view",
+      "visible": true,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107614-819839135.png"
+    },
+    {
+      "key": "enhancement-main-playstation-en",
+      "source": "assets/screenshots/1.3.1/enhancement-main-playstation-en.png",
+      "title": "03 - PBZKeyForge 1.3.1 - English - PlayStation key view",
+      "visible": true,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107616-1951279601.png"
+    },
+    {
+      "key": "enhancement-actions-en",
+      "source": "assets/screenshots/1.3.1/enhancement-actions-en.png",
+      "title": "04 - PBZKeyForge 1.3.1 - English - Action view and extra moves",
+      "visible": true,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107617-1764465306.png"
+    },
+    {
+      "key": "enhancement-main-zh-Hans",
+      "source": "assets/screenshots/1.3.1/enhancement-main-zh-Hans.png",
+      "title": "05 - PBZKeyForge 1.3.1 - 简体中文 - PC 键位视图",
+      "visible": true,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107620-120672843.png"
+    },
+    {
+      "key": "enhancement-main-gamepad-zh-Hans",
+      "source": "assets/screenshots/1.3.1/enhancement-main-gamepad-zh-Hans.png",
+      "title": "06 - PBZKeyForge 1.3.1 - 简体中文 - Xbox 键位视图",
+      "visible": true,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107619-865041343.png"
+    },
+    {
+      "key": "enhancement-main-playstation-zh-Hans",
+      "source": "assets/screenshots/1.3.1/enhancement-main-playstation-zh-Hans.png",
+      "title": "07 - PBZKeyForge 1.3.1 - 简体中文 - PlayStation 键位视图",
+      "visible": true,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107623-1314788389.png"
+    },
+    {
+      "key": "enhancement-actions-zh-Hans",
+      "source": "assets/screenshots/1.3.1/enhancement-actions-zh-Hans.png",
+      "title": "08 - PBZKeyForge 1.3.1 - 简体中文 - 动作视图与额外招式",
+      "visible": true,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107623-1293485611.png"
+    },
+    {
+      "key": "bindings-en",
+      "source": "assets/screenshots/1.3.1/bindings-en.png",
+      "title": "10 - PBZKeyForge 1.3.1 - Edit and compare bindings",
+      "visible": false,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107625-670626789.png"
+    },
+    {
+      "key": "presets-save-en",
+      "source": "assets/screenshots/1.3.1/presets-save-en.png",
+      "title": "11 - PBZKeyForge 1.3.1 - Save your preset",
+      "visible": false,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107625-878518668.png"
+    },
+    {
+      "key": "presets-share-en",
+      "source": "assets/screenshots/1.3.1/presets-share-en.png",
+      "title": "12 - PBZKeyForge 1.3.1 - Share by device",
+      "visible": false,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107628-2130680389.png"
+    },
+    {
+      "key": "enhancement-moves-en",
+      "source": "assets/screenshots/1.3.1/enhancement-moves-en.png",
+      "title": "13 - PBZKeyForge 1.3.1 - Complete moves",
+      "visible": false,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107628-320811591.png"
+    },
+    {
+      "key": "enhancement-tuning-en",
+      "source": "assets/screenshots/1.3.1/enhancement-tuning-en.png",
+      "title": "14 - PBZKeyForge 1.3.1 - Restrictions and move effects",
+      "visible": false,
+      "url": "https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107629-924528065.png"
+    }
+  ]
+}

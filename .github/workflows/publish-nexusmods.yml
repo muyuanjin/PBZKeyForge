@@ -1,4 +1,5 @@
 name: Publish to Nexus Mods
+run-name: Nexus ${{ inputs.tag }} / ${{ inputs.category }}
 
 on:
   workflow_dispatch:

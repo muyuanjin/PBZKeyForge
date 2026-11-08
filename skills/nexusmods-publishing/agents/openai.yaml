@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nexus Mods Publishing"
+  short_description: "Set up Nexus releases, credentials, Actions and media"
+  default_prompt: "Use $nexusmods-publishing to prepare and publish this mod update through GitHub Actions and verify the public Nexus pages."
