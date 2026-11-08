@@ -9,8 +9,9 @@ local MoveEquipment = require("move-equipment")
 local MovePreparation = require("move-preparation")
 local SnakePreparation = require("snake-preparation")
 local StanceInput = require("stance-input")
+local PlayerSession = require("player-session")
 local Backend = {}
-Backend.__index = Backend
+local BackendMethods
 
 local function valid(value)
     if value == nil then return false end
@@ -20,6 +21,10 @@ end
 
 local function identity(value)
     return valid(value) and tostring(value:GetAddress()) or nil
+end
+
+local function persistent_object_path(path)
+    return type(path) == "string" and path:find(":PersistentLevel",1,true) ~= nil
 end
 
 function Backend.new(config, log)
@@ -32,7 +37,7 @@ function Backend.new(config, log)
         focus, focusError = package.loadlib(dllPath, "pbz_input_is_foreground")
     end
     local instance = setmetatable({config = config, log = log or print, objects = {}, functions = {},
-        missing = {}, controller = nil, pawn = nil, subsystem = nil, captured = {},
+        missing = {}, session = nil, captured = {},
         names = {}, key_dimensions = {}, focus_probe = focus,
         physical_input = PhysicalInput.new(dllPath), generation = 0, config_generation = 0,
         state = {ready = false, gameplay = false}}, Backend)
@@ -49,7 +54,8 @@ function Backend:report(key, message)
 end
 
 function Backend:object(path, className)
-    local object = self.objects[path]
+    local cacheable = not persistent_object_path(path)
+    local object = cacheable and self.objects[path] or nil
     if not valid(object) then
         local lookup = path
         local short = path:match("%.([^.:]+)$") or path:match("/([^/]+)$")
@@ -77,13 +83,17 @@ function Backend:object(path, className)
                 end
             end
         end
-        if valid(object) then self.objects[path] = object end
+        if valid(object) and cacheable then self.objects[path] = object end
     end
     if not valid(object) then error("Object is not loaded: " .. path, 0) end
     return object
 end
 
 function Backend:invoke(object, path, ...)
+    if self.dispatch_generation ~= nil and (self.dispatch_generation ~= self.generation
+        or self.dispatch_session ~= self.session) then
+        error("Player session changed during native dispatch: " .. path, 0)
+    end
     if not valid(object) then error("Receiver unavailable for " .. path, 0) end
     local fn = self.functions[path]
     if not valid(fn) then
@@ -170,8 +180,36 @@ function Backend:library(name)
     return self:object("/Script/" .. name:gsub("%.", ".Default__", 1))
 end
 
+function Backend:input_subsystem(controller)
+    local library = self:library("Engine.SubsystemBlueprintLibrary")
+    return self:invoke(library,
+        "/Script/Engine.SubsystemBlueprintLibrary:GetLocalPlayerSubSystemFromPlayerController",
+        controller, self:object("/Script/EnhancedInput.EnhancedInputLocalPlayerSubsystem"))
+end
+
+function Backend:session_controller()
+    if self.active_player then return self.active_player.controller end
+    local direct = rawget(self, "controller")
+    if direct ~= nil then return direct end
+    return self.session and self.session.controller or nil
+end
+
+function Backend:session_pawn()
+    if self.active_player then return self.active_player.pawn end
+    local direct = rawget(self, "pawn")
+    if direct ~= nil then return direct end
+    return self.session and self.session.pawn or nil
+end
+
+function Backend:session_subsystem()
+    if self.active_player then return self.active_player.subsystem end
+    local direct = rawget(self, "subsystem")
+    if direct ~= nil then return direct end
+    return self.session and self.session.subsystem or nil
+end
+
 function Backend:refresh()
-    local controller = self.controller
+    local controller = self.session and self.session.controller or rawget(self, "controller")
     if not valid(controller) then
         controller = nil
         for _, candidate in ipairs(FindAllOf("PlayerController") or {}) do
@@ -182,23 +220,35 @@ function Backend:refresh()
         end
     end
     if not valid(controller) then
-        self:retire()
+        self:invalidate_session()
         self.state = {ready = false, gameplay = false, generation = self.generation}
         return false
     end
     local pawn = self:invoke(controller, "/Script/Engine.Controller:K2_GetPawn")
-    local changed = identity(controller) ~= identity(self.controller) or identity(pawn) ~= identity(self.pawn)
-    if changed then
-        self:retire()
-        self.controller, self.pawn, self.subsystem = controller, pawn, nil
-        self.generation = self.generation + 1
+    local session = self.session
+    local changed = not session or session.controller_address ~= identity(controller)
+        or session.pawn_address ~= identity(pawn)
+    if changed or not valid(pawn) then
+        local had_session = session ~= nil
+        self:invalidate_session()
+        if not valid(pawn) then
+            self.state = {ready = false, gameplay = false, generation = self.generation}
+            return false
+        end
+        if not had_session then self.generation = self.generation + 1 end
+        ObjectPool.clear()
+        self.session = PlayerSession.new(self, controller, pawn, self.generation)
         self.log("Local player changed; generation=" .. self.generation)
     end
-    if not valid(self.subsystem) then
-        local library = self:library("Engine.SubsystemBlueprintLibrary")
-        self.subsystem = self:invoke(library,
-            "/Script/Engine.SubsystemBlueprintLibrary:GetLocalPlayerSubSystemFromPlayerController",
-            controller, self:object("/Script/EnhancedInput.EnhancedInputLocalPlayerSubsystem"))
+    if not self.session:refresh(controller, pawn) then
+        self:invalidate_session()
+        self.state = {ready = false, gameplay = false, generation = self.generation}
+        return false
+    end
+    local live = self.session:snapshot()
+    if not live then
+        self.state = {ready = false, gameplay = false, generation = self.generation}
+        return false
     end
     local paused = self:invoke(self:library("Engine.GameplayStatics"),
         "/Script/Engine.GameplayStatics:IsGamePaused", controller)
@@ -207,11 +257,12 @@ function Backend:refresh()
     local foreground = self.config.require_foreground == false or
         (type(self.focus_probe) == "function" and self.focus_probe(true) == true)
     local inputLayer = not self.config.unified_native or self:gameplay_input_layer()
-    self.state = {ready = valid(pawn) and valid(self.subsystem), has_pawn = valid(pawn),
+    self.state = {ready = true, has_pawn = true, generation = self.generation,
+        pawn = live.pawn, controller = live.controller, subsystem = live.subsystem,
         paused = paused == true, cursor = cursor, foreground = foreground,
-        move_ignored = moveIgnored == true, generation = self.generation,
+        move_ignored = moveIgnored == true,
         input_layer = inputLayer,
-        gameplay = valid(pawn) and paused ~= true and not cursor and foreground and inputLayer}
+        gameplay = paused ~= true and not cursor and foreground and inputLayer}
     LedgeProtection.update(self)
     if self.state.gameplay and self.config.enabled ~= false then
         self.released_preserving = nil
@@ -285,10 +336,83 @@ function Backend:take_capture()
     end
 end
 
+local session_state_fields = {
+    "complete_move_active", "complete_move_inputs", "complete_move_pending",
+    "move_equipment", "move_preparation", "move_restriction_scopes",
+    "native_move_input_frame", "native_move_input_results", "native_move_inputs",
+    "snake_preparation", "stance_input",
+    "ledge_movement", "ledge_requested", "ledge_walk_off",
+    "weapon_switch_hook", "weapon_switch_scope",
+    "resource_costs", "native_input", "native_abilities",
+    "input_router", "holder", "holder_action", "context_holders",
+    "configured_functions", "released_preserving"
+}
+
+function Backend:clear_session_state()
+    for _, field in ipairs(session_state_fields) do self[field] = nil end
+    for path in pairs(self.objects) do
+        if persistent_object_path(path) then self.objects[path] = nil end
+    end
+    self.captured = {}
+    self.dynamic_config, self.dynamic_contexts = nil, nil
+    self.config_generation = self.config_generation + 1
+end
+
+function Backend:discard_session_inputs()
+    pcall(LedgeProtection.discard,self)
+    pcall(MovePreparation.discard,self)
+    pcall(CompleteMoves.discard,self)
+    pcall(MoveInputs.discard,self)
+    pcall(MoveEquipment.discard,self)
+    pcall(SnakePreparation.discard,self)
+    pcall(StanceInput.discard,self)
+    if self.native_abilities then pcall(function() self.native_abilities:restore() end) end
+    if self.native_input then
+        if self.native_input.discard then pcall(self.native_input.discard,self.native_input)
+        else pcall(function() self.native_input:restore() end) end
+    end
+    if self.resource_costs and self.resource_costs.discard then
+        pcall(self.resource_costs.discard,self.resource_costs)
+    end
+    pcall(WeaponSwitch.reset,self)
+    pcall(ObjectPool.clear)
+end
+
+function Backend:invalidate_session()
+    local session = self.session
+    if not session then return end
+    self.generation = self.generation + 1
+    self.state = {ready = false, gameplay = false, generation = self.generation}
+    session:invalidate()
+    self.session = nil
+    if self.on_retire then
+        local ok, failure = pcall(self.on_retire)
+        if not ok then self:report("session-retire", "Player session detach failed: " .. tostring(failure)) end
+    end
+    self:discard_session_inputs()
+    self:clear_session_state()
+end
+
+function Backend:validate_session()
+    local session = self.session
+    if not session or not session:validate_pawn() then
+        self:invalidate_session()
+        return false
+    end
+    return true
+end
+
 function Backend:retire()
+    if self.session then
+        self:invalidate_session()
+        return
+    end
+    self.state = {ready = false, gameplay = false, generation = self.generation}
     if self.on_retire then self.on_retire() end
     self:release_capture()
-    self.controller, self.pawn, self.subsystem = nil, nil, nil
+    rawset(self, "controller", nil)
+    rawset(self, "pawn", nil)
+    rawset(self, "subsystem", nil)
     self.input_router = nil
 end
 
@@ -305,6 +429,7 @@ function Backend:release_capture(preserveTuning)
     attempt("Snake projectile release",function() SnakePreparation.reset(self) end)
     attempt("Native move effect release",function() MovePreparation.reset(self) end)
     attempt("Move equipment restore",function() MoveEquipment.reset(self) end)
+    attempt("Weapon switch hook release",function() WeaponSwitch.reset(self) end)
     if self.resource_costs then
         attempt("Binding tuning release",function()
             if preserveTuning and not self.resource_costs.closed
@@ -504,8 +629,15 @@ function Backend:key_dimension(key)
 end
 
 function Backend:context()
-    self.state.pawn, self.state.controller = self.pawn, self.controller
-    self.state.subsystem, self.state.backend = self.subsystem, self
+    local live = self.active_player or (self.session and self.session:context())
+    self.state.pawn = live and live.pawn or rawget(self, "pawn")
+    self.state.controller = live and live.controller or rawget(self, "controller")
+    self.state.subsystem = live and live.subsystem or rawget(self, "subsystem")
+    self.state.backend = self
+    self.state.pawn_address = identity(self.state.pawn)
+    self.state.controller_address = identity(self.state.controller)
+    self.state.subsystem_address = identity(self.state.subsystem)
+    if live then self.state.generation = live.generation end
     return self.state
 end
 
@@ -572,10 +704,12 @@ function Backend:receiver(spec)
     if name == "controller" then return self.controller end
     if name == "subsystem" then return self.subsystem end
     if name == "ability_input" then
+        if self.session then return self.session:ability_input(self.active_player) end
         return self:invoke(self.pawn, "/Script/Engine.Actor:GetComponentByClass",
             self:object("/Script/SGameInputSystem.AbilityInputComponent"))
     end
     if name == "ability_system" then
+        if self.session then return self.session:ability_system(self.active_player) end
         return self:invoke(self:library("GameplayAbilities.AbilitySystemBlueprintLibrary"),
             "/Script/GameplayAbilities.AbilitySystemBlueprintLibrary:GetAbilitySystemComponent", self.pawn)
     end
@@ -635,19 +769,37 @@ function Backend:reset_move_inputs()
 end
 
 function Backend:dispatch(spec, phase, value, bindingId, bypass, settings, nativePrepared)
-    if spec.kind == "action" and phase == "canceled" and (not valid(self.controller) or not valid(self.subsystem)) then return true end
+    if not self.session and spec.kind == "action" and phase == "canceled"
+        and (not valid(self.controller) or not valid(self.subsystem)) then return true end
     if self.config.enabled == false or not self.state.ready then return false end
     local releasing = phase == "completed" or phase == "canceled"
+    if self.session and not self.session:assert_current() then
+        self.state.ready, self.state.gameplay = false, false
+        self.dispatch_error = "Player session changed during input dispatch"
+        if releasing then return true, false end
+        return false, self.dispatch_error
+    end
+    local dispatch_session, dispatch_generation = self.session, self.session and self.session.generation
     if not releasing and self:target_failed(spec, bindingId) then return true, false end
+    local previous_player = self.active_player
+    self.active_player = self.session and self.session:snapshot() or previous_player
     if (spec.native_hold_inputs or spec.native_hold_variants) and not nativePrepared then
+        local previous_dispatch_generation, previous_dispatch_session = self.dispatch_generation, self.dispatch_session
+        self.dispatch_generation, self.dispatch_session = dispatch_generation, dispatch_session
         local ok,accepted,result,reason = xpcall(function()
             return MoveInputs.dispatch(self,spec,phase,value,bindingId,bypass,settings)
         end,debug.traceback)
+        self.dispatch_generation, self.dispatch_session = previous_dispatch_generation, previous_dispatch_session
+        self.active_player = previous_player
+        if dispatch_session and (self.session ~= dispatch_session
+            or self.session.generation ~= dispatch_generation) then return true,false end
         if not ok then self:fail_target(spec,accepted,bindingId); return false,accepted end
         if result == false then self:move_rejected(spec,bindingId,reason) end
         return accepted,result,reason
     end
     local preparation
+    local previous_dispatch_generation, previous_dispatch_session = self.dispatch_generation, self.dispatch_session
+    self.dispatch_generation, self.dispatch_session = dispatch_generation, dispatch_session
     local ok, result, reason = xpcall(function()
         if not releasing then
             local prepared, rejection = MoveEquipment.prepare(self,spec,settings)
@@ -734,6 +886,10 @@ function Backend:dispatch(spec, phase, value, bindingId, bypass, settings, nativ
         end
         error("Unsupported target kind: " .. tostring(spec.kind), 0)
     end, debug.traceback)
+    self.dispatch_generation, self.dispatch_session = previous_dispatch_generation, previous_dispatch_session
+    self.active_player = previous_player
+    if dispatch_session and (self.session ~= dispatch_session
+        or self.session.generation ~= dispatch_generation) then return true,false end
     local cleaned,cleanup = pcall(MovePreparation.finish,self,preparation,ok and result ~= false)
     if not cleaned then
         result = (ok and "" or tostring(result).."\n")..tostring(cleanup)
@@ -766,6 +922,14 @@ end
 
 function Backend:shutdown(preserveTuning)
     self:release_capture(preserveTuning)
+end
+
+BackendMethods = Backend
+Backend.__index = function(self, key)
+    if key == "controller" then return self:session_controller() end
+    if key == "pawn" then return self:session_pawn() end
+    if key == "subsystem" then return self:session_subsystem() end
+    return BackendMethods[key]
 end
 
 return Backend

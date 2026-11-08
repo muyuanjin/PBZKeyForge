@@ -10,8 +10,14 @@ using PBZKeyForge;
 public static class InteractionPerformanceTests
 {
     const BindingFlags Hidden = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+    static T Field<T>(object target, string name) { return (T)target.GetType().GetField(name, Hidden).GetValue(target); }
+    static T Property<T>(object target, string name) { return (T)target.GetType().GetProperty(name, Hidden).GetValue(target, null); }
     static object Call(object target, string name, params object[] args)
-    { return target.GetType().GetMethod(name, Hidden).Invoke(target, args); }
+    { return target.GetType().GetMethods(Hidden).Single(method => method.Name == name && method.GetParameters().Length == args.Length).Invoke(target, args); }
+    static object Call(object target, string name, int parameterCount, params object[] args)
+    {
+        return target.GetType().GetMethods(Hidden).Single(method => method.Name == name && method.GetParameters().Length == parameterCount).Invoke(target, args);
+    }
     static double Measure(string name, int iterations, Action action)
     {
         action();
@@ -21,13 +27,38 @@ public static class InteractionPerformanceTests
         Console.WriteLine("{0}: {1:F2} ms", name, ms);
         return ms;
     }
+    static void Profile(MainForm form)
+    {
+        Measure("RefreshKeyEnhancement", 5, delegate { Call(form, "RefreshKeyEnhancement", false); });
+        Measure("RenderBindingViews", 5, delegate { Call(form, "RenderBindingViews"); });
+        Measure("RenderSchemeBar", 5, delegate { Call(form, "RenderSchemeBar"); });
+        Measure("RefreshFooterResourceMod", 5, delegate { Call(form, "RefreshFooterResourceMod", false); });
+        Measure("RenderGameStatus", 5, delegate { Call(form, "RenderGameStatus"); });
+        Measure("LayoutFooter", 5, delegate { Call(form, "LayoutFooter"); });
+        var session = form.Session;
+        var scopes = new[] { (BindingWorkspace)Call(form, "ViewWorkspace", false, -1) }
+            .Concat(session.ControllerFamilies.Select(family => (BindingWorkspace)Call(form, "ViewWorkspace", true, family.Index))).ToArray();
+        object[] snapshots = null;
+        string sourceSignature = null;
+        Measure("binding edit signature", 5, delegate { sourceSignature = Property<string>(form, "BindingEditSignature"); });
+        Measure("three cached snapshots", 5, delegate { snapshots = scopes.Select(workspace => Call(workspace, "SnapshotWithSource", sourceSignature)).ToArray(); });
+        var snapshotArray = Array.CreateInstance(snapshots[0].GetType(), snapshots.Length);
+        Array.Copy(snapshots, snapshotArray, snapshots.Length);
+        var diff = Field<object>(form, "schemeDiff");
+        Measure("scheme diff render", 5, delegate { Call(diff, "Render", 2, session, snapshotArray); });
+        var keys = Field<object>(form, "keyBindings");
+        Measure("key view render", 5, delegate { Call(keys, "Render", 2, session, snapshots[0]); });
+        var workspacePanel = Field<Control>(form, "bindingWorkspace");
+        Measure("binding workspace layout", 5, delegate { workspacePanel.PerformLayout(); });
+    }
     [STAThread]
     public static int Main(string[] args)
     {
         Application.EnableVisualStyles(); I18n.Current = "zh-Hans";
         string output = Path.GetFullPath(args[0]); Directory.CreateDirectory(output);
         var session = EditorSession.CreateOffline();
-        var config = args.Length > 1 ? KeyEnhancementConfiguration.FromJson(File.ReadAllText(args[1])) : new KeyEnhancementConfiguration { Enabled = true };
+        bool profile = args.Length > 1 && args[1] == "--profile";
+        var config = args.Length > 1 && !profile ? KeyEnhancementConfiguration.FromJson(File.ReadAllText(args[1])) : new KeyEnhancementConfiguration { Enabled = true };
         var baseline = config.Clone();
         var workspace = new BindingWorkspace(session, config, baseline, false, -1);
         if (args.Length > 2)
@@ -59,12 +90,15 @@ public static class InteractionPerformanceTests
         { editor.DrawToBitmap(image, new Rectangle(Point.Empty, image.Size)); image.Save(Path.Combine(output, "binding-editor.png")); }
         opening.Restart(); editor.Dispose();
         Console.WriteLine("binding editor disposal: {0:F2} ms", opening.Elapsed.TotalMilliseconds);
-        using (var form = new MainForm(new EditorPreferences(Path.Combine(output, "preferences.txt"))))
+        var preferences = new EditorPreferences(Path.Combine(output, "preferences.txt"));
+        if (Environment.GetEnvironmentVariable("PBZ_GUI_NO_EFFECTS") == "1") preferences.SaveFlameEffects(false);
+        using (var form = new MainForm(preferences))
         {
             typeof(MainForm).GetProperty("Session", Hidden).GetSetMethod(true).Invoke(form, new object[] { session });
             form.RenderSession();
             typeof(MainForm).GetField("keyEnhancement", Hidden).SetValue(form, config);
             form.ShowInTaskbar = false; form.Show(); Application.DoEvents();
+            if (profile) Profile(form);
             Measure("key view refresh", 5, form.RenderSession);
             form.ShowActionView(true); Application.DoEvents();
             Measure("action view refresh", 5, form.RenderSession);

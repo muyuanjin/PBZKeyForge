@@ -146,7 +146,11 @@ do
     check(not state.masks and state.restores == 1 and state.subsystemQueries == 1,
         "missing class retained key enhancement or invoked a subsystem with no valid class")
     backend:refresh()
-    check(#state.logs == 1 and state.logs[1]:find("native input retained", 1, true),
+    local native_reports = 0
+    for _, message in ipairs(state.logs) do
+        if message:find("native input retained", 1, true) then native_reports = native_reports + 1 end
+    end
+    check(native_reports == 1,
         "missing-class fallback did not report once that native input was retained")
     state.class = object(4)
     check(backend:refresh() and backend:context().gameplay and state.masks,
@@ -229,10 +233,10 @@ end
 
 do
     local backend,state=fixture()
-    local tuning={inputs={G=true},snapshots={projectile=11},suspends=0,updates=0,resets=0}
+    local tuning={inputs={G=true},snapshots={projectile=11},suspends=0,updates=0,discards=0}
     function tuning:suspend() self.inputs={};self.suspends=self.suspends+1 end
     function tuning:update() self.updates=self.updates+1 end
-    function tuning:reset() self.snapshots={};self.resets=self.resets+1 end
+    function tuning:discard() self.snapshots={};self.discards=self.discards+1 end
     backend.resource_costs=tuning
     state.paused=true
     check(backend:refresh() and backend.resource_costs==tuning and tuning.snapshots.projectile==11,
@@ -246,7 +250,7 @@ do
     check(backend.resource_costs==tuning and tuning.snapshots.projectile==11,
         "configuration reload retains the current projectile snapshots")
     backend:retire()
-    check(not backend.resource_costs and tuning.resets==1 and not next(tuning.snapshots),
+    check(not backend.resource_costs and tuning.discards==1 and not next(tuning.snapshots),
         "leaving the pawn fully releases projectile tuning")
 end
 

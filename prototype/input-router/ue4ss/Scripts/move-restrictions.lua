@@ -37,7 +37,8 @@ local function container(names)
 end
 
 function Restrictions.begin(backend,target,settings)
-    if #(settings and settings.restriction_bypasses or {}) == 0 then return {} end
+    local generation=backend.generation
+    if #(settings and settings.restriction_bypasses or {}) == 0 then return {generation=generation,items={}} end
     local component=backend:receiver({receiver="ability_system"})
     assert(valid(component),"Move restriction preparation requires the player's ability system")
     local matches,selection=Selection.matcher(target)
@@ -72,16 +73,17 @@ function Restrictions.begin(backend,target,settings)
         end,matches,selection)
     end)
     if not ok then
-        Restrictions.finish(changed)
+        Restrictions.finish(backend,{generation=generation,items=changed})
         error(result,0)
     end
-    return changed
+    return {generation=generation,items=changed}
 end
 
-function Restrictions.finish(changed)
+function Restrictions.finish(backend,changed)
+    if not changed or not changed.items or changed.generation~=backend.generation then return end
     local failures={}
-    for index=#(changed or {}),1,-1 do
-        local item=changed[index]
+    for index=#changed.items,1,-1 do
+        local item=changed.items[index]
         local restored,failure=pcall(item.object.SetPropertyValue,item.object,item.name,item.value)
         if not restored then failures[#failures+1]=tostring(failure) end
     end
@@ -98,7 +100,7 @@ function Restrictions.with(backend,target,settings,callback)
     local ok,result=pcall(callback)
     scopes[#scopes]=nil
     if #scopes==0 then backend.move_restriction_scopes=nil end
-    local restored,failure=pcall(Restrictions.finish,changed)
+    local restored,failure=pcall(Restrictions.finish,backend,changed)
     if not ok then error(tostring(result)..(restored and "" or "; "..tostring(failure)),0) end
     if not restored then error(failure,0) end
     return result

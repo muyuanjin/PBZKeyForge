@@ -194,6 +194,7 @@ do
     },bindings={{id="move",keys={"W"},outputs={"move"}},
         {id="edge",keys={"G"},trigger="press",outputs={"edge"}}},hooks={}}
     local backend=Backend.new(config,function() end)
+    backend.generation=1
     backend.state={ready=true,gameplay=true,generation=1}
     function backend:refresh() refreshes=refreshes+1; if broken then error("shared input unavailable",0) end;return true end
     function backend:shutdown() cleanups=cleanups+1;if cleanupBroken then error("cleanup unavailable",0) end end
@@ -235,7 +236,7 @@ do
         if event.target=="W" and event.phase=="started" then movement=movement+1 end
         if event.target=="edge" then edges=edges+1 end
     end
-    check(movement==1 and edges==0,"recovery lost held movement or replayed a held edge action")
+    check(movement==1 and edges==0,"recovery lost held movement or replayed a held edge action: movement="..movement.." edges="..edges)
     local diagnostics=0
     for _,message in ipairs(logs) do if message:find("Routing suspended",1,true) then diagnostics=diagnostics+1 end end
     check(diagnostics<=3,"shared retry repeated diagnostics on every frame")

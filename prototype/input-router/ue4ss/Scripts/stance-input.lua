@@ -34,6 +34,7 @@ local function initialise(backend)
     return {
         owner=owner, passive=ability,
         prepare=load(backend,"pbz_stance_prepare"), reset=load(backend,"pbz_stance_restore"),
+        reset_triggers=load(backend,"pbz_input_reset_triggers"),
         watch_trigger=load(backend,"pbz_input_watch_trigger"),
         trigger_state=load(backend,"pbz_input_trigger_state"),
         count=backend:invoke(owner,
@@ -111,12 +112,17 @@ function StanceInput.prepare(backend,inputs)
         return
     end
     local state = backend.stance_input
+    if state and state.generation ~= backend.generation then
+        StanceInput.discard(backend)
+        return
+    end
     if state and (not valid(state.owner) or not valid(state.passive)) then
         StanceInput.restore(backend)
         return
     end
     if not state then
         state = initialise(backend)
+        state.generation = backend.generation
         state.held = state.count > 0
         backend.stance_input = state
     end
@@ -137,9 +143,20 @@ function StanceInput.prepare(backend,inputs)
     end
 end
 
+local function clear_triggers(backend,state)
+    if state.reset_triggers then pcall(state.reset_triggers) end
+    if backend.native_input then backend.native_input.tuning_coverage=nil end
+end
+
 function StanceInput.restore(backend)
     local state = backend.stance_input
     if not state then return end
+    if state.generation ~= backend.generation then
+        pcall(state.reset,0,false)
+        clear_triggers(backend,state)
+        backend.stance_input = nil
+        return
+    end
     local owner = valid(state.owner) and valid(state.passive) and state.owner:GetAddress() or 0
     local held = owner ~= 0 and state.passive["Stance Key Down"] == true
     if held and not state.held then
@@ -147,6 +164,16 @@ function StanceInput.restore(backend)
     end
     local status,failure = state.reset(owner,held)
     assert(status == 1,failure)
+    clear_triggers(backend,state)
+    backend.stance_input = nil
+end
+
+function StanceInput.discard(backend)
+    local state = backend.stance_input
+    if state then
+        if state.reset then pcall(state.reset,0,false) end
+        clear_triggers(backend,state)
+    end
     backend.stance_input = nil
 end
 

@@ -57,7 +57,7 @@ class KeyEnhancementConfigurationTests
         bool rejected = false;
         try { config.CompileLua(); } catch (InvalidDataException) { rejected = true; }
         Check(rejected, "Custom trigger without evaluator was accepted.");
-        rule.EvaluateLua = "function(now, snapshot) return {active=snapshot.K==1,pulse=true,value=1} end";
+        rule.EvaluateLua = "function(now, snapshot) local active=snapshot.K==1; return {active=active,pulse=active,value=active and 1 or 0} end";
         rule.WhenLua = "function(context) return context.gameplay end";
         rule.Outputs.Add(new KeyEnhancementOutput { Kind = "property", Property = "bFlag", Value = false });
         rule.Outputs.Add(new KeyEnhancementOutput { Kind = "lua", Code = "function(backend,event) return event.binding end" });
@@ -67,6 +67,14 @@ class KeyEnhancementConfigurationTests
         lua = config.CompileLua();
         if (args.Length > 0) File.WriteAllText(args[0], lua, new System.Text.UTF8Encoding(false));
         Check(lua.Contains("[\"value\"]=false") && lua.Contains("function(now, snapshot)"), "Typed or custom target compilation lost values.");
+        var nativeDash = new KeyEnhancementOutput { Kind = "ability", Tag = "Ability.Action.Hun.SpecialDash" };
+        rule.Outputs.Add(nativeDash);
+        string nativeDashLua = config.CompileLua();
+        Check(nativeDashLua.Contains("[\"kind\"]=\"ability\"")
+            && nativeDashLua.Contains("[\"tag\"]=\"Ability.Action.Hun.SpecialDash\"")
+            && !nativeDashLua.Contains("[\"mapping\"]=\"IA_Dodge\""),
+            "SpecialDash lost its exact ability identity or was replaced with the generic dodge action.");
+        rule.Outputs.Remove(nativeDash);
         Check(KeyEnhancementConfiguration.Triggers.Length == 11, "Trigger menu must cover ten built-ins and custom.");
         copy = config.Clone();
         copy.Rules.Add(new KeyEnhancementRule { Id = copy.Rules[0].Id, Enabled = false });
@@ -91,6 +99,19 @@ class KeyEnhancementConfigurationTests
         rejected = false;
         try { copy.CompileLua(); } catch (InvalidDataException) { rejected = true; }
         Check(rejected, "Duplicate hooks survived configuration compilation.");
+        var identities = new KeyEnhancementConfiguration { Enabled = true };
+        foreach (var ability in KeyEnhancementCatalog.Targets.Where(target => target.Kind == "ability"))
+        {
+            var identity = new KeyEnhancementRule { Id = "identity_" + identities.Rules.Count, Trigger = "press" };
+            identity.Keys.Add("F9");
+            identity.Outputs.Add(new KeyEnhancementOutput { Kind = "ability", Tag = ability.Tag });
+            identities.Rules.Add(identity);
+        }
+        int abilityCount = KeyEnhancementCatalog.Targets.Count(target => target.Kind == "ability");
+        string identityLua = identities.CompileLua();
+        int compiledAbilities = System.Text.RegularExpressions.Regex.Matches(identityLua, "\\[\"kind\"\\]=\"ability\"").Count;
+        Check(compiledAbilities == abilityCount,
+            "Ability identity changed during compilation: expected " + abilityCount + " exact ability targets, got " + compiledAbilities + ".");
         Console.WriteLine("KeyEnhancementConfigurationTests: " + assertions + " assertions passed");
     }
 }

@@ -99,7 +99,8 @@ end
 local configuration = {enabled=true,targets={old={kind="event",tag="old"}},bindings={{id="old",keys={"J"},trigger="press",outputs={"old"}}},hooks={}}
 package.preload["router-config"]=function() return configuration end
 local physical, events, frame = {}, {}, nil
-local backend={config=configuration,config_generation=0,state={ready=true,gameplay=true,generation=1}}
+local backend={config=configuration,config_generation=0,generation=1,session={},
+    state={ready=true,gameplay=true,generation=1}}
 function backend:refresh() return true end
 function backend:effective_config() return self.config end
 function backend:context() return self.state end
@@ -109,6 +110,7 @@ function backend:shutdown() end
 function backend:prepare_dynamic_capture() if self.config.fail then error("pipeline unavailable") end end
 function backend:allowed() return true end
 function backend:dispatch(target) events[#events+1]=target.tag;return true end
+function backend:report() end
 package.loaded.backend=nil;package.preload.backend=function() return {new=function() return backend end} end
 local apply, reported_state, reported_error
 package.loaded["live-config"]=nil;package.preload["live-config"]=function() return {new=function(callback,_,status)
@@ -120,6 +122,8 @@ EngineTickAvailable=true
 function LoopInGameThreadAfterFrames(_,callback) frame=callback;return 1 end
 function CancelDelayedAction() end
 Key={F7=1,F8=2};function RegisterKeyBind() end
+function RegisterHook() return 1,2 end
+function UnregisterHook() end
 local lifecycle=dofile(scripts .. "main.lua")
 frame();physical.J=1;frame();check(events[1]=="old","baseline did not route")
 local bad={enabled=true,dynamic_capture=true,targets=configuration.targets,bindings=configuration.bindings,hooks={},fail=true}

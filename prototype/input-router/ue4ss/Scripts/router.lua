@@ -75,6 +75,14 @@ local function settings_identity(settings)
         tostring(settings.super_armor == true),tostring(settings.invincible == true),table.concat(restrictions,",")},"|")
 end
 
+local function occupied(reserved, owners, key, owner)
+    return reserved[key] and owners[key] ~= owner
+end
+
+local function generation_current(router, context)
+    return not context or not context.generation or context.generation == router.backend.generation
+end
+
 function Router.new(config, backend)
     assert(type(config.targets) == "table", "targets must be a table")
     assert(type(config.bindings) == "table", "bindings must be an array")
@@ -94,20 +102,22 @@ function Router.new(config, backend)
         assert(binding.axis or #(binding.keys or {}) > 0 or kind == "sequence"
             or binding.evaluate, "binding needs an input")
         if kind == "sequence" then assert(#(binding.steps or {}) > 0, "empty sequence") end
-        for _, key in ipairs(binding.keys or {}) do add(key) end
+        local blockingKeys = {}
+        for _, key in ipairs(binding.keys or {}) do add(key);blockingKeys[#blockingKeys+1]=key end
         local dimension = 1
         if binding.axis then
             add(binding.axis)
+            blockingKeys[#blockingKeys+1]=binding.axis
             if backend.key_dimension then dimension = backend:key_dimension(binding.axis) end
             if dimension > 1 then
                 for component = 1, dimension do add(binding.axis .. "@" .. component) end
             end
         end
         for _, step in ipairs(binding.steps or {}) do
-            if type(step) == "string" then add(step)
-            else for _, key in ipairs(step) do add(key) end end
+            if type(step) == "string" then add(step);blockingKeys[#blockingKeys+1]=step
+            else for _, key in ipairs(step) do add(key);blockingKeys[#blockingKeys+1]=key end end
         end
-        for _, key in ipairs(binding.watch or {}) do add(key) end
+        for _, key in ipairs(binding.watch or {}) do add(key);blockingKeys[#blockingKeys+1]=key end
         local consumeKeys = consumes(binding)
         for _, key in ipairs(consumeKeys) do add(key) end
         assert(#(binding.outputs or {}) > 0 or binding.pending_outputs, "binding needs outputs")
@@ -130,6 +140,7 @@ function Router.new(config, backend)
         self.rules[#self.rules+1] = { binding=binding, index=index, dimension=dimension, state={},
             owner=binding.input_group or binding.id,
             input_source=binding.source_binding or binding,
+            blocking_keys=blockingKeys,
             consume_keys=consumeKeys, input_signature=table.concat(sourceKeys, ",") .. ":", move_ids=moveIds,
             pulse_outputs=pulseOutputs, repeat_ability=binding.default_trigger == true or kind ~= "press" }
         if #consumeKeys > 0 then
@@ -314,33 +325,40 @@ function Router:step(now, snapshot, context)
             self.backend:release_reserved_input(key)
         end
     end
-    local function occupied(key, owner) return reserved[key] and owners[key] ~= owner end
+    -- Error-isolated evaluation needs a callback; reuse one for the whole frame.
+    local evaluation_binding, evaluation_state, evaluation_blocked, evaluation_rule
+    local function evaluate_current()
+        local b, st = evaluation_binding, evaluation_state
+        local allowed = not b.when or self.backend:allowed(b.when, context)
+        if evaluation_blocked and b.evaluate then
+            evaluation_state = {resume_wait = held_binding(b, snapshot, b.threshold or .5) or nil}
+            evaluation_rule.state = evaluation_state
+            return inactive, allowed
+        end
+        return evaluate(b, st, now, snapshot, context, evaluation_rule.dimension), allowed
+    end
     for rank, rule in ipairs(self.rules) do
+        if not generation_current(self, context) then self:detach(); return false end
         local b, st = rule.binding, rule.state
         local blocked = false
-        for _, key in ipairs(b.keys or {}) do if occupied(key, rule.owner) then blocked=true end end
-        for _, key in ipairs(b.watch or {}) do if occupied(key, rule.owner) then blocked=true end end
-        if b.axis and occupied(b.axis, rule.owner) then blocked=true end
-        for _, sequenceStep in ipairs(b.steps or {}) do
-            if type(sequenceStep) == "string" then
-                if occupied(sequenceStep, rule.owner) then blocked=true end
-            else
-                for _, key in ipairs(sequenceStep) do if occupied(key, rule.owner) then blocked=true end end
-            end
-        end
-        local function evaluate_rule()
-            local allowed = not b.when or self.backend:allowed(b.when, context)
-            if blocked and b.evaluate then
-                st = {resume_wait = held_binding(b, snapshot, b.threshold or .5) or nil}
-                rule.state = st
-                return inactive, allowed
-            end
-            return evaluate(b, st, now, snapshot, context, rule.dimension), allowed
+        for _, key in ipairs(rule.blocking_keys) do
+            if occupied(reserved, owners, key, rule.owner) then blocked=true;break end
         end
         local result, allowed
-        if self.backend.evaluate_binding then result, allowed = self.backend:evaluate_binding(b,evaluate_rule)
-        else result, allowed = evaluate_rule() end
+        evaluation_binding, evaluation_state, evaluation_blocked, evaluation_rule = b, st, blocked, rule
+        if self.backend.evaluate_binding then result, allowed = self.backend:evaluate_binding(b,evaluate_current)
+        else result, allowed = evaluate_current() end
+        st = evaluation_state
         if not result then
+            if #rule.consume_keys > 0 then
+                unavailable[b.id] = true
+                for _, key in ipairs(rule.consume_keys) do
+                    if self.consumed and self.consumed[key] == rule.owner then
+                        if self.backend.release_reserved_input then self.backend:release_reserved_input(key) end
+                        self.consumed[key] = nil
+                    end
+                end
+            end
             rule.state, result, allowed = {}, inactive, false
         end
         local outputPulse = result.pulse
@@ -380,6 +398,18 @@ function Router:step(now, snapshot, context)
         end
         if blocked and b.trigger == "sequence" then st.step, st.lastStep = 0, nil end
         if not blocked and allowed then
+            if result.reserve and #rule.consume_keys > 0 and not unavailable[b.id] then
+                local any_available = false
+                for _, output in ipairs(b.outputs) do
+                    local name = type(output) == "string" and output or output.target
+                    local target = self.config.targets[name]
+                    if not self.backend.target_failed or not self.backend:target_failed(target,b.id) then
+                        any_available = true
+                        break
+                    end
+                end
+                unavailable[b.id] = not any_available
+            end
             if result.reserve and not unavailable[b.id] then
                 for _, key in ipairs(rule.consume_keys) do reserved[key], owners[key]=true, rule.owner end
             end
@@ -427,7 +457,9 @@ function Router:step(now, snapshot, context)
                                     rank=rank,bypass_resources=b.bypass_resources}
                             end
                         elseif target.kind ~= "action" and result.pulse then
+                            if not generation_current(self, context) then self:detach(); return false end
                             self.backend:dispatch(target, "triggered", v, b.id, b.bypass_resources, b)
+                            if not generation_current(self, context) then self:detach(); return false end
                         end
                     end
                 end
@@ -496,10 +528,12 @@ function Router:step(now, snapshot, context)
         self.backend:prepare_input_settings(requests)
     end
     for _, request in ipairs(moveOrder) do
+        if not generation_current(self, context) then self:detach(); return false end
         local ok, result = self.backend:dispatch(request.target, "triggered", request.value, request.binding, request.bypass_resources, request.settings)
         local failed = ok == false or result == false or self.backend.target_failed and self.backend:target_failed(request.target,request.binding)
         if failed then
             for _, alternative in ipairs(request.alternatives or {}) do
+                if not generation_current(self, context) then self:detach(); return false end
                 ok, result = self.backend:dispatch(alternative.target,"triggered",alternative.value,alternative.binding,
                     alternative.bypass_resources,alternative.settings)
                 if ok ~= false and result ~= false and not (self.backend.target_failed and self.backend:target_failed(alternative.target,alternative.binding)) then break end
@@ -507,12 +541,14 @@ function Router:step(now, snapshot, context)
         end
     end
     for _,request in ipairs(actionRequests) do
+        if not generation_current(self, context) then self:detach(); return false end
         local ok = self.backend:dispatch(request.target,request.phase,request.value,request.binding,request.bypass_resources,request.settings)
         if ok == false then error(self.backend.dispatch_error or "Action dispatch failed", 0) end
     end
     for native, previous in pairs(previousLevels) do
         for pipeline, contribution in pairs(previous.pipelines) do
             if not levels[native] or not levels[native].pipelines[pipeline] then
+                if not generation_current(self, context) then self:detach(); return false end
                 local phase = canceled[native] and canceled[native][pipeline] and "canceled" or "completed"
                 local ok = self.backend:dispatch(contribution.target, phase, {x=0,y=0,z=0}, contribution.binding)
                 if ok == false then error(self.backend.dispatch_error or "Action release failed", 0) end
@@ -521,6 +557,18 @@ function Router:step(now, snapshot, context)
     end
     self.previous = levels
     self.previous_pulses = nextPulses
+end
+
+function Router:discard()
+    self.previous, self.lastTime = {}, nil
+    self.consumed, self.previous_pulses = nil, nil
+    for _, rule in ipairs(self.rules) do rule.state = {} end
+end
+
+function Router:detach()
+    self:discard()
+    self.config, self.rules, self.samples = {targets={},bindings={}}, {}, {}
+    self.consumers, self.pending_consumers = {}, {}
 end
 
 function Router:reset(cancel)

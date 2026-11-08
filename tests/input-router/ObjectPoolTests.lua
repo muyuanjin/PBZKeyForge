@@ -31,4 +31,11 @@ loaded.Binding={object(3)}
 check(#Pool.get("Binding")==1 and listeners["/Script/Game.Binding"], "late-loaded asset class was not observed")
 listeners["/Script/Game.Binding"](object(4))
 check(#Pool.get("Binding")==2 and scans.Binding==2, "late-created asset forced another global search")
+loaded.EditableText={object(5)}
+local before=scans.EditableText
+Pool.clear()
+local rebuilt=Pool.get("EditableText","/Script/UMG.EditableText")
+check(#rebuilt==1 and rebuilt[1]:GetAddress()==5 and scans.EditableText==before+1,
+    "generation reset retained or failed to rediscover pooled objects")
+check(listeners["/Script/UMG.EditableText"]~=nil,"generation reset removed the live creation listener")
 print("ObjectPoolTests: " .. passed .. " assertions passed")

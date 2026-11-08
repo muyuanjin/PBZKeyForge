@@ -47,6 +47,7 @@ namespace PBZKeyForge
         void RememberBindingEdit()
         {
             if (Session == null || restoringEdit || IsApplying) return;
+            InvalidateBindingSnapshots();
             string signature = BindingEditSignature;
             if (bindingHistory.Count > 0 && MatchesBindingEdit(bindingHistory.Peek())) return;
             bindingHistory.Push(new BindingCheckpoint { Session = Session, Draft = Session.CaptureDraft(), Configuration = keyEnhancement.Clone(),

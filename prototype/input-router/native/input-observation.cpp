@@ -108,8 +108,9 @@ namespace PBZInputObservation
                 if (std::memcmp(span.address,bytes.data()+span.offset,span.size) != 0) return false;
             return true;
         }
-    } snapshot;
+    };
 
+    std::unordered_map<void*, Snapshot> snapshots;
     std::unordered_map<long long, Snapshot> abilitySnapshots;
     long long nextAbilitySnapshot = 0;
 
@@ -200,7 +201,7 @@ namespace PBZInputObservation
             auto* defaults = property(context,L"DefaultKeyMappings");
             rows(next,field(context,defaults),member(defaults,L"Mappings"));
         }
-        snapshot = std::move(next);
+        snapshots[input] = std::move(next);
     }
 
     void triggerBlock(Snapshot& out, void* block, FProperty* structure)
@@ -257,7 +258,7 @@ extern "C" __declspec(dllexport) int pbz_input_mappings_observe(void* state)
     try { PBZInputObservation::observe(reinterpret_cast<void*>(lua.get_integer(1))); }
     catch (const std::exception& failure)
     {
-        PBZInputObservation::snapshot = {};
+        PBZInputObservation::snapshots.erase(reinterpret_cast<void*>(lua.get_integer(1)));
         lua.set_string(failure.what(),std::strlen(failure.what()));
         return 1;
     }
@@ -269,7 +270,19 @@ extern "C" __declspec(dllexport) int pbz_input_mappings_unchanged(void* state)
 {
     struct LuaView { void* state; } view{state};
     auto& lua = *reinterpret_cast<const RC::LuaMadeSimple::Lua*>(&view);
-    return PBZInputObservation::snapshot.unchanged(reinterpret_cast<void*>(lua.get_integer(1))) ? 1 : 0;
+    auto* input = reinterpret_cast<void*>(lua.get_integer(1));
+    auto found = PBZInputObservation::snapshots.find(input);
+    return found != PBZInputObservation::snapshots.end() && found->second.unchanged(input) ? 1 : 0;
+}
+
+extern "C" __declspec(dllexport) int pbz_input_mappings_forget(void* state)
+{
+    struct LuaView { void* state; } view{state};
+    auto& lua = *reinterpret_cast<const RC::LuaMadeSimple::Lua*>(&view);
+    auto* input = reinterpret_cast<void*>(lua.get_integer(1));
+    if (input) PBZInputObservation::snapshots.erase(input);
+    else PBZInputObservation::snapshots.clear();
+    return 0;
 }
 
 extern "C" __declspec(dllexport) int pbz_ability_bindings_observe(void* state)

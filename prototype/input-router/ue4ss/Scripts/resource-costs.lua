@@ -87,7 +87,8 @@ local function dual_axe_maximum(backend)
 end
 
 function Costs.new(backend)
-    local self = setmetatable({backend=backend, instances={}, inputs={}, transfers={}, hooks={}, frame=0},Costs)
+    local self = setmetatable({backend=backend, generation=backend.generation,
+        instances={}, inputs={}, transfers={}, hooks={}, frame=0},Costs)
     local ok,failure = pcall(function()
         self.context = Context.new(function(message) backend:report("damage-scaling",message) end)
         self:install_transfer_hooks()
@@ -528,8 +529,13 @@ function Costs:inherit(instance)
 end
 
 function Costs:end_transfer(succeeded)
+    if self.generation~=self.backend.generation then
+        self:discard()
+        return
+    end
     local transfer = self.transfers[#self.transfers]
-    Restrictions.finish(transfer.restrictions)
+    if not transfer then return end
+    Restrictions.finish(self.backend,transfer.restrictions)
     if transfer.passive then
         if not next(self.instances) then table.remove(self.transfers); return end
         transfer.passive = nil
@@ -765,6 +771,12 @@ function Costs:input(target,bypass,settings,rank)
 end
 
 function Costs:update()
+    if self.generation ~= self.backend.generation then
+        local backend = self.backend
+        self:discard()
+        if backend.resource_costs == self then backend.resource_costs = nil end
+        return
+    end
     if self.context.closed then
         local failure = self.context.failure or "Binding tuning stopped after its native context was disabled"
         local cleaned,cleanup = pcall(self.reset,self)
@@ -837,14 +849,30 @@ function Costs:suspend()
     self.inputs = {}
 end
 
+function Costs:discard()
+    self.closed = true
+    self.inputs, self.transfers, self.instances = {}, {}, {}
+    if self.context and self.context.discard then pcall(self.context.discard,self.context) end
+    self.context = nil
+    for path,ids in pairs(self.hooks) do
+        pcall(UnregisterHook,path,ids[1],ids[2])
+    end
+    self.hooks = {}
+    if self.backend.resource_costs==self then self.backend.resource_costs=nil end
+end
+
 function Costs:reset()
+    if self.generation~=self.backend.generation then
+        self:discard()
+        return
+    end
     self.closed = true
     local failures = {}
     local function attempt(callback)
         local ok,failure = pcall(callback)
         if not ok then failures[#failures+1] = tostring(failure) end
     end
-    for index=#self.transfers,1,-1 do attempt(function() Restrictions.finish(self.transfers[index].restrictions) end) end
+    for index=#self.transfers,1,-1 do attempt(function() Restrictions.finish(self.backend,self.transfers[index].restrictions) end) end
     for address in pairs(self.instances) do attempt(function() self:restore(address) end) end
     self.inputs, self.transfers = {}, {}
     if self.context then attempt(function() self.context:reset() end) end

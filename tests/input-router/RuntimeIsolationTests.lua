@@ -69,6 +69,9 @@ do
         {path="/Script/Test:Healthy",value=7}
     }}
     local backend = Backend.new(config,function() end)
+    backend.generation = 1
+    backend.session = {generation=1, context=function() return backend.state end,
+        assert_current=function() return true end, snapshot=function() return backend.state end}
     backend.state = {ready=true,gameplay=true,generation=1}
     function backend:refresh() return true end
     function backend:snapshot() return self.pressed and {G=1} or {} end
@@ -103,7 +106,8 @@ do
     check(failures == 2 and healthy == 120 and shutdowns == 0,
         "one bad target suspended the scheduler or kept throwing every frame")
     check(predicates == 1 and registrations == 1 and missingLookups <= 6,
-        "bad hooks retried every frame or missing Blueprint hooks repeated lookup without delay")
+        "bad hooks retried every frame or missing Blueprint hooks repeated lookup without delay: predicates="
+            .. predicates .. " registrations=" .. registrations .. " missingLookups=" .. missingLookups)
     check(callbacks["/Script/Test:Healthy"]() == 7, "a failed hook disabled its healthy sibling")
     runtime.stop()
 end
@@ -114,7 +118,7 @@ do
     local failed, good = {kind="move",move_id="bad"}, {kind="move",move_id="good"}
     local instance = object({bIsActive=true})
     local stops, cancellations = 0, 0
-    local input = {identity="input",owners=1,subsystem=object(),action=object()}
+    local input = {identity="input",owners=1,generation=backend.generation,subsystem=object(),action=object()}
     local pending = {identity="bad",spec=failed,instance=instance,input=input}
     backend.complete_move_pending = {bad=pending,good={spec=good}}
     backend.complete_move_active = {bad=pending}
@@ -126,7 +130,8 @@ do
     end
     backend:fail_target(failed,"bad deferred blueprint")
     check(stops == 1 and cancellations == 1 and not backend.complete_move_pending.bad,
-        "failed move left injected input or an active ability")
+        "failed move left injected input or an active ability: stops=" .. stops
+            .. " cancellations=" .. cancellations .. " pending=" .. tostring(backend.complete_move_pending.bad))
     check(backend.complete_move_pending.good and not next(backend.complete_move_inputs),
         "failed move removed unrelated work or retained its input")
     local broken = {identity="broken",spec=failed,instance=instance,input=input}

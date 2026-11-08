@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace PBZKeyForge
 {
-    internal sealed class KeyEnhancementFlameOverlay : System.ComponentModel.Component
+    internal sealed class KeyEnhancementFlameOverlay : System.ComponentModel.Component, IMessageFilter
     {
         readonly Form host;
         readonly Timer animation = new Timer { Interval = 40 };
@@ -25,6 +25,8 @@ namespace PBZKeyForge
         bool flameEnabled;
         bool animationPaused;
         bool applicationActive = true;
+        int interactionUntil = Environment.TickCount;
+        bool filteringMessages;
         internal bool ApplicationActive
         {
             get { return applicationActive; }
@@ -62,6 +64,9 @@ namespace PBZKeyForge
         internal int PaintTop { get { return Size.Height * (100 - frameHeight) / 100; } }
         internal bool IsActive { get; private set; }
         internal bool IsDisposed { get; private set; }
+        internal bool PaintSuspended { get; set; }
+        internal bool InteractionPaused
+        { get { return flameEnabled && !IsDisposed && unchecked(Environment.TickCount - interactionUntil) < 0; } }
         internal event EventHandler FrameChanged;
 
         public bool FlameEnabled
@@ -79,9 +84,18 @@ namespace PBZKeyForge
             host.Activated += Synchronize;
             host.EnabledChanged += Synchronize;
             host.Disposed += HostDisposed;
+            Application.AddMessageFilter(this); filteringMessages = true;
             animation.Tick += delegate {
                 tick++; if (pulse > 0) pulse--; RenderFrame();
             };
+        }
+
+        public bool PreFilterMessage(ref Message message)
+        {
+            int id = message.Msg;
+            if (id >= 0x0100 && id <= 0x0109 || id >= 0x0200 && id <= 0x020E || id == 0x0114 || id == 0x0115)
+                interactionUntil = Environment.TickCount + 220;
+            return false;
         }
 
         void HostDisposed(object sender, EventArgs e) { Dispose(); }
@@ -741,6 +755,7 @@ namespace PBZKeyForge
                 host.Activated -= Synchronize;
                 host.EnabledChanged -= Synchronize;
                 host.Disposed -= HostDisposed;
+                if (filteringMessages) { Application.RemoveMessageFilter(this); filteringMessages = false; }
                 if (frame != null) { frame.Dispose(); frame = null; }
             }
             base.Dispose(disposing);

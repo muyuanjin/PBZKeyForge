@@ -47,7 +47,19 @@ local function running(backend,target)
     return false
 end
 
+local function discard_state(state)
+    if state.long_buffs and state.context and state.context.discard_long_buffs then
+        pcall(state.context.discard_long_buffs,state.context,state.long_buffs)
+    end
+    state.long_buffs, state.handle = nil, nil
+end
+
 local function remove(backend,state)
+    if state.generation and state.generation ~= backend.generation then
+        discard_state(state)
+        backend.move_preparation[state.key] = nil
+        return
+    end
     if valid(state.component) then
         if state.handle ~= nil then
             state.context:remove_effect(state.component,state.handle)
@@ -82,7 +94,8 @@ local function begin(backend,target,settings,bindingId,scope)
                     if not state then
                         if not backend.resource_costs then backend.resource_costs = require("resource-costs").new(backend) end
                         local context = backend.resource_costs.context
-                        state = {key=key,component=component,context=context,targets={}}
+                        state = {key=key,component=component,context=context,targets={},
+                            generation=backend.generation}
                         backend.move_preparation[key] = state
                         scope[#scope+1] = {state=state,target=target,owner=bindingId or target,added=true}
                         if effect.replacedEffectClasses then
@@ -148,10 +161,15 @@ end
 
 function Preparation.update(backend)
     for _,state in pairs(backend.move_preparation or {}) do
-        for target in pairs(state.targets) do
-            if not running(backend,target) then state.targets[target] = nil end
+        if state.generation and state.generation ~= backend.generation then
+            discard_state(state)
+            backend.move_preparation[state.key] = nil
+        else
+            for target in pairs(state.targets) do
+                if not running(backend,target) then state.targets[target] = nil end
+            end
+            if not next(state.targets) then remove(backend,state) end
         end
-        if not next(state.targets) then remove(backend,state) end
     end
 end
 
@@ -162,6 +180,13 @@ function Preparation.reset(backend)
         if not ok then failures[#failures+1] = tostring(failure) end
     end
     if #failures > 0 then error(table.concat(failures,"; "),0) end
+end
+
+function Preparation.discard(backend)
+    for _,state in pairs(backend.move_preparation or {}) do
+        discard_state(state)
+    end
+    backend.move_preparation = nil
 end
 
 return Preparation

@@ -41,13 +41,16 @@ end
 function NativeInput.new(backend)
     local source = debug.getinfo(1,"S").source:sub(2):match("^(.*[/\\])")
     local dll = source and source:gsub("Scripts[/\\]$", "") .. "lib/pbzability-context.dll"
-    local observe, unchanged
+    local observe, unchanged, forget
     if dll then
         observe = package.loadlib(dll,"pbz_input_mappings_observe")
         unchanged = package.loadlib(dll,"pbz_input_mappings_unchanged")
+        forget = package.loadlib(dll,"pbz_input_mappings_forget")
     end
-    return setmetatable({backend = backend, masked = {}, consumed = {}, maintained = {}, remapped = {}, expanded = nil,
-        observe_native = observe and unchanged and observe, unchanged_native = observe and unchanged and unchanged}, NativeInput)
+    return setmetatable({backend = backend, generation = backend.generation,
+        masked = {}, consumed = {}, maintained = {}, remapped = {}, expanded = nil,
+        observe_native = observe and unchanged and forget and observe,
+        unchanged_native = observe and unchanged and forget and unchanged, forget_native = forget}, NativeInput)
 end
 
 function NativeInput:mappings()
@@ -264,16 +267,22 @@ local function device_of(key)
     return (key:match("^Gamepad_") or key:match("^PBZ_Touchpad_")) and "gamepad" or "keyboard"
 end
 
-local function copy_settings(value)
-    if type(value) ~= "table" then return value end
+-- Covers target and key arrays while stopping before wrapped UE objects.
+local settings_depth = 4
+
+local function copy_settings(value, depth)
+    if type(value) ~= "table" or depth == 0 then return value end
     local result = {}
-    for key, item in pairs(value) do result[key] = copy_settings(item) end
+    for key, item in pairs(value) do result[key] = copy_settings(item, depth and depth - 1) end
     return result
 end
 
-local function same_settings(first, second)
+local function same_settings(first, second, depth)
+    if first == second then return true end
     if type(first) ~= "table" or type(second) ~= "table" then return first == second end
-    for key, value in pairs(first) do if not same_settings(value, second[key]) then return false end end
+    if depth == 0 then return false end
+    local next_depth = depth and depth - 1
+    for key, value in pairs(first) do if not same_settings(value, second[key], next_depth) then return false end end
     for key in pairs(second) do if first[key] == nil then return false end end
     return true
 end
@@ -411,12 +420,18 @@ function NativeInput:observe(frame, settings)
         observed.rows[#observed.rows+1] = observe(entry.current)
     end
     for _, entry in ipairs(frame.templates) do observed.templates[#observed.templates+1] = observe(entry.current) end
-    self.observed, self.prepared_config, self.prepared_config_source = observed, copy_settings(settings), self.backend.config
+    self.observed, self.prepared_config, self.prepared_config_source = observed, copy_settings(settings, settings_depth), self.backend.config
     if self.observe_native then
-        local failure = self.observe_native(self.backend.controller.PlayerInput:GetAddress())
+        local input = self.backend.controller.PlayerInput:GetAddress()
+        if self.observed_input and self.observed_input ~= input and self.forget_native then
+            pcall(self.forget_native,self.observed_input)
+        end
+        local failure = self.observe_native(input)
         if failure then
-            self.observe_native, self.unchanged_native = nil, nil
+            self.observe_native, self.unchanged_native, self.observed_input = nil, nil, nil
             self.backend:report("input-observation", "Native mapping observation unavailable: " .. tostring(failure))
+        else
+            self.observed_input = input
         end
     end
 end
@@ -544,9 +559,19 @@ function NativeInput:restore()
             end
         end
     end
+    if self.forget_native then pcall(self.forget_native,self.observed_input or 0) end
     self.masked, self.consumed, self.maintained, self.remapped, self.expanded = {}, {}, {}, {}, nil
     self.originals, self.observed, self.prepared_config, self.prepared_config_source = nil, nil, nil, nil
+    self.observed_input = nil
     self.tuning_sources, self.tuning_triggers, self.tuning_coverage = nil, nil, nil
+end
+
+function NativeInput:discard()
+    if self.forget_native then pcall(self.forget_native,self.observed_input or 0) end
+    self.masked, self.consumed, self.maintained, self.remapped, self.expanded = {}, {}, {}, {}, nil
+    self.originals, self.observed, self.prepared_config, self.prepared_config_source = nil, nil, nil, nil
+    self.observed_input, self.coverage, self.inventory = nil, nil, nil
+    self.tuning_sources, self.tuning_triggers, self.tuning_coverage, self.tuning_costs = nil, nil, nil, nil
 end
 
 function NativeInput:prepare_overrides()
@@ -554,7 +579,8 @@ function NativeInput:prepare_overrides()
     if not settings then settings = {native_only=true}; self.override_settings = settings end
     settings.enabled, settings.unified = self.backend.config.enabled, self.backend.config.unified_native
     settings.overrides, settings.suppressions = self.backend.config.native_bindings, self.backend.config.suppressions
-    local prepared = self.prepared_config_source == self.backend.config and same_settings(settings, self.prepared_config)
+    local prepared = self.prepared_config_source == self.backend.config
+        and same_settings(settings, self.prepared_config, settings_depth)
     if prepared and self:unchanged() then return end
     local frame, unchanged = self:inspect()
     if not prepared or not unchanged then self:apply_masks(nil,nil,frame) end
@@ -572,7 +598,8 @@ function NativeInput:prepare()
     for name, target in pairs(backend.config.targets or {}) do
         if target.kind == "mapping" then settings.targets[name] = target end
     end
-    local prepared = self.prepared_config_source == backend.config and same_settings(settings, self.prepared_config)
+    local prepared = self.prepared_config_source == backend.config
+        and same_settings(settings, self.prepared_config, settings_depth)
     if backend.config.unified_native and prepared and self.expanded and self:unchanged() then return end
     local expanded, sources, maintained = {}, {}, {}
     local frame, unchanged = self:inspect()

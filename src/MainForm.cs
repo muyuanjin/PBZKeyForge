@@ -482,6 +482,8 @@ namespace PBZKeyForge
         public void RenderSession()
         {
             if (IsApplying) return;
+            bool suspendFlamePaint = keyEnhancementFlame != null && !keyEnhancementFlame.PaintSuspended;
+            if (suspendFlamePaint) keyEnhancementFlame.PaintSuspended = true;
             loading = true;
             SuspendLayout(); body.SuspendLayout(); footer.SuspendLayout();
             try
@@ -540,6 +542,7 @@ namespace PBZKeyForge
             finally
             {
                 footer.ResumeLayout(true); body.ResumeLayout(true); ResumeLayout(true); loading = false;
+                if (suspendFlamePaint && !keyEnhancementFlame.IsDisposed) keyEnhancementFlame.PaintSuspended = false;
             }
         }
 
@@ -736,6 +739,7 @@ namespace PBZKeyForge
             catch (Exception ex) { SetMessage("editor.refreshfail", true, ex.Message); }
             RefreshFooterResourceMod(true);
             RefreshKeyEnhancement(true);
+            InvalidateBindingSnapshots();
             if (!allowDiscoveryRetry && !changed && previousModState == footerModState && previousModReady == footerModReady
                 && previousModError == footerModError && previousEnhancementState == keyEnhancementState
                 && previousRepair == keyEnhancementRepair && previousEnhancementError == keyEnhancementError)

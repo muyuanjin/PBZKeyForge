@@ -156,7 +156,8 @@ namespace PBZKeyForge
                 currentBindings = ViewWorkspace(gamepad, SelectedFamilyIndex);
                 keyBindings.Workspace = currentBindings;
                 var scopes = new[] { ViewWorkspace(false, -1) }.Concat(Session.ControllerFamilies.Select(family => ViewWorkspace(true, family.Index))).ToArray();
-                var snapshots = scopes.Select(workspace => workspace.Snapshot()).ToArray();
+                string snapshotSource = BindingEditSignature;
+                var snapshots = scopes.Select(workspace => workspace.SnapshotWithSource(snapshotSource)).ToArray();
                 keyboardBindingChanges = snapshots.Where(snapshot => !snapshot.Gamepad).SelectMany(snapshot => snapshot.Differences(false)).Select(change => change.Action).Distinct().Count();
                 gamepadBindingChanges = snapshots.Where(snapshot => snapshot.Gamepad).SelectMany(snapshot => snapshot.Differences(false)).Select(change => change.Action).Distinct().Count();
                 var currentSnapshot = snapshots.First(snapshot => snapshot.Gamepad == gamepad && (!gamepad || snapshot.FamilyIndex == SelectedFamilyIndex));
@@ -181,6 +182,11 @@ namespace PBZKeyForge
             };
             bindingWorkspaces.Add(workspace);
             return workspace;
+        }
+
+        void InvalidateBindingSnapshots()
+        {
+            foreach (var workspace in bindingWorkspaces) workspace.InvalidateSnapshot();
         }
 
         void ShowActionRelations(string action)

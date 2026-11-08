@@ -154,7 +154,8 @@ namespace PBZKeyForge
                 foreach (var output in rule.Outputs)
                 {
                     string name = "output_" + targets.Count.ToString(CultureInfo.InvariantCulture);
-                    var target = (Dictionary<string, object>)Target(output, Enabled, devices.Length == 1 ? devices[0] : null);
+                    var target = (Dictionary<string, object>)Target(output, Enabled,
+                        devices.Length == 1 ? devices[0] : null);
                     MoveRestrictionCatalog.Apply(target, output, rule.BypassRestrictions);
                     targets.Add(name, target);
                     var reference = new Dictionary<string, object> { { "target", name } };

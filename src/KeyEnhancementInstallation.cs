@@ -94,7 +94,7 @@ namespace PBZKeyForge
                     }
             }
             foreach (string required in new[] { "dwmapi.dll", "ue4ss/UE4SS.dll", ModPrefix + "Scripts/main.lua",
-                ModPrefix + "Scripts/backend.lua", ModPrefix + "Scripts/router.lua", ModPrefix + "Scripts/native-input.lua",
+                ModPrefix + "Scripts/backend.lua", ModPrefix + "Scripts/player-session.lua", ModPrefix + "Scripts/router.lua", ModPrefix + "Scripts/native-input.lua",
                 ModPrefix + "Scripts/native-abilities.lua", ModPrefix + "Scripts/physical-input.lua", ModPrefix + "Scripts/object-pool.lua",
                 ModPrefix + "Scripts/complete-moves.lua", ModPrefix + "Scripts/resource-costs.lua", ModPrefix + "Scripts/script-context.lua",
                 ModPrefix + "lib/pbzinput-focus.dll", ModPrefix + "lib/pbzability-context.dll" })

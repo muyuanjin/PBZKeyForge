@@ -37,5 +37,7 @@ router:step(0,{K=1},{gameplay=true})
 assert(#backend.events==7)
 backend.events={}
 router:step(.1,{}, {gameplay=true})
-assert(#backend.events==1 and backend.events[1].phase=="completed")
+local release={}
+for _,event in ipairs(backend.events) do release[#release+1]=tostring(event.target.kind)..":"..tostring(event.phase) end
+assert(#backend.events==1 and backend.events[1].phase=="completed", table.concat(release,","))
 print("CompiledConfigurationTests: generated Lua, custom evaluator, typed outputs and release passed")

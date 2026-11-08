@@ -358,4 +358,16 @@ check(not pcall(cleanupContext.reset,cleanupContext) and cleanupCalls==1,
     "input observation cleanup runs even when disabling capture fails")
 cleanupContext.enable=function() end
 check(pcall(cleanupContext.reset,cleanupContext) and cleanupCalls==2,"context cleanup remains retryable")
+local discardContext=Context.new()
+discardContext.damage_modules,discardContext.damage_payloads,discardContext.damage_bullets={1},{2},{3}
+local native_disabled,damage_resets,input_resets=false,0,0
+discardContext.enable=function(_,active) native_disabled=not active end
+discardContext.reset_damage=function() damage_resets=damage_resets+1;return 1 end
+discardContext.input_reset_triggers=function() input_resets=input_resets+1;return 1 end
+discardContext:discard()
+check(native_disabled and discardContext.closed and not discardContext.damage_enabled and not discardContext.resource_enabled
+    and not next(discardContext.damage_modules) and not next(discardContext.damage_payloads)
+    and not next(discardContext.damage_bullets) and discardContext.reset_damage==nil
+    and discardContext.input_reset_triggers==nil and damage_resets==1 and input_resets==1,
+    "discard retained generation-owned damage or input state")
 print("ScriptContextTests PASS "..checks)

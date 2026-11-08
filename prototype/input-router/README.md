@@ -39,6 +39,8 @@
 
 运行时默认仅在游戏前台、角色存在、未暂停、未显示鼠标光标时处理额外绑定；其他状态撤销屏蔽并释放额外输出。原生上下文始终保留，未修改的按键继续由游戏处理。
 
+玩家对象由 `PlayerSession` 管理。每帧一次刷新取得 Controller、Pawn 和 InputSubsystem，同一 generation 内缓存 AbilityInputComponent、AbilitySystem、原生映射及招式状态。Pawn EndPlay、Controller Possess／UnPossess 会立即失效旧 generation；只有生命周期钩子不完整时，才在调度前补一次 Pawn 身份校验。稳定派发热路径只比较 generation，不逐输出查询 Pawn 或组件。
+
 应用内通过“更多 → 完整卸载键位增强 → 应用更改”卸载脚本、配置及启用项。安装器记录自己创建的加载器文件；只有内容未改且没有其他 Mod 使用时才一并删除，原有共享加载器和未知修改保留。手动安装可在退出游戏后移除 `Mods/PBZInputRouter`，并移除自己添加的启用项。移除 `~mods/PBZKeyForge_StanceDashOnJump` 内的三个容器可卸载资源补丁。
 
 ## 配置接口
@@ -73,6 +75,8 @@ return {
 `native-input.lua` 保留原生上下文，不生成原生映射的逐帧重放。`suppressions` 中明确指定的动作／按键关系及规则消费的物理键，会将对应运行映射的 `Key` 临时改为 `None`。组合结束后，消费键仍锁到物理释放；上下文变化不会把仍按住的键当作释放。运行映射数组重建时使用当次有效对象，恢复不会写旧包装对象。
 
 `ability_suppressions={"Ability.Action.Hun.SpecialDash","Ability.Action.Hun.DeflectDash"}` 关闭原生瞬身组合入口，保留 Dash 的普通闪避。`native-abilities.lua` 遍历 InputActionBinding 的普通和条件 Actions、Combos、InterruptLower，仅清除匹配 TriggerTag；额外 ability 输出通过独立入口激活。列表清空及键位增强停用时恢复原标签。应用在能力详情提供对应复选框，关闭 SpecialDash 时包含 DeflectDash 变体。静态核对覆盖 CL-302256 全部 114 个资产、907 条触发记录，DebugAbility 均为空；当前实现不处理直接能力引用非空的其他版本或外部修改。
+
+`IA_Dodge` 对应普通闪避；`AIM_Hun_Dash` 的 SpecialDash 组还要求架势等原生条件，所以单独注入 `IA_Dodge` 不会稳定得到瞬身。瞬身和拼刀起始瞬身保留精确 GameplayTag，通过当前 PlayerSession 的 `AbilityInputComponent` 激活，并把 `IA_Dodge` 作为原生输入身份；只有 InputActionBinding 直接指向目标能力时才改用动作映射。
 
 `mapping` 目标将原生可重绑名称扩展为当前有效 InputAction 管线；完全解绑时使用已应用上下文的默认模板。额外输出克隆原生触发器、修饰器配置，使用独立实例保存状态，来源不变时复用实例。原生按键及其触发器状态保持由游戏处理。
 
@@ -123,6 +127,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File prototype/input-router/n
 python tests/input-router/run_lua.py tests/input-router/RouterTests.lua
 python tests/input-router/run_lua.py tests/input-router/StanceInputPerformanceTests.lua
 python tests/input-router/run_lua.py tests/input-router/BackendTests.lua
+python tests/input-router/run_lua.py tests/input-router/PlayerSessionTests.lua
 python tests/input-router/run_lua.py tests/input-router/NativeInputTests.lua
 python tests/input-router/run_lua.py tests/input-router/NativeAbilityTests.lua
 python tests/input-router/run_lua.py tests/input-router/MainLifecycleTests.lua

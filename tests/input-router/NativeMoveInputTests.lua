@@ -223,7 +223,8 @@ do
             "Native filtering must retain the real pending charge: "..identity)
         router:reset(true)
     end
-    check(count==#compiled.bindings and count>28,"Every compiled keyboard/controller native Hold entrance must run")
+    check(count==#compiled.bindings and count>28,
+        "Every compiled keyboard/controller native Hold entrance must run: completed="..count..", bindings="..#compiled.bindings)
     check(seen["move:Weapon.Weapon_Hun_Horizontal.GA_Hun_Horizontal_BladeWave"]
         and seen["Ability.Action.Hun.Heavy.Horizontal.BladeWave"],
         "Both the weapon entrance and direct blade-wave ability need real Hold input")

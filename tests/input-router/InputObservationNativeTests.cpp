@@ -118,8 +118,12 @@ int main()
     objectTypes[&input]=&inputType;objectTypes[&action]=&actionType;objectTypes[&settings]=&settingsType;
     objectTypes[&trigger]=&triggerType;objectTypes[&context]=&contextType;
     observe(&input);
-    for (int i=0;i<2000;++i) { trigger.lastValue=static_cast<float>(i);assert(snapshot.unchanged(&input)); }
-    auto changed=[&](auto& value,auto replacement) { auto original=value;value=replacement;assert(!snapshot.unchanged(&input));value=original;assert(snapshot.unchanged(&input)); };
+    auto unchanged=[&](void* target) {
+        auto found=PBZInputObservation::snapshots.find(target);
+        return found!=PBZInputObservation::snapshots.end() && found->second.unchanged(target);
+    };
+    for (int i=0;i<2000;++i) { trigger.lastValue=static_cast<float>(i);assert(unchanged(&input)); }
+    auto changed=[&](auto& value,auto replacement) { auto original=value;value=replacement;assert(!unchanged(&input));value=original;assert(unchanged(&input)); };
     changed(rows[0].key,uint64_t(9));changed(templates[0].key,uint64_t(9));changed(settings.name,uint64_t(19));
     changed(trigger.threshold,0.f);changed(trigger.hold,0.f);changed(rows[0].behavior,static_cast<unsigned char>(2));
     changed(rows[0].settings,&settings);changed(rows[0].action,static_cast<Action*>(nullptr));
@@ -131,14 +135,16 @@ int main()
     rows[0].triggers={static_cast<unsigned char*>(guarded),1,1};*static_cast<void**>(guarded)=&trigger;
     observe(&input);
     rows[0].triggers={};VirtualFree(guarded,0,MEM_RELEASE);
-    assert(!snapshot.unchanged(&input));
-    observe(&input);assert(snapshot.unchanged(&input));
-    auto original=input.mappings.data;input.mappings.data=nullptr;assert(!snapshot.unchanged(&input));input.mappings.data=original;
-    auto* otherInput=&context;assert(!snapshot.unchanged(otherInput));
+    assert(!unchanged(&input));
+    observe(&input);assert(unchanged(&input));
+    auto original=input.mappings.data;input.mappings.data=nullptr;assert(!unchanged(&input));input.mappings.data=original;
+    auto* otherInput=&context;assert(!unchanged(otherInput));
     parameter=reinterpret_cast<long long>(&input);nameSize=12;
-    assert(pbz_input_mappings_observe(nullptr)==1 && !error.empty() && !snapshot.input);
+    assert(pbz_input_mappings_observe(nullptr)==1 && !error.empty() && !unchanged(&input));
     nameSize=8;assert(pbz_input_mappings_observe(nullptr)==0 && pbz_input_mappings_unchanged(nullptr)==1);
-    input.mappings={};input.contexts={};observe(&input);assert(snapshot.unchanged(&input));
+    input.mappings={};input.contexts={};observe(&input);assert(unchanged(&input));
+    parameter=reinterpret_cast<long long>(&input);
+    assert(pbz_input_mappings_forget(nullptr)==0 && !unchanged(&input));
     // InputActionBinding.Bindings is an array; conditional blocks are a sparse map.
     struct AbilityTrigger { uint64_t tag; int untouched; };
     struct Block { Array actions, combos, interrupts; };

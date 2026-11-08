@@ -45,7 +45,8 @@ class BindingWorkspaceTests
         var config = new KeyEnhancementConfiguration();
         var workspace = new BindingWorkspace(session, config, config.Clone(), false, -1);
         Check(workspace.Functions.Count(item => !item.RequiresKeyEnhancement) == 21, "Original functions must retain their mapping identities.");
-        Check(workspace.Functions.Take(21).All(item => !item.RequiresKeyEnhancement), "Ordinary mode must start with usable save controls.");
+        var firstEnhanced = workspace.Functions.Take(21).FirstOrDefault(item => item.RequiresKeyEnhancement);
+        Check(firstEnhanced == null, "Ordinary mode must start with usable save controls: " + (firstEnhanced == null ? "" : firstEnhanced.Id));
         Check(workspace.Functions.All(item => item.GroupPath.Length > 0 && item.GroupPath.Length == item.GroupLabels.Length
             && item.GroupLabels.All(label => !string.IsNullOrWhiteSpace(label) && !label.StartsWith("unified."))), "Action groups must have translated labels at every level.");
         var pipa = workspace.Functions.Single(item => item.Id == "ability:Ability.Action.Hun.ShachiAbility.PiPa.Dash");

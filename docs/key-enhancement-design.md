@@ -22,11 +22,15 @@
 
 输入层读取当前本地玩家 CommonUI 子系统的实际模式，并检查文本焦点、光标、暂停和前台状态。剧情、地图及菜单返回后随实际模式恢复，不依赖 Blueprint 输入模式函数的调用记录；游戏原生代码同样可以切换输入模式。
 
+玩家及世界对象按 `PlayerSession` generation 管理。每帧一次刷新取得本地 Controller、Pawn 和 InputSubsystem，并把同一帧的对象交给 session，不再重复查询 Pawn；同一 generation 内缓存 AbilityInputComponent、AbilitySystem、原生映射、延迟招式和持续输入。Pawn 的 EndPlay、Controller 的 Possess／UnPossess 会立即递增 generation，并丢弃旧的招式、装备准备、移动例外、架势、输入注入、原生映射快照和 C++ 伤害／资源／触发器观察。清理只复位插件自己的状态，不再回调旧 Pawn 或 AbilitySystem。调度热路径只比较 generation，不逐输出查询 Pawn 或组件；生命周期钩子不完整时，仅在进入调度前补一次 Pawn 身份校验。暂停和菜单保持同一 generation，仍执行正常释放。
+
 输入映射及其触发器、修饰器通过数组索引读取，上下文 Map 回调只收集上下文对象，退出回调后再读取默认映射。原键记录在写入每条映射前保存，中途失败仍能还原已修改的部分。
 
 绑定条件、倍率准备和输出执行的异常按绑定及目标隔离，同键、其他键及同动作的其他绑定继续执行。延迟招式回调保留触发绑定身份，只清理该绑定拥有的输入和能力。失败后按 1、2、4、8、16、30 秒退避，持续失败时保持 30 秒间隔，相同故障不逐帧记录；后续有效输入可自动重试。共享输入层或清理失败时暂停调度并归还原生输入，冷却后先完成清理再恢复，保留移动恢复和离散动作等待新按键的规则。稳定恢复 30 秒后重置退避；重载配置和更换玩家会重置绑定故障记录。增强关闭时不派发、不准备倍率或读取玩法映射。
 
 能力详情的“保留游戏原有触发方式”独立管理原生组合。`NativeAbilitySuppressions` 编译为 `ability_suppressions`，`native-abilities.lua` 只临时清除匹配的输入触发标签，保留组优先级、资格条件和其他能力。关闭 SpecialDash 的原生触发同时处理 DeflectDash 变体。模块按资产与当前结构地址保存原标签，不保留旧结构包装对象；列表清空、暂停、关闭与重载均恢复仍有效的入口。CL-302256 的 114 个 InputActionBinding 含 907 条触发记录，DebugAbility 全为空；更新后需重新确认直接能力引用。
+
+`IA_Dodge` 是普通闪避输入，不是瞬身的精确原生入口；`AIM_Hun_Dash` 只在输入和架势等条件同时满足时选择 SpecialDash 子路由，单独注入 `IA_Dodge` 会执行普通 Dash。因此瞬身与拼刀起始瞬身保留精确 GameplayTag，由当前 PlayerSession 的 `AbilityInputComponent` 激活，`IA_Dodge` 仅作为该能力入口的原生输入身份。只有 InputActionBinding 确实直接指向目标能力时才编译成原生动作映射；直接激活仍受 generation 边界和游戏原生能力资格约束。
 
 绑定窗口的“更多设置”提供启用、优先级、逐键占用和输出向量。顺序列表支持每步组合与重排。返回值 hook 通过同一自定义功能入口增删改，同一函数路径只保留一条覆盖，编辑冲突保留原配置。
 

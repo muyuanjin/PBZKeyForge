@@ -37,6 +37,77 @@ end
 
 do
     local bindings={}
+    for index=1,64 do
+        bindings[index]={id="alloc"..index,keys={"K"..index},consume=index%3==0,outputs={"a"}}
+    end
+    local backend={events={}}
+    function backend:target_failures() return {} end
+    function backend:target_failed() return false end
+    function backend:dispatch() return true end
+    local router=Router.new({targets={a={kind="action",path="a"}},bindings=bindings},backend)
+    for frame=1,100 do router:step(frame/60,{}, {}) end
+    collectgarbage("collect");collectgarbage("stop")
+    local before=collectgarbage("count")
+    for frame=1,2000 do router:step(frame/60,{}, {}) end
+    local allocated=collectgarbage("count")-before
+    collectgarbage("restart")
+    check(allocated<8192,"stable routing allocated per-rule closures: "..allocated.." KiB")
+end
+
+do
+    local target={kind="lua"}
+    local backend={}
+    function backend:target_failures() return {} end
+    function backend:target_failed() return false end
+    function backend:dispatch() return true end
+    local router=Router.new({targets={target=target},bindings={{id="x",keys={"X"},outputs={"target"}}}},backend)
+    router:step(0,{X=1},{})
+    router:detach()
+    check(next(router.config.targets)==nil and #router.rules==0 and #router:keys()==0 and next(router.previous)==nil,
+        "detaching a player session retained targets, rules or active outputs")
+end
+
+do
+    local calls={}
+    local backend={generation=1}
+    function backend:target_failures() return {} end
+    function backend:target_failed() return false end
+    function backend:dispatch(target)
+        calls[#calls+1]=target.path
+        self.generation=2
+        return true,false
+    end
+    local router=Router.new({targets={first={kind="lua",path="first"},second={kind="lua",path="second"}},bindings={
+        {id="first",keys={"G"},trigger="pulse",interval=.1,outputs={"first"}},
+        {id="second",keys={"G"},trigger="pulse",interval=.1,outputs={"second"}}
+    }},backend)
+    router:step(0,{G=1},{generation=1})
+    check(#calls==1 and calls[1]=="first" and #router.rules==0 and next(router.config.targets)==nil,
+        "mid-step generation change continued with outputs or targets from the previous player")
+end
+
+do
+    local calls={}
+    local backend={generation=1}
+    local router
+    function backend:target_failures() return {} end
+    function backend:target_failed() return false end
+    function backend:dispatch(target)
+        calls[#calls+1]=target.path
+        self.generation=2
+        router:detach()
+        return true,false
+    end
+    router=Router.new({targets={first={kind="lua",path="first"},second={kind="lua",path="second"}},bindings={
+        {id="direct-outputs",keys={"G"},trigger="pulse",interval=.1,outputs={"first","second"}}
+    }},backend)
+    check(router:step(0,{G=1},{generation=1})==false and #calls==1 and calls[1]=="first"
+        and next(router.config.targets)==nil,
+        "synchronous invalidation during direct dispatch continued to the next output")
+end
+
+do
+    local bindings={}
     for i=1,128 do bindings[i]={id="b"..i,keys={"K"..i},outputs={"a"}} end
     local router,backend,step=rig(bindings)
     check(#router:keys()==128,"128 bindings must not use save slots")

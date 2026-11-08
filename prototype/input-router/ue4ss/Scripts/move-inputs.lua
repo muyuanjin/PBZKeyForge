@@ -8,8 +8,10 @@ local function key(target, binding)
 end
 
 local function release(backend, state)
-    for _, input in ipairs(state.inputs) do Moves.release_input(backend,input) end
-    backend.native_move_inputs[state.key] = nil
+    if state.generation == backend.generation then
+        for _, input in ipairs(state.inputs) do Moves.release_input(backend,input) end
+    end
+    if backend.native_move_inputs then backend.native_move_inputs[state.key] = nil end
 end
 
 local function ready(backend, state)
@@ -76,6 +78,10 @@ function Inputs.prepare(backend, requests)
     local states = {}
     for _, state in pairs(backend.native_move_inputs or {}) do states[#states+1] = state end
     for _, state in ipairs(states) do
+        if state.generation ~= backend.generation then
+            backend.native_move_inputs[state.key] = nil
+            goto continue
+        end
         if not held[state.key] and not state.once then
             if not state.activated then release(backend,state) else state.releasing = true; state.pending = nil end
         end
@@ -89,6 +95,7 @@ function Inputs.prepare(backend, requests)
                 if state.releasing then finish_ready(backend,state) end
             end
         end
+        ::continue::
     end
 end
 
@@ -115,7 +122,8 @@ function Inputs.dispatch(backend,target,phase,value,binding,bypass,settings)
         local prepared,reason = Equipment.prepare(backend,target,settings)
         if not prepared then return true,false,reason end
         local trigger = settings and settings.trigger or "down"
-        state = {key=identity,target=target,inputs={},once=trigger == "press" and not (settings and settings.default_trigger)
+        state = {key=identity,target=target,inputs={},generation=backend.generation,
+            once=trigger == "press" and not (settings and settings.default_trigger)
             or trigger == "tap" or trigger == "release" or trigger == "pulse"
             or trigger == "multi_tap" or trigger == "sequence"}
         backend.native_move_inputs[identity] = state
@@ -155,6 +163,12 @@ function Inputs.reset(backend)
         if not ok then failures[#failures+1] = tostring(failure) end
     end
     if #failures > 0 then error(table.concat(failures,"; "),0) end
+end
+
+function Inputs.discard(backend)
+    backend.native_move_input_results = nil
+    backend.native_move_inputs = nil
+    backend.native_move_input_frame = nil
 end
 
 return Inputs

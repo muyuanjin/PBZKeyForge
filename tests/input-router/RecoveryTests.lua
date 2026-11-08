@@ -9,6 +9,7 @@ function backend:effective_config() return self.config end
 function backend:context() return self.state end
 function backend:snapshot() return {} end
 function backend:time() return 1 end
+function backend:report() end
 function backend:shutdown()
     self.shutdowns=self.shutdowns+1
     if self.failRestore then error("context restore unavailable") end
@@ -29,6 +30,8 @@ Key={F7=7,F8=8}
 function LoopInGameThreadAfterFrames(_,callback) frame=callback;return 1 end
 function ExecuteInGameThread(callback) callback() end
 function RegisterKeyBind(key,callback) keys[key]=callback end
+function RegisterHook() return 1,2 end
+function UnregisterHook() end
 function CancelDelayedAction() end
 local handle=dofile("prototype/input-router/ue4ss/Scripts/main.lua")
 frame()
@@ -36,7 +39,7 @@ route.failStep=true
 route.failReset=true
 backend.failRestore=true
 frame()
-assert(logs[#logs]:find("restoration incomplete",1,true))
+assert(logs[#logs]:find("restoration incomplete",1,true),tostring(logs[#logs]))
 assert(backend.shutdowns==1,"Action release failure must still attempt context restoration")
 local steps=route.steps
 frame()

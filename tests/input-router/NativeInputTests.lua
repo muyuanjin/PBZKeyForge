@@ -5,6 +5,7 @@ package.path = scripts .. "?.lua;" .. package.path
 local NativeInput = dofile(scripts .. "native-input.lua")
 local Backend = dofile(scripts .. "backend.lua")
 local Router = dofile(scripts .. "router.lua")
+package.loadlib = function() return nil end
 local passed, failures, nextAddress = 0, {}, 100
 local stress_gc = true
 local map_callback = false
@@ -76,6 +77,7 @@ end
 
 local function fixture(config)
     config = config or {targets = {}, bindings = {}}
+    if config.require_foreground == nil then config.require_foreground = false end
     config.suppressions = config.suppressions or {}
     config.targets, config.bindings = config.targets or {}, config.bindings or {}
     local state = {rows = {}, contexts = {}, physical = {}, calls = {}, now = 0, clones = 0}
@@ -102,7 +104,9 @@ local function fixture(config)
     backend.controller = object("/Controller.Controller")
     backend.subsystem = object("/Subsystem.Subsystem")
     backend.state = {ready = true, gameplay = true, generation = 1}
+    backend.generation = backend.state.generation
     local input = object("/PlayerInput.PlayerInput")
+    state.input = input
     backend.controller.PlayerInput = input
     function input:GetPropertyValue(name)
         if name == "EnhancedActionMappings" then return array(state.rows, function(value)
@@ -1006,7 +1010,7 @@ test("unified main lifecycle resumes movement, sailing and stance but never held
     local lifecycle=dofile(scripts .. "main.lua")
     frame();state.physical.W,state.physical.E=1,1;frame()
     check(#state.calls == 5, "unified main did not start movement, sailing, stance and execution together")
-    state.calls={};backend.state.generation=2;frame()
+    state.calls={};backend.state.generation,backend.generation=2,2;frame()
     local function recovered()
         local found={};for _,call in ipairs(state.calls) do if call.value.x ~= 0 then found[call.target.object]=true end end
         return found[move] and found[fast] and found[ship] and found[stance] and not found[execute]
@@ -1505,7 +1509,8 @@ end)
 
 test("native observation skips stable Lua traversal and rebuilds before accepting new ownership", function()
     local loader = package.loadlib
-    local observes, probes, changed, rejected = 0,0,false,false
+    local observes, probes, forgets, changed, rejected = 0,0,0,false,false
+    local forgotten_input
     package.loadlib = function(_, name)
         if name=="pbz_input_mappings_observe" then return function(input)
             check(type(input)=="number", "native observation received a wrapper instead of the current input address")
@@ -1515,6 +1520,10 @@ test("native observation skips stable Lua traversal and rebuilds before acceptin
         if name=="pbz_input_mappings_unchanged" then return function(input, value)
             check(type(input)=="number" and value==true, "native comparison lost its Lua result argument")
             probes=probes+1;return not changed
+        end end
+        if name=="pbz_input_mappings_forget" then return function(input)
+            check(type(input)=="number", "native observation forget received a wrapper")
+            forgets=forgets+1;forgotten_input=input
         end end
         return nil
     end
@@ -1532,14 +1541,46 @@ test("native observation skips stable Lua traversal and rebuilds before acceptin
     check(observes==2 and key(state.rows[1])=="None" and backend.dynamic_config.bindings[1].relation_key=="F",
         "native invalidation did not rebuild and mask the new mapping")
     native:restore();native:prepare()
-    check(observes==3, "restoration reused a native observation for retired ownership")
+    check(observes==3 and forgets==1 and forgotten_input==state.input:GetAddress(),
+        "restoration retained the retired native observation")
     rejected=true;changed=true
     native:prepare()
     check(not native.observe_native and not native.unchanged_native, "unsupported native layout did not retain Lua observation")
     state.mapping_reads=0;native:prepare()
     check(state.mapping_reads==1, "Lua observation did not resume after native layout rejection")
     native:restore()
-    check(key(state.rows[1])=="F", "native observation failure changed native restoration")
+    check(key(state.rows[1])=="F" and forgets==2, "native observation failure changed native restoration or retained its snapshot")
+end)
+
+test("native observation retires a replaced PlayerInput snapshot", function()
+    local loader = package.loadlib
+    local observes,forgets,forgotten,changed=0,0,nil,false
+    package.loadlib = function(_, name)
+        if name=="pbz_input_mappings_observe" then return function() observes=observes+1;changed=false end end
+        if name=="pbz_input_mappings_unchanged" then return function() return not changed end end
+        if name=="pbz_input_mappings_forget" then return function(input)
+            forgets=forgets+1;forgotten=input
+        end end
+        return nil
+    end
+    local action=object("/Game/Jump.Jump")
+    local backend,native,state=fixture({unified_native=true,native_actions={"/Game/Jump"}})
+    package.loadlib=loader
+    state.rows={mapping(action,"E")}
+    native:prepare()
+    local first=state.input
+    local replacement=object("/PlayerInput.Replacement")
+    replacement.GetPropertyValue=first.GetPropertyValue
+    state.input=replacement
+    backend.controller.PlayerInput=replacement
+    changed=true
+    native:prepare()
+    check(observes==2 and forgets==1 and forgotten==first:GetAddress()
+        and native.observed_input==replacement:GetAddress(),
+        "replacing PlayerInput retained or reused the retired native snapshot")
+    native:restore()
+    check(forgets==2 and forgotten==replacement:GetAddress(),
+        "restoration forgot the current PlayerInput snapshot only")
 end)
 
 test("rebuilding resolves each original key once and discards frame-local results", function()
@@ -1580,6 +1621,11 @@ test("stable native preparation reuses configuration storage and detects target 
     native:prepare()
     check(backend.config_generation>generation and not backend.dynamic_config.targets.mapping_48,
         "reused settings retained a deleted mapping target")
+    generation=backend.config_generation
+    config.targets.mapping_2.actions[1]="/Game/Changed"
+    native:prepare()
+    check(backend.config_generation>generation and backend.dynamic_config.targets.mapping_2==config.targets.mapping_2,
+        "bounded settings comparison missed an in-place target action edit")
     generation=backend.config_generation
     config.targets.mapping_1.kind="event";config.targets.mapping_1.tag="Changed"
     native:prepare()

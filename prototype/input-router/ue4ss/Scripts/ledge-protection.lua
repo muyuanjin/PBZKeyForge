@@ -33,6 +33,12 @@ function LedgeProtection.reset(backend)
     backend.ledge_requested = nil
 end
 
+function LedgeProtection.discard(backend)
+    if backend.ledge_movement then pcall(native_gate,backend,nil) end
+    backend.ledge_movement = nil
+    backend.ledge_requested = nil
+end
+
 function LedgeProtection.update(backend)
     local movement
     if backend.config.enabled ~= false and backend.state.ready and backend.state.gameplay and not backend.state.move_ignored

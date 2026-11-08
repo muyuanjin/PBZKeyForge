@@ -438,4 +438,20 @@ function Context:reset()
     if #failures > 0 then error(table.concat(failures,"\n"),0) end
 end
 
+function Context:discard()
+    self.closed = true
+    self.damage_enabled = false
+    self.resource_enabled = false
+    if activeContext == self then activeContext = nil end
+    if self.enable then pcall(self.enable,false) end
+    if self.reset_damage then pcall(self.reset_damage) end
+    if self.input_reset_triggers then pcall(self.input_reset_triggers) end
+    if self.execution_modify_pre then
+        pcall(UnregisterHook,self.execution_modify_path,self.execution_modify_pre,self.execution_modify_post)
+        self.execution_modify_pre, self.execution_modify_post = nil, nil
+    end
+    self.damage_modules,self.damage_payloads,self.damage_bullets = {},{},{}
+    self.reset_damage, self.input_reset_triggers = nil, nil
+end
+
 return Context

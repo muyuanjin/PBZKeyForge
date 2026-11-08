@@ -81,6 +81,7 @@ end
 
 local function remember_activation(backend, pending)
     if not pending.instance then return end
+    pending.generation = pending.generation or backend.generation
     backend.complete_move_active = backend.complete_move_active or {}
     backend.complete_move_active[pending.identity] = pending
 end
@@ -196,6 +197,7 @@ local function prepare_branch(backend,component,instance,pending)
 end
 
 local function pending_instance(backend, pending)
+    if pending.generation and pending.generation ~= backend.generation then return end
     local component = backend:receiver({receiver="ability_system"})
     if not valid(component) or component:GetAddress() ~= pending.component:GetAddress() then return end
     local instance, active = owned_instance(backend,component, pending.spec.ability_class)
@@ -216,7 +218,7 @@ local function hold_input(backend, pending)
         if not backend.resource_costs then backend.resource_costs = ResourceCosts.new(backend) end
         -- FInputActionValue has no reflected fields; preserve it entirely in native memory.
         backend.resource_costs.context:start_hold_input(backend.subsystem,action)
-        input = {identity=identity, action=action, subsystem=backend.subsystem, owners=0}
+        input = {identity=identity, action=action, subsystem=backend.subsystem, generation=backend.generation, owners=0}
         backend.complete_move_inputs[identity] = input
     end
     input.owners = input.owners + 1
@@ -229,8 +231,10 @@ local function release_input(backend, pending)
     local input = pending.input
     if not input then return end
     if input.owners == 1 then
-        backend:invoke(input.subsystem,
-            "/Script/EnhancedInput.EnhancedInputSubsystemInterface:StopContinuousInputInjectionForAction", input.action)
+        if input.generation == backend.generation then
+            backend:invoke(input.subsystem,
+                "/Script/EnhancedInput.EnhancedInputSubsystemInterface:StopContinuousInputInjectionForAction", input.action)
+        end
         backend.complete_move_inputs[input.identity] = nil
     end
     input.owners = input.owners - 1
@@ -394,7 +398,7 @@ local function dispatch_active(backend, component, target, bypass, settings, bin
                         return invoke_entry(backend,instance,target)
                     end,policy,target.active_callback_only,target.phase_window,target.phase_windows)
                     if not target.active_callback_only then
-                        remember_activation(backend,{identity=identity,
+                        remember_activation(backend,{identity=identity,generation=backend.generation,
                             component=component,instance=instance,spec=target,settings=settings,
                             binding_id=bindingId,phase_entered=true})
                     end
@@ -451,6 +455,10 @@ end
 
 function Moves.update(backend)
     for identity, active in pairs(backend.complete_move_active or {}) do
+        if active.generation and active.generation ~= backend.generation then
+            backend.complete_move_active[identity] = nil
+            goto continue_active
+        end
         local ok, running = xpcall(function()
             if active.phase_entered and active.spec.completion_when then
                 local instance, component = pending_instance(backend,active)
@@ -466,10 +474,15 @@ function Moves.update(backend)
         elseif not running then
             backend.complete_move_active[identity] = nil
         end
+        ::continue_active::
     end
     for _, pending in pairs(backend.complete_move_pending or {}) do
-        local ok, failure = xpcall(update_pending, debug.traceback, backend, pending)
-        if not ok then backend:fail_target(pending.spec.request_spec or pending.spec, failure, pending.binding_id) end
+        if pending.generation and pending.generation ~= backend.generation then
+            finish(backend,pending)
+        else
+            local ok, failure = xpcall(update_pending, debug.traceback, backend, pending)
+            if not ok then backend:fail_target(pending.spec.request_spec or pending.spec, failure, pending.binding_id) end
+        end
     end
 end
 
@@ -525,6 +538,12 @@ function Moves.reset(backend)
     if backend.complete_move_pending and not next(backend.complete_move_pending) then backend.complete_move_pending = nil end
     WeaponSwitch.reset(backend)
     if #failures > 0 then error(table.concat(failures,"; "),0) end
+end
+
+function Moves.discard(backend)
+    backend.complete_move_inputs = nil
+    backend.complete_move_active = nil
+    backend.complete_move_pending = nil
 end
 
 function Moves.dispatch(backend, spec, phase, bypass,settings,bindingId)
@@ -583,7 +602,8 @@ function Moves.dispatch(backend, spec, phase, bypass,settings,bindingId)
     end
     local identity = instance and class_path(instance) .. ":" .. tostring(instance:GetAddress()) or spec.tag
     if backend.complete_move_pending and backend.complete_move_pending[identity] then return true end
-    local pending = {identity=identity, spec=spec, instance=instance, component=component, bypass_resources=bypass,settings=settings,
+    local pending = {identity=identity, spec=spec, instance=instance, component=component, generation=backend.generation,
+        bypass_resources=bypass,settings=settings,
         binding_id=bindingId}
     if spec.prepare_input then
         assert(instance, "Prepared complete moves require a granted ability instance")

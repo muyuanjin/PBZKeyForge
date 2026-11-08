@@ -9,13 +9,15 @@ local function path(object) return object:GetFullName():gsub("^%S+ ","") end
 local function config_path(object) return path(object):gsub("%.[^./]+$","") end
 
 local function restore(backend,state)
-    if valid(state.component) and valid(state.original) then
-        state.context:set_weapon_slot(state.component,state.slot,state.index,state.original)
+    if state.generation == backend.generation then
+        if valid(state.component) and valid(state.original) then
+            state.context:set_weapon_slot(state.component,state.slot,state.index,state.original)
+        end
+        if state.armed_original ~= nil and valid(state.component) then
+            backend:invoke(state.component,prefix.."SetArmed",{TagName=FName(state.slot)},state.armed_original)
+        end
     end
-    if state.armed_original ~= nil and valid(state.component) then
-        backend:invoke(state.component,prefix.."SetArmed",{TagName=FName(state.slot)},state.armed_original)
-    end
-    backend.move_equipment[state.slot] = nil
+    if backend.move_equipment then backend.move_equipment[state.slot] = nil end
 end
 
 local function running(backend,state)
@@ -45,7 +47,13 @@ end
 function Equipment.update(backend)
     local states = {}
     for _,state in pairs(backend.move_equipment or {}) do states[#states+1] = state end
-    for _,state in ipairs(states) do if not running(backend,state) then restore(backend,state) end end
+    for _,state in ipairs(states) do
+        if state.generation ~= backend.generation then
+            backend.move_equipment[state.slot] = nil
+        elseif not running(backend,state) then
+            restore(backend,state)
+        end
+    end
 end
 
 function Equipment.prepare(backend,target,settings)
@@ -115,7 +123,8 @@ function Equipment.prepare(backend,target,settings)
         end
     end
     if not backend.resource_costs then backend.resource_costs = require("resource-costs").new(backend) end
-    local state = {slot=slot,index=index,component=component,original=not same and original or nil,config=wanted,
+    local state = {slot=slot,index=index,component=component,generation=backend.generation,
+        original=not same and original or nil,config=wanted,
         armed_target=armed and armed.armed,
         context=backend.resource_costs.context,classes={}}
     if changeArmed then state.armed_original = originalArmed end
@@ -148,4 +157,9 @@ function Equipment.reset(backend)
     end
     if #failures>0 then error(table.concat(failures,"; "),0) end
 end
+
+function Equipment.discard(backend)
+    backend.move_equipment = nil
+end
+
 return Equipment

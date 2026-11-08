@@ -21,7 +21,7 @@ end
 
 local function qualify(backend, avatar, ability)
     local scope = backend.weapon_switch_scope
-    if not scope then return end
+    if not scope or scope.generation ~= backend.generation then return end
     avatar, ability = avatar:get(), ability:get()
     if not valid(avatar) or not valid(ability) or not valid(backend.pawn)
         or avatar:GetAddress() ~= backend.pawn:GetAddress() or not matches(ability,scope.target) then return end
@@ -47,13 +47,15 @@ function Switch.with(backend, target, callback)
         end)
         backend.weapon_switch_hook = {first,second}
     end
+    local generation = backend.generation
     local previous = backend.weapon_switch_scope
-    local scope = {target=target,component=component}
+    local scope = {target=target,component=component,generation=generation}
     backend.weapon_switch_scope = scope
     local ok, result = xpcall(callback,debug.traceback)
     backend.weapon_switch_scope = previous
     if not ok then error(result,0) end
     if scope.failure then error(scope.failure,0) end
+    if generation ~= backend.generation then return false end
     return result
 end
 

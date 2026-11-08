@@ -24,7 +24,8 @@ local function log(message)
 end
 
 local runtime = {running = true, pending = false, generation = nil, last_error = nil,
-    suspended = false, hooks = {}, failed_hooks = {}, hook_retry = {}, active = false}
+    suspended = false, hooks = {}, failed_hooks = {}, hook_retry = {}, session_hooks = {}, active = false}
+local uninstall_session_hooks
 local backend = Backend.new(Config, log)
 local router = Router.new(Config, backend)
 
@@ -43,7 +44,11 @@ local function publish_scheme()
     if not file then log("Could not save active scheme: " .. tostring(err)); return end
     file:write(Config.scheme_id); file:close()
 end
-backend.on_retire = function() router:reset(true) end
+backend.on_retire = function()
+    router:detach()
+    runtime.active, runtime.generation = false, nil
+    runtime.switch_latch, runtime.pending_scheme = nil, nil
+end
 backend.on_release = function() router:reset(true) end
 
 local function restore(preserveTuning)
@@ -64,6 +69,7 @@ local function uninstall_hooks()
         end
     end
     remove(runtime.hooks)
+    uninstall_session_hooks()
     if #failures > 0 then error(table.concat(failures,"\n"),0) end
     runtime.failed_hooks, runtime.hook_retry = {}, {}
 end
@@ -188,6 +194,57 @@ local function publish_live()
     if live then pcall(function() live:publish() end) end
 end
 
+local session_hook_paths = {
+    {path = "/Script/Engine.Actor:EndPlay", owner = "pawn"},
+    {path = "/Script/Engine.Controller:UnPossess", owner = "controller"},
+    {path = "/Script/Engine.Controller:Possess", owner = "controller"}
+}
+
+local function hook_object(value)
+    if value == nil then return nil end
+    local ok, object = pcall(function() return value:get() end)
+    return ok and object or value
+end
+
+local function same_object(first, second)
+    if not first or not second then return false end
+    local ok, first_address = pcall(function() return tostring(first:GetAddress()) end)
+    local other_ok, second_address = pcall(function() return tostring(second:GetAddress()) end)
+    if ok and other_ok and first_address and second_address then return first_address == second_address end
+    local first_valid_ok, first_valid = pcall(function() return first:IsValid() end)
+    local second_valid_ok, second_valid = pcall(function() return second:IsValid() end)
+    return first_valid_ok and first_valid and second_valid_ok and second_valid and first == second
+end
+
+local function install_session_hooks()
+    if Config.enabled == false or runtime.session_hooks.installed then return end
+    runtime.session_hooks = {installed = true, complete = true}
+    for _, rule in ipairs(session_hook_paths) do
+        local function callback(value)
+            local current = rule.owner == "pawn" and backend.pawn or backend.controller
+            if not same_object(hook_object(value), current) then return end
+            backend:invalidate_session()
+            runtime.active, runtime.generation = false, nil
+        end
+        local ok, first, second = pcall(RegisterHook, rule.path, callback, nil)
+        if ok then
+            runtime.session_hooks[rule.path] = {first, second}
+        else
+            runtime.session_hooks.complete = false
+            backend:report("session-hook:" .. rule.path, "Player lifecycle hook unavailable: " .. tostring(first))
+        end
+    end
+end
+
+uninstall_session_hooks = function()
+    for path, ids in pairs(runtime.session_hooks) do
+        if type(path) == "string" and type(ids) == "table" then
+            pcall(UnregisterHook, path, ids[1], ids[2])
+        end
+    end
+    runtime.session_hooks = {}
+end
+
 local function install_hooks()
     if Config.enabled == false then return end
     for _, rule in ipairs(Config.hooks or {}) do
@@ -203,7 +260,8 @@ local function install_hooks()
                     return backend:argument(rule.value, backend:context())
                 end
                 local function callback(...)
-                    if not runtime.running or Config.enabled == false or runtime.suspended or ruleFailed then return end
+                    if not runtime.running or Config.enabled == false or runtime.suspended or ruleFailed
+                        or not backend.session then return end
                     local ok, result = xpcall(evaluate, debug.traceback, ...)
                     if not ok then
                         ruleFailed = true
@@ -244,13 +302,15 @@ local function tick()
             runtime.suspended = false
         end
         if Config.enabled == false then
-            if runtime.active or runtime.generation ~= nil or backend.resource_costs or next(runtime.hooks) then
+            if runtime.active or runtime.generation ~= nil or backend.resource_costs
+                or next(runtime.hooks) or runtime.session_hooks.installed then
                 restore()
                 uninstall_hooks()
                 runtime.active, runtime.generation, runtime.config_generation = false,nil,nil
             end
             return
         end
+        install_session_hooks()
         if not backend:refresh() then runtime.active = false; return end
         if backend.config_generation ~= runtime.config_generation then
             local nextConfig = backend:effective_config()
@@ -295,6 +355,11 @@ local function tick()
         if not runtime.active then
             router:resume(snapshot, context)
             runtime.active = true
+        end
+        if not runtime.session_hooks.complete and backend.session
+            and backend.validate_session and not backend:validate_session() then
+            runtime.active, runtime.generation = false, nil
+            return
         end
         backend.dispatch_error = nil
         router:step(backend:time(), snapshot, context)

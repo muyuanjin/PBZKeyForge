@@ -1,6 +1,12 @@
 local Pool = {}
 local pools = {}
 
+function Pool.clear()
+    for _, pool in pairs(pools) do
+        pool.objects, pool.pending, pool.rescan = {}, {}, true
+    end
+end
+
 function Pool.get(name, classPath)
     if type(NotifyOnNewObject) ~= "function" then return FindAllOf(name) or {} end
     local pool = pools[name]
@@ -21,6 +27,10 @@ function Pool.get(name, classPath)
             -- Construction may run outside the game tick; inspect properties on the next tick.
             pool.pending[#pool.pending+1] = object
         end)
+    end
+    if pool.rescan then
+        pool.pending = FindAllOf(name) or {}
+        pool.rescan = false
     end
     local objects, count = pool.objects, 0
     local seen = #pool.pending > 0 and {} or nil

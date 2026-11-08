@@ -35,7 +35,7 @@ local function fixture(module, triggerScenario)
     local owner,passive,other = object("Owner"),object("Passive"),object("Other")
     local controller,playerInput = object("Controller"),object("PlayerInput")
     controller.PlayerInput = playerInput
-    local watched,watchCalls,prepareCalls,stateCalls = {},0,0,0
+    local watched,watchCalls,prepareCalls,stateCalls,triggerResets = {},0,0,0,0
     local objects,coverage = {},{}
     local reads,objectCalls,libraryCalls,invokeCalls = 0,0,0,0
     local countSource=function() reads=reads+1 end
@@ -86,6 +86,7 @@ local function fixture(module, triggerScenario)
             end
         end
         if name=="pbz_stance_restore" then return function() return 1 end end
+        if name=="pbz_input_reset_triggers" then return function() triggerResets=triggerResets+1;return 1 end end
         if name=="pbz_input_watch_trigger" then
             return function(trigger)
                 check(trigger==triggerObject:GetAddress(),"another trigger was observed")
@@ -109,12 +110,14 @@ local function fixture(module, triggerScenario)
             backend.currentFrame=index
             module.prepare(backend,{})
         end
+        native.tuning_coverage=coverage
+        module.restore(backend)
     end)
     package.loadlib=originalLoadlib
     if not ok then error(errorMessage,0) end
     return {source_reads=reads,object_lookups=objectCalls,library_lookups=libraryCalls,
         native_invokes=invokeCalls,prepare_calls=prepareCalls,watch_calls=watchCalls,
-        trigger_queries=stateCalls}
+        trigger_queries=stateCalls,trigger_resets=triggerResets,tuning_coverage=native.tuning_coverage}
 end
 
 local function run(path,triggerScenario)
@@ -139,6 +142,8 @@ for _,case in ipairs({{name="standby",trigger=false},{name="trigger",trigger=tru
     check(after.object_lookups == 0 and after.library_lookups == 0,
         "a stable stance frame rebuilt static native context")
     check(after.prepare_calls == 0,"a stable stance frame replayed its native contribution")
+    check(after.trigger_resets==1 and after.tuning_coverage==nil,
+        "stance release retained native trigger observations or tuning registrations")
     if case.trigger then
         check(after.watch_calls == 0,"a stable trigger observation was registered again")
         check(after.trigger_queries == frames,"trigger observation was not sampled exactly once per frame")

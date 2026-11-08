@@ -24,7 +24,11 @@ local config = {enabled = true, runtime_hotkeys = false, require_foreground = fa
     }}
 local physical, engine, events = {}, {}, {}
 local backend = Backend.new(config, function() end)
-backend.controller = {IsValid = function() return true end}
+backend.controller = {IsValid = function() return true end, GetAddress = function() return 1 end}
+backend.generation = 1
+backend.session = {generation=1, context=function() return backend.state end,
+    assert_current=function() return true end, validate_pawn=function() return true end,
+    snapshot=function() return backend.state end}
 backend.state = {ready = true, gameplay = true, generation = 1}
 backend.physical_input = {sample = function(_, key) return physical[key] or 0 end}
 function FName(value) return {ToString = function() return value end} end
@@ -58,6 +62,8 @@ package.preload.router = function() return Router end
 package.preload["router-config"] = function() return config end
 EngineTickAvailable = true
 function LoopInGameThreadAfterFrames(_, callback) frame = callback; return 1 end
+function RegisterHook() return 1,2 end
+function UnregisterHook() end
 function CancelDelayedAction() end
 local lifecycle = dofile(scripts .. "main.lua")
 frame()
@@ -88,6 +94,8 @@ check(count("move", "started") == 1 and count("fast", "started") == 1,
 check(count("interact") == 0 and count("animation") == 0,
     "returning from UI replayed held interaction or animation")
 
+backend.generation = 2
+backend.session.generation = 2
 backend.state.generation = 2
 events = {}
 frame()

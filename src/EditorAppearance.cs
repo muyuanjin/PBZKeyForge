@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -55,10 +56,17 @@ namespace PBZKeyForge
 
     internal static class EditorArtwork
     {
+        static readonly ConditionalWeakTable<Control, MainForm> hostForms = new ConditionalWeakTable<Control, MainForm>();
         internal static void PaintEffect(Control surface, Graphics graphics)
         {
-            var window = surface.FindForm() as MainForm;
-            if (window != null) window.PaintFlameBackground(surface, graphics);
+            MainForm window;
+            if (!hostForms.TryGetValue(surface, out window))
+            {
+                window = surface.FindForm() as MainForm;
+                if (window == null) return;
+                hostForms.Add(surface, window);
+            }
+            window.PaintFlameBackground(surface, graphics);
         }
 
         internal static void ClearSurface(Control surface, Graphics graphics, Color color)

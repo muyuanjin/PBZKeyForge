@@ -22,11 +22,12 @@ first.schemes, first.scheme_order = library, order
 package.preload["router-config"] = function() return first end
 package.loaded["live-config"] = {new=function() return {poll=function() end,publish=function() end} end}
 local physical, events, released, notices = {}, {}, {}, {}
-local backend = {state={ready=true,gameplay=true,generation=1}}
+local backend = {generation=1,session={},state={ready=true,gameplay=true,generation=1}}
 function backend:refresh() return true end
 function backend:effective_config() return self.config end
 function backend:context() return self.state end
 function backend:allowed() return true end
+function backend:report() end
 function backend:snapshot(keys)
     self.last_samples = keys
     local values = {}; for _, key in ipairs(keys) do values[key] = physical[key] or 0 end; return values
@@ -48,6 +49,8 @@ package.preload.backend = function() return {new=function(configuration) backend
 EngineTickAvailable = true
 function LoopInGameThreadAfterFrames(_, callback) frame=callback;return 1 end
 function CancelDelayedAction() end
+function RegisterHook() return 1,2 end
+function UnregisterHook() end
 function StaticFindObject() return {IsValid=function() return true end} end
 local file=assert(io.open(scripts .. "main.lua","rb")); local source=file:read("*a");file:close()
 local handle=assert(load(source,"@" .. directory .. "Scripts/main.lua"))()

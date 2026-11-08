@@ -614,6 +614,8 @@ namespace PBZKeyForge
         readonly ListBox sequenceSteps = new ListBox();
         readonly List<string> retainedConsume = new List<string>();
         readonly List<string> consumeInputs = new List<string>();
+        readonly List<string> initialWatchedKeys = new List<string>();
+        bool watchedKeysInitialized, additionalKeysInitialized;
         bool consumeInitialized;
         readonly Panel outputVector;
         readonly HashSet<string> heldKeys = new HashSet<string>();
@@ -686,7 +688,7 @@ namespace PBZKeyForge
             foreach (string id in TriggerIds) trigger.Items.Add(UnifiedBindingUi.Text("trigger." + id));
             AddField(fields, Parameter(UnifiedBindingUi.Text("trigger"), trigger), 0);
             preview.ForeColor = EditorTheme.Muted; preview.Name = "triggerPreview"; AddField(fields, preview, 32);
-            mainKey.DropDownStyle = ComboBoxStyle.DropDownList; mainKey.Dock = DockStyle.Fill; mainKey.Name = "bindingKey";
+            mainKey.DropDownStyle = ComboBoxStyle.DropDownList; mainKey.FormattingEnabled = false; mainKey.Dock = DockStyle.Fill; mainKey.Name = "bindingKey";
             mainKey.Items.AddRange(DeviceKeys().Select(key => new KeyChoice(key)).ToArray());
             mainKey.SelectedIndexChanged += delegate
             {
@@ -708,13 +710,12 @@ namespace PBZKeyForge
             AddField(fields, combination, 0);
             var addKey = UnifiedBindingUi.Button(UnifiedBindingUi.Text("addcombination"), "addCombination");
             additionalKey.DropDownStyle = ComboBoxStyle.DropDownList; additionalKey.Width = 270; additionalKey.Visible = false; additionalKey.Name = "additionalKey";
-            additionalKey.Items.AddRange(mainKey.Items.Cast<KeyChoice>().Select(choice => new KeyChoice(choice.Key)).ToArray());
             additionalKey.SelectionChangeCommitted += delegate {
                 var choice = additionalKey.SelectedItem as KeyChoice;
                 if (choice != null && choice.Key != SelectedKey() && !extraKeys.Contains(choice.Key)) extraKeys.Add(choice.Key);
                 additionalKey.Visible = false; inputChanged = true; RenderCombination();
             };
-            addKey.Click += delegate { additionalKey.Visible = true; additionalKey.Focus(); additionalKey.DroppedDown = true; };
+            addKey.Click += delegate { EnsureAdditionalKeys(); additionalKey.Visible = true; additionalKey.Focus(); additionalKey.DroppedDown = true; };
             combinationCommands.Dock = DockStyle.Fill; combinationCommands.AutoSize = true; combinationCommands.Controls.Add(addKey); combinationCommands.Controls.Add(additionalKey); AddField(fields, combinationCommands, 0);
             secondsRow = Parameter(UnifiedBindingUi.Text("duration"), seconds); AddField(fields, secondsRow, 0);
             intervalRow = Parameter(UnifiedBindingUi.Text("interval"), interval); AddField(fields, intervalRow, 0);
@@ -739,8 +740,7 @@ namespace PBZKeyForge
             AddField(customFields, UnifiedBindingUi.Label(UnifiedBindingUi.Text("watchKeys")), 32);
             watchedKeys.CheckOnClick = true; watchedKeys.IntegralHeight = false; watchedKeys.BackColor = EditorTheme.Floating; watchedKeys.ForeColor = EditorTheme.Ink;
             var watched = current != null && current.Rule != null ? current.Rule.Watch : new List<string>();
-            foreach (string key in watched.Concat(KeyNames.Keyboard).Concat(KeyNames.Gamepad).Concat(AxisKeys).Where(key => !string.IsNullOrEmpty(key) && key != "None").Distinct())
-                watchedKeys.Items.Add(new KeyChoice(key), watched.Contains(key));
+            initialWatchedKeys.AddRange(watched);
             AddField(customFields, watchedKeys, 130); AddField(fields, evaluatorSettings, 0);
             var more = UnifiedBindingUi.Button(UnifiedBindingUi.Text("moreSettings"), "moreBindingSettings");
             more.Click += delegate {
@@ -877,6 +877,7 @@ namespace PBZKeyForge
             if (rule != null) foreach (var step in rule.Steps) sequenceSteps.Items.Add(new StepChoice(step));
             evaluatorCode.Text = UnifiedBindingUi.ScriptText(rule != null && !string.IsNullOrWhiteSpace(rule.EvaluateLua)
                 ? rule.EvaluateLua : "function(now, snapshot, context, state)\n    return {active=false, pulse=false, value=1}\nend");
+            if (rule != null && rule.Watch.Count > 0) EnsureWatchedKeys();
             for (int i = 0; i < watchedKeys.Items.Count; i++) watchedKeys.SetItemChecked(i, rule != null && rule.Watch.Contains(((KeyChoice)watchedKeys.Items[i]).Key));
             bindingEnabled.Checked = current == null || current.Enabled; priority.Value = current == null ? 0 : current.Priority;
             string when = rule == null ? null : rule.WhenLua;
@@ -955,7 +956,10 @@ namespace PBZKeyForge
             if (trigger.SelectedIndex == Array.IndexOf(TriggerIds, "axis"))
             { var selectedAxis = axis.SelectedItem as KeyChoice; if (selectedAxis != null) keys.Add(selectedAxis.Key); }
             else if (trigger.SelectedIndex == Array.IndexOf(TriggerIds, "custom"))
+            {
+                EnsureWatchedKeys();
                 keys.AddRange(watchedKeys.CheckedItems.Cast<KeyChoice>().Select(choice => choice.Key));
+            }
             else if (trigger.SelectedIndex == Array.IndexOf(TriggerIds, "sequence") && sequenceSteps.Items.Count > 0)
                 keys.AddRange(sequenceSteps.Items.Cast<StepChoice>().SelectMany(step => step.Keys));
             else { if (!string.IsNullOrEmpty(SelectedKey())) keys.Add(SelectedKey()); keys.AddRange(extraKeys); }
@@ -1054,6 +1058,20 @@ namespace PBZKeyForge
             axisDirection.Enabled = choice == null || !choice.Key.EndsWith("2D", StringComparison.Ordinal);
             if (!axisDirection.Enabled) axisDirection.SelectedIndex = 0;
         }
+        void EnsureAdditionalKeys()
+        {
+            if (additionalKeysInitialized) return;
+            additionalKeysInitialized = true;
+            additionalKey.Items.AddRange(mainKey.Items.Cast<KeyChoice>().Select(choice => new KeyChoice(choice.Key)).ToArray());
+        }
+        void EnsureWatchedKeys()
+        {
+            if (watchedKeysInitialized) return;
+            watchedKeysInitialized = true;
+            foreach (string key in initialWatchedKeys.Concat(KeyNames.Keyboard).Concat(KeyNames.Gamepad).Concat(AxisKeys)
+                .Where(key => !string.IsNullOrEmpty(key) && key != "None").Distinct())
+                watchedKeys.Items.Add(new KeyChoice(key), initialWatchedKeys.Contains(key));
+        }
         void Parameters()
         {
             scroll.SuspendLayout(); fields.SuspendLayout();
@@ -1061,6 +1079,7 @@ namespace PBZKeyForge
             {
                 UpdateAxisDirection();
                 string id = TriggerIds[Math.Max(0, trigger.SelectedIndex)];
+                if (id == "custom") EnsureWatchedKeys();
                 secondsRow.Visible = id == "tap" || id == "hold"; intervalRow.Visible = id == "multi_tap" || id == "pulse" || id == "sequence";
                 countRow.Visible = id == "multi_tap"; thresholdRow.Visible = axisRow.Visible = id == "axis";
                 axisDirectionRow.Visible = id == "axis";
@@ -1146,6 +1165,7 @@ namespace PBZKeyForge
         {
             RefreshConsumeKeys();
             string key = SelectedKey(); string id = TriggerIds[Math.Max(0, trigger.SelectedIndex)];
+            if (id == "custom") EnsureWatchedKeys();
             if (string.IsNullOrEmpty(key) && id != "axis" && id != "custom" && !(id == "sequence" && sequenceSteps.Items.Count > 0))
             { status.Text = UnifiedBindingUi.Text("choosekey"); mainKey.Focus(); return; }
             string[] orderedKeys = (string.IsNullOrEmpty(key) ? new string[0] : new[] { key }).Concat(extraKeys).ToArray();
@@ -1233,19 +1253,21 @@ namespace PBZKeyForge
         sealed class KeyChoice
         {
             public string Key;
-            public string Label
+            readonly string label;
+            public string Label { get { return label; } }
+            public KeyChoice(string key)
             {
-                get
+                Key = key;
+                string prefix = key.StartsWith("Gamepad_Left", StringComparison.Ordinal) && (key.EndsWith("2D", StringComparison.Ordinal) || key == "Gamepad_LeftX" || key == "Gamepad_LeftY") ? "leftStick"
+                    : key.StartsWith("Gamepad_Right", StringComparison.Ordinal) && (key.EndsWith("2D", StringComparison.Ordinal) || key == "Gamepad_RightX" || key == "Gamepad_RightY") ? "rightStick"
+                    : key == "MouseX" || key == "MouseY" || key == "Mouse2D" ? "mouseAxis" : null;
+                if (prefix == null) label = BindingButton.FriendlyKey(key);
+                else
                 {
-                    string prefix = Key.StartsWith("Gamepad_Left", StringComparison.Ordinal) && (Key.EndsWith("2D", StringComparison.Ordinal) || Key == "Gamepad_LeftX" || Key == "Gamepad_LeftY") ? "leftStick"
-                        : Key.StartsWith("Gamepad_Right", StringComparison.Ordinal) && (Key.EndsWith("2D", StringComparison.Ordinal) || Key == "Gamepad_RightX" || Key == "Gamepad_RightY") ? "rightStick"
-                        : Key == "MouseX" || Key == "MouseY" || Key == "Mouse2D" ? "mouseAxis" : null;
-                    if (prefix == null) return BindingButton.FriendlyKey(Key);
-                    string component = Key.EndsWith("2D", StringComparison.Ordinal) ? "XY" : Key.Substring(Key.Length - 1);
-                    return UnifiedBindingUi.Text(prefix) + " " + component + " · " + Key;
+                    string component = key.EndsWith("2D", StringComparison.Ordinal) ? "XY" : key.Substring(key.Length - 1);
+                    label = UnifiedBindingUi.Text(prefix) + " " + component + " · " + key;
                 }
             }
-            public KeyChoice(string key) { Key = key; }
             public override string ToString() { return Label; }
         }
         protected override void WndProc(ref Message message)

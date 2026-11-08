@@ -207,13 +207,21 @@ namespace PBZKeyForge
             }).ToArray();
             string signature = I18n.Current + "|" + value.KeyEnhancementEnabled + "|" + string.Join("\n", allRows.Select(row => string.Join("/", row.Function.GroupPath) + ":" + string.Join("/", row.Function.GroupLabels)));
             if (groupSignature != signature) { groupSignature = signature; BuildGroups(); }
-            FilterRows(null); timer.Stop(); Console.WriteLine("UnifiedActionView Render {0} ms; functions={1}, rows={2}", timer.ElapsedMilliseconds, allRows.Length, rows.Count);
+            FilterRows(null);
+            timer.Stop(); Console.WriteLine("UnifiedActionView Render {0} ms; functions={1}, rows={2}", timer.ElapsedMilliseconds, allRows.Length, rows.Count);
         }
 
         void BuildGroups()
         {
             string selected = groups.SelectedNode == null ? workspace.KeyEnhancementEnabled ? "" : "native" : groups.SelectedNode.Tag as string;
-            updatingGroups = true; groups.BeginUpdate();
+            bool visible = groups.Visible;
+            var drawMode = groups.DrawMode;
+            // Owner-drawn TreeView invokes the managed painter for every hidden
+            // node during the first bulk EndUpdate; build the hierarchy normally.
+            groups.Visible = false;
+            groups.DrawMode = TreeViewDrawMode.Normal;
+            updatingGroups = true;
+            groups.BeginUpdate();
             try
             {
                 groups.Nodes.Clear(); keyEnhancementGroups.Clear();
@@ -254,7 +262,13 @@ namespace PBZKeyForge
                 else groups.SelectedNode = nodes.TryGetValue("native", out selection) ? selection : all;
                 if (groups.SelectedNode != null) groups.SelectedNode.EnsureVisible();
             }
-            finally { groups.EndUpdate(); updatingGroups = false; }
+            finally
+            {
+                groups.EndUpdate();
+                groups.DrawMode = drawMode;
+                groups.Visible = visible;
+                updatingGroups = false;
+            }
         }
 
         void DrawGroup(object sender, DrawTreeNodeEventArgs e)

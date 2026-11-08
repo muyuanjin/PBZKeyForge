@@ -38,11 +38,13 @@ local function identity(target,binding)
     return tostring(binding or target).."|"..tostring(target.move_id or target.ability_class)
 end
 local function cleanup(backend,state)
-    if state.owned and valid(state.instance) and state.instance:GetPropertyValue("bIsActive") then
-        backend:invoke(state.instance,"/Script/GameplayAbilities.GameplayAbility:K2_CancelAbility")
-    end
-    if state.projectile_owned and not state.committed and valid(state.passive) then
-        backend:invoke_configured(state.passive,passiveClass..":Force Cancel Projectile")
+    if state.generation == backend.generation then
+        if state.owned and valid(state.instance) and state.instance:GetPropertyValue("bIsActive") then
+            backend:invoke(state.instance,"/Script/GameplayAbilities.GameplayAbility:K2_CancelAbility")
+        end
+        if state.projectile_owned and not state.committed and valid(state.passive) then
+            backend:invoke_configured(state.passive,passiveClass..":Force Cancel Projectile")
+        end
     end
     if backend.snake_preparation==state then backend.snake_preparation=nil end
 end
@@ -81,7 +83,7 @@ function Snake.prepare(backend,target,phase,value,binding,bypass,settings)
     end
     local ability,active=instance(backend,throwClass)
     if not valid(ability) then return false,"Snake throw ability instance is not granted" end
-    state={passive=passive,instance=ability,requests={[key]=request},owned=not active,
+    state={passive=passive,instance=ability,requests={[key]=request},generation=backend.generation,owned=not active,
         projectile_owned=not active and mode=="projectile",mode=mode}
     backend.snake_preparation=state
     if not active then
@@ -133,6 +135,10 @@ end
 function Snake.update(backend)
     local state=backend.snake_preparation
     if not state then return end
+    if state.generation ~= backend.generation then
+        Snake.discard(backend)
+        return
+    end
     local ok,failure=xpcall(update,debug.traceback,backend,state)
     if not ok then
         for _,request in pairs(state.requests) do backend:fail_target(request.target,failure,request.binding) end
@@ -151,4 +157,13 @@ function Snake.reset(backend)
     local state=backend.snake_preparation
     if state then cleanup(backend,state) end
 end
+
+function Snake.discard(backend)
+    local state=backend.snake_preparation
+    if state then
+        state.requests, state.instance, state.passive = {}, nil, nil
+    end
+    backend.snake_preparation=nil
+end
+
 return Snake

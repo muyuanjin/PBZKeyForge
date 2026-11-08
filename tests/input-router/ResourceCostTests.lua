@@ -396,4 +396,9 @@ do
     attack.bIsActive=false;cost:update();attack.nonLego=nil
 end
 cost:reset();check(stopped and next(hooks)==nil,"reset releases hooks and native capture")
+local discarded=Costs.new(backend)
+check(next(hooks)~=nil,"discard fixture did not install transfer hooks")
+discarded:discard()
+check(discarded.closed and discarded.context==nil and next(discarded.instances)==nil and next(hooks)==nil,
+    "session discard retained hooks or world-owned tuning state")
 print("ResourceCostTests PASS "..checks)

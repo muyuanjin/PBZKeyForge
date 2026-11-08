@@ -78,6 +78,10 @@ namespace PBZKeyForge
         string functionsLanguage;
         string functionsProfile;
         string[] customFunctionNames;
+        BindingSnapshot snapshotCache;
+        string snapshotCacheKey;
+        string snapshotCacheSource;
+        int changeVersion;
         public bool KeyEnhancementEnabled { get { return config.Enabled; } }
         public EditorSession Session { get { return session; } }
         public KeyEnhancementConfiguration Configuration { get { return config; } }
@@ -90,7 +94,16 @@ namespace PBZKeyForge
             set { liveEditing = value; }
         }
         public Action BeforeChange;
-        void Changing() { if (BeforeChange != null) BeforeChange(); }
+        void Changing()
+        {
+            changeVersion++;
+            InvalidateSnapshot();
+            if (BeforeChange != null) BeforeChange();
+        }
+        internal void InvalidateSnapshot()
+        {
+            snapshotCache = null; snapshotCacheKey = null; snapshotCacheSource = null;
+        }
         NativeBindingOverride NativeOverride(string functionId, KeyEnhancementConfiguration source)
         { return source.NativeBindings.FirstOrDefault(item => item.FunctionId == functionId && item.Device == (pad ? "gamepad" : "keyboard")); }
         NativeBindingOverride EditNative(string functionId)
@@ -172,8 +185,11 @@ namespace PBZKeyForge
                         FixedKeys = pad ? new string[0] : MovementKeys[i], DefaultOutputValue = MovementValue(i),
                         Targets = new[] { KeyEnhancementCatalog.Targets.Single(target => target.Path == KeyboardMovement) } });
                 foreach (var target in KeyEnhancementCatalog.Targets)
-                    result.Add(new BindingFunction { Id = target.Id, Label = FunctionLabel(target.Id), TechnicalName = target.Path ?? target.Tag,
-                        RequiresKeyEnhancement = true, Targets = new[] { target } });
+                {
+                    var function = new BindingFunction { Id = target.Id, Label = FunctionLabel(target.Id), TechnicalName = target.Path ?? target.Tag,
+                        RequiresKeyEnhancement = true, Targets = new[] { target } };
+                    result.Add(function);
+                }
                 foreach (var output in config.CustomFunctions.Concat(config.Rules.SelectMany(rule => rule.Outputs)))
                 {
                     string id = OutputFunction(output);
@@ -830,6 +846,16 @@ namespace PBZKeyForge
 
         internal BindingSnapshot Snapshot()
         {
+            return SnapshotWithSource(config.ToJson());
+        }
+
+        internal BindingSnapshot SnapshotWithSource(string sourceSignature)
+        {
+            // The source signature is shared by every device so one configuration
+            // serialization invalidates the complete cached view of this session.
+            string cacheKey = changeVersion + "|" + config.Enabled + "|" + baseline.Enabled + "|" + config.SelectedSchemeId + "|"
+                + session.SelectedProfile + "|" + session.DraftSignature + "|" + I18n.Current;
+            if (snapshotCache != null && snapshotCacheKey == cacheKey && snapshotCacheSource == sourceSignature) return snapshotCache;
             var functions = Functions;
             var entriesAfter = CollectEntries(config, false, null);
             var afterEntries = entriesAfter.ToLookup(entry => entry.FunctionId);
@@ -838,7 +864,11 @@ namespace PBZKeyForge
                 var entries = (before ? beforeEntries : afterEntries)[function.Id].ToArray();
                 var native = function.NativeAction == null ? null : session.Relations(function.NativeAction, pad, family);
                 var source = before ? baseline : config;
-                bool blocked = NativeTriggerTags(function).Any(tag => source.NativeAbilitySuppressions.Contains(tag));
+                bool blocked = NativeTriggerTags(function).Any(source.NativeAbilitySuppressions.Contains);
+                if (entries.Length == 0 && native == null)
+                    return new ActionRelations { Action = function.Id, Keys = new string[0], DefaultKeys = function.FixedKeys ?? new string[0],
+                        BindingDetails = blocked ? new[] { I18n.Str("binding.native.replaced") } : new string[0],
+                        BindingSignature = blocked ? "blocked" : "", CustomBindings = blocked, Complete = true, Changed = false };
                 return new ActionRelations { Action = function.Id, Keys = entries.Where(entry => entry.Active).SelectMany(UsedKeys).Distinct().ToArray(),
                     DefaultKeys = function.FixedKeys ?? (native == null ? new string[0] : native.DefaultKeys),
                     BindingDetails = entries.Select(BindingEntryText.EntryDescription).Concat(blocked ? new[] { I18n.Str("binding.native.replaced") } : new string[0]).ToArray(),
@@ -847,8 +877,10 @@ namespace PBZKeyForge
                     Complete = native == null || native.Complete, Changed = entries.Any(entry => entry.Pending) };
             };
             var current = functions.Select(function => relation(function, false)).ToArray();
-            return new BindingSnapshot(pad, family, session.ControllerFamilies.Where(item => item.Index == family).Select(item => item.Name).FirstOrDefault(), current,
+            snapshotCache = new BindingSnapshot(pad, family, session.ControllerFamilies.Where(item => item.Index == family).Select(item => item.Name).FirstOrDefault(), current,
                 functions.ToDictionary(function => function.Id, function => relation(function, true)), entriesAfter);
+            snapshotCacheKey = cacheKey; snapshotCacheSource = sourceSignature;
+            return snapshotCache;
         }
     }
 }

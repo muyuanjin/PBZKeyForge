@@ -476,6 +476,17 @@ do
 end
 
 do
+    local backend = Backend.new({require_foreground=false},function() end)
+    local path="/Game/Maps/Test/Map.Test:PersistentLevel.WorldActor"
+    local first,second,calls=object(1700,path),object(1701,path),0
+    function StaticFindObject(query)
+        if query==path then calls=calls+1;return calls==1 and first or second end
+    end
+    check(backend:object(path)==first and backend:object(path)==second and calls==2 and backend.objects[path]==nil,
+        "world-owned receiver path was cached across generations")
+end
+
+do
     local backend,_,_,calls=fixture()
     local queries=0
     function backend:key_dimension(key) return key=="Stick" and 2 or 1 end
@@ -503,6 +514,118 @@ end
 
 do
     local backend = fixture()
+    backend.pawn = object(1400, "/Test/PawnOne")
+    function backend:library() return object(1402, "/Test/GameplayStatics") end
+    function backend:input_subsystem() return self.subsystem end
+    check(backend:refresh(), "player session failed to initialize from a valid pawn")
+    local first, generation = backend.session, backend.generation
+    check(first and first.pawn == backend.pawn and backend:context().generation == generation,
+        "fresh player session did not own the current pawn generation")
+    local invoke, pawn_queries = backend.invoke, 0
+    function backend:invoke(receiver,path,...)
+        if path == "/Script/Engine.Controller:K2_GetPawn" then pawn_queries = pawn_queries + 1 end
+        return invoke(self,receiver,path,...)
+    end
+    check(backend:refresh() and pawn_queries == 1,
+        "stable refresh queried the Pawn more than once")
+    local find_all, find_all_calls = FindAllOf, 0
+    FindAllOf = function(...) find_all_calls = find_all_calls + 1; return find_all(...) end
+    check(backend:dispatch({kind="lua",run=function() return true end},"triggered",nil,"hot"),"generation guard rejected a live dispatch")
+    FindAllOf = find_all
+    check(pawn_queries == 1 and find_all_calls == 0,
+        "stable dispatch queried the Pawn or searched UObjects instead of comparing the session generation")
+    backend.pawn = object(1401, "/Test/PawnTwo")
+    check(backend:refresh(), "replacement pawn did not initialize a new session")
+    check(first.invalidated and backend.session ~= first and backend.generation == generation + 1,
+        "pawn replacement retained the previous session or generation")
+    check(backend.session.pawn == backend.pawn and backend:context().pawn == backend.pawn,
+        "new session did not resolve the replacement pawn")
+end
+
+do
+    local backend = fixture()
+    backend.pawn = object(1500, "/Test/PawnOne")
+    function backend:library() return object(1501, "/Test/GameplayStatics") end
+    function backend:input_subsystem() return self.subsystem end
+    check(backend:refresh(), "session guard fixture failed to initialize")
+    local first_generation = backend.generation
+    backend.complete_move_pending = {stale = true}
+    local discarded = 0
+    backend.resource_costs = {discard = function() discarded = discarded + 1 end}
+    local restored, native_input_discarded = 0, 0
+    local retired = 0
+    local cleanup = {}
+    backend.ledge_movement = object(1503, "/Test/Movement")
+    backend.ledge_walk_off = function(address)
+        cleanup[#cleanup+1] = "ledge:" .. tostring(address)
+        return 1
+    end
+    backend.move_preparation = {state = {long_buffs = 23,
+        context = {discard_long_buffs = function(_, token)
+            cleanup[#cleanup+1] = "buffs:" .. tostring(token)
+        end}}}
+    backend.stance_input = {reset = function(owner, held)
+        cleanup[#cleanup+1] = "stance:" .. tostring(owner) .. ":" .. tostring(held)
+        return 1
+    end}
+    backend.complete_move_inputs = {held = {generation = backend.generation,
+        subsystem = object(1504, "/Test/InputSubsystem"), action = object(1505, "/Test/HoldAction")}}
+    local world_calls = 0
+    local stop_inputs = backend.invoke
+    function backend:invoke(receiver, path, action)
+        if path == "/Script/EnhancedInput.EnhancedInputSubsystemInterface:StopContinuousInputInjectionForAction" then
+            world_calls = world_calls + 1
+            return
+        end
+        return stop_inputs(self, receiver, path, action)
+    end
+    backend.on_retire = function() retired = retired + 1; cleanup[#cleanup+1] = "retire" end
+    backend.native_input = {
+        restore = function() error("Session invalidation must not restore through the old controller") end,
+        discard = function() native_input_discarded = native_input_discarded + 1 end}
+    backend.native_abilities = {restore = function() restored = restored + 1 end}
+    backend.pawn = object(1502, "/Test/PawnTwo")
+    local ran = false
+    check(not backend:validate_session(), "frame guard accepted a replacement pawn")
+    local ok = backend:dispatch({kind="lua",run=function() ran=true end}, "triggered", nil, "transition")
+    check(not ok and not ran, "dispatch used state from the previous player generation")
+    check(backend.generation == first_generation + 1 and backend.session == nil,
+        "frame guard did not immediately rotate and discard the old session")
+    check(backend:refresh() and backend.generation == first_generation + 2,
+        "replacement pawn did not establish the next player session")
+    check(restored == 1 and native_input_discarded == 1 and discarded == 1 and retired == 1 and world_calls == 0
+        and not backend.complete_move_pending and not backend.complete_move_inputs
+        and not backend.complete_move_active and not backend.move_preparation
+        and not backend.stance_input and not backend.ledge_movement and not backend.resource_costs,
+        "session rotation retained delayed move, tuning or native input state")
+    check(table.concat(cleanup, ",") == "retire,ledge:0,buffs:23,stance:0:false",
+        "session rotation did not discard native state before dropping old world objects: "
+            .. table.concat(cleanup, ","))
+    check(not backend.session.invalidated and backend.session.pawn == backend.pawn,
+        "new generation did not replace the stale session")
+end
+
+do
+    local backend = fixture()
+    backend.pawn = object(1550, "/Test/PawnOne")
+    function backend:library() return object(1551, "/Test/GameplayStatics") end
+    function backend:input_subsystem() return self.subsystem end
+    check(backend:refresh(), "dispatch transition fixture failed to initialize")
+    local retired = 0
+    backend.on_retire = function() retired = retired + 1 end
+    local ok, result = backend:dispatch({kind="lua",run=function(active)
+        active:invalidate_session()
+        local invoked, failure = pcall(active.invoke,active,object(1552,"/Test/Stale"),"/Test.Stale:Call")
+        check(not invoked and tostring(failure):find("Player session changed during native dispatch",1,true),
+            "dispatch continued into a native call after its owning session was invalidated")
+        return true, "must not reach cleanup"
+    end}, "triggered", nil, "during-dispatch")
+    check(ok and result == false and retired == 1 and backend.session == nil,
+        "synchronous player replacement leaked through the active dispatch")
+end
+
+do
+    local backend = fixture()
     local logs, accepted = {}, false
     backend.log = function(message) logs[#logs+1] = message end
     local receiver = object(700, "receiver")
@@ -526,6 +649,40 @@ do
     accepted=true
     local ok,result = backend:dispatch(target,"triggered",nil,"first")
     check(ok and result and #logs==2,"A held request must remain able to activate when its native qualification changes")
+end
+
+do
+    local backend = Backend.new({require_foreground=false},function() end)
+    backend.state = {ready=true,gameplay=true}
+    local component, action = object(1600, "/Test/AbilityInput"), object(1601, "/Test/IA_Dodge")
+    backend.pawn = object(1602, "/Test/Pawn")
+    function backend:receiver()
+        return component
+    end
+    local injection, direct, seen = nil, false, {}
+    function backend:object(path)
+        if path == "/PBZDeflectSystem/Input/IA_Dodge.IA_Dodge" then return action end
+        return object(1603, path)
+    end
+    function backend:invoke(receiver, path, value, inputAction)
+        if path == "/Script/Engine.Actor:GetComponentByClass" then return action end
+        if path:find(":IsArmed",1,true) then return true end
+        if path:find(":InjectInputVectorForAction",1,true) then
+            injection = {receiver=receiver,action=value,path=path}
+            return true
+        end
+        if path:find("AbilityInputComponent:",1,true) then
+            seen.receiver, seen.tag, seen.input = receiver, value.TagName:ToString(), inputAction
+            direct = receiver == component and seen.tag == "Ability.Action.Hun.SpecialDash"
+                and inputAction == action
+        end
+        return true
+    end
+    local ok = backend:dispatch({kind="ability",tag="Ability.Action.Hun.SpecialDash"},"triggered",nil,"native-dash")
+    check(ok and direct and not injection,
+        "SpecialDash was replaced with the generic IA_Dodge action instead of activating its exact ability tag: ok="
+            .. tostring(ok) .. " direct=" .. tostring(direct) .. " receiver=" .. tostring(seen.receiver)
+            .. " tag=" .. tostring(seen.tag) .. " input=" .. tostring(seen.input == action) .. " injection=" .. tostring(injection ~= nil))
 end
 
 print("BackendTests: " .. passed .. " assertions passed")

@@ -132,6 +132,7 @@ namespace PBZKeyForge
         bool flameEffectsEnabled;
         FlameAppearance flameAppearance;
         int previousFlameTop;
+        int lastFlamePaint = Environment.TickCount;
 
         void BuildKeyEnhancement()
         {
@@ -401,6 +402,13 @@ namespace PBZKeyForge
         void InvalidateFlameBackground()
         {
             if (IsDisposed || !IsHandleCreated) return;
+            if (keyEnhancementFlame != null && keyEnhancementFlame.PaintSuspended) return;
+            if (keyEnhancementFlame != null && keyEnhancementFlame.InteractionPaused) return;
+            int now = Environment.TickCount;
+            long pixels = (long)ClientSize.Width * ClientSize.Height;
+            int minimumInterval = pixels > 1500000 ? 100 : pixels > 900000 ? 70 : 45;
+            if (unchecked(now - lastFlamePaint) < minimumInterval) return;
+            lastFlamePaint = now;
             int rim = 50, nextTop = keyEnhancementFlame.PaintTop, top = Math.Min(previousFlameTop, nextTop);
             previousFlameTop = nextTop;
             var bands = new[] {

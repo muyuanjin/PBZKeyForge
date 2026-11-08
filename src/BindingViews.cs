@@ -102,6 +102,10 @@ namespace PBZKeyForge
         List<string> extraKeys = new List<string>();
         readonly Dictionary<string, RectangleF> imageBounds = new Dictionary<string, RectangleF>();
         Bitmap deviceArtwork;
+        // Target labels and badges change only with selection, hover, state or layout.
+        // Flame animation can reuse this transparent layer instead of remeasuring them.
+        Bitmap targetCache;
+        bool targetCacheDirty = true;
         string hoveredKey;
         float scale = 1f;
         public DeviceDiagram(bool pad, string family, Func<string, KeyBadgeState> stateForKey, Action<string> select,
@@ -125,14 +129,25 @@ namespace PBZKeyForge
             this.pad = pad; this.stateForKey = stateForKey; this.selectedKey = selectedKey;
             controller = sony ? "playstation" : "xbox";
             extraKeys = extras;
+            targetCacheDirty = true;
             if (layout) { hoveredKey = null; tip.SetToolTip(this, ""); PerformLayout(); }
-            else foreach (string key in targets.Keys) { states[key] = stateForKey(key); AddBadge(key); }
+            else
+            {
+                foreach (string key in targets.Keys.ToArray())
+                {
+                    KeyBadgeState previous;
+                    var next = stateForKey(key);
+                    bool widthChanged = !states.TryGetValue(key, out previous) || previous.Number != next.Number;
+                    states[key] = next;
+                    if (widthChanged) AddBadge(key);
+                }
+            }
             AccessibleName = I18n.Str("views.clickkey");
             UpdateToolTip();
             Invalidate();
         }
         public void SelectKey(string key)
-        { selectedKey = key; Invalidate(); }
+        { selectedKey = key; targetCacheDirty = true; Invalidate(); }
         static Image Artwork(string device)
         { return device == "keyboard" ? EditorArtwork.Keyboard : device == "mouse" ? EditorArtwork.Mouse : device == "xbox" ? EditorArtwork.Xbox : EditorArtwork.PlayStation; }
         static RectangleF Fit(Image image, RectangleF area)
@@ -169,6 +184,7 @@ namespace PBZKeyForge
         protected override void OnLayout(LayoutEventArgs e)
         {
             if (deviceArtwork != null) { deviceArtwork.Dispose(); deviceArtwork = null; }
+            targetCacheDirty = true;
             if (stateForKey == null) { base.OnLayout(e); return; }
             using (var graphics = CreateGraphics()) scale = graphics.DpiX / 96f;
             targets.Clear(); badges.Clear(); states.Clear(); devices.Clear(); imageBounds.Clear();
@@ -264,6 +280,7 @@ namespace PBZKeyForge
         {
             base.OnMouseMove(e); string key = Hit(e.Location); Cursor = key == null ? Cursors.Default : Cursors.Hand;
             if (key == hoveredKey) return; hoveredKey = key;
+            targetCacheDirty = true;
             UpdateToolTip();
             Invalidate();
         }
@@ -274,7 +291,11 @@ namespace PBZKeyForge
                 + " · " + states[key].Status + (states[key].Complete ? "" : "\n" + I18n.Str("views.partial"));
             if (tip.GetToolTip(this) != text) tip.SetToolTip(this, text);
         }
-        protected override void OnMouseLeave(EventArgs e) { base.OnMouseLeave(e); hoveredKey = null; Invalidate(); }
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            hoveredKey = null; targetCacheDirty = true; Invalidate();
+        }
         protected override void OnMouseClick(MouseEventArgs e)
         { base.OnMouseClick(e); if (e.Button == MouseButtons.Left) { string key = Hit(e.Location); if (key != null) { Focus(); select(key); } } }
         protected override bool IsInputKey(Keys keyData) { return (keyData & Keys.KeyCode) == Keys.Left || (keyData & Keys.KeyCode) == Keys.Right || base.IsInputKey(keyData); }
@@ -326,16 +347,37 @@ namespace PBZKeyForge
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e); EditorArtwork.PaintEffect(this, e.Graphics); e.Graphics.SmoothingMode = SmoothingMode.AntiAlias; e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            if (targetCache == null || targetCache.Size != ClientSize)
+            {
+                if (targetCache != null) targetCache.Dispose();
+                targetCache = new Bitmap(ClientSize.Width, ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                targetCacheDirty = true;
+            }
+            if (targetCacheDirty)
+            {
+                using (var graphics = Graphics.FromImage(targetCache))
+                {
+                    graphics.Clear(Color.Transparent);
+                    graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    RenderTargets(graphics);
+                }
+                targetCacheDirty = false;
+            }
+            e.Graphics.DrawImageUnscaled(targetCache, 0, 0);
+        }
+        void RenderTargets(Graphics graphics)
+        {
             if (deviceArtwork == null && ClientSize.Width > 0 && ClientSize.Height > 0)
             {
                 deviceArtwork = new Bitmap(ClientSize.Width, ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-                using (var graphics = Graphics.FromImage(deviceArtwork))
+                using (var artworkGraphics = Graphics.FromImage(deviceArtwork))
                 {
-                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    foreach (var item in imageBounds) graphics.DrawImage(Artwork(item.Key), item.Value);
+                    artworkGraphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    foreach (var item in imageBounds) artworkGraphics.DrawImage(Artwork(item.Key), item.Value);
                 }
             }
-            if (deviceArtwork != null) e.Graphics.DrawImageUnscaled(deviceArtwork, 0, 0);
+            if (deviceArtwork != null) graphics.DrawImageUnscaled(deviceArtwork, 0, 0);
             using (var keyFont = new Font("Segoe UI", KeyboardFontSize()))
             using (var mouseFont = new Font(Font.FontFamily, 8f))
             foreach (var item in targets)
@@ -347,26 +389,26 @@ namespace PBZKeyForge
                     using (var path = TargetOutline(key, box))
                     using (var brush = new SolidBrush(Color.FromArgb(active ? 80 : 45, active ? state.Color : EditorTheme.Muted)))
                     using (var pen = new Pen(active ? EditorTheme.Ink : EditorTheme.Muted, active ? 1.5f * scale : scale))
-                    { e.Graphics.FillPath(brush, path); e.Graphics.DrawPath(pen, path); }
+                    { graphics.FillPath(brush, path); graphics.DrawPath(pen, path); }
                 }
                 string caption = devices[key] == "extra" ? BindingButton.FriendlyKey(key) : KeyCaption(key, devices[key]);
                 Font captionFont = devices[key] == "keyboard" ? keyFont : mouseFont;
                 RectangleF captionBox = box;
                 if (pad && devices[key] != "extra")
                 {
-                    Size text = TextRenderer.MeasureText(e.Graphics, caption, captionFont, Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
+                    Size text = TextRenderer.MeasureText(graphics, caption, captionFont, Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
                     captionBox.Inflate(Math.Max(0, text.Width - box.Width) / 2, Math.Max(0, text.Height - box.Height) / 2);
                 }
                 var captionBounds = Rectangle.Round(captionBox);
                 const TextFormatFlags captionFlags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.NoPadding;
-                Size captionSize = TextRenderer.MeasureText(e.Graphics, caption, captionFont, Size.Empty, captionFlags);
+                Size captionSize = TextRenderer.MeasureText(graphics, caption, captionFont, Size.Empty, captionFlags);
                 float fontRatio = devices[key] == "keyboard" ? Math.Min(1, Math.Min(Math.Max(1, captionBounds.Width - 1f) / captionSize.Width, Math.Max(1, captionBounds.Height) / (float)captionSize.Height)) : 1;
                 if (fontRatio < 1)
                 {
                     using (var fitted = new Font(captionFont.FontFamily, captionFont.Size * fontRatio * .95f))
-                        TextRenderer.DrawText(e.Graphics, caption, fitted, captionBounds, EditorTheme.Ink, captionFlags);
+                        TextRenderer.DrawText(graphics, caption, fitted, captionBounds, EditorTheme.Ink, captionFlags);
                 }
-                else TextRenderer.DrawText(e.Graphics, caption, captionFont, captionBounds, EditorTheme.Ink, captionFlags);
+                else TextRenderer.DrawText(graphics, caption, captionFont, captionBounds, EditorTheme.Ink, captionFlags);
                 if (!state.Visible) continue;
                 RectangleF badge = badges[key];
                 using (var path = EditorArtwork.Rounded(badge, badge.Height / 2))
@@ -374,8 +416,8 @@ namespace PBZKeyForge
                 using (var pen = new Pen(EditorTheme.Surface, scale))
                 using (var numberFont = BadgeFont(key, badge.Height))
                 {
-                    e.Graphics.FillPath(brush, path); e.Graphics.DrawPath(pen, path);
-                    TextRenderer.DrawText(e.Graphics, state.Number, numberFont, Rectangle.Round(badge), EditorTheme.Background,
+                    graphics.FillPath(brush, path); graphics.DrawPath(pen, path);
+                    TextRenderer.DrawText(graphics, state.Number, numberFont, Rectangle.Round(badge), EditorTheme.Background,
                         TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
                 }
             }
@@ -386,7 +428,15 @@ namespace PBZKeyForge
             return imageBounds.TryGetValue("keyboard", out keyboard) ? Math.Max(4.5f, Math.Min(9f, keyboard.Width / scale / 65f)) : 9f;
         }
         protected override void Dispose(bool disposing)
-        { if (disposing) { tip.Dispose(); if (deviceArtwork != null) deviceArtwork.Dispose(); } base.Dispose(disposing); }
+        {
+            if (disposing)
+            {
+                tip.Dispose();
+                if (deviceArtwork != null) deviceArtwork.Dispose();
+                if (targetCache != null) targetCache.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 
     internal sealed class RelationshipButton : EditorButton
@@ -438,24 +488,63 @@ namespace PBZKeyForge
 
     internal sealed class BindingLegend : Control
     {
-        public bool IsOffline;
+        bool offline;
+        Bitmap textCache;
+        bool textCacheDirty = true;
+        string textCacheLanguage;
+        float textCacheScale;
+        public bool IsOffline
+        {
+            get { return offline; }
+            set
+            {
+                if (offline == value) return;
+                offline = value; textCacheDirty = true; Invalidate();
+            }
+        }
         public BindingLegend()
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
         }
         protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaint(e); EditorArtwork.PaintEffect(this, e.Graphics); float scale = e.Graphics.DpiX / 96f, left = 8 * scale;
-            string[] names = { "views.original", "views.savedcustom", IsOffline ? "offline.pending" : "views.pending" };
+            base.OnPaint(e); EditorArtwork.PaintEffect(this, e.Graphics);
+            float scale = e.Graphics.DpiX / 96f;
+            if (textCache == null || textCache.Size != ClientSize || textCacheDirty
+                || textCacheLanguage != I18n.Current || Math.Abs(textCacheScale - scale) > .01f)
+            {
+                if (textCache != null) textCache.Dispose();
+                textCache = new Bitmap(Math.Max(1, ClientSize.Width), Math.Max(1, ClientSize.Height),
+                    System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                using (var graphics = Graphics.FromImage(textCache))
+                {
+                    graphics.Clear(Color.Transparent);
+                    RenderText(graphics, scale);
+                }
+                textCacheDirty = false; textCacheLanguage = I18n.Current; textCacheScale = scale;
+            }
+            e.Graphics.DrawImageUnscaled(textCache, 0, 0);
+        }
+        void RenderText(Graphics graphics, float scale)
+        {
+            float left = 8 * scale;
+            string[] names = { "views.original", "views.savedcustom", offline ? "offline.pending" : "views.pending" };
             Color[] colors = { BindingStatus.Factory, BindingStatus.Custom, BindingStatus.Pending };
             using (var font = new Font(Font.FontFamily, 8f))
             for (int i = 0; i < names.Length; i++)
             {
                 string text = I18n.Str(names[i]);
-                BindingStatus.Dot(e.Graphics, colors[i], left, Height / 2f - 3 * scale, 6 * scale);
-                TextRenderer.DrawText(e.Graphics, text, font, new Point((int)(left + 11 * scale), (Height - font.Height) / 2), EditorTheme.Muted);
-                left += TextRenderer.MeasureText(e.Graphics, text, font).Width + 28 * scale;
+                BindingStatus.Dot(graphics, colors[i], left, Height / 2f - 3 * scale, 6 * scale);
+                TextRenderer.DrawText(graphics, text, font, new Point((int)(left + 11 * scale), (Height - font.Height) / 2), EditorTheme.Muted);
+                left += TextRenderer.MeasureText(graphics, text, font).Width + 28 * scale;
             }
+        }
+        protected override void OnFontChanged(EventArgs e) { textCacheDirty = true; base.OnFontChanged(e); }
+        protected override void OnResize(EventArgs e) { textCacheDirty = true; base.OnResize(e); }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && textCache != null) textCache.Dispose();
+            base.Dispose(disposing);
         }
     }
 
@@ -578,13 +667,39 @@ namespace PBZKeyForge
             string familyName = snapshot.Family;
             var physical = pad ? DeviceHotspots.ForDevice("xbox").Keys.Concat(DeviceHotspots.ForDevice("playstation").Keys)
                 : DeviceHotspots.ForDevice("keyboard").Keys.Concat(DeviceHotspots.ForDevice("mouse").Keys);
-            var states = physical.Concat(known).Distinct().ToDictionary(key => key, key => new KeyBadgeState {
-                IsOffline = session.IsOffline,
-                Count = relations.Count(r => r.Keys.Contains(key)), Complete = relations.All(r => r.KnowsKey(key)),
-                Differs = relations.Any(r => r.DefaultKeys != null && (r.Keys.Contains(key) && !r.DefaultKeys.Contains(key)
-                    || r.Complete && !r.Keys.Contains(key) && r.DefaultKeys.Contains(key))),
-                Pending = relations.Any(r => r.Keys.Contains(key) != before[r.Action].Keys.Contains(key)
-                    && r.KnowsKey(key) && before[r.Action].KnowsKey(key)) });
+            var stateKeys = new HashSet<string>(physical.Concat(known).Distinct(), StringComparer.Ordinal);
+            var states = stateKeys.ToDictionary(key => key, key => new KeyBadgeState { IsOffline = session.IsOffline, Complete = true },
+                StringComparer.Ordinal);
+            foreach (var relation in relations)
+            {
+                var currentKeys = new HashSet<string>(relation.Keys, StringComparer.Ordinal);
+                var defaultKeys = relation.DefaultKeys == null ? null : new HashSet<string>(relation.DefaultKeys, StringComparer.Ordinal);
+                var savedKeys = new HashSet<string>(before[relation.Action].Keys, StringComparer.Ordinal);
+                foreach (string key in currentKeys)
+                {
+                    KeyBadgeState badge;
+                    if (!states.TryGetValue(key, out badge)) continue;
+                    badge.Count++;
+                    if (defaultKeys != null && !defaultKeys.Contains(key)) badge.Differs = true;
+                    if (!savedKeys.Contains(key) && relation.KnowsKey(key) && before[relation.Action].KnowsKey(key)) badge.Pending = true;
+                }
+                if (defaultKeys != null)
+                    foreach (string key in defaultKeys)
+                    {
+                        KeyBadgeState badge;
+                        if (states.TryGetValue(key, out badge) && !currentKeys.Contains(key) && relation.Complete) badge.Differs = true;
+                    }
+                foreach (string key in savedKeys)
+                {
+                    KeyBadgeState badge;
+                    if (!currentKeys.Contains(key) && states.TryGetValue(key, out badge)
+                        && relation.KnowsKey(key) && before[relation.Action].KnowsKey(key)) badge.Pending = true;
+                }
+                if (relation.Complete) continue;
+                IEnumerable<string> unknown = defaultKeys == null ? stateKeys.Except(currentKeys)
+                    : defaultKeys.Where(key => stateKeys.Contains(key) && !currentKeys.Contains(key));
+                foreach (string key in unknown) states[key].Complete = false;
+            }
             Func<string, KeyBadgeState> state = key => states[key];
             if (diagram == null)
             {

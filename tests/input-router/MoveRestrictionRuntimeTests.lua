@@ -18,6 +18,7 @@ local function object(id,data)
     function data:GetAddress() return id end
     function data:GetPropertyValue(name) return self[name] end
     function data:SetPropertyValue(name,value)
+        self.writes=(self.writes or 0)+1
         local names={};for _,tag in ipairs(value.GameplayTags) do names[#names+1]=tag.TagName:ToString() end
         self[name]=container(names)
     end
@@ -63,7 +64,7 @@ local function fixture(selected,key,predecessor)
     local choices=selected=="all" and kinds or selected and {selected} or {}
     local config={enabled=true,targets={attack=target},bindings={{id="attack",keys={key or "G"},trigger="press",
         restriction_bypasses=choices,outputs={"attack"}}}}
-    local backend=setmetatable({config=config,state={ready=true},pawn=pawn},Backend)
+    local backend=setmetatable({config=config,state={ready=true},pawn=pawn,generation=1},Backend)
     function backend:receiver(request) return request.receiver=="ability_system" and asc or input end
     function backend:object() return class end
     function backend:library() return class end
@@ -252,6 +253,20 @@ end
 
 do
     local _,backend,state,target=fixture("all")
+    local cdoWrites,abilityWrites
+    Restrictions.with(backend,target,{restriction_bypasses=kinds},function()
+        cdoWrites,abilityWrites=state.cdo.writes,state.ability.writes
+        backend.generation=2
+    end)
+    check(state.cdo.writes==cdoWrites and state.ability.writes==abilityWrites,
+        "A session change during activation must discard restriction records without writing stale abilities")
+    check(state.cdo.ActivationRequiredTags.GameplayTags:GetArrayNum()==1
+        and state.ability.ActivationRequiredTags.GameplayTags:GetArrayNum()==1,
+        "A stale generation must not restore native fields on world-owned abilities")
+end
+
+do
+    local _,backend,state,target=fixture("all")
     local names={}
     for _,tag in ipairs(state.cdo.ActivationRequiredTags.GameplayTags) do names[#names+1]=tag.TagName:ToString() end
     local replica=object(91,{class=state.ability:GetClass(),ActivationRequiredTags=container(names),
@@ -347,6 +362,20 @@ do
     check(not result and count==0,"A false native result cannot acquire a match by removing blockers")
     current=nil
     backend.resource_costs:reset()
+end
+do
+    local _,backend,state,target=fixture("all")
+    local cost=Costs.new(backend);backend.resource_costs=cost
+    local cdoWrites,abilityWrites
+    local result=cost:activate(target,false,function()
+        cdoWrites,abilityWrites=state.cdo.writes,state.ability.writes
+        backend.generation=backend.generation+1
+        return true
+    end,{restriction_bypasses=kinds})
+    check(result==true and cost.closed and backend.resource_costs==nil,
+        "A transfer interrupted by a player-session change must discard its stale tuning pipeline")
+    check(state.cdo.writes==cdoWrites and state.ability.writes==abilityWrites,
+        "An interrupted transfer must not restore fields on the previous player's abilities")
 end
 
 print("MoveRestrictionRuntimeTests PASS "..checks)
