@@ -31,7 +31,7 @@ Copying a preset save replaces your saved layouts. Ordinary shared keys trigger 
 The interface supports all 15 game languages, including Simplified and Traditional Chinese. Switch languages from the toolbar. Keyboard/mouse, Xbox and PlayStation are supported. The gallery shows complete PC, Xbox and PlayStation key views, followed by the extra-action catalog, in English and Simplified Chinese.
 
 [center][b]Select a key, edit its actions, and review the scheme changes[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107625-670626789.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794192899-1278073912.png[/img][/center]
 
 [color=#e8b96a][b]CHOOSE HOW A PRESET CHANGES YOUR KEYS[/b][/color]
 Three choices stay visible beside the preset picker. Hover over a choice for details.
@@ -47,14 +47,14 @@ The initial choice is Preset only, and your choice is remembered. Selecting a pr
 Click [b]Save as preset[/b] in the scheme bar to name the current draft and choose its devices. [b]Preset manager[/b] beside Quick setup manages your preset library independently. Select a preset or paste a share code to see its contents, rename, save, delete, export or share it. Personal presets remain separate from built-ins.
 
 [center][b]Save your current scheme with a name[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107625-878518668.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794192909-168972536.png[/img][/center]
 
 Copy a named, one-line share code for all included devices, keyboard/mouse, controllers or one controller family. Export saves that share code as a text file. Select a saved preset to see its bindings, triggers and settings; check presets in the library to delete them.
 
 Paste a share code to see the preset contents automatically. [b]Load into editor…[/b] returns it to the main window, where you choose a load mode and confirm its effect on the editing scheme. [b]Apply changes[/b] activates the resulting draft. Saving to [b]My presets[/b] is optional and separate from loading. Enhancement presets and share codes include enhancement settings. [b]Export game bindings[/b] in the main window creates a .sav copy for ordinary bindings or a ZIP preserving the enhancement scheme library. Export leaves the source save and active game scheme unchanged.
 
 [center][b]Share your layout for all devices or a selected device family[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107628-2130680389.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794192921-1167744653.png[/img][/center]
 
 [color=#e8b96a][b]BUILT-IN LAYOUTS[/b][/color]
 [list]
@@ -74,19 +74,19 @@ Click any key and [b]Add action[/b], or browse [b]By action[/b]. The expanded gr
 The action table includes [b]attack insight[/b] for bindable moves: physical or elemental damage coefficients, poise coefficients, conditional ranges and timeline attack nodes. Values are searchable, and their tooltips distinguish resource coefficients from final health damage and attack nodes from actual hit counts. One-Eyed Bow entries use the real held-input and projectile preparation; Thousand-Eyed Gaze is a related upgrade of its native entrance. Bind several functions to one key, or give one function multiple inputs.
 
 [center][b]Search extra weapon moves and bind complete Combat Arts[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107628-320811591.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794192931-826567439.png[/img][/center]
 
 Use press, release, tap/hold, chords, repeated presses or sequences. Each combat binding can independently bypass supported resource costs, use full-resource release effects and adjust health damage, startup speed and recovery speed. Separate restriction controls cover equipment, training, ground/air, stance, predecessor and cooldown where supported. Optional super armor and invincibility apply during this move. Defaults preserve normal rules and 1× multipliers. Projectiles and native follow-ups retain their own activation settings; temporary equipment and effects are restored when the move ends.
 
 [b]Independent Deflect:[/b] hold to repeat short defense presses with complete release frames, including when several bindings overlap. Independent Stance stays held; ordinary Guard keeps the game's combined behavior. Explicit single-press and repeat-interval choices remain available.
 
 [center][b]Choose resource and restriction bypasses, damage, speed and move effects[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107629-924528065.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794192942-937114417.png[/img][/center]
 
 Enhancement uses independent schemes, initially copied from the three game layouts. Use [b]+[/b] to copy a scheme and [b]•••[/b] to rename or remove an added scheme. Scheme-switch bindings work in game even after closing the editor. Applying a scheme deploys its bindings; clicking a tab only selects what you edit. Turning enhancement off returns to the game's ordinary schemes and retains the enhancement library.
 
 [center][b]Build independent enhancement schemes and add actions to any key[/b]
-[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107614-1437476136.png[/img][/center]
+[img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794192754-280259120.png[/img][/center]
 
 The runtime reduces repeated ability scans and mapping work, and checks current inputs and scene changes every frame. The changes reduce overhead during ordinary play and when enhancement bindings are active.
 
