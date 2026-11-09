@@ -142,7 +142,10 @@ class Browser:
     def html(self, name):
         path = ROOT / 'dist/publishing' / name
         path.parent.mkdir(parents=True, exist_ok=True)
-        self.action('get-html', '--max-bytes', '1500000', '--out', path, '--quiet')
+        state = self.sync()
+        self.call('get-html', '--max-bytes', '1500000', '--out', path, '--quiet',
+                  '--context', state['context_id'], '--observation', state['observation_id'],
+                  json_output=False)
         html = path.read_text(encoding='utf-8')
         if not html.rstrip().endswith('</html>'):
             raise RuntimeError('Incomplete page HTML; inspect the current page before proceeding.')
