@@ -14,6 +14,8 @@ namespace PBZKeyForge
         public string[] GroupPath = new string[0], GroupLabels = new string[0];
         public string GroupSearchText;
         public string[] SearchNames = new string[0];
+        internal string GroupPathText, LabelLower, GroupSearchTextLower, SearchTextLower;
+        internal string[] SearchNamesLower = new string[0];
         public bool RequiresKeyEnhancement;
         public string[] FixedKeys;
         public string[] FactoryKeys = new string[0];
@@ -27,6 +29,7 @@ namespace PBZKeyForge
         public string Id, FunctionId, Axis, RuleId, Trigger = "default";
         public string ExecutionOwner;
         public string DisplayName;
+        internal string OwnerSchemeId;
         public bool OriginalInputBlocked;
         public bool? KeepNativeTrigger;
         public bool BypassResources, BypassRestrictions, SuperArmor, Invincible;
@@ -105,7 +108,7 @@ namespace PBZKeyForge
             snapshotCache = null; snapshotCacheKey = null; snapshotCacheSource = null;
         }
         NativeBindingOverride NativeOverride(string functionId, KeyEnhancementConfiguration source)
-        { return source.NativeBindings.FirstOrDefault(item => item.FunctionId == functionId && item.Device == (pad ? "gamepad" : "keyboard")); }
+        { return NativeBindingsFor(source).FirstOrDefault(item => item.FunctionId == functionId && item.Device == (pad ? "gamepad" : "keyboard")); }
         NativeBindingOverride EditNative(string functionId)
         {
             var item = NativeOverride(functionId, config);
@@ -113,9 +116,62 @@ namespace PBZKeyForge
             {
                 item = new NativeBindingOverride { FunctionId = functionId, Device = pad ? "gamepad" : "keyboard",
                     Keys = session.Relations(functionId, pad, family).Keys.ToList() };
-                config.NativeBindings.Add(item);
+                NativeBindingsFor(config).Add(item);
             }
             return item;
+        }
+        KeyEnhancementScheme EditingScheme(KeyEnhancementConfiguration source)
+        {
+            if (source == null || source.Enabled || source.Schemes == null || source.Schemes.Count == 0) return null;
+            return source.Schemes.First(item => item.Id == source.SelectedSchemeId);
+        }
+        List<NativeBindingOverride> NativeBindingsFor(KeyEnhancementConfiguration source)
+        {
+            var scheme = EditingScheme(source);
+            return scheme == null ? source.NativeBindings : scheme.NativeBindings;
+        }
+        List<KeyEnhancementRule> EditableRulesFor(KeyEnhancementConfiguration source)
+        {
+            var scheme = EditingScheme(source);
+            return scheme == null ? source.Rules : scheme.Rules;
+        }
+        IEnumerable<KeyEnhancementRule> RulesFor(KeyEnhancementConfiguration source)
+        {
+            var scheme = EditingScheme(source);
+            return scheme == null ? source.Rules : scheme.Rules.Concat(source.SchemeSwitchBindings);
+        }
+        List<KeyEnhancementSuppression> SuppressionsFor(KeyEnhancementConfiguration source)
+        {
+            var scheme = EditingScheme(source);
+            return scheme == null ? source.Suppressions : scheme.Suppressions;
+        }
+        List<string> NativeAbilitySuppressionsFor(KeyEnhancementConfiguration source)
+        {
+            var scheme = EditingScheme(source);
+            return scheme == null ? source.NativeAbilitySuppressions : scheme.NativeAbilitySuppressions;
+        }
+        static bool IsSchemeRule(KeyEnhancementRule rule)
+        { return rule.Outputs.Count > 0 && rule.Outputs.All(output => output.Kind == "scheme"); }
+        void AddRule(KeyEnhancementRule rule)
+        {
+            if (IsSchemeRule(rule))
+            {
+                config.SchemeSwitchBindings.Add(rule);
+                if (config.Enabled || config.Schemes.Count == 0) config.Rules.Add(rule);
+            }
+            else EditableRulesFor(config).Add(rule);
+        }
+        void RemoveRule(KeyEnhancementRule rule)
+        {
+            config.SchemeSwitchBindings.Remove(rule);
+            config.Rules.Remove(rule);
+            foreach (var scheme in config.Schemes) scheme.Rules.Remove(rule);
+        }
+        KeyEnhancementRule RuleFor(KeyEnhancementConfiguration source, string id)
+        {
+            return source.SchemeSwitchBindings.FirstOrDefault(rule => rule.Id == id)
+                ?? EditableRulesFor(source).FirstOrDefault(rule => rule.Id == id)
+                ?? source.Rules.FirstOrDefault(rule => rule.Id == id);
         }
         public int FamilyIndex { get { return family; } }
         public string[] UncoveredInputs { get { return KeyEnhancementInputPlan.Uncovered; } }
@@ -123,7 +179,7 @@ namespace PBZKeyForge
         public bool UsesNativeTrigger(string functionId)
         {
             var function = Functions.First(item => item.Id == functionId);
-            return NativeTriggerTags(function).All(tag => !config.NativeAbilitySuppressions.Contains(tag));
+            return NativeTriggerTags(function).All(tag => !NativeAbilitySuppressionsFor(config).Contains(tag));
         }
 
         public void SetNativeTrigger(string functionId, bool enabled)
@@ -132,8 +188,8 @@ namespace PBZKeyForge
             var function = Functions.First(item => item.Id == functionId);
             foreach (string tag in NativeTriggerTags(function))
             {
-                config.NativeAbilitySuppressions.RemoveAll(item => item == tag);
-                if (!enabled) config.NativeAbilitySuppressions.Add(tag);
+                NativeAbilitySuppressionsFor(config).RemoveAll(item => item == tag);
+                if (!enabled) NativeAbilitySuppressionsFor(config).Add(tag);
             }
         }
 
@@ -150,10 +206,14 @@ namespace PBZKeyForge
         {
             if (session == null || config == null) throw new ArgumentNullException(session == null ? "session" : "config");
             this.session = session; this.config = config; this.baseline = baseline ?? new KeyEnhancementConfiguration(); this.pad = pad; this.family = family;
-            if (config.Enabled && config.Schemes.Count > 0)
+            if (config.Schemes.Count > 0)
             {
                 this.baseline = this.baseline.Clone(); this.baseline.SetEnabled(config.Enabled); this.baseline.EnsureSchemes(session);
-                if (this.baseline.Schemes.Any(item => item.Id == config.SelectedSchemeId)) this.baseline.SelectScheme(config.SelectedSchemeId);
+                if (this.baseline.Schemes.Any(item => item.Id == config.SelectedSchemeId))
+                {
+                    this.baseline.SelectedSchemeId = config.SelectedSchemeId;
+                    if (this.baseline.Enabled) this.baseline.SelectScheme(config.SelectedSchemeId);
+                }
                 else this.baseline = config.Clone();
                 this.baseline.Enabled = config.Enabled;
             }
@@ -163,7 +223,8 @@ namespace PBZKeyForge
         {
             get
             {
-                var customNames = config.CustomFunctions.Concat(config.Rules.SelectMany(rule => rule.Outputs))
+                var currentRules = RulesFor(config).ToArray();
+                var customNames = config.CustomFunctions.Concat(currentRules.SelectMany(rule => rule.Outputs))
                     .Select(output => OutputFunction(output) + "\n" + output.Name + "\n" + output.Kind + "\n"
                         + output.Path + "\n" + output.Tag + "\n" + output.Property + "\n" + output.Code + "\n" + output.MappingName).Distinct().ToArray();
                 if (functions != null && functionsLanguage == I18n.Current && functionsProfile == session.SelectedProfile + config.SelectedSchemeId + string.Join(";", config.Schemes.Select(item => item.Id + item.Name))
@@ -190,7 +251,7 @@ namespace PBZKeyForge
                         RequiresKeyEnhancement = true, Targets = new[] { target } };
                     result.Add(function);
                 }
-                foreach (var output in config.CustomFunctions.Concat(config.Rules.SelectMany(rule => rule.Outputs)))
+                foreach (var output in config.CustomFunctions.Concat(currentRules.SelectMany(rule => rule.Outputs)))
                 {
                     string id = OutputFunction(output);
                     if (!result.Any(item => item.Id == id)) result.Add(new BindingFunction { Id = id, Label = string.IsNullOrWhiteSpace(output.Name) ? FunctionLabel(id) : output.Name, TechnicalName = output.Path ?? output.Tag ?? output.Property,
@@ -203,12 +264,28 @@ namespace PBZKeyForge
                     FunctionLocalization localization;
                     bool localized = Localizations.TryGetValue(CompleteMoveCatalog.SourceId(function.Id), out localization) && localization.labels != null && localization.labels.ContainsKey(I18n.Current);
                     function.LabelSource = localized && !ActionCatalogLabels.IsSemantic(function.Id) && function.Id != "action:" + KeyboardMovement && function.Id != "action:/SGameLocomotionDriver/Input/IA_JoystickMoveInput" ? localization.source : "semantic";
-                    function.SearchNames = new[] { function.Label }.Concat(GameMoveNames.SearchNames(function.Id)).Concat(PlayerAliases(function.Id))
+                    string sourceId = CompleteMoveCatalog.SourceId(function.Id);
+                    bool inheritsSource = sourceId != function.Id;
+                    function.SearchNames = new[] { function.Label }
+                        .Concat(inheritsSource ? new[] { FunctionLabel(sourceId) } : new string[0])
+                        .Concat(GameMoveNames.SearchNames(function.Id))
+                        .Concat(inheritsSource ? GameMoveNames.SearchNames(sourceId) : new string[0])
+                        .Concat(PlayerAliases(function.Id))
+                        .Concat(inheritsSource ? PlayerAliases(sourceId) : new string[0])
                         .Concat(function.NativeAction == null && localization != null ? localization.aliases ?? new string[0] : new string[0])
                         .Concat(function.NativeAction == null ? new string[0] : I18n.Translations("act." + function.NativeAction)).ToArray();
                     function.SearchText = function.Label + " " + function.TechnicalName + " " + function.Id + " " + string.Join(" ", function.SearchNames) + " " + ActionCatalogLabels.SearchAliases(function.Id);
                     if (localization != null)
                         function.SearchText += " " + string.Join(" ", localization.labels.Values.Concat(localization.aliases ?? new string[0]));
+                    if (inheritsSource)
+                    {
+                        var sourceTarget = KeyEnhancementCatalog.Targets.FirstOrDefault(target => target.Id == sourceId);
+                        function.SearchText += " " + sourceId + " " + ActionCatalogLabels.SearchAliases(sourceId);
+                        if (sourceTarget != null)
+                            function.SearchText += " " + sourceTarget.Name + " " + sourceTarget.Path
+                                + " " + string.Join(" ", sourceTarget.MappingNames.Select(FunctionLabel))
+                                + " " + string.Join(" ", sourceTarget.MappingNames);
+                    }
                     foreach (var target in function.Targets)
                     {
                         function.SearchText += " " + string.Join(" ", target.MappingNames.Select(FunctionLabel)) + " " + string.Join(" ", target.MappingNames);
@@ -225,6 +302,10 @@ namespace PBZKeyForge
                     function.SearchText += " " + function.GroupSearchText + " " + string.Join(" ", PlayerAliases(Purpose(function)));
                     if (function.TechnicalName != null && function.TechnicalName.Contains("Look")) function.SearchText += " 相机 镜头 摄像机 camera look view";
                     if (function.TechnicalName != null && function.TechnicalName.Contains("Climb")) function.SearchText += " 攀爬 爬梯 梯子 climb ladder";
+                    function.LabelLower = NormalizeSearch(function.Label);
+                    function.GroupSearchTextLower = NormalizeSearch(function.GroupSearchText);
+                    function.SearchNamesLower = function.SearchNames.Select(NormalizeSearch).ToArray();
+                    function.SearchTextLower = NormalizeSearch(function.SearchText);
                 }
                 foreach (var function in result)
                     function.IdentityCode = function.FixedKeys != null ? "WASD · " + function.Id.Substring(9)
@@ -235,6 +316,7 @@ namespace PBZKeyForge
                     foreach (var function in group) function.IdentityCode = function.Id;
                 functionsLanguage = I18n.Current;
                 functionsProfile = session.SelectedProfile + config.SelectedSchemeId + string.Join(";", config.Schemes.Select(item => item.Id + item.Name)); customFunctionNames = customNames;
+                lastSearchQuery = null; lastSearchResult = null;
                 return functions = OrderFunctions(result);
             }
         }
@@ -337,6 +419,7 @@ namespace PBZKeyForge
         BindingEntry[] CollectEntries(KeyEnhancementConfiguration source, bool before, string functionId, bool allDevices = false)
         {
             var result = new List<BindingEntry>();
+            var ownerSchemeId = EditingScheme(source) == null ? null : source.SelectedSchemeId;
             var selected = functionId == null ? Functions : new[] { Functions.First(item => item.Id == functionId) };
             foreach (var function in selected)
             if (function.NativeAction != null)
@@ -345,14 +428,14 @@ namespace PBZKeyForge
                 var nativeOverride = NativeOverride(function.Id, source);
                 if (nativeOverride != null && !source.Enabled)
                     foreach (string original in relation.Keys)
-                        result.Add(new BindingEntry { Id = "save:" + function.Id + ":" + original, FunctionId = function.Id, Keys = new[] { original },
+                        result.Add(new BindingEntry { Id = "save:" + function.Id + ":" + original, FunctionId = function.Id, OwnerSchemeId = ownerSchemeId, Keys = new[] { original },
                             IsNative = true, Active = true, ExecutionOwner = "game", IsDefault = relation.DefaultKeys.Contains(original),
                             Pending = !before && session.RelationshipPending(function.NativeAction, original, pad, family),
                             ReadOnly = session.Defaults.FixedForAction(function.NativeAction, pad).Contains(original) });
                 foreach (string key in nativeOverride == null ? relation.Keys : nativeOverride.Keys.ToArray())
                 {
                     bool suppressed = source.Enabled && FullySuppressed(function, key, source);
-                    result.Add(new BindingEntry { Id = "native:" + function.Id + ":" + key, FunctionId = function.Id, Keys = new[] { key }, IsNative = true,
+                    result.Add(new BindingEntry { Id = "native:" + function.Id + ":" + key, FunctionId = function.Id, OwnerSchemeId = ownerSchemeId, Keys = new[] { key }, IsNative = true,
                         ExecutionOwner = nativeOverride != null && !source.Enabled ? "inactive" : !source.Enabled || KeyEnhancementInputPlan.Retained(function.NativeAction) ? "game" : !KeyEnhancementInputPlan.Covers(function.NativeAction, key) ? "uncovered" : suppressed ? "inactive" : "scheduler",
                         OriginalInputBlocked = source.Enabled && KeyEnhancementInputPlan.Covers(function.NativeAction, key),
                         IsRuntimeBinding = nativeOverride != null, Active = !suppressed && (nativeOverride == null || source.Enabled), Suppressed = suppressed, IsDefault = relation.DefaultKeys != null && relation.DefaultKeys.Contains(key),
@@ -364,14 +447,14 @@ namespace PBZKeyForge
                 foreach (string key in function.FixedKeys)
                 {
                     bool suppressed = source.Enabled && FullySuppressed(function, key, source);
-                    result.Add(new BindingEntry { Id = "fixed:" + function.Id + ":" + key, FunctionId = function.Id, Keys = new[] { key },
+                    result.Add(new BindingEntry { Id = "fixed:" + function.Id + ":" + key, FunctionId = function.Id, OwnerSchemeId = ownerSchemeId, Keys = new[] { key },
                         IsNative = true, ReadOnly = true, IsDefault = true, Active = !suppressed, Suppressed = suppressed,
                         OutputValue = function.DefaultOutputValue, ExecutionOwner = !source.Enabled ? "game" : suppressed ? "inactive" : "scheduler",
                         OriginalInputBlocked = source.Enabled,
                         Pending = !before && suppressed != (baseline.Enabled && FullySuppressed(function, key, baseline)) });
                 }
-            var oldRules = baseline.Rules.ToDictionary(rule => rule.Id);
-            foreach (var rule in source.Rules.Where(rule => allDevices || DeviceMatches(rule)))
+            var oldRules = RulesFor(baseline).ToDictionary(rule => rule.Id);
+            foreach (var rule in RulesFor(source).Where(rule => allDevices || DeviceMatches(rule)))
             {
                 var indexes = Enumerable.Range(0, rule.Outputs.Count).Where(index => functionId == null || OutputFunction(rule.Outputs[index]) == functionId).ToArray();
                 if (indexes.Length == 0) continue;
@@ -380,7 +463,8 @@ namespace PBZKeyForge
                 bool pending = !before && (old == null || Serialize(old) != serialized || baseline.Enabled != config.Enabled);
                 foreach (int i in indexes)
                     {
-                        result.Add(new BindingEntry { Id = rule.Id + ":" + i, FunctionId = OutputFunction(rule.Outputs[i]), Keys = rule.Keys.ToArray(), Axis = rule.Axis,
+                        result.Add(new BindingEntry { Id = rule.Id + ":" + i, FunctionId = OutputFunction(rule.Outputs[i]),
+                            OwnerSchemeId = IsSchemeRule(rule) ? null : ownerSchemeId, Keys = rule.Keys.ToArray(), Axis = rule.Axis,
                             DisplayName = rule.Outputs[i].Kind == "scheme" ? SchemeBindingLabel(source, rule.Outputs[i].Tag) : null,
                             ExecutionOwner = !source.Enabled || !rule.Enabled ? "inactive" : KeyEnhancementInputPlan.SupportsMapping(rule.Outputs[i]) ? "scheduler" : "uncovered",
                             Trigger = rule.DefaultTrigger ? "default" : rule.Trigger,
@@ -423,9 +507,9 @@ namespace PBZKeyForge
         { return path == null ? "" : Regex.Replace(path, "\\.[^./]+$", ""); }
         static string Serialize(object value) { return new JavaScriptSerializer { MaxJsonLength = 16777216 }.Serialize(value); }
         static KeyEnhancementRule Copy(KeyEnhancementRule rule) { return new JavaScriptSerializer().Deserialize<KeyEnhancementRule>(Serialize(rule)); }
-        static IEnumerable<KeyEnhancementSuppression> AllSuppressions(KeyEnhancementConfiguration source)
-        { return source.Suppressions.Concat(source.Rules.Where(rule => rule.Enabled || rule.BlockOriginalWhenDisabled).SelectMany(rule => rule.Suppressions)); }
-        static bool FullySuppressed(BindingFunction function, string key, KeyEnhancementConfiguration source)
+        IEnumerable<KeyEnhancementSuppression> AllSuppressions(KeyEnhancementConfiguration source)
+        { return SuppressionsFor(source).Concat(RulesFor(source).Where(rule => rule.Enabled || rule.BlockOriginalWhenDisabled).SelectMany(rule => rule.Suppressions)); }
+        bool FullySuppressed(BindingFunction function, string key, KeyEnhancementConfiguration source)
         {
             return function.Targets.Length > 0 && function.Targets.All(target => AllSuppressions(source).Any(item => PackagePath(item.ActionPath) == PackagePath(target.Path) && (string.IsNullOrEmpty(item.Key) || item.Key == key)));
         }
@@ -500,7 +584,7 @@ namespace PBZKeyForge
                 return Entries(functionId).First(entry => entry.IsNative && !entry.IsRuntimeBinding && entry.Keys[0] == specification.Keys[0]);
             }
             var rule = NewRule(function, specification);
-            config.Rules.Add(rule);
+            AddRule(rule);
             LinkInputVariants(rule);
             return CollectEntries(config, false, functionId, true).First(entry => entry.RuleId == rule.Id);
         }
@@ -519,14 +603,14 @@ namespace PBZKeyForge
             var rule = specification.Rule == null ? new KeyEnhancementRule() : Copy(specification.Rule);
             rule.Id = Guid.NewGuid().ToString("N"); ApplySpecification(rule, specification, function, target);
             rule.Outputs = new List<KeyEnhancementOutput> { target }; rule.Suppressions.Clear();
-            config.Rules.Add(rule); config.CustomFunctions.Add(target); functions = null;
+            AddRule(rule); config.CustomFunctions.Add(target); functions = null;
             return CollectEntries(config, false, id, true).First(entry => entry.RuleId == rule.Id);
         }
         public BindingEntry AddCustomTarget(KeyEnhancementOutput output, BindingEntry specification, string label)
         { return AddCustom(output, specification, label); }
         public KeyEnhancementOutput CustomOutput(string functionId)
         {
-            var output = config.CustomFunctions.Concat(config.Rules.Concat(baseline.Rules).SelectMany(rule => rule.Outputs)).First(item => OutputFunction(item) == functionId);
+            var output = config.CustomFunctions.Concat(RulesFor(config).Concat(RulesFor(baseline)).SelectMany(rule => rule.Outputs)).First(item => OutputFunction(item) == functionId);
             return new JavaScriptSerializer().Deserialize<KeyEnhancementOutput>(Serialize(output));
         }
         public string UpdateCustomOutput(string functionId, KeyEnhancementOutput output, string label)
@@ -541,7 +625,7 @@ namespace PBZKeyForge
             config.CustomFunctions.RemoveAll(item => OutputFunction(item) == functionId);
             config.CustomFunctions.Add(replacement);
             config.StoreSelectedScheme();
-            foreach (var rule in config.Rules.Concat(config.Schemes.SelectMany(scheme => scheme.Rules)).Distinct())
+            foreach (var rule in RulesFor(config).Concat(config.Schemes.SelectMany(scheme => scheme.Rules)).Distinct())
                 for (int index = 0; index < rule.Outputs.Count; index++)
                     if (OutputFunction(rule.Outputs[index]) == functionId)
                         rule.Outputs[index] = new JavaScriptSerializer().Deserialize<KeyEnhancementOutput>(Serialize(replacement));
@@ -552,18 +636,15 @@ namespace PBZKeyForge
         {
             Changing();
             config.CustomFunctions.RemoveAll(item => OutputFunction(item) == functionId);
-            foreach (var rule in config.Rules.ToArray())
+            foreach (var rule in RulesFor(config).Concat(config.Schemes.SelectMany(scheme => scheme.Rules)).Distinct().ToArray())
                 for (int index = rule.Outputs.Count - 1; index >= 0; index--)
                     if (OutputFunction(rule.Outputs[index]) == functionId) RemoveOutput(rule, index, functionId, false);
             config.StoreSelectedScheme();
-            foreach (var scheme in config.Schemes.Where(item => item.Id != config.SelectedSchemeId))
+            foreach (var rule in RulesFor(config).Concat(config.Schemes.SelectMany(scheme => scheme.Rules)).Distinct().ToArray())
             {
-                foreach (var rule in scheme.Rules)
-                {
-                    rule.Outputs.RemoveAll(output => OutputFunction(output) == functionId);
-                    rule.Suppressions.RemoveAll(item => item.FunctionId == functionId);
-                }
-                scheme.Rules.RemoveAll(rule => rule.Outputs.Count == 0);
+                rule.Outputs.RemoveAll(output => OutputFunction(output) == functionId);
+                rule.Suppressions.RemoveAll(item => item.FunctionId == functionId);
+                if (rule.Outputs.Count == 0) RemoveRule(rule);
             }
             functions = null;
         }
@@ -605,7 +686,7 @@ namespace PBZKeyForge
             }
             if (function.Targets.Length == 0)
             {
-                var existing = config.CustomFunctions.Concat(config.Rules.Concat(baseline.Rules).SelectMany(item => item.Outputs)).First(output => OutputFunction(output) == function.Id);
+                var existing = config.CustomFunctions.Concat(RulesFor(config).Concat(RulesFor(baseline)).SelectMany(item => item.Outputs)).First(output => OutputFunction(output) == function.Id);
                 return new JavaScriptSerializer().Deserialize<KeyEnhancementOutput>(Serialize(existing));
             }
             var selectedTarget = function.Targets.First();
@@ -670,11 +751,11 @@ namespace PBZKeyForge
             {
                 var rule = NewRule(function, specification);
                 rule.Suppressions.AddRange(function.Targets.Select(target => new KeyEnhancementSuppression { ActionPath = target.Path, Key = current.Keys[0], FunctionId = function.Id }));
-                config.Rules.Add(rule);
+                AddRule(rule);
                 LinkInputVariants(rule);
                 return CollectEntries(config, false, function.Id, true).First(entry => entry.RuleId == rule.Id);
             }
-            var owner = config.Rules.Single(rule => rule.Id == current.RuleId);
+            var owner = RuleFor(config, current.RuleId);
             KeyEnhancementInputPlan.ValidateMapping(owner.Outputs[current.OutputIndex]);
             if (owner.Outputs.Count == 1)
             {
@@ -689,7 +770,7 @@ namespace PBZKeyForge
             ApplySpecification(detached, specification, function);
             SetOutputValue(detached.Outputs[0], specification.OutputValue ?? function.DefaultOutputValue);
             RemoveOutput(owner, current.OutputIndex, function.Id);
-            config.Rules.Add(detached);
+            AddRule(detached);
             return CollectEntries(config, false, function.Id, true).First(entry => entry.RuleId == detached.Id);
         }
 
@@ -708,10 +789,10 @@ namespace PBZKeyForge
                 if (function.NativeAction != null && (LiveEditing || current.IsRuntimeBinding))
                 { EditNative(current.FunctionId).Keys.Remove(current.Keys[0]); return; }
                 if (!current.ReadOnly) { session.ChangeRelationship(function.NativeAction, current.Keys[0], false, pad, family); return; }
-                config.Suppressions.AddRange(function.Targets.Select(target => new KeyEnhancementSuppression { ActionPath = target.Path, Key = current.Keys[0], FunctionId = function.Id }));
+                SuppressionsFor(config).AddRange(function.Targets.Select(target => new KeyEnhancementSuppression { ActionPath = target.Path, Key = current.Keys[0], FunctionId = function.Id }));
                 return;
             }
-            RemoveOutput(config.Rules.Single(rule => rule.Id == current.RuleId), current.OutputIndex, function.Id);
+            RemoveOutput(RuleFor(config, current.RuleId), current.OutputIndex, function.Id);
         }
         public void Remove(string entryId) { Remove(GetSnapshot().First(entry => entry.Id == entryId)); }
         public void RemoveRelationship(string functionId, string key)
@@ -727,8 +808,8 @@ namespace PBZKeyForge
             var workspace = new BindingWorkspace(session, planned, baseline, pad, family);
             var affected = workspace.GetSnapshot().Where(entry => !entry.IsNative && UsedKeys(entry).Intersect(keys).Any()).ToArray();
             foreach (var entry in affected.OrderByDescending(item => item.OutputIndex)) workspace.Remove(entry);
-            planned.Suppressions.RemoveAll(item => keys.Contains(item.Key));
-            foreach (var rule in planned.Rules) rule.Suppressions.RemoveAll(item => keys.Contains(item.Key));
+            workspace.SuppressionsFor(planned).RemoveAll(item => keys.Contains(item.Key));
+            foreach (var rule in workspace.RulesFor(planned)) rule.Suppressions.RemoveAll(item => keys.Contains(item.Key));
             foreach (var function in Functions.Where(item => item.NativeAction != null))
             {
                 var item = workspace.NativeOverride(function.Id, planned);
@@ -741,7 +822,7 @@ namespace PBZKeyForge
             if (!LiveEditing && !(config.Enabled && config.Schemes.Count > 0)) session.RestoreKeys(keys, pad, family, config.Enabled ? (Action<string, string>)delegate(string action, string input) {
                 workspace.Add(action, new BindingEntry { Keys = new[] { input }, Trigger = "default" });
             } : null);
-            config.NativeBindings = planned.NativeBindings; config.Rules = planned.Rules; config.CustomFunctions = planned.CustomFunctions; config.Suppressions = planned.Suppressions;
+            config.ReplaceWith(planned);
             functions = null;
         }
         public void SetEnabled(BindingEntry entry, bool enabled)
@@ -755,12 +836,12 @@ namespace PBZKeyForge
                     var rule = NewRule(function, new BindingEntry { Keys = entry.Keys, Trigger = "down", Enabled = false });
                     rule.BlockOriginalWhenDisabled = true;
                     rule.Suppressions.AddRange(function.Targets.Select(target => new KeyEnhancementSuppression { ActionPath = target.Path, Key = entry.Keys[0], FunctionId = function.Id }));
-                    config.Rules.Add(rule);
+                    AddRule(rule);
                 }
                 else Restore(entry);
                 return;
             }
-            var owner = config.Rules.Single(rule => rule.Id == entry.RuleId);
+            var owner = RuleFor(config, entry.RuleId);
             if (owner.Outputs.Count == 1) owner.Enabled = enabled;
             else
             {
@@ -768,7 +849,7 @@ namespace PBZKeyForge
                 detached.Outputs = new List<KeyEnhancementOutput> { detached.Outputs[entry.OutputIndex] };
                 detached.Suppressions = detached.Suppressions.Where(item => OwnsSuppression(entry.FunctionId, item)).ToList();
                 detached.Enabled = enabled;
-                RemoveOutput(owner, entry.OutputIndex, entry.FunctionId); config.Rules.Add(detached);
+                RemoveOutput(owner, entry.OutputIndex, entry.FunctionId); AddRule(detached);
             }
         }
         void RemoveOutput(KeyEnhancementRule owner, int index, string functionId, bool keepFunction = true)
@@ -777,7 +858,7 @@ namespace PBZKeyForge
             if (keepFunction && !string.IsNullOrEmpty(removedOutput.Id) && !config.CustomFunctions.Any(item => item.Id == removedOutput.Id))
                 config.CustomFunctions.Add(new JavaScriptSerializer().Deserialize<KeyEnhancementOutput>(Serialize(removedOutput)));
             owner.Outputs.RemoveAt(index);
-            if (owner.Outputs.Count == 0) config.Rules.Remove(owner);
+            if (owner.Outputs.Count == 0) RemoveRule(owner);
             else if (!owner.Outputs.Any(output => OutputFunction(output) == functionId)) owner.Suppressions.RemoveAll(item => OwnsSuppression(functionId, item) && !owner.Outputs.Any(output => OwnsSuppression(OutputFunction(output), item)));
         }
         bool OwnsSuppression(string functionId, KeyEnhancementSuppression suppression)
@@ -807,8 +888,8 @@ namespace PBZKeyForge
         }
         void RestoreNativeInput(BindingFunction function, string key)
         {
-            foreach (var rule in config.Rules) rule.Suppressions.RemoveAll(item => Suppresses(function, key, item));
-            config.Suppressions.RemoveAll(item => Suppresses(function, key, item));
+            foreach (var rule in RulesFor(config)) rule.Suppressions.RemoveAll(item => Suppresses(function, key, item));
+            SuppressionsFor(config).RemoveAll(item => Suppresses(function, key, item));
         }
         static bool Suppresses(BindingFunction function, string key, KeyEnhancementSuppression suppression)
         { return (string.IsNullOrEmpty(suppression.Key) || suppression.Key == key) && function.Targets.Any(target => PackagePath(target.Path) == PackagePath(suppression.ActionPath)); }
@@ -816,7 +897,7 @@ namespace PBZKeyForge
         public void Restore(string functionId)
         {
             Changing();
-            config.NativeBindings.RemoveAll(item => item.FunctionId == functionId && item.Device == (pad ? "gamepad" : "keyboard"));
+            NativeBindingsFor(config).RemoveAll(item => item.FunctionId == functionId && item.Device == (pad ? "gamepad" : "keyboard"));
             var function = Functions.First(item => item.Id == functionId);
             Func<KeyEnhancementSuppression, bool> owns = item => function.FixedKeys != null ? OwnsSuppression(functionId, item)
                 : function.Targets.Any(target => PackagePath(target.Path) == PackagePath(item.ActionPath));
@@ -825,12 +906,12 @@ namespace PBZKeyForge
                 if (LiveEditing || config.Enabled && config.Schemes.Count > 0) EditNative(function.Id).Keys = session.Relations(function.NativeAction, pad, family).DefaultKeys.ToList();
                 else session.RestoreAction(function.NativeAction, pad, family);
             }
-            foreach (string tag in NativeTriggerTags(function)) config.NativeAbilitySuppressions.RemoveAll(item => item == tag);
-            foreach (var rule in config.Rules.Where(DeviceMatches).ToArray())
+            foreach (string tag in NativeTriggerTags(function)) NativeAbilitySuppressionsFor(config).RemoveAll(item => item == tag);
+            foreach (var rule in RulesFor(config).Where(DeviceMatches).ToArray())
                 for (int i = rule.Outputs.Count - 1; i >= 0; i--)
                     if (OutputFunction(rule.Outputs[i]) == functionId) RemoveOutput(rule, i, functionId);
-            config.Suppressions.RemoveAll(item => owns(item) && !string.IsNullOrEmpty(item.Key) && IsPad(item.Key) == pad);
-            foreach (var rule in config.Rules.Where(DeviceMatches)) rule.Suppressions.RemoveAll(item => owns(item) && (string.IsNullOrEmpty(item.Key) || IsPad(item.Key) == pad));
+            SuppressionsFor(config).RemoveAll(item => owns(item) && !string.IsNullOrEmpty(item.Key) && IsPad(item.Key) == pad);
+            foreach (var rule in RulesFor(config).Where(DeviceMatches)) rule.Suppressions.RemoveAll(item => owns(item) && (string.IsNullOrEmpty(item.Key) || IsPad(item.Key) == pad));
         }
 
         static void CheckInput(BindingEntry specification)
@@ -866,7 +947,7 @@ namespace PBZKeyForge
                 var entries = (before ? beforeEntries : afterEntries)[function.Id].ToArray();
                 var native = function.NativeAction == null ? null : session.Relations(function.NativeAction, pad, family);
                 var source = before ? baseline : config;
-                bool blocked = NativeTriggerTags(function).Any(source.NativeAbilitySuppressions.Contains);
+                bool blocked = NativeTriggerTags(function).Any(NativeAbilitySuppressionsFor(source).Contains);
                 if (entries.Length == 0 && native == null)
                     return new ActionRelations { Action = function.Id, Keys = new string[0], DefaultKeys = function.FixedKeys ?? new string[0],
                         BindingDetails = blocked ? new[] { I18n.Str("binding.native.replaced") } : new string[0],

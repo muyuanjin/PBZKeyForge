@@ -80,51 +80,21 @@
     },
     "move:Weapon.Weapon_Hun_BaiShanFengLeiJian.GA_Hun_FengLeiJian_C": {
       "aliases": {
-        "zh-Hans": [
-          "白山风雷斩"
-        ],
-        "en": [
-          "Baishan Wind-Thunder Slash"
-        ],
-        "ja": [
-          "白山風雷斬"
-        ],
-        "ko": [
-          "백산풍뢰참"
-        ],
-        "ru": [
-          "Удар ветра и грома Байшаня"
-        ],
-        "zh-Hant": [
-          "白山風雷斬"
-        ],
-        "fr": [
-          "Entaille foudre et vent de Baishan"
-        ],
-        "de": [
-          "Baishan-Wind-Donner-Hieb"
-        ],
-        "es-ES": [
-          "Tajo viento y trueno de Baishan"
-        ],
-        "pt-BR": [
-          "Corte Vento-Trovão de Baishan"
-        ],
-        "it": [
-          "Squarcio Vento-Tuono di Baishan"
-        ],
-        "th": [
-          "คมวายุอัสนีแห่งไป๋ซาน"
-        ],
-        "vi": [
-          "Bạch Sơn Phong Lôi Trảm"
-        ],
-        "pt-PT": [
-          "Golpe de Vento-trovão Baishan"
-        ],
-        "es-419": [
-          "Corte viento y trueno de Baishan"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -253,23 +223,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/BaiShanFengLeiJian/Draw/GA_Hun_FengLeiJian_A_DashDraw.GA_Hun_FengLeiJian_A_DashDraw_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "白山风雷剑 · 连环追斩",
-        "en": "BAISHAN STORMSWORDS · Relentless Pursuit",
-        "ja": "白山風雷剣 · 連続追斬",
-        "ko": "백산풍뢰검 · 연환 추참",
-        "ru": "Буревестные Мечи Байшаня · Неумолимое преследование",
-        "zh-Hant": "白山風雷劍 · 連環追斬",
-        "fr": "ÉPÉES-TEMPÊTE DE BAISHAN · Poursuite implacable",
-        "de": "BAISHAN-STURMSCHWERTER · Unerbittliche Verfolgung",
-        "es-ES": "ESPADAS TORMENTOSAS DE BAISHAN · Persecución incesante",
-        "pt-BR": "ESPADAS DA TEMPESTADE DE BAISHAN · Perseguição Implacável",
-        "it": "LAMA TEMPESTOSE DI BAISHAN · Caccia implacabile",
-        "th": "กระบี่วายุไป๋ซาน · ไล่ฟันต่อเนื่อง",
-        "vi": "PHONG LÔI SONG KIẾM · Truy Kích Liên Trảm",
-        "pt-PT": "ESPADA DA TEMPESTADE BAISHAN · Perseguição Implacável",
-        "es-419": "ESPADAS TORMENTA DE BAISHAN · Persecución incesante"
       }
     },
     "weapon-art:Weapon_Hun_BaiYing.GA_Hun_BaiYing_C": {
@@ -350,51 +303,21 @@
     },
     "move:Weapon.Weapon_Hun_BaiYing.GA_Hun_BaiYing_C": {
       "aliases": {
-        "zh-Hans": [
-          "白影寒啸"
-        ],
-        "en": [
-          "White Shadow's Frosthowl"
-        ],
-        "ja": [
-          "白影寒嘯"
-        ],
-        "ko": [
-          "백영한소"
-        ],
-        "ru": [
-          "Морозный вой Белой тени"
-        ],
-        "zh-Hant": [
-          "白影寒嘯"
-        ],
-        "fr": [
-          "Hurlement glacé de l'Ombre blanche"
-        ],
-        "de": [
-          "Frostheulen des Weißschattens"
-        ],
-        "es-ES": [
-          "Aullido gélido de Sombra Blanca"
-        ],
-        "pt-BR": [
-          "Uivo Gélido da Sombra Branca"
-        ],
-        "it": [
-          "Grido Gelido dell'Ombra Bianca"
-        ],
-        "th": [
-          "เงาเหมันต์คำราม"
-        ],
-        "vi": [
-          "Bạch Ảnh Hàn Khiếu"
-        ],
-        "pt-PT": [
-          "Uivo Gélido da Sombra Branca"
-        ],
-        "es-419": [
-          "Aullido gélido de Sombra blanca"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -603,51 +526,21 @@
     },
     "move:Weapon.Weapon_Hun_TianXuanQingTongJian.GA_Hun_BronzeSword_C": {
       "aliases": {
-        "zh-Hans": [
-          "大象无形"
-        ],
-        "en": [
-          "Greatness Without Form"
-        ],
-        "ja": [
-          "大象無形"
-        ],
-        "ko": [
-          "대상무형"
-        ],
-        "ru": [
-          "Величие без формы"
-        ],
-        "zh-Hant": [
-          "大象無形"
-        ],
-        "fr": [
-          "Grandeur sans forme"
-        ],
-        "de": [
-          "Formlose Größe"
-        ],
-        "es-ES": [
-          "Grandeza sin forma"
-        ],
-        "pt-BR": [
-          "Grandeza Sem Forma"
-        ],
-        "it": [
-          "Maestria senza forma"
-        ],
-        "th": [
-          "มหารูปไร้ลักษณ์"
-        ],
-        "vi": [
-          "Đại Tượng Vô Hình"
-        ],
-        "pt-PT": [
-          "Grandeza Sem Forma"
-        ],
-        "es-419": [
-          "Grandeza sin forma"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -856,51 +749,21 @@
     },
     "move:Weapon.Weapon_Hun_CiGuHunDunJian.GA_Hun_Chaos_C": {
       "aliases": {
-        "zh-Hans": [
-          "混沌侵蚀"
-        ],
-        "en": [
-          "Chaos Erosion"
-        ],
-        "ja": [
-          "混沌侵蝕"
-        ],
-        "ko": [
-          "혼돈 침식"
-        ],
-        "ru": [
-          "Разъедающий хаос"
-        ],
-        "zh-Hant": [
-          "混沌侵蝕"
-        ],
-        "fr": [
-          "Érosion du chaos"
-        ],
-        "de": [
-          "Chaoserosion"
-        ],
-        "es-ES": [
-          "Erosión caótica"
-        ],
-        "pt-BR": [
-          "Erosão Caótica"
-        ],
-        "it": [
-          "Erosione del Caos"
-        ],
-        "th": [
-          "เพลิงโกลาหลกัดกร่อน"
-        ],
-        "vi": [
-          "Xâm Thực Hỗn Độn"
-        ],
-        "pt-PT": [
-          "Erosão do Caos"
-        ],
-        "es-419": [
-          "Erosión caótica"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -1564,51 +1427,21 @@
     },
     "move:Weapon.Weapon_Hun_ChiZheCanJian.GA_Hun_ChiZheCanJian_C_Zui": {
       "aliases": {
-        "zh-Hans": [
-          "一醉方休"
-        ],
-        "en": [
-          "Drink Until Dawn"
-        ],
-        "ja": [
-          "一酔方休"
-        ],
-        "ko": [
-          "일취방휴"
-        ],
-        "ru": [
-          "Пить до рассвета"
-        ],
-        "zh-Hant": [
-          "一醉方休"
-        ],
-        "fr": [
-          "Boire jusqu'à l'aube"
-        ],
-        "de": [
-          "Trinken bis zum Morgengrauen"
-        ],
-        "es-ES": [
-          "Beber hasta el amanecer"
-        ],
-        "pt-BR": [
-          "Beber Até o Sol Nascer"
-        ],
-        "it": [
-          "Ebbrezza albeggiante"
-        ],
-        "th": [
-          "เมามายไม่จบสิ้น"
-        ],
-        "vi": [
-          "Uống Đến Hừng Đông"
-        ],
-        "pt-PT": [
-          "Beber até Amanhecer"
-        ],
-        "es-419": [
-          "Beber hasta el amanecer"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -1640,51 +1473,21 @@
     },
     "move:Weapon.Weapon_Hun_ChiZheCanJian.GA_Hun_ChiZheCanJian_C": {
       "aliases": {
-        "zh-Hans": [
-          "一醉方休"
-        ],
-        "en": [
-          "Drink Until Dawn"
-        ],
-        "ja": [
-          "一酔方休"
-        ],
-        "ko": [
-          "일취방휴"
-        ],
-        "ru": [
-          "Пить до рассвета"
-        ],
-        "zh-Hant": [
-          "一醉方休"
-        ],
-        "fr": [
-          "Boire jusqu'à l'aube"
-        ],
-        "de": [
-          "Trinken bis zum Morgengrauen"
-        ],
-        "es-ES": [
-          "Beber hasta el amanecer"
-        ],
-        "pt-BR": [
-          "Beber Até o Sol Nascer"
-        ],
-        "it": [
-          "Ebbrezza albeggiante"
-        ],
-        "th": [
-          "เมามายไม่จบสิ้น"
-        ],
-        "vi": [
-          "Uống Đến Hừng Đông"
-        ],
-        "pt-PT": [
-          "Beber até Amanhecer"
-        ],
-        "es-419": [
-          "Beber hasta el amanecer"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -1716,51 +1519,21 @@
     },
     "move:Weapon.Weapon_Hun_ChiZheCanJian.GA_Hun_ChiZheCanJian_C_ToZui": {
       "aliases": {
-        "zh-Hans": [
-          "一醉方休"
-        ],
-        "en": [
-          "Drink Until Dawn"
-        ],
-        "ja": [
-          "一酔方休"
-        ],
-        "ko": [
-          "일취방휴"
-        ],
-        "ru": [
-          "Пить до рассвета"
-        ],
-        "zh-Hant": [
-          "一醉方休"
-        ],
-        "fr": [
-          "Boire jusqu'à l'aube"
-        ],
-        "de": [
-          "Trinken bis zum Morgengrauen"
-        ],
-        "es-ES": [
-          "Beber hasta el amanecer"
-        ],
-        "pt-BR": [
-          "Beber Até o Sol Nascer"
-        ],
-        "it": [
-          "Ebbrezza albeggiante"
-        ],
-        "th": [
-          "เมามายไม่จบสิ้น"
-        ],
-        "vi": [
-          "Uống Đến Hừng Đông"
-        ],
-        "pt-PT": [
-          "Beber até Amanhecer"
-        ],
-        "es-419": [
-          "Beber hasta el amanecer"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -2121,51 +1894,21 @@
     },
     "move:Weapon.Weapon_Hun_ChiZheZuiJian.GA_Hun_ChiZheCanJian_C_Zui": {
       "aliases": {
-        "zh-Hans": [
-          "一醉方休"
-        ],
-        "en": [
-          "Drink Until Dawn"
-        ],
-        "ja": [
-          "一酔方休"
-        ],
-        "ko": [
-          "일취방휴"
-        ],
-        "ru": [
-          "Пить до рассвета"
-        ],
-        "zh-Hant": [
-          "一醉方休"
-        ],
-        "fr": [
-          "Boire jusqu'à l'aube"
-        ],
-        "de": [
-          "Trinken bis zum Morgengrauen"
-        ],
-        "es-ES": [
-          "Beber hasta el amanecer"
-        ],
-        "pt-BR": [
-          "Beber Até o Sol Nascer"
-        ],
-        "it": [
-          "Ebbrezza albeggiante"
-        ],
-        "th": [
-          "เมามายไม่จบสิ้น"
-        ],
-        "vi": [
-          "Uống Đến Hừng Đông"
-        ],
-        "pt-PT": [
-          "Beber até Amanhecer"
-        ],
-        "es-419": [
-          "Beber hasta el amanecer"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -2197,51 +1940,21 @@
     },
     "move:Weapon.Weapon_Hun_ChiZheZuiJian.GA_Hun_ChiZheCanJian_C": {
       "aliases": {
-        "zh-Hans": [
-          "一醉方休"
-        ],
-        "en": [
-          "Drink Until Dawn"
-        ],
-        "ja": [
-          "一酔方休"
-        ],
-        "ko": [
-          "일취방휴"
-        ],
-        "ru": [
-          "Пить до рассвета"
-        ],
-        "zh-Hant": [
-          "一醉方休"
-        ],
-        "fr": [
-          "Boire jusqu'à l'aube"
-        ],
-        "de": [
-          "Trinken bis zum Morgengrauen"
-        ],
-        "es-ES": [
-          "Beber hasta el amanecer"
-        ],
-        "pt-BR": [
-          "Beber Até o Sol Nascer"
-        ],
-        "it": [
-          "Ebbrezza albeggiante"
-        ],
-        "th": [
-          "เมามายไม่จบสิ้น"
-        ],
-        "vi": [
-          "Uống Đến Hừng Đông"
-        ],
-        "pt-PT": [
-          "Beber até Amanhecer"
-        ],
-        "es-419": [
-          "Beber hasta el amanecer"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -2273,51 +1986,21 @@
     },
     "move:Weapon.Weapon_Hun_ChiZheZuiJian.GA_Hun_ChiZheCanJian_C_ToZui": {
       "aliases": {
-        "zh-Hans": [
-          "一醉方休"
-        ],
-        "en": [
-          "Drink Until Dawn"
-        ],
-        "ja": [
-          "一酔方休"
-        ],
-        "ko": [
-          "일취방휴"
-        ],
-        "ru": [
-          "Пить до рассвета"
-        ],
-        "zh-Hant": [
-          "一醉方休"
-        ],
-        "fr": [
-          "Boire jusqu'à l'aube"
-        ],
-        "de": [
-          "Trinken bis zum Morgengrauen"
-        ],
-        "es-ES": [
-          "Beber hasta el amanecer"
-        ],
-        "pt-BR": [
-          "Beber Até o Sol Nascer"
-        ],
-        "it": [
-          "Ebbrezza albeggiante"
-        ],
-        "th": [
-          "เมามายไม่จบสิ้น"
-        ],
-        "vi": [
-          "Uống Đến Hừng Đông"
-        ],
-        "pt-PT": [
-          "Beber até Amanhecer"
-        ],
-        "es-419": [
-          "Beber hasta el amanecer"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -2522,72 +2205,25 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/GA_Hun_Double_A_DashDraw_Short.GA_Hun_Double_A_DashDraw_Short_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "黑伤双刃 · 连环追斩",
-        "en": "SANGUINE TWIN · Relentless Pursuit",
-        "ja": "黒傷・双刀 · 連続追斬",
-        "ko": "흑상 쌍검 · 연환 추참",
-        "ru": "Парные Багрянцы · Неумолимое преследование",
-        "zh-Hant": "黑傷雙刃 · 連環追斬",
-        "fr": "DOUBLE SANGUINE · Poursuite implacable",
-        "de": "BLUTROT-ZWILLINGSKLINGEN · Unerbittliche Verfolgung",
-        "es-ES": "SANGUINAS GEMELAS · Persecución incesante",
-        "pt-BR": "LÂMINAS GÊMEAS DA SANGUÍNEA · Perseguição Implacável",
-        "it": "SANGUINARIE GEMELLE · Caccia implacabile",
-        "th": "ดาบคู่แผลนิลกาฬ · ไล่ฟันต่อเนื่อง",
-        "vi": "SONG ĐAO HẮC THƯƠNG · Truy Kích Liên Trảm",
-        "pt-PT": "GÉMEAS SANGUINE · Perseguição Implacável",
-        "es-419": "SANGUINAS GEMELAS · Persecución incesante"
       }
     },
     "move:Weapon.Weapon_Hun_Double.GA_Hun_Double_C": {
       "aliases": {
-        "zh-Hans": [
-          "双刃乱舞"
-        ],
-        "en": [
-          "Dual-Blade Flurry"
-        ],
-        "ja": [
-          "双刃乱舞"
-        ],
-        "ko": [
-          "쌍검 난무"
-        ],
-        "ru": [
-          "Вихрь парных клинков"
-        ],
-        "zh-Hant": [
-          "雙刃亂舞"
-        ],
-        "fr": [
-          "Déluge de lames jumelles"
-        ],
-        "de": [
-          "Doppelklingenwirbel"
-        ],
-        "es-ES": [
-          "Ráfaga de doble hoja"
-        ],
-        "pt-BR": [
-          "Rajada Dupla"
-        ],
-        "it": [
-          "Turbine a due lame"
-        ],
-        "th": [
-          "ระบำคมดาบคู่"
-        ],
-        "vi": [
-          "Song Đao Loạn Vũ"
-        ],
-        "pt-PT": [
-          "Rajada de Lâminas Duplas"
-        ],
-        "es-419": [
-          "Ráfaga de espadas dobles"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -2716,23 +2352,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/GA_Hun_Double_ATB.GA_Hun_Double_ATB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "黑伤双刃 · 刀随意转",
-        "en": "SANGUINE TWIN · Blades at Will",
-        "ja": "黒傷・双刀 · 人刀一心",
-        "ko": "흑상 쌍검 · 도수의전",
-        "ru": "Парные Багрянцы · Клинки воли",
-        "zh-Hant": "黑傷雙刃 · 刀隨意轉",
-        "fr": "DOUBLE SANGUINE · Lames déchaînées",
-        "de": "BLUTROT-ZWILLINGSKLINGEN · Klingen nach eigenem Willen",
-        "es-ES": "SANGUINAS GEMELAS · Hojas desatadas",
-        "pt-BR": "LÂMINAS GÊMEAS DA SANGUÍNEA · Lâminas à Vontade",
-        "it": "SANGUINARIE GEMELLE · Lame a volontà",
-        "th": "ดาบคู่แผลนิลกาฬ · แปรผันตามเจตนา",
-        "vi": "SONG ĐAO HẮC THƯƠNG · Đao Tùy Ý Chuyển",
-        "pt-PT": "GÉMEAS SANGUINE · Lâminas à Vontade",
-        "es-419": "SANGUINAS GEMELAS · Espadas a voluntad"
       }
     },
     "move:Weapon.Weapon_Hun_Double.GA_Hun_Double_ATBB": {
@@ -2834,23 +2453,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/GA_Hun_Double_ATBB.GA_Hun_Double_ATBB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "黑伤双刃 · 刀随意转",
-        "en": "SANGUINE TWIN · Blades at Will",
-        "ja": "黒傷・双刀 · 人刀一心",
-        "ko": "흑상 쌍검 · 도수의전",
-        "ru": "Парные Багрянцы · Клинки воли",
-        "zh-Hant": "黑傷雙刃 · 刀隨意轉",
-        "fr": "DOUBLE SANGUINE · Lames déchaînées",
-        "de": "BLUTROT-ZWILLINGSKLINGEN · Klingen nach eigenem Willen",
-        "es-ES": "SANGUINAS GEMELAS · Hojas desatadas",
-        "pt-BR": "LÂMINAS GÊMEAS DA SANGUÍNEA · Lâminas à Vontade",
-        "it": "SANGUINARIE GEMELLE · Lame a volontà",
-        "th": "ดาบคู่แผลนิลกาฬ · แปรผันตามเจตนา",
-        "vi": "SONG ĐAO HẮC THƯƠNG · Đao Tùy Ý Chuyển",
-        "pt-PT": "GÉMEAS SANGUINE · Lâminas à Vontade",
-        "es-419": "SANGUINAS GEMELAS · Espadas a voluntad"
       }
     },
     "move:Weapon.Weapon_Hun_Double.GA_Hun_Double_ATBBB": {
@@ -2952,23 +2554,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/GA_Hun_Double_ATBBB.GA_Hun_Double_ATBBB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "黑伤双刃 · 刀随意转",
-        "en": "SANGUINE TWIN · Blades at Will",
-        "ja": "黒傷・双刀 · 人刀一心",
-        "ko": "흑상 쌍검 · 도수의전",
-        "ru": "Парные Багрянцы · Клинки воли",
-        "zh-Hant": "黑傷雙刃 · 刀隨意轉",
-        "fr": "DOUBLE SANGUINE · Lames déchaînées",
-        "de": "BLUTROT-ZWILLINGSKLINGEN · Klingen nach eigenem Willen",
-        "es-ES": "SANGUINAS GEMELAS · Hojas desatadas",
-        "pt-BR": "LÂMINAS GÊMEAS DA SANGUÍNEA · Lâminas à Vontade",
-        "it": "SANGUINARIE GEMELLE · Lame a volontà",
-        "th": "ดาบคู่แผลนิลกาฬ · แปรผันตามเจตนา",
-        "vi": "SONG ĐAO HẮC THƯƠNG · Đao Tùy Ý Chuyển",
-        "pt-PT": "GÉMEAS SANGUINE · Lâminas à Vontade",
-        "es-419": "SANGUINAS GEMELAS · Espadas a voluntad"
       }
     },
     "move:Weapon.Weapon_Hun_Double.GA_Hun_Double_BTA": {
@@ -3070,23 +2655,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/GA_Hun_Double_BTA.GA_Hun_Double_BTA_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "黑伤双刃 · 连环追斩",
-        "en": "SANGUINE TWIN · Relentless Pursuit",
-        "ja": "黒傷・双刀 · 連続追斬",
-        "ko": "흑상 쌍검 · 연환 추참",
-        "ru": "Парные Багрянцы · Неумолимое преследование",
-        "zh-Hant": "黑傷雙刃 · 連環追斬",
-        "fr": "DOUBLE SANGUINE · Poursuite implacable",
-        "de": "BLUTROT-ZWILLINGSKLINGEN · Unerbittliche Verfolgung",
-        "es-ES": "SANGUINAS GEMELAS · Persecución incesante",
-        "pt-BR": "LÂMINAS GÊMEAS DA SANGUÍNEA · Perseguição Implacável",
-        "it": "SANGUINARIE GEMELLE · Caccia implacabile",
-        "th": "ดาบคู่แผลนิลกาฬ · ไล่ฟันต่อเนื่อง",
-        "vi": "SONG ĐAO HẮC THƯƠNG · Truy Kích Liên Trảm",
-        "pt-PT": "GÉMEAS SANGUINE · Perseguição Implacável",
-        "es-419": "SANGUINAS GEMELAS · Persecución incesante"
       }
     },
     "move:Weapon.Weapon_Hun_Double.GA_Hun_Double_Buff": {
@@ -3458,72 +3026,25 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/GA_Hun_Double_A_DashDraw_Short.GA_Hun_Double_A_DashDraw_Short_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "绝影 · 连环追斩",
-        "en": "SHADOWLESS EDGE · Relentless Pursuit",
-        "ja": "絶影 · 連続追斬",
-        "ko": "절영 · 연환 추참",
-        "ru": "Неуловимые Клинки · Неумолимое преследование",
-        "zh-Hant": "絕影 · 連環追斬",
-        "fr": "OMBRES INSAISISSABLES · Poursuite implacable",
-        "de": "SCHATTENLOSE KLINGE · Unerbittliche Verfolgung",
-        "es-ES": "FILOS SIN SOMBRA · Persecución incesante",
-        "pt-BR": "LÂMINA SEM SOMBRA · Perseguição Implacável",
-        "it": "LAMA SENZ'OMBRA · Caccia implacabile",
-        "th": "ดาบเงาสูญ · ไล่ฟันต่อเนื่อง",
-        "vi": "TUYỆT ẢNH · Truy Kích Liên Trảm",
-        "pt-PT": "GUME SEM SOMBRA · Perseguição Implacável",
-        "es-419": "FILO SIN SOMBRA · Persecución incesante"
       }
     },
     "move:Weapon.Weapon_Hun_JueYing.GA_Hun_Double_JueYing_C": {
       "aliases": {
-        "zh-Hans": [
-          "双刃乱舞"
-        ],
-        "en": [
-          "Dual-Blade Flurry"
-        ],
-        "ja": [
-          "双刃乱舞"
-        ],
-        "ko": [
-          "쌍검 난무"
-        ],
-        "ru": [
-          "Вихрь парных клинков"
-        ],
-        "zh-Hant": [
-          "雙刃亂舞"
-        ],
-        "fr": [
-          "Déluge de lames jumelles"
-        ],
-        "de": [
-          "Doppelklingenwirbel"
-        ],
-        "es-ES": [
-          "Ráfaga de doble hoja"
-        ],
-        "pt-BR": [
-          "Rajada Dupla"
-        ],
-        "it": [
-          "Turbine a due lame"
-        ],
-        "th": [
-          "ระบำคมดาบคู่"
-        ],
-        "vi": [
-          "Song Đao Loạn Vũ"
-        ],
-        "pt-PT": [
-          "Rajada de Lâminas Duplas"
-        ],
-        "es-419": [
-          "Ráfaga de espadas dobles"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -3652,23 +3173,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/GA_Hun_Double_ATB.GA_Hun_Double_ATB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "绝影 · 刀随意转",
-        "en": "SHADOWLESS EDGE · Blades at Will",
-        "ja": "絶影 · 人刀一心",
-        "ko": "절영 · 도수의전",
-        "ru": "Неуловимые Клинки · Клинки воли",
-        "zh-Hant": "絕影 · 刀隨意轉",
-        "fr": "OMBRES INSAISISSABLES · Lames déchaînées",
-        "de": "SCHATTENLOSE KLINGE · Klingen nach eigenem Willen",
-        "es-ES": "FILOS SIN SOMBRA · Hojas desatadas",
-        "pt-BR": "LÂMINA SEM SOMBRA · Lâminas à Vontade",
-        "it": "LAMA SENZ'OMBRA · Lame a volontà",
-        "th": "ดาบเงาสูญ · แปรผันตามเจตนา",
-        "vi": "TUYỆT ẢNH · Đao Tùy Ý Chuyển",
-        "pt-PT": "GUME SEM SOMBRA · Lâminas à Vontade",
-        "es-419": "FILO SIN SOMBRA · Espadas a voluntad"
       }
     },
     "move:Weapon.Weapon_Hun_JueYing.GA_Hun_Double_ATBB": {
@@ -3770,23 +3274,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/GA_Hun_Double_ATBB.GA_Hun_Double_ATBB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "绝影 · 刀随意转",
-        "en": "SHADOWLESS EDGE · Blades at Will",
-        "ja": "絶影 · 人刀一心",
-        "ko": "절영 · 도수의전",
-        "ru": "Неуловимые Клинки · Клинки воли",
-        "zh-Hant": "絕影 · 刀隨意轉",
-        "fr": "OMBRES INSAISISSABLES · Lames déchaînées",
-        "de": "SCHATTENLOSE KLINGE · Klingen nach eigenem Willen",
-        "es-ES": "FILOS SIN SOMBRA · Hojas desatadas",
-        "pt-BR": "LÂMINA SEM SOMBRA · Lâminas à Vontade",
-        "it": "LAMA SENZ'OMBRA · Lame a volontà",
-        "th": "ดาบเงาสูญ · แปรผันตามเจตนา",
-        "vi": "TUYỆT ẢNH · Đao Tùy Ý Chuyển",
-        "pt-PT": "GUME SEM SOMBRA · Lâminas à Vontade",
-        "es-419": "FILO SIN SOMBRA · Espadas a voluntad"
       }
     },
     "move:Weapon.Weapon_Hun_JueYing.GA_Hun_Double_ATBBB": {
@@ -3888,23 +3375,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/JueYing/GA_Hun_Double_ATBBB.GA_Hun_Double_ATBBB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "绝影 · 刀随意转",
-        "en": "SHADOWLESS EDGE · Blades at Will",
-        "ja": "絶影 · 人刀一心",
-        "ko": "절영 · 도수의전",
-        "ru": "Неуловимые Клинки · Клинки воли",
-        "zh-Hant": "絕影 · 刀隨意轉",
-        "fr": "OMBRES INSAISISSABLES · Lames déchaînées",
-        "de": "SCHATTENLOSE KLINGE · Klingen nach eigenem Willen",
-        "es-ES": "FILOS SIN SOMBRA · Hojas desatadas",
-        "pt-BR": "LÂMINA SEM SOMBRA · Lâminas à Vontade",
-        "it": "LAMA SENZ'OMBRA · Lame a volontà",
-        "th": "ดาบเงาสูญ · แปรผันตามเจตนา",
-        "vi": "TUYỆT ẢNH · Đao Tùy Ý Chuyển",
-        "pt-PT": "GUME SEM SOMBRA · Lâminas à Vontade",
-        "es-419": "FILO SIN SOMBRA · Espadas a voluntad"
       }
     },
     "move:Weapon.Weapon_Hun_JueYing.GA_Hun_Double_BTA": {
@@ -4006,72 +3476,25 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DoubleBalde/Default/GA_Hun_Double_BTA.GA_Hun_Double_BTA_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "绝影 · 连环追斩",
-        "en": "SHADOWLESS EDGE · Relentless Pursuit",
-        "ja": "絶影 · 連続追斬",
-        "ko": "절영 · 연환 추참",
-        "ru": "Неуловимые Клинки · Неумолимое преследование",
-        "zh-Hant": "絕影 · 連環追斬",
-        "fr": "OMBRES INSAISISSABLES · Poursuite implacable",
-        "de": "SCHATTENLOSE KLINGE · Unerbittliche Verfolgung",
-        "es-ES": "FILOS SIN SOMBRA · Persecución incesante",
-        "pt-BR": "LÂMINA SEM SOMBRA · Perseguição Implacável",
-        "it": "LAMA SENZ'OMBRA · Caccia implacabile",
-        "th": "ดาบเงาสูญ · ไล่ฟันต่อเนื่อง",
-        "vi": "TUYỆT ẢNH · Truy Kích Liên Trảm",
-        "pt-PT": "GUME SEM SOMBRA · Perseguição Implacável",
-        "es-419": "FILO SIN SOMBRA · Persecución incesante"
       }
     },
     "move:Weapon.Weapon_Hun_JueYing.GA_Hun_Double_JueYing_C_Air": {
       "aliases": {
-        "zh-Hans": [
-          "双刃乱舞"
-        ],
-        "en": [
-          "Dual-Blade Flurry"
-        ],
-        "ja": [
-          "双刃乱舞"
-        ],
-        "ko": [
-          "쌍검 난무"
-        ],
-        "ru": [
-          "Вихрь парных клинков"
-        ],
-        "zh-Hant": [
-          "雙刃亂舞"
-        ],
-        "fr": [
-          "Déluge de lames jumelles"
-        ],
-        "de": [
-          "Doppelklingenwirbel"
-        ],
-        "es-ES": [
-          "Ráfaga de doble hoja"
-        ],
-        "pt-BR": [
-          "Rajada Dupla"
-        ],
-        "it": [
-          "Turbine a due lame"
-        ],
-        "th": [
-          "ระบำคมดาบคู่"
-        ],
-        "vi": [
-          "Song Đao Loạn Vũ"
-        ],
-        "pt-PT": [
-          "Rajada de Lâminas Duplas"
-        ],
-        "es-419": [
-          "Ráfaga de espadas dobles"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -4179,51 +3602,21 @@
     },
     "move:Weapon.Weapon_Hun_DualHook.GA_Hun_DualHook_C": {
       "aliases": {
-        "zh-Hans": [
-          "无双残钩"
-        ],
-        "en": [
-          "Peerless Hook"
-        ],
-        "ja": [
-          "無双残鉤"
-        ],
-        "ko": [
-          "무쌍잔구"
-        ],
-        "ru": [
-          "Непревзойденный крюк"
-        ],
-        "zh-Hant": [
-          "無雙殘鉤"
-        ],
-        "fr": [
-          "Crochet sans égal"
-        ],
-        "de": [
-          "Unvergleichlicher Haken"
-        ],
-        "es-ES": [
-          "Gancho sin igual"
-        ],
-        "pt-BR": [
-          "Gancho Imparável"
-        ],
-        "it": [
-          "Uncino Inimitabile"
-        ],
-        "th": [
-          "ตะขอไร้เทียมทาน"
-        ],
-        "vi": [
-          "Vô Song Tàn Câu"
-        ],
-        "pt-PT": [
-          "Gancho Sem Par"
-        ],
-        "es-419": [
-          "Gancho sin igual"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -4668,23 +4061,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_A_Pursure_02.GA_Hun_DualHook_A_Pursure_02_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "别离残钩 · 反制追击",
-        "en": "PARTING HOOKS · Counter Follow-Up",
-        "ja": "別離残鉤 · 反撃追撃",
-        "ko": "이별 잔구 · 반격 추격",
-        "ru": "Крюки Разлуки · Продолжение контратаки",
-        "zh-Hant": "別離殘鉤 · 反制追擊",
-        "fr": "CROCHETS D'ADIEU · Enchaînement de riposte",
-        "de": "TRENNENDE HAKEN · Konter-Folgeangriff",
-        "es-ES": "GANCHOS DE DESPEDIDA · Remate del contraataque",
-        "pt-BR": "GANCHOS DA DESPEDIDA · Contra-ataque Sequencial",
-        "it": "UNCINI DEL COMMIATO · Prosecuzione del Contrattacco",
-        "th": "ตะขอพรากวิญญาณ · โต้กลับต่อเนื่อง",
-        "vi": "BIỆT LY TÀN CÂU · Khắc Chế Truy Kích",
-        "pt-PT": "GANCHOS DO ADEUS · Seguimento de Contra-ataque",
-        "es-419": "GANCHOS DEL ADIÓS · Seguimiento para contrarrestar"
       }
     },
     "move:Weapon.Weapon_Hun_DualHook.GA_Hun_DualHook_B_Pursure": {
@@ -4786,23 +4162,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_B_Pursure.GA_Hun_DualHook_B_Pursure_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "别离残钩 · 反制追击",
-        "en": "PARTING HOOKS · Counter Follow-Up",
-        "ja": "別離残鉤 · 反撃追撃",
-        "ko": "이별 잔구 · 반격 추격",
-        "ru": "Крюки Разлуки · Продолжение контратаки",
-        "zh-Hant": "別離殘鉤 · 反制追擊",
-        "fr": "CROCHETS D'ADIEU · Enchaînement de riposte",
-        "de": "TRENNENDE HAKEN · Konter-Folgeangriff",
-        "es-ES": "GANCHOS DE DESPEDIDA · Remate del contraataque",
-        "pt-BR": "GANCHOS DA DESPEDIDA · Contra-ataque Sequencial",
-        "it": "UNCINI DEL COMMIATO · Prosecuzione del Contrattacco",
-        "th": "ตะขอพรากวิญญาณ · โต้กลับต่อเนื่อง",
-        "vi": "BIỆT LY TÀN CÂU · Khắc Chế Truy Kích",
-        "pt-PT": "GANCHOS DO ADEUS · Seguimento de Contra-ataque",
-        "es-419": "GANCHOS DEL ADIÓS · Seguimiento para contrarrestar"
       }
     },
     "weapon-art:Weapon_Hun_GuiTouBlade.GA_Hun_GuiTouBlade_C": {
@@ -4884,77 +4243,62 @@
     "move:Weapon.Weapon_Hun_GuiTouBlade.GA_Hun_GuiTouBlade_C": {
       "aliases": {
         "zh-Hans": [
-          "红妆漫天",
           "遍地红妆",
           "断情绝路"
         ],
         "en": [
-          "Rouge Bloomstorm",
           "Scarlet Field",
           "Severed Vows"
         ],
         "ja": [
-          "紅粧漫天",
           "紅粧染め",
           "断情絶路"
         ],
         "ko": [
-          "홍장만천",
           "만지홍장",
           "단정절로"
         ],
         "ru": [
-          "Багровая цветочная буря",
           "Багровое поле",
           "Разорванные обеты"
         ],
         "zh-Hant": [
-          "紅妝漫天",
           "遍地紅妝",
           "斷情絕路"
         ],
         "fr": [
-          "Tempête de fleurs rouges",
           "Champ écarlate",
           "Serments brisés"
         ],
         "de": [
-          "Rouge-Blütensturm",
           "Scharlachrotes Feld",
           "Gebrochene Schwüre"
         ],
         "es-ES": [
-          "Tormenta de flores rojas",
           "Campo escarlata",
           "Votos cercenados"
         ],
         "pt-BR": [
-          "Tempestade Floral",
           "Campo Escarlate",
           "Votos Partidos"
         ],
         "it": [
-          "Tempesta Floreale Vermiglia",
           "Campo Scarlatto",
           "Promesse Infrante"
         ],
         "th": [
-          "วิวาห์ชาดเต็มฟ้า",
           "วิวาห์ชาดทั่วปฐพี",
           "ตัดเยื่อใยไร้หวนคืน"
         ],
         "vi": [
-          "Sắc Đỏ Ngập Trời",
           "Cánh Đồng Đỏ Thẫm",
           "Đoạn Tình"
         ],
         "pt-PT": [
-          "Tempestade Rubra",
           "Campo Escarlate",
           "Votos Decepados"
         ],
         "es-419": [
-          "Tormenta de flores rojas",
           "Campo escarlata",
           "Votos rotos"
         ]
@@ -5268,51 +4612,21 @@
     },
     "move:Weapon.Weapon_Hun_HeiMoShang.GA_Hun_HeiMoShang_C1": {
       "aliases": {
-        "zh-Hans": [
-          "地趟刀法"
-        ],
-        "en": [
-          "Sweeping Blade"
-        ],
-        "ja": [
-          "伏地刀法"
-        ],
-        "ko": [
-          "지당도법"
-        ],
-        "ru": [
-          "Сметающий удар"
-        ],
-        "zh-Hant": [
-          "地趟刀法"
-        ],
-        "fr": [
-          "Lame circulaire"
-        ],
-        "de": [
-          "Fegende Klinge"
-        ],
-        "es-ES": [
-          "Tajo Rasante"
-        ],
-        "pt-BR": [
-          "Lâmina Varredora"
-        ],
-        "it": [
-          "Lama Guizzante"
-        ],
-        "th": [
-          "เพลงดาบกวาดปฐพี"
-        ],
-        "vi": [
-          "Địa Thảng Đao Pháp"
-        ],
-        "pt-PT": [
-          "Lâmina Ampla"
-        ],
-        "es-419": [
-          "Tajo Rasante"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -5560,23 +4874,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_BBBB.GA_Hun_HeiMoShang_BBBB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "黑魔伤 · 流水",
-        "en": "INFERNAL ROUGE · Flowing Water",
-        "ja": "黒魔傷 · 流水",
-        "ko": "흑마상 · 유수",
-        "ru": "Багрянец Мо · Текущая вода",
-        "zh-Hant": "黑魔傷 · 流水",
-        "fr": "ROUGE INFERNAL · Eau Fluide",
-        "de": "HÖLLISCHES BLUTROT · Fließendes Wasser",
-        "es-ES": "ROJO INFERNAL · Fluir del agua",
-        "pt-BR": "SANGUÍNEA INFERNAL · Água Fluente",
-        "it": "SANGUINARIA MO · Acqua Fluente",
-        "th": "คมมารทมิฬ · ธาราไหล",
-        "vi": "MA HẮC THƯƠNG · Lưu Thủy",
-        "pt-PT": "SANGUINE DE MÓ · Água Corrente",
-        "es-419": "ROJO INFERNAL · Flujo de agua"
       }
     },
     "move:Weapon.Weapon_Hun_HeiMoShang.GA_Hun_HeiMoShang_AAAAAB": {
@@ -5679,23 +4976,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_AAAAAB.GA_Hun_HeiMoShang_AAAAAB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "黑魔伤 · 流水",
-        "en": "INFERNAL ROUGE · Flowing Water",
-        "ja": "黒魔傷 · 流水",
-        "ko": "흑마상 · 유수",
-        "ru": "Багрянец Мо · Текущая вода",
-        "zh-Hant": "黑魔傷 · 流水",
-        "fr": "ROUGE INFERNAL · Eau Fluide",
-        "de": "HÖLLISCHES BLUTROT · Fließendes Wasser",
-        "es-ES": "ROJO INFERNAL · Fluir del agua",
-        "pt-BR": "SANGUÍNEA INFERNAL · Água Fluente",
-        "it": "SANGUINARIA MO · Acqua Fluente",
-        "th": "คมมารทมิฬ · ธาราไหล",
-        "vi": "MA HẮC THƯƠNG · Lưu Thủy",
-        "pt-PT": "SANGUINE DE MÓ · Água Corrente",
-        "es-419": "ROJO INFERNAL · Flujo de agua"
       }
     },
     "move:Weapon.Weapon_Hun_HeiMoShang.GA_Hun_HeiMoShang_AAAAABB": {
@@ -5798,23 +5078,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_AAAAABB.GA_Hun_HeiMoShang_AAAAABB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "黑魔伤 · 流水",
-        "en": "INFERNAL ROUGE · Flowing Water",
-        "ja": "黒魔傷 · 流水",
-        "ko": "흑마상 · 유수",
-        "ru": "Багрянец Мо · Текущая вода",
-        "zh-Hant": "黑魔傷 · 流水",
-        "fr": "ROUGE INFERNAL · Eau Fluide",
-        "de": "HÖLLISCHES BLUTROT · Fließendes Wasser",
-        "es-ES": "ROJO INFERNAL · Fluir del agua",
-        "pt-BR": "SANGUÍNEA INFERNAL · Água Fluente",
-        "it": "SANGUINARIA MO · Acqua Fluente",
-        "th": "คมมารทมิฬ · ธาราไหล",
-        "vi": "MA HẮC THƯƠNG · Lưu Thủy",
-        "pt-PT": "SANGUINE DE MÓ · Água Corrente",
-        "es-419": "ROJO INFERNAL · Flujo de agua"
       }
     },
     "move:Weapon.Weapon_Hun_HeiMoShang.GA_Hun_Tang_Buff": {
@@ -6013,51 +5276,21 @@
     },
     "move:Weapon.Weapon_Hun_Horizontal.GA_Hun_Horizontal_C": {
       "aliases": {
-        "zh-Hans": [
-          "荡寇凶斩"
-        ],
-        "en": [
-          "Bandit-Slaying Rampage"
-        ],
-        "ja": [
-          "蕩寇凶斬"
-        ],
-        "ko": [
-          "탕구흉참"
-        ],
-        "ru": [
-          "Неистовство истребителя разбойников"
-        ],
-        "zh-Hant": [
-          "蕩寇凶斬"
-        ],
-        "fr": [
-          "Fureur chasse-bandits"
-        ],
-        "de": [
-          "Banditen-Gemetzel"
-        ],
-        "es-ES": [
-          "Masacre cazabandidos"
-        ],
-        "pt-BR": [
-          "Fúria Matadora de Bandidos"
-        ],
-        "it": [
-          "Furia Trucida-Banditi"
-        ],
-        "th": [
-          "คมทมิฬปราบโจร"
-        ],
-        "vi": [
-          "Hung Trảm Diệt Phỉ"
-        ],
-        "pt-PT": [
-          "Massacre de Bandidos"
-        ],
-        "es-419": [
-          "Furia matabandidos"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -6309,64 +5542,64 @@
     "move:Weapon.Weapon_Hun_Horizontal.GA_Hun_Horizontal_CounterAttack_02": {
       "aliases": {
         "zh-Hans": [
-          "斩尽杀绝",
-          "以血养刃"
+          "以血养刃",
+          "斩尽杀绝"
         ],
         "en": [
-          "Annihilating Slash",
-          "Blood-Fed Edge"
+          "Blood-Fed Edge",
+          "Annihilating Slash"
         ],
         "ja": [
-          "斬尽殺絶",
-          "以血養刃"
+          "以血養刃",
+          "斬尽殺絶"
         ],
         "ko": [
-          "참진살절",
-          "이혈양인"
+          "이혈양인",
+          "참진살절"
         ],
         "ru": [
-          "Уничтожающий удар",
-          "Напоенное кровью лезвие"
+          "Напоенное кровью лезвие",
+          "Уничтожающий удар"
         ],
         "zh-Hant": [
-          "斬盡殺絕",
-          "以血養刃"
+          "以血養刃",
+          "斬盡殺絕"
         ],
         "fr": [
-          "Taille anéantissante",
-          "Lame abreuvée de sang"
+          "Lame abreuvée de sang",
+          "Taille anéantissante"
         ],
         "de": [
-          "Vernichtender Hieb",
-          "Blutgetränkte Klinge"
+          "Blutgetränkte Klinge",
+          "Vernichtender Hieb"
         ],
         "es-ES": [
-          "Tajo aniquilador",
-          "Filo saciado de sangre"
+          "Filo saciado de sangre",
+          "Tajo aniquilador"
         ],
         "pt-BR": [
-          "Corte Aniquilador",
-          "Lâmina Ensanguentada"
+          "Lâmina Ensanguentada",
+          "Corte Aniquilador"
         ],
         "it": [
-          "Squarcio Devastante",
-          "Filo Sanguinario"
+          "Filo Sanguinario",
+          "Squarcio Devastante"
         ],
         "th": [
-          "สังหารราบคาบ",
-          "ชุบคมด้วยโลหิต"
+          "ชุบคมด้วยโลหิต",
+          "สังหารราบคาบ"
         ],
         "vi": [
-          "Trảm Tận Giết Tuyệt",
-          "Dùng Máu Nuôi Đao"
+          "Dùng Máu Nuôi Đao",
+          "Trảm Tận Giết Tuyệt"
         ],
         "pt-PT": [
-          "Golpe Aniquilador",
-          "Gume Come-sangue"
+          "Gume Come-sangue",
+          "Golpe Aniquilador"
         ],
         "es-419": [
-          "Corte aniquilador",
-          "Filo saciado de sangre"
+          "Filo saciado de sangre",
+          "Corte aniquilador"
         ]
       },
       "effects": [
@@ -6559,51 +5792,21 @@
     },
     "move:Weapon.Weapon_Hun_Iron.GA_Hun_Iron_C": {
       "aliases": {
-        "zh-Hans": [
-          "残钢乱舞"
-        ],
-        "en": [
-          "Jagged Steel Rampage"
-        ],
-        "ja": [
-          "残鋼乱舞"
-        ],
-        "ko": [
-          "잔강난무"
-        ],
-        "ru": [
-          "Буйство Щербатой Стали"
-        ],
-        "zh-Hant": [
-          "殘鋼亂舞"
-        ],
-        "fr": [
-          "Déchaînement de Lame ébréchée"
-        ],
-        "de": [
-          "Amoklauf des Gezackten Stahls"
-        ],
-        "es-ES": [
-          "Frenesí de Acero Serrado"
-        ],
-        "pt-BR": [
-          "Alvoroço de Lâmina Desgastada"
-        ],
-        "it": [
-          "Furia della Lama Dentellata"
-        ],
-        "th": [
-          "ระบำดาบเหล็กบิ่น"
-        ],
-        "vi": [
-          "Tàn Cương Loạn Vũ"
-        ],
-        "pt-PT": [
-          "Fúria do Aço Corroído"
-        ],
-        "es-419": [
-          "Frenesí de Acero serrado"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -7044,72 +6247,25 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/New/GA_Hun_Jade_A_DashDraw.GA_Hun_Jade_A_DashDraw_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "玉双环 · 连环追斩",
-        "en": "SEAMLESS DEATH · Relentless Pursuit",
-        "ja": "玉双環 · 連続追斬",
-        "ko": "옥쌍환 · 연환 추참",
-        "ru": "Безупречная Смерть · Неумолимое преследование",
-        "zh-Hant": "玉雙環 · 連環追斬",
-        "fr": "DOUCE MORT · Poursuite implacable",
-        "de": "NAHTLOSER TOD · Unerbittliche Verfolgung",
-        "es-ES": "MUERTE FLUIDA · Persecución incesante",
-        "pt-BR": "MORTE CIRCULAR · Perseguição Implacável",
-        "it": "MORTE FLUIDA · Caccia implacabile",
-        "th": "จักรหยกคู่ · ไล่ฟันต่อเนื่อง",
-        "vi": "NGỌC SONG HOÀN · Truy Kích Liên Trảm",
-        "pt-PT": "MORTE SUAVE · Perseguição Implacável",
-        "es-419": "MUERTE PERFECTA · Persecución incesante"
       }
     },
     "move:Weapon.Weapon_Hun_JadeDual.GA_Hun_Jade_C_Range": {
       "aliases": {
-        "zh-Hans": [
-          "无尽索命环"
-        ],
-        "en": [
-          "Reaping Rings"
-        ],
-        "ja": [
-          "無尽索命環"
-        ],
-        "ko": [
-          "무진색명환"
-        ],
-        "ru": [
-          "Жатва колец"
-        ],
-        "zh-Hant": [
-          "無盡索命環"
-        ],
-        "fr": [
-          "Anneaux faucheurs"
-        ],
-        "de": [
-          "Schnitter-Ringe"
-        ],
-        "es-ES": [
-          "Anillos segadores"
-        ],
-        "pt-BR": [
-          "Aros Ceifadores"
-        ],
-        "it": [
-          "Anelli Falcianti"
-        ],
-        "th": [
-          "ห่วงพิฆาตไร้สิ้นสุด"
-        ],
-        "vi": [
-          "Phi Hoàn Đoạt Mệnh"
-        ],
-        "pt-PT": [
-          "Anéis de Ceifar"
-        ],
-        "es-419": [
-          "Aros segadores"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -7432,72 +6588,25 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/Jade/New/GA_Hun_Jade_A_DashDraw.GA_Hun_Jade_A_DashDraw_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "玉双环 · 连环追斩",
-        "en": "SEAMLESS DEATH · Relentless Pursuit",
-        "ja": "玉双環 · 連続追斬",
-        "ko": "옥쌍환 · 연환 추참",
-        "ru": "Безупречная Смерть · Неумолимое преследование",
-        "zh-Hant": "玉雙環 · 連環追斬",
-        "fr": "DOUCE MORT · Poursuite implacable",
-        "de": "NAHTLOSER TOD · Unerbittliche Verfolgung",
-        "es-ES": "MUERTE FLUIDA · Persecución incesante",
-        "pt-BR": "MORTE CIRCULAR · Perseguição Implacável",
-        "it": "MORTE FLUIDA · Caccia implacabile",
-        "th": "จักรหยกคู่ · ไล่ฟันต่อเนื่อง",
-        "vi": "NGỌC SONG HOÀN · Truy Kích Liên Trảm",
-        "pt-PT": "MORTE SUAVE · Perseguição Implacável",
-        "es-419": "MUERTE PERFECTA · Persecución incesante"
       }
     },
     "move:Weapon.Weapon_Hun_JadeDual_Evaluation.GA_Hun_Jade_C_Range": {
       "aliases": {
-        "zh-Hans": [
-          "无尽索命环"
-        ],
-        "en": [
-          "Reaping Rings"
-        ],
-        "ja": [
-          "無尽索命環"
-        ],
-        "ko": [
-          "무진색명환"
-        ],
-        "ru": [
-          "Жатва колец"
-        ],
-        "zh-Hant": [
-          "無盡索命環"
-        ],
-        "fr": [
-          "Anneaux faucheurs"
-        ],
-        "de": [
-          "Schnitter-Ringe"
-        ],
-        "es-ES": [
-          "Anillos segadores"
-        ],
-        "pt-BR": [
-          "Aros Ceifadores"
-        ],
-        "it": [
-          "Anelli Falcianti"
-        ],
-        "th": [
-          "ห่วงพิฆาตไร้สิ้นสุด"
-        ],
-        "vi": [
-          "Phi Hoàn Đoạt Mệnh"
-        ],
-        "pt-PT": [
-          "Anéis de Ceifar"
-        ],
-        "es-419": [
-          "Aros segadores"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -7723,51 +6832,21 @@
     },
     "move:Weapon.Weapon_Hun_Jigsaw.GA_Hun_Jigsaw_C": {
       "aliases": {
-        "zh-Hans": [
-          "凶残谢幕"
-        ],
-        "en": [
-          "Savage Finale"
-        ],
-        "ja": [
-          "凶残なる幕引き"
-        ],
-        "ko": [
-          "잔혹한 마무리"
-        ],
-        "ru": [
-          "Свирепая расправа"
-        ],
-        "zh-Hant": [
-          "凶殘謝幕"
-        ],
-        "fr": [
-          "Final sauvage"
-        ],
-        "de": [
-          "Wildes Finale"
-        ],
-        "es-ES": [
-          "Remate brutal"
-        ],
-        "pt-BR": [
-          "Final Feroz"
-        ],
-        "it": [
-          "Finale Cruento"
-        ],
-        "th": [
-          "ปิดฉากอำมหิต"
-        ],
-        "vi": [
-          "Kết Cục Đẫm Máu"
-        ],
-        "pt-PT": [
-          "Final Selvagem"
-        ],
-        "es-419": [
-          "Final salvaje"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -7972,23 +7051,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_AB.GA_Hun_ChiRen_AB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "炽刃 · 旋风斩击",
-        "en": "BLAZING EDGE · Whirlwind Slash",
-        "ja": "熾刃 · 旋風斬撃",
-        "ko": "치인 · 폭풍 참격",
-        "ru": "Пылающий Клинок · Вихревой удар",
-        "zh-Hant": "熾刃 · 旋風斬擊",
-        "fr": "LAME ARDENTE · Taille tourbillonnante",
-        "de": "FLAMMENDE KLINGE · Wirbelwindhieb",
-        "es-ES": "HOJA ABRASADORA · Tajo torbellino",
-        "pt-BR": "LÂMINA FLAMEJANTE · Corte Turbilhão",
-        "it": "LAMA ROVENTE · Fendente vorticante",
-        "th": "คมอัคคีโชติช่วง · คมดาบพายุหมุน",
-        "vi": "HỎA NHẬN · Toàn Phong Trảm",
-        "pt-PT": "GUME ARDENTE · Corte Turbilhão",
-        "es-419": "FILO ABRASADOR · Corte arremolinado"
       }
     },
     "move:Weapon.Weapon_Hun_ChiRen.GA_Hun_Long_Counter": {
@@ -8208,23 +7270,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_BSup.GA_Hun_ChiRen_BSup_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "炽刃 · 风回云卷",
-        "en": "BLAZING EDGE · Tempest Wheel",
-        "ja": "熾刃 · 風回雲巻",
-        "ko": "치인 · 풍회운권",
-        "ru": "Пылающий Клинок · Колесо бури",
-        "zh-Hant": "熾刃 · 風迴雲卷",
-        "fr": "LAME ARDENTE · Roue de la tempête",
-        "de": "FLAMMENDE KLINGE · Sturmrad",
-        "es-ES": "HOJA ABRASADORA · Rueda de la tempestad",
-        "pt-BR": "LÂMINA FLAMEJANTE · Roda Tempestuosa",
-        "it": "LAMA ROVENTE · Ruota della Tempesta",
-        "th": "คมอัคคีโชติช่วง · วายุหวนเมฆาม้วน",
-        "vi": "HỎA NHẬN · Phong Hồi Vân Quyển",
-        "pt-PT": "GUME ARDENTE · Roda Tempestade",
-        "es-419": "FILO ABRASADOR · Rueda de tempestad"
       }
     },
     "move:Weapon.Weapon_Hun_ChiRen.GA_Hun_Long_CounterA": {
@@ -8326,71 +7371,69 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Default/GA_Hun_Long_CounterA.GA_Hun_Long_CounterA_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "炽刃 · 风回云卷",
-        "en": "BLAZING EDGE · Tempest Wheel",
-        "ja": "熾刃 · 風回雲巻",
-        "ko": "치인 · 풍회운권",
-        "ru": "Пылающий Клинок · Колесо бури",
-        "zh-Hant": "熾刃 · 風迴雲卷",
-        "fr": "LAME ARDENTE · Roue de la tempête",
-        "de": "FLAMMENDE KLINGE · Sturmrad",
-        "es-ES": "HOJA ABRASADORA · Rueda de la tempestad",
-        "pt-BR": "LÂMINA FLAMEJANTE · Roda Tempestuosa",
-        "it": "LAMA ROVENTE · Ruota della Tempesta",
-        "th": "คมอัคคีโชติช่วง · วายุหวนเมฆาม้วน",
-        "vi": "HỎA NHẬN · Phong Hồi Vân Quyển",
-        "pt-PT": "GUME ARDENTE · Roda Tempestade",
-        "es-419": "FILO ABRASADOR · Rueda de tempestad"
       }
     },
     "move:Weapon.Weapon_Hun_ChiRen.GA_Hun_ChiRen_BD": {
       "aliases": {
         "zh-Hans": [
-          "旋风斩击"
+          "旋风斩击",
+          "焰波"
         ],
         "en": [
-          "Whirlwind Slash"
+          "Whirlwind Slash",
+          "Flame Wave"
         ],
         "ja": [
-          "旋風斬撃"
+          "旋風斬撃",
+          "焔波"
         ],
         "ko": [
-          "폭풍 참격"
+          "폭풍 참격",
+          "염파"
         ],
         "ru": [
-          "Вихревой удар"
+          "Вихревой удар",
+          "Волна пламени"
         ],
         "zh-Hant": [
-          "旋風斬擊"
+          "旋風斬擊",
+          "焰波"
         ],
         "fr": [
-          "Taille tourbillonnante"
+          "Taille tourbillonnante",
+          "Vague de feu"
         ],
         "de": [
-          "Wirbelwindhieb"
+          "Wirbelwindhieb",
+          "Flammenwelle"
         ],
         "es-ES": [
-          "Tajo torbellino"
+          "Tajo torbellino",
+          "Ola ígnea"
         ],
         "pt-BR": [
-          "Corte Turbilhão"
+          "Corte Turbilhão",
+          "Onda de Fogo"
         ],
         "it": [
-          "Fendente vorticante"
+          "Fendente vorticante",
+          "Ondata Incendiaria"
         ],
         "th": [
-          "คมดาบพายุหมุน"
+          "คมดาบพายุหมุน",
+          "คลื่นเพลิง"
         ],
         "vi": [
-          "Toàn Phong Trảm"
+          "Toàn Phong Trảm",
+          "Sóng Lửa"
         ],
         "pt-PT": [
-          "Corte Turbilhão"
+          "Corte Turbilhão",
+          "Vaga de Chamas"
         ],
         "es-419": [
-          "Corte arremolinado"
+          "Corte arremolinado",
+          "Ola de fuego"
         ]
       },
       "effects": [
@@ -8434,6 +7477,45 @@
             "pt-PT": "Prime <InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/> para consumir uma grande quantidade de Sha-Chi e executar um <Character_Yellow_Decorator2>Corte Turbilhão</>.",
             "es-419": "Presiona <InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para consumir una gran cantidad de Sha-Chi y ejecutar un <Character_Yellow_Decorator2>Corte arremolinado</>."
           }
+        },
+        {
+          "key": "Weapon_FunctionName_014_EX",
+          "labels": {
+            "zh-Hans": "焰波",
+            "en": "Flame Wave",
+            "ja": "焔波",
+            "ko": "염파",
+            "ru": "Волна пламени",
+            "zh-Hant": "焰波",
+            "fr": "Vague de feu",
+            "de": "Flammenwelle",
+            "es-ES": "Ola ígnea",
+            "pt-BR": "Onda de Fogo",
+            "it": "Ondata Incendiaria",
+            "th": "คลื่นเพลิง",
+            "vi": "Sóng Lửa",
+            "pt-PT": "Vaga de Chamas",
+            "es-419": "Ola de fuego"
+          },
+          "kind": "related",
+          "upgradeTags": [],
+          "descriptionLabels": {
+            "zh-Hans": "<InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>消耗杀气斩出火焰波，会点燃敌人。",
+            "en": "Press<InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>to consume Sha-Chi and unleash a flame wave that Ignites enemies.",
+            "ja": "<InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>で殺気を消費して焔波を放ち、敵を燃焼状態にする。",
+            "ko": "<InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/> 버튼을 눌러 살기를 소모하고 화염 파동을 날려 적을 점화 상태로 만든다.",
+            "ru": "Нажмите<InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"5\"/>, чтобы израсходовать Ша-Ци и выпустить волну пламени, которая поджигает противников.",
+            "zh-Hant": "<InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>消耗殺氣斬出火焰波，會點燃敵人。",
+            "fr": "Appuyez sur <InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/> pour consommer du Sha-Chi et libérer une vague de feu qui enflamme les ennemis.",
+            "de": "Drücke <InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"5\"/>, um Sha-Chi zu verbrauchen und eine Flammenwelle zu entfesseln, die Gegner entzündet.",
+            "es-ES": "Pulsa<InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para consumir Sha-Chi y desatar una ola ígnea que envuelve en llamas a los enemigos.",
+            "pt-BR": "Aperte<InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para consumir Sha-Chi e desferir uma onda de fogo que Incendeia inimigos.",
+            "it": "Premi <InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/> per consumare Sha-Chi e scatenare un'ondata di fiamme che incendia i nemici.",
+            "th": "กด<InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>ใช้ปราณสังหารฟันปล่อยคลื่นเพลิงออกไป และทำให้ศัตรูลุกไหม้",
+            "vi": "Nhấn<InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>để tiêu hao Sát Khí và phát ra sóng lửa thiêu đốt kẻ địch.",
+            "pt-PT": "Prime<InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para consumir Sha-Chi e desferir uma onda de chamas que incendeia inimigos.",
+            "es-419": "Presiona <InputAction id=\"Stance\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>+<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para consumir Sha-Chi y desatar una ola de fuego que prende fuego a los enemigos."
+          }
         }
       ],
       "evidence": {
@@ -8443,24 +7525,10 @@
         "abilityClasses": [
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/ChiRen/GA_Hun_ChiRen_BD.GA_Hun_ChiRen_BD_C"
         ],
-        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "炽刃 · 旋风斩击",
-        "en": "BLAZING EDGE · Whirlwind Slash",
-        "ja": "熾刃 · 旋風斬撃",
-        "ko": "치인 · 폭풍 참격",
-        "ru": "Пылающий Клинок · Вихревой удар",
-        "zh-Hant": "熾刃 · 旋風斬擊",
-        "fr": "LAME ARDENTE · Taille tourbillonnante",
-        "de": "FLAMMENDE KLINGE · Wirbelwindhieb",
-        "es-ES": "HOJA ABRASADORA · Tajo torbellino",
-        "pt-BR": "LÂMINA FLAMEJANTE · Corte Turbilhão",
-        "it": "LAMA ROVENTE · Fendente vorticante",
-        "th": "คมอัคคีโชติช่วง · คมดาบพายุหมุน",
-        "vi": "HỎA NHẬN · Toàn Phong Trảm",
-        "pt-PT": "GUME ARDENTE · Corte Turbilhão",
-        "es-419": "FILO ABRASADOR · Corte arremolinado"
+        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags",
+        "relatedNameKeys": [
+          "Weapon_FunctionName_014_EX"
+        ]
       }
     },
     "weapon-art:Weapon_Hun_Long.GA_Hun_Long_C": {
@@ -8541,51 +7609,21 @@
     },
     "move:Weapon.Weapon_Hun_Long.GA_Hun_Long_C": {
       "aliases": {
-        "zh-Hans": [
-          "长刃连斩"
-        ],
-        "en": [
-          "Longblade Chain Slash"
-        ],
-        "ja": [
-          "長刃連斬"
-        ],
-        "ko": [
-          "장검 연참"
-        ],
-        "ru": [
-          "Серия ударов длинным клинком"
-        ],
-        "zh-Hant": [
-          "長刃連斬"
-        ],
-        "fr": [
-          "Enchaînement de longue lame"
-        ],
-        "de": [
-          "Langklingen-Kettenhieb"
-        ],
-        "es-ES": [
-          "Tajo encadenado de espada larga"
-        ],
-        "pt-BR": [
-          "Sequência de Cortes com Lâmina Longa"
-        ],
-        "it": [
-          "Catena di fendenti"
-        ],
-        "th": [
-          "คมยาวฟันต่อเนื่อง"
-        ],
-        "vi": [
-          "Trường Kiếm Liên Trảm"
-        ],
-        "pt-PT": [
-          "Sequência de Golpes de Lâmina Longa"
-        ],
-        "es-419": [
-          "Cortes encadenados de espada larga"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -8832,23 +7870,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Default/GA_Hun_Long_BSup.GA_Hun_Long_BSup_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "长形黑伤 · 风回云卷",
-        "en": "SANGUINE REACH · Tempest Wheel",
-        "ja": "黒傷・長刀 · 風回雲巻",
-        "ko": "장형 흑상 · 풍회운권",
-        "ru": "Длинный Багрянец · Колесо бури",
-        "zh-Hant": "長形黑傷 · 風迴雲卷",
-        "fr": "SANGUINE ALLONGÉE · Roue de la tempête",
-        "de": "BLUTROT-LANGKLINGE · Sturmrad",
-        "es-ES": "SANGUINA EXTENSA · Rueda de la tempestad",
-        "pt-BR": "SANGUÍNEA LONGA · Roda Tempestuosa",
-        "it": "GRAN SANGUINARIA · Ruota della Tempesta",
-        "th": "ดาบแผลนิลกาฬทรงยาว · วายุหวนเมฆาม้วน",
-        "vi": "HẮC THƯƠNG TRƯỜNG KIẾM · Phong Hồi Vân Quyển",
-        "pt-PT": "SANGUINE DEVASTADORA · Roda Tempestade",
-        "es-419": "SANGUINA ALARGADA · Rueda de tempestad"
       }
     },
     "move:Weapon.Weapon_Hun_Long.GA_Hun_Long_CounterA": {
@@ -8950,23 +7971,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Default/GA_Hun_Long_CounterA.GA_Hun_Long_CounterA_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "长形黑伤 · 风回云卷",
-        "en": "SANGUINE REACH · Tempest Wheel",
-        "ja": "黒傷・長刀 · 風回雲巻",
-        "ko": "장형 흑상 · 풍회운권",
-        "ru": "Длинный Багрянец · Колесо бури",
-        "zh-Hant": "長形黑傷 · 風迴雲卷",
-        "fr": "SANGUINE ALLONGÉE · Roue de la tempête",
-        "de": "BLUTROT-LANGKLINGE · Sturmrad",
-        "es-ES": "SANGUINA EXTENSA · Rueda de la tempestad",
-        "pt-BR": "SANGUÍNEA LONGA · Roda Tempestuosa",
-        "it": "GRAN SANGUINARIA · Ruota della Tempesta",
-        "th": "ดาบแผลนิลกาฬทรงยาว · วายุหวนเมฆาม้วน",
-        "vi": "HẮC THƯƠNG TRƯỜNG KIẾM · Phong Hồi Vân Quyển",
-        "pt-PT": "SANGUINE DEVASTADORA · Roda Tempestade",
-        "es-419": "SANGUINA ALARGADA · Rueda de tempestad"
       }
     },
     "move:Weapon.Weapon_Hun_Long.GA_Hun_Long_BD": {
@@ -9068,23 +8072,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/LongBlade/Default/GA_Hun_Long_BD.GA_Hun_Long_BD_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "长形黑伤 · 旋风斩击",
-        "en": "SANGUINE REACH · Whirlwind Slash",
-        "ja": "黒傷・長刀 · 旋風斬撃",
-        "ko": "장형 흑상 · 폭풍 참격",
-        "ru": "Длинный Багрянец · Вихревой удар",
-        "zh-Hant": "長形黑傷 · 旋風斬擊",
-        "fr": "SANGUINE ALLONGÉE · Taille tourbillonnante",
-        "de": "BLUTROT-LANGKLINGE · Wirbelwindhieb",
-        "es-ES": "SANGUINA EXTENSA · Tajo torbellino",
-        "pt-BR": "SANGUÍNEA LONGA · Corte Turbilhão",
-        "it": "GRAN SANGUINARIA · Fendente vorticante",
-        "th": "ดาบแผลนิลกาฬทรงยาว · คมดาบพายุหมุน",
-        "vi": "HẮC THƯƠNG TRƯỜNG KIẾM · Toàn Phong Trảm",
-        "pt-PT": "SANGUINE DEVASTADORA · Corte Turbilhão",
-        "es-419": "SANGUINA ALARGADA · Corte arremolinado"
       }
     },
     "weapon-art:Weapon_Hun_LuanYing_Evolution.GA_Hun_LuanYing_CA": {
@@ -9241,51 +8228,21 @@
     },
     "move:Weapon.Weapon_Hun_LuanYing_Evolution.GA_Hun_LuanYing_CA": {
       "aliases": {
-        "zh-Hans": [
-          "乱莺剑法"
-        ],
-        "en": [
-          "Wild Oriole Sword Art"
-        ],
-        "ja": [
-          "乱鶯剣法"
-        ],
-        "ko": [
-          "난앵검법"
-        ],
-        "ru": [
-          "Искусство меча «Дикая иволга»"
-        ],
-        "zh-Hant": [
-          "亂鶯劍法"
-        ],
-        "fr": [
-          "Art de l'Épée du Loriot sauvage"
-        ],
-        "de": [
-          "Pirol-Schwertkunst"
-        ],
-        "es-ES": [
-          "Arte de la Espada de la Oropéndola Salvaje"
-        ],
-        "pt-BR": [
-          "Arte da Espada do Rouxinol Selvagem"
-        ],
-        "it": [
-          "Arte di spada dell'oriolo"
-        ],
-        "th": [
-          "เพลงกระบี่วิหคอลหม่าน"
-        ],
-        "vi": [
-          "Loạn Oanh Kiếm Pháp"
-        ],
-        "pt-PT": [
-          "Arte de Espada Papa-Figos"
-        ],
-        "es-419": [
-          "Arte de la Espada de la Oropéndola Salvaje"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -9317,51 +8274,21 @@
     },
     "move:Weapon.Weapon_Hun_LuanYing_Evolution.GA_Hun_LuanYing_P2_CA": {
       "aliases": {
-        "zh-Hans": [
-          "乱莺剑法"
-        ],
-        "en": [
-          "Wild Oriole Sword Art"
-        ],
-        "ja": [
-          "乱鶯剣法"
-        ],
-        "ko": [
-          "난앵검법"
-        ],
-        "ru": [
-          "Искусство меча «Дикая иволга»"
-        ],
-        "zh-Hant": [
-          "亂鶯劍法"
-        ],
-        "fr": [
-          "Art de l'Épée du Loriot sauvage"
-        ],
-        "de": [
-          "Pirol-Schwertkunst"
-        ],
-        "es-ES": [
-          "Arte de la Espada de la Oropéndola Salvaje"
-        ],
-        "pt-BR": [
-          "Arte da Espada do Rouxinol Selvagem"
-        ],
-        "it": [
-          "Arte di spada dell'oriolo"
-        ],
-        "th": [
-          "เพลงกระบี่วิหคอลหม่าน"
-        ],
-        "vi": [
-          "Loạn Oanh Kiếm Pháp"
-        ],
-        "pt-PT": [
-          "Arte de Espada Papa-Figos"
-        ],
-        "es-419": [
-          "Arte de la Espada de la Oropéndola Salvaje"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -9469,51 +8396,21 @@
     },
     "move:Weapon.Weapon_Hun_XieHuo.GA_Hun_Long_C": {
       "aliases": {
-        "zh-Hans": [
-          "燧断"
-        ],
-        "en": [
-          "Sunderflame"
-        ],
-        "ja": [
-          "燧断"
-        ],
-        "ko": [
-          "화수단"
-        ],
-        "ru": [
-          "Пламенный удар"
-        ],
-        "zh-Hant": [
-          "燧斷"
-        ],
-        "fr": [
-          "Flamme déchirante"
-        ],
-        "de": [
-          "Schmetterflamme"
-        ],
-        "es-ES": [
-          "Llama devastadora"
-        ],
-        "pt-BR": [
-          "Chama Partidora"
-        ],
-        "it": [
-          "Fiamma Frantumante"
-        ],
-        "th": [
-          "อัคคีสะบั้น"
-        ],
-        "vi": [
-          "Hỏa Đoạn"
-        ],
-        "pt-PT": [
-          "Fogo Dilacerante"
-        ],
-        "es-419": [
-          "Llama desgarradora"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -9621,51 +8518,21 @@
     },
     "move:Weapon.Weapon_Hun_PoJun.GA_Hun_PoJun_C": {
       "aliases": {
-        "zh-Hans": [
-          "破阵刀法"
-        ],
-        "en": [
-          "Formation Breaking Art"
-        ],
-        "ja": [
-          "破陣刀法"
-        ],
-        "ko": [
-          "파진도법"
-        ],
-        "ru": [
-          "Искусство прорыва строя"
-        ],
-        "zh-Hant": [
-          "破陣刀法"
-        ],
-        "fr": [
-          "Art de la rupture de formation"
-        ],
-        "de": [
-          "Formationsbrechende Kunst"
-        ],
-        "es-ES": [
-          "Técnica rompeformaciones"
-        ],
-        "pt-BR": [
-          "Arte da Quebra de Formação"
-        ],
-        "it": [
-          "Arte dello Sfondamento"
-        ],
-        "th": [
-          "เพลงดาบทะลวงค่ายกล"
-        ],
-        "vi": [
-          "Đao Pháp Phá Trận"
-        ],
-        "pt-PT": [
-          "Arte da Quebra de Formação"
-        ],
-        "es-419": [
-          "Arte de romper formaciones"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -10163,72 +9030,25 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_A_DashDraw.GA_Hun_ShuangYue_A_DashDraw_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "天煞双钺 · 连环追斩",
-        "en": "SUNDERING DUAL AXES · Relentless Pursuit",
-        "ja": "天煞双鉞 · 連続追斬",
-        "ko": "천살쌍월 · 연환 추참",
-        "ru": "Небесная Кара · Неумолимое преследование",
-        "zh-Hant": "天煞雙鉞 · 連環追斬",
-        "fr": "CROISSANTS CÉLESTES · Poursuite implacable",
-        "de": "SPALTENDE ZWILLINGSÄXTE · Unerbittliche Verfolgung",
-        "es-ES": "HACHAS DOBLES CERCENADORAS · Persecución incesante",
-        "pt-BR": "MACHADOS DUPLOS DILACERANTES · Perseguição Implacável",
-        "it": "ASCE FRANTUMANTI · Caccia implacabile",
-        "th": "ขวานคู่อสูรฟ้า · ไล่ฟันต่อเนื่อง",
-        "vi": "THIÊN SÁT SONG VIỆT · Truy Kích Liên Trảm",
-        "pt-PT": "MACHADOS IMPIEDOSOS · Perseguição Implacável",
-        "es-419": "HACHAS GEMELAS DESTRUCTORAS · Persecución incesante"
       }
     },
     "move:Weapon.Weapon_Hun_ShuangYue.GA_Hun_ShuangYue_C": {
       "aliases": {
-        "zh-Hans": [
-          "天煞破敌"
-        ],
-        "en": [
-          "Tiansha Reaving"
-        ],
-        "ja": [
-          "天煞破敵"
-        ],
-        "ko": [
-          "천살파적"
-        ],
-        "ru": [
-          "Жатва Тяньша"
-        ],
-        "zh-Hant": [
-          "天煞破敵"
-        ],
-        "fr": [
-          "Pillage de Tiansha"
-        ],
-        "de": [
-          "Tiansha-Plünderung"
-        ],
-        "es-ES": [
-          "Segado de Tiansha"
-        ],
-        "pt-BR": [
-          "Arrebate Tiansha"
-        ],
-        "it": [
-          "Squarcio Tiansha"
-        ],
-        "th": [
-          "อสูรฟ้าพิชิตศัตรู"
-        ],
-        "vi": [
-          "Thiên Sát Phá Địch"
-        ],
-        "pt-PT": [
-          "Saque de Tiansha"
-        ],
-        "es-419": [
-          "Siega Tiansha"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -10357,23 +9177,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_PB.GA_Hun_ShuangYue_PB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "天煞双钺 · 断肠击",
-        "en": "SUNDERING DUAL AXES · Heart-Rending Strike",
-        "ja": "天煞双鉞 · 断腸撃",
-        "ko": "천살쌍월 · 단장격",
-        "ru": "Небесная Кара · Разрывающий сердце удар",
-        "zh-Hant": "天煞雙鉞 · 斷腸擊",
-        "fr": "CROISSANTS CÉLESTES · Frappe fende-cœur",
-        "de": "SPALTENDE ZWILLINGSÄXTE · Herzzerreißender Schlag",
-        "es-ES": "HACHAS DOBLES CERCENADORAS · Golpe desgarracorazones",
-        "pt-BR": "MACHADOS DUPLOS DILACERANTES · Golpe Corta-corações",
-        "it": "ASCE FRANTUMANTI · Colpo Spaccacuori",
-        "th": "ขวานคู่อสูรฟ้า · จู่โจมสะบั้นวิญญาณ",
-        "vi": "THIÊN SÁT SONG VIỆT · Đoạn Trường Kích",
-        "pt-PT": "MACHADOS IMPIEDOSOS · Golpe Corta-Corações",
-        "es-419": "HACHAS GEMELAS DESTRUCTORAS · Golpe rasgacorazones"
       }
     },
     "move:Weapon.Weapon_Hun_ShuangYue.GA_Hun_ShuangYue_PBB": {
@@ -10475,23 +9278,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_PBB.GA_Hun_ShuangYue_PBB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "天煞双钺 · 断肠击",
-        "en": "SUNDERING DUAL AXES · Heart-Rending Strike",
-        "ja": "天煞双鉞 · 断腸撃",
-        "ko": "천살쌍월 · 단장격",
-        "ru": "Небесная Кара · Разрывающий сердце удар",
-        "zh-Hant": "天煞雙鉞 · 斷腸擊",
-        "fr": "CROISSANTS CÉLESTES · Frappe fende-cœur",
-        "de": "SPALTENDE ZWILLINGSÄXTE · Herzzerreißender Schlag",
-        "es-ES": "HACHAS DOBLES CERCENADORAS · Golpe desgarracorazones",
-        "pt-BR": "MACHADOS DUPLOS DILACERANTES · Golpe Corta-corações",
-        "it": "ASCE FRANTUMANTI · Colpo Spaccacuori",
-        "th": "ขวานคู่อสูรฟ้า · จู่โจมสะบั้นวิญญาณ",
-        "vi": "THIÊN SÁT SONG VIỆT · Đoạn Trường Kích",
-        "pt-PT": "MACHADOS IMPIEDOSOS · Golpe Corta-Corações",
-        "es-419": "HACHAS GEMELAS DESTRUCTORAS · Golpe rasgacorazones"
       }
     },
     "move:Weapon.Weapon_Hun_ShuangYue.GA_Hun_ShuangYue_DB": {
@@ -10808,51 +9594,21 @@
     },
     "move:Weapon.Weapon_Hun_SlitheringSword.GA_Hun_SlitheringSword_C": {
       "aliases": {
-        "zh-Hans": [
-          "灵蛇乱舞"
-        ],
-        "en": [
-          "Wild Serpent Dance"
-        ],
-        "ja": [
-          "霊蛇乱舞"
-        ],
-        "ko": [
-          "영사난무"
-        ],
-        "ru": [
-          "Танец дикой змеи"
-        ],
-        "zh-Hant": [
-          "靈蛇亂舞"
-        ],
-        "fr": [
-          "Danse sauvage du serpent"
-        ],
-        "de": [
-          "Wilder Schlangentanz"
-        ],
-        "es-ES": [
-          "Danza de la serpiente salvaje"
-        ],
-        "pt-BR": [
-          "Dança da Serpente Selvagem"
-        ],
-        "it": [
-          "Danza del Serpente"
-        ],
-        "th": [
-          "ระบำอสรพิษคลั่ง"
-        ],
-        "vi": [
-          "Linh Xà Loạn Vũ"
-        ],
-        "pt-PT": [
-          "Dança da Serpente Selvagem"
-        ],
-        "es-419": [
-          "Danza de la serpiente salvaje"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -11162,51 +9918,21 @@
     },
     "move:Weapon.Weapon_Hun_SnakeDual.GA_Hun_SnakeDual_C": {
       "aliases": {
-        "zh-Hans": [
-          "双蛇狂舞"
-        ],
-        "en": [
-          "Twin Serpent Frenzy"
-        ],
-        "ja": [
-          "双蛇狂舞"
-        ],
-        "ko": [
-          "쌍사광무"
-        ],
-        "ru": [
-          "Неистовство двух змей"
-        ],
-        "zh-Hant": [
-          "雙蛇狂舞"
-        ],
-        "fr": [
-          "Frénésie des serpents jumeaux"
-        ],
-        "de": [
-          "Zwillingsschlangen-Raserei"
-        ],
-        "es-ES": [
-          "Frenesí de las serpientes gemelas"
-        ],
-        "pt-BR": [
-          "Frenesi das Serpes Gêmeas"
-        ],
-        "it": [
-          "Frenesia dei Serpenti Gemelli"
-        ],
-        "th": [
-          "สองอสรพิษระบำคลั่ง"
-        ],
-        "vi": [
-          "Song Xà Cuồng Vũ"
-        ],
-        "pt-PT": [
-          "Frenesim das Serpentes Gémeas"
-        ],
-        "es-419": [
-          "Frenesí de serpientes gemelas"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -11314,51 +10040,21 @@
     },
     "move:Weapon.Weapon_Hun_Tang.GA_Hun_Tang_C": {
       "aliases": {
-        "zh-Hans": [
-          "地趟刀法"
-        ],
-        "en": [
-          "Sweeping Blade"
-        ],
-        "ja": [
-          "伏地刀法"
-        ],
-        "ko": [
-          "지당도법"
-        ],
-        "ru": [
-          "Сметающий удар"
-        ],
-        "zh-Hant": [
-          "地趟刀法"
-        ],
-        "fr": [
-          "Lame circulaire"
-        ],
-        "de": [
-          "Fegende Klinge"
-        ],
-        "es-ES": [
-          "Tajo Rasante"
-        ],
-        "pt-BR": [
-          "Lâmina Varredora"
-        ],
-        "it": [
-          "Lama Guizzante"
-        ],
-        "th": [
-          "เพลงดาบกวาดปฐพี"
-        ],
-        "vi": [
-          "Địa Thảng Đao Pháp"
-        ],
-        "pt-PT": [
-          "Lâmina Ampla"
-        ],
-        "es-419": [
-          "Tajo Rasante"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -11606,23 +10302,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/Default/GA_Hun_Tang_BBBB.GA_Hun_Tang_BBBB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "黑伤 · 流水",
-        "en": "SANGUINE · Flowing Water",
-        "ja": "黒傷 · 流水",
-        "ko": "흑상 · 유수",
-        "ru": "Багрянец · Текущая вода",
-        "zh-Hant": "黑傷 · 流水",
-        "fr": "SANGUINE · Eau Fluide",
-        "de": "BLUTROT · Fließendes Wasser",
-        "es-ES": "SANGUINA · Fluir del agua",
-        "pt-BR": "SANGUÍNEA · Água Fluente",
-        "it": "SANGUINARIA · Acqua Fluente",
-        "th": "ดาบแผลนิลกาฬ · ธาราไหล",
-        "vi": "HẮC THƯƠNG · Lưu Thủy",
-        "pt-PT": "SANGUINE · Água Corrente",
-        "es-419": "SANGUINA · Flujo de agua"
       }
     },
     "move:Weapon.Weapon_Hun_Tang.GA_Hun_Tang_AAAAAB": {
@@ -11725,23 +10404,6 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/TangBlade/Default/GA_Hun_Tang_AAAAAB.GA_Hun_Tang_AAAAAB_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "黑伤 · 流水",
-        "en": "SANGUINE · Flowing Water",
-        "ja": "黒傷 · 流水",
-        "ko": "흑상 · 유수",
-        "ru": "Багрянец · Текущая вода",
-        "zh-Hant": "黑傷 · 流水",
-        "fr": "SANGUINE · Eau Fluide",
-        "de": "BLUTROT · Fließendes Wasser",
-        "es-ES": "SANGUINA · Fluir del agua",
-        "pt-BR": "SANGUÍNEA · Água Fluente",
-        "it": "SANGUINARIA · Acqua Fluente",
-        "th": "ดาบแผลนิลกาฬ · ธาราไหล",
-        "vi": "HẮC THƯƠNG · Lưu Thủy",
-        "pt-PT": "SANGUINE · Água Corrente",
-        "es-419": "SANGUINA · Flujo de agua"
       }
     },
     "move:Weapon.Weapon_Hun_Tang.GA_Hun_Tang_Buff": {
@@ -11940,51 +10602,21 @@
     },
     "move:Weapon.Weapon_Hun_WoodenSword.GA_Hun_WoodenSword_C": {
       "aliases": {
-        "zh-Hans": [
-          "木刀乱舞"
-        ],
-        "en": [
-          "Wooden Blade Flurry"
-        ],
-        "ja": [
-          "乱舞・木刀"
-        ],
-        "ko": [
-          "목검난무"
-        ],
-        "ru": [
-          "Вихрь деревянного клинка"
-        ],
-        "zh-Hant": [
-          "木刀亂舞"
-        ],
-        "fr": [
-          "Déluge de lames en bois"
-        ],
-        "de": [
-          "Holzklingenwirbel"
-        ],
-        "es-ES": [
-          "Ráfaga de espada de madera"
-        ],
-        "pt-BR": [
-          "Rajada de Espada de Madeira"
-        ],
-        "it": [
-          "Turbine ligneo"
-        ],
-        "th": [
-          "ระบำดาบไม้"
-        ],
-        "vi": [
-          "Mộc Kiếm Loạn Vũ"
-        ],
-        "pt-PT": [
-          "Rajada da Lâmina de Madeira"
-        ],
-        "es-419": [
-          "Ráfaga de cuchillas de madera"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -12189,72 +10821,25 @@
           "/PBZCombatAsset/ActorData/Players/Hun/Abilities/XieShan/GA_Hun_XieShan_A_DashDraw_New.GA_Hun_XieShan_A_DashDraw_New_C"
         ],
         "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "圣母邪扇 · 连环追斩",
-        "en": "THE LADY'S FAN · Relentless Pursuit",
-        "ja": "聖母の邪扇 · 連続追斬",
-        "ko": "성모의 부채 · 연환 추참",
-        "ru": "Веер Матери · Неумолимое преследование",
-        "zh-Hant": "聖母邪扇 · 連環追斬",
-        "fr": "ÉVENTAIL DE LA DAME · Poursuite implacable",
-        "de": "DER FÄCHER DER HERRIN · Unerbittliche Verfolgung",
-        "es-ES": "ABANICO DE LA DAMA · Persecución incesante",
-        "pt-BR": "Um leque sinistro outrora empunhado por Meng Hua, a Piedosa Dama do Véu Florido. · Perseguição Implacável",
-        "it": "VENTAGLIO DELLA SIGNORA · Caccia implacabile",
-        "th": "พัดมารแห่งพระแม่ · ไล่ฟันต่อเนื่อง",
-        "vi": "THÁNH MẪU TÀ PHIẾN · Truy Kích Liên Trảm",
-        "pt-PT": "O LEQUE DA SENHORA · Perseguição Implacável",
-        "es-419": "EL ABANICO DE LA DAMA · Persecución incesante"
       }
     },
     "move:Weapon.Weapon_Hun_XieShan.GA_Hun_XieShan_C": {
       "aliases": {
-        "zh-Hans": [
-          "无垠之浊"
-        ],
-        "en": [
-          "Boundless Blight"
-        ],
-        "ja": [
-          "果てなき濁"
-        ],
-        "ko": [
-          "무궁한 탁기"
-        ],
-        "ru": [
-          "Безграничная скверна"
-        ],
-        "zh-Hant": [
-          "無垠之濁"
-        ],
-        "fr": [
-          "Fléau sans fin"
-        ],
-        "de": [
-          "Grenzenlose Verderbnis"
-        ],
-        "es-ES": [
-          "Plaga desmedida"
-        ],
-        "pt-BR": [
-          "Flagelo Ilimitado"
-        ],
-        "it": [
-          "Flagello Inestinguibile"
-        ],
-        "th": [
-          "มลทินไร้ขอบเขต"
-        ],
-        "vi": [
-          "Trược Khí Vô Biên"
-        ],
-        "pt-PT": [
-          "Devastação Infinita"
-        ],
-        "es-419": [
-          "Plaga sin límites"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -12463,51 +11048,21 @@
     },
     "move:Weapon.Weapon_Hun_YanYueDao.GA_Hun_YanYueDao_C": {
       "aliases": {
-        "zh-Hans": [
-          "温酒青龙斩"
-        ],
-        "en": [
-          "Warm-Wine Qinglong Cleave"
-        ],
-        "ja": [
-          "温酒青龍斬"
-        ],
-        "ko": [
-          "온주 청룡참"
-        ],
-        "ru": [
-          "Пока вино не остыло"
-        ],
-        "zh-Hant": [
-          "溫酒青龍斬"
-        ],
-        "fr": [
-          "Fente de Qinglong au vin chaud"
-        ],
-        "de": [
-          "Qinglong-Spalthieb bei warmem Wein"
-        ],
-        "es-ES": [
-          "Corte de Qinglong del vino tibio"
-        ],
-        "pt-BR": [
-          "Corte Qinglong do Vinho Morno"
-        ],
-        "it": [
-          "Fendente di Qinglong del Vino Caldo"
-        ],
-        "th": [
-          "อุ่นสุราฟันมังกรเขียว"
-        ],
-        "vi": [
-          "Ôn Tửu Thanh Long Trảm"
-        ],
-        "pt-PT": [
-          "Corte Qinglong Vinho Quente"
-        ],
-        "es-419": [
-          "Corte Qinglong de vino caliente"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -12773,51 +11328,21 @@
     },
     "move:Weapon.Weapon_Hun_YuuBlade.GA_Hun_YuuBlade_C": {
       "aliases": {
-        "zh-Hans": [
-          "妖之形"
-        ],
-        "en": [
-          "Fiend Form"
-        ],
-        "ja": [
-          "妖の形"
-        ],
-        "ko": [
-          "요괴의 형상"
-        ],
-        "ru": [
-          "Облик демона"
-        ],
-        "zh-Hant": [
-          "妖之形"
-        ],
-        "fr": [
-          "Forme démoniaque"
-        ],
-        "de": [
-          "Dämonengestalt"
-        ],
-        "es-ES": [
-          "Forma demoníaca"
-        ],
-        "pt-BR": [
-          "Forma Hedionda"
-        ],
-        "it": [
-          "Forma Diabolica"
-        ],
-        "th": [
-          "ร่างอสูร"
-        ],
-        "vi": [
-          "Yêu Hình"
-        ],
-        "pt-PT": [
-          "Forma Maligna"
-        ],
-        "es-419": [
-          "Forma demoníaca"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -13490,51 +12015,21 @@
     },
     "move:Weapon.Weapon_Hun_ZiMingJian.GA_Hun_ZiMingJian_New_C": {
       "aliases": {
-        "zh-Hans": [
-          "煌龙剑阵"
-        ],
-        "en": [
-          "Radiant Lóng Sword Formation"
-        ],
-        "ja": [
-          "煌龍剣陣"
-        ],
-        "ko": [
-          "황룡검진"
-        ],
-        "ru": [
-          "Сияющий строй мечей Лун"
-        ],
-        "zh-Hant": [
-          "煌龍劍陣"
-        ],
-        "fr": [
-          "Formation de l'épée radieuse de Lóng"
-        ],
-        "de": [
-          "Strahlende Lóng-Schwertformation"
-        ],
-        "es-ES": [
-          "Formación de la espada de Lóng radiante"
-        ],
-        "pt-BR": [
-          "Formação Radiante da Espada do Dragão"
-        ],
-        "it": [
-          "Formazione Radiosa Long"
-        ],
-        "th": [
-          "ค่ายกลกระบี่มังกรเรืองรอง"
-        ],
-        "vi": [
-          "Hoàng Long Kiếm Trận"
-        ],
-        "pt-PT": [
-          "Formação da Espada Lóng Radiante"
-        ],
-        "es-419": [
-          "Formación de espada Lóng radiante"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -13566,51 +12061,21 @@
     },
     "move:Weapon.Weapon_Hun_ZiMingJian.GA_Hun_ZiMingJian_New_CC": {
       "aliases": {
-        "zh-Hans": [
-          "煌龙剑阵"
-        ],
-        "en": [
-          "Radiant Lóng Sword Formation"
-        ],
-        "ja": [
-          "煌龍剣陣"
-        ],
-        "ko": [
-          "황룡검진"
-        ],
-        "ru": [
-          "Сияющий строй мечей Лун"
-        ],
-        "zh-Hant": [
-          "煌龍劍陣"
-        ],
-        "fr": [
-          "Formation de l'épée radieuse de Lóng"
-        ],
-        "de": [
-          "Strahlende Lóng-Schwertformation"
-        ],
-        "es-ES": [
-          "Formación de la espada de Lóng radiante"
-        ],
-        "pt-BR": [
-          "Formação Radiante da Espada do Dragão"
-        ],
-        "it": [
-          "Formazione Radiosa Long"
-        ],
-        "th": [
-          "ค่ายกลกระบี่มังกรเรืองรอง"
-        ],
-        "vi": [
-          "Hoàng Long Kiếm Trận"
-        ],
-        "pt-PT": [
-          "Formação da Espada Lóng Radiante"
-        ],
-        "es-419": [
-          "Formación de espada Lóng radiante"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -13642,51 +12107,21 @@
     },
     "move:Weapon.Weapon_Hun_ZiMingJian.GA_Hun_ZiMingJian_New_CCC": {
       "aliases": {
-        "zh-Hans": [
-          "煌龙剑阵"
-        ],
-        "en": [
-          "Radiant Lóng Sword Formation"
-        ],
-        "ja": [
-          "煌龍剣陣"
-        ],
-        "ko": [
-          "황룡검진"
-        ],
-        "ru": [
-          "Сияющий строй мечей Лун"
-        ],
-        "zh-Hant": [
-          "煌龍劍陣"
-        ],
-        "fr": [
-          "Formation de l'épée radieuse de Lóng"
-        ],
-        "de": [
-          "Strahlende Lóng-Schwertformation"
-        ],
-        "es-ES": [
-          "Formación de la espada de Lóng radiante"
-        ],
-        "pt-BR": [
-          "Formação Radiante da Espada do Dragão"
-        ],
-        "it": [
-          "Formazione Radiosa Long"
-        ],
-        "th": [
-          "ค่ายกลกระบี่มังกรเรืองรอง"
-        ],
-        "vi": [
-          "Hoàng Long Kiếm Trận"
-        ],
-        "pt-PT": [
-          "Formação da Espada Lóng Radiante"
-        ],
-        "es-419": [
-          "Formación de espada Lóng radiante"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -13950,51 +12385,21 @@
     },
     "ability:Ability.Action.Hun.CombatArt.JueYing.Air": {
       "aliases": {
-        "zh-Hans": [
-          "双刃乱舞"
-        ],
-        "en": [
-          "Dual-Blade Flurry"
-        ],
-        "ja": [
-          "双刃乱舞"
-        ],
-        "ko": [
-          "쌍검 난무"
-        ],
-        "ru": [
-          "Вихрь парных клинков"
-        ],
-        "zh-Hant": [
-          "雙刃亂舞"
-        ],
-        "fr": [
-          "Déluge de lames jumelles"
-        ],
-        "de": [
-          "Doppelklingenwirbel"
-        ],
-        "es-ES": [
-          "Ráfaga de doble hoja"
-        ],
-        "pt-BR": [
-          "Rajada Dupla"
-        ],
-        "it": [
-          "Turbine a due lame"
-        ],
-        "th": [
-          "ระบำคมดาบคู่"
-        ],
-        "vi": [
-          "Song Đao Loạn Vũ"
-        ],
-        "pt-PT": [
-          "Rajada de Lâminas Duplas"
-        ],
-        "es-419": [
-          "Ráfaga de espadas dobles"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -14022,242 +12427,6 @@
         "vi": "TUYỆT ẢNH · Song Đao Loạn Vũ",
         "pt-PT": "GUME SEM SOMBRA · Rajada de Lâminas Duplas",
         "es-419": "FILO SIN SOMBRA · Ráfaga de espadas dobles"
-      }
-    },
-    "ability:Ability.Action.Hun.Light.DualHook.Pursure": {
-      "aliases": {
-        "zh-Hans": [
-          "反制追击"
-        ],
-        "en": [
-          "Counter Follow-Up"
-        ],
-        "ja": [
-          "反撃追撃"
-        ],
-        "ko": [
-          "반격 추격"
-        ],
-        "ru": [
-          "Продолжение контратаки"
-        ],
-        "zh-Hant": [
-          "反制追擊"
-        ],
-        "fr": [
-          "Enchaînement de riposte"
-        ],
-        "de": [
-          "Konter-Folgeangriff"
-        ],
-        "es-ES": [
-          "Remate del contraataque"
-        ],
-        "pt-BR": [
-          "Contra-ataque Sequencial"
-        ],
-        "it": [
-          "Prosecuzione del Contrattacco"
-        ],
-        "th": [
-          "โต้กลับต่อเนื่อง"
-        ],
-        "vi": [
-          "Khắc Chế Truy Kích"
-        ],
-        "pt-PT": [
-          "Seguimento de Contra-ataque"
-        ],
-        "es-419": [
-          "Seguimiento para contrarrestar"
-        ]
-      },
-      "effects": [
-        {
-          "key": "Weapon_FunctionName_028_5",
-          "labels": {
-            "zh-Hans": "反制追击",
-            "en": "Counter Follow-Up",
-            "ja": "反撃追撃",
-            "ko": "반격 추격",
-            "ru": "Продолжение контратаки",
-            "zh-Hant": "反制追擊",
-            "fr": "Enchaînement de riposte",
-            "de": "Konter-Folgeangriff",
-            "es-ES": "Remate del contraataque",
-            "pt-BR": "Contra-ataque Sequencial",
-            "it": "Prosecuzione del Contrattacco",
-            "th": "โต้กลับต่อเนื่อง",
-            "vi": "Khắc Chế Truy Kích",
-            "pt-PT": "Seguimento de Contra-ataque",
-            "es-419": "Seguimiento para contrarrestar"
-          },
-          "kind": "upgrade",
-          "upgradeTags": [
-            "CharacterState.WeaponUpgrade.DualHook.DBPursure"
-          ],
-          "descriptionLabels": {
-            "zh-Hans": "成功<Character_Yellow_Decorator2>【反制】</>敌人蓝光技能后，可点按<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>或<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>以不同的招式追击。",
-            "en": "After successfully countering a Blue-flash Attack with  <Character_Yellow_Decorator2>[Counter]</>, press<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>or<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>to perform different follow-up attacks.",
-            "ja": "敵の青攻撃への<Character_Yellow_Decorator2>【反撃】</>に成功すると、<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>または<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>を押して、それぞれ異なる技で追撃できる。",
-            "ko": "【<Character_Yellow_Decorator2>반격</>】으로 적의 푸른빛 스킬을 받아친 뒤 <InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> 또는 <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>를 누르면 다른 초식으로 추가 공격할 수 있다.",
-            "ru": "Успешно отразив атаку с синей вспышкой приёмом<Character_Yellow_Decorator2> [Контратака]</>, нажмите<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>или<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"5\"/>, чтобы выполнить разные дополнительные атаки.",
-            "zh-Hant": "成功<Character_Yellow_Decorator2>【反制】</>敵人藍光技能後，可點按<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>或<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>以不同的招式追擊。",
-            "fr": "Après avoir réussi une riposte contre une attaque clignotante bleue avec <Character_Yellow_Decorator2>[Riposte]</>, appuyez sur <InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> ou <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> pour exécuter différents enchaînements.",
-            "de": "Nach dem erfolgreichen Kontern eines blau aufblitzenden Angriffs mit<Character_Yellow_Decorator2> [Konter] </>drücke <InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> oder <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"0\"/>, um verschiedene Folgeangriffe auszuführen.",
-            "es-ES": "Tras contrarrestar con éxito un ataque con destello azul con <Character_Yellow_Decorator2>[Contraataque]</>, pulsa<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>o<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para ejecutar distintos tipos de remate.",
-            "pt-BR": "Após contra-atacar um Ataque Azul com <Character_Yellow_Decorator2>[Contra-ataque]</>, aperte<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>ou<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para executar diferentes ataques sequenciais.",
-            "it": "Dopo aver risposto a un attacco con bagliore blu con un <Character_Yellow_Decorator2>[Contrattacco]</>, premi <InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> o <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> per eseguire diversi attacchi consecutivi.",
-            "th": "หลัง<Character_Yellow_Decorator2>[สวนกลับ]</>ท่าประกายฟ้าของศัตรูสำเร็จ กด<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>หรือ<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>เพื่อไล่โจมตีด้วยกระบวนท่าที่แตกต่างกัน",
-            "vi": "Sau khi thành công phản kích Đòn Ánh Xanh của địch bằng <Character_Yellow_Decorator2>[Khắc Chế]</>, nhấn<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>hoặc<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/> để thi triển các đòn truy kích nối tiếp khác nhau.",
-            "pt-PT": "Depois de contra-atacares com sucesso um Ataque de clarão azul com <Character_Yellow_Decorator2>[Contra-ataque]</>, prime<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>ou<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para executar diferentes ataques de seguimento.",
-            "es-419": "Después de contrarrestar con éxito un ataque de destello azul con <Character_Yellow_Decorator2>[Contrarrestar]</>, presiona<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>o<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para realizar diferentes ataques de seguimiento."
-          }
-        }
-      ],
-      "evidence": {
-        "nameKeys": [
-          "Weapon_FunctionName_028_5"
-        ],
-        "abilityClasses": [
-          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_A_Pursure_02.GA_Hun_DualHook_A_Pursure_02_C"
-        ],
-        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "别离残钩 · 反制追击",
-        "en": "PARTING HOOKS · Counter Follow-Up",
-        "ja": "別離残鉤 · 反撃追撃",
-        "ko": "이별 잔구 · 반격 추격",
-        "ru": "Крюки Разлуки · Продолжение контратаки",
-        "zh-Hant": "別離殘鉤 · 反制追擊",
-        "fr": "CROCHETS D'ADIEU · Enchaînement de riposte",
-        "de": "TRENNENDE HAKEN · Konter-Folgeangriff",
-        "es-ES": "GANCHOS DE DESPEDIDA · Remate del contraataque",
-        "pt-BR": "GANCHOS DA DESPEDIDA · Contra-ataque Sequencial",
-        "it": "UNCINI DEL COMMIATO · Prosecuzione del Contrattacco",
-        "th": "ตะขอพรากวิญญาณ · โต้กลับต่อเนื่อง",
-        "vi": "BIỆT LY TÀN CÂU · Khắc Chế Truy Kích",
-        "pt-PT": "GANCHOS DO ADEUS · Seguimento de Contra-ataque",
-        "es-419": "GANCHOS DEL ADIÓS · Seguimiento para contrarrestar"
-      }
-    },
-    "ability:Ability.Action.Hun.Heavy.DualHook.Pursure": {
-      "aliases": {
-        "zh-Hans": [
-          "反制追击"
-        ],
-        "en": [
-          "Counter Follow-Up"
-        ],
-        "ja": [
-          "反撃追撃"
-        ],
-        "ko": [
-          "반격 추격"
-        ],
-        "ru": [
-          "Продолжение контратаки"
-        ],
-        "zh-Hant": [
-          "反制追擊"
-        ],
-        "fr": [
-          "Enchaînement de riposte"
-        ],
-        "de": [
-          "Konter-Folgeangriff"
-        ],
-        "es-ES": [
-          "Remate del contraataque"
-        ],
-        "pt-BR": [
-          "Contra-ataque Sequencial"
-        ],
-        "it": [
-          "Prosecuzione del Contrattacco"
-        ],
-        "th": [
-          "โต้กลับต่อเนื่อง"
-        ],
-        "vi": [
-          "Khắc Chế Truy Kích"
-        ],
-        "pt-PT": [
-          "Seguimento de Contra-ataque"
-        ],
-        "es-419": [
-          "Seguimiento para contrarrestar"
-        ]
-      },
-      "effects": [
-        {
-          "key": "Weapon_FunctionName_028_5",
-          "labels": {
-            "zh-Hans": "反制追击",
-            "en": "Counter Follow-Up",
-            "ja": "反撃追撃",
-            "ko": "반격 추격",
-            "ru": "Продолжение контратаки",
-            "zh-Hant": "反制追擊",
-            "fr": "Enchaînement de riposte",
-            "de": "Konter-Folgeangriff",
-            "es-ES": "Remate del contraataque",
-            "pt-BR": "Contra-ataque Sequencial",
-            "it": "Prosecuzione del Contrattacco",
-            "th": "โต้กลับต่อเนื่อง",
-            "vi": "Khắc Chế Truy Kích",
-            "pt-PT": "Seguimento de Contra-ataque",
-            "es-419": "Seguimiento para contrarrestar"
-          },
-          "kind": "upgrade",
-          "upgradeTags": [
-            "CharacterState.WeaponUpgrade.DualHook.DBPursure"
-          ],
-          "descriptionLabels": {
-            "zh-Hans": "成功<Character_Yellow_Decorator2>【反制】</>敌人蓝光技能后，可点按<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>或<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>以不同的招式追击。",
-            "en": "After successfully countering a Blue-flash Attack with  <Character_Yellow_Decorator2>[Counter]</>, press<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>or<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>to perform different follow-up attacks.",
-            "ja": "敵の青攻撃への<Character_Yellow_Decorator2>【反撃】</>に成功すると、<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>または<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>を押して、それぞれ異なる技で追撃できる。",
-            "ko": "【<Character_Yellow_Decorator2>반격</>】으로 적의 푸른빛 스킬을 받아친 뒤 <InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> 또는 <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>를 누르면 다른 초식으로 추가 공격할 수 있다.",
-            "ru": "Успешно отразив атаку с синей вспышкой приёмом<Character_Yellow_Decorator2> [Контратака]</>, нажмите<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>или<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"5\"/>, чтобы выполнить разные дополнительные атаки.",
-            "zh-Hant": "成功<Character_Yellow_Decorator2>【反制】</>敵人藍光技能後，可點按<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>或<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>以不同的招式追擊。",
-            "fr": "Après avoir réussi une riposte contre une attaque clignotante bleue avec <Character_Yellow_Decorator2>[Riposte]</>, appuyez sur <InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> ou <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> pour exécuter différents enchaînements.",
-            "de": "Nach dem erfolgreichen Kontern eines blau aufblitzenden Angriffs mit<Character_Yellow_Decorator2> [Konter] </>drücke <InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> oder <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"0\"/>, um verschiedene Folgeangriffe auszuführen.",
-            "es-ES": "Tras contrarrestar con éxito un ataque con destello azul con <Character_Yellow_Decorator2>[Contraataque]</>, pulsa<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>o<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para ejecutar distintos tipos de remate.",
-            "pt-BR": "Após contra-atacar um Ataque Azul com <Character_Yellow_Decorator2>[Contra-ataque]</>, aperte<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>ou<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para executar diferentes ataques sequenciais.",
-            "it": "Dopo aver risposto a un attacco con bagliore blu con un <Character_Yellow_Decorator2>[Contrattacco]</>, premi <InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> o <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> per eseguire diversi attacchi consecutivi.",
-            "th": "หลัง<Character_Yellow_Decorator2>[สวนกลับ]</>ท่าประกายฟ้าของศัตรูสำเร็จ กด<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>หรือ<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>เพื่อไล่โจมตีด้วยกระบวนท่าที่แตกต่างกัน",
-            "vi": "Sau khi thành công phản kích Đòn Ánh Xanh của địch bằng <Character_Yellow_Decorator2>[Khắc Chế]</>, nhấn<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>hoặc<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/> để thi triển các đòn truy kích nối tiếp khác nhau.",
-            "pt-PT": "Depois de contra-atacares com sucesso um Ataque de clarão azul com <Character_Yellow_Decorator2>[Contra-ataque]</>, prime<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>ou<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para executar diferentes ataques de seguimento.",
-            "es-419": "Después de contrarrestar con éxito un ataque de destello azul con <Character_Yellow_Decorator2>[Contrarrestar]</>, presiona<InputAction id=\"LightAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>o<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para realizar diferentes ataques de seguimiento."
-          }
-        }
-      ],
-      "evidence": {
-        "nameKeys": [
-          "Weapon_FunctionName_028_5"
-        ],
-        "abilityClasses": [
-          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_B_Pursure.GA_Hun_DualHook_B_Pursure_C"
-        ],
-        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "别离残钩 · 反制追击",
-        "en": "PARTING HOOKS · Counter Follow-Up",
-        "ja": "別離残鉤 · 反撃追撃",
-        "ko": "이별 잔구 · 반격 추격",
-        "ru": "Крюки Разлуки · Продолжение контратаки",
-        "zh-Hant": "別離殘鉤 · 反制追擊",
-        "fr": "CROCHETS D'ADIEU · Enchaînement de riposte",
-        "de": "TRENNENDE HAKEN · Konter-Folgeangriff",
-        "es-ES": "GANCHOS DE DESPEDIDA · Remate del contraataque",
-        "pt-BR": "GANCHOS DA DESPEDIDA · Contra-ataque Sequencial",
-        "it": "UNCINI DEL COMMIATO · Prosecuzione del Contrattacco",
-        "th": "ตะขอพรากวิญญาณ · โต้กลับต่อเนื่อง",
-        "vi": "BIỆT LY TÀN CÂU · Khắc Chế Truy Kích",
-        "pt-PT": "GANCHOS DO ADEUS · Seguimento de Contra-ataque",
-        "es-419": "GANCHOS DEL ADIÓS · Seguimiento para contrarrestar"
       }
     },
     "ability:Ability.Action.Hun.Heavy.GuiTouDao.BHold.Start": {
@@ -14376,125 +12545,6 @@
         "vi": "HỒNG Y QUỶ TRẢM · Hỏa Chiếu Hoàng Tuyền",
         "pt-PT": "ESPECTRAL ESCARLATE · Rebento do Submundo",
         "es-419": "ESPADA ESPECTRAL ESCARLATA · Flor de luz infernal"
-      }
-    },
-    "ability:Ability.Action.Hun.Heavy.Tang.AAAAABB": {
-      "aliases": {
-        "zh-Hans": [
-          "流水"
-        ],
-        "en": [
-          "Flowing Water"
-        ],
-        "ja": [
-          "流水"
-        ],
-        "ko": [
-          "유수"
-        ],
-        "ru": [
-          "Текущая вода"
-        ],
-        "zh-Hant": [
-          "流水"
-        ],
-        "fr": [
-          "Eau Fluide"
-        ],
-        "de": [
-          "Fließendes Wasser"
-        ],
-        "es-ES": [
-          "Fluir del agua"
-        ],
-        "pt-BR": [
-          "Água Fluente"
-        ],
-        "it": [
-          "Acqua Fluente"
-        ],
-        "th": [
-          "ธาราไหล"
-        ],
-        "vi": [
-          "Lưu Thủy"
-        ],
-        "pt-PT": [
-          "Água Corrente"
-        ],
-        "es-419": [
-          "Flujo de agua"
-        ]
-      },
-      "effects": [
-        {
-          "key": "Weapon_FunctionName_001_25",
-          "labels": {
-            "zh-Hans": "流水",
-            "en": "Flowing Water",
-            "ja": "流水",
-            "ko": "유수",
-            "ru": "Текущая вода",
-            "zh-Hant": "流水",
-            "fr": "Eau Fluide",
-            "de": "Fließendes Wasser",
-            "es-ES": "Fluir del agua",
-            "pt-BR": "Água Fluente",
-            "it": "Acqua Fluente",
-            "th": "ธาราไหล",
-            "vi": "Lưu Thủy",
-            "pt-PT": "Água Corrente",
-            "es-419": "Flujo de agua"
-          },
-          "kind": "upgrade",
-          "upgradeTags": [
-            "CharacterState.WeaponUpgrade.Tang.Combo_02",
-            "CharacterState.WeaponUpgrade.Tang.Combo_03"
-          ],
-          "descriptionLabels": {
-            "zh-Hans": "<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>连招结束后，可再次<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>衔接一个新招式。",
-            "en": "After completing a<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>combo, press<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>again to chain into a follow-up move.",
-            "ja": "<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>連撃の終了後、再度<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>を押すことで新たな技へつなげることができる。",
-            "ko": "<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> 콤보 종료 후 <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> 버튼을 다시 누르면 새로운 초식으로 연계할 수 있다.",
-            "ru": "Завершив комбо <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"0\"/>, снова нажмите <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"0\"/>, чтобы продолжить его дополнительным приёмом.",
-            "zh-Hant": "<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>連招結束後，可再次<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>銜接一個新招式。",
-            "fr": "Une fois un combo <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> terminé, appuyez de nouveau sur <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> pour enchaîner avec une attaque de suivi.",
-            "de": "Drücke nach Abschluss einer <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>-Kombo erneut <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"0\"/>, um eine Folgeaktion anzuschließen.",
-            "es-ES": "Ejecuta un combo con<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>y pulsa de nuevo<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para encadenar un ataque de seguimiento.",
-            "pt-BR": "Ao completar um combo<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"5\"/>, aperte<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>para continuar em um ataque sequencial.",
-            "it": "Dopo aver completato una combo <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"0\"/>, premi nuovamente <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> per concatenare una mossa consecutiva.",
-            "th": "เมื่อคอมโบ<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>สิ้นสุด สามารถกด<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>อีกครั้งเพื่อต่อด้วยกระบวนท่าใหม่",
-            "vi": "Sau khi hoàn thành một liên kích<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"5\"/>, nhấn<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>lần nữa để nối sang chiêu thức tiếp theo.",
-            "pt-PT": "Depois de concluir um combo<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"5\"/>, prime<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/>novamente para encadear num movimento de seguimento.",
-            "es-419": "Tras completar un combo con<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"5\"/>, vuelve a presionar <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>para enlazar un ataque de seguimiento."
-          }
-        }
-      ],
-      "evidence": {
-        "nameKeys": [
-          "Weapon_FunctionName_001_25"
-        ],
-        "abilityClasses": [
-          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/HeiMoShang/GA_Hun_HeiMoShang_AAAAABB.GA_Hun_HeiMoShang_AAAAABB_C"
-        ],
-        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "黑魔伤 · 流水",
-        "en": "INFERNAL ROUGE · Flowing Water",
-        "ja": "黒魔傷 · 流水",
-        "ko": "흑마상 · 유수",
-        "ru": "Багрянец Мо · Текущая вода",
-        "zh-Hant": "黑魔傷 · 流水",
-        "fr": "ROUGE INFERNAL · Eau Fluide",
-        "de": "HÖLLISCHES BLUTROT · Fließendes Wasser",
-        "es-ES": "ROJO INFERNAL · Fluir del agua",
-        "pt-BR": "SANGUÍNEA INFERNAL · Água Fluente",
-        "it": "SANGUINARIA MO · Acqua Fluente",
-        "th": "คมมารทมิฬ · ธาราไหล",
-        "vi": "MA HẮC THƯƠNG · Lưu Thủy",
-        "pt-PT": "SANGUINE DE MÓ · Água Corrente",
-        "es-419": "ROJO INFERNAL · Flujo de agua"
       }
     },
     "ability:Ability.Action.Hun.Heavy.Horizontal.BladeWave": {
@@ -14618,64 +12668,64 @@
     "ability:Ability.Action.Hun.Heavy.Horizontal.CriticalAttack": {
       "aliases": {
         "zh-Hans": [
-          "斩尽杀绝",
-          "以血养刃"
+          "以血养刃",
+          "斩尽杀绝"
         ],
         "en": [
-          "Annihilating Slash",
-          "Blood-Fed Edge"
+          "Blood-Fed Edge",
+          "Annihilating Slash"
         ],
         "ja": [
-          "斬尽殺絶",
-          "以血養刃"
+          "以血養刃",
+          "斬尽殺絶"
         ],
         "ko": [
-          "참진살절",
-          "이혈양인"
+          "이혈양인",
+          "참진살절"
         ],
         "ru": [
-          "Уничтожающий удар",
-          "Напоенное кровью лезвие"
+          "Напоенное кровью лезвие",
+          "Уничтожающий удар"
         ],
         "zh-Hant": [
-          "斬盡殺絕",
-          "以血養刃"
+          "以血養刃",
+          "斬盡殺絕"
         ],
         "fr": [
-          "Taille anéantissante",
-          "Lame abreuvée de sang"
+          "Lame abreuvée de sang",
+          "Taille anéantissante"
         ],
         "de": [
-          "Vernichtender Hieb",
-          "Blutgetränkte Klinge"
+          "Blutgetränkte Klinge",
+          "Vernichtender Hieb"
         ],
         "es-ES": [
-          "Tajo aniquilador",
-          "Filo saciado de sangre"
+          "Filo saciado de sangre",
+          "Tajo aniquilador"
         ],
         "pt-BR": [
-          "Corte Aniquilador",
-          "Lâmina Ensanguentada"
+          "Lâmina Ensanguentada",
+          "Corte Aniquilador"
         ],
         "it": [
-          "Squarcio Devastante",
-          "Filo Sanguinario"
+          "Filo Sanguinario",
+          "Squarcio Devastante"
         ],
         "th": [
-          "สังหารราบคาบ",
-          "ชุบคมด้วยโลหิต"
+          "ชุบคมด้วยโลหิต",
+          "สังหารราบคาบ"
         ],
         "vi": [
-          "Trảm Tận Giết Tuyệt",
-          "Dùng Máu Nuôi Đao"
+          "Dùng Máu Nuôi Đao",
+          "Trảm Tận Giết Tuyệt"
         ],
         "pt-PT": [
-          "Golpe Aniquilador",
-          "Gume Come-sangue"
+          "Gume Come-sangue",
+          "Golpe Aniquilador"
         ],
         "es-419": [
-          "Corte aniquilador",
-          "Filo saciado de sangre"
+          "Filo saciado de sangre",
+          "Corte aniquilador"
         ]
       },
       "effects": [
@@ -15437,242 +13487,6 @@
         "es-419": "ROMPEEJÉRCITOS · Corte conquistador"
       }
     },
-    "ability:Ability.Action.Hun.Heavy.ShuangYue.PB": {
-      "aliases": {
-        "zh-Hans": [
-          "断肠击"
-        ],
-        "en": [
-          "Heart-Rending Strike"
-        ],
-        "ja": [
-          "断腸撃"
-        ],
-        "ko": [
-          "단장격"
-        ],
-        "ru": [
-          "Разрывающий сердце удар"
-        ],
-        "zh-Hant": [
-          "斷腸擊"
-        ],
-        "fr": [
-          "Frappe fende-cœur"
-        ],
-        "de": [
-          "Herzzerreißender Schlag"
-        ],
-        "es-ES": [
-          "Golpe desgarracorazones"
-        ],
-        "pt-BR": [
-          "Golpe Corta-corações"
-        ],
-        "it": [
-          "Colpo Spaccacuori"
-        ],
-        "th": [
-          "จู่โจมสะบั้นวิญญาณ"
-        ],
-        "vi": [
-          "Đoạn Trường Kích"
-        ],
-        "pt-PT": [
-          "Golpe Corta-Corações"
-        ],
-        "es-419": [
-          "Golpe rasgacorazones"
-        ]
-      },
-      "effects": [
-        {
-          "key": "Weapon_FunctionName_026_25",
-          "labels": {
-            "zh-Hans": "断肠击",
-            "en": "Heart-Rending Strike",
-            "ja": "断腸撃",
-            "ko": "단장격",
-            "ru": "Разрывающий сердце удар",
-            "zh-Hant": "斷腸擊",
-            "fr": "Frappe fende-cœur",
-            "de": "Herzzerreißender Schlag",
-            "es-ES": "Golpe desgarracorazones",
-            "pt-BR": "Golpe Corta-corações",
-            "it": "Colpo Spaccacuori",
-            "th": "จู่โจมสะบั้นวิญญาณ",
-            "vi": "Đoạn Trường Kích",
-            "pt-PT": "Golpe Corta-Corações",
-            "es-419": "Golpe rasgacorazones"
-          },
-          "kind": "upgrade",
-          "upgradeTags": [
-            "CharacterState.WeaponUpgrade.ShuangYue.CanPB"
-          ],
-          "descriptionLabels": {
-            "zh-Hans": "施展绝技<Character_Yellow_Decorator2>【天煞破敌】</>，<Character_Yellow_Decorator2>完美闪避</>红光技能，或<Character_Yellow_Decorator2>完美格挡</>蓝光技能后，可衔接<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>后撤并进行连续强力远程攻击。",
-            "en": "After using <Character_Yellow_Decorator2>[Tiansha Reaving]</>, performing a <Character_Yellow_Decorator2>Perfect Dodge</> against a Red-flash Attack, or <Character_Yellow_Decorator2>parrying</> a Blue-flash Attack, press<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>to retreat and unleash a series of powerful ranged attacks.",
-            "ja": "絶技<Character_Yellow_Decorator2>【天煞破敵】</>の発動後、または赤攻撃を<Character_Yellow_Decorator2>ジャスト回避</>、青攻撃を<Character_Yellow_Decorator2>ジャストガード</>した後に<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>を押すと、後退しながら強力な遠距離連撃を放つ。",
-            "ko": "궁극기 【<Character_Yellow_Decorator2>천살파적</>】을 시전한 뒤, 붉은빛 기술을 <Character_Yellow_Decorator2>완벽 회피</>하거나 푸른빛 기술을 <Character_Yellow_Decorator2>완벽 방어</>하면 <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>를 연이어 눌러 뒤로 물러나며 강력한 원거리 공격을 연속으로 가할 수 있다.",
-            "ru": "После применения <Character_Yellow_Decorator2>[Жатвы Тяньша]</>, <Character_Yellow_Decorator2>идеального уклонения</> от атаки с красной вспышкой или <Character_Yellow_Decorator2>парирования</> атаки с синей вспышкой нажмите<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"0\"/>, чтобы отступить и выполнить серию мощных дальнобойных атак.",
-            "zh-Hant": "施展絕技<Character_Yellow_Decorator2>【天煞破敵】</>，<Character_Yellow_Decorator2>完美閃避</>紅光技能，或<Character_Yellow_Decorator2>完美格擋</>藍光技能後，可銜接<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>後撤並進行連續強力遠程攻擊。",
-            "fr": "Après avoir utilisé <Character_Yellow_Decorator2>[Pillage de Tiansha]</>, effectué une <Character_Yellow_Decorator2>esquive parfaite</> contre une attaque clignotante rouge ou <Character_Yellow_Decorator2>effectué une parade parfaite</> contre une attaque clignotante bleue, appuyez sur <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> pour reculer et déclencher une série de puissantes attaques à distance.",
-            "de": "Nachdem du <Character_Yellow_Decorator2>[Tiansha-Plünderung]</> eingesetzt hast, einem rot aufblitzenden Angriff <Character_Yellow_Decorator2>perfekt ausgewichen</> bist oder einen blau aufblitzenden Angriff <Character_Yellow_Decorator2>pariert</> hast, drücke <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"0\"/>, um zurückzuweichen und eine Serie mächtiger Fernangriffe zu entfesseln.",
-            "es-ES": "Tras usar <Character_Yellow_Decorator2>[Segado de Tiansha]</>, realizar una <Character_Yellow_Decorator2>esquiva perfecta</> contra un ataque con destello rojo o <Character_Yellow_Decorator2>realizar una parada perfecta</> contra un ataque con destello azul, pulsa<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>para retirarte y desatar una serie de potentes ataques a distancia.",
-            "pt-BR": "Após usar <Character_Yellow_Decorator2>[Arrebate Tiansha]</>, executar uma <Character_Yellow_Decorator2>Esquiva Perfeita</> contra um Ataque Vermelho ou realizar um <Character_Yellow_Decorator2>Bloqueio Perfeito</> contra um Ataque Azul, aperte<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>para recuar e desferir uma série de ataques poderosos à distância.",
-            "it": "Dopo aver usato <Character_Yellow_Decorator2>[Squarcio Tiansha]</>, aver eseguito una <Character_Yellow_Decorator2>Schivata Perfetta</> contro un attacco con bagliore rosso o aver eseguito una<Character_Yellow_Decorator2> Parata Perfetta </>su un attacco con bagliore blu, premi <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> per arretrare e scatenare una serie di potenti attacchi a distanza.",
-            "th": "หลังใช้ท่าไม้ตาย<Character_Yellow_Decorator2>[อสูรฟ้าพิชิตศัตรู]</> <Character_Yellow_Decorator2>หลบหลีก</>ท่าประกายแดง<Character_Yellow_Decorator2>อย่างสมบูรณ์แบบ</> หรือ<Character_Yellow_Decorator2>ปัดป้อง</>ท่าประกายฟ้า<Character_Yellow_Decorator2>อย่างสมบูรณ์แบบ</> สามารถต่อด้วยคอมโบ<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>เพื่อถอยหลังและโจมตีระยะไกลอย่างรุนแรงได้",
-            "vi": "Sau khi sử dụng <Character_Yellow_Decorator2>[Thiên Sát Phá Địch]</>, thi triển một lần <Character_Yellow_Decorator2>Né Tránh Hoàn Hảo</> Đòn Ánh Đỏ, hoặc <Character_Yellow_Decorator2>Đỡ Đòn Hoàn Hảo</> một Đòn Ánh Xanh, nhấn<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>để rút lui và thi triển loạt chiêu thức tầm xa đầy uy lực.",
-            "pt-PT": "Após usar <Character_Yellow_Decorator2>[Saque de Tiansha]</>, executar uma <Character_Yellow_Decorator2>Esquiva perfeita</> contra um Ataque de clarão vermelho ou <Character_Yellow_Decorator2>aparar</> um Ataque de clarão azul, prime<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>para recuar e desferir uma série de poderosos ataques à distância.",
-            "es-419": "Después de usar <Character_Yellow_Decorator2>[Siega Tiansha]</>, realizar una <Character_Yellow_Decorator2>esquiva perfecta</> contra un ataque de destello rojo o <Character_Yellow_Decorator2>realizar una parada perfecta</> contra un ataque de destello azul, presiona <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>para retirarte y desatar una serie de poderosos ataques a distancia."
-          }
-        }
-      ],
-      "evidence": {
-        "nameKeys": [
-          "Weapon_FunctionName_026_25"
-        ],
-        "abilityClasses": [
-          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_PB.GA_Hun_ShuangYue_PB_C"
-        ],
-        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "天煞双钺 · 断肠击",
-        "en": "SUNDERING DUAL AXES · Heart-Rending Strike",
-        "ja": "天煞双鉞 · 断腸撃",
-        "ko": "천살쌍월 · 단장격",
-        "ru": "Небесная Кара · Разрывающий сердце удар",
-        "zh-Hant": "天煞雙鉞 · 斷腸擊",
-        "fr": "CROISSANTS CÉLESTES · Frappe fende-cœur",
-        "de": "SPALTENDE ZWILLINGSÄXTE · Herzzerreißender Schlag",
-        "es-ES": "HACHAS DOBLES CERCENADORAS · Golpe desgarracorazones",
-        "pt-BR": "MACHADOS DUPLOS DILACERANTES · Golpe Corta-corações",
-        "it": "ASCE FRANTUMANTI · Colpo Spaccacuori",
-        "th": "ขวานคู่อสูรฟ้า · จู่โจมสะบั้นวิญญาณ",
-        "vi": "THIÊN SÁT SONG VIỆT · Đoạn Trường Kích",
-        "pt-PT": "MACHADOS IMPIEDOSOS · Golpe Corta-Corações",
-        "es-419": "HACHAS GEMELAS DESTRUCTORAS · Golpe rasgacorazones"
-      }
-    },
-    "ability:Ability.Action.Hun.Heavy.ShuangYue.PBB": {
-      "aliases": {
-        "zh-Hans": [
-          "断肠击"
-        ],
-        "en": [
-          "Heart-Rending Strike"
-        ],
-        "ja": [
-          "断腸撃"
-        ],
-        "ko": [
-          "단장격"
-        ],
-        "ru": [
-          "Разрывающий сердце удар"
-        ],
-        "zh-Hant": [
-          "斷腸擊"
-        ],
-        "fr": [
-          "Frappe fende-cœur"
-        ],
-        "de": [
-          "Herzzerreißender Schlag"
-        ],
-        "es-ES": [
-          "Golpe desgarracorazones"
-        ],
-        "pt-BR": [
-          "Golpe Corta-corações"
-        ],
-        "it": [
-          "Colpo Spaccacuori"
-        ],
-        "th": [
-          "จู่โจมสะบั้นวิญญาณ"
-        ],
-        "vi": [
-          "Đoạn Trường Kích"
-        ],
-        "pt-PT": [
-          "Golpe Corta-Corações"
-        ],
-        "es-419": [
-          "Golpe rasgacorazones"
-        ]
-      },
-      "effects": [
-        {
-          "key": "Weapon_FunctionName_026_25",
-          "labels": {
-            "zh-Hans": "断肠击",
-            "en": "Heart-Rending Strike",
-            "ja": "断腸撃",
-            "ko": "단장격",
-            "ru": "Разрывающий сердце удар",
-            "zh-Hant": "斷腸擊",
-            "fr": "Frappe fende-cœur",
-            "de": "Herzzerreißender Schlag",
-            "es-ES": "Golpe desgarracorazones",
-            "pt-BR": "Golpe Corta-corações",
-            "it": "Colpo Spaccacuori",
-            "th": "จู่โจมสะบั้นวิญญาณ",
-            "vi": "Đoạn Trường Kích",
-            "pt-PT": "Golpe Corta-Corações",
-            "es-419": "Golpe rasgacorazones"
-          },
-          "kind": "upgrade",
-          "upgradeTags": [
-            "CharacterState.WeaponUpgrade.ShuangYue.CanPB"
-          ],
-          "descriptionLabels": {
-            "zh-Hans": "施展绝技<Character_Yellow_Decorator2>【天煞破敌】</>，<Character_Yellow_Decorator2>完美闪避</>红光技能，或<Character_Yellow_Decorator2>完美格挡</>蓝光技能后，可衔接<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>后撤并进行连续强力远程攻击。",
-            "en": "After using <Character_Yellow_Decorator2>[Tiansha Reaving]</>, performing a <Character_Yellow_Decorator2>Perfect Dodge</> against a Red-flash Attack, or <Character_Yellow_Decorator2>parrying</> a Blue-flash Attack, press<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>to retreat and unleash a series of powerful ranged attacks.",
-            "ja": "絶技<Character_Yellow_Decorator2>【天煞破敵】</>の発動後、または赤攻撃を<Character_Yellow_Decorator2>ジャスト回避</>、青攻撃を<Character_Yellow_Decorator2>ジャストガード</>した後に<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>を押すと、後退しながら強力な遠距離連撃を放つ。",
-            "ko": "궁극기 【<Character_Yellow_Decorator2>천살파적</>】을 시전한 뒤, 붉은빛 기술을 <Character_Yellow_Decorator2>완벽 회피</>하거나 푸른빛 기술을 <Character_Yellow_Decorator2>완벽 방어</>하면 <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>를 연이어 눌러 뒤로 물러나며 강력한 원거리 공격을 연속으로 가할 수 있다.",
-            "ru": "После применения <Character_Yellow_Decorator2>[Жатвы Тяньша]</>, <Character_Yellow_Decorator2>идеального уклонения</> от атаки с красной вспышкой или <Character_Yellow_Decorator2>парирования</> атаки с синей вспышкой нажмите<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"0\"/>, чтобы отступить и выполнить серию мощных дальнобойных атак.",
-            "zh-Hant": "施展絕技<Character_Yellow_Decorator2>【天煞破敵】</>，<Character_Yellow_Decorator2>完美閃避</>紅光技能，或<Character_Yellow_Decorator2>完美格擋</>藍光技能後，可銜接<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>後撤並進行連續強力遠程攻擊。",
-            "fr": "Après avoir utilisé <Character_Yellow_Decorator2>[Pillage de Tiansha]</>, effectué une <Character_Yellow_Decorator2>esquive parfaite</> contre une attaque clignotante rouge ou <Character_Yellow_Decorator2>effectué une parade parfaite</> contre une attaque clignotante bleue, appuyez sur <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> pour reculer et déclencher une série de puissantes attaques à distance.",
-            "de": "Nachdem du <Character_Yellow_Decorator2>[Tiansha-Plünderung]</> eingesetzt hast, einem rot aufblitzenden Angriff <Character_Yellow_Decorator2>perfekt ausgewichen</> bist oder einen blau aufblitzenden Angriff <Character_Yellow_Decorator2>pariert</> hast, drücke <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"0\" LeftPadding=\"0\"/>, um zurückzuweichen und eine Serie mächtiger Fernangriffe zu entfesseln.",
-            "es-ES": "Tras usar <Character_Yellow_Decorator2>[Segado de Tiansha]</>, realizar una <Character_Yellow_Decorator2>esquiva perfecta</> contra un ataque con destello rojo o <Character_Yellow_Decorator2>realizar una parada perfecta</> contra un ataque con destello azul, pulsa<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>para retirarte y desatar una serie de potentes ataques a distancia.",
-            "pt-BR": "Após usar <Character_Yellow_Decorator2>[Arrebate Tiansha]</>, executar uma <Character_Yellow_Decorator2>Esquiva Perfeita</> contra um Ataque Vermelho ou realizar um <Character_Yellow_Decorator2>Bloqueio Perfeito</> contra um Ataque Azul, aperte<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>para recuar e desferir uma série de ataques poderosos à distância.",
-            "it": "Dopo aver usato <Character_Yellow_Decorator2>[Squarcio Tiansha]</>, aver eseguito una <Character_Yellow_Decorator2>Schivata Perfetta</> contro un attacco con bagliore rosso o aver eseguito una<Character_Yellow_Decorator2> Parata Perfetta </>su un attacco con bagliore blu, premi <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/> per arretrare e scatenare una serie di potenti attacchi a distanza.",
-            "th": "หลังใช้ท่าไม้ตาย<Character_Yellow_Decorator2>[อสูรฟ้าพิชิตศัตรู]</> <Character_Yellow_Decorator2>หลบหลีก</>ท่าประกายแดง<Character_Yellow_Decorator2>อย่างสมบูรณ์แบบ</> หรือ<Character_Yellow_Decorator2>ปัดป้อง</>ท่าประกายฟ้า<Character_Yellow_Decorator2>อย่างสมบูรณ์แบบ</> สามารถต่อด้วยคอมโบ<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>เพื่อถอยหลังและโจมตีระยะไกลอย่างรุนแรงได้",
-            "vi": "Sau khi sử dụng <Character_Yellow_Decorator2>[Thiên Sát Phá Địch]</>, thi triển một lần <Character_Yellow_Decorator2>Né Tránh Hoàn Hảo</> Đòn Ánh Đỏ, hoặc <Character_Yellow_Decorator2>Đỡ Đòn Hoàn Hảo</> một Đòn Ánh Xanh, nhấn<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>để rút lui và thi triển loạt chiêu thức tầm xa đầy uy lực.",
-            "pt-PT": "Após usar <Character_Yellow_Decorator2>[Saque de Tiansha]</>, executar uma <Character_Yellow_Decorator2>Esquiva perfeita</> contra um Ataque de clarão vermelho ou <Character_Yellow_Decorator2>aparar</> um Ataque de clarão azul, prime<InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"5\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>para recuar e desferir uma série de poderosos ataques à distância.",
-            "es-419": "Después de usar <Character_Yellow_Decorator2>[Siega Tiansha]</>, realizar una <Character_Yellow_Decorator2>esquiva perfecta</> contra un ataque de destello rojo o <Character_Yellow_Decorator2>realizar una parada perfecta</> contra un ataque de destello azul, presiona <InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/><InputAction id=\"HeavyAttack\" height=\"26\" RightPadding=\"5\" LeftPadding=\"0\"/>para retirarte y desatar una serie de poderosos ataques a distancia."
-          }
-        }
-      ],
-      "evidence": {
-        "nameKeys": [
-          "Weapon_FunctionName_026_25"
-        ],
-        "abilityClasses": [
-          "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShuangYue/Default/GA_Hun_ShuangYue_PBB.GA_Hun_ShuangYue_PBB_C"
-        ],
-        "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"
-      },
-      "labels": {
-        "zh-Hans": "天煞双钺 · 断肠击",
-        "en": "SUNDERING DUAL AXES · Heart-Rending Strike",
-        "ja": "天煞双鉞 · 断腸撃",
-        "ko": "천살쌍월 · 단장격",
-        "ru": "Небесная Кара · Разрывающий сердце удар",
-        "zh-Hant": "天煞雙鉞 · 斷腸擊",
-        "fr": "CROISSANTS CÉLESTES · Frappe fende-cœur",
-        "de": "SPALTENDE ZWILLINGSÄXTE · Herzzerreißender Schlag",
-        "es-ES": "HACHAS DOBLES CERCENADORAS · Golpe desgarracorazones",
-        "pt-BR": "MACHADOS DUPLOS DILACERANTES · Golpe Corta-corações",
-        "it": "ASCE FRANTUMANTI · Colpo Spaccacuori",
-        "th": "ขวานคู่อสูรฟ้า · จู่โจมสะบั้นวิญญาณ",
-        "vi": "THIÊN SÁT SONG VIỆT · Đoạn Trường Kích",
-        "pt-PT": "MACHADOS IMPIEDOSOS · Golpe Corta-Corações",
-        "es-419": "HACHAS GEMELAS DESTRUCTORAS · Golpe rasgacorazones"
-      }
-    },
     "ability:Ability.Action.Hun.Heavy.ShuangYue.DB": {
       "aliases": {
         "zh-Hans": [
@@ -16030,51 +13844,21 @@
     },
     "ability:Ability.Action.Hun.CombatArt.Atk02": {
       "aliases": {
-        "zh-Hans": [
-          "煌龙剑阵"
-        ],
-        "en": [
-          "Radiant Lóng Sword Formation"
-        ],
-        "ja": [
-          "煌龍剣陣"
-        ],
-        "ko": [
-          "황룡검진"
-        ],
-        "ru": [
-          "Сияющий строй мечей Лун"
-        ],
-        "zh-Hant": [
-          "煌龍劍陣"
-        ],
-        "fr": [
-          "Formation de l'épée radieuse de Lóng"
-        ],
-        "de": [
-          "Strahlende Lóng-Schwertformation"
-        ],
-        "es-ES": [
-          "Formación de la espada de Lóng radiante"
-        ],
-        "pt-BR": [
-          "Formação Radiante da Espada do Dragão"
-        ],
-        "it": [
-          "Formazione Radiosa Long"
-        ],
-        "th": [
-          "ค่ายกลกระบี่มังกรเรืองรอง"
-        ],
-        "vi": [
-          "Hoàng Long Kiếm Trận"
-        ],
-        "pt-PT": [
-          "Formação da Espada Lóng Radiante"
-        ],
-        "es-419": [
-          "Formación de espada Lóng radiante"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {
@@ -16106,51 +13890,21 @@
     },
     "ability:Ability.Action.Hun.CombatArt.Atk03": {
       "aliases": {
-        "zh-Hans": [
-          "煌龙剑阵"
-        ],
-        "en": [
-          "Radiant Lóng Sword Formation"
-        ],
-        "ja": [
-          "煌龍剣陣"
-        ],
-        "ko": [
-          "황룡검진"
-        ],
-        "ru": [
-          "Сияющий строй мечей Лун"
-        ],
-        "zh-Hant": [
-          "煌龍劍陣"
-        ],
-        "fr": [
-          "Formation de l'épée radieuse de Lóng"
-        ],
-        "de": [
-          "Strahlende Lóng-Schwertformation"
-        ],
-        "es-ES": [
-          "Formación de la espada de Lóng radiante"
-        ],
-        "pt-BR": [
-          "Formação Radiante da Espada do Dragão"
-        ],
-        "it": [
-          "Formazione Radiosa Long"
-        ],
-        "th": [
-          "ค่ายกลกระบี่มังกรเรืองรอง"
-        ],
-        "vi": [
-          "Hoàng Long Kiếm Trận"
-        ],
-        "pt-PT": [
-          "Formação da Espada Lóng Radiante"
-        ],
-        "es-419": [
-          "Formación de espada Lóng radiante"
-        ]
+        "zh-Hans": [],
+        "en": [],
+        "ja": [],
+        "ko": [],
+        "ru": [],
+        "zh-Hant": [],
+        "fr": [],
+        "de": [],
+        "es-ES": [],
+        "pt-BR": [],
+        "it": [],
+        "th": [],
+        "vi": [],
+        "pt-PT": [],
+        "es-419": []
       },
       "effects": [],
       "evidence": {

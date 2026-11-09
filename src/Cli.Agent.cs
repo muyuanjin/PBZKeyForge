@@ -217,7 +217,7 @@ namespace PBZKeyForge
                     schemeNames = document.Configuration.Schemes.Select(item => new { item.Id, Name = KeyEnhancementConfiguration.SchemeName(item) }), device = device, devices = document.Session.ControllerFamilies,
                     running = EditorSession.IsGameRunning, live = document.Installation == null ? null : document.Installation.LiveStatus(),
                     readiness = Readiness(document, scheme != null),
-                    functions = workspace.FindFunctions(query).Select(function => new { function.Id, function.Label, function.TechnicalName, function.GroupPath, function.GroupLabels,
+                    functions = workspace.FindFunctionChoices(query).Select(function => new { function.Id, function.Label, function.TechnicalName, function.GroupPath, function.GroupLabels,
                         function.RequiresKeyEnhancement, function.FactoryKeys, function.Targets,
                         bindings = snapshot.Where(entry => entry.FunctionId == function.Id), enhancementCapacity = function.NativeAction == null || KeyEnhancementInputPlan.Covers(function.NativeAction) ? "no_fixed_slots" : "active_native_pipelines", capacity = function.NativeAction == null ? null : document.Session.RelationshipCapacity(function.Id, family != null, familyIndex) }),
                     configuration = document.Configuration, coverage = workspace.UncoveredInputs,

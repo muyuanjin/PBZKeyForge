@@ -4,6 +4,9 @@ If something doesn't work, please post your tool version, device/layout and a sc
 
 [b]Close the game for ordinary save edits, Mod installation and runtime updates. Connected Key Enhancement bindings support live editing. Applying or resetting bindings in the game's own binding screen will overwrite your layout.
 [/b][/center][center][size=5][color=#e8b96a][b]Changelog[/b][/color][/size][/center]
+[center][color=#1e84cc][b]V1.3.2[/b][/color]
+Move search accepts separate weapon, move, upgrade or technical terms in any order, and each shared official name is selectable on its own. Added attack coefficients, poise, conditional ranges and timeline attack nodes to the action table. Preset loads now show a content and impact review; inactive-scheme edits, stance eligibility and runtime session recovery are more reliable.
+
 [center][color=#1e84cc][b]V1.3.1[/b][/color]
 Smoother Key Enhancement, more weapon and Phantom Edge moves with searchable game names, and fixes to One-Eyed Bow and overlapping independent Deflect bindings. Added separate restriction bypasses and move effects; resource, damage and timing settings follow each activation. Update the enhancement runtime with the game closed, then restart.
 

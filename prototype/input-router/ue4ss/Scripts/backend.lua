@@ -915,7 +915,7 @@ end
 function Backend:scheme_notice(name)
     local ok, err = pcall(function()
         self:invoke(self:library("Engine.KismetSystemLibrary"), "/Script/Engine.KismetSystemLibrary:PrintString",
-            self.controller, tostring(name), true, false, {R=.76,G=.60,B=1,A=1}, 2, "PBZKeyForgeScheme")
+            self.controller, tostring(name), true, false, {R=.76,G=.60,B=1,A=1}, 2, FName("PBZKeyForgeScheme"))
     end)
     if not ok then self:report("scheme-notice", tostring(err)) end
 end

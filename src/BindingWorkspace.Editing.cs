@@ -18,7 +18,7 @@ namespace PBZKeyForge
         void LinkInputVariants(KeyEnhancementRule rule)
         {
             if (rule.Trigger != "tap" && rule.Trigger != "hold") return;
-            var variants = config.Rules.Where(item => item.Axis == rule.Axis && item.Keys.OrderBy(key => key).SequenceEqual(rule.Keys.OrderBy(key => key))
+            var variants = RulesFor(config).Where(item => item.Axis == rule.Axis && item.Keys.OrderBy(key => key).SequenceEqual(rule.Keys.OrderBy(key => key))
                 && (item.Trigger == "tap" || item.Trigger == "hold")).ToArray();
             if (variants.Length < 2) return;
             string group = variants.Select(item => item.InputGroup).FirstOrDefault(value => !string.IsNullOrEmpty(value)) ?? Guid.NewGuid().ToString("N");
@@ -44,8 +44,7 @@ namespace PBZKeyForge
                 rules.Add(rule);
             }
             var check = config.Clone(); check.Rules.AddRange(rules); check.CompileLua();
-            config.Rules.AddRange(rules);
-            foreach (var rule in rules) LinkInputVariants(rule);
+            foreach (var rule in rules) { AddRule(rule); LinkInputVariants(rule); }
             if (specification.KeepNativeTrigger.HasValue)
                 foreach (var function in selected) SetNativeTrigger(function.Id, specification.KeepNativeTrigger.Value);
             return CollectEntries(config, false, null, true).Where(entry => rules.Any(rule => rule.Id == entry.RuleId)).ToArray();
@@ -89,7 +88,7 @@ namespace PBZKeyForge
                         foreach (var key in desired.Except(keys)) session.ChangeRelationship(function.Id, key, true, pad, family);
                     }
                 }
-                foreach (var rule in config.Rules)
+                foreach (var rule in RulesFor(config))
                 {
                     rule.Keys = rule.Keys.Select(move).Distinct().ToList(); rule.Watch = rule.Watch.Select(move).Distinct().ToList();
                     rule.ConsumeKeys = rule.ConsumeKeys.Select(move).Distinct().ToList();
@@ -97,7 +96,7 @@ namespace PBZKeyForge
                     if (rule.Axis != null) rule.Axis = move(rule.Axis);
                     moveSuppressions(rule.Suppressions);
                 }
-                moveSuppressions(config.Suppressions);
+                moveSuppressions(SuppressionsFor(config));
                 foreach (var function in Functions.Where(item => item.FixedKeys != null))
                     foreach (var key in function.FixedKeys.Where(key => move(key) != key))
                     {

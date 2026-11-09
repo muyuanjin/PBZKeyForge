@@ -19,7 +19,19 @@ public static class UnifiedBindingFlowTests
     [DllImport("user32.dll")] static extern IntPtr SendMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
     static void Check(bool value, string message) { checks++; if (!value) throw new Exception(message); }
     static T Field<T>(object owner, string name) { return (T)owner.GetType().GetField(name, Hidden).GetValue(owner); }
-    static object Call(object owner, string name, params object[] arguments) { return owner.GetType().GetMethod(name, Hidden).Invoke(owner, arguments); }
+    static object Call(object owner, string name, params object[] arguments)
+    {
+        arguments = arguments ?? new object[0];
+        var method = owner.GetType().GetMethods(Hidden).Single(candidate =>
+        {
+            var parameters = candidate.GetParameters();
+            return candidate.Name == name && parameters.Length == arguments.Length
+                && parameters.Select((parameter, index) => arguments[index] == null
+                    ? !parameter.ParameterType.IsValueType
+                    : parameter.ParameterType.IsInstanceOfType(arguments[index])).All(match => match);
+        });
+        return method.Invoke(owner, arguments);
+    }
     static IEnumerable<Control> All(Control owner)
     {
         foreach (Control control in owner.Controls) { yield return control; foreach (var child in All(control)) yield return child; }
@@ -28,6 +40,13 @@ public static class UnifiedBindingFlowTests
     static KeyEnhancementConfiguration Config(MainForm form) { return Field<KeyEnhancementConfiguration>(form, "keyEnhancement"); }
     static BindingWorkspace Workspace(MainForm form)
     { return new BindingWorkspace(form.Session, Config(form), Field<KeyEnhancementConfiguration>(form, "keyEnhancementBaseline"), false, -1); }
+    static KeyEnhancementRule[] Rules(MainForm form)
+    {
+        var config = Config(form);
+        var scheme = !config.Enabled && config.Schemes.Count > 0
+            ? config.Schemes.FirstOrDefault(item => item.Id == config.SelectedSchemeId) : null;
+        return scheme == null ? config.Rules.ToArray() : scheme.Rules.Concat(config.SchemeSwitchBindings).ToArray();
+    }
     static CheckBox Toggle(MainForm form) { return Field<CheckBox>(Field<Control>(form, "keyEnhancementBar"), "Toggle"); }
     static void Switch(MainForm form) { SendMessage(Toggle(form).Handle, 0xf5, IntPtr.Zero, IntPtr.Zero); Application.DoEvents(); }
     static void Shot(Form form, string name)
@@ -72,8 +91,12 @@ public static class UnifiedBindingFlowTests
     static void SelectFunction(Form dialog, string id)
     {
         Field<TextBox>(dialog, "search").Text = id;
+        Call(dialog, "FlushSearch"); Application.DoEvents();
         var list = Field<ListBox>(dialog, "functions");
-        var function = list.Items.Cast<BindingFunction>().Single(item => item.Id == id);
+        var matches = list.Items.Cast<BindingFunction>().Where(item => item.Id == id).ToArray();
+        Check(matches.Length == 1, "The function search did not resolve one row for " + id + ": "
+            + string.Join("; ", list.Items.Cast<BindingFunction>().Select(item => item.Id + "/" + item.Label)));
+        var function = matches[0];
         list.SelectedItem = function;
         Check(list.SelectedItem == function, "The chosen function was not retained.");
     }
@@ -85,9 +108,13 @@ public static class UnifiedBindingFlowTests
         Modal(delegate { Field<Button>(view, "add").PerformClick(); }, "UnifiedActionChoiceDialog", delegate(Form dialog)
         {
             SelectFunction(dialog, functionId);
-            Button(dialog, "addSelectedAction").PerformClick();
+            Button accept = Button(dialog, "addSelectedAction");
+            Check(accept.Enabled, "The selected function cannot be added.");
+            accept.PerformClick();
+            if (dialog.DialogResult != DialogResult.OK)
+                throw new Exception("The selected function was not added: " + Field<Label>(dialog, "status").Text);
             if (enableInside)
-                Check(!Config(form).Enabled && Config(form).Rules.Any(rule => rule.Keys.Contains(key)), "Inactive editing enabled execution or lost the binding");
+                Check(!Config(form).Enabled && Rules(form).Any(rule => rule.Keys.Contains(key)), "Inactive editing enabled execution or lost the binding");
         });
     }
     static void EditFromAction(MainForm form, string functionId, string key, string trigger)
@@ -160,6 +187,7 @@ public static class UnifiedBindingFlowTests
             {
                 form.ShowInTaskbar = false; form.UiSmoke(save);
                 form.Shown += delegate { form.BeginInvoke((Action)delegate {
+                    string stage = "initial enhancement state";
                     try
                     {
                         I18n.Current = "zh-Hans"; form.RenderSession(); Application.DoEvents();
@@ -178,29 +206,43 @@ public static class UnifiedBindingFlowTests
                         }
                         Check(!workspace.CanAddNative("IA_Jump"), "The native-slot fixture did not fill its supported capacity.");
                         form.RenderSession(); Switch(form);
+                        stage = "ordinary add beyond native slots";
                         int before = workspace.Entries("IA_Jump").Length;
                         AddFromKey(form, "F9", "IA_Jump", false);
-                        Check(Workspace(form).Entries("IA_Jump").Length == before + 1 && Config(form).Rules.Any(rule => rule.Outputs.Any(item => item.Kind == "mapping" && item.MappingName == "IA_Jump")),
-                            "The ordinary add-function flow could not add beyond native slots.");
+                        var afterEntries = Workspace(form).Entries("IA_Jump");
+                        int after = afterEntries.Length;
+                        Check(after == before + 1, "The ordinary add-function flow could not add beyond native slots: before=" + before + ", after=" + after);
+                        Check(Config(form).NativeBindings.Any(item => item.FunctionId == "IA_Jump" && item.Device == "keyboard" && item.Keys.Contains("F9")),
+                            "The ordinary add-function flow did not extend IA_Jump through its native override: "
+                            + string.Join("; ", afterEntries.Select(item => item.Id + "/" + item.ExecutionOwner)));
+                        stage = "hold binding from action details";
                         EditFromAction(form, "IA_Jump", "F10", "hold");
                         Check(Workspace(form).Entries("IA_Jump").Any(entry => !entry.IsNative && entry.Trigger == "hold" && entry.Keys.Contains("F10")),
                             "The ordinary action editor did not retain a long-press binding.");
-                        int ruleCount = Config(form).Rules.Count; Switch(form);
+                        int ruleCount = Rules(form).Length; Switch(form);
+                        stage = "disabled action details";
                         Check(!Config(form).Enabled && Workspace(form).Entries("IA_Jump").Where(entry => !entry.IsNative).All(entry => !entry.Active), "Extra bindings remained active when key enhancement was closed.");
                         form.RenderSession(); Shot(form, "mode-off-extra-bindings");
                         Modal(delegate { Call(form, "ShowActionRelations", "IA_Jump"); }, "UnifiedActionBindingsDialog", delegate(Form details)
                         {
-                            var label = All(Field<Control>(details, "bindings")).OfType<Label>().Single(item => item.Text.Contains("F10"));
+                            var labels = All(Field<Control>(details, "bindings")).OfType<Label>().Where(item => item.Text.Contains("F10")).ToArray();
+                            Check(labels.Length == 1, "Action details did not show exactly one F10 binding: "
+                                + string.Join("; ", All(Field<Control>(details, "bindings")).OfType<Label>().Select(item => item.Text)));
+                            var label = labels[0];
                             Color muted = (Color)typeof(MainForm).Assembly.GetType("PBZKeyForge.EditorTheme").GetField("Muted", BindingFlags.Static | BindingFlags.Public).GetValue(null);
                             Check(label.ForeColor == muted && All(details).OfType<Button>().Any(button => button.Name == "editBinding" && button.Enabled),
                                 "Disabled extra bindings are not gray and editable in ordinary action details.");
                             Shot(details, "action-extra-disabled"); Button(details, "close").PerformClick();
                         });
+                        stage = "enhancement-only function add";
                         string extra = Workspace(form).Functions.First(function => function.RequiresKeyEnhancement).Id;
-                        AddFromKey(form, "F11", extra, true);
-                        Check(!Config(form).Enabled && Config(form).Rules.Count == ruleCount + 1 && Workspace(form).Entries(extra).Any(entry => entry.Keys.Contains("F11")),
+                        try { AddFromKey(form, "F11", extra, true); }
+                        catch (Exception ex) { throw new Exception("Adding enhancement-only function " + extra + " failed.", ex); }
+                        Check(!Config(form).Enabled && Rules(form).Length == ruleCount + 1 && Workspace(form).Entries(extra).Any(entry => entry.Keys.Contains("F11")),
                             "Inactive editing lost the selected function or input.");
+                        stage = "reopening enhancement";
                         Switch(form);
+                        stage = "action view";
                         Shot(form, "unified-key-view");
                         form.ShowActionView(true); Application.DoEvents(); Shot(form, "unified-action-view");
                         var differences = Field<Control>(form, "schemeDiff");
@@ -227,9 +269,12 @@ public static class UnifiedBindingFlowTests
                             var triggers = Field<ComboBox>(editor, "trigger"); triggers.SelectedIndex = 4;
                             Button(editor, "saveBinding").PerformClick();
                         });
-                        Check(Workspace(form).Entries("IA_Jump").Count(entry => entry.Keys.Contains("F12")) == 1
-                            && Workspace(form).Entries("IA_Jump").Single(entry => entry.Keys.Contains("F12")).Trigger == "hold",
-                            "Direct binding editing duplicated or lost the selected binding.");
+                        var edited = Workspace(form).Entries("IA_Jump").Where(entry => entry.Keys.Contains("F12")).ToArray();
+                        var active = edited.Where(entry => entry.Active).ToArray();
+                        Check(active.Length == 1 && active[0].Trigger == "hold" && !active[0].IsNative,
+                            "Direct binding editing duplicated or lost the selected binding: "
+                            + string.Join("; ", edited.Select(entry => entry.Id + "/" + entry.Trigger + "/" + entry.ExecutionOwner + "/" + entry.Active)));
+                        stage = "key-view restore";
                         RestoreFromKeyView(form);
                         if (editOnly)
                         {
@@ -242,11 +287,11 @@ public static class UnifiedBindingFlowTests
                         Apply(form);
                         Check(Field<KeyEnhancementInstallation>(form, "keyEnhancementInstallation").ReadState() == KeyEnhancementInstallState.Enabled,
                             "Unified bindings were not installed: " + Field<Label>(form, "lblStatus").Text);
-                        int savedRules = Config(form).Rules.Count; Switch(form); Apply(form);
-                        Check(Config(form).Rules.Count == savedRules && Field<KeyEnhancementInstallation>(form, "keyEnhancementInstallation").ReadState() == KeyEnhancementInstallState.Disabled,
+                        int savedRules = Rules(form).Length; Switch(form); Apply(form);
+                        Check(Rules(form).Length == savedRules && Field<KeyEnhancementInstallation>(form, "keyEnhancementInstallation").ReadState() == KeyEnhancementInstallState.Disabled,
                             "Closing key enhancement discarded unified extra bindings.");
                     }
-                    catch (Exception ex) { failure = ex; }
+                    catch (Exception ex) { failure = new Exception("Unified binding flow failed during " + stage, ex); }
                     finally
                     {
                         form.Dispose();

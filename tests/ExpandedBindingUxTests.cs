@@ -15,6 +15,10 @@ class ExpandedBindingUxTests
     static T Field<T>(object owner, string name) { return (T)owner.GetType().GetField(name, Hidden).GetValue(owner); }
     static object Call(object owner, string name, params object[] args) { return owner.GetType().GetMethod(name, Hidden).Invoke(owner, args); }
     static void Check(bool value, string message) { checks++; if (!value) throw new Exception(message); }
+    static void Search(Form form, string value)
+    {
+        Field<TextBox>(form, "search").Text = value; Call(form, "FlushSearch"); Application.DoEvents();
+    }
     static BindingEntry Spec(string key, string trigger) { return new BindingEntry { Keys = new[] { key }, Trigger = trigger }; }
     static void Save(UnifiedBindingEditDialog dialog) { Call(dialog, "Save"); Check(dialog.Result != null, "Editor did not save the binding"); }
     static void Choose(ComboBox combo, string key)
@@ -153,7 +157,7 @@ class ExpandedBindingUxTests
         for(int i=0;i<3;i++)s.SetKeyboard("IA_Jump",i,new[]{"J","K","L"}[i]);
         using(var dialog=new UnifiedActionChoiceDialog(w,"J",null))
         {
-            dialog.Show();Application.DoEvents();Field<TextBox>(dialog,"search").Text="IA_Jump";var list=Field<ListBox>(dialog,"functions");
+            dialog.Show();Application.DoEvents();Search(dialog,"IA_Jump");var list=Field<ListBox>(dialog,"functions");
             for(int i=0;i<list.Items.Count;i++)if(((BindingFunction)list.Items[i]).Id=="IA_Jump")list.SelectedIndex=i;
             Call(dialog,"AddSelected");Check(dialog.DialogResult==DialogResult.OK && !c.Enabled,"Existing relation required enhancement when native slots were full");
         }

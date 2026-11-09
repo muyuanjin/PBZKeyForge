@@ -8,13 +8,13 @@ A key binding editor for **Phantom Blade Zero** that writes the game's own input
 
 `PBZKeyForge.exe` · single file · no installer · no .NET runtime download · Windows 10/11
 
-![PBZKeyForge 1.3.1 Key Enhancement and independent schemes](assets/screenshots/1.3.1/enhancement-main-en.png)
+![PBZKeyForge 1.3.2 Key Enhancement and independent schemes](assets/screenshots/1.3.2/enhancement-main-en.png)
 
-![PBZKeyForge 1.3.1 additional Phantom Edge actions](assets/screenshots/1.3.1/enhancement-actions-en.png)
+![PBZKeyForge 1.3.2 additional Phantom Edge actions](assets/screenshots/1.3.2/enhancement-actions-en.png)
 
-![PBZKeyForge 1.3.1 per-binding combat settings](assets/screenshots/1.3.1/enhancement-tuning-en.png)
+![PBZKeyForge 1.3.2 per-binding combat settings](assets/screenshots/1.3.2/enhancement-tuning-en.png)
 
-[Feature screenshots in English and Simplified Chinese](assets/screenshots/1.3.1/README.md)
+[Feature screenshots in English and Simplified Chinese](assets/screenshots/1.3.2/README.md)
 
 ---
 
@@ -31,7 +31,7 @@ The in-game screen validates on **save**, not at runtime, and it rejects any bin
 ## Features
 
 - **One key, several actions.** Guard on the attack key, dodge on the guard key, whatever you want.
-- **Key Enhancement.** Add unlimited bindings, chords, sequences, tap/hold and extra functions through the existing key and action views. Search weapon and Phantom Edge moves by their game names. Tune resources, restriction bypasses, damage, timing and move effects per binding. Independent schemes can be switched through bindings in game. The mode switch stages it and Apply installs it; restart the game after installation, then edit bindings live. [Usage and limits](docs/key-enhancement.md).
+- **Key Enhancement.** Add unlimited bindings, chords, sequences, tap/hold and extra functions through the existing key and action views. Search weapon and Phantom Edge moves by several terms at once, and compare timeline attack nodes plus physical, elemental and poise coefficients before binding. Tune resources, restriction bypasses, damage, timing and move effects per binding. Independent schemes can be switched through bindings in game. The mode switch stages it and Apply installs it; restart the game after installation, then edit bindings live. [Usage and limits](docs/key-enhancement.md).
 - **Scheme aware.** Pick which scheme you are editing — `Default`, `Custom 1`, `Custom 2` — and switch the game to it from the tool.
 - **Two editing views.** Click keyboard, mouse or controller buttons to edit their actions, or edit bindings by action. Factory, customized and pending bindings have distinct badge colors; the bottom panel compares the whole scheme.
 - **Quick setups** for one-key guard, a Souls-style gamepad layout, and Space-based movement; restore the selected scheme's defaults from the same list.
@@ -171,13 +171,13 @@ Not affiliated with S-Game. Use at your own risk, keep the backup.
 
 键位增强使用 x64 UE4SS，需要最新版 [Microsoft Visual C++ v14 x64 运行库](https://aka.ms/vc14/vc_redist.x64.exe)。启用和更新前会检查实际依赖，缺失或过旧时提供修复提示；普通改键、预设和离线编辑不需要它。
 
-![PBZKeyForge 1.3.1 键位增强与独立方案](assets/screenshots/1.3.1/enhancement-main-zh-Hans.png)
+![PBZKeyForge 1.3.2 键位增强与独立方案](assets/screenshots/1.3.2/enhancement-main-zh-Hans.png)
 
-![PBZKeyForge 1.3.1 影之武装额外动作](assets/screenshots/1.3.1/enhancement-actions-zh-Hans.png)
+![PBZKeyForge 1.3.2 影之武装额外动作](assets/screenshots/1.3.2/enhancement-actions-zh-Hans.png)
 
-![PBZKeyForge 1.3.1 逐绑定战斗设置](assets/screenshots/1.3.1/enhancement-tuning-zh-Hans.png)
+![PBZKeyForge 1.3.2 逐绑定战斗设置](assets/screenshots/1.3.2/enhancement-tuning-zh-Hans.png)
 
-[中英文功能截图](assets/screenshots/1.3.1/README.md)
+[中英文功能截图](assets/screenshots/1.3.2/README.md)
 
 ### 为什么需要它
 
@@ -192,7 +192,7 @@ Not affiliated with S-Game. Use at your own risk, keep the backup.
 ### 功能
 
 - **一个键多个动作**：防御并到攻击键、闪避并到防御键，随便配。
-- **键位增强**：沿用原来的按键和动作入口，添加不限槽位的绑定、组合、顺序输入、短按／长按及额外招式，招式采用游戏显示名称，可逐绑定设置资源、限制绕过、伤害、前后摇及附加效果。增强方案独立保存，支持游戏内按键切换。底部开关暂存启用，应用后安装；重启游戏加载后可实时编辑。[使用说明与边界](docs/key-enhancement.md)。
+- **键位增强**：沿用原来的按键和动作入口，添加不限槽位的绑定、组合、顺序输入、短按／长按及额外招式。招式支持多词搜索，共享名称可按实际动作分别选择；动作表显示时间轴攻击节点，以及已解析的物理、元素和削韧系数。可逐绑定设置资源、限制绕过、伤害、前后摇及附加效果。增强方案独立保存，支持游戏内按键切换。底部开关暂存启用，应用后安装；重启游戏加载后可实时编辑。[使用说明与边界](docs/key-enhancement.md)。
 - **认方案**：可选编辑 `默认 / 自定义方案 1 / 自定义方案 2`，并能在工具里直接把某个方案设为游戏当前生效方案。
 - **两种视图**：按键视图可点击键鼠和手柄图形，动作视图按功能编辑；徽标区分原厂、已修改和待应用，底部显示整个方案的差异。
 - **自己的预设**：命名保存、分享码预览导入、按设备分享、导出游戏键位文件，也可批量删除个人预设。

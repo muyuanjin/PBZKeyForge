@@ -249,9 +249,13 @@ def main():
         "Ability.Action.Hun.Heavy.DualHook.Pursure": ["act.IA_HeavyAttack"],
     }
     for stage in range(1, 4):
+        phases["Ability.Action.Hun.ShachiAbility.TieKuangQuanTao.Combo.%s" % ("C" * stage)] = ["catalog.stage", str(stage)]
+        phases["Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Common.%02d" % stage] = ["catalog.stage", str(stage)]
         phases["Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.Escape.%02d" % stage] = ["catalog.stage", str(stage)]
     for tag, parts in phases.items():
-        entries["ability:" + tag]["labelParts"] = parts
+        identity = "ability:" + tag
+        if identity in entries:
+            entries[identity]["labelParts"] = parts
     for item in entries.values():
         for effect in item.get("effects", []):
             level = next((re.search(r"(?:Lv|V|Level|\.)([123])$", tag) for tag in effect.get("upgradeTags", [])

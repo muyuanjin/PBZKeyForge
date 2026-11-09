@@ -7,6 +7,12 @@ namespace PBZKeyForge
 {
     public sealed partial class BindingWorkspace
     {
+        sealed class SearchHit
+        {
+            internal BindingFunction Function;
+            internal int Score, Index;
+            internal bool DisplayMatched;
+        }
         static readonly string[] CatalogRoots = { "native", "locomotion", "targeting", "offense", "defense", "weapons", "shadow", "accessories", "interaction", "scene", "interface", "schemes", "custom", "debug" };
         static readonly string[] PlayerMappings = {
             "IA_MoveFast", "IA_MoveSlow", "IA_Jump", "IA_Crouch", "IA_LightAttack", "IA_HeavyAttack", "IA_Guard", "IA_Dodge",
@@ -14,22 +20,199 @@ namespace PBZKeyForge
             "IA_SwitchShadowArm", "IA_Interact", "IA_UseTopItem", "IA_UseBottomItem", "IA_Sense_Default", "IA_OpenCharacterMenu", "IA_OpenMapMenu"
         };
 
+        string lastSearchQuery;
+        BindingFunction[] lastSearchResult;
+        string lastChoiceSearchQuery;
+        BindingFunction[] lastChoiceSearchResult;
+        BindingFunction[] functionChoices, functionChoicesSource;
+        string functionChoicesLanguage;
+
         public BindingFunction[] FindFunctions(string query)
         {
             query = (query ?? "").Trim();
-            if (query.Length == 0) return Functions;
-            return Functions.Where(function => function.SearchText.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
-                .OrderBy(function => SearchOrder(function, query))
-                .ThenBy(function => function.NativeAction != null ? 0 : function.Id.StartsWith("ability:", StringComparison.Ordinal) ? 2 : 1).ToArray();
+            var functions = Functions;
+            if (query.Length == 0) return functions;
+            string[] terms = SearchTerms(query);
+            if (terms.Length == 0) return functions;
+            string normalized = string.Join(" ", terms);
+            if (normalized == lastSearchQuery && lastSearchResult != null) return lastSearchResult;
+            var hits = new List<SearchHit>();
+            for (int index = 0; index < functions.Length; index++)
+            {
+                int score = SearchScore(functions[index], normalized, terms);
+                if (score >= 0) hits.Add(new SearchHit { Function = functions[index], Score = score, Index = index });
+            }
+            lastSearchQuery = normalized;
+            lastSearchResult = hits.OrderBy(hit => hit.Score)
+                .ThenBy(hit => hit.Function.NativeAction != null ? 0 : hit.Function.Id.StartsWith("ability:", StringComparison.Ordinal) ? 2 : 1)
+                .ThenBy(hit => hit.Index).Select(hit => hit.Function).ToArray();
+            return lastSearchResult;
         }
 
-        static int SearchOrder(BindingFunction function, string query)
+        public BindingFunction[] FunctionChoices
         {
+            get
+            {
+                var source = Functions;
+                if (functionChoices != null && object.ReferenceEquals(functionChoicesSource, source)
+                    && functionChoicesLanguage == I18n.Current) return functionChoices;
+                var result = new List<BindingFunction>();
+                foreach (var function in source)
+                    foreach (string label in GameMoveNames.DisplayNames(function.Id, function.Label))
+                        result.Add(DisplayChoice(function, label));
+                functionChoices = result.ToArray();
+                functionChoicesSource = source;
+                functionChoicesLanguage = I18n.Current;
+                lastChoiceSearchQuery = null;
+                lastChoiceSearchResult = null;
+                return functionChoices;
+            }
+        }
+
+        static BindingFunction DisplayChoice(BindingFunction function, string label)
+        {
+            string searchText = function.SearchText + " " + label;
+            return new BindingFunction
+            {
+                Id = function.Id,
+                Label = label,
+                TechnicalName = function.TechnicalName,
+                NativeAction = function.NativeAction,
+                SearchText = searchText,
+                LabelSource = function.LabelSource,
+                IdentityCode = function.IdentityCode,
+                GroupPath = function.GroupPath,
+                GroupLabels = function.GroupLabels,
+                GroupSearchText = function.GroupSearchText,
+                SearchNames = function.SearchNames,
+                GroupPathText = function.GroupPathText,
+                LabelLower = NormalizeSearch(label),
+                GroupSearchTextLower = function.GroupSearchTextLower,
+                SearchTextLower = NormalizeSearch(searchText),
+                SearchNamesLower = function.SearchNamesLower,
+                RequiresKeyEnhancement = function.RequiresKeyEnhancement,
+                FixedKeys = function.FixedKeys,
+                FactoryKeys = function.FactoryKeys,
+                DefaultOutputValue = function.DefaultOutputValue,
+                Targets = function.Targets
+            };
+        }
+
+        public BindingFunction[] FindFunctionChoices(string query)
+        {
+            query = (query ?? "").Trim();
+            var choices = FunctionChoices;
+            if (query.Length == 0) return choices;
+            string[] terms = SearchTerms(query);
+            if (terms.Length == 0) return choices;
+            string normalized = string.Join(" ", terms);
+            if (normalized == lastChoiceSearchQuery && lastChoiceSearchResult != null) return lastChoiceSearchResult;
+            var hits = new List<SearchHit>();
+            for (int index = 0; index < choices.Length; index++)
+            {
+                int score = SearchScore(choices[index], normalized, terms);
+                if (score < 0) continue;
+                hits.Add(new SearchHit
+                {
+                    Function = choices[index],
+                    Score = score,
+                    Index = index,
+                    DisplayMatched = ContainsAll(choices[index].LabelLower, terms)
+                });
+            }
+            var ordered = hits.OrderBy(hit => hit.Score)
+                .ThenBy(hit => hit.Function.NativeAction != null ? 0 : hit.Function.Id.StartsWith("ability:", StringComparison.Ordinal) ? 2 : 1)
+                .ThenBy(hit => hit.Index).ToArray();
+            var displayed = new HashSet<string>(ordered.Where(hit => hit.DisplayMatched).Select(hit => hit.Function.Id), StringComparer.Ordinal);
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+            var result = new List<BindingFunction>();
+            foreach (var hit in ordered)
+            {
+                if (displayed.Contains(hit.Function.Id))
+                {
+                    if (!hit.DisplayMatched) continue;
+                }
+                else if (!seen.Add(hit.Function.Id)) continue;
+                result.Add(hit.Function);
+            }
+            lastChoiceSearchQuery = normalized;
+            lastChoiceSearchResult = result.ToArray();
+            return lastChoiceSearchResult;
+        }
+
+        public BindingFunction FindFunctionChoice(string id, string label)
+        {
+            var function = Functions.First(item => item.Id == id);
+            if (string.IsNullOrWhiteSpace(label)) return function;
+            return FunctionChoices.FirstOrDefault(item => item.Id == id && item.Label == label) ?? function;
+        }
+
+        static string[] SearchTerms(string query)
+        {
+            var terms = new List<string>(); int start = -1;
+            for (int index = 0; index <= query.Length; index++)
+            {
+                bool whitespace = index == query.Length || char.IsWhiteSpace(query[index]);
+                if (!whitespace) { if (start < 0) start = index; continue; }
+                if (start >= 0)
+                {
+                    terms.Add(NormalizeSearch(query.Substring(start, index - start))); start = -1;
+                }
+            }
+            terms.RemoveAll(term => term.Length == 0);
+            return terms.ToArray();
+        }
+
+        static string NormalizeSearch(string value)
+        { return (value ?? "").ToLowerInvariant(); }
+
+        static bool ContainsAll(string value, string[] terms)
+        {
+            if (value == null || value.Length == 0) return false;
+            foreach (string term in terms)
+                if (value.IndexOf(term, StringComparison.Ordinal) < 0) return false;
+            return true;
+        }
+
+        static int CountTerms(string value, string[] terms)
+        {
+            if (value == null || value.Length == 0) return 0;
+            int count = 0;
+            foreach (string term in terms) if (value.IndexOf(term, StringComparison.Ordinal) >= 0) count++;
+            return count;
+        }
+
+        static int SearchScore(BindingFunction function, string query, string[] terms)
+        {
+            if (!ContainsAll(function.SearchTextLower, terms)) return -1;
             if (string.Equals(function.Id, query, StringComparison.OrdinalIgnoreCase)) return 0;
-            if (function.SearchNames.Any(name => string.Equals(name, query, StringComparison.OrdinalIgnoreCase))) return 1;
-            if (function.SearchNames.Any(name => name.StartsWith(query, StringComparison.OrdinalIgnoreCase))) return 2;
-            if (function.Label.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0) return 3;
-            return 4;
+            int labelHits = CountTerms(function.LabelLower, terms);
+            bool labelMatch = labelHits == terms.Length;
+            bool nameMatch = function.SearchNamesLower.Any(name => ContainsAll(name, terms));
+            int score;
+            if (terms.Length == 1)
+            {
+                if (function.SearchNamesLower.Any(name => string.Equals(name, query, StringComparison.Ordinal)))
+                    return 1000000;
+                else if (labelMatch && (function.LabelLower.StartsWith(query, StringComparison.Ordinal)
+                    || function.SearchNamesLower.Any(name => name.StartsWith(query, StringComparison.Ordinal)))) score = 2;
+                else if (labelMatch || nameMatch) score = 3;
+                else if (ContainsAll(function.GroupSearchTextLower, terms)) score = 4;
+                else score = 5;
+            }
+            else if (labelMatch) score = 2;
+            else if (nameMatch) score = 3;
+            else if (ContainsAll(function.GroupSearchTextLower, terms)) score = 4;
+            else score = 5;
+            string label = function.LabelLower ?? "";
+            int labelPosition = label.Length;
+            foreach (string term in terms)
+            {
+                int position = label.IndexOf(term, StringComparison.Ordinal);
+                if (position >= 0) labelPosition = Math.Min(labelPosition, position);
+            }
+            return score * 1000000 + Math.Min(99, terms.Length - labelHits) * 100000
+                + Math.Min(9999, label.Length) * 10 + Math.Min(9, labelPosition);
         }
 
         static string[] PlayerAliases(string id)
@@ -105,7 +288,8 @@ namespace PBZKeyForge
             }
             if (path[0] == "custom") labels[0] = I18n.Str("unified.customtarget");
             if (path[0] == "schemes") labels[0] = I18n.Str("schemes.group");
-            function.GroupPath = path; function.GroupLabels = labels; function.GroupSearchText = string.Join(" ", labels);
+            function.GroupPath = path; function.GroupLabels = labels;
+            function.GroupPathText = string.Join("/", path); function.GroupSearchText = string.Join(" ", labels);
         }
 
         static int MappingOrder(string mapping)

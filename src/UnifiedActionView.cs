@@ -14,10 +14,10 @@ namespace PBZKeyForge
         {
             internal BindingFunction Function;
             internal BindingEntry[] Entries;
-            internal string Factory, Code, Insight, InsightDetails;
+            internal string RowKey, Factory, Code, Insight, InsightDetails, GroupPathText, GroupSignature;
             internal string[] BindingTexts;
             internal readonly List<BindingHit> Hits = new List<BindingHit>();
-            internal int Height;
+            internal int Height, MeasuredWidth = -1, MeasuredVersion = -1;
         }
         sealed class BindingHit
         {
@@ -82,16 +82,23 @@ namespace PBZKeyForge
         readonly ToolTip scopeTip = new ToolTip();
         readonly HashSet<string> keyEnhancementGroups = new HashSet<string>();
         readonly List<ActionRow> rows = new List<ActionRow>();
+        readonly Dictionary<string, ActionRow> allRowsByKey = new Dictionary<string, ActionRow>(StringComparer.Ordinal);
         ActionRow[] allRows = new ActionRow[0];
         BindingWorkspace workspace;
         string groupSignature;
         bool updatingGroups;
         Font codeFont;
         float dpiScale = 1f;
+        int measureVersion;
+        string measuredFontFamily;
+        float measuredFontSize;
         bool sizedSplitter;
         public event Action<string> EditAction;
         public event Action<BindingEntry> EditRequested;
         public event Action<string> AddRequested;
+        public event Action<BindingFunction> FunctionRequested;
+        public event Action<BindingEntry, BindingFunction> BindingRequested;
+        public event Action<BindingFunction> FunctionAddRequested;
 
         protected override void OnPaintBackground(PaintEventArgs e)
         { base.OnPaintBackground(e); EditorArtwork.PaintEffect(this, e.Graphics); }
@@ -166,6 +173,11 @@ namespace PBZKeyForge
         {
             float previousScale = dpiScale;
             using (var graphics = CreateGraphics()) dpiScale = graphics.DpiX / 96f;
+            string family = Font.FontFamily.Name; float size = Font.SizeInPoints;
+            if (measuredFontFamily != family || Math.Abs(measuredFontSize - size) >= .01f || Math.Abs(previousScale - dpiScale) >= .001f)
+            {
+                measuredFontFamily = family; measuredFontSize = size; measureVersion++;
+            }
             if (codeFont == null || codeFont.FontFamily.Name != Font.FontFamily.Name
                 || Math.Abs(codeFont.SizeInPoints - Math.Max(7f, Font.SizeInPoints - 1f)) >= .01f)
             {
@@ -201,15 +213,21 @@ namespace PBZKeyForge
             actions.Columns[InsightColumn].ToolTipText = I18n.Str("moves.insight.details.source");
             actions.Columns[AddColumn].HeaderText = "+"; actions.Columns[AddColumn].ToolTipText = UnifiedBindingUi.Text("addbinding");
             var snapshot = entrySnapshot.GroupBy(entry => entry.FunctionId).ToDictionary(group => group.Key, group => group.ToArray());
-            allRows = value.Functions.Select(function =>
+            var functionChoices = value.FunctionChoices;
+            var nextRows = new List<ActionRow>(functionChoices.Length); allRowsByKey.Clear();
+            foreach (var function in functionChoices)
             {
                 BindingEntry[] entries; if (!snapshot.TryGetValue(function.Id, out entries)) entries = new BindingEntry[0];
                 string[] factory = function.FactoryKeys;
-                return new ActionRow { Function = function, Entries = entries, BindingTexts = entries.Select(UnifiedBindingUi.BindingText).ToArray(),
+                var row = new ActionRow { RowKey = RowKey(function), Function = function, Entries = entries, BindingTexts = entries.Select(UnifiedBindingUi.BindingText).ToArray(),
                     Factory = factory == null ? I18n.Str("editor.defaultunknown") : BindingViewText.Keys(factory), Code = function.RequiresKeyEnhancement ? UnifiedBindingUi.FunctionIdentity(function) : "",
                     Insight = MoveInsightCatalog.Summary(function.Id), InsightDetails = MoveInsightCatalog.Details(function.Id) };
-            }).ToArray();
-            string signature = I18n.Current + "|" + value.KeyEnhancementEnabled + "|" + string.Join("\n", allRows.Select(row => string.Join("/", row.Function.GroupPath) + ":" + string.Join("/", row.Function.GroupLabels)));
+                row.GroupPathText = function.GroupPathText;
+                row.GroupSignature = row.GroupPathText + ":" + string.Join("/", function.GroupLabels);
+                nextRows.Add(row); allRowsByKey[row.RowKey] = row;
+            }
+            allRows = nextRows.ToArray();
+            string signature = I18n.Current + "|" + value.KeyEnhancementEnabled + "|" + string.Join("\n", allRows.Select(row => row.GroupSignature));
             if (groupSignature != signature) { groupSignature = signature; BuildGroups(); }
             FilterRows(null);
             timer.Stop(); Console.WriteLine("UnifiedActionView Render {0} ms; functions={1}, rows={2}", timer.ElapsedMilliseconds, allRows.Length, rows.Count);
@@ -307,30 +325,32 @@ namespace PBZKeyForge
         {
             if (workspace == null) return; var timer = Stopwatch.StartNew();
             int first = actions.FirstDisplayedScrollingRowIndex;
-            string anchor = operation == null && first >= 0 && first < rows.Count ? rows[first].Function.Id : null;
+            string anchor = operation == null && first >= 0 && first < rows.Count ? rows[first].RowKey : null;
             string selected = operation == null && actions.CurrentCell != null && actions.CurrentCell.RowIndex < rows.Count
-                ? rows[actions.CurrentCell.RowIndex].Function.Id : null;
+                ? rows[actions.CurrentCell.RowIndex].RowKey : null;
             int column = actions.CurrentCell == null ? 0 : actions.CurrentCell.ColumnIndex;
             string query = search.Text.Trim(), group = groups.SelectedNode == null ? "" : groups.SelectedNode.Tag as string;
             rows.Clear();
             if (query.Length > 0)
             {
-                var byId = allRows.ToDictionary(row => row.Function.Id);
-                rows.AddRange(workspace.FindFunctions(query).Select(function => byId[function.Id]));
+                foreach (var function in workspace.FindFunctionChoices(query))
+                {
+                    ActionRow row; if (allRowsByKey.TryGetValue(RowKey(function), out row)) rows.Add(row);
+                }
             }
-            else rows.AddRange(allRows.Where(row => string.IsNullOrEmpty(group) || string.Join("/", row.Function.GroupPath) == group
-                || string.Join("/", row.Function.GroupPath).StartsWith(group + "/", StringComparison.Ordinal)));
+            else rows.AddRange(allRows.Where(row => string.IsNullOrEmpty(group) || row.GroupPathText == group
+                || row.GroupPathText.StartsWith(group + "/", StringComparison.Ordinal)));
             keyEnhancementNotice.Text = workspace.KeyEnhancementEnabled ? I18n.Str("binding.scope.scheme") + " · " + I18n.Str("enhancement.title") + ": " + I18n.Str("binding.scope.global") : UnifiedBindingUi.KeyEnhancementHint;
             LayoutNotice();
             actions.RowCount = rows.Count; MeasureRows(); empty.Visible = rows.Count == 0; if (empty.Visible) empty.BringToFront(); else actions.BringToFront();
             if (selected != null)
             {
-                int index = rows.FindIndex(row => row.Function.Id == selected);
+                int index = rows.FindIndex(row => row.RowKey == selected);
                 if (index >= 0 && (actions.CurrentCell == null || actions.CurrentCell.RowIndex != index)) actions.CurrentCell = actions[column, index];
             }
             if (anchor != null)
             {
-                int index = rows.FindIndex(row => row.Function.Id == anchor);
+                int index = rows.FindIndex(row => row.RowKey == anchor);
                 if (index >= 0 && actions.FirstDisplayedScrollingRowIndex != index) actions.FirstDisplayedScrollingRowIndex = index;
             }
             timer.Stop(); if (operation != null) Console.WriteLine("UnifiedActionView {0} {1} ms; rows={2}", operation, timer.ElapsedMilliseconds, rows.Count);
@@ -339,13 +359,15 @@ namespace PBZKeyForge
         void MeasureRows()
         {
             if (actions.Columns.Count < 5) return;
-            int width = Math.Max(20, actions.Columns[BindingColumn].Width);
+            int width = Math.Max(20, actions.Columns[BindingColumn].Width); bool changed = false;
             foreach (var row in rows)
             {
+                if (row.MeasuredWidth == width && row.MeasuredVersion == measureVersion) continue;
                 LayoutBindings(row, width); int linesHeight = row.Hits.Count == 0 ? 0 : row.Hits.Max(hit => hit.Bounds.Bottom) + Scale(3);
                 row.Height = Math.Max(Scale(row.Function.RequiresKeyEnhancement || row.Insight.Length > 0 ? 40 : 28), linesHeight);
+                row.MeasuredWidth = width; row.MeasuredVersion = measureVersion; changed = true;
             }
-            if (actions.RowCount > 0) actions.UpdateRowHeightInfo(0, true); actions.Invalidate();
+            if (changed && actions.RowCount > 0) actions.UpdateRowHeightInfo(0, true); actions.Invalidate();
         }
 
         void LayoutNotice()
@@ -460,12 +482,27 @@ namespace PBZKeyForge
             {
                 var hit = row.Hits.FirstOrDefault(item => item.Bounds.Contains(e.X, e.Y));
                 if (hit != null && hit.Index >= 0)
-                { if (EditRequested != null) EditRequested(row.Entries[hit.Index]); else RequestDetails(row); return; }
+                {
+                    if (BindingRequested != null) BindingRequested(row.Entries[hit.Index], row.Function);
+                    else if (EditRequested != null) EditRequested(row.Entries[hit.Index]);
+                    else RequestDetails(row);
+                    return;
+                }
             }
             RequestDetails(row);
         }
-        void RequestAdd(ActionRow row) { if (AddRequested != null) AddRequested(row.Function.Id); else RequestDetails(row); }
-        void RequestDetails(ActionRow row) { if (EditAction != null) EditAction(row.Function.Id); }
+        void RequestAdd(ActionRow row)
+        {
+            if (FunctionAddRequested != null) FunctionAddRequested(row.Function);
+            else if (AddRequested != null) AddRequested(row.Function.Id);
+            else RequestDetails(row);
+        }
+        void RequestDetails(ActionRow row)
+        {
+            if (FunctionRequested != null) FunctionRequested(row.Function);
+            else if (EditAction != null) EditAction(row.Function.Id);
+        }
+        static string RowKey(BindingFunction function) { return function.Id + "\u001f" + function.Label; }
 
         void CellTip(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
         {

@@ -513,7 +513,7 @@ namespace PBZKeyForge
                     try
                     {
                         choices.Items.Clear(); string term = filter.Text.Trim();
-                        foreach (var function in workspace.FindFunctions(term))
+                        foreach (var function in workspace.FindFunctionChoices(term))
                             if (function.Targets.Length == 1 && function.Id == function.Targets[0].Id && (showAll || suggestedIds.Contains(function.Id)))
                                 choices.Items.Add(new CatalogItem { Function = function }, chosen.Contains(function.Targets[0]));
                     }

@@ -45,10 +45,10 @@ class UnifiedActionViewTests
                 var enabledWorkspace = new BindingWorkspace(EditorSession.CreateOffline(), enabled, enabled.Clone(), false, -1);
                 compact.Render(enabledWorkspace);
                 var catalogTree = Field<TreeView>(compact, "groups");
-                int functionCount = enabledWorkspace.Functions.Length;
+                int functionCount = enabledWorkspace.FunctionChoices.Length;
                 Check((string)catalogTree.SelectedNode.Tag == "" && Field<DataGridView>(compact, "actions").RowCount == functionCount,
                     "Enhanced catalog must initially show every function");
-                Check(catalogTree.Nodes.Count == enabledWorkspace.Functions.Select(function => function.GroupPath[0]).Distinct().Count() + 1
+                Check(catalogTree.Nodes.Count == enabledWorkspace.FunctionChoices.Select(function => function.GroupPath[0]).Distinct().Count() + 1
                     && catalogTree.Nodes[0].Nodes.Count == 0 && catalogTree.Nodes[0].Text.EndsWith("(" + functionCount + ")"),
                     "All-functions entry must be a visible sibling of complete purpose groups, with the full count");
                 var pendingGroups = new System.Collections.Generic.Stack<TreeNode>(catalogTree.Nodes.Cast<TreeNode>().Skip(1));
@@ -56,7 +56,7 @@ class UnifiedActionViewTests
                 while (pendingGroups.Count > 0)
                 {
                     var node = pendingGroups.Pop(); string path = (string)node.Tag;
-                    var members = enabledWorkspace.Functions.Where(function => string.Join("/", function.GroupPath) == path
+                    var members = enabledWorkspace.FunctionChoices.Where(function => string.Join("/", function.GroupPath) == path
                         || string.Join("/", function.GroupPath).StartsWith(path + "/", StringComparison.Ordinal)).ToArray();
                     Check(node.Text.EndsWith("(" + members.Length + ")") && enhancedGroups.Contains(path) == members.All(function => function.RequiresKeyEnhancement),
                         "Catalog group counts and native/enhanced membership must include every descendant: " + path);
@@ -75,7 +75,7 @@ class UnifiedActionViewTests
                 form.Controls.Add(view); form.Show(); Application.DoEvents();
                 var timer = Stopwatch.StartNew(); view.Render(workspace); Application.DoEvents(); timer.Stop();
                 var grid = Field<DataGridView>(view, "actions"); var tree = Field<TreeView>(view, "groups"); var search = Field<TextBox>(view, "search");
-                int basicCount = workspace.Functions.Count(function => function.GroupPath[0] == "native");
+                int basicCount = workspace.FunctionChoices.Count(function => function.GroupPath[0] == "native");
                 Console.WriteLine("Table: {0}x{1}, displayed={2}, first row={3}, font={4}", grid.Width, grid.Height, grid.DisplayedRowCount(false), grid.Rows[0].Height, grid.Font.SizeInPoints);
                 Capture(form, Path.Combine(output, "actions-native.png"));
                 Check(grid.VirtualMode && grid.ColumnCount == 5, "Actions must use one virtual aligned table");
@@ -118,6 +118,43 @@ class UnifiedActionViewTests
                 config.Enabled = true; view.Render(workspace); Application.DoEvents();
                 Capture(form, Path.Combine(output, "actions-enabled.png"));
                 Check(grid.RowCount == basicCount, "Enabling key enhancement must initially retain the basic group");
+                const string chirenMove = "move:Weapon.Weapon_Hun_ChiRen.GA_Hun_ChiRen_BD";
+                search.Text = "焰波"; Application.DoEvents();
+                string[] flameLabels = Field<IList>(view, "rows").Cast<object>()
+                    .Select(row => Field<BindingFunction>(row, "Function")).Where(function => function.Id == chirenMove)
+                    .Select(function => function.Label).ToArray();
+                Check(flameLabels.SequenceEqual(new[] { "炽刃 · 焰波" }), "Flame Wave is not a separate action-row name.");
+                int flameRow = Enumerable.Range(0, Field<IList>(view, "rows").Count).Single(index =>
+                {
+                    var function = Field<BindingFunction>(Field<IList>(view, "rows")[index], "Function");
+                    return function.Id == chirenMove && function.Label == "炽刃 · 焰波";
+                });
+                BindingFunction requestedFunction = null, requestedFunctionAdd = null;
+                Action<BindingFunction> captureFunction = function => requestedFunction = function;
+                Action<BindingFunction> captureFunctionAdd = function => requestedFunctionAdd = function;
+                view.FunctionRequested += captureFunction; view.FunctionAddRequested += captureFunctionAdd;
+                CellClick(view, 0, flameRow, 12, 12);
+                Check(requestedFunction != null && requestedFunction.Id == chirenMove && requestedFunction.Label == "炽刃 · 焰波",
+                    "Clicking Flame Wave did not retain its exact shared name and underlying move.");
+                CellClick(view, 4, flameRow, 12, 12);
+                Check(requestedFunctionAdd != null && requestedFunctionAdd.Id == chirenMove && requestedFunctionAdd.Label == "炽刃 · 焰波",
+                    "Adding Flame Wave did not retain its exact shared name and underlying move.");
+                view.FunctionRequested -= captureFunction; view.FunctionAddRequested -= captureFunctionAdd;
+                search.Text = "旋风斩击"; Application.DoEvents();
+                string[] whirlwindLabels = Field<IList>(view, "rows").Cast<object>()
+                    .Select(row => Field<BindingFunction>(row, "Function")).Where(function => function.Id == chirenMove)
+                    .Select(function => function.Label).ToArray();
+                Check(whirlwindLabels.SequenceEqual(new[] { "炽刃 · 旋风斩击" }), "Whirlwind Slash is not a separate action-row name.");
+                search.Text = chirenMove; Application.DoEvents();
+                Check(Field<IList>(view, "rows").Cast<object>().Count(row => Field<BindingFunction>(row, "Function").Id == chirenMove) == 1,
+                    "Technical move search duplicated all shared display rows.");
+                search.Text = "独眼弓 凝视"; Application.DoEvents();
+                Check(Field<IList>(view, "rows").Cast<object>().Any(row =>
+                {
+                    var function = Field<BindingFunction>(row, "Function");
+                    return function.Label == "独眼弓 · 凝视";
+                }), "A generated weapon-qualified shared name is not directly searchable.");
+                search.Text = ""; Application.DoEvents();
                 const string bronzeId = "move:Ability.Action.Hun.Heavy.BronzeSword.BHold.Release2";
                 search.Text = bronzeId; Application.DoEvents();
                 int bronzeRow = Enumerable.Range(0, grid.RowCount).Single(index =>
@@ -181,7 +218,7 @@ class UnifiedActionViewTests
                 Check(grid.RowCount == 16, "Movement group omits sprint, walk, crouch, jump or movement axes");
                 Capture(form, Path.Combine(output, "actions-movement.png"));
                 int controlCount = CountControls(view); TreeNode originalRoot = tree.Nodes[0];
-                tree.SelectedNode = originalRoot; Application.DoEvents(); Check(grid.RowCount == workspace.Functions.Length, "All-functions tree node omitted functions");
+                tree.SelectedNode = originalRoot; Application.DoEvents(); Check(grid.RowCount == workspace.FunctionChoices.Length, "All-functions tree node omitted functions");
                 Capture(form, Path.Combine(output, "actions-all.png"));
                 var weaponA = workspace.Functions.Single(function => function.Id == "ability:Ability.Action.Hun.Heavy.SnakeDual.DB");
                 var weaponB = workspace.Functions.Single(function => function.Id == "move:Ability.Action.Hun.Heavy.BronzeSword.BHold.Release2");
@@ -209,7 +246,7 @@ class UnifiedActionViewTests
                 var extra = workspace.Functions.First(function => function.RequiresKeyEnhancement && function.GroupPath.Length > 0);
                 string groupPath = string.Join("/", extra.GroupPath); var extraNode = Find(tree.Nodes, groupPath); Check(extraNode != null, "Catalog group missing from tree");
                 tree.SelectedNode = extraNode; Application.DoEvents();
-                Check(grid.RowCount > 0 && grid.RowCount < workspace.Functions.Length, "Group selection flattened the full catalog");
+                Check(grid.RowCount > 0 && grid.RowCount < workspace.FunctionChoices.Length, "Group selection flattened the full catalog");
                 Check(CountControls(view) == controlCount && object.ReferenceEquals(originalRoot, tree.Nodes[0]), "Changing group rebuilt the tree or controls");
                 int beforeScroll = CountControls(view); if (grid.RowCount > 8) grid.FirstDisplayedScrollingRowIndex = 5; Application.DoEvents();
                 Check(CountControls(view) == beforeScroll && object.ReferenceEquals(originalRoot, tree.Nodes[0]), "Scrolling rebuilt the tree or controls");

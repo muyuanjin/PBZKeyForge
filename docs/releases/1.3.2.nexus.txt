@@ -1,0 +1,5 @@
+A smarter move picker and more useful combat reference. Version 1.3.2 lets you search with separate weapon, move, upgrade or technical terms in any order, exposes every official shared name as its own row, and keeps the exact name you chose while still creating one binding. The action table now shows physical or elemental coefficients, poise, conditional ranges and timeline attack nodes for bindable moves.
+
+This release also reviews saved presets before loading them, preserves explicit stance and combined-guard eligibility, keeps paired Deflect state independent, and retains edits made to an inactive enhancement scheme. Runtime session recovery and the scheme menu are more stable.
+
+Extract and run PBZKeyForge.exe. Close the game before updating the enhancement runtime, apply in the editor, then restart. Keyboard/mouse, Xbox and PlayStation bindings, presets and sharing retain the new behavior. Enhanced combat targets Steam CL-302256 with the bundled UE4SS runtime; ordinary editing also supports CL-301524. Coefficients and timeline nodes describe move resources, not final health damage or actual hit counts.

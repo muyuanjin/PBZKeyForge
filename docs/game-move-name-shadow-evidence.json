@@ -1153,9 +1153,29 @@
       "effectKeys": []
     },
     {
+      "id": "move:ShadowPhase.GA_Hun_Lute_A.Stage2",
+      "family": "Lute",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Lute.BlueBullet"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
       "id": "move:Shadow.Lute.GA_Hun_Lute_A",
       "family": "Lute",
       "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_A",
+      "referencedUpgradeTags": [
+        "CharacterState.WeaponUpgrade.Lute.BlueBullet"
+      ],
+      "officialNameKeys": [],
+      "effectKeys": []
+    },
+    {
+      "id": "move:ShadowPhase.GA_Hun_Lute_AA.Stage2",
+      "family": "Lute",
+      "class": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/ShachiAbility/Lute/GA_Hun_Lute_AA",
       "referencedUpgradeTags": [
         "CharacterState.WeaponUpgrade.Lute.BlueBullet"
       ],
@@ -2236,9 +2256,7 @@
           "key": "PhantomEdges_FunctionName_001_15",
           "nativeName": "疾行斧",
           "catalogIds": [
-            "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting",
-            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease1",
-            "move:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting.SprintRelease2"
+            "ability:Ability.Action.Hun.ShachiAbility.BrutalAxe.Sprinting"
           ],
           "status": "mapped-native-entrance-or-upgrade"
         },
@@ -2429,9 +2447,7 @@
           "key": "PhantomEdges_FunctionName_015_5",
           "nativeName": "铁花飞溅",
           "catalogIds": [
-            "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA",
-            "move:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA.Final",
-            "move:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA.Training"
+            "ability:Ability.Action.Hun.ShachiAbility.HuoLiuXing.AAAA"
           ],
           "status": "mapped-native-entrance-or-upgrade"
         },
@@ -2541,7 +2557,6 @@
           "key": "PhantomEdges_FunctionName_002_25",
           "nativeName": "余势未消",
           "catalogIds": [
-            "move:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack.Training",
             "ability:Ability.Action.Hun.ShachiAbility.JinGua.ExtraAttack"
           ],
           "status": "mapped-native-entrance-or-upgrade"
@@ -2674,8 +2689,7 @@
           "key": "PhantomEdges_FunctionName_024_25",
           "nativeName": "破阵曲",
           "catalogIds": [
-            "ability:Ability.Action.Hun.ShachiAbility.PiPa.Skill",
-            "move:Ability.Action.Hun.ShachiAbility.PiPa.Skill.End"
+            "ability:Ability.Action.Hun.ShachiAbility.PiPa.Skill"
           ],
           "status": "mapped-native-entrance-or-upgrade"
         },
@@ -2733,8 +2747,7 @@
           "key": "PhantomEdges_FunctionName_010_25",
           "nativeName": "疾风步",
           "catalogIds": [
-            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB",
-            "move:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB.End"
+            "ability:Ability.Action.Hun.ShachiAbility.MiaoShouFeiDao.DB"
           ],
           "status": "mapped-native-entrance-or-upgrade"
         },
@@ -2855,10 +2868,7 @@
           "key": "PhantomEdges_FunctionName_014_5",
           "nativeName": "如影附形",
           "catalogIds": [
-            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag",
-            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training1",
-            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training2",
-            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag.Training3"
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.Drag"
           ],
           "status": "mapped-native-entrance-or-upgrade"
         },
@@ -2880,8 +2890,7 @@
           "key": "PhantomEdges_FunctionName_014_25",
           "nativeName": "追命龙卷",
           "catalogIds": [
-            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC",
-            "move:Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC.Training"
+            "ability:Ability.Action.Hun.ShachiAbility.ShachiHook.CCCC"
           ],
           "status": "mapped-native-entrance-or-upgrade"
         },
@@ -2913,8 +2922,7 @@
           "key": "PhantomEdges_FunctionName_005_15",
           "nativeName": "全力一击",
           "catalogIds": [
-            "ability:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack",
-            "move:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack.Training"
+            "ability:Ability.Action.Hun.ShachiAbility.TanLang.ExtraAttack"
           ],
           "status": "mapped-native-entrance-or-upgrade"
         },
@@ -2964,8 +2972,7 @@
           "key": "PhantomEdges_FunctionName_019_25",
           "nativeName": "雷霆再临",
           "catalogIds": [
-            "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04",
-            "move:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04.Training"
+            "ability:Ability.Action.Hun.ShachiAbility.ThunderSpear.Common_04"
           ],
           "status": "mapped-native-entrance-or-upgrade"
         },
@@ -3075,9 +3082,6 @@
           "key": "PhantomEdges_FunctionName_006_15",
           "nativeName": "二重咆哮",
           "catalogIds": [
-            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch",
-            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch.Great",
-            "move:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge.Launch.Perfect",
             "ability:Ability.Action.Hun.ShachiAbility.TigerCannon.QuickCharge"
           ],
           "status": "mapped-native-entrance-or-upgrade"
@@ -3212,7 +3216,6 @@
           "key": "PhantomEdges_FunctionName_020_15",
           "nativeName": "血滴穿空",
           "catalogIds": [
-            "move:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack.Training",
             "ability:Ability.Action.Hun.ShachiAbility.XueDiZi.SpAttack"
           ],
           "status": "mapped-native-entrance-or-upgrade"

@@ -70,6 +70,9 @@ namespace PBZKeyForge
             unifiedActions.EditAction += ShowActionRelations;
             unifiedActions.EditRequested += delegate(BindingEntry entry) { EditActionBinding(entry.FunctionId, entry); };
             unifiedActions.AddRequested += delegate(string action) { EditActionBinding(action, null); };
+            unifiedActions.FunctionRequested += delegate(BindingFunction function) { ShowActionRelations(function.Id, function.Label); };
+            unifiedActions.BindingRequested += delegate(BindingEntry entry, BindingFunction function) { EditActionBinding(function.Id, function.Label, entry); };
+            unifiedActions.FunctionAddRequested += delegate(BindingFunction function) { EditActionBinding(function.Id, function.Label, null); };
             keyBindings.ActionViewRequested += delegate { ShowActionView(true); };
             keyBindings.RestoreSelectedKey += delegate(string key)
             {
@@ -191,16 +194,21 @@ namespace PBZKeyForge
 
         void ShowActionRelations(string action)
         {
+            ShowActionRelations(action, null);
+        }
+
+        void ShowActionRelations(string action, string label)
+        {
             if (Session == null) return;
             if (currentBindings.LiveEditing)
             {
-                PresentBindingWindow(new UnifiedActionBindingsDialog(currentBindings, action, EnableKeyEnhancementEditing, delegate { RenderSession(); }), this, null);
+                PresentBindingWindow(new UnifiedActionBindingsDialog(currentBindings, action, label, EnableKeyEnhancementEditing, delegate { RenderSession(); }), this, null);
                 return;
             }
             modalActive = true;
             try
             {
-                using (var dialog = new UnifiedActionBindingsDialog(currentBindings, action, EnableKeyEnhancementEditing, delegate { RenderSession(); })) dialog.ShowDialog(this);
+                using (var dialog = new UnifiedActionBindingsDialog(currentBindings, action, label, EnableKeyEnhancementEditing, delegate { RenderSession(); })) dialog.ShowDialog(this);
             }
             finally { EndModal(); RenderSession(); }
         }
@@ -215,10 +223,15 @@ namespace PBZKeyForge
 
         void EditActionBinding(string action, BindingEntry entry)
         {
+            EditActionBinding(action, null, entry);
+        }
+
+        void EditActionBinding(string action, string label, BindingEntry entry)
+        {
             if (Session == null || currentBindings == null || Session.IsResetPending) return;
             if (currentBindings.LiveEditing)
             {
-                var editor = new UnifiedBindingEditDialog(currentBindings, action, entry, null, EnableKeyEnhancementEditing);
+                var editor = new UnifiedBindingEditDialog(currentBindings, action, label, entry, null, EnableKeyEnhancementEditing);
                 PresentBindingWindow(editor, this, delegate {
                     if (editor.DialogResult == DialogResult.OK)
                         TryAction(delegate { if (editor.RemoveRequested && editor.CurrentBinding != null) currentBindings.Remove(editor.CurrentBinding); });
@@ -228,7 +241,7 @@ namespace PBZKeyForge
             modalActive = true;
             try
             {
-                using (var dialog = new UnifiedBindingEditDialog(currentBindings, action, entry, null, EnableKeyEnhancementEditing))
+                using (var dialog = new UnifiedBindingEditDialog(currentBindings, action, label, entry, null, EnableKeyEnhancementEditing))
                     if (dialog.ShowDialog(this) == DialogResult.OK)
                         TryAction(delegate {
                             if (dialog.RemoveRequested) currentBindings.Remove(entry);

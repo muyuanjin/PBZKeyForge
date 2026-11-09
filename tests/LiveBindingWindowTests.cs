@@ -17,7 +17,19 @@ class LiveBindingWindowTests
     static bool availabilityOnly;
     static T Field<T>(object owner, string name) { return (T)owner.GetType().GetField(name, Hidden).GetValue(owner); }
     static void Set(object owner, string name, object value) { owner.GetType().GetField(name, Hidden).SetValue(owner, value); }
-    static object Call(object owner, string name, params object[] args) { return owner.GetType().GetMethod(name, Hidden).Invoke(owner, args); }
+    static object Call(object owner, string name, params object[] args)
+    {
+        args = args ?? new object[0];
+        var method = owner.GetType().GetMethods(Hidden).Single(candidate =>
+        {
+            var parameters = candidate.GetParameters();
+            return candidate.Name == name && parameters.Length == args.Length
+                && parameters.Select((parameter, index) => args[index] == null
+                    ? !parameter.ParameterType.IsValueType
+                    : parameter.ParameterType.IsInstanceOfType(args[index])).All(match => match);
+        });
+        return method.Invoke(owner, args);
+    }
     static void Check(bool value, string message) { checks++; if (!value) throw new Exception(message); }
     static IEnumerable<Control> All(Control owner)
     { foreach (Control child in owner.Controls) { yield return child; foreach (Control item in All(child)) yield return item; } }

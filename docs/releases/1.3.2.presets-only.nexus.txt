@@ -1,0 +1,5 @@
+Ready-made ordinary keyboard/mouse and controller layouts for players who want shared-key bindings without running the editor. Includes eight factory-based saves and bilingual PRESETS.md: shared attack/guard, dual-button combat, auto sprint, Souls-style controller controls, Space alternatives and factory defaults.
+
+The layouts are unchanged from 1.3.1. Version 1.3.2's move-search, name selection, attack insight and editing fixes are available in the main editor download; this archive contains no executable, loader or enhancement runtime.
+
+Close the game, back up EnhancedInputUserSettings.sav, choose one layout using PRESETS.md and replace the settings file. Select Custom 1 in game. Copying a save replaces existing layouts; use the main editor to combine layouts, preserve other schemes or use enhancement features. Supports the documented Steam CL-301524 and CL-302256 ordinary binding formats.

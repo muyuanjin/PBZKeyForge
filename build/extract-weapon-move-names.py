@@ -12,6 +12,14 @@ SPEC = importlib.util.spec_from_file_location("weapon_names_entries", ROOT / "bu
 entries = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(entries)
 
+REVIEWED_RELATED_NAMES = {
+    "move:Weapon.Weapon_Hun_ChiRen.GA_Hun_ChiRen_BD": [{
+        "key": "Weapon_FunctionName_014_EX",
+        "reason": "DT_WeaponData row 邪火 describes the stance heavy attack as a flame wave; "
+                  "GA_Hun_ChiRen_BD has the matching fire weapon particles and burning effect.",
+    }],
+}
+
 
 def soft_path(reader):
     package, asset, subobject = reader.name(), reader.name(), reader.string()
@@ -154,18 +162,15 @@ def extract(archive, symbols):
                        (set(record["upgradeTags"]) & (route_tags | references) or path in record["grantedAbilities"])]
             primary = [record for record in matches if set(record["upgradeTags"]) & route_tags or path in record["grantedAbilities"]]
             is_art = move.get("tag", "").startswith("Ability.Action.Hun.CombatArt.")
-            name_key = skill_key if is_art and skill_present and labels(skill_key) else primary[0]["name"]["key"] if len(primary) == 1 else None
-            if not name_key and not matches:
+            primary_keys = sorted(record["name"]["key"] for record in primary)
+            art_key = skill_key if is_art and skill_present and labels(skill_key) else None
+            candidate_name_keys = sorted(set(primary_keys + ([art_key] if art_key else [])))
+            provisional_name_key = art_key or (primary_keys[0] if len(primary_keys) == 1 else None)
+            if not provisional_name_key and not matches:
                 continue
             value = {"aliases": {lang: [] for lang in languages}, "effects": [],
                      "evidence": {"nameKeys": [], "abilityClasses": [target["abilityClass"]],
                                   "source": "DT_WeaponData native equipment/function record; exact granted class and input-route upgrade tags"}}
-            if name_key:
-                display = labels(name_key)
-                value["labels"] = {lang: target.get("weaponLabels", {}).get(lang, "") + " · " + text for lang, text in display.items()}
-                value["evidence"]["nameKeys"].append(name_key)
-                for lang, text in display.items():
-                    value["aliases"][lang].append(text)
             for record in matches:
                 key = record["name"]["key"]
                 value["effects"].append({"key": key, "labels": record["labels"], "kind": "upgrade",
@@ -177,8 +182,55 @@ def extract(archive, symbols):
             value["evidence"]["nameKeys"] = sorted(set(value["evidence"]["nameKeys"]))
             result[move["id"]] = value
             proof.append({"id": move["id"], "abilityClass": target["abilityClass"], "nativeRouteRequiredTags": sorted(route_tags),
-                          "primaryKey": name_key, "effectKeys": [x["name"]["key"] for x in matches],
+                          "sourceId": target.get("sourceId"), "primaryKeys": primary_keys, "candidateNameKeys": candidate_name_keys,
+                          "provisionalNameKey": provisional_name_key, "primaryKey": None, "rejectedNameKeys": [],
+                          "reviewedNameKeys": [], "effectKeys": [x["name"]["key"] for x in matches],
                           "equipmentNameSource": source})
+    primary_sources = collections.defaultdict(set)
+    candidate_sources = collections.defaultdict(set)
+    for item in proof:
+        source_id = item["sourceId"] or "id:" + item["id"]
+        for key in item["primaryKeys"]:
+            primary_sources[key].add(source_id)
+        for key in item["candidateNameKeys"]:
+            candidate_sources[key].add(source_id)
+    cross_source_primary_keys = {key for key, sources in primary_sources.items() if len(sources) > 1}
+    cross_source_name_keys = {key for key, sources in candidate_sources.items() if len(sources) > 1}
+    for item in proof:
+        preferred = item["provisionalNameKey"]
+        if preferred in cross_source_primary_keys:
+            alternatives = [key for key in item["primaryKeys"] if key not in cross_source_primary_keys]
+            preferred = alternatives[0] if len(alternatives) == 1 else None
+        item["rejectedNameKeys"] = sorted(set(item["candidateNameKeys"]) & cross_source_primary_keys)
+        if preferred:
+            display = labels(preferred)
+            target = by_id[item["id"]]
+            result[item["id"]]["labels"] = {
+                lang: target.get("weaponLabels", {}).get(lang, "") + " · " + text for lang, text in display.items()
+            }
+            result[item["id"]]["evidence"]["nameKeys"] = sorted(set(
+                result[item["id"]]["evidence"]["nameKeys"] + [preferred]))
+            item["primaryKey"] = preferred
+    reviewed = []
+    for move_id, relations in REVIEWED_RELATED_NAMES.items():
+        value = result.get(move_id)
+        if value is None:
+            raise ValueError("Reviewed relation points to an unnamed catalog move: " + move_id)
+        association = next(item for item in proof if item["id"] == move_id)
+        for relation in relations:
+            record = unique[relation["key"]]
+            value["aliases"].setdefault("zh-Hans", [])
+            for language, text in record["labels"].items():
+                value["aliases"].setdefault(language, [])
+                if text not in value["aliases"][language]:
+                    value["aliases"][language].append(text)
+            value["effects"].append({"key": record["name"]["key"], "labels": record["labels"], "kind": "related",
+                                     "upgradeTags": record["upgradeTags"], "descriptionLabels": record["descriptionLabels"]})
+            value["evidence"].setdefault("relatedNameKeys", [])
+            value["evidence"]["relatedNameKeys"] = sorted(set(value["evidence"]["relatedNameKeys"] + [record["name"]["key"]]))
+            association["reviewedNameKeys"].append(record["name"]["key"])
+            reviewed.append({"id": move_id, "key": record["name"]["key"], "offset": record["offset"],
+                             "reason": relation["reason"]})
     # Existing action identities get a name only when every concrete named target agrees.
     groups = collections.defaultdict(list)
     for move in catalog:
@@ -190,9 +242,26 @@ def extract(archive, symbols):
             result[source] = dict(values[0])
             result[source]["evidence"] = dict(values[0]["evidence"])
             result[source]["evidence"]["abilityClasses"] = sorted({p for x in values for p in x["evidence"]["abilityClasses"]})
+    relation_keys = {effect["key"] for value in result.values() for effect in value.get("effects", [])}
+    formal_keys = {item["primaryKey"] for item in proof if item["primaryKey"]}
+    relationless = []
+    unassociated = []
+    for key, record in sorted(unique.items()):
+        if record["upgradeTags"] or record["grantedAbilities"]:
+            continue
+        compact = {"key": key, "labels": record["labels"], "effect": record["effect"],
+                   "upgradeTags": record["upgradeTags"], "grantedAbilities": record["grantedAbilities"]}
+        relationless.append(compact)
+        if key not in relation_keys and key not in formal_keys:
+            unassociated.append(compact)
     return {"schemaVersion": 1, "build": audit["build"], "entries": result}, {
         "build": audit["build"], "runtimeVerified": False, "records": list(unique.values()), "associations": proof,
-        "classification": "An exact native input-route unlock or direct grant names the move; other referenced upgrades are effects."}
+        "reviewedAssociations": reviewed, "relationlessRecords": relationless, "unassociatedRecords": unassociated,
+        "crossSourcePrimaryKeys": sorted(cross_source_primary_keys),
+        "crossSourceNameKeys": [{"key": key, "sourceIds": sorted(candidate_sources[key])}
+                                for key in sorted(cross_source_name_keys)],
+        "classification": "An exact native input-route unlock or direct grant names the move when that name stays within "
+                          "one catalog source; cross-source and other referenced upgrade names remain searchable effects."}
 
 
 def main():

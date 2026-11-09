@@ -16,6 +16,12 @@ class BindingIdentityUiTests
     static string output;
     static T Field<T>(object owner, string name) { return (T)owner.GetType().GetField(name, Hidden).GetValue(owner); }
     static void Check(bool value, string message) { checks++; if (!value) throw new Exception(message); }
+    static void Search(Form form, string value)
+    {
+        Field<TextBox>(form, "search").Text = value;
+        form.GetType().GetMethod("FlushSearch", Hidden).Invoke(form, null);
+        Application.DoEvents();
+    }
     static string Assignment(UnifiedActionChoiceDialog dialog, string id)
     {
         var list = Field<ListBox>(dialog, "functions");
@@ -26,7 +32,7 @@ class BindingIdentityUiTests
     static UnifiedActionChoiceDialog Picker(BindingWorkspace workspace, string key)
     {
         var dialog = new UnifiedActionChoiceDialog(workspace, key, null);
-        dialog.Show(); Field<TextBox>(dialog, "search").Text = "收"; Application.DoEvents(); return dialog;
+        dialog.Show(); Search(dialog, "收"); return dialog;
     }
     static void Capture(Form form, string name)
     {
@@ -112,11 +118,12 @@ class BindingIdentityUiTests
             picker.Show();
             foreach (string query in new[] { "偃月刀", "妙手飞刀", "探花步", "凝气于刃" })
             {
-                Field<TextBox>(picker, "search").Text = query; Application.DoEvents();
+                Search(picker, query);
                 var list = Field<ListBox>(picker, "functions");
                 Check(list.Items.Count > 1, "Move-name search lost the distinct entries for " + query);
                 list.SelectedIndex = 0; Application.DoEvents();
-                Check(Field<TextBox>(picker, "selectionDetails").Text.Contains(((BindingFunction)list.SelectedItem).TechnicalName),
+                var selected = (BindingFunction)list.SelectedItem;
+                Check(Field<TextBox>(picker, "selectionDetails").Text.Contains(selected.IdentityCode ?? selected.TechnicalName),
                     "Selection details lost the selected move identity for " + query);
                 Capture(picker, "catalog-" + query + ".png");
             }

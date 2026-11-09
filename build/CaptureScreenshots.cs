@@ -195,9 +195,8 @@ internal static class CaptureScreenshots
         if (scene == "enhancement-actions")
         {
             var actions = Field<object>(form, "unifiedActions");
-            var groups = Field<TreeView>(actions, "groups");
-            groups.SelectedNode = groups.Nodes.Cast<TreeNode>().Single(node => (string)node.Tag == "shadow");
-            groups.SelectedNode.Expand();
+            Field<TextBox>(actions, "search").Text = I18n.Current == "zh-Hans" ? "天玄青铜剑" : "TIANXUAN BRONZE SWORD";
+            Application.DoEvents();
             Application.DoEvents();
         }
         if (scene == "enhancement-moves")

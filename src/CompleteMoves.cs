@@ -41,6 +41,10 @@ namespace PBZKeyForge
             public Move[] moves;
         }
         static readonly Dictionary<string, Move> Moves = Load();
+        static readonly Dictionary<string, Move[]> SourceMoves = Moves.Values
+            .Where(move => !string.IsNullOrEmpty(move.sourceId))
+            .GroupBy(move => move.sourceId, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.ToArray(), StringComparer.Ordinal);
 
         public static KeyEnhancementCatalogEntry[] Targets
         {
@@ -68,10 +72,28 @@ namespace PBZKeyForge
         { Move move; return id != null && Moves.TryGetValue(id, out move) && !string.IsNullOrEmpty(move.sourceId) ? move.sourceId : id; }
         internal static string LabelSuffix(string id)
         { return string.Join(" · ", Moves[id].labelParts.Select(part => I18n.Str(part))); }
-        internal static string LabelPrefix(string id, string fallback)
+        static string WeaponLabel(Move move)
         {
             string label;
-            return Moves[id].weaponLabels != null && Moves[id].weaponLabels.TryGetValue(I18n.Current, out label) && !string.IsNullOrEmpty(label) ? label : fallback;
+            return move.weaponLabels != null && move.weaponLabels.TryGetValue(I18n.Current, out label)
+                && !string.IsNullOrEmpty(label) ? label : null;
+        }
+        internal static string LabelPrefix(string id, string fallback)
+        {
+            Move move;
+            if (id != null && Moves.TryGetValue(id, out move))
+            {
+                string label = WeaponLabel(move);
+                if (!string.IsNullOrEmpty(label)) return label;
+            }
+            Move[] sources;
+            if (id != null && SourceMoves.TryGetValue(id, out sources))
+            {
+                string[] labels = sources.Select(WeaponLabel).Where(label => !string.IsNullOrEmpty(label))
+                    .Distinct(StringComparer.Ordinal).ToArray();
+                if (labels.Length == 1) return labels[0];
+            }
+            return fallback;
         }
         internal static string SearchAliases(string id)
         { Move move; return id != null && Moves.TryGetValue(id, out move) ? string.Join(" ", move.searchAliases) : ""; }

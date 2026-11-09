@@ -17,6 +17,12 @@ class UnifiedBindingDialogTests
     static IEnumerable<Control> All(Control parent)
     { foreach (Control child in parent.Controls) { yield return child; foreach (Control descendant in All(child)) yield return descendant; } }
     static void Click(Form form, string name) { All(form).OfType<Button>().Single(button => button.Name == name).PerformClick(); Application.DoEvents(); }
+    static void Search(Form form, string value)
+    {
+        Field<TextBox>(form, "search").Text = value;
+        form.GetType().GetMethod("FlushSearch", Hidden).Invoke(form, null);
+        Application.DoEvents();
+    }
     [STAThread]
     static int Main(string[] args)
     {
@@ -40,6 +46,7 @@ class UnifiedBindingDialogTests
             MoreSettings(workspace);
             SequenceChords(workspace);
             SearchLanguage(workspace);
+            SharedMoveNames();
             NativeAbilityTrigger(workspace);
             AdvancedTargets(workspace);
             RecursiveValues();
@@ -58,9 +65,9 @@ class UnifiedBindingDialogTests
         {
             dialog.Show(); Application.DoEvents();
             var functions = Field<ListBox>(dialog, "functions");
-            Check(functions.Items.Count == workspace.Functions.Count(function => function.GroupPath[0] == "native"), "Inactive action picker omits common controls");
+            Check(functions.Items.Count == workspace.FunctionChoices.Count(function => function.GroupPath[0] == "native"), "Inactive action picker omits common controls");
             Field<ComboBox>(dialog, "groups").SelectedIndex = 0; Application.DoEvents();
-            Check(functions.Items.Count == workspace.Functions.Length, "All-functions category hides additional functions");
+            Check(functions.Items.Count == workspace.FunctionChoices.Length, "All-functions category hides additional functions");
             functions.ClearSelected(); functions.SelectedIndex = Enumerable.Range(0, functions.Items.Count).First(index => ((BindingFunction)functions.Items[index]).Id == "ability:Ability.Action.Hun.SpecialDash");
             Check(Field<Label>(dialog, "status").Text.Contains(I18n.Str("unified.requiresbrief")), "Inactive picker lacks the key enhancement hint");
             Capture(dialog, "inactive-action-picker.png");
@@ -95,7 +102,7 @@ class UnifiedBindingDialogTests
         {
             dialog.Show(); Application.DoEvents();
             var functions = Field<ListBox>(dialog, "functions");
-            Check(functions.Items.Count == workspace.Functions.Length && Field<ComboBox>(dialog, "groups").SelectedIndex == 0, "Enabled action picker must open the complete catalog");
+            Check(functions.Items.Count == workspace.FunctionChoices.Length && Field<ComboBox>(dialog, "groups").SelectedIndex == 0, "Enabled action picker must open the complete catalog");
             var categories = Field<ComboBox>(dialog, "groups");
             categories.SelectedIndex = Enumerable.Range(0, categories.Items.Count).Single(index => Field<string>(categories.Items[index], "Path") == "locomotion/movement"); Application.DoEvents();
             Check(((BindingFunction)functions.Items[0]).Id == "movement:forward" && functions.Items.Count == 7, "Movement category omits directions or axes");
@@ -110,12 +117,12 @@ class UnifiedBindingDialogTests
                 }
             }
             Capture(dialog, "movement-action-picker.png");
-            Field<TextBox>(dialog, "search").Text = "收刀"; Application.DoEvents();
+            Search(dialog, "收刀");
             Check(functions.Items.Count == 3 && ((BindingFunction)functions.Items[0]).Id == "action:/SGameCombatSystem/Weapon/Input/IA_ChangeArmed", "Sheathing cannot be found from the ordinary key entry");
             Check(((BindingFunction)functions.SelectedItem).Id == "action:/SGameCombatSystem/Weapon/Input/IA_ChangeArmed", "Sheathing search selects a less relevant ordinary mapping");
-            Field<TextBox>(dialog, "search").Text = "更换武器"; Application.DoEvents();
+            Search(dialog, "更换武器");
             functions.SelectedItem = functions.Items.Cast<BindingFunction>().Single(item => item.Id == "IA_SwitchWeapon");
-            Field<TextBox>(dialog, "search").Text = "收刀"; Application.DoEvents();
+            Search(dialog, "收刀");
             Check(((BindingFunction)functions.SelectedItem).Id == "action:/SGameCombatSystem/Weapon/Input/IA_ChangeArmed", "Changing the search retains an old less relevant selection");
             Capture(dialog, "sheathe-action-picker.png");
         }
@@ -256,6 +263,74 @@ class UnifiedBindingDialogTests
             Check(Field<Label>(view, "searchTitle").Text == "搜索功能", "Search heading did not follow current language");
         }
     }
+    static void SharedMoveNames()
+    {
+        const string move = "move:Weapon.Weapon_Hun_ChiRen.GA_Hun_ChiRen_BD";
+        var config = new KeyEnhancementConfiguration { Enabled = true };
+        var workspace = new BindingWorkspace(EditorSession.CreateOffline(), config, config.Clone(), false, -1);
+        using (var dialog = new UnifiedActionChoiceDialog(workspace, "G", null))
+        {
+            dialog.Show(); Application.DoEvents();
+            var list = Field<ListBox>(dialog, "functions");
+            Search(dialog, "焰波");
+            var flame = list.Items.Cast<BindingFunction>().Where(item => item.Id == move).ToArray();
+            Check(flame.Length == 1 && flame[0].Label == "炽刃 · 焰波", "Flame Wave is not its own picker entry.");
+            Search(dialog, "独眼弓 凝视");
+            Check(list.Items.Cast<BindingFunction>().Any(item => item.Label == "独眼弓 · 凝视"),
+                "A generated weapon-qualified name is not directly searchable.");
+            Search(dialog, "以逸待劳·之二");
+            var placeholder = list.Items.Cast<BindingFunction>()
+                .Where(item => item.Label == "别离残钩 · 以逸待劳·之二").ToArray();
+            Check(placeholder.Length == 2 && placeholder.Select(item => item.Id).Distinct().Count() == 2,
+                "The expanded placeholder name did not retain both distinct technical actions.");
+            Search(dialog, "旋风斩击");
+            var whirlwind = list.Items.Cast<BindingFunction>().Where(item => item.Id == move).ToArray();
+            Check(whirlwind.Length == 1 && whirlwind[0].Label == "炽刃 · 旋风斩击", "Whirlwind Slash is not its own picker entry.");
+            Search(dialog, move);
+            Check(list.Items.Cast<BindingFunction>().Count(item => item.Id == move) == 1, "A technical move search duplicated every display name.");
+            Search(dialog, "炽刃");
+            list.ClearSelected();
+            int[] indexes = Enumerable.Range(0, list.Items.Count).Where(index => ((BindingFunction)list.Items[index]).Id == move).ToArray();
+            Check(indexes.Length == 2, "Blazing Edge does not expose both shared original names as separate rows.");
+            foreach (int index in indexes) list.SetSelected(index, true);
+            Application.DoEvents();
+            Click(dialog, "addSelectedAction");
+            Check(config.Rules.Count == 1 && config.Rules[0].Outputs.Count == 1 && dialog.Result == move,
+                "Selecting more than one name for the same move created duplicate outputs.");
+        }
+        using (var details = new UnifiedActionBindingsDialog(workspace, move, "炽刃 · 焰波", null, null))
+        {
+            details.Show(); Application.DoEvents();
+            Check(details.Text == "炽刃 · 焰波", "Action details replaced the clicked shared name with the canonical label.");
+            details.Close();
+        }
+        using (var editor = new UnifiedBindingEditDialog(workspace, move, "炽刃 · 焰波", null, "G", null))
+        {
+            editor.Show(); Application.DoEvents();
+            Check(editor.Text.StartsWith("炽刃 · 焰波", StringComparison.Ordinal),
+                "The binding editor replaced the clicked shared name with the canonical label.");
+            editor.Close();
+        }
+        const string dualHook = "move:Weapon.Weapon_Hun_DualHook.GA_Hun_DualHook_DB";
+        var placeholderConfig = new KeyEnhancementConfiguration { Enabled = true };
+        var placeholderWorkspace = new BindingWorkspace(EditorSession.CreateOffline(), placeholderConfig, placeholderConfig.Clone(), false, -1);
+        using (var dialog = new UnifiedActionChoiceDialog(placeholderWorkspace, "G", null))
+        {
+            dialog.Show(); Application.DoEvents();
+            Search(dialog, "别离残钩");
+            var list = Field<ListBox>(dialog, "functions");
+            list.ClearSelected();
+            int[] indexes = Enumerable.Range(0, list.Items.Count)
+                .Where(index => ((BindingFunction)list.Items[index]).Id == dualHook).ToArray();
+            Check(indexes.Length == 4 && indexes.Select(index => ((BindingFunction)list.Items[index]).Label).Contains("别离残钩 · 以逸待劳·之二"),
+                "Every expanded Dual Hook name is not independently selectable.");
+            foreach (int index in indexes) list.SetSelected(index, true);
+            Application.DoEvents();
+            Click(dialog, "addSelectedAction");
+            Check(placeholderConfig.Rules.Count == 1 && placeholderConfig.Rules[0].Outputs.Count == 1 && dialog.Result == dualHook,
+                "Selecting multiple expanded aliases for one action created duplicate outputs.");
+        }
+    }
     static void NativeAbilityTrigger(BindingWorkspace workspace)
     {
         const string function = "ability:Ability.Action.Hun.SpecialDash";
@@ -331,7 +406,7 @@ class UnifiedBindingDialogTests
         using (var dialog = new UnifiedActionChoiceDialog(workspace, "J", null))
         {
             dialog.Show(); Application.DoEvents(); dialog.Scale(new SizeF(1.5f, 1.5f)); dialog.ClientSize = dialog.MinimumSize;
-            Field<TextBox>(dialog, "search").Text = "瞬身"; Application.DoEvents();
+            Search(dialog, "瞬身");
             Check(Field<ListBox>(dialog, "functions").Items.Count > 0, "Natural-language stance dash search");
             ButtonsVisible(dialog); Capture(dialog, "choice-150.png");
         }
@@ -397,8 +472,8 @@ class UnifiedBindingDialogTests
             var scroll = All(dialog).OfType<ScrollableControl>().First(control => control.AutoScroll);
             Check(!scroll.HorizontalScroll.Visible, "Combat editor scrolls horizontally");
             var more = All(dialog).Single(control => control.Name == "moreBindingSettings");
-            Check(scroll.RectangleToScreen(scroll.ClientRectangle).Contains(more.RectangleToScreen(more.ClientRectangle)),
-                "Basic combat settings require scrolling at the default size");
+            Check(dialog.RectangleToScreen(dialog.ClientRectangle).Contains(more.RectangleToScreen(more.ClientRectangle)),
+                "The additional binding settings control is clipped at the default size");
             ButtonsVisible(dialog);
             Click(dialog, "moreBindingSettings");
             scroll.ScrollControlIntoView(Field<ComboBox>(dialog, "condition")); Application.DoEvents();

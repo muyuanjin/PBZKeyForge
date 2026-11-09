@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.3.2 — 2026-11-09
+
+- Search the expanded move catalog with separate terms in any order. Weapon, move, upgrade and technical names can be combined, and equivalent consecutive searches reuse their results.
+- Show every official name shared by one action as its own picker row. The chosen name is retained while adding or editing the binding, and selecting several names for the same action creates one output.
+- Show attack insight for bindable moves: physical or elemental coefficients, poise coefficients, active conditional ranges and timeline attack nodes. Coefficients also participate in search. The tooltips distinguish these values from final health damage and actual hit counts.
+- Preview saved presets and review their target scheme, binding changes and script or input effects before loading.
+- Preserve explicit stance and combined-guard eligibility while keeping paired Deflect state independent. Stabilize player-session recovery, scheme menus, window restoration and deployment comparison.
+- Keep edits to an inactive enhancement scheme attached to that scheme, and make the scheme notice use the runtime's expected name value.
+
+## 1.3.1 — 2026-11-08
+
+- Reduced repeated ability-binding, input-pipeline, ledge-protection and temporary-equipment work while continuing to check input and scene changes every frame.
+- Expanded weapon and Phantom Edge entries with searchable localized move names, weapon chains, charged releases and follow-up phases.
+- Fixed One-Eyed Bow preparation and held input, repeated activation for default ability bindings, and overlapping independently held Deflect inputs.
+- Added separate restriction bypasses for equipment, training, ground/air, stance, predecessor and cooldown, with real preparation and restoration.
+- Added full-resource release effects, super armor and invincibility, and retained independent Deflect and Stance behavior.
+
 ## 1.2.3 — 2026-11-05
 
 - Add optional “Perfect guard: no rapid-click penalty” in the footer, off by default. Check it and Apply changes to install; uncheck and apply to restore the original rules. It applies across schemes, difficulties and guard keys while retaining the game's base timing and eligibility rules.

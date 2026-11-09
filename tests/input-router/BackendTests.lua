@@ -685,4 +685,19 @@ do
             .. " tag=" .. tostring(seen.tag) .. " input=" .. tostring(seen.input == action) .. " injection=" .. tostring(injection ~= nil))
 end
 
+do
+    local backend = Backend.new({require_foreground=false},function() end)
+    backend.controller = object(1700, "/Test/Controller")
+    local captured
+    function backend:library() return object(1701, "/Test/KismetSystemLibrary") end
+    function backend:invoke(receiver, path, ...)
+        captured = {receiver=receiver, path=path, args={...}}
+    end
+    backend:scheme_notice("Scheme name")
+    check(captured and captured.path == "/Script/Engine.KismetSystemLibrary:PrintString"
+        and type(captured.args[7]) == "table"
+        and captured.args[7]:ToString() == "PBZKeyForgeScheme",
+        "Scheme notices must pass the PrintString key as FName")
+end
+
 print("BackendTests: " .. passed .. " assertions passed")

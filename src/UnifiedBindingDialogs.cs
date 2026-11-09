@@ -151,6 +151,7 @@ namespace PBZKeyForge
         readonly Func<bool> enableRequested;
         readonly Action changed;
         readonly TextBox search = UnifiedBindingUi.Search();
+        readonly Timer searchTimer = new Timer { Interval = 90 };
         readonly ComboBox groups = new EditorComboBox();
         readonly ListBox functions = new ListBox();
         readonly EditorButton accept = UnifiedBindingUi.Button(I18n.Str("views.add"), "addSelectedAction");
@@ -164,7 +165,7 @@ namespace PBZKeyForge
         readonly CheckBox nativeAbilityTrigger = new EditorCheckBox { Name = "nativeAbilityTrigger", Dock = DockStyle.Fill, AutoSize = true, ThreeState = true };
         string selectedGroup = "native";
         int hoveredFunction = -1;
-        bool changingGroups;
+        bool changingGroups, assignedLoaded, populating;
         public string Result { get; private set; }
         public UnifiedActionChoiceDialog(BindingWorkspace workspace, string key, Func<bool> enableRequested)
             : this(workspace, key, enableRequested, null) { }
@@ -180,29 +181,38 @@ namespace PBZKeyForge
             root.RowStyles.Add(new RowStyle(SizeType.Absolute, 32)); root.RowStyles.Add(new RowStyle(SizeType.Absolute, 38)); root.RowStyles.Add(new RowStyle(SizeType.Absolute, 38)); root.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); root.RowStyles.Add(new RowStyle(SizeType.Absolute, 100)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             root.Controls.Add(UnifiedBindingUi.Label(I18n.Str("editing.multiselect")), 0, 0); root.Controls.Add(search, 0, 1);
             groups.Name = "functionGroup"; groups.Dock = DockStyle.Fill; groups.DropDownStyle = ComboBoxStyle.DropDownList;
-            groups.Items.Add(new FunctionGroup { Path = "", Label = I18n.Str("unified.groups.all") + " (" + workspace.Functions.Length + ")" });
-            var paths = new HashSet<string>();
-            foreach (var function in workspace.Functions)
+            var allFunctions = workspace.FunctionChoices;
+            groups.Items.Add(new FunctionGroup { Path = "", Label = I18n.Str("unified.groups.all") + " (" + allFunctions.Length + ")" });
+            var paths = new List<string>(); var pathLabels = new Dictionary<string, string>(StringComparer.Ordinal);
+            var counts = new Dictionary<string, int>(StringComparer.Ordinal);
+            foreach (var function in allFunctions)
+            {
+                string path = "";
                 for (int depth = 1; depth <= function.GroupPath.Length; depth++)
                 {
-                    string path = string.Join("/", function.GroupPath.Take(depth));
-                    if (paths.Add(path))
+                    path = depth == 1 ? function.GroupPath[0] : path + "/" + function.GroupPath[depth - 1];
+                    int count; counts.TryGetValue(path, out count); counts[path] = count + 1;
+                    if (!pathLabels.ContainsKey(path))
                     {
-                        int count = workspace.Functions.Count(item => string.Join("/", item.GroupPath) == path || string.Join("/", item.GroupPath).StartsWith(path + "/", StringComparison.Ordinal));
-                        groups.Items.Add(new FunctionGroup { Path = path, Label = string.Join(" / ", function.GroupLabels.Take(depth)) + " (" + count + ")" });
+                        paths.Add(path);
+                        pathLabels[path] = string.Join(" / ", function.GroupLabels.Take(depth));
                     }
                 }
+            }
+            foreach (string path in paths)
+                groups.Items.Add(new FunctionGroup { Path = path, Label = pathLabels[path] + " (" + counts[path] + ")" });
             groups.SelectedIndex = Enumerable.Range(0, groups.Items.Count).FirstOrDefault(index => ((FunctionGroup)groups.Items[index]).Path == selectedGroup, 0);
             groups.SelectedIndexChanged += delegate
             {
                 if (changingGroups) return;
+                searchTimer.Stop();
                 var selected = groups.SelectedItem as FunctionGroup; selectedGroup = selected == null ? "" : selected.Path; Populate();
             };
             root.Controls.Add(groups, 0, 2);
             functions.Dock = DockStyle.Fill; functions.BackColor = EditorTheme.Surface; functions.ForeColor = EditorTheme.Ink; functions.BorderStyle = BorderStyle.FixedSingle;
             functions.DrawMode = DrawMode.OwnerDrawFixed; functions.ItemHeight = Font.Height * 3 + 20; functions.IntegralHeight = false;
             functions.SelectionMode = SelectionMode.MultiExtended;
-            functions.DrawItem += DrawFunction; functions.SelectedIndexChanged += delegate { UpdateSelection(); }; functions.DoubleClick += delegate { AddSelected(); };
+            functions.DrawItem += DrawFunction; functions.SelectedIndexChanged += delegate { if (!populating) UpdateSelection(); }; functions.DoubleClick += delegate { AddSelected(); };
             functions.MouseMove += delegate(object sender, MouseEventArgs e) {
                 int index = functions.IndexFromPoint(e.Location); if (index == hoveredFunction) return; hoveredFunction = index;
                 var function = index < 0 ? null : (BindingFunction)functions.Items[index];
@@ -222,9 +232,11 @@ namespace PBZKeyForge
             var custom = UnifiedBindingUi.Button(UnifiedBindingUi.Text("addcustom"), "addCustomFunction"); custom.Click += delegate { AddCustom(); };
             var configure = UnifiedBindingUi.Button(I18n.Str("binding.configure"), "configureBinding");
             configure.Click += delegate {
+                FlushSearch();
                 var selected = functions.SelectedItems.Cast<BindingFunction>().ToArray();
                 var function = selected.FirstOrDefault(UnifiedBindingUi.HasNativeTrigger) ?? selected.FirstOrDefault(); if (function == null) return;
-                using (var dialog = new UnifiedBindingEditDialog(workspace, function.Id, template, key, enableRequested, functions.SelectedItems.Count > 1))
+                using (var dialog = new UnifiedBindingEditDialog(workspace, function.Id, function.Label, template, key, enableRequested,
+                    selected.Select(item => item.Id).Distinct().Count() > 1))
                 {
                     dialog.NativeTriggerChoice = NativeTriggerChoice;
                     if (dialog.ShowDialog(this) == DialogResult.OK)
@@ -235,30 +247,50 @@ namespace PBZKeyForge
             var cancel = UnifiedBindingUi.Button(I18n.Str("editor.cancel"), "cancel"); cancel.DialogResult = DialogResult.Cancel;
             foreach (var button in new[] { custom, configure, cancel, accept }) button.Dock = DockStyle.Fill;
             footer.Controls.Add(custom, 0, 2); footer.Controls.Add(configure, 1, 2); footer.Controls.Add(cancel, 0, 3); footer.Controls.Add(accept, 1, 3); root.Controls.Add(footer, 0, 5);
-            accept.Click += delegate { AddSelected(); }; search.TextChanged += delegate { functions.SelectedIndex = -1; Populate(); }; Controls.Add(root); AcceptButton = accept; CancelButton = cancel; Populate();
+            searchTimer.Tick += delegate { searchTimer.Stop(); Populate(false); };
+            accept.Click += delegate { AddSelected(); }; search.TextChanged += delegate
+            {
+                functions.SelectedIndex = -1; functions.Enabled = false; groups.Enabled = false;
+                searchTimer.Stop(); searchTimer.Start();
+            };
+            Controls.Add(root); AcceptButton = accept; CancelButton = cancel; Populate(false);
         }
-        void Populate()
+        void FlushSearch()
         {
-            assigned = workspace.GetSnapshot().Where(entry => !entry.Suppressed).GroupBy(entry => entry.FunctionId)
-                .ToDictionary(group => group.Key, group => group.ToArray());
+            if (!searchTimer.Enabled) return;
+            searchTimer.Stop(); Populate(false);
+        }
+        void Populate(bool preserveSelection = true)
+        {
+            if (!assignedLoaded)
+            {
+                assigned = workspace.GetSnapshot().Where(entry => !entry.Suppressed).GroupBy(entry => entry.FunctionId)
+                    .ToDictionary(group => group.Key, group => group.ToArray());
+                assignedLoaded = true;
+            }
             hoveredFunction = -1; tip.SetToolTip(functions, "");
-            string selected = functions.SelectedItem is BindingFunction ? ((BindingFunction)functions.SelectedItem).Id : null;
+            string selected = preserveSelection && functions.SelectedItem is BindingFunction ? ChoiceKey((BindingFunction)functions.SelectedItem) : null;
+            populating = true;
             functions.BeginUpdate(); functions.Items.Clear(); string query = search.Text.Trim();
             changingGroups = true;
             groups.SelectedIndex = Enumerable.Range(0, groups.Items.Count).FirstOrDefault(index => ((FunctionGroup)groups.Items[index]).Path == (query.Length > 0 ? "" : selectedGroup), 0);
             groups.Enabled = query.Length == 0; changingGroups = false;
-            foreach (var function in workspace.FindFunctions(query))
-                if (query.Length > 0 || string.IsNullOrEmpty(selectedGroup) || string.Join("/", function.GroupPath) == selectedGroup
-                    || string.Join("/", function.GroupPath).StartsWith(selectedGroup + "/", StringComparison.Ordinal)) functions.Items.Add(function);
-            functions.SelectedIndex = selected == null ? -1 : Enumerable.Range(0, functions.Items.Count).FirstOrDefault(index => ((BindingFunction)functions.Items[index]).Id == selected, -1);
+            var matches = new List<object>();
+            foreach (var function in workspace.FindFunctionChoices(query))
+                if (query.Length > 0 || string.IsNullOrEmpty(selectedGroup) || function.GroupPathText == selectedGroup
+                    || function.GroupPathText.StartsWith(selectedGroup + "/", StringComparison.Ordinal)) matches.Add(function);
+            functions.Items.AddRange(matches.ToArray());
+            functions.SelectedIndex = selected == null ? -1 : Enumerable.Range(0, functions.Items.Count)
+                .FirstOrDefault(index => ChoiceKey((BindingFunction)functions.Items[index]) == selected, -1);
             if (functions.SelectedIndex < 0 && functions.Items.Count > 0)
                 functions.SelectedIndex = query.Length > 0 ? 0 : Enumerable.Range(0, functions.Items.Count).FirstOrDefault(index => !((BindingFunction)functions.Items[index]).RequiresKeyEnhancement, 0);
-            functions.EndUpdate(); UpdateSelection();
+            functions.EndUpdate(); functions.Enabled = true; populating = false; UpdateSelection();
         }
         void UpdateSelection()
         {
             var function = functions.SelectedItem as BindingFunction; accept.Enabled = function != null;
-            var nativeFunctions = functions.SelectedItems.Cast<BindingFunction>().Where(UnifiedBindingUi.HasNativeTrigger).ToArray();
+            var nativeFunctions = functions.SelectedItems.Cast<BindingFunction>().Where(UnifiedBindingUi.HasNativeTrigger)
+                .GroupBy(item => item.Id).Select(group => group.First()).ToArray();
             nativeAbilityTrigger.Visible = nativeFunctions.Length > 0;
             bool[] choices = nativeFunctions.Select(item => workspace.UsesNativeTrigger(item.Id)).Distinct().ToArray();
             nativeAbilityTrigger.ThreeState = choices.Length > 1;
@@ -284,6 +316,7 @@ namespace PBZKeyForge
         }
         void AddSelected()
         {
+            FlushSearch();
             var function = functions.SelectedItem as BindingFunction; if (function == null) return;
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             var entry = template == null ? new BindingEntry { FunctionId = function.Id, Keys = new[] { key }, Trigger = "default" }
@@ -294,6 +327,7 @@ namespace PBZKeyForge
         }
         bool? NativeTriggerChoice
         { get { return !nativeAbilityTrigger.Visible || nativeAbilityTrigger.CheckState == CheckState.Indeterminate ? (bool?)null : nativeAbilityTrigger.Checked; } }
+        static string ChoiceKey(BindingFunction function) { return function.Id + "\u001f" + function.Label; }
         void AddCustom()
         {
             using (var dialog = new AdvancedFunctionDialog(workspace.Configuration))
@@ -342,7 +376,7 @@ namespace PBZKeyForge
                     TextFormatFlags.EndEllipsis | TextFormatFlags.SingleLine);
             }
         }
-        protected override void Dispose(bool disposing) { if (disposing) tip.Dispose(); base.Dispose(disposing); }
+        protected override void Dispose(bool disposing) { if (disposing) { searchTimer.Dispose(); tip.Dispose(); } base.Dispose(disposing); }
         internal static string FunctionCode(BindingFunction function)
         {
             if (function.IdentityCode != null) return function.IdentityCode.TrimStart().StartsWith("function", StringComparison.Ordinal) ? "Lua" : function.IdentityCode;
@@ -369,8 +403,10 @@ namespace PBZKeyForge
         readonly EditorButton editCustomFunction = UnifiedBindingUi.Button(UnifiedBindingUi.Text("editFunction"), "editCustomFunction");
         bool updatingNativeAbilityTrigger;
         public UnifiedActionBindingsDialog(BindingWorkspace workspace, string functionId, Func<bool> enableRequested, Action changed)
+            : this(workspace, functionId, null, enableRequested, changed) { }
+        public UnifiedActionBindingsDialog(BindingWorkspace workspace, string functionId, string label, Func<bool> enableRequested, Action changed)
         {
-            this.workspace = workspace; this.function = workspace.Functions.First(item => item.Id == functionId); this.enableRequested = enableRequested; this.changed = changed;
+            this.workspace = workspace; this.function = workspace.FindFunctionChoice(functionId, label); this.enableRequested = enableRequested; this.changed = changed;
             UnifiedBindingUi.Form(this, function.Label, new Size(760, 420), new Size(560, 300));
             var root = UnifiedBindingUi.Grid(1); root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); root.Padding = new Padding(16, 10, 16, 12); root.RowCount = 6;
             root.RowStyles.Add(new RowStyle(SizeType.Absolute, function.RequiresKeyEnhancement ? Font.Height * 2 + 16 : 42)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize)); root.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize)); root.RowStyles.Add(new RowStyle(SizeType.Absolute, 42)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -462,10 +498,10 @@ namespace PBZKeyForge
                         var host = owner as MainForm;
                         if (host != null && workspace.LiveEditing)
                         {
-                            host.PresentBindingWindow(new UnifiedActionBindingsDialog(workspace, target.Id, enableRequested, changed), this, RenderBindings);
+                            host.PresentBindingWindow(new UnifiedActionBindingsDialog(workspace, target.Id, target.Label, enableRequested, changed), this, RenderBindings);
                             return;
                         }
-                        using (var dialog = new UnifiedActionBindingsDialog(workspace, target.Id, enableRequested, changed)) dialog.ShowDialog(this);
+                        using (var dialog = new UnifiedActionBindingsDialog(workspace, target.Id, target.Label, enableRequested, changed)) dialog.ShowDialog(this);
                         RenderBindings();
                     };
                     tip.SetToolTip(link, I18n.Str("binding.related.open")); nativeEntries.Controls.Add(link);
@@ -555,7 +591,7 @@ namespace PBZKeyForge
         { foreach (Control row in bindings.Controls) row.Width = Math.Max(260, bindings.Width - SystemInformation.VerticalScrollBarWidth - 8); }
         void Edit(BindingEntry entry)
         {
-            using (var dialog = new UnifiedBindingEditDialog(workspace, function.Id, entry, null, enableRequested))
+            using (var dialog = new UnifiedBindingEditDialog(workspace, function.Id, function.Label, entry, null, enableRequested))
                 if (dialog.ShowDialog(this) == DialogResult.OK) Apply(delegate { if (dialog.RemoveRequested) workspace.Remove(entry); else if (entry == null) workspace.Add(function.Id, dialog.Result); else workspace.Replace(entry, dialog.Result); });
         }
         void Apply(Action operation)
@@ -631,10 +667,12 @@ namespace PBZKeyForge
         internal BindingEntry CurrentBinding { get { return current; } }
         public bool RemoveRequested { get; private set; }
         public UnifiedBindingEditDialog(BindingWorkspace workspace, string functionId, BindingEntry current, string initialKey, Func<bool> enableRequested, bool multipleFunctions = false)
+            : this(workspace, functionId, null, current, initialKey, enableRequested, multipleFunctions) { }
+        public UnifiedBindingEditDialog(BindingWorkspace workspace, string functionId, string label, BindingEntry current, string initialKey, Func<bool> enableRequested, bool multipleFunctions = false)
         {
             SuspendLayout();
             moreSettings.SuspendLayout(); sequenceSettings.SuspendLayout(); evaluatorSettings.SuspendLayout();
-            this.workspace = workspace; this.function = workspace.Functions.First(item => item.Id == functionId); this.current = current; this.multipleFunctions = multipleFunctions;
+            this.workspace = workspace; this.function = workspace.FindFunctionChoice(functionId, label); this.current = current; this.multipleFunctions = multipleFunctions;
             UnifiedBindingUi.Form(this, function.Label + " · " + UnifiedBindingUi.FunctionIdentity(function), new Size(640, 600), new Size(500, 440));
             var root = UnifiedBindingUi.Grid(1); root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); root.Padding = new Padding(16, 10, 16, 12); root.RowCount = 4;
             root.SuspendLayout();
@@ -747,7 +785,7 @@ namespace PBZKeyForge
                 moreSettings.Visible = !moreSettings.Visible; RefreshConsumeKeys();
                 if (moreSettings.Visible) { scroll.PerformLayout(); scroll.ScrollControlIntoView(bindingEnabled); }
             };
-            var moreButtonRow = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true }; moreButtonRow.Controls.Add(more); AddField(fields, moreButtonRow, 0);
+            var moreButtonRow = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true }; moreButtonRow.Controls.Add(more); root.Controls.Add(moreButtonRow, 0, 1);
             var advancedFields = (TableLayoutPanel)moreSettings; advancedFields.AutoSize = true; advancedFields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             bindingEnabled.Text = UnifiedBindingUi.Text("bindingEnabled"); bindingEnabled.Checked = current == null || current.Enabled;
             AddField(advancedFields, bindingEnabled, 36);

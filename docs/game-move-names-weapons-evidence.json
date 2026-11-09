@@ -8116,7 +8116,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_010_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_010_Skill",
       "primaryKey": "Weapon_FunctionName_010_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8137,7 +8145,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboBTA"
       ],
-      "primaryKey": "Weapon_FunctionName_022_15",
+      "sourceId": "ability:Ability.Action.Hun.Light.ADash.Draw",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_15",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_15"
       ],
@@ -8158,7 +8178,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_016_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_016_Skill",
       "primaryKey": "Weapon_FunctionName_016_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8177,7 +8205,13 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.BronzeSword.BHold",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_007_5"
       ],
@@ -8198,7 +8232,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_007_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_007_Skill",
       "primaryKey": "Weapon_FunctionName_007_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8218,7 +8260,13 @@
         "Ability.Action.Hun.Heavy.ComboAtk_N1H2",
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.BronzeSword.Nsp",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_007_15"
       ],
@@ -8239,7 +8287,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_004_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_004_Skill",
       "primaryKey": "Weapon_FunctionName_004_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8258,7 +8314,13 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Atk01_Hold",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_004_15"
       ],
@@ -8279,7 +8341,13 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Atk01_Hold",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_004_25"
       ],
@@ -8300,7 +8368,13 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Atk01_Hold",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_004_5"
       ],
@@ -8322,7 +8396,13 @@
         "CharacterState.AbilityState.Stance.HoldingStanceKey",
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.ChiZheCanJian.Drink.Normal",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_008_5"
       ],
@@ -8343,7 +8423,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_008_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_008_Skill",
       "primaryKey": "Weapon_FunctionName_008_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8362,7 +8450,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_008_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_008_Skill",
       "primaryKey": "Weapon_FunctionName_008_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8381,7 +8477,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_008_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_008_Skill",
       "primaryKey": "Weapon_FunctionName_008_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8401,7 +8505,13 @@
         "CharacterState.AbilityState.Stance.HoldingStanceKey",
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.ChiZheCanJian.Drink.Normal",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_008_5"
       ],
@@ -8422,7 +8532,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_008_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_008_Skill",
       "primaryKey": "Weapon_FunctionName_008_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8441,7 +8559,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_008_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_008_Skill",
       "primaryKey": "Weapon_FunctionName_008_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8460,7 +8586,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_008_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_008_Skill",
       "primaryKey": "Weapon_FunctionName_008_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8481,7 +8615,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboBTA"
       ],
-      "primaryKey": "Weapon_FunctionName_022_15",
+      "sourceId": "ability:Ability.Action.Hun.Light.ADash.Draw",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_15",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_15"
       ],
@@ -8502,7 +8648,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_Skill",
       "primaryKey": "Weapon_FunctionName_022_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8523,7 +8677,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboATB"
       ],
-      "primaryKey": "Weapon_FunctionName_022_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Double.ATB",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_25"
       ],
@@ -8546,7 +8712,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboATB"
       ],
-      "primaryKey": "Weapon_FunctionName_022_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Double.ATBB",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_25"
       ],
@@ -8569,7 +8747,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboATB"
       ],
-      "primaryKey": "Weapon_FunctionName_022_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Double.ATBBB",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_25"
       ],
@@ -8592,7 +8782,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboBTA"
       ],
-      "primaryKey": "Weapon_FunctionName_022_15",
+      "sourceId": "ability:Ability.Action.Hun.Light.Double.BTA",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_15",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_15"
       ],
@@ -8615,7 +8817,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.CanBuff"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Special.Double.Buff",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_5",
       "primaryKey": "Weapon_FunctionName_022_5",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_5"
       ],
@@ -8638,7 +8850,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboBTA"
       ],
-      "primaryKey": "Weapon_FunctionName_022_15",
+      "sourceId": "ability:Ability.Action.Hun.Light.ADash.Draw",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_15",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_15"
       ],
@@ -8659,7 +8883,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_Skill",
       "primaryKey": "Weapon_FunctionName_022_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8680,7 +8912,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboATB"
       ],
-      "primaryKey": "Weapon_FunctionName_022_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Double.ATB",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_25"
       ],
@@ -8703,7 +8947,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboATB"
       ],
-      "primaryKey": "Weapon_FunctionName_022_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Double.ATBB",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_25"
       ],
@@ -8726,7 +8982,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboATB"
       ],
-      "primaryKey": "Weapon_FunctionName_022_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Double.ATBBB",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_25"
       ],
@@ -8749,7 +9017,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboBTA"
       ],
-      "primaryKey": "Weapon_FunctionName_022_15",
+      "sourceId": "ability:Ability.Action.Hun.Light.Double.BTA",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_15",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_15"
       ],
@@ -8770,7 +9050,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Air"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.JueYing.Air",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_Skill",
       "primaryKey": "Weapon_FunctionName_022_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8789,7 +9077,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_028_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_028_Skill",
       "primaryKey": "Weapon_FunctionName_028_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8809,7 +9105,13 @@
         "CharacterState.AbilityState.Stance.HoldingStanceKey",
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.DualHook.DB",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_028_10",
         "Weapon_FunctionName_028_25"
@@ -8829,7 +9131,13 @@
       "id": "move:Weapon.Weapon_Hun_DualHook.GA_Hun_DualHook_DB_SWT",
       "abilityClass": "/PBZCombatAsset/ActorData/Players/Hun/Abilities/DualHook/Default/GA_Hun_DualHook_DB_SWT.GA_Hun_DualHook_DB_SWT_C",
       "nativeRouteRequiredTags": [],
+      "sourceId": "action:/PBZInput/InputActions/IA_AttackH_Press",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_028_10",
         "Weapon_FunctionName_028_25"
@@ -8853,7 +9161,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.DualHook.DBPursure"
       ],
-      "primaryKey": "Weapon_FunctionName_028_5",
+      "sourceId": "ability:Ability.Action.Hun.Light.DualHook.Pursure",
+      "primaryKeys": [
+        "Weapon_FunctionName_028_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_028_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_028_5",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_028_5"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_028_5"
       ],
@@ -8876,7 +9196,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.DualHook.DBPursure"
       ],
-      "primaryKey": "Weapon_FunctionName_028_5",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.DualHook.Pursure",
+      "primaryKeys": [
+        "Weapon_FunctionName_028_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_028_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_028_5",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_028_5"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_028_5"
       ],
@@ -8897,7 +9229,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_017_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_017_Skill",
       "primaryKey": "Weapon_FunctionName_017_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_017_5",
         "Weapon_FunctionName_017_15"
@@ -8920,7 +9260,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.GuiTouBlade.CanCharge"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.GuiTouDao.BHold.Start",
+      "primaryKeys": [
+        "Weapon_FunctionName_017_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_017_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_017_25",
       "primaryKey": "Weapon_FunctionName_017_25",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_017_25"
       ],
@@ -8941,7 +9291,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_Skill",
       "primaryKey": "Weapon_FunctionName_001_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -8962,7 +9320,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.Combo_01"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Light.Tang.AAAAAA",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_15",
       "primaryKey": "Weapon_FunctionName_001_15",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_15"
       ],
@@ -8985,7 +9353,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.Combo_03"
       ],
-      "primaryKey": "Weapon_FunctionName_001_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.BBBB",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_25"
       ],
@@ -9008,7 +9388,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.Combo_02"
       ],
-      "primaryKey": "Weapon_FunctionName_001_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.AAAAAB",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_25"
       ],
@@ -9031,7 +9423,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.Combo_03"
       ],
-      "primaryKey": "Weapon_FunctionName_001_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.AAAAABB",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_25"
       ],
@@ -9054,7 +9458,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.CanBuff"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Special.Tang.Buff",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_5",
       "primaryKey": "Weapon_FunctionName_001_5",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_5"
       ],
@@ -9077,7 +9491,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.Combo_01"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Light.Tang.AAAAAA",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_15",
       "primaryKey": "Weapon_FunctionName_001_15",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_15"
       ],
@@ -9100,7 +9524,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.Combo_03"
       ],
-      "primaryKey": "Weapon_FunctionName_001_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.BBBB",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_25"
       ],
@@ -9123,7 +9559,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.Combo_02"
       ],
-      "primaryKey": "Weapon_FunctionName_001_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.AAAAAB",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_25"
       ],
@@ -9146,7 +9594,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.Combo_03"
       ],
-      "primaryKey": "Weapon_FunctionName_001_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.AAAAABB",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_25"
       ],
@@ -9169,7 +9629,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.CanBuff"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Special.Tang.Buff",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_5",
       "primaryKey": "Weapon_FunctionName_001_5",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_5"
       ],
@@ -9190,7 +9660,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_019_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_019_Skill",
       "primaryKey": "Weapon_FunctionName_019_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9210,7 +9688,13 @@
         "CharacterState.AbilityState.Horizontal.Overcharged",
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Horizontal.Overcharge",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_019_5"
       ],
@@ -9233,7 +9717,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Horizontal.CanBladeWave"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Horizontal.BladeWave",
+      "primaryKeys": [
+        "Weapon_FunctionName_019_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_019_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_019_15",
       "primaryKey": "Weapon_FunctionName_019_15",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_019_15"
       ],
@@ -9256,7 +9750,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Horizontal.CriticalHit"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Horizontal.CriticalAttack",
+      "primaryKeys": [
+        "Weapon_FunctionName_019_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_019_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_019_25",
       "primaryKey": "Weapon_FunctionName_019_25",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_019_5",
         "Weapon_FunctionName_019_25"
@@ -9278,7 +9782,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_002_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_002_Skill",
       "primaryKey": "Weapon_FunctionName_002_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9298,7 +9810,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Iron.BCharge"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Iron.BCharge",
+      "primaryKeys": [
+        "Weapon_FunctionName_002_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_002_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_002_15",
       "primaryKey": "Weapon_FunctionName_002_15",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_002_15"
       ],
@@ -9321,7 +9843,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Iron.CanBuff"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Iron.Buff",
+      "primaryKeys": [
+        "Weapon_FunctionName_002_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_002_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_002_25",
       "primaryKey": "Weapon_FunctionName_002_25",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_002_25"
       ],
@@ -9344,7 +9876,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboBTA"
       ],
-      "primaryKey": "Weapon_FunctionName_022_15",
+      "sourceId": "ability:Ability.Action.Hun.Light.ADash.Draw",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_15",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_15"
       ],
@@ -9365,7 +9909,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_029_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_029_Skill",
       "primaryKey": "Weapon_FunctionName_029_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9386,7 +9938,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Jade.EnableDB"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Special.Jade.DB",
+      "primaryKeys": [
+        "Weapon_FunctionName_029_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_029_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_029_5",
       "primaryKey": "Weapon_FunctionName_029_5",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_029_5"
       ],
@@ -9409,7 +9971,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboBTA"
       ],
-      "primaryKey": "Weapon_FunctionName_022_15",
+      "sourceId": "ability:Ability.Action.Hun.Light.ADash.Draw",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_15",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_15"
       ],
@@ -9430,7 +10004,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_029_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_029_Skill",
       "primaryKey": "Weapon_FunctionName_029_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9451,7 +10033,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Jade.EnableDB"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Special.Jade.DB",
+      "primaryKeys": [
+        "Weapon_FunctionName_029_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_029_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_029_5",
       "primaryKey": "Weapon_FunctionName_029_5",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_029_5"
       ],
@@ -9472,7 +10064,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_015_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_015_Skill",
       "primaryKey": "Weapon_FunctionName_015_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9493,7 +10093,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Long.CanBuff"
       ],
-      "primaryKey": "Weapon_FunctionName_012_5",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.ComboAtk_N1H1",
+      "primaryKeys": [
+        "Weapon_FunctionName_012_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_012_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_012_5",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_012_5"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_012_5"
       ],
@@ -9516,7 +10128,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Long.BBB"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Light.Long.AAAAA",
+      "primaryKeys": [
+        "Weapon_FunctionName_012_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_012_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_012_15",
       "primaryKey": "Weapon_FunctionName_012_15",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_012_15"
       ],
@@ -9540,7 +10162,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Long.BBBB"
       ],
-      "primaryKey": "Weapon_FunctionName_012_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Long.BSup",
+      "primaryKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_012_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_012_25"
       ],
@@ -9563,7 +10197,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Long.BBBB"
       ],
-      "primaryKey": "Weapon_FunctionName_012_25",
+      "sourceId": "ability:Ability.Action.Hun.Light.Long.AAAAAA",
+      "primaryKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_012_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_012_25"
       ],
@@ -9586,7 +10232,21 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Long.CanBuff"
       ],
-      "primaryKey": "Weapon_FunctionName_012_5",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Long.BD",
+      "primaryKeys": [
+        "Weapon_FunctionName_012_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_012_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_012_5",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_012_5"
+      ],
+      "reviewedNameKeys": [
+        "Weapon_FunctionName_014_EX"
+      ],
       "effectKeys": [
         "Weapon_FunctionName_012_5"
       ],
@@ -9607,7 +10267,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_012_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_012_Skill",
       "primaryKey": "Weapon_FunctionName_012_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9628,7 +10296,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Long.BBB"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Light.Long.AAAAA",
+      "primaryKeys": [
+        "Weapon_FunctionName_012_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_012_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_012_15",
       "primaryKey": "Weapon_FunctionName_012_15",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_012_15"
       ],
@@ -9652,7 +10330,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Long.BBBB"
       ],
-      "primaryKey": "Weapon_FunctionName_012_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Long.BSup",
+      "primaryKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_012_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_012_25"
       ],
@@ -9675,7 +10365,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Long.BBBB"
       ],
-      "primaryKey": "Weapon_FunctionName_012_25",
+      "sourceId": "ability:Ability.Action.Hun.Light.Long.AAAAAA",
+      "primaryKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_012_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_012_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_012_25"
       ],
@@ -9698,7 +10400,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Long.CanBuff"
       ],
-      "primaryKey": "Weapon_FunctionName_012_5",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Long.BD",
+      "primaryKeys": [
+        "Weapon_FunctionName_012_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_012_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_012_5",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_012_5"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_012_5"
       ],
@@ -9719,7 +10433,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_003_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_003_Skill",
       "primaryKey": "Weapon_FunctionName_003_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9738,7 +10460,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_003_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_003_Skill",
       "primaryKey": "Weapon_FunctionName_003_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9757,7 +10487,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_014_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_014_Skill",
       "primaryKey": "Weapon_FunctionName_014_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9776,7 +10514,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_018_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_018_Skill",
       "primaryKey": "Weapon_FunctionName_018_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9797,7 +10543,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.PoJun.DB.01"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.PoJun.DB",
+      "primaryKeys": [
+        "Weapon_FunctionName_018_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_018_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_018_5",
       "primaryKey": "Weapon_FunctionName_018_5",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_018_5",
         "Weapon_FunctionName_018_15"
@@ -9821,7 +10577,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.PoJun.DB.03"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.PoJun.DB2",
+      "primaryKeys": [
+        "Weapon_FunctionName_018_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_018_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_018_25",
       "primaryKey": "Weapon_FunctionName_018_25",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_018_25"
       ],
@@ -9844,7 +10610,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboBTA"
       ],
-      "primaryKey": "Weapon_FunctionName_022_15",
+      "sourceId": "ability:Ability.Action.Hun.Light.ADash.Draw",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_15",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_15"
       ],
@@ -9865,7 +10643,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_026_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_026_Skill",
       "primaryKey": "Weapon_FunctionName_026_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9886,7 +10672,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.ShuangYue.CanPB"
       ],
-      "primaryKey": "Weapon_FunctionName_026_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.ShuangYue.PB",
+      "primaryKeys": [
+        "Weapon_FunctionName_026_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_026_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_026_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_026_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_026_25"
       ],
@@ -9909,7 +10707,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.ShuangYue.CanPB"
       ],
-      "primaryKey": "Weapon_FunctionName_026_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.ShuangYue.PBB",
+      "primaryKeys": [
+        "Weapon_FunctionName_026_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_026_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_026_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_026_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_026_25"
       ],
@@ -9932,7 +10742,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.ShuangYue.CanDB"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.ShuangYue.DB",
+      "primaryKeys": [
+        "Weapon_FunctionName_026_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_026_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_026_15",
       "primaryKey": "Weapon_FunctionName_026_15",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_026_15"
       ],
@@ -9955,7 +10775,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.ShuangYue.CanDB"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.ShuangYue.DB",
+      "primaryKeys": [
+        "Weapon_FunctionName_026_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_026_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_026_15",
       "primaryKey": "Weapon_FunctionName_026_15",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_026_15"
       ],
@@ -9976,7 +10806,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_009_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_009_Skill",
       "primaryKey": "Weapon_FunctionName_009_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -9997,7 +10835,13 @@
         "CharacterState.AbilityState.Stance.HoldingStanceKey",
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB3",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_009_10"
       ],
@@ -10020,7 +10864,13 @@
         "CharacterState.AbilityState.Stance.HoldingStanceKey",
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.SlitheringSword.DB1",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_009_10"
       ],
@@ -10041,7 +10891,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_027_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_027_Skill",
       "primaryKey": "Weapon_FunctionName_027_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -10060,7 +10918,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_Skill",
       "primaryKey": "Weapon_FunctionName_001_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -10081,7 +10947,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.Combo_01"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Light.Tang.AAAAAA",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_15",
       "primaryKey": "Weapon_FunctionName_001_15",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_15"
       ],
@@ -10104,7 +10980,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.Combo_03"
       ],
-      "primaryKey": "Weapon_FunctionName_001_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.BBBB",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_25"
       ],
@@ -10127,7 +11015,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.Combo_02"
       ],
-      "primaryKey": "Weapon_FunctionName_001_25",
+      "sourceId": "ability:Ability.Action.Hun.Heavy.Tang.AAAAAB",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_25",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_001_25"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_25"
       ],
@@ -10150,7 +11050,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Tang.CanBuff"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Special.Tang.Buff",
+      "primaryKeys": [
+        "Weapon_FunctionName_001_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_001_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_001_5",
       "primaryKey": "Weapon_FunctionName_001_5",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_001_5"
       ],
@@ -10171,7 +11081,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_000_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_000_Skill",
       "primaryKey": "Weapon_FunctionName_000_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -10192,7 +11110,19 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.Double.ComboBTA"
       ],
-      "primaryKey": "Weapon_FunctionName_022_15",
+      "sourceId": "ability:Ability.Action.Hun.Light.ADash.Draw",
+      "primaryKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_022_15",
+      "primaryKey": null,
+      "rejectedNameKeys": [
+        "Weapon_FunctionName_022_15"
+      ],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_022_15"
       ],
@@ -10213,7 +11143,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_031_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_031_Skill",
       "primaryKey": "Weapon_FunctionName_031_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -10233,7 +11171,13 @@
         "CharacterState.AbilityState.Stance.HoldingStanceKey",
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.XieShan.DB",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_031_25"
       ],
@@ -10254,7 +11198,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_020_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_020_Skill",
       "primaryKey": "Weapon_FunctionName_020_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -10274,7 +11226,13 @@
         "CharacterState.AbilityState.Stance.HoldingStanceKey",
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.YanYueDao.Special01",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_020_5",
         "Weapon_FunctionName_020_25"
@@ -10296,7 +11254,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_023_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_023_Skill",
       "primaryKey": "Weapon_FunctionName_023_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -10316,7 +11282,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.YuuBlade.FastLightAttack"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Light.YuuBlade.FastAttack",
+      "primaryKeys": [
+        "Weapon_FunctionName_023_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_023_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_023_5",
       "primaryKey": "Weapon_FunctionName_023_5",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_023_5"
       ],
@@ -10337,7 +11313,13 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.YuuBlade.FastAttack",
+      "primaryKeys": [],
+      "candidateNameKeys": [],
+      "provisionalNameKey": null,
       "primaryKey": null,
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_023_15"
       ],
@@ -10360,7 +11342,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.ZhanMa.CanChargeAttack"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.ZhanMa.DB",
+      "primaryKeys": [
+        "Weapon_FunctionName_013_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_013_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_013_5",
       "primaryKey": "Weapon_FunctionName_013_5",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_013_5"
       ],
@@ -10381,7 +11373,15 @@
       "nativeRouteRequiredTags": [
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk01",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_011_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_011_Skill",
       "primaryKey": "Weapon_FunctionName_011_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -10401,7 +11401,15 @@
         "Ability.Action.Hun.CombatArt.Atk01",
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk02",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_011_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_011_Skill",
       "primaryKey": "Weapon_FunctionName_011_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -10421,7 +11429,15 @@
         "Ability.Action.Hun.CombatArt.Atk02",
         "CharacterState.Space.Ground"
       ],
+      "sourceId": "ability:Ability.Action.Hun.CombatArt.Atk03",
+      "primaryKeys": [],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_011_Skill"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_011_Skill",
       "primaryKey": "Weapon_FunctionName_011_Skill",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [],
       "equipmentNameSource": {
         "table": "/Game/PBZContent/DataTable/UI/DT_WeaponData",
@@ -10442,7 +11458,17 @@
         "CharacterState.Space.Ground",
         "CharacterState.WeaponUpgrade.ZiMingJian.CanBuJu"
       ],
+      "sourceId": "ability:Ability.Action.Hun.Heavy.ZiMingJian.DB.FirstTime",
+      "primaryKeys": [
+        "Weapon_FunctionName_011_5"
+      ],
+      "candidateNameKeys": [
+        "Weapon_FunctionName_011_5"
+      ],
+      "provisionalNameKey": "Weapon_FunctionName_011_5",
       "primaryKey": "Weapon_FunctionName_011_5",
+      "rejectedNameKeys": [],
+      "reviewedNameKeys": [],
       "effectKeys": [
         "Weapon_FunctionName_011_5",
         "Weapon_FunctionName_011_15",
@@ -10460,5 +11486,1147 @@
       }
     }
   ],
-  "classification": "An exact native input-route unlock or direct grant names the move; other referenced upgrades are effects."
+  "reviewedAssociations": [
+    {
+      "id": "move:Weapon.Weapon_Hun_ChiRen.GA_Hun_ChiRen_BD",
+      "key": "Weapon_FunctionName_014_EX",
+      "offset": 205215,
+      "reason": "DT_WeaponData row 邪火 describes the stance heavy attack as a flame wave; GA_Hun_ChiRen_BD has the matching fire weapon particles and burning effect."
+    }
+  ],
+  "relationlessRecords": [
+    {
+      "key": "Weapon_FunctionName_000_10",
+      "labels": {
+        "zh-Hans": "飞花摘叶·{之一|之二|之三}",
+        "en": "Falling Petal Strike {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "飛花摘葉・{その一|その二|その三}",
+        "ko": "비화적엽·{1|2|3}",
+        "ru": "Удар опавшего лепестка {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "飛花摘葉·{之一|之二|之三}",
+        "fr": "Frappe des pétales {niv. 1|niv. 2|niv. 3}",
+        "de": "Fallender Blütenblattschlag {St. 1|St. 2|St. 3}",
+        "es-ES": "Lluvia de pétalos {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Golpe da Pétala Descendente {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Colpo del Petalo Cadente {liv. 1|liv. 2|liv. 3}",
+        "th": "ปลิดบุปผาเด็ดใบ {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Phi Hoa Trích Diệp {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Golpe da Pétala Caída {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Ataque de pétalos caídos {Nv. 1|Nv. 2|Nv. 3}"
+      },
+      "effect": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/WoodenSword/UpgradeData/GE_WoodenSword_DamageToBreaken_LV1",
+        "asset": "GE_WoodenSword_DamageToBreaken_LV1_C",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_000_5",
+      "labels": {
+        "zh-Hans": "返璞归真",
+        "en": "Back to Basics",
+        "ja": "守真",
+        "ko": "반박귀진",
+        "ru": "Возвращение к основам",
+        "zh-Hant": "返璞歸真",
+        "fr": "Retour aux fondamentaux",
+        "de": "Zurück zu den Grundlagen",
+        "es-ES": "Vuelta a lo básico",
+        "pt-BR": "De Volta Ao Básico",
+        "it": "Ritorno alle basi",
+        "th": "คืนสู่สามัญ",
+        "vi": "Phản Phác Quy Chân",
+        "pt-PT": "Regresso ao Essencial",
+        "es-419": "Volver a lo básico"
+      },
+      "effect": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/WoodenSword/UpgradeData/GE_WoodenSword_PerfectReflectShachi",
+        "asset": "GE_WoodenSword_PerfectReflectShachi_C",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_001_10",
+      "labels": {
+        "zh-Hans": "瞬杀·{之一|之二|之三}",
+        "en": "Phantom Execution {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "瞬殺・{その一|その二|その三}",
+        "ko": "순살·{1|2|3}",
+        "ru": "Фантомная казнь {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "瞬殺·{之一|之二|之三}",
+        "fr": "Exécution spectrale {niv. 1|niv. 2|niv. 3}",
+        "de": "Phantom-Hinrichtung {St. 1|St. 2|St. 3}",
+        "es-ES": "Ejecución espectral {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Execução Fantasma {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Esecuzione Eterea {liv. 1|liv. 2|liv. 3}",
+        "th": "สังหารฉับพลัน {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Huyễn Sát {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Execução Fantasma {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Ejecución espectral {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_002_10",
+      "labels": {
+        "zh-Hans": "流血不止·{之一|之二|之三}",
+        "en": "Relentless Bleed {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "出血不止・{その一|その二|その三}",
+        "ko": "지속 출혈·{1|2|3}",
+        "ru": "Неостановимое кровотечение {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "流血不止·{之一|之二|之三}",
+        "fr": "Saignement implacable {niv. 1|niv. 2|niv. 3}",
+        "de": "Unaufhörliche Blutung {St. 1|St. 2|St. 3}",
+        "es-ES": "Sangrado implacable {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Sangramento Implacável {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Sanguinamento implacabile {liv. 1|liv. 2|liv. 3}",
+        "th": "เพลงฟันหลั่งโลหิต {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Xuất Huyết Liên Tục {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Sangramento Implacável {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Sangrado implacable {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_003_10",
+      "labels": {
+        "zh-Hans": "莺痕·展锋·{之一|之二|之三}",
+        "en": "Potent Mark {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "鶯痕・展鋒・{その一|その二|その三}",
+        "ko": "앵흔·전봉·{1|2|3}",
+        "ru": "Усиленная метка {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "鶯痕·展鋒·{之一|之二|之三}",
+        "fr": "Marque renforcée {niv. 1|niv. 2|niv. 3}",
+        "de": "Kraftvolles Mal {St. 1|St. 2|St. 3}",
+        "es-ES": "Marca potente {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Marca Potente {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Marchio Potente {liv. 1|liv. 2|liv. 3}",
+        "th": "รอยวิหค·เผยคม {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Oanh Ngân · Triển Phong {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Marca Potente {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Marca potente {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_003_15",
+      "labels": {
+        "zh-Hans": "莺痕·爆裂",
+        "en": "Bursting Mark",
+        "ja": "鶯痕・爆裂",
+        "ko": "앵흔·폭발",
+        "ru": "Взрывная метка",
+        "zh-Hant": "鶯痕·爆裂",
+        "fr": "Marque explosive",
+        "de": "Berstendes Mal",
+        "es-ES": "Marca explosiva",
+        "pt-BR": "Marca Explosiva",
+        "it": "Marchio Dirompente",
+        "th": "รอยวิหค·ปะทุ",
+        "vi": "Oanh Ngân · Bạo Liệt",
+        "pt-PT": "Marca Transbordante",
+        "es-419": "Marca explosiva"
+      },
+      "effect": {
+        "package": "/Script/PBZCombatAsset",
+        "asset": "GE_LuanYing_YingHen_BurstUnlock",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_003_25",
+      "labels": {
+        "zh-Hans": "莺痕·重现",
+        "en": "Lingering Mark",
+        "ja": "鶯痕・再現",
+        "ko": "앵흔·재현",
+        "ru": "Затяжная метка",
+        "zh-Hant": "鶯痕·重現",
+        "fr": "Marque persistante",
+        "de": "Anhaltendes Mal",
+        "es-ES": "Marca persistente",
+        "pt-BR": "Marca Persistente",
+        "it": "Marchio Persistente",
+        "th": "รอยวิหค หวนคืน",
+        "vi": "Oanh Ngân · Tái Hiện",
+        "pt-PT": "Marca Persistente",
+        "es-419": "Marca persistente"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_008_10",
+      "labels": {
+        "zh-Hans": "难得糊涂·{之一|之二|之三}",
+        "en": "Drunken Clarity {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "難得糊塗・{その一|その二|その三}",
+        "ko": "난득호도·{1|2|3}",
+        "ru": "Пьяная ясность {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "難得糊塗·{之一|之二|之三}",
+        "fr": "Lucidité ivre {niv. 1|niv. 2|niv. 3}",
+        "de": "Betrunkene Klarheit {St. 1|St. 2|St. 3}",
+        "es-ES": "Lucidez ebria {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Clareza Ébria {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Lucidità da Sbronza {liv. 1|liv. 2|liv. 3}",
+        "th": "แสร้งเมามาย {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Giả Say Mà Tỉnh {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Clareza Ébria {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Lucidez embriagadora {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_009_5",
+      "labels": {
+        "zh-Hans": "以静养气",
+        "en": "Inner Stillness",
+        "ja": "以静養気",
+        "ko": "이정양기",
+        "ru": "Внутреннее спокойствие",
+        "zh-Hant": "以靜養氣",
+        "fr": "Calme intérieur",
+        "de": "Innere Stille",
+        "es-ES": "Calma interior",
+        "pt-BR": "Imobilidade Interior",
+        "it": "Quiete Interiore",
+        "th": "สงบนิ่งบ่มปราณ",
+        "vi": "Tĩnh Lặng Dưỡng Khí",
+        "pt-PT": "Quietude Interior",
+        "es-419": "Serenidad interior"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_012_10",
+      "labels": {
+        "zh-Hans": "炽杀·{之一|之二|之三}",
+        "en": "Fatal Execution {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "絶殺・{その一|その二|その三}",
+        "ko": "치살·{1|2|3}",
+        "ru": "Смертельная казнь {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "熾殺·{之一|之二|之三}",
+        "fr": "Exécution fatale {niv. 1|niv. 2|niv. 3}",
+        "de": "Tödliche Hinrichtung {St. 1|St. 2|St. 3}",
+        "es-ES": "Ejecución letal {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Execução Fatal {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Esecuzione fatale {liv. 1|liv. 2|liv. 3}",
+        "th": "วิชาปลิดชีพ {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Tuyệt Sát {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Execução Fatal {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Ejecución fatal {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_014_EX",
+      "labels": {
+        "zh-Hans": "焰波",
+        "en": "Flame Wave",
+        "ja": "焔波",
+        "ko": "염파",
+        "ru": "Волна пламени",
+        "zh-Hant": "焰波",
+        "fr": "Vague de feu",
+        "de": "Flammenwelle",
+        "es-ES": "Ola ígnea",
+        "pt-BR": "Onda de Fogo",
+        "it": "Ondata Incendiaria",
+        "th": "คลื่นเพลิง",
+        "vi": "Sóng Lửa",
+        "pt-PT": "Vaga de Chamas",
+        "es-419": "Ola de fuego"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_016_10",
+      "labels": {
+        "zh-Hans": "刺骨·{之一|之二|之三}",
+        "en": "Piercing Cold {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "刺骨・{その一|その二|その三}",
+        "ko": "자골·{1|2|3}",
+        "ru": "Пронизывающий холод {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "刺骨·{之一|之二|之三}",
+        "fr": "Froid perçant {niv. 1|niv. 2|niv. 3}",
+        "de": "Beißende Kälte {St. 1|St. 2|St. 3}",
+        "es-ES": "Frío perforante {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Frio Cortante {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Freddo Pungente {liv. 1|liv. 2|liv. 3}",
+        "th": "เงาโลหิตเยือกแข็ง {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Lạnh Thấu Xương Tủy {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Frio Perfurante {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Frío penetrante {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BaiYing/UpgradeData/GE_Baiying_FrozenReinforced_Lv1",
+        "asset": "GE_Baiying_FrozenReinforced_Lv1_C",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_017_10",
+      "labels": {
+        "zh-Hans": "花中藏刃·{之一|之二|之三}",
+        "en": "Hidden Thorns {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "花中蔵刃・{その一|その二|その三}",
+        "ko": "꽃 속의 칼날·{1|2|3}",
+        "ru": "Скрытые шипы {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "花中藏刃·{之一|之二|之三}",
+        "fr": "Épines dissimulées {niv. 1|niv. 2|niv. 3}",
+        "de": "Verborgene Dornen {St. 1|St. 2|St. 3}",
+        "es-ES": "Espinas ocultas {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Espinhos Ocultos {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Spine Nascoste {liv. 1|liv. 2|liv. 3}",
+        "th": "ตมซ่อนกลางบุปผา {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Sát Chiêu Ẩn Giấu {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Espinhos Ocultos {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Espinas ocultas {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_018_10",
+      "labels": {
+        "zh-Hans": "一往无前·{之一|之二|之三}",
+        "en": "Unstoppable Advance {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "一往無前・{その一|その二|その三}",
+        "ko": "일왕무전·{1|2|3}",
+        "ru": "Неудержимое наступление {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "一往無前·{之一|之二|之三}",
+        "fr": "Avancée irrépressible {niv. 1|niv. 2|niv. 3}",
+        "de": "Unaufhaltsamer Vorstoß {St. 1|St. 2|St. 3}",
+        "es-ES": "Avance imparable {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Avanço Imparável {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Avanzata Inarrestabile {liv. 1|liv. 2|liv. 3}",
+        "th": "โถมบุกไร้ปราณี {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Thẳng Tiến Không Lui {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Avanço Imparável {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Avance imparable {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_020_10",
+      "labels": {
+        "zh-Hans": "圆转如意·{之一|之二|之三}",
+        "en": "Fluid Rotation {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "円転如意・{その一|その二|その三}",
+        "ko": "원전여의·{1|2|3}",
+        "ru": "Плавное вращение {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "圓轉如意·{之一|之二|之三}",
+        "fr": "Rotation fluide {niv. 1|niv. 2|niv. 3}",
+        "de": "Fließende Rotation {St. 1|St. 2|St. 3}",
+        "es-ES": "Rotación fluida {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Rotação Fluida {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Rotazione Fluida {liv. 1|liv. 2|liv. 3}",
+        "th": "หมุนเวียนดังใจ {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Tùy Tâm Sở Dục {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Rotação Fluida {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Rotación fluida {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_022_10",
+      "labels": {
+        "zh-Hans": "影杀·{之一|之二|之三}",
+        "en": "Shadow Execution {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "影殺・{その一|その二|その三}",
+        "ko": "영살·{1|2|3}",
+        "ru": "Теневая казнь {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "影殺·{之一|之二|之三}",
+        "fr": "Exécution de l'ombre {niv. 1|niv. 2|niv. 3}",
+        "de": "Schatten-Hinrichtung {St. 1|St. 2|St. 3}",
+        "es-ES": "Ejecución sombría {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Execução Sombria {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Esecuzione delle Ombre {liv. 1|liv. 2|liv. 3}",
+        "th": "สังหารเงา {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Ảnh Sát {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Execução Sombria {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Ejecución de sombra {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_027_10",
+      "labels": {
+        "zh-Hans": "蛇缠蟒绞·{之一|之二|之三}",
+        "en": "Coiling Serpents {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "蛇纏蟒絞・{その一|その二|その三}",
+        "ko": "사전망교·{1|2|3}",
+        "ru": "Клубок змей {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "蛇纏蟒絞·{之一|之二|之三}",
+        "fr": "Serpents enroulés {niv. 1|niv. 2|niv. 3}",
+        "de": "Sich windende Schlangen {St. 1|St. 2|St. 3}",
+        "es-ES": "Serpientes enroscadas {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Serpes Espirais {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Serpi Avvolgenti {liv. 1|liv. 2|liv. 3}",
+        "th": "อสรพิษรัดสังหาร {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Mãng Xà Quấn Thân {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Serpentes Enroladas {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Serpientes enrolladas {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_031_10",
+      "labels": {
+        "zh-Hans": "浊之力·{之一|之二|之三}",
+        "en": "Blight-Fueled Power {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "濁の力・{その一|その二|その三}",
+        "ko": "탁의 힘·{1|2|3}",
+        "ru": "Сила Скверны {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "濁之力·{之一|之二|之三}",
+        "fr": "Puissance du fléau {niv. 1|niv. 2|niv. 3}",
+        "de": "Verderbnisgestärkte Macht {St. 1|St. 2|St. 3}",
+        "es-ES": "Poder basado en la plaga {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Poder do Flagelo {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Potenza del Flagello {liv. 1|liv. 2|liv. 3}",
+        "th": "พลังมลทิน {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Trược Khí Chi Lực {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Força à Base de Devastação {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Poder de la Plaga {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "/Script/PBZCombatAsset",
+        "asset": "GE_XieShan_BlessingUpgrade",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_031_15",
+      "labels": {
+        "zh-Hans": "黑暗规则",
+        "en": "Dark Law",
+        "ja": "暗黒の法則",
+        "ko": "어둠의 규칙",
+        "ru": "Темный закон",
+        "zh-Hant": "黑暗規則",
+        "fr": "Loi obscure",
+        "de": "Dunkles Gesetz",
+        "es-ES": "Ley oscura",
+        "pt-BR": "Lei Sombria",
+        "it": "Legge Oscura",
+        "th": "กฎแห่งความมืด",
+        "vi": "Quy Tắc Hắc Ám",
+        "pt-PT": "Lei Negra",
+        "es-419": "Ley oscura"
+      },
+      "effect": {
+        "package": "/Script/PBZCombatAsset",
+        "asset": "GE_XieShan_DarkRuleUpgrade",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_031_5",
+      "labels": {
+        "zh-Hans": "圣母护佑",
+        "en": "The Lady's Grace",
+        "ja": "聖母の加護",
+        "ko": "성모의 가호",
+        "ru": "Благодать Матери",
+        "zh-Hant": "聖母護佑",
+        "fr": "Grâce de la Dame",
+        "de": "Die Gnade der Herrin",
+        "es-ES": "La gracia de la Dama",
+        "pt-BR": "Bênção da Dama",
+        "it": "Grazia della Signora",
+        "th": "พระแม่คุ้มครอง",
+        "vi": "Thánh Mẫu Phù Hộ",
+        "pt-PT": "A Graça da Senhora",
+        "es-419": "La gracia de la Dama"
+      },
+      "effect": {
+        "package": "/Script/PBZCombatAsset",
+        "asset": "GE_XieShan_BlessingUpgrade",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    }
+  ],
+  "unassociatedRecords": [
+    {
+      "key": "Weapon_FunctionName_000_10",
+      "labels": {
+        "zh-Hans": "飞花摘叶·{之一|之二|之三}",
+        "en": "Falling Petal Strike {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "飛花摘葉・{その一|その二|その三}",
+        "ko": "비화적엽·{1|2|3}",
+        "ru": "Удар опавшего лепестка {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "飛花摘葉·{之一|之二|之三}",
+        "fr": "Frappe des pétales {niv. 1|niv. 2|niv. 3}",
+        "de": "Fallender Blütenblattschlag {St. 1|St. 2|St. 3}",
+        "es-ES": "Lluvia de pétalos {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Golpe da Pétala Descendente {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Colpo del Petalo Cadente {liv. 1|liv. 2|liv. 3}",
+        "th": "ปลิดบุปผาเด็ดใบ {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Phi Hoa Trích Diệp {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Golpe da Pétala Caída {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Ataque de pétalos caídos {Nv. 1|Nv. 2|Nv. 3}"
+      },
+      "effect": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/WoodenSword/UpgradeData/GE_WoodenSword_DamageToBreaken_LV1",
+        "asset": "GE_WoodenSword_DamageToBreaken_LV1_C",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_000_5",
+      "labels": {
+        "zh-Hans": "返璞归真",
+        "en": "Back to Basics",
+        "ja": "守真",
+        "ko": "반박귀진",
+        "ru": "Возвращение к основам",
+        "zh-Hant": "返璞歸真",
+        "fr": "Retour aux fondamentaux",
+        "de": "Zurück zu den Grundlagen",
+        "es-ES": "Vuelta a lo básico",
+        "pt-BR": "De Volta Ao Básico",
+        "it": "Ritorno alle basi",
+        "th": "คืนสู่สามัญ",
+        "vi": "Phản Phác Quy Chân",
+        "pt-PT": "Regresso ao Essencial",
+        "es-419": "Volver a lo básico"
+      },
+      "effect": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/WoodenSword/UpgradeData/GE_WoodenSword_PerfectReflectShachi",
+        "asset": "GE_WoodenSword_PerfectReflectShachi_C",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_001_10",
+      "labels": {
+        "zh-Hans": "瞬杀·{之一|之二|之三}",
+        "en": "Phantom Execution {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "瞬殺・{その一|その二|その三}",
+        "ko": "순살·{1|2|3}",
+        "ru": "Фантомная казнь {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "瞬殺·{之一|之二|之三}",
+        "fr": "Exécution spectrale {niv. 1|niv. 2|niv. 3}",
+        "de": "Phantom-Hinrichtung {St. 1|St. 2|St. 3}",
+        "es-ES": "Ejecución espectral {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Execução Fantasma {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Esecuzione Eterea {liv. 1|liv. 2|liv. 3}",
+        "th": "สังหารฉับพลัน {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Huyễn Sát {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Execução Fantasma {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Ejecución espectral {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_002_10",
+      "labels": {
+        "zh-Hans": "流血不止·{之一|之二|之三}",
+        "en": "Relentless Bleed {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "出血不止・{その一|その二|その三}",
+        "ko": "지속 출혈·{1|2|3}",
+        "ru": "Неостановимое кровотечение {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "流血不止·{之一|之二|之三}",
+        "fr": "Saignement implacable {niv. 1|niv. 2|niv. 3}",
+        "de": "Unaufhörliche Blutung {St. 1|St. 2|St. 3}",
+        "es-ES": "Sangrado implacable {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Sangramento Implacável {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Sanguinamento implacabile {liv. 1|liv. 2|liv. 3}",
+        "th": "เพลงฟันหลั่งโลหิต {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Xuất Huyết Liên Tục {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Sangramento Implacável {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Sangrado implacable {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_003_10",
+      "labels": {
+        "zh-Hans": "莺痕·展锋·{之一|之二|之三}",
+        "en": "Potent Mark {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "鶯痕・展鋒・{その一|その二|その三}",
+        "ko": "앵흔·전봉·{1|2|3}",
+        "ru": "Усиленная метка {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "鶯痕·展鋒·{之一|之二|之三}",
+        "fr": "Marque renforcée {niv. 1|niv. 2|niv. 3}",
+        "de": "Kraftvolles Mal {St. 1|St. 2|St. 3}",
+        "es-ES": "Marca potente {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Marca Potente {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Marchio Potente {liv. 1|liv. 2|liv. 3}",
+        "th": "รอยวิหค·เผยคม {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Oanh Ngân · Triển Phong {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Marca Potente {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Marca potente {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_003_15",
+      "labels": {
+        "zh-Hans": "莺痕·爆裂",
+        "en": "Bursting Mark",
+        "ja": "鶯痕・爆裂",
+        "ko": "앵흔·폭발",
+        "ru": "Взрывная метка",
+        "zh-Hant": "鶯痕·爆裂",
+        "fr": "Marque explosive",
+        "de": "Berstendes Mal",
+        "es-ES": "Marca explosiva",
+        "pt-BR": "Marca Explosiva",
+        "it": "Marchio Dirompente",
+        "th": "รอยวิหค·ปะทุ",
+        "vi": "Oanh Ngân · Bạo Liệt",
+        "pt-PT": "Marca Transbordante",
+        "es-419": "Marca explosiva"
+      },
+      "effect": {
+        "package": "/Script/PBZCombatAsset",
+        "asset": "GE_LuanYing_YingHen_BurstUnlock",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_003_25",
+      "labels": {
+        "zh-Hans": "莺痕·重现",
+        "en": "Lingering Mark",
+        "ja": "鶯痕・再現",
+        "ko": "앵흔·재현",
+        "ru": "Затяжная метка",
+        "zh-Hant": "鶯痕·重現",
+        "fr": "Marque persistante",
+        "de": "Anhaltendes Mal",
+        "es-ES": "Marca persistente",
+        "pt-BR": "Marca Persistente",
+        "it": "Marchio Persistente",
+        "th": "รอยวิหค หวนคืน",
+        "vi": "Oanh Ngân · Tái Hiện",
+        "pt-PT": "Marca Persistente",
+        "es-419": "Marca persistente"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_008_10",
+      "labels": {
+        "zh-Hans": "难得糊涂·{之一|之二|之三}",
+        "en": "Drunken Clarity {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "難得糊塗・{その一|その二|その三}",
+        "ko": "난득호도·{1|2|3}",
+        "ru": "Пьяная ясность {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "難得糊塗·{之一|之二|之三}",
+        "fr": "Lucidité ivre {niv. 1|niv. 2|niv. 3}",
+        "de": "Betrunkene Klarheit {St. 1|St. 2|St. 3}",
+        "es-ES": "Lucidez ebria {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Clareza Ébria {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Lucidità da Sbronza {liv. 1|liv. 2|liv. 3}",
+        "th": "แสร้งเมามาย {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Giả Say Mà Tỉnh {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Clareza Ébria {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Lucidez embriagadora {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_009_5",
+      "labels": {
+        "zh-Hans": "以静养气",
+        "en": "Inner Stillness",
+        "ja": "以静養気",
+        "ko": "이정양기",
+        "ru": "Внутреннее спокойствие",
+        "zh-Hant": "以靜養氣",
+        "fr": "Calme intérieur",
+        "de": "Innere Stille",
+        "es-ES": "Calma interior",
+        "pt-BR": "Imobilidade Interior",
+        "it": "Quiete Interiore",
+        "th": "สงบนิ่งบ่มปราณ",
+        "vi": "Tĩnh Lặng Dưỡng Khí",
+        "pt-PT": "Quietude Interior",
+        "es-419": "Serenidad interior"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_012_10",
+      "labels": {
+        "zh-Hans": "炽杀·{之一|之二|之三}",
+        "en": "Fatal Execution {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "絶殺・{その一|その二|その三}",
+        "ko": "치살·{1|2|3}",
+        "ru": "Смертельная казнь {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "熾殺·{之一|之二|之三}",
+        "fr": "Exécution fatale {niv. 1|niv. 2|niv. 3}",
+        "de": "Tödliche Hinrichtung {St. 1|St. 2|St. 3}",
+        "es-ES": "Ejecución letal {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Execução Fatal {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Esecuzione fatale {liv. 1|liv. 2|liv. 3}",
+        "th": "วิชาปลิดชีพ {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Tuyệt Sát {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Execução Fatal {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Ejecución fatal {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_016_10",
+      "labels": {
+        "zh-Hans": "刺骨·{之一|之二|之三}",
+        "en": "Piercing Cold {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "刺骨・{その一|その二|その三}",
+        "ko": "자골·{1|2|3}",
+        "ru": "Пронизывающий холод {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "刺骨·{之一|之二|之三}",
+        "fr": "Froid perçant {niv. 1|niv. 2|niv. 3}",
+        "de": "Beißende Kälte {St. 1|St. 2|St. 3}",
+        "es-ES": "Frío perforante {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Frio Cortante {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Freddo Pungente {liv. 1|liv. 2|liv. 3}",
+        "th": "เงาโลหิตเยือกแข็ง {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Lạnh Thấu Xương Tủy {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Frio Perfurante {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Frío penetrante {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "/PBZCombatAsset/ActorData/Players/Hun/Weapon/BaiYing/UpgradeData/GE_Baiying_FrozenReinforced_Lv1",
+        "asset": "GE_Baiying_FrozenReinforced_Lv1_C",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_017_10",
+      "labels": {
+        "zh-Hans": "花中藏刃·{之一|之二|之三}",
+        "en": "Hidden Thorns {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "花中蔵刃・{その一|その二|その三}",
+        "ko": "꽃 속의 칼날·{1|2|3}",
+        "ru": "Скрытые шипы {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "花中藏刃·{之一|之二|之三}",
+        "fr": "Épines dissimulées {niv. 1|niv. 2|niv. 3}",
+        "de": "Verborgene Dornen {St. 1|St. 2|St. 3}",
+        "es-ES": "Espinas ocultas {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Espinhos Ocultos {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Spine Nascoste {liv. 1|liv. 2|liv. 3}",
+        "th": "ตมซ่อนกลางบุปผา {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Sát Chiêu Ẩn Giấu {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Espinhos Ocultos {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Espinas ocultas {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_018_10",
+      "labels": {
+        "zh-Hans": "一往无前·{之一|之二|之三}",
+        "en": "Unstoppable Advance {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "一往無前・{その一|その二|その三}",
+        "ko": "일왕무전·{1|2|3}",
+        "ru": "Неудержимое наступление {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "一往無前·{之一|之二|之三}",
+        "fr": "Avancée irrépressible {niv. 1|niv. 2|niv. 3}",
+        "de": "Unaufhaltsamer Vorstoß {St. 1|St. 2|St. 3}",
+        "es-ES": "Avance imparable {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Avanço Imparável {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Avanzata Inarrestabile {liv. 1|liv. 2|liv. 3}",
+        "th": "โถมบุกไร้ปราณี {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Thẳng Tiến Không Lui {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Avanço Imparável {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Avance imparable {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_020_10",
+      "labels": {
+        "zh-Hans": "圆转如意·{之一|之二|之三}",
+        "en": "Fluid Rotation {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "円転如意・{その一|その二|その三}",
+        "ko": "원전여의·{1|2|3}",
+        "ru": "Плавное вращение {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "圓轉如意·{之一|之二|之三}",
+        "fr": "Rotation fluide {niv. 1|niv. 2|niv. 3}",
+        "de": "Fließende Rotation {St. 1|St. 2|St. 3}",
+        "es-ES": "Rotación fluida {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Rotação Fluida {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Rotazione Fluida {liv. 1|liv. 2|liv. 3}",
+        "th": "หมุนเวียนดังใจ {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Tùy Tâm Sở Dục {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Rotação Fluida {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Rotación fluida {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_022_10",
+      "labels": {
+        "zh-Hans": "影杀·{之一|之二|之三}",
+        "en": "Shadow Execution {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "影殺・{その一|その二|その三}",
+        "ko": "영살·{1|2|3}",
+        "ru": "Теневая казнь {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "影殺·{之一|之二|之三}",
+        "fr": "Exécution de l'ombre {niv. 1|niv. 2|niv. 3}",
+        "de": "Schatten-Hinrichtung {St. 1|St. 2|St. 3}",
+        "es-ES": "Ejecución sombría {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Execução Sombria {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Esecuzione delle Ombre {liv. 1|liv. 2|liv. 3}",
+        "th": "สังหารเงา {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Ảnh Sát {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Execução Sombria {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Ejecución de sombra {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_027_10",
+      "labels": {
+        "zh-Hans": "蛇缠蟒绞·{之一|之二|之三}",
+        "en": "Coiling Serpents {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "蛇纏蟒絞・{その一|その二|その三}",
+        "ko": "사전망교·{1|2|3}",
+        "ru": "Клубок змей {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "蛇纏蟒絞·{之一|之二|之三}",
+        "fr": "Serpents enroulés {niv. 1|niv. 2|niv. 3}",
+        "de": "Sich windende Schlangen {St. 1|St. 2|St. 3}",
+        "es-ES": "Serpientes enroscadas {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Serpes Espirais {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Serpi Avvolgenti {liv. 1|liv. 2|liv. 3}",
+        "th": "อสรพิษรัดสังหาร {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Mãng Xà Quấn Thân {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Serpentes Enroladas {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Serpientes enrolladas {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "None",
+        "asset": "None",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_031_10",
+      "labels": {
+        "zh-Hans": "浊之力·{之一|之二|之三}",
+        "en": "Blight-Fueled Power {Lv. 1|Lv. 2|Lv. 3}",
+        "ja": "濁の力・{その一|その二|その三}",
+        "ko": "탁의 힘·{1|2|3}",
+        "ru": "Сила Скверны {Ур. 1|Ур. 2|Ур. 3}",
+        "zh-Hant": "濁之力·{之一|之二|之三}",
+        "fr": "Puissance du fléau {niv. 1|niv. 2|niv. 3}",
+        "de": "Verderbnisgestärkte Macht {St. 1|St. 2|St. 3}",
+        "es-ES": "Poder basado en la plaga {Nv. 1|Nv. 2|Nv. 3}",
+        "pt-BR": "Poder do Flagelo {Nv. 1|Nv. 2|Nv. 3}",
+        "it": "Potenza del Flagello {liv. 1|liv. 2|liv. 3}",
+        "th": "พลังมลทิน {Lv. 1|Lv. 2|Lv. 3}",
+        "vi": "Trược Khí Chi Lực {Cấp 1|Cấp 2|Cấp 3}",
+        "pt-PT": "Força à Base de Devastação {Nv. 1|Nv. 2|Nv. 3}",
+        "es-419": "Poder de la Plaga {Nivel 1|Nivel 2|Nivel 3}"
+      },
+      "effect": {
+        "package": "/Script/PBZCombatAsset",
+        "asset": "GE_XieShan_BlessingUpgrade",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_031_15",
+      "labels": {
+        "zh-Hans": "黑暗规则",
+        "en": "Dark Law",
+        "ja": "暗黒の法則",
+        "ko": "어둠의 규칙",
+        "ru": "Темный закон",
+        "zh-Hant": "黑暗規則",
+        "fr": "Loi obscure",
+        "de": "Dunkles Gesetz",
+        "es-ES": "Ley oscura",
+        "pt-BR": "Lei Sombria",
+        "it": "Legge Oscura",
+        "th": "กฎแห่งความมืด",
+        "vi": "Quy Tắc Hắc Ám",
+        "pt-PT": "Lei Negra",
+        "es-419": "Ley oscura"
+      },
+      "effect": {
+        "package": "/Script/PBZCombatAsset",
+        "asset": "GE_XieShan_DarkRuleUpgrade",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    },
+    {
+      "key": "Weapon_FunctionName_031_5",
+      "labels": {
+        "zh-Hans": "圣母护佑",
+        "en": "The Lady's Grace",
+        "ja": "聖母の加護",
+        "ko": "성모의 가호",
+        "ru": "Благодать Матери",
+        "zh-Hant": "聖母護佑",
+        "fr": "Grâce de la Dame",
+        "de": "Die Gnade der Herrin",
+        "es-ES": "La gracia de la Dama",
+        "pt-BR": "Bênção da Dama",
+        "it": "Grazia della Signora",
+        "th": "พระแม่คุ้มครอง",
+        "vi": "Thánh Mẫu Phù Hộ",
+        "pt-PT": "A Graça da Senhora",
+        "es-419": "La gracia de la Dama"
+      },
+      "effect": {
+        "package": "/Script/PBZCombatAsset",
+        "asset": "GE_XieShan_BlessingUpgrade",
+        "subobject": ""
+      },
+      "upgradeTags": [],
+      "grantedAbilities": []
+    }
+  ],
+  "crossSourcePrimaryKeys": [
+    "Weapon_FunctionName_001_25",
+    "Weapon_FunctionName_012_25",
+    "Weapon_FunctionName_012_5",
+    "Weapon_FunctionName_022_15",
+    "Weapon_FunctionName_022_25",
+    "Weapon_FunctionName_026_25",
+    "Weapon_FunctionName_028_5"
+  ],
+  "crossSourceNameKeys": [
+    {
+      "key": "Weapon_FunctionName_001_25",
+      "sourceIds": [
+        "ability:Ability.Action.Hun.Heavy.Tang.AAAAAB",
+        "ability:Ability.Action.Hun.Heavy.Tang.AAAAABB",
+        "ability:Ability.Action.Hun.Heavy.Tang.BBBB"
+      ]
+    },
+    {
+      "key": "Weapon_FunctionName_011_Skill",
+      "sourceIds": [
+        "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "ability:Ability.Action.Hun.CombatArt.Atk02",
+        "ability:Ability.Action.Hun.CombatArt.Atk03"
+      ]
+    },
+    {
+      "key": "Weapon_FunctionName_012_25",
+      "sourceIds": [
+        "ability:Ability.Action.Hun.Heavy.Long.BSup",
+        "ability:Ability.Action.Hun.Light.Long.AAAAAA"
+      ]
+    },
+    {
+      "key": "Weapon_FunctionName_012_5",
+      "sourceIds": [
+        "ability:Ability.Action.Hun.Heavy.ComboAtk_N1H1",
+        "ability:Ability.Action.Hun.Heavy.Long.BD"
+      ]
+    },
+    {
+      "key": "Weapon_FunctionName_022_15",
+      "sourceIds": [
+        "ability:Ability.Action.Hun.Light.ADash.Draw",
+        "ability:Ability.Action.Hun.Light.Double.BTA"
+      ]
+    },
+    {
+      "key": "Weapon_FunctionName_022_25",
+      "sourceIds": [
+        "ability:Ability.Action.Hun.Heavy.Double.ATB",
+        "ability:Ability.Action.Hun.Heavy.Double.ATBB",
+        "ability:Ability.Action.Hun.Heavy.Double.ATBBB"
+      ]
+    },
+    {
+      "key": "Weapon_FunctionName_022_Skill",
+      "sourceIds": [
+        "ability:Ability.Action.Hun.CombatArt.Atk01",
+        "ability:Ability.Action.Hun.CombatArt.JueYing.Air"
+      ]
+    },
+    {
+      "key": "Weapon_FunctionName_026_25",
+      "sourceIds": [
+        "ability:Ability.Action.Hun.Heavy.ShuangYue.PB",
+        "ability:Ability.Action.Hun.Heavy.ShuangYue.PBB"
+      ]
+    },
+    {
+      "key": "Weapon_FunctionName_028_5",
+      "sourceIds": [
+        "ability:Ability.Action.Hun.Heavy.DualHook.Pursure",
+        "ability:Ability.Action.Hun.Light.DualHook.Pursure"
+      ]
+    }
+  ],
+  "classification": "An exact native input-route unlock or direct grant names the move when that name stays within one catalog source; cross-source and other referenced upgrade names remain searchable effects."
 }

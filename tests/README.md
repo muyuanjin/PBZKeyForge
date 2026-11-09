@@ -112,11 +112,25 @@ The checks reject airborne use of ground moves, missing live instances, active p
 
 Check the equipment-specific catalog, keyboard/controller sharing, binding effects and picker screenshots:
 
-`GameMoveNameTests` checks official names and related upgrade searches in all 15 languages, and captures the keyboard/controller picker for the One-Eyed Bow's Thousand-Eyed Gaze. The upgrade remains attached to its real laser entrance. Run this targeted localization check after generating `assets/key-enhancement/game-move-names.json`:
+`GameMoveNameTests` checks official names, related upgrade searches and every shared action ID in all 15 languages. Each official name must be a separate searchable picker row, including generated weapon prefixes and expanded placeholder variants; selecting every name for one ID must still create one binding rule and output. Distinct actions with the same label must remain separate. The harness also captures the keyboard/controller picker for the One-Eyed Bow's Thousand-Eyed Gaze, with the upgrade attached to its real laser entrance. Run this targeted localization check after generating `assets/key-enhancement/game-move-names.json`:
 
 ```powershell
 & "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /win32manifest:build\app.manifest /out:dist\GameMoveNameTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Web.Extensions.dll tests\GameMoveNameTests.cs
 .\dist\GameMoveNameTests.exe dist\game-move-name-check
+```
+
+`SearchOptimizationTests` checks multi-term ranking across labels and technical fields, order-independent queries, cache invalidation and the search path over the full catalog. Compile it against the built application with `System.Core.dll` and run without arguments:
+
+```powershell
+& $compiler /nologo /out:dist\SearchOptimizationTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll tests\SearchOptimizationTests.cs
+.\dist\SearchOptimizationTests.exe
+```
+
+`SearchDialogPerformanceTests` measures the debounced picker under a typing burst and verifies the final list still selects the intended move. Compile with the same WinForms references and DPI manifest as `UnifiedBindingDialogTests`, then run without arguments:
+
+```powershell
+& $compiler /nologo /win32manifest:build\app.manifest /out:dist\SearchDialogPerformanceTests.exe /r:dist\PBZKeyForge.exe /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll tests\SearchDialogPerformanceTests.cs
+.\dist\SearchDialogPerformanceTests.exe
 ```
 
 ```powershell

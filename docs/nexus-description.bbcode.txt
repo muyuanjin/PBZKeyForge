@@ -1,5 +1,5 @@
 [color=#e8b96a][b]YOUR CONTROLS, MORE MOVES, SMOOTHER KEY ENHANCEMENT[/b][/color]
-Build the keyboard or controller layout you want: combine attack and guard on one key, bind extra weapon moves independently, and choose how each move behaves. Version 1.3.1 expands the move selection, fixes independent activation and reduces repeated work during play. Ordinary shared-key editing needs no runtime loader.
+Build the keyboard or controller layout you want: combine attack and guard on one key, bind extra weapon moves independently, and choose how each move behaves. Version 1.3.2 makes the move catalog easier to explore with multi-term search, exact shared names and attack coefficients. Ordinary shared-key editing needs no runtime loader.
 
 Windows editor with ordinary save editing and optional Key Enhancement. Ordinary bindings need no loader; Key Enhancement includes the pinned Kintaro PBZ UE4SS runtime. Open source; release downloads are built and uploaded by GitHub Actions.
 
@@ -69,7 +69,9 @@ Paste a share code to see the preset contents automatically. [b]Load into editor
 The included [b]PRESETS.md[/b] lists the factory-based layouts used by the eight ready-made settings files. Add keys mode can retain additional existing bindings; the hover preview shows the preset relative to factory settings.
 
 [color=#e8b96a][b]KEY ENHANCEMENT: EXTRA ACTIONS AND YOUR OWN SCHEMES[/b][/color]
-Click any key and [b]Add action[/b], or browse [b]By action[/b]. The expanded grouped catalog includes weapon attack chains such as ChiRen, Combat Art finishers, charged releases, Phantom Edge attacks, counters and follow-ups. Search by the game's localized move names, related upgrades, weapon or technical code. One-Eyed Bow entries use the real held-input and projectile preparation; Thousand-Eyed Gaze is a related upgrade of its native entrance. Bind several functions to one key, or give one function multiple inputs.
+Click any key and [b]Add action[/b], or browse [b]By action[/b]. The expanded grouped catalog includes weapon attack chains such as ChiRen, Combat Art finishers, charged releases, Phantom Edge attacks, counters and follow-ups. Combine localized move, upgrade, weapon and technical terms in one search. Official names shared by a single action appear as separate rows, and your chosen name stays visible while the binding still points to one action.
+
+The action table includes [b]attack insight[/b] for bindable moves: physical or elemental damage coefficients, poise coefficients, conditional ranges and timeline attack nodes. Values are searchable, and their tooltips distinguish resource coefficients from final health damage and attack nodes from actual hit counts. One-Eyed Bow entries use the real held-input and projectile preparation; Thousand-Eyed Gaze is a related upgrade of its native entrance. Bind several functions to one key, or give one function multiple inputs.
 
 [center][b]Search extra weapon moves and bind complete Combat Arts[/b]
 [img]https://staticdelivery.nexusmods.com/mods/10614/images/402/402-1794107628-320811591.png[/img][/center]
@@ -104,7 +106,7 @@ Restore your save backup to remove ordinary binding changes, or preview and appl
 
 [color=#e8b96a][b]KNOWN LIMITS[/b][/color]
 The optional gameplay patch uses Steam 1.0302256 difficulty assets and conflicts with mods replacing the same assets. A new game patch may require an updated mod.
-Key Enhancement targets Steam CL-302256 with UE4SS v3.0.1-1195-g1ceefac8 and requires Microsoft Visual C++ v14 x64. The editor checks its dependencies before installation. Combat behavior may conflict with Mods changing the same inputs or abilities. Automated tests cover input routing and recovery; they do not establish in-game FPS or every move's combat behavior.
+Key Enhancement targets Steam CL-302256 with UE4SS v3.0.1-1195-g1ceefac8 and requires Microsoft Visual C++ v14 x64. The editor checks its dependencies before installation. Combat behavior may conflict with Mods changing the same inputs or abilities. Attack coefficients and timeline nodes describe referenced move resources, not final per-hit health damage or guaranteed hit counts. Automated tests cover input routing and recovery; they do not establish in-game FPS or every move's combat behavior.
 
 [color=#e8b96a][b]SOURCE AND BUILDS[/b][/color]
 [url=https://github.com/muyuanjin/PBZKeyForge]Source, documentation and issues[/url] · [url=https://github.com/muyuanjin/PBZKeyForge/releases]Version downloads and update notes[/url]
